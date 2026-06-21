@@ -1,0 +1,47 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(sudo rm *)",
+      "Bash(npm cache *)",
+      "Bash(node *)",
+      "Bash(npm run *)",
+      "Bash(npx vite *)",
+      "Bash(node_modules/.bin/vite build *)",
+      "Bash(python3 *)",
+      "Bash(npx --yes vite build --logLevel error)",
+      "Bash(brew install *)",
+      "Bash(pdftotext --version)",
+      "Bash(pdftotext '/Users/necib/Downloads/Annexe 1 – Programme de français pour le cycle 4-480713 \\(2\\).pdf' -)",
+      "Bash(claude auth *)",
+      "Bash(claude mcp *)",
+      "mcp__supabase__list_projects",
+      "mcp__supabase__execute_sql",
+      "mcp__supabase__get_publishable_keys",
+      "mcp__supabase__get_project_url",
+      "mcp__supabase__apply_migration",
+      "Read(//Users/necib/Desktop/DEV/NEW_120426/**)",
+      "Read(//Users/necib/Desktop/DEV/NEW_120426/crpe_lp/**)",
+      "Bash(curl -s http://localhost:3001)",
+      "Bash(curl -s http://localhost:5173)",
+      "Bash(pkill -f \"vite\\\\|node server\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3001)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:5173)",
+      "Bash(lsof -ti:3001)",
+      "Bash(xargs kill -9)",
+      "Bash(lsof -ti:5173)",
+      "mcp__supabase__list_tables",
+      "Bash(curl -s http://localhost:5173/src/App.jsx)",
+      "Bash(grep -n \"fetch\\(\\\\s*['\\\\\"]/api\\\\|fetch\\(\\\\`/api\\\\|fetch\\(apiBase\\\\|API_BASE\\\\|axios\\\\.\" /Users/necib/Desktop/DEV/NEW_120426/CRPE/src/App.jsx)",
+      "Bash(mkdir -p /Users/necib/Desktop/DEV/NEW_120426/CRPE/landing)",
+      "Bash(cp /Users/necib/Desktop/DEV/NEW_120426/crpe_lp/index.html /Users/necib/Desktop/DEV/NEW_120426/CRPE/landing/index.html)",
+      "Bash(mkdir -p /Users/necib/Desktop/DEV/NEW_120426/CRPE/api)",
+      "Bash(gh auth *)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  },
+  "enabledMcpjsonServers": [
+    "supabase"
+  ]
+}
