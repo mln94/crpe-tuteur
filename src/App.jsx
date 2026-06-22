@@ -1637,9 +1637,29 @@ function PaywallModal({ questionsUsed, onUnlock, onClose }) {
   const paypalContainerRef = useRef(null);
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState(null);
+  const [sdkReady, setSdkReady] = useState(!!window.paypal?.Buttons);
+
+  // Le SDK PayPal est chargé en <script async> dans index.html : il peut ne pas
+  // encore être prêt au montage de la modale, donc on patiente en sondant.
+  useEffect(() => {
+    if (sdkReady) return;
+    const interval = setInterval(() => {
+      if (window.paypal?.Buttons) {
+        setSdkReady(true);
+        clearInterval(interval);
+      }
+    }, 200);
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
+      if (!window.paypal?.Buttons) {
+        setPayError('Le module de paiement PayPal n\'a pas pu se charger. Vérifiez votre connexion et rechargez la page.');
+      }
+    }, 10000);
+    return () => { clearInterval(interval); clearTimeout(timeout); };
+  }, [sdkReady]);
 
   useEffect(() => {
-    if (!window.paypal?.Buttons || !paypalContainerRef.current) return;
+    if (!sdkReady || !paypalContainerRef.current) return;
 
     const buttons = window.paypal.Buttons({
       style: { layout: 'horizontal', color: 'blue', shape: 'pill', label: 'pay', height: 45 },
@@ -1684,7 +1704,7 @@ function PaywallModal({ questionsUsed, onUnlock, onClose }) {
 
     buttons.render(paypalContainerRef.current);
     return () => { try { buttons.close(); } catch { /* déjà démonté */ } };
-  }, []);
+  }, [sdkReady]);
 
   const FEATURES = [
     { icon: '📚', text: 'Questions illimitées — toutes thématiques (grammaire, lecture, vocabulaire, écriture, culture littéraire)' },
