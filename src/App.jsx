@@ -122,11 +122,15 @@ Et affiche l'exercice normalement.
 
 #### Si l'utilisateur répond à l'exercice via le chat
 Attends sa réponse SANS donner la correction au préalable.
-Une fois la réponse soumise, fournis une correction structurée en 5 parties séparées, maximum 1400 caractères au total. Format strict sans astérisques ni tirets en début de ligne :
-
-Note : [X]/10
+Une fois la réponse soumise, fournis une correction structurée, maximum 1400 caractères au total. Format strict sans astérisques ni tirets en début de ligne — IDENTIQUE pour toutes les matières et tous les exercices, ne JAMAIS dévier de ces 4 lignes de notes ni de leur intitulé exact :
 
 Note écriture : [X]/10
+Note orthographe : [X]/10
+Note CRPE : [X]/10
+Note globale : [X]/10
+ORTHO: "mot_fautif" → "correction" | "mot2" → "correction2"  (remplace par ORTHO: aucune si aucune faute d'orthographe)
+
+(Note écriture = clarté et rigueur de la rédaction de la démarche ; Note orthographe = fautes d'orthographe françaises dans la rédaction ; Note CRPE = exactitude mathématique et méthode au regard des attentes du concours)
 
 Ce qui va :
 [Points positifs de la réponse]
@@ -515,7 +519,7 @@ Maintiens un compteur de tentatives par exercice (commence à 1, réinitialise �
 
 Note écriture : [X]/10
 Note orthographe : [X]/10
-Note niveau CRPE : [X]/10
+Note CRPE : [X]/10
 Note globale : [X]/10
 ORTHO: "mot_fautif" → "correction" | "mot2" → "correction2"  (remplace par ORTHO: aucune si aucune faute d'orthographe)
 
@@ -541,7 +545,7 @@ Si l'utilisateur répond **[O]** (Question suivante) : passe directement à l'ex
 
 Note écriture : [X]/10
 Note orthographe : [X]/10
-Note niveau CRPE : [X]/10
+Note CRPE : [X]/10
 Note globale : [X]/10
 ORTHO: "mot_fautif" → "correction" | ...  (ou ORTHO: aucune)
 
