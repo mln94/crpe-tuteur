@@ -146,8 +146,33 @@ app.post('/api/webhook/paypal', async (req, res) => {
 });
 
 /* ── API ── */
+async function logConsommation({ meta, model, usage, dureeMs, success }) {
+  if (!meta?.user_id) return;
+  try {
+    await supabaseAdmin.from('consommation_utilisateurs').insert({
+      user_id: meta.user_id,
+      session_id: meta.session_id || null,
+      type_evenement: meta.type_evenement || 'chat',
+      matiere: meta.matiere || null,
+      thematique: meta.thematique || null,
+      model,
+      input_tokens: usage?.input_tokens || 0,
+      output_tokens: usage?.output_tokens || 0,
+      cache_read_input_tokens: usage?.cache_read_input_tokens || 0,
+      cache_creation_input_tokens: usage?.cache_creation_input_tokens || 0,
+      duree_ms: dureeMs,
+      success,
+    });
+  } catch (e) {
+    console.warn('[consommation] insert échouée', e.message);
+  }
+}
+
+const CHAT_MODEL = 'claude-sonnet-4-6';
+
 app.post('/api/chat', async (req, res) => {
-  const { messages, system } = req.body;
+  const { messages, system, meta } = req.body;
+  const startedAt = Date.now();
 
   res.setHeader('Content-Type', 'text/event-stream');
   res.setHeader('Cache-Control', 'no-cache');
@@ -155,7 +180,7 @@ app.post('/api/chat', async (req, res) => {
 
   try {
     const stream = client.messages.stream({
-      model: 'claude-sonnet-4-6',
+      model: CHAT_MODEL,
       max_tokens: 2000,
       system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }],
       messages,
@@ -165,14 +190,16 @@ app.post('/api/chat', async (req, res) => {
       res.write(`data: ${JSON.stringify({ text })}\n\n`);
     });
 
-    await stream.finalMessage();
+    const finalMsg = await stream.finalMessage();
     res.write('data: [DONE]\n\n');
     res.end();
+    logConsommation({ meta, model: finalMsg.model, usage: finalMsg.usage, dureeMs: Date.now() - startedAt, success: true });
   } catch (err) {
     console.error('[API error]', err.message);
     res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
     res.write('data: [DONE]\n\n');
     res.end();
+    logConsommation({ meta, model: CHAT_MODEL, usage: null, dureeMs: Date.now() - startedAt, success: false });
   }
 });
 

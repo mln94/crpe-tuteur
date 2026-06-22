@@ -1246,11 +1246,11 @@ function uid() {
 // ---------------------------------------------------------------------------
 // Streaming helper
 // ---------------------------------------------------------------------------
-async function streamClaude(messages, system, onChunk, onDone) {
+async function streamClaude(messages, system, onChunk, onDone, meta) {
   const res = await fetch('/api/chat', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ messages, system }),
+    body: JSON.stringify({ messages, system, meta }),
   });
 
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -1978,6 +1978,14 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
     storage.set(storeKey, { displayMessages: disp, apiMessages: api, savedAt: new Date().toISOString(), topic, niveau, mode });
   };
 
+  const chatMeta = (typeEvenement) => ({
+    user_id: userId.current,
+    session_id: sessionUuidRef.current || storeKey,
+    type_evenement: typeEvenement,
+    matiere,
+    thematique: topic || null,
+  });
+
   const saveKeywords = (text) => {
     if (mode !== 'ecriture') return;
     const words = extractKeywords(text).map(k => k.word);
@@ -2022,7 +2030,8 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
           saveKeywords(final);
           saveQuestion(final);
           text = final;
-        }
+        },
+        chatMeta('chat_exercice')
       );
     } catch (e) {
       setError(e.message);
@@ -2058,7 +2067,8 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
           const assistantMsg = { role: 'assistant', content: final };
           setApiMessages([...newApi, assistantMsg]);
           setDefinitions(s => ({ ...s, loading: false }));
-        }
+        },
+        chatMeta('chat_definitions')
       );
     } catch (e) {
       setDefinitions(s => ({ ...s, loading: false, content: `Erreur : ${e.message}` }));
@@ -2080,7 +2090,8 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
           setApiMessages([...newApi, assistantMsg]);
           setSynthese(s => ({ ...s, loading: false }));
           saveSynthese(final);
-        }
+        },
+        chatMeta('chat_synthese')
       );
     } catch (e) {
       setSynthese(s => ({ ...s, loading: false, content: `Erreur : ${e.message}` }));
@@ -2175,7 +2186,8 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
             }
           }
           response = final;
-        }
+        },
+        chatMeta('chat_reponse')
       );
     } catch (e) {
       setError(e.message);
@@ -3376,6 +3388,7 @@ ${tentative === 1
         `Tu es un coach en argumentation littéraire pour le CRPE. Donne des conseils structurés et actionnables pour aider à construire une réponse argumentée à cette question. Ne donne pas la réponse — guide la démarche argumentative. Structure ta réponse en 3 parties : 1. Plan suggéré (2-3 parties), 2. Éléments textuels à mobiliser, 3. Vocabulaire littéraire clé. Sois concis et précis.`,
         (chunk) => setArgumentation(a => ({ ...a, content: chunk })),
         (final) => setArgumentation(a => ({ ...a, content: final, loading: false })),
+        { user_id: userIdRef.current, session_id: dbSessionIdRef.current, type_evenement: 'banque_argumentation', matiere: 'francais', thematique: topic || null },
       ).catch(() => setArgumentation(a => ({ ...a, loading: false, content: 'Erreur lors du chargement des conseils.' })));
       return;
     }
@@ -3522,7 +3535,8 @@ ${tentative === 1
               ...noteFields,
             });
           }
-        }
+        },
+        { user_id: userIdRef.current, session_id: dbSessionIdRef.current, type_evenement: 'banque_correction', matiere: 'francais', thematique: q?.thematique || topic || null }
       );
     } catch (_) {
       setStreamingText('');
