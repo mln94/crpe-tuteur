@@ -786,32 +786,6 @@ async function supabaseInsert(table, data) {
   }
 }
 
-async function supabaseInsertReturningId(table, data) {
-  if (!SUPABASE_URL || !SUPABASE_KEY) return null;
-  try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
-      method: 'POST',
-      headers: {
-        apikey: SUPABASE_KEY,
-        Authorization: `Bearer ${SUPABASE_KEY}`,
-        'Content-Type': 'application/json',
-        Prefer: 'return=representation',
-      },
-      body: JSON.stringify(data),
-    });
-    const rows = await res.json();
-    return rows?.[0]?.id ?? null;
-  } catch (e) {
-    console.warn(`[Supabase] Insert ${table}:`, e.message);
-    return null;
-  }
-}
-
-async function linkConsommationToReponse(clientRefId, reponseId) {
-  if (!clientRefId || !reponseId) return;
-  await supabasePatch('consommation_utilisateurs', { client_ref_id: clientRefId }, { id_reponse_utilisateur: reponseId });
-}
-
 async function supabasePatch(table, filters, data) {
   if (!SUPABASE_URL || !SUPABASE_KEY) return;
   try {
@@ -1837,7 +1811,6 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
   const prePuzzleOptionsRef  = useRef([]);
   const syntheseShownRef    = useRef(new Set());
   const definitionsShownRef = useRef(new Set());
-  const lastChatMetaRef     = useRef(null);
 
   const [objectives, setObjectives] = useState([]);
   const [objectivesReady, setObjectivesReady] = useState(
@@ -1926,9 +1899,8 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
       note_globale:     _ngVals.length ? Math.round((_ngVals.reduce((a, b) => a + b, 0) / _ngVals.length) * 10) / 10 : null,
     };
 
-    const clientRefId = lastChatMetaRef.current?.client_ref_id;
     if (tentativeRef.current === 1) {
-      supabaseInsertReturningId('reponses_utilisateurs', {
+      supabaseInsert('reponses_utilisateurs', {
         user_id:        userId.current,
         session_id:     sessionId,
         classe:         niveau ? NIVEAU_TO_CLASSE[niveau] : null,
@@ -1940,9 +1912,9 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
         reponse:        pendingResponseRef.current,
         reponse_ideale: idealResponse,
         ...noteFields,
-      }).then(id => linkConsommationToReponse(clientRefId, id));
+      });
     } else {
-      supabaseInsertReturningId('reponses_utilisateurs', {
+      supabaseInsert('reponses_utilisateurs', {
         user_id:        userId.current,
         session_id:     sessionId,
         classe:         niveau ? NIVEAU_TO_CLASSE[niveau] : null,
@@ -1955,7 +1927,7 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
         reponse_ideale: idealResponse,
         tentative:      2,
         ...noteFields,
-      }).then(id => linkConsommationToReponse(clientRefId, id));
+      });
     }
 
     if (idealResponse && ex.question) {
@@ -2016,8 +1988,6 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
     type_evenement: typeEvenement,
     matiere,
     thematique: topic || null,
-    id_question_generee: null, // non suivi côté ChatView (question générée à la volée par le chat)
-    client_ref_id: crypto.randomUUID(),
   });
 
   const saveKeywords = (text) => {
@@ -2158,7 +2128,6 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
       lastOptionRef.current = content.trim()[1]; // e.g. 'R', 'O', 'N'…
     }
     setLoading(true);
-    lastChatMetaRef.current = chatMeta('chat_reponse');
 
     try {
       let response = '';
@@ -2222,7 +2191,7 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
           }
           response = final;
         },
-        lastChatMetaRef.current
+        chatMeta('chat_reponse')
       );
     } catch (e) {
       setError(e.message);
@@ -3423,7 +3392,7 @@ ${tentative === 1
         `Tu es un coach en argumentation littéraire pour le CRPE. Donne des conseils structurés et actionnables pour aider à construire une réponse argumentée à cette question. Ne donne pas la réponse — guide la démarche argumentative. Structure ta réponse en 3 parties : 1. Plan suggéré (2-3 parties), 2. Éléments textuels à mobiliser, 3. Vocabulaire littéraire clé. Sois concis et précis.`,
         (chunk) => setArgumentation(a => ({ ...a, content: chunk })),
         (final) => setArgumentation(a => ({ ...a, content: final, loading: false })),
-        { user_id: userIdRef.current, session_id: dbSessionIdRef.current, type_evenement: 'banque_argumentation', matiere: 'francais', thematique: topic || null, id_question_generee: q?.id ?? null, client_ref_id: crypto.randomUUID() },
+        { user_id: userIdRef.current, session_id: dbSessionIdRef.current, type_evenement: 'banque_argumentation', matiere: 'francais', thematique: topic || null },
       ).catch(() => setArgumentation(a => ({ ...a, loading: false, content: 'Erreur lors du chargement des conseils.' })));
       return;
     }
@@ -3508,16 +3477,6 @@ ${tentative === 1
     setStreamingText('');
     setPhase('correction');
 
-    const correctionMeta = {
-      user_id: userIdRef.current,
-      session_id: dbSessionIdRef.current,
-      type_evenement: 'banque_correction',
-      matiere: 'francais',
-      thematique: q?.thematique || topic || null,
-      id_question_generee: q?.id ?? null,
-      client_ref_id: crypto.randomUUID(),
-    };
-
     try {
       await streamClaude(
         [{ role: 'user', content: buildCorrectionPrompt(q, content, tentative) }],
@@ -3541,7 +3500,7 @@ ${tentative === 1
             note_globale:     _ngVals2.length ? Math.round((_ngVals2.reduce((a, b) => a + b, 0) / _ngVals2.length) * 10) / 10 : null,
           };
           if (tentative === 1) {
-            supabaseInsertReturningId('reponses_utilisateurs', {
+            supabaseInsert('reponses_utilisateurs', {
               user_id:                userIdRef.current,
               session_id:             dbSessionIdRef.current,
               classe,
@@ -3555,7 +3514,7 @@ ${tentative === 1
               tentative:              1,
               id_question_completee:  q?.id              ?? null,
               ...noteFields,
-            }).then(id => linkConsommationToReponse(correctionMeta.client_ref_id, id));
+            });
             // Increment free question counter (only on first attempt = one question answered)
             if (!isLocked) {
               const newCount = (storage.get('crpe_free_questions_used') || 0) + 1;
@@ -3564,7 +3523,7 @@ ${tentative === 1
               if (typeof onQuestionAnswered === 'function') onQuestionAnswered(userIdRef.current);
             }
           } else {
-            supabaseInsertReturningId('reponses_utilisateurs', {
+            supabaseInsert('reponses_utilisateurs', {
               user_id:                userIdRef.current,
               session_id:             dbSessionIdRef.current,
               classe,
@@ -3578,10 +3537,10 @@ ${tentative === 1
               tentative:              2,
               id_question_completee:  q?.id              ?? null,
               ...noteFields,
-            }).then(id => linkConsommationToReponse(correctionMeta.client_ref_id, id));
+            });
           }
         },
-        correctionMeta
+        { user_id: userIdRef.current, session_id: dbSessionIdRef.current, type_evenement: 'banque_correction', matiere: 'francais', thematique: q?.thematique || topic || null }
       );
     } catch (_) {
       setStreamingText('');
