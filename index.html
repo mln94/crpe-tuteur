@@ -1,12 +1,21 @@
 <!doctype html>
 <html lang="fr">
   <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P4BXMJXQT5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-P4BXMJXQT5');
+    </script>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CRPE Tuteur IA</title>
     <script
-      src="https://www.paypal.com/sdk/js?client-id=BAArjU2jJQxSeyABbpVLd4RDVbLcIKYm4ptTiVwuMA53EpBgoeFRg99H5MiB7qinrqrsFEVhT-xnoZ4kY4&components=hosted-buttons&disable-funding=venmo&currency=EUR"
+      src="https://www.paypal.com/sdk/js?client-id=%VITE_PAYPAL_CLIENT_ID%&components=buttons&intent=capture&currency=EUR&disable-funding=venmo"
       crossorigin="anonymous"
       async>
     </script>
