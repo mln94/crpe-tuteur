@@ -155,6 +155,7 @@ async function logConsommation({ meta, model, usage, dureeMs, success }) {
       type_evenement: meta.type_evenement || 'chat',
       matiere: meta.matiere || null,
       thematique: meta.thematique || null,
+      question: meta.question || null,
       model,
       input_tokens: usage?.input_tokens || 0,
       output_tokens: usage?.output_tokens || 0,

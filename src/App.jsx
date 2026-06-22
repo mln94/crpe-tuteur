@@ -1984,6 +1984,7 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
     type_evenement: typeEvenement,
     matiere,
     thematique: topic || null,
+    question: currentExerciseRef.current.question || null,
   });
 
   const saveKeywords = (text) => {
@@ -3388,7 +3389,7 @@ ${tentative === 1
         `Tu es un coach en argumentation littéraire pour le CRPE. Donne des conseils structurés et actionnables pour aider à construire une réponse argumentée à cette question. Ne donne pas la réponse — guide la démarche argumentative. Structure ta réponse en 3 parties : 1. Plan suggéré (2-3 parties), 2. Éléments textuels à mobiliser, 3. Vocabulaire littéraire clé. Sois concis et précis.`,
         (chunk) => setArgumentation(a => ({ ...a, content: chunk })),
         (final) => setArgumentation(a => ({ ...a, content: final, loading: false })),
-        { user_id: userIdRef.current, session_id: dbSessionIdRef.current, type_evenement: 'banque_argumentation', matiere: 'francais', thematique: topic || null },
+        { user_id: userIdRef.current, session_id: dbSessionIdRef.current, type_evenement: 'banque_argumentation', matiere: 'francais', thematique: topic || null, question: q?.question || null },
       ).catch(() => setArgumentation(a => ({ ...a, loading: false, content: 'Erreur lors du chargement des conseils.' })));
       return;
     }
@@ -3536,7 +3537,7 @@ ${tentative === 1
             });
           }
         },
-        { user_id: userIdRef.current, session_id: dbSessionIdRef.current, type_evenement: 'banque_correction', matiere: 'francais', thematique: q?.thematique || topic || null }
+        { user_id: userIdRef.current, session_id: dbSessionIdRef.current, type_evenement: 'banque_correction', matiere: 'francais', thematique: q?.thematique || topic || null, question: q?.question || null }
       );
     } catch (_) {
       setStreamingText('');
