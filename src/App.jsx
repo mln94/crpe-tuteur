@@ -522,6 +522,7 @@ Note orthographe : [X]/10
 Note CRPE : [X]/10
 Note globale : [X]/10
 ORTHO: "mot_fautif" → "correction" | "mot2" → "correction2"  (remplace par ORTHO: aucune si aucune faute d'orthographe)
+SYNTAXE: "erreur de syntaxe" → "correction" | ...  (remplace par SYNTAXE: aucune si aucune erreur de syntaxe)
 
 Ce qui va :
 [Points positifs de la réponse]
@@ -548,6 +549,7 @@ Note orthographe : [X]/10
 Note CRPE : [X]/10
 Note globale : [X]/10
 ORTHO: "mot_fautif" → "correction" | ...  (ou ORTHO: aucune)
+SYNTAXE: "erreur de syntaxe" → "correction" | ...  (ou SYNTAXE: aucune)
 
 Ce qui va :
 [Points positifs de la réponse]
@@ -786,6 +788,27 @@ async function supabaseInsert(table, data) {
   }
 }
 
+async function supabaseInsertReturningId(table, data) {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return null;
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=representation',
+      },
+      body: JSON.stringify(data),
+    });
+    const rows = await res.json();
+    return rows?.[0]?.id ?? null;
+  } catch (e) {
+    console.warn(`[Supabase] Insert ${table}:`, e.message);
+    return null;
+  }
+}
+
 async function supabasePatch(table, filters, data) {
   if (!SUPABASE_URL || !SUPABASE_KEY) return;
   try {
@@ -946,6 +969,26 @@ function extractOrthoFautes(text) {
     );
     return { faute: parts[0] || '', correction: parts[1] || '' };
   }).filter(f => f.faute);
+}
+
+function extractSyntaxeErreurs(text) {
+  const match = text.match(/^SYNTAXE:\s*(.+)$/m);
+  if (!match || /^aucune$/i.test(match[1].trim())) return [];
+  return match[1].split('|').map(item => {
+    const parts = item.split('→').map(s =>
+      s.trim().replace(/^["«»"“”]+|["«»"“”]+$/g, '').trim()
+    );
+    return { erreur: parts[0] || '', correction: parts[1] || '' };
+  }).filter(e => e.erreur);
+}
+
+function extractConseils(text) {
+  // Format ChatView : notes (+ ORTHO/SYNTAXE) puis conseils ("Ce qui va", "Pistes d'amélioration"…)
+  const m1 = text.match(/Note\s+globale\s*:\s*\d+\s*\/\s*10[^\n]*\n(?:ORTHO:.*\n)?(?:SYNTAXE:.*\n)?([\s\S]*?)(?=\s*Réponse type CRPE\s*:|\s*Souhaitez-vous|\s*Êtes-vous prêt|\s*\*\*\[|$)/);
+  if (m1?.[1]?.trim()) return m1[1].trim();
+  // Format banque de questions : conseils ("Sur le fond/forme/orthographe") puis notes
+  const m2 = text.match(/^([\s\S]+?)\n+Note\s+écriture\s*:/m);
+  return m2?.[1]?.trim() || null;
 }
 
 function extractNotesFromText(text) {
@@ -1849,22 +1892,25 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
     }
   };
 
-  const saveOrtho = (text) => {
+  const saveFautesEtErreurs = (text, reponseId) => {
     if (matiere !== 'francais' || mode === 'revision') return;
-    const fautes = extractOrthoFautes(text);
-    if (!fautes.length) return;
     const ex = currentExerciseRef.current;
-    fautes.forEach(({ faute, correction }) => {
-      supabaseInsert('fautes_orthographe', {
-        user_id:        userId.current,
-        session_id:     sessionUuidRef.current || storeKey,
-        classe:         niveau ? NIVEAU_TO_CLASSE[niveau] : null,
-        thematique:     topic || null,
-        sous_categorie: ex.sous_categorie,
-        objectif:       ex.objectif,
-        faute,
-        correction,
-      });
+    const base = {
+      user_id:                userId.current,
+      session_id:             sessionUuidRef.current || storeKey,
+      classe:                 niveau ? NIVEAU_TO_CLASSE[niveau] : null,
+      thematique:             topic || null,
+      sous_categorie:         ex.sous_categorie,
+      objectif:               ex.objectif,
+      id_reponse_utilisateur: reponseId,
+      ma_reponse:             pendingResponseRef.current,
+      question:               ex.question,
+    };
+    extractOrthoFautes(text).forEach(({ faute, correction }) => {
+      supabaseInsert('fautes_orthographe', { ...base, faute, correction });
+    });
+    extractSyntaxeErreurs(text).forEach(({ erreur, correction }) => {
+      supabaseInsert('erreurs_syntaxe', { ...base, erreur, correction });
     });
   };
 
@@ -1889,6 +1935,7 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
     const notes = extractNotesFromText(correctionText);
     const ex = currentExerciseRef.current;
     const idealResponse = extractReponseTypeCRPE(correctionText) || null;
+    const conseils = extractConseils(correctionText);
     const sessionId = sessionUuidRef.current || storeKey;
     const _ne = notes.ecriture ?? null, _no = notes.orthographe ?? null, _nc = notes.crpe ?? null;
     const _ngVals = [_ne, _no, _nc].filter(v => v != null);
@@ -1899,36 +1946,23 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
       note_globale:     _ngVals.length ? Math.round((_ngVals.reduce((a, b) => a + b, 0) / _ngVals.length) * 10) / 10 : null,
     };
 
-    if (tentativeRef.current === 1) {
-      supabaseInsert('reponses_utilisateurs', {
-        user_id:        userId.current,
-        session_id:     sessionId,
-        classe:         niveau ? NIVEAU_TO_CLASSE[niveau] : null,
-        thematique:     topic || null,
-        sous_categorie: ex.sous_categorie,
-        objectif:       ex.objectif,
-        question:       ex.question,
-        texte_support:  ex.texte,
-        reponse:        pendingResponseRef.current,
-        reponse_ideale: idealResponse,
-        ...noteFields,
-      });
-    } else {
-      supabaseInsert('reponses_utilisateurs', {
-        user_id:        userId.current,
-        session_id:     sessionId,
-        classe:         niveau ? NIVEAU_TO_CLASSE[niveau] : null,
-        thematique:     topic || null,
-        sous_categorie: ex.sous_categorie,
-        objectif:       ex.objectif,
-        question:       ex.question,
-        texte_support:  ex.texte,
-        reponse:        pendingResponseRef.current,
-        reponse_ideale: idealResponse,
-        tentative:      2,
-        ...noteFields,
-      });
-    }
+    const reponseRecord = {
+      user_id:        userId.current,
+      session_id:     sessionId,
+      classe:         niveau ? NIVEAU_TO_CLASSE[niveau] : null,
+      thematique:     topic || null,
+      sous_categorie: ex.sous_categorie,
+      objectif:       ex.objectif,
+      question:       ex.question,
+      texte_support:  ex.texte,
+      reponse:        pendingResponseRef.current,
+      reponse_ideale: idealResponse,
+      conseils,
+      ...noteFields,
+      ...(tentativeRef.current === 2 ? { tentative: 2 } : {}),
+    };
+    supabaseInsertReturningId('reponses_utilisateurs', reponseRecord)
+      .then(reponseId => saveFautesEtErreurs(correctionText, reponseId));
 
     if (idealResponse && ex.question) {
       supabasePatch('questions_generees', {
@@ -2146,7 +2180,6 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
           saveSession(finalDisplay, finalApi);
           saveKeywords(final);
           saveQuestion(final);
-          saveOrtho(final);
           saveResponseAfterCorrection(final);
 
           // Si l'utilisateur vient de cliquer [R], capturer la réponse idéale
@@ -2677,7 +2710,7 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, f
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-hidden px-4 pt-4 pb-20 gap-3">
+    <div className="flex-1 flex flex-col overflow-y-auto px-4 pt-4 pb-20 gap-3">
 
       {/* Paywall popup */}
       {showPaywall && (
@@ -2817,16 +2850,30 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, f
       {/* Examens blancs — à venir */}
       <div className="flex-shrink-0">
         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Bientôt disponible</p>
-        <div className="bg-white rounded-2xl border border-dashed border-gray-200 px-4 py-3 flex items-center gap-3 opacity-60">
-          <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-violet-100">
-            <ClipboardList className="w-4.5 h-4.5 text-violet-500" />
-          </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-0.5">
-              <h3 className="text-sm font-bold text-gray-900">Examens blancs</h3>
-              <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-600 uppercase tracking-wide">À venir</span>
+        <div className="space-y-2">
+          <div className="bg-white rounded-2xl border border-dashed border-gray-200 px-4 py-3 flex items-center gap-3 opacity-60">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-violet-100">
+              <ClipboardList className="w-4.5 h-4.5 text-violet-500" />
             </div>
-            <p className="text-[11px] text-gray-400 leading-snug">Simulations complètes des épreuves CRPE en conditions réelles.</p>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-0.5">
+                <h3 className="text-sm font-bold text-gray-900">Examens blancs</h3>
+                <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-violet-100 text-violet-600 uppercase tracking-wide">À venir</span>
+              </div>
+              <p className="text-[11px] text-gray-400 leading-snug">Simulations complètes des épreuves CRPE en conditions réelles.</p>
+            </div>
+          </div>
+          <div className="bg-white rounded-2xl border border-dashed border-gray-200 px-4 py-3 flex items-center gap-3 opacity-60">
+            <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 bg-amber-100">
+              <PenLine className="w-4.5 h-4.5 text-amber-500" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-0.5">
+                <h3 className="text-sm font-bold text-gray-900">Écrire comme le CRPE</h3>
+                <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-600 uppercase tracking-wide">À venir</span>
+              </div>
+              <p className="text-[11px] text-gray-400 leading-snug">Apprendre à rédiger une réponse dans le format et le style attendus par le jury du CRPE.</p>
+            </div>
           </div>
         </div>
       </div>
@@ -2861,7 +2908,7 @@ function HistoryView() {
     if (!userId || !SUPABASE_URL || !SUPABASE_KEY) { setLoading(false); return; }
     const params = new URLSearchParams({
       user_id: `eq.${userId}`,
-      select: 'id,thematique,classe,objectif,sous_categorie,question,texte_support,reponse,reponse_ideale,note_ecriture,note_orthographe,note_crpe,created_at,tentative',
+      select: 'id,thematique,classe,objectif,sous_categorie,question,texte_support,reponse,reponse_ideale,conseils,note_ecriture,note_orthographe,note_crpe,created_at,tentative',
       order: 'created_at.desc',
     });
     fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs?${params}`, {
@@ -2936,6 +2983,12 @@ function HistoryView() {
                     <div>
                       <p className="text-[10px] font-semibold text-gray-400 mb-1">Ma réponse</p>
                       <p className="text-xs text-gray-600 leading-relaxed">{row.reponse}</p>
+                    </div>
+                  )}
+                  {row.conseils && (
+                    <div>
+                      <p className="text-[10px] font-semibold text-indigo-600 mb-1">Conseils de l'IA</p>
+                      <p className="text-xs text-indigo-900 leading-relaxed whitespace-pre-line">{row.conseils}</p>
                     </div>
                   )}
                   {row.reponse_ideale && (
@@ -3357,6 +3410,8 @@ Note écriture : X/10
 Note orthographe : X/10
 Note CRPE : X/10
 Note globale : X/10
+ORTHO: "mot_fautif" → "correction" | "mot2" → "correction2"  (ou ORTHO: aucune si aucune faute d'orthographe)
+SYNTAXE: "erreur de syntaxe" → "correction" | ...  (ou SYNTAXE: aucune si aucune erreur de syntaxe)
 
 ${tentative === 1
   ? '**[N]** **[R]** **[S]** **[D]** **[O]**'
@@ -3499,8 +3554,28 @@ ${tentative === 1
             note_crpe:        _nc2,
             note_globale:     _ngVals2.length ? Math.round((_ngVals2.reduce((a, b) => a + b, 0) / _ngVals2.length) * 10) / 10 : null,
           };
+          const conseils = extractConseils(final);
+          const saveBanqueFautesEtErreurs = (reponseId) => {
+            const base = {
+              user_id:                userIdRef.current,
+              session_id:             dbSessionIdRef.current,
+              classe,
+              thematique:             q?.thematique     || null,
+              sous_categorie:         q?.sous_categorie  || null,
+              objectif:               q?.objectif        || null,
+              id_reponse_utilisateur: reponseId,
+              ma_reponse:             content,
+              question:               q?.question        || null,
+            };
+            extractOrthoFautes(final).forEach(({ faute, correction }) => {
+              supabaseInsert('fautes_orthographe', { ...base, faute, correction });
+            });
+            extractSyntaxeErreurs(final).forEach(({ erreur, correction }) => {
+              supabaseInsert('erreurs_syntaxe', { ...base, erreur, correction });
+            });
+          };
           if (tentative === 1) {
-            supabaseInsert('reponses_utilisateurs', {
+            supabaseInsertReturningId('reponses_utilisateurs', {
               user_id:                userIdRef.current,
               session_id:             dbSessionIdRef.current,
               classe,
@@ -3511,10 +3586,11 @@ ${tentative === 1
               texte_support:          q?.texte_support   || null,
               reponse:                content,
               reponse_ideale:         q?.reponse_ideale  || null,
+              conseils,
               tentative:              1,
               id_question_completee:  q?.id              ?? null,
               ...noteFields,
-            });
+            }).then(saveBanqueFautesEtErreurs);
             // Increment free question counter (only on first attempt = one question answered)
             if (!isLocked) {
               const newCount = (storage.get('crpe_free_questions_used') || 0) + 1;
@@ -3523,7 +3599,7 @@ ${tentative === 1
               if (typeof onQuestionAnswered === 'function') onQuestionAnswered(userIdRef.current);
             }
           } else {
-            supabaseInsert('reponses_utilisateurs', {
+            supabaseInsertReturningId('reponses_utilisateurs', {
               user_id:                userIdRef.current,
               session_id:             dbSessionIdRef.current,
               classe,
@@ -3534,10 +3610,11 @@ ${tentative === 1
               texte_support:          q?.texte_support   || null,
               reponse:                content,
               reponse_ideale:         q?.reponse_ideale  || null,
+              conseils,
               tentative:              2,
               id_question_completee:  q?.id              ?? null,
               ...noteFields,
-            });
+            }).then(saveBanqueFautesEtErreurs);
           }
         },
         { user_id: userIdRef.current, session_id: dbSessionIdRef.current, type_evenement: 'banque_correction', matiere: 'francais', thematique: q?.thematique || topic || null }
