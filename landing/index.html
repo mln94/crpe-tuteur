@@ -528,19 +528,6 @@
       display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
       position: relative; z-index: 1;
     }
-    .cta-input {
-      width: 320px;
-      padding: 14px 20px;
-      border-radius: 12px;
-      border: 2px solid rgba(255,255,255,0.25);
-      background: rgba(255,255,255,0.15);
-      color: #fff;
-      font-size: 15px; font-family: inherit;
-      outline: none;
-      transition: border-color .2s;
-    }
-    .cta-input::placeholder { color: rgba(255,255,255,0.6); }
-    .cta-input:focus { border-color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.2); }
     .btn-white {
       display: inline-flex; align-items: center; gap: 8px;
       background: #fff; color: var(--indigo-700);
@@ -602,7 +589,6 @@
     @media (max-width: 600px) {
       .steps { grid-template-columns: 1fr; }
       .hero { padding: 72px 20px 60px; }
-      .cta-input { width: 100%; }
       .stat-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.1); }
       .stat-item:last-child { border-bottom: none; }
     }
@@ -721,7 +707,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li><a href="#temoignages">Avis</a></li>
       <li><a href="#faq">FAQ</a></li>
     </ul>
-    <a href="#" class="nav-cta" onclick="openAuth(event)">Commencer gratuitement →</a>
+    <a href="#" class="nav-cta cta-commencer" onclick="openAuth(event)">Commencer gratuitement →</a>
   </div>
 </nav>
 
@@ -731,7 +717,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <h1>Préparez votre CRPE par la pratique, exercice après exercice.</h1>
   <p class="hero-sub">passCRPE.fr est un tuteur IA qui génère des milliers d'exercices en français et en mathématiques adaptés à votre niveau, corrige vos réponses selon les exigences du CRPE, et vous fait progresser grâce à des conseils personnalisés.</p>
   <div class="hero-actions">
-    <a href="#" class="btn-primary" onclick="openAuth(event)">
+    <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event)">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       Commencer gratuitement
     </a>
@@ -1088,13 +1074,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="container">
     <h2>Commencez votre préparation aujourd'hui</h2>
     <p>Rejoignez plus de 1 200 candidats qui se préparent intelligemment au CRPE. Accès immédiat, sans engagement.</p>
-    <form class="cta-form" onsubmit="openAuthFromForm(event)">
-      <input class="cta-input" type="email" placeholder="Votre adresse e-mail" required id="emailInput" />
-      <button type="submit" class="btn-white">
+    <div class="cta-form">
+      <button type="button" class="btn-white cta-commencer" onclick="openAuth(event)">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        S'inscrire gratuitement
+        Commencer gratuitement
       </button>
-    </form>
+    </div>
     <p class="cta-note" id="cta-message">Sans carte bancaire · Annulable à tout moment</p>
   </div>
 </section>
@@ -1312,15 +1297,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeAuth();
   });
-
-  /* CTA bottom form → open modal with pre-filled email */
-  function openAuthFromForm(e) {
-    e.preventDefault();
-    const email = document.getElementById('emailInput').value;
-    openAuth();
-    switchTab('register');
-    if (email) document.getElementById('authEmail').value = email;
-  }
 
   function switchTab(mode) {
     authMode = mode;
