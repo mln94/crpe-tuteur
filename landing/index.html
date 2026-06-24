@@ -723,7 +723,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       Commencer gratuitement
     </a>
-    <a href="#newsletter" class="btn-secondary">Recevoir nos conseils CRPE gratuits</a>
+    <a href="#newsletter" class="btn-secondary" onclick="openKlaviyoNewsletter()">Recevoir nos conseils CRPE gratuits</a>
   </div>
   <div class="hero-proof">
     <div class="hero-proof-avatars">
@@ -895,7 +895,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="section-eyebrow">Newsletter</div>
     <h2 class="section-title">Actus CRPE et nouveautés PassCRPE</h2>
     <p class="section-sub">Recevez toutes les deux semaines les mises à jour de l'application et les informations importantes sur le concours.</p>
-    <div class="klaviyo-form-VuuMji"></div>
+    <button type="button" class="btn-primary" style="border:none;cursor:pointer;font-family:inherit;" onclick="openKlaviyoNewsletter()">Je m'inscris</button>
   </div>
 </section>
 
@@ -1452,6 +1452,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script type="text/javascript">
 //Initialize Klaviyo object on page load
 !function(){if(!window.klaviyo){window._klOnsite=window._klOnsite||[];try{window.klaviyo=new Proxy({},{get:function(n,i){return"push"===i?function(){var n;(n=window._klOnsite).push.apply(n,arguments)}:function(){for(var n=arguments.length,o=new Array(n),w=0;w<n;w++)o[w]=arguments[w];var t="function"==typeof o[o.length-1]?o.pop():void 0,e=new Promise((function(n){window._klOnsite.push([i].concat(o,[function(i){t&&t(i),n(i)}]))}));return e}}})}catch(n){window.klaviyo=window.klaviyo||[],window.klaviyo.push=function(){var n;(n=window._klOnsite).push.apply(n,arguments)}}}}();
+
+function openKlaviyoNewsletter() {
+  window._klOnsite = window._klOnsite || [];
+  window._klOnsite.push(['openForm', 'VuuMji']);
+}
 </script>
 </body>
 </html>
