@@ -1677,8 +1677,9 @@ function SyntheseModal({ content, loading, onClose }) {
 // ---------------------------------------------------------------------------
 // PaywallModal — shown after FREE_QUESTION_LIMIT questions
 // ---------------------------------------------------------------------------
-const FREE_QUESTION_LIMIT = 5;
+const FREE_QUESTION_LIMIT = 10;
 const CONTACT_EMAIL       = 'mohamed.necib94310@gmail.com';
+const CRPE_PRICE_LABEL    = '399,00 €'; // doit rester aligné avec CRPE_PRICE dans app.js
 
 function PaywallModal({ questionsUsed, onUnlock, onClose }) {
   const paypalContainerRef = useRef(null);
@@ -1781,7 +1782,7 @@ function PaywallModal({ questionsUsed, onUnlock, onClose }) {
           </div>
           <h2 className="text-lg font-bold leading-tight">Débloquez l'accès complet</h2>
           <p className="text-indigo-200 text-xs mt-1.5 leading-snug">
-            Vous avez utilisé vos 5 questions d'essai gratuites.
+            Vous avez utilisé vos {FREE_QUESTION_LIMIT} questions d'essai gratuites.
           </p>
         </div>
 
@@ -1804,6 +1805,12 @@ function PaywallModal({ questionsUsed, onUnlock, onClose }) {
 
           {/* Séparateur */}
           <div className="h-px bg-gray-100" />
+
+          {/* Prix */}
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-semibold text-gray-700">Accès complet — paiement unique</span>
+            <span className="text-lg font-bold text-indigo-600">{CRPE_PRICE_LABEL}</span>
+          </div>
 
           {/* PayPal Smart Button */}
           <div ref={paypalContainerRef} />
@@ -2751,7 +2758,7 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, f
             Débloquer mon accès complet
           </button>
           <p className="text-[10px] text-gray-400 text-center mt-1.5">
-            Vos 10 questions gratuites sont utilisées · Accès illimité pour continuer
+            Vos {FREE_QUESTION_LIMIT} questions gratuites sont utilisées · Accès illimité pour continuer
           </p>
         </div>
       )}
@@ -4067,6 +4074,7 @@ function NoteLineChart({ rows, classLabel, borderColor, hdrBg, labelColor }) {
         <span className={`text-sm font-bold ${labelColor}`}>Classe de {classLabel}</span>
         <span className="text-xs text-gray-400">{rows.length} réponse{rows.length !== 1 ? 's' : ''} · {n} jour{n !== 1 ? 's' : ''}</span>
       </div>
+      <p className="text-[10px] text-gray-400 px-4 pt-1.5">Moyenne des notes par jour</p>
       {/* Légende */}
       <div className="flex flex-wrap gap-x-4 gap-y-1 px-4 pt-2.5 pb-0.5">
         {LINES.map(l => (
