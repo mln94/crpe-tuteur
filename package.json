@@ -25,7 +25,7 @@
     "dev": "concurrently -k -n \"API,UI\" -c \"cyan,magenta\" \"node server.js\" \"vite\"",
     "server": "node server.js",
     "start": "vite",
-    "build": "vite build && cp landing/index.html dist/index.html",
+    "build": "vite build && cp landing/index.html dist/index.html && cp public/favicon.svg dist/favicon.svg",
     "preview": "vite preview"
   }
 }
