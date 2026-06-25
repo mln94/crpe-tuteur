@@ -1327,6 +1327,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <input class="auth-input" type="password" id="authPassword" placeholder="••••••••" required autocomplete="current-password" minlength="8" />
       </div>
 
+      <div id="consentRow" style="display:none">
+        <label style="display:flex; align-items:flex-start; gap:10px; cursor:pointer;">
+          <input type="checkbox" id="authConsent" style="flex-shrink:0; margin-top:3px; accent-color:#4f46e5; width:15px; height:15px;" />
+          <span style="font-size:12px; color:#4b5563; line-height:1.5;">Je consens à recevoir des e-mails de PassCRPE, ainsi que des offres de partenaires.</span>
+        </label>
+      </div>
+
       <button type="submit" class="auth-submit" id="authSubmit">Se connecter</button>
     </form>
 
@@ -1436,6 +1443,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.getElementById('tabRegister').classList.toggle('active', !isLogin);
     document.getElementById('nameRow').style.display = isLogin ? 'none' : 'flex';
     document.getElementById('registerFields').style.display = isLogin ? 'none' : 'flex';
+    document.getElementById('consentRow').style.display = isLogin ? 'none' : 'block';
+    if (isLogin) document.getElementById('authConsent').checked = false;
     document.getElementById('authSubmit').textContent = isLogin ? 'Se connecter' : 'Créer mon compte';
     document.getElementById('authToggle').innerHTML = isLogin
       ? 'Pas encore de compte ? <button onclick="switchTab(\'register\')">Créer un compte</button>'
@@ -1472,6 +1481,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!email || !password) return;
     if (authMode === 'register' && (!prenom || !concours || !diplome)) {
       showAuthMessage('Veuillez remplir tous les champs.', 'error');
+      return;
+    }
+    if (authMode === 'register' && !document.getElementById('authConsent').checked) {
+      showAuthMessage('Veuillez cocher la case de consentement pour continuer.', 'error');
       return;
     }
     clearAuthMessage();
