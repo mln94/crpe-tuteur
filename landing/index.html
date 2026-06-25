@@ -1529,10 +1529,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   /* ── Newsletter form ── */
-  // ⚠️ Remplacez par l'ID de votre liste Klaviyo (Dashboard → Lists & Segments)
-  const KLAVIYO_LIST_ID    = 'U97rGQ';
-  const KLAVIYO_COMPANY_ID = 'VSxBFx';
-
   document.getElementById('nl-form').addEventListener('submit', async function (e) {
     e.preventDefault();
     const btn   = document.getElementById('nl-submit');
@@ -1559,28 +1555,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     btn.textContent = 'Inscription en cours…';
 
     try {
-      const res = await fetch(
-        `https://a.klaviyo.com/client/subscriptions/?company_id=${KLAVIYO_COMPANY_ID}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'revision': '2023-02-22' },
-          body: JSON.stringify({
-            data: {
-              type: 'subscription',
-              attributes: {
-                profile: { data: { type: 'profile', attributes: { email, first_name: prenom, last_name: nom } } },
-                list_id: KLAVIYO_LIST_ID,
-              },
-            },
-          }),
-        }
-      );
-      if (res.ok || res.status === 202) {
+      const res = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prenom, nom, email }),
+      });
+      const json = await res.json();
+      if (res.ok && json.ok) {
         alert.className = 'nl-alert success';
         alert.textContent = '✓ Inscription confirmée ! Vous recevrez bientôt nos premiers conseils CRPE.';
         e.target.reset();
       } else {
-        throw new Error(`Erreur ${res.status}`);
+        throw new Error(json.error || `Erreur ${res.status}`);
       }
     } catch {
       alert.className = 'nl-alert error';
