@@ -160,13 +160,16 @@ function klaviyoHeaders() {
   };
 }
 
-async function klaviyoSubscribePipeline(email, prenom, nom, listId) {
+async function klaviyoSubscribePipeline(email, prenom, nom, listId, properties = {}) {
   // 1. Créer le profil (ou récupérer l'ID existant en cas de 409)
   const profileRes = await fetch(`${KLAVIYO_API_BASE}/profiles`, {
     method: 'POST',
     headers: klaviyoHeaders(),
     body: JSON.stringify({
-      data: { type: 'profile', attributes: { email, first_name: prenom, last_name: nom } },
+      data: {
+        type: 'profile',
+        attributes: { email, first_name: prenom, last_name: nom, ...(Object.keys(properties).length ? { properties } : {}) },
+      },
     }),
   });
   let profileId;
@@ -250,7 +253,7 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   if (!prenom || !nom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ error: 'Données invalides.' });
   try {
-    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP);
+    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP, { email_verified: false });
     res.json({ ok: true });
   } catch (err) {
     console.error('[Klaviyo signup]', err.message);
