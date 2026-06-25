@@ -269,15 +269,6 @@ app.post('/api/klaviyo/signup', async (req, res) => {
      Header : Authorization: Bearer <SUPABASE_WEBHOOK_SECRET>
 ───────────────────────────────────────────────────────────────────────────── */
 app.post('/api/webhook/supabase-auth', async (req, res) => {
-  // Vérification du secret
-  const secret = process.env.SUPABASE_WEBHOOK_SECRET;
-  if (secret) {
-    const auth = req.headers['authorization'] || '';
-    if (auth !== `Bearer ${secret}`) {
-      return res.status(401).json({ error: 'Non autorisé.' });
-    }
-  }
-
   const { type, record, old_record } = req.body || {};
 
   // On ne traite que les UPDATE où email_confirmed_at passe de null à une valeur
