@@ -160,6 +160,10 @@ function klaviyoHeaders() {
 }
 
 app.post('/api/newsletter/subscribe', async (req, res) => {
+  if (!process.env.KLAVIYO_PRIVATE_API_KEY) {
+    console.error('[Klaviyo] KLAVIYO_PRIVATE_API_KEY manquante');
+    return res.status(500).json({ error: 'Configuration serveur incomplète.' });
+  }
   const { prenom, nom, email } = req.body || {};
   if (!prenom || !nom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return res.status(400).json({ error: 'Données invalides.' });
