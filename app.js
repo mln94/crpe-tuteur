@@ -215,16 +215,25 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
             profiles: {
               data: [{
                 type: 'profile',
-                id: profileId,
                 attributes: {
                   email,
                   subscriptions: {
-                    email: { marketing: { consent: 'SUBSCRIBED' } },
+                    email: {
+                      marketing: {
+                        consent: 'SUBSCRIBED',
+                        consented_at: new Date().toISOString(),
+                      },
+                    },
                   },
                 },
               }],
             },
-            list_id: KLAVIYO_LIST_ID,
+            historical_import: false,
+          },
+          relationships: {
+            list: {
+              data: { type: 'list', id: KLAVIYO_LIST_ID },
+            },
           },
         },
       }),
