@@ -261,6 +261,74 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   }
 });
 
+/* ── Supabase Auth Webhook → Klaviyo email_verified ──────────────────────────
+   URL à configurer dans Supabase :
+   Dashboard → Database → Webhooks → New webhook
+     Table  : auth.users   Events : UPDATE
+     URL    : https://www.passcrpe.fr/api/webhook/supabase-auth
+     Header : Authorization: Bearer <SUPABASE_WEBHOOK_SECRET>
+───────────────────────────────────────────────────────────────────────────── */
+app.post('/api/webhook/supabase-auth', async (req, res) => {
+  // Vérification du secret
+  const secret = process.env.SUPABASE_WEBHOOK_SECRET;
+  if (secret) {
+    const auth = req.headers['authorization'] || '';
+    if (auth !== `Bearer ${secret}`) {
+      return res.status(401).json({ error: 'Non autorisé.' });
+    }
+  }
+
+  const { type, record, old_record } = req.body || {};
+
+  // On ne traite que les UPDATE où email_confirmed_at passe de null à une valeur
+  if (type !== 'UPDATE') return res.json({ ignored: true });
+  const wasVerified = !!old_record?.email_confirmed_at;
+  const isVerified  = !!record?.email_confirmed_at;
+  if (wasVerified || !isVerified) return res.json({ ignored: true });
+
+  const email = record?.email;
+  if (!email) return res.status(400).json({ error: 'Email manquant.' });
+
+  try {
+    // Trouver le profil Klaviyo par email
+    const searchRes = await fetch(
+      `${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`,
+      { headers: klaviyoHeaders() }
+    );
+    const searchData = await searchRes.json();
+    const profileId  = searchData.data?.[0]?.id;
+
+    if (!profileId) {
+      console.warn(`[Klaviyo webhook] Profil introuvable pour ${email}`);
+      return res.json({ ok: true, skipped: 'profil introuvable' });
+    }
+
+    // Mettre à jour email_verified → true
+    const patchRes = await fetch(`${KLAVIYO_API_BASE}/profiles/${profileId}`, {
+      method: 'PATCH',
+      headers: klaviyoHeaders(),
+      body: JSON.stringify({
+        data: {
+          type: 'profile',
+          id: profileId,
+          attributes: { properties: { email_verified: true } },
+        },
+      }),
+    });
+
+    if (!patchRes.ok) {
+      const err = await patchRes.json();
+      throw new Error(err.errors?.[0]?.detail || `Erreur PATCH profil: ${patchRes.status}`);
+    }
+
+    console.log(`[Klaviyo webhook] email_verified=true pour ${email}`);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[Klaviyo webhook]', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 /* ── API ── */
 async function logConsommation({ meta, model, usage, dureeMs, success }) {
   if (!meta?.user_id) return;
