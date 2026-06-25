@@ -683,6 +683,81 @@
       .auth-card { padding: 32px 24px 28px; }
       .auth-name-row { flex-direction: column; gap: 14px; }
     }
+
+    /* ── NEWSLETTER SECTION ── */
+    .nl-section {
+      background: var(--indigo-50);
+      padding: 72px 24px;
+    }
+    .nl-inner {
+      max-width: 540px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .nl-inner .section-eyebrow { margin-bottom: 10px; }
+    .nl-inner .section-title   { margin-bottom: 12px; }
+    .nl-inner .section-sub     { margin: 0 auto 28px; }
+    .nl-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .nl-field { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+    .nl-field label { font-size: 12px; font-weight: 600; color: var(--gray-600); }
+    .nl-field input {
+      padding: 11px 14px;
+      border: 1.5px solid var(--indigo-200);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--gray-900);
+      background: #fff;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .nl-field input:focus {
+      border-color: var(--indigo-500);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+    }
+    .nl-field input::placeholder { color: var(--gray-400); }
+    .nl-field.full { grid-column: 1 / -1; }
+    .nl-submit {
+      width: 100%;
+      padding: 13px;
+      margin-top: 6px;
+      background: var(--indigo-600);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.28);
+    }
+    .nl-submit:hover { background: var(--indigo-700); transform: translateY(-1px); }
+    .nl-submit:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+    .nl-privacy {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin-top: 12px;
+    }
+    .nl-alert {
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 12px;
+      text-align: left;
+      display: none;
+    }
+    .nl-alert.success { background: #ecfdf5; color: #059669; display: block; }
+    .nl-alert.error   { background: #fef2f2; color: #dc2626; display: block; }
+    @media (max-width: 480px) {
+      .nl-form-row { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
@@ -723,7 +798,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       Commencer gratuitement
     </a>
-    <a href="/newsletter" class="btn-secondary">Recevoir nos conseils CRPE gratuits</a>
+    <a href="#newsletter" class="btn-secondary">Recevoir nos conseils CRPE gratuits</a>
   </div>
   <div class="hero-proof">
     <div class="hero-proof-avatars">
@@ -886,16 +961,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ═══════════════════════════════ NEWSLETTER ═══════════════════════════════ -->
-<section id="newsletter">
-  <div class="container">
-    <div class="section-eyebrow">Newsletter</div>
-    <h2 class="section-title">Exercices corrigés, conseils de jury et actus du concours</h2>
-    <p class="section-sub">Recevez toutes les deux semaines les mises à jour de l'application et les informations importantes sur le concours.</p>
-    <button type="button" class="btn-primary" style="border:none;cursor:pointer;font-family:inherit;" onclick="openKlaviyoNewsletter()">Je m'inscris</button>
   </div>
 </section>
 
@@ -1093,6 +1158,37 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </button>
     </div>
     <p class="cta-note" id="cta-message">Sans carte bancaire · Annulable à tout moment</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════ NEWSLETTER ═══════════════════════════════ -->
+<section class="nl-section" id="newsletter">
+  <div class="nl-inner">
+    <div class="section-eyebrow">Newsletter</div>
+    <h2 class="section-title">Exercices corrigés, conseils de jury et actus du concours</h2>
+    <p class="section-sub">Recevez toutes les deux semaines les mises à jour de l'application et les informations importantes sur le concours.</p>
+
+    <form id="nl-form" novalidate>
+      <div class="nl-form-row">
+        <div class="nl-field">
+          <label for="nl-prenom">Prénom</label>
+          <input type="text" id="nl-prenom" placeholder="Marie" autocomplete="given-name" required />
+        </div>
+        <div class="nl-field">
+          <label for="nl-nom">Nom</label>
+          <input type="text" id="nl-nom" placeholder="Dupont" autocomplete="family-name" required />
+        </div>
+      </div>
+      <div class="nl-form-row">
+        <div class="nl-field full">
+          <label for="nl-email">Adresse e-mail</label>
+          <input type="email" id="nl-email" placeholder="marie.dupont@email.fr" autocomplete="email" required />
+        </div>
+      </div>
+      <button type="submit" class="nl-submit" id="nl-submit">Recevoir nos conseils CRPE gratuits</button>
+      <div class="nl-alert" id="nl-alert"></div>
+    </form>
+    <p class="nl-privacy">Désabonnement en un clic à tout moment. Vos données ne sont jamais revendues.</p>
   </div>
 </section>
 
@@ -1432,6 +1528,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       window.location.href = appBase;
     }
   }
+
+  /* ── Newsletter form ── */
+  // ⚠️ Remplacez par l'ID de votre liste Klaviyo (Dashboard → Lists & Segments)
+  const KLAVIYO_LIST_ID    = 'REMPLACER_PAR_ID_LISTE';
+  const KLAVIYO_COMPANY_ID = 'VSxBFx';
+
+  document.getElementById('nl-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const btn   = document.getElementById('nl-submit');
+    const alert = document.getElementById('nl-alert');
+    alert.className = 'nl-alert';
+    alert.textContent = '';
+
+    const prenom = document.getElementById('nl-prenom').value.trim();
+    const nom    = document.getElementById('nl-nom').value.trim();
+    const email  = document.getElementById('nl-email').value.trim();
+
+    if (!prenom || !nom || !email) {
+      alert.className = 'nl-alert error';
+      alert.textContent = 'Veuillez remplir tous les champs.';
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert.className = 'nl-alert error';
+      alert.textContent = 'Adresse e-mail invalide.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Inscription en cours…';
+
+    try {
+      const res = await fetch(
+        `https://a.klaviyo.com/client/subscriptions/?company_id=${KLAVIYO_COMPANY_ID}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'revision': '2023-02-22' },
+          body: JSON.stringify({
+            data: {
+              type: 'subscription',
+              attributes: {
+                profile: { data: { type: 'profile', attributes: { email, first_name: prenom, last_name: nom } } },
+                list_id: KLAVIYO_LIST_ID,
+              },
+            },
+          }),
+        }
+      );
+      if (res.ok || res.status === 202) {
+        alert.className = 'nl-alert success';
+        alert.textContent = '✓ Inscription confirmée ! Vous recevrez bientôt nos premiers conseils CRPE.';
+        e.target.reset();
+      } else {
+        throw new Error(`Erreur ${res.status}`);
+      }
+    } catch {
+      alert.className = 'nl-alert error';
+      alert.textContent = 'Une erreur est survenue. Veuillez réessayer.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Recevoir nos conseils CRPE gratuits';
+    }
+  });
 
   function translateSupabaseError(msg) {
     if (msg.includes('already registered') || msg.includes('User already registered'))
