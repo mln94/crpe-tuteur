@@ -739,6 +739,26 @@
     }
     .nl-submit:hover { background: var(--indigo-700); transform: translateY(-1px); }
     .nl-submit:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+    .nl-consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 14px;
+      text-align: left;
+    }
+    .nl-consent input[type="checkbox"] {
+      flex-shrink: 0;
+      width: 16px; height: 16px;
+      margin-top: 2px;
+      accent-color: var(--indigo-600);
+      cursor: pointer;
+    }
+    .nl-consent label {
+      font-size: 12px;
+      color: var(--gray-600);
+      line-height: 1.5;
+      cursor: pointer;
+    }
     .nl-privacy {
       font-size: 11px;
       color: var(--gray-400);
@@ -1184,6 +1204,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <input type="email" id="nl-email" placeholder="marie.dupont@email.fr" autocomplete="email" required />
         </div>
       </div>
+      <div class="nl-consent">
+        <input type="checkbox" id="nl-consent" />
+        <label for="nl-consent">Je consens à recevoir des e-mails de PassCRPE, ainsi que des offres de partenaires.</label>
+      </div>
       <button type="submit" class="nl-submit" id="nl-submit">Recevoir nos conseils CRPE gratuits</button>
       <div class="nl-alert" id="nl-alert"></div>
     </form>
@@ -1548,6 +1572,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       alert.className = 'nl-alert error';
       alert.textContent = 'Adresse e-mail invalide.';
+      return;
+    }
+    if (!document.getElementById('nl-consent').checked) {
+      alert.className = 'nl-alert error';
+      alert.textContent = 'Veuillez cocher la case de consentement pour continuer.';
       return;
     }
 
