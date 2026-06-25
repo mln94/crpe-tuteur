@@ -221,7 +221,6 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
                     email: {
                       marketing: {
                         consent: 'SUBSCRIBED',
-                        consented_at: new Date().toISOString(),
                       },
                     },
                   },
