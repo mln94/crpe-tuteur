@@ -1508,6 +1508,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (error) {
         showAuthMessage(translateSupabaseError(error.message), 'error');
       } else {
+        // Klaviyo signup list — fire and forget
+        fetch('/api/klaviyo/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prenom, nom, email }),
+        }).catch(() => {});
         _lastRegisteredEmail = email;
         document.getElementById('authForm').style.display = 'none';
         document.getElementById('authTabs').style.display = 'none';

@@ -145,10 +145,11 @@ app.post('/api/webhook/paypal', async (req, res) => {
   }
 });
 
-/* ── Klaviyo Newsletter ── */
-const KLAVIYO_API_BASE = 'https://a.klaviyo.com/api';
-const KLAVIYO_LIST_ID  = 'U97rGQ';
-const KLAVIYO_REVISION = '2026-04-15';
+/* ── Klaviyo ── */
+const KLAVIYO_API_BASE      = 'https://a.klaviyo.com/api';
+const KLAVIYO_LIST_NEWSLETTER = 'U97rGQ';
+const KLAVIYO_LIST_SIGNUP     = 'SgJQyM';
+const KLAVIYO_REVISION      = '2026-04-15';
 
 function klaviyoHeaders() {
   return {
@@ -159,92 +160,100 @@ function klaviyoHeaders() {
   };
 }
 
-app.post('/api/newsletter/subscribe', async (req, res) => {
+async function klaviyoSubscribePipeline(email, prenom, nom, listId) {
+  // 1. Créer le profil (ou récupérer l'ID existant en cas de 409)
+  const profileRes = await fetch(`${KLAVIYO_API_BASE}/profiles`, {
+    method: 'POST',
+    headers: klaviyoHeaders(),
+    body: JSON.stringify({
+      data: { type: 'profile', attributes: { email, first_name: prenom, last_name: nom } },
+    }),
+  });
+  let profileId;
+  if (profileRes.status === 409) {
+    const dup = await profileRes.json();
+    profileId = dup.errors?.[0]?.meta?.duplicate_profile_id;
+    if (!profileId) throw new Error('Profil en double sans ID récupérable.');
+  } else if (profileRes.ok) {
+    profileId = (await profileRes.json()).data?.id;
+  } else {
+    const err = await profileRes.json();
+    throw new Error(err.errors?.[0]?.detail || `Erreur création profil: ${profileRes.status}`);
+  }
+
+  // 2. Ajouter le profil à la liste
+  const listRes = await fetch(`${KLAVIYO_API_BASE}/lists/${listId}/relationships/profiles`, {
+    method: 'POST',
+    headers: klaviyoHeaders(),
+    body: JSON.stringify({ data: [{ type: 'profile', id: profileId }] }),
+  });
+  if (!listRes.ok && listRes.status !== 409) {
+    const err = await listRes.json();
+    throw new Error(err.errors?.[0]?.detail || `Erreur ajout à la liste: ${listRes.status}`);
+  }
+
+  // 3. Consentement e-mail marketing
+  const consentRes = await fetch(`${KLAVIYO_API_BASE}/profile-subscription-bulk-create-jobs`, {
+    method: 'POST',
+    headers: klaviyoHeaders(),
+    body: JSON.stringify({
+      data: {
+        type: 'profile-subscription-bulk-create-job',
+        attributes: {
+          profiles: {
+            data: [{
+              type: 'profile',
+              attributes: {
+                email,
+                subscriptions: { email: { marketing: { consent: 'SUBSCRIBED' } } },
+              },
+            }],
+          },
+          historical_import: false,
+        },
+        relationships: { list: { data: { type: 'list', id: listId } } },
+      },
+    }),
+  });
+  if (!consentRes.ok) {
+    const err = await consentRes.json();
+    throw new Error(err.errors?.[0]?.detail || `Erreur consentement: ${consentRes.status}`);
+  }
+}
+
+function klaviyoGuard(res) {
   if (!process.env.KLAVIYO_PRIVATE_API_KEY) {
     console.error('[Klaviyo] KLAVIYO_PRIVATE_API_KEY manquante');
-    return res.status(500).json({ error: 'Configuration serveur incomplète.' });
+    res.status(500).json({ error: 'Configuration serveur incomplète.' });
+    return false;
   }
+  return true;
+}
+
+app.post('/api/newsletter/subscribe', async (req, res) => {
+  if (!klaviyoGuard(res)) return;
   const { prenom, nom, email } = req.body || {};
-  if (!prenom || !nom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+  if (!prenom || !nom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ error: 'Données invalides.' });
-  }
   try {
-    // 1. Créer le profil (ou récupérer l'ID existant en cas de 409)
-    const profileRes = await fetch(`${KLAVIYO_API_BASE}/profiles`, {
-      method: 'POST',
-      headers: klaviyoHeaders(),
-      body: JSON.stringify({
-        data: {
-          type: 'profile',
-          attributes: { email, first_name: prenom, last_name: nom },
-        },
-      }),
-    });
-    let profileId;
-    if (profileRes.status === 409) {
-      const dup = await profileRes.json();
-      profileId = dup.errors?.[0]?.meta?.duplicate_profile_id;
-      if (!profileId) throw new Error('Profil en double sans ID récupérable.');
-    } else if (profileRes.ok) {
-      const created = await profileRes.json();
-      profileId = created.data?.id;
-    } else {
-      const err = await profileRes.json();
-      throw new Error(err.errors?.[0]?.detail || `Erreur création profil: ${profileRes.status}`);
-    }
-
-    // 2. Ajouter le profil à la liste newsletter
-    const listRes = await fetch(`${KLAVIYO_API_BASE}/lists/${KLAVIYO_LIST_ID}/relationships/profiles`, {
-      method: 'POST',
-      headers: klaviyoHeaders(),
-      body: JSON.stringify({ data: [{ type: 'profile', id: profileId }] }),
-    });
-    if (!listRes.ok && listRes.status !== 409) {
-      const err = await listRes.json();
-      throw new Error(err.errors?.[0]?.detail || `Erreur ajout à la liste: ${listRes.status}`);
-    }
-
-    // 3. Mettre à jour le consentement e-mail marketing
-    const consentRes = await fetch(`${KLAVIYO_API_BASE}/profile-subscription-bulk-create-jobs`, {
-      method: 'POST',
-      headers: klaviyoHeaders(),
-      body: JSON.stringify({
-        data: {
-          type: 'profile-subscription-bulk-create-job',
-          attributes: {
-            profiles: {
-              data: [{
-                type: 'profile',
-                attributes: {
-                  email,
-                  subscriptions: {
-                    email: {
-                      marketing: {
-                        consent: 'SUBSCRIBED',
-                      },
-                    },
-                  },
-                },
-              }],
-            },
-            historical_import: false,
-          },
-          relationships: {
-            list: {
-              data: { type: 'list', id: KLAVIYO_LIST_ID },
-            },
-          },
-        },
-      }),
-    });
-    if (!consentRes.ok) {
-      const err = await consentRes.json();
-      throw new Error(err.errors?.[0]?.detail || `Erreur consentement: ${consentRes.status}`);
-    }
-
+    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER);
     res.json({ ok: true });
   } catch (err) {
-    console.error('[Klaviyo subscribe]', err.message);
+    console.error('[Klaviyo newsletter]', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/klaviyo/signup', async (req, res) => {
+  if (!klaviyoGuard(res)) return;
+  const { prenom, nom, email } = req.body || {};
+  if (!prenom || !nom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+    return res.status(400).json({ error: 'Données invalides.' });
+  try {
+    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[Klaviyo signup]', err.message);
     res.status(500).json({ error: err.message });
   }
 });
