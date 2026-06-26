@@ -261,58 +261,67 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   }
 });
 
+/* ── Klaviyo : passer email_verified à true pour un email donné ── */
+async function klaviyoSetEmailVerified(email) {
+  const searchRes = await fetch(
+    `${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`,
+    { headers: klaviyoHeaders() }
+  );
+  const searchData = await searchRes.json();
+  const profileId  = searchData.data?.[0]?.id;
+  if (!profileId) {
+    console.warn(`[Klaviyo] Profil introuvable pour ${email}`);
+    return;
+  }
+  const patchRes = await fetch(`${KLAVIYO_API_BASE}/profiles/${profileId}`, {
+    method: 'PATCH',
+    headers: klaviyoHeaders(),
+    body: JSON.stringify({
+      data: { type: 'profile', id: profileId, attributes: { properties: { email_verified: true } } },
+    }),
+  });
+  if (!patchRes.ok) {
+    const err = await patchRes.json();
+    throw new Error(err.errors?.[0]?.detail || `Erreur PATCH profil: ${patchRes.status}`);
+  }
+  console.log(`[Klaviyo] email_verified=true pour ${email}`);
+}
+
+/* ── Route : confirmation e-mail depuis le front (access_token dans le hash) ─
+   Valide le token côté serveur via Supabase Admin pour ne jamais exposer
+   la clé Klaviyo au navigateur.
+─────────────────────────────────────────────────────────────────────────── */
+app.post('/api/klaviyo/email-verified', async (req, res) => {
+  const { access_token } = req.body || {};
+  if (!access_token) return res.status(400).json({ error: 'Token manquant.' });
+  try {
+    const { data, error } = await supabaseAdmin.auth.getUser(access_token);
+    if (error || !data?.user) return res.status(401).json({ error: 'Token invalide.' });
+    const email = data.user.email;
+    if (!email) return res.status(400).json({ error: 'Email introuvable dans le token.' });
+    await klaviyoSetEmailVerified(email);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[Klaviyo email-verified]', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 /* ── Supabase Auth Webhook → Klaviyo email_verified ──────────────────────────
-   URL à configurer dans Supabase :
    Dashboard → Database → Webhooks → New webhook
-     Table  : auth.users   Events : UPDATE
-     URL    : https://www.passcrpe.fr/api/webhook/supabase-auth
-     Header : Authorization: Bearer <SUPABASE_WEBHOOK_SECRET>
+     Table : auth.users   Events : UPDATE
+     URL   : https://www.passcrpe.fr/api/webhook/supabase-auth
 ───────────────────────────────────────────────────────────────────────────── */
 app.post('/api/webhook/supabase-auth', async (req, res) => {
   const { type, record, old_record } = req.body || {};
-
-  // On ne traite que les UPDATE où email_confirmed_at passe de null à une valeur
   if (type !== 'UPDATE') return res.json({ ignored: true });
   const wasVerified = !!old_record?.email_confirmed_at;
   const isVerified  = !!record?.email_confirmed_at;
   if (wasVerified || !isVerified) return res.json({ ignored: true });
-
   const email = record?.email;
   if (!email) return res.status(400).json({ error: 'Email manquant.' });
-
   try {
-    // Trouver le profil Klaviyo par email
-    const searchRes = await fetch(
-      `${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`,
-      { headers: klaviyoHeaders() }
-    );
-    const searchData = await searchRes.json();
-    const profileId  = searchData.data?.[0]?.id;
-
-    if (!profileId) {
-      console.warn(`[Klaviyo webhook] Profil introuvable pour ${email}`);
-      return res.json({ ok: true, skipped: 'profil introuvable' });
-    }
-
-    // Mettre à jour email_verified → true
-    const patchRes = await fetch(`${KLAVIYO_API_BASE}/profiles/${profileId}`, {
-      method: 'PATCH',
-      headers: klaviyoHeaders(),
-      body: JSON.stringify({
-        data: {
-          type: 'profile',
-          id: profileId,
-          attributes: { properties: { email_verified: true } },
-        },
-      }),
-    });
-
-    if (!patchRes.ok) {
-      const err = await patchRes.json();
-      throw new Error(err.errors?.[0]?.detail || `Erreur PATCH profil: ${patchRes.status}`);
-    }
-
-    console.log(`[Klaviyo webhook] email_verified=true pour ${email}`);
+    await klaviyoSetEmailVerified(email);
     res.json({ ok: true });
   } catch (err) {
     console.error('[Klaviyo webhook]', err.message);
