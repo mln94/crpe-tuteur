@@ -253,7 +253,7 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   if (!prenom || !nom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ error: 'Données invalides.' });
   try {
-    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP, { email_verified: false, trial: true });
+    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP, { email_verified: false, trial: true, paid_user: false });
 
     // Créer la ligne profil Supabase avec trial = true
     if (user_id) {
