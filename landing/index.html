@@ -1574,7 +1574,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
 
     if (authMode === 'register') {
-      const { error } = await sb.auth.signUp({
+      const { data: signUpData, error } = await sb.auth.signUp({
         email,
         password,
         options: { data: { prenom, nom, concours, diplome } }
@@ -1582,11 +1582,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (error) {
         showAuthMessage(translateSupabaseError(error.message), 'error');
       } else {
-        // Klaviyo signup list — fire and forget
+        // Klaviyo + Supabase profil — fire and forget
         fetch('/api/klaviyo/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prenom, nom, email }),
+          body: JSON.stringify({ prenom, nom, email, user_id: signUpData?.user?.id }),
         }).catch(() => {});
         _lastRegisteredEmail = email;
         document.getElementById('authForm').style.display = 'none';

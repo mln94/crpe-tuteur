@@ -249,11 +249,19 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
 
 app.post('/api/klaviyo/signup', async (req, res) => {
   if (!klaviyoGuard(res)) return;
-  const { prenom, nom, email } = req.body || {};
+  const { prenom, nom, email, user_id } = req.body || {};
   if (!prenom || !nom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ error: 'Données invalides.' });
   try {
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP, { email_verified: false, trial: true });
+
+    // Créer la ligne profil Supabase avec trial = true
+    if (user_id) {
+      await supabaseAdmin
+        .from('profils_utilisateurs')
+        .upsert({ user_id, trial: true }, { onConflict: 'user_id', ignoreDuplicates: true });
+    }
+
     res.json({ ok: true });
   } catch (err) {
     console.error('[Klaviyo signup]', err.message);
@@ -315,9 +323,20 @@ app.post('/api/klaviyo/trial-ended', async (req, res) => {
   try {
     const { data, error } = await supabaseAdmin.auth.getUser(token);
     if (error || !data?.user) return res.status(401).json({ error: 'Token invalide.' });
-    const email = data.user.email;
+    const { id: userId, email } = data.user;
     if (!email) return res.status(400).json({ error: 'Email introuvable dans le token.' });
 
+    const now = new Date().toISOString();
+
+    // Supabase : trial = false + trial_ended_at
+    await supabaseAdmin
+      .from('profils_utilisateurs')
+      .upsert(
+        { user_id: userId, trial: false, trial_ended_at: now },
+        { onConflict: 'user_id' }
+      );
+
+    // Klaviyo : même mise à jour
     const searchRes = await fetch(
       `${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`,
       { headers: klaviyoHeaders() }
@@ -326,7 +345,7 @@ app.post('/api/klaviyo/trial-ended', async (req, res) => {
     const profileId  = searchData.data?.[0]?.id;
     if (!profileId) {
       console.warn(`[Klaviyo trial-ended] Profil introuvable pour ${email}`);
-      return res.json({ ok: true, skipped: 'profil introuvable' });
+      return res.json({ ok: true, skipped: 'profil klaviyo introuvable' });
     }
 
     const patchRes = await fetch(`${KLAVIYO_API_BASE}/profiles/${profileId}`, {
@@ -336,12 +355,7 @@ app.post('/api/klaviyo/trial-ended', async (req, res) => {
         data: {
           type: 'profile',
           id: profileId,
-          attributes: {
-            properties: {
-              trial: false,
-              date_trial_ended: new Date().toISOString(),
-            },
-          },
+          attributes: { properties: { trial: false, date_trial_ended: now } },
         },
       }),
     });
@@ -349,7 +363,7 @@ app.post('/api/klaviyo/trial-ended', async (req, res) => {
       const err = await patchRes.json();
       throw new Error(err.errors?.[0]?.detail || `Erreur PATCH: ${patchRes.status}`);
     }
-    console.log(`[Klaviyo trial-ended] trial=false pour ${email}`);
+    console.log(`[trial-ended] trial=false pour ${email}`);
     res.json({ ok: true });
   } catch (err) {
     console.error('[Klaviyo trial-ended]', err.message);
