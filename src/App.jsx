@@ -4812,6 +4812,20 @@ function AppContent({ authUser }) {
   const isPaidApp   = dbPaid !== null ? dbPaid : storage.get('crpe_paid') === true;
   const isLockedApp = dbFreeQsUsed !== null && !isPaidApp && dbFreeQsUsed >= FREE_QUESTION_LIMIT;
 
+  const trialEndedFired = useRef(false);
+  useEffect(() => {
+    if (!isLockedApp || trialEndedFired.current) return;
+    trialEndedFired.current = true;
+    sbClient.auth.getSession().then(({ data }) => {
+      const token = data.session?.access_token;
+      if (!token) return;
+      fetch('/api/klaviyo/trial-ended', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${token}` },
+      }).catch(() => {});
+    });
+  }, [isLockedApp]);
+
   const refreshFreeQsCount = (userId) => {
     if (!userId) return;
     fetchFreeQuestionsUsed(userId).then(count => {

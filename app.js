@@ -253,7 +253,7 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   if (!prenom || !nom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ error: 'Données invalides.' });
   try {
-    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP, { email_verified: false });
+    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP, { email_verified: false, trial: true });
     res.json({ ok: true });
   } catch (err) {
     console.error('[Klaviyo signup]', err.message);
@@ -303,6 +303,56 @@ app.post('/api/klaviyo/email-verified', async (req, res) => {
     res.json({ ok: true });
   } catch (err) {
     console.error('[Klaviyo email-verified]', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── Route : fin de période d'essai (10 questions atteintes) ── */
+app.post('/api/klaviyo/trial-ended', async (req, res) => {
+  const authHeader = req.headers.authorization || '';
+  const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  if (!token) return res.status(401).json({ error: 'Token manquant.' });
+  try {
+    const { data, error } = await supabaseAdmin.auth.getUser(token);
+    if (error || !data?.user) return res.status(401).json({ error: 'Token invalide.' });
+    const email = data.user.email;
+    if (!email) return res.status(400).json({ error: 'Email introuvable dans le token.' });
+
+    const searchRes = await fetch(
+      `${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`,
+      { headers: klaviyoHeaders() }
+    );
+    const searchData = await searchRes.json();
+    const profileId  = searchData.data?.[0]?.id;
+    if (!profileId) {
+      console.warn(`[Klaviyo trial-ended] Profil introuvable pour ${email}`);
+      return res.json({ ok: true, skipped: 'profil introuvable' });
+    }
+
+    const patchRes = await fetch(`${KLAVIYO_API_BASE}/profiles/${profileId}`, {
+      method: 'PATCH',
+      headers: klaviyoHeaders(),
+      body: JSON.stringify({
+        data: {
+          type: 'profile',
+          id: profileId,
+          attributes: {
+            properties: {
+              trial: false,
+              date_trial_ended: new Date().toISOString(),
+            },
+          },
+        },
+      }),
+    });
+    if (!patchRes.ok) {
+      const err = await patchRes.json();
+      throw new Error(err.errors?.[0]?.detail || `Erreur PATCH: ${patchRes.status}`);
+    }
+    console.log(`[Klaviyo trial-ended] trial=false pour ${email}`);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[Klaviyo trial-ended]', err.message);
     res.status(500).json({ error: err.message });
   }
 });
