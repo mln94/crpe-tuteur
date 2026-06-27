@@ -160,7 +160,7 @@ function klaviyoHeaders() {
   };
 }
 
-async function klaviyoSubscribePipeline(email, prenom, nom, listId, properties = {}) {
+async function klaviyoSubscribePipeline(email, prenom, nom, listId, properties = {}, extraAttrs = {}) {
   // 1. Créer le profil (ou récupérer l'ID existant en cas de 409)
   const profileRes = await fetch(`${KLAVIYO_API_BASE}/profiles`, {
     method: 'POST',
@@ -168,7 +168,11 @@ async function klaviyoSubscribePipeline(email, prenom, nom, listId, properties =
     body: JSON.stringify({
       data: {
         type: 'profile',
-        attributes: { email, first_name: prenom, last_name: nom, ...(Object.keys(properties).length ? { properties } : {}) },
+        attributes: {
+          email, first_name: prenom, last_name: nom,
+          ...extraAttrs,
+          ...(Object.keys(properties).length ? { properties } : {}),
+        },
       },
     }),
   });
@@ -249,11 +253,12 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
 
 app.post('/api/klaviyo/signup', async (req, res) => {
   if (!klaviyoGuard(res)) return;
-  const { prenom, nom, email, user_id } = req.body || {};
+  const { prenom, nom, email, user_id, telephone } = req.body || {};
   if (!prenom || !nom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ error: 'Données invalides.' });
   try {
-    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP, { email_verified: false, trial: true, paid_user: false, form_trial: false });
+    const phoneAttrs = telephone ? { phone_number: telephone } : {};
+    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP, { email_verified: false, trial: true, paid_user: false, form_trial: false }, phoneAttrs);
 
     // Créer la ligne profil Supabase avec trial = true
     if (user_id) {
@@ -374,7 +379,7 @@ app.post('/api/klaviyo/trial-ended', async (req, res) => {
 /* ── Formulaire avis post-essai ── */
 app.post('/api/feedback/trial', async (req, res) => {
   const {
-    email, telephone, note_globale, peut_aider, pourquoi, plus_apprecie, moins_apprecie,
+    email, note_globale, peut_aider, pourquoi, plus_apprecie, moins_apprecie,
     exercices_attendus, corrections_utiles, manquait,
     calibrage_questions, frein_souscription, continuer, frein_continuer,
     recommander, autres_outils, lesquels_outils, suggestions,
@@ -385,7 +390,6 @@ app.post('/api/feedback/trial', async (req, res) => {
 
   const { error } = await supabaseAdmin.from('avis_trial').insert({
     email:                email || null,
-    telephone:            telephone || null,
     note_globale:         Number(note_globale),
     peut_aider,
     pourquoi:             pourquoi || null,
