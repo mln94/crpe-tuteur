@@ -83,14 +83,10 @@
       width: 100%; max-width: 680px;
       padding: 0 24px;
       display: flex; flex-direction: column; gap: 28px;
-      opacity: 0;
-      transition: opacity .22s ease;
+      will-change: transform;
       pointer-events: none;
     }
-    .q-slide.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .q-slide.active { pointer-events: auto; }
 
     /* ── QUESTION LABEL ── */
     .q-num {
@@ -428,7 +424,6 @@
               `<button type="button" class="rating-btn${answers[q.id] === n ? ' selected' : ''}" data-val="${n}">${n}</button>`
             ).join('')}
           </div>
-          <div class="rating-labels"><span>${q.min}</span><span>${q.max}</span></div>
         </div>`;
 
       } else if (q.type === 'radio') {
@@ -534,42 +529,47 @@
       return el;
     }
 
-    /* ── Navigation ── */
+    /* ── Navigation — swipe simultané ── */
+    const SWIPE_DURATION = 400;
+    const SWIPE_EASE = 'cubic-bezier(.4,0,.2,1)';
+
     function goTo(idx, direction = 'forward') {
       const qs = activeQuestions();
       const total = qs.length;
       const q = qs[idx];
-
       const stage = document.getElementById('stage');
       const old = slideEl;
 
-      const doShow = () => {
-        updateProgress(idx, total);
-        document.getElementById('nav-counter').textContent = `${idx + 1} / ${total}`;
-        document.getElementById('btn-back').style.display = idx > 0 ? 'flex' : 'none';
+      updateProgress(idx, total);
+      document.getElementById('nav-counter').textContent = `${idx + 1} / ${total}`;
+      document.getElementById('btn-back').style.display = idx > 0 ? 'flex' : 'none';
 
-        const newSlide = renderQuestion(q, idx, total);
-        stage.appendChild(newSlide);
+      const newSlide = renderQuestion(q, idx, total);
+      const startX = direction === 'forward' ? '100vw' : '-100vw';
+      const endX   = direction === 'forward' ? '-100vw' : '100vw';
 
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            newSlide.classList.add('active');
-          });
-        });
+      // Positionner la nouvelle slide hors écran sans transition
+      newSlide.style.transform = `translateX(${startX})`;
+      newSlide.style.transition = 'none';
+      stage.appendChild(newSlide);
 
-        slideEl = newSlide;
-        current = idx;
-      };
+      // Forcer le reflow pour que la position initiale soit prise en compte
+      newSlide.getBoundingClientRect();
+
+      // Lancer le swipe simultané
+      newSlide.style.transition = `transform ${SWIPE_DURATION}ms ${SWIPE_EASE}`;
+      newSlide.style.transform = 'translateX(0)';
+      newSlide.classList.add('active');
 
       if (old) {
         old.classList.remove('active');
-        setTimeout(() => {
-          old.remove();
-          doShow();
-        }, 230);
-      } else {
-        doShow();
+        old.style.transition = `transform ${SWIPE_DURATION}ms ${SWIPE_EASE}`;
+        old.style.transform = `translateX(${endX})`;
+        setTimeout(() => old.remove(), SWIPE_DURATION + 50);
       }
+
+      slideEl = newSlide;
+      current = idx;
     }
 
     function advance() {
