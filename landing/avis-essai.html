@@ -83,13 +83,14 @@
       width: 100%; max-width: 680px;
       padding: 0 24px;
       display: flex; flex-direction: column; gap: 28px;
-      transition: transform .35s cubic-bezier(.4,0,.2,1), opacity .35s ease;
+      opacity: 0;
+      transition: opacity .22s ease;
+      pointer-events: none;
     }
-    .q-slide.enter-right  { transform: translateX(60px);  opacity: 0; pointer-events: none; }
-    .q-slide.exit-left    { transform: translateX(-60px); opacity: 0; pointer-events: none; }
-    .q-slide.enter-left   { transform: translateX(-60px); opacity: 0; pointer-events: none; }
-    .q-slide.exit-right   { transform: translateX(60px);  opacity: 0; pointer-events: none; }
-    .q-slide.active       { transform: translateX(0);     opacity: 1; }
+    .q-slide.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     /* ── QUESTION LABEL ── */
     .q-num {
@@ -105,14 +106,19 @@
     }
 
     /* ── RATING ── */
-    .rating-row { display: flex; flex-wrap: wrap; gap: 10px; }
+    .rating-row {
+      display: flex; flex-wrap: nowrap; gap: 6px;
+      width: 100%;
+    }
     .rating-btn {
-      width: 52px; height: 52px;
+      flex: 1; min-width: 0;
+      aspect-ratio: 1;
       border: 2px solid var(--gray-200);
-      border-radius: 12px; background: #fff;
-      font-size: 16px; font-weight: 700; color: var(--gray-600);
+      border-radius: 10px; background: #fff;
+      font-size: clamp(13px, 2vw, 16px); font-weight: 700; color: var(--gray-600);
       cursor: pointer; transition: all .15s;
       display: flex; align-items: center; justify-content: center;
+      padding: 0;
     }
     .rating-btn:hover { border-color: var(--indigo-500); color: var(--indigo-600); transform: scale(1.05); }
     .rating-btn.selected {
@@ -534,30 +540,36 @@
       const total = qs.length;
       const q = qs[idx];
 
-      updateProgress(idx, total);
-      document.getElementById('nav-counter').textContent = `${idx + 1} / ${total}`;
-      document.getElementById('btn-back').style.display = idx > 0 ? 'flex' : 'none';
+      const stage = document.getElementById('stage');
+      const old = slideEl;
 
-      const newSlide = renderQuestion(q, idx, total);
-      newSlide.classList.add(direction === 'forward' ? 'enter-right' : 'enter-left');
-      document.getElementById('stage').appendChild(newSlide);
+      const doShow = () => {
+        updateProgress(idx, total);
+        document.getElementById('nav-counter').textContent = `${idx + 1} / ${total}`;
+        document.getElementById('btn-back').style.display = idx > 0 ? 'flex' : 'none';
 
-      if (slideEl) {
-        const exitClass = direction === 'forward' ? 'exit-left' : 'exit-right';
-        slideEl.classList.add(exitClass);
-        const old = slideEl;
-        setTimeout(() => old.remove(), 380);
-      }
+        const newSlide = renderQuestion(q, idx, total);
+        stage.appendChild(newSlide);
 
-      requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          newSlide.classList.remove('enter-right', 'enter-left');
-          newSlide.classList.add('active');
+          requestAnimationFrame(() => {
+            newSlide.classList.add('active');
+          });
         });
-      });
 
-      slideEl = newSlide;
-      current = idx;
+        slideEl = newSlide;
+        current = idx;
+      };
+
+      if (old) {
+        old.classList.remove('active');
+        setTimeout(() => {
+          old.remove();
+          doShow();
+        }, 230);
+      } else {
+        doShow();
+      }
     }
 
     function advance() {
