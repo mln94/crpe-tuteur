@@ -406,6 +406,65 @@
           <div class="question-group">
             <span class="question-label">
               <span class="question-num">6</span>
+              Est-ce que les exercices correspondaient à ce que vous attendiez ?
+            </span>
+            <div class="pill-group">
+              <div class="pill-option">
+                <input type="radio" name="exercices_attendus" id="ea-oui" value="oui">
+                <label for="ea-oui">Oui</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="exercices_attendus" id="ea-pas-vraiment" value="pas_vraiment">
+                <label for="ea-pas-vraiment">Pas vraiment</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="exercices_attendus" id="ea-non" value="non">
+                <label for="ea-non">Non</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Q7 -->
+          <div class="question-group">
+            <span class="question-label">
+              <span class="question-num">7</span>
+              Est-ce que les corrections vous ont appris quelque chose ?
+            </span>
+            <div class="pill-group">
+              <div class="pill-option">
+                <input type="radio" name="corrections_utiles" id="cu-oui" value="oui">
+                <label for="cu-oui">Oui</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="corrections_utiles" id="cu-pas-vraiment" value="pas_vraiment">
+                <label for="cu-pas-vraiment">Pas vraiment</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="corrections_utiles" id="cu-non" value="non">
+                <label for="cu-non">Non</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Q8 -->
+          <div class="question-group">
+            <label class="question-label" for="manquait">
+              <span class="question-num">8</span>
+              Est-ce qu'il y a quelque chose qui vous a manqué ?
+            </label>
+            <textarea id="manquait" name="manquait" placeholder="Une fonctionnalité, un type d'exercice, un retour particulier…"></textarea>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Q9 (ex-Q6) -->
+          <div class="question-group">
+            <span class="question-label">
+              <span class="question-num">9</span>
               Les questions vous ont-elles semblé trop faciles, trop difficiles ou bien calibrées pour le CRPE ?
             </span>
             <div class="pill-group">
@@ -432,10 +491,10 @@
 
         <div class="card">
 
-          <!-- Q7 -->
+          <!-- Q10 -->
           <div class="question-group">
             <span class="question-label">
-              <span class="question-num">7</span>
+              <span class="question-num">10</span>
               Vous n'avez pas encore souscrit à l'offre. Qu'est-ce qui vous retient ?
             </span>
             <div class="pill-group" id="frein-group">
@@ -476,10 +535,10 @@
 
           <div class="divider"></div>
 
-          <!-- Q8 -->
+          <!-- Q11 -->
           <div class="question-group">
             <span class="question-label">
-              <span class="question-num">8</span>
+              <span class="question-num">11</span>
               Est-ce que vous comptez continuer à utiliser PassCRPE ?
             </span>
             <div class="pill-group">
@@ -507,10 +566,10 @@
 
           <div class="divider"></div>
 
-          <!-- Q9 -->
+          <!-- Q12 -->
           <div class="question-group">
             <span class="question-label">
-              <span class="question-num">9</span>
+              <span class="question-num">12</span>
               Est-ce que vous recommanderiez PassCRPE à quelqu'un qui prépare le CRPE ?
             </span>
             <div class="pill-group">
@@ -533,10 +592,10 @@
 
         <div class="card">
 
-          <!-- Q10 -->
+          <!-- Q13 -->
           <div class="question-group">
             <span class="question-label">
-              <span class="question-num">10</span>
+              <span class="question-num">13</span>
               Utilisez-vous d'autres outils pour préparer le CRPE ?
             </span>
             <div class="pill-group">
@@ -560,10 +619,10 @@
 
           <div class="divider"></div>
 
-          <!-- Q11 -->
+          <!-- Q14 -->
           <div class="question-group">
             <label class="question-label" for="suggestions">
-              <span class="question-num">11</span>
+              <span class="question-num">14</span>
               Quel autre service ou outil aimeriez-vous qu'on propose sur PassCRPE ?
             </label>
             <textarea id="suggestions" name="suggestions" placeholder="Vos idées sont précieuses…"></textarea>
@@ -662,6 +721,9 @@
         pourquoi:            document.getElementById('pourquoi').value.trim() || null,
         plus_apprecie:       document.getElementById('plus_apprecie').value.trim() || null,
         moins_apprecie:      document.getElementById('moins_apprecie').value.trim() || null,
+        exercices_attendus:  document.querySelector('input[name="exercices_attendus"]:checked')?.value || null,
+        corrections_utiles:  document.querySelector('input[name="corrections_utiles"]:checked')?.value || null,
+        manquait:            document.getElementById('manquait').value.trim() || null,
         calibrage_questions: document.querySelector('input[name="calibrage_questions"]:checked')?.value || null,
         frein_souscription:  (() => {
           const checked = [...document.querySelectorAll('input[name="frein"]:checked')].map(cb => cb.value);
