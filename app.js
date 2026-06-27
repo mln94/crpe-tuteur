@@ -371,6 +371,41 @@ app.post('/api/klaviyo/trial-ended', async (req, res) => {
   }
 });
 
+/* ── Formulaire avis post-essai ── */
+app.post('/api/feedback/trial', async (req, res) => {
+  const {
+    user_id, note_globale, peut_aider, pourquoi, plus_apprecie, moins_apprecie,
+    calibrage_questions, frein_souscription, continuer, frein_continuer,
+    recommander, autres_outils, lesquels_outils, suggestions,
+  } = req.body || {};
+
+  if (note_globale == null || !peut_aider)
+    return res.status(400).json({ error: 'Champs obligatoires manquants.' });
+
+  const { error } = await supabaseAdmin.from('avis_trial').insert({
+    user_id:             user_id || null,
+    note_globale:        Number(note_globale),
+    peut_aider,
+    pourquoi:            pourquoi || null,
+    plus_apprecie:       plus_apprecie || null,
+    moins_apprecie:      moins_apprecie || null,
+    calibrage_questions: calibrage_questions || null,
+    frein_souscription:  frein_souscription || null,
+    continuer:           continuer || null,
+    frein_continuer:     frein_continuer || null,
+    recommander:         recommander || null,
+    autres_outils:       autres_outils || null,
+    lesquels_outils:     lesquels_outils || null,
+    suggestions:         suggestions || null,
+  });
+
+  if (error) {
+    console.error('[feedback/trial]', error.message);
+    return res.status(500).json({ error: error.message });
+  }
+  res.json({ ok: true });
+});
+
 /* ── Supabase Auth Webhook → Klaviyo email_verified ──────────────────────────
    Dashboard → Database → Webhooks → New webhook
      Table : auth.users   Events : UPDATE

@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-TMLHJT3Q');</script>
+  <!-- End Google Tag Manager -->
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Votre avis sur PassCRPE</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --indigo-50:   #eef2ff;
+      --indigo-100:  #e0e7ff;
+      --indigo-500:  #6366f1;
+      --indigo-600:  #4f46e5;
+      --indigo-700:  #4338ca;
+      --gray-50:     #f9fafb;
+      --gray-100:    #f3f4f6;
+      --gray-200:    #e5e7eb;
+      --gray-300:    #d1d5db;
+      --gray-400:    #9ca3af;
+      --gray-500:    #6b7280;
+      --gray-600:    #4b5563;
+      --gray-700:    #374151;
+      --gray-800:    #1f2937;
+      --gray-900:    #111827;
+      --emerald-50:  #ecfdf5;
+      --emerald-600: #059669;
+      --red-50:      #fef2f2;
+      --red-600:     #dc2626;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--gray-800);
+      background: linear-gradient(160deg, #f0f4ff 0%, #fff 55%, #f5f3ff 100%);
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-100);
+      padding: 0 24px;
+      position: sticky; top: 0; z-index: 10;
+    }
+    .nav-inner {
+      max-width: 680px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      height: 60px;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 8px;
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      width: 34px; height: 34px;
+      background: var(--indigo-600);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon svg { width: 18px; height: 18px; color: #fff; }
+    .nav-logo-text { font-size: 16px; font-weight: 800; color: var(--indigo-700); letter-spacing: -0.3px; }
+
+    /* ── LAYOUT ── */
+    main {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 40px 20px 80px;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--indigo-50);
+      color: var(--indigo-600);
+      font-size: 12px; font-weight: 700;
+      letter-spacing: .8px; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 20px;
+      margin-bottom: 16px;
+    }
+    .hero h1 {
+      font-size: 26px; font-weight: 800;
+      color: var(--gray-900); letter-spacing: -.5px;
+      line-height: 1.25; margin-bottom: 10px;
+    }
+    .hero p {
+      font-size: 15px; color: var(--gray-500); line-height: 1.6;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 32px rgba(99,102,241,.08), 0 1px 6px rgba(0,0,0,.05);
+      padding: 36px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 520px) { .card { padding: 24px 18px; } }
+
+    /* ── QUESTION ── */
+    .question-group { margin-bottom: 36px; }
+    .question-group:last-child { margin-bottom: 0; }
+
+    .question-label {
+      display: block;
+      font-size: 15px; font-weight: 700;
+      color: var(--gray-900); line-height: 1.4;
+      margin-bottom: 14px;
+    }
+    .question-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px;
+      background: var(--indigo-600); color: #fff;
+      border-radius: 50%; font-size: 11px; font-weight: 800;
+      margin-right: 8px; flex-shrink: 0; vertical-align: middle;
+    }
+
+    /* ── RATING 0-10 ── */
+    .rating-row {
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .rating-btn {
+      width: 44px; height: 44px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 10px;
+      background: #fff;
+      font-size: 14px; font-weight: 700;
+      color: var(--gray-600);
+      cursor: pointer;
+      transition: all .15s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .rating-btn:hover { border-color: var(--indigo-500); color: var(--indigo-600); }
+    .rating-btn.selected {
+      background: var(--indigo-600); color: #fff;
+      border-color: var(--indigo-600);
+      box-shadow: 0 2px 8px rgba(79,70,229,.30);
+    }
+    .rating-labels {
+      display: flex; justify-content: space-between;
+      font-size: 11px; color: var(--gray-400);
+      margin-top: 6px; padding: 0 2px;
+    }
+
+    /* ── PILL RADIO ── */
+    .pill-group {
+      display: flex; flex-wrap: wrap; gap: 8px;
+    }
+    .pill-option { position: relative; }
+    .pill-option input[type="radio"] {
+      position: absolute; opacity: 0; width: 0; height: 0;
+    }
+    .pill-option label {
+      display: inline-block;
+      padding: 9px 18px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 10px;
+      background: #fff;
+      font-size: 14px; font-weight: 600;
+      color: var(--gray-700);
+      cursor: pointer;
+      transition: all .15s;
+      user-select: none;
+    }
+    .pill-option label:hover { border-color: var(--indigo-400); color: var(--indigo-600); }
+    .pill-option input:checked + label {
+      background: var(--indigo-600); color: #fff;
+      border-color: var(--indigo-600);
+      box-shadow: 0 2px 8px rgba(79,70,229,.25);
+    }
+
+    /* ── TEXTAREA ── */
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--gray-200);
+      border-radius: 12px;
+      font-size: 14px; font-family: inherit;
+      color: var(--gray-900); line-height: 1.6;
+      resize: vertical; min-height: 90px;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    textarea:focus {
+      border-color: var(--indigo-500);
+      box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+    }
+    textarea::placeholder { color: var(--gray-400); }
+
+    /* ── CONDITIONAL BLOCK ── */
+    .conditional-block {
+      display: none;
+      margin-top: 16px;
+      padding: 16px;
+      background: var(--gray-50);
+      border-radius: 12px;
+      border-left: 3px solid var(--indigo-200);
+    }
+    .conditional-block .question-label {
+      font-size: 14px; font-weight: 600;
+      color: var(--gray-700); margin-bottom: 10px;
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      height: 1px; background: var(--gray-100);
+      margin: 36px 0;
+    }
+
+    /* ── SUBMIT ── */
+    .submit-wrap { margin-top: 32px; text-align: center; }
+    .submit-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--indigo-600); color: #fff;
+      border: none; border-radius: 14px;
+      padding: 14px 36px;
+      font-size: 15px; font-weight: 700; font-family: inherit;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(79,70,229,.30);
+      transition: background .2s, transform .15s, box-shadow .2s;
+    }
+    .submit-btn:hover { background: var(--indigo-700); transform: translateY(-1px); }
+    .submit-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
+    .submit-note {
+      font-size: 12px; color: var(--gray-400);
+      margin-top: 10px; line-height: 1.5;
+    }
+
+    /* ── ALERT ── */
+    .form-alert {
+      border-radius: 12px; padding: 12px 16px;
+      font-size: 13px; font-weight: 500; line-height: 1.5;
+      margin-top: 16px; display: none;
+    }
+    .form-alert.error   { background: var(--red-50);     color: var(--red-600); display: block; }
+    .form-alert.success { background: var(--emerald-50); color: var(--emerald-600); display: block; }
+
+    /* ── SUCCESS STATE ── */
+    #success-screen { display: none; text-align: center; padding: 60px 20px; }
+    .success-icon {
+      width: 72px; height: 72px;
+      background: var(--emerald-50); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 32px; margin: 0 auto 20px;
+    }
+    #success-screen h2 { font-size: 22px; font-weight: 800; color: var(--gray-900); margin-bottom: 10px; }
+    #success-screen p  { font-size: 15px; color: var(--gray-500); line-height: 1.6; max-width: 380px; margin: 0 auto 28px; }
+    .back-btn {
+      display: inline-block;
+      background: var(--indigo-600); color: #fff;
+      text-decoration: none; border-radius: 12px;
+      padding: 12px 28px; font-size: 14px; font-weight: 700;
+      transition: background .2s;
+    }
+    .back-btn:hover { background: var(--indigo-700); }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TMLHJT3Q"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-logo">
+        <div class="nav-logo-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+          </svg>
+        </div>
+        <span class="nav-logo-text">PassCRPE</span>
+      </a>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-badge">✍️ &nbsp;2 minutes</div>
+      <h1>Votre avis compte vraiment</h1>
+      <p>Vous venez de terminer votre essai gratuit. Aidez-nous à améliorer PassCRPE en répondant à ces quelques questions.</p>
+    </div>
+
+    <!-- FORM -->
+    <div id="form-screen">
+      <form id="feedback-form" novalidate>
+
+        <div class="card">
+
+          <!-- Q1 -->
+          <div class="question-group">
+            <span class="question-label">
+              <span class="question-num">1</span>
+              Sur une note de 0 à 10, comment évalueriez-vous votre expérience globale sur PassCRPE ?
+            </span>
+            <div class="rating-row" id="rating-row">
+              <button type="button" class="rating-btn" data-value="0">0</button>
+              <button type="button" class="rating-btn" data-value="1">1</button>
+              <button type="button" class="rating-btn" data-value="2">2</button>
+              <button type="button" class="rating-btn" data-value="3">3</button>
+              <button type="button" class="rating-btn" data-value="4">4</button>
+              <button type="button" class="rating-btn" data-value="5">5</button>
+              <button type="button" class="rating-btn" data-value="6">6</button>
+              <button type="button" class="rating-btn" data-value="7">7</button>
+              <button type="button" class="rating-btn" data-value="8">8</button>
+              <button type="button" class="rating-btn" data-value="9">9</button>
+              <button type="button" class="rating-btn" data-value="10">10</button>
+            </div>
+            <div class="rating-labels"><span>Très décevant</span><span>Excellent</span></div>
+            <input type="hidden" id="note_globale" name="note_globale">
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Q2 -->
+          <div class="question-group">
+            <span class="question-label">
+              <span class="question-num">2</span>
+              Est-ce que vous pensez que PassCRPE peut vous aider à préparer le CRPE ?
+            </span>
+            <div class="pill-group">
+              <div class="pill-option">
+                <input type="radio" name="peut_aider" id="pa-oui" value="oui">
+                <label for="pa-oui">Oui</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="peut_aider" id="pa-non" value="non">
+                <label for="pa-non">Non</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="peut_aider" id="pa-sais-pas" value="je_ne_sais_pas">
+                <label for="pa-sais-pas">Je ne sais pas encore</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Q3 -->
+          <div class="question-group">
+            <label class="question-label" for="pourquoi">
+              <span class="question-num">3</span>
+              Pourquoi ?
+            </label>
+            <textarea id="pourquoi" name="pourquoi" placeholder="Expliquez en quelques mots…"></textarea>
+          </div>
+
+        </div><!-- /card -->
+
+        <div class="card">
+
+          <!-- Q4 -->
+          <div class="question-group">
+            <label class="question-label" for="plus_apprecie">
+              <span class="question-num">4</span>
+              Qu'est-ce que vous avez le plus apprécié ?
+            </label>
+            <textarea id="plus_apprecie" name="plus_apprecie" placeholder="Ce qui vous a le plus plu…"></textarea>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Q5 -->
+          <div class="question-group">
+            <label class="question-label" for="moins_apprecie">
+              <span class="question-num">5</span>
+              Qu'est-ce que vous avez le moins apprécié ?
+            </label>
+            <textarea id="moins_apprecie" name="moins_apprecie" placeholder="Ce qui vous a déplu ou manqué…"></textarea>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Q6 -->
+          <div class="question-group">
+            <span class="question-label">
+              <span class="question-num">6</span>
+              Les questions vous ont-elles semblé trop faciles, trop difficiles ou bien calibrées pour le CRPE ?
+            </span>
+            <div class="pill-group">
+              <div class="pill-option">
+                <input type="radio" name="calibrage_questions" id="cal-faciles" value="trop_faciles">
+                <label for="cal-faciles">Trop faciles</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="calibrage_questions" id="cal-bien" value="bien_calibrees">
+                <label for="cal-bien">Bien calibrées</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="calibrage_questions" id="cal-diff" value="trop_difficiles">
+                <label for="cal-diff">Trop difficiles</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="calibrage_questions" id="cal-variait" value="ca_variait">
+                <label for="cal-variait">Ça variait</label>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /card -->
+
+        <div class="card">
+
+          <!-- Q7 -->
+          <div class="question-group">
+            <label class="question-label" for="frein_souscription">
+              <span class="question-num">7</span>
+              Vous n'avez pas encore souscrit à l'offre. Qu'est-ce qui vous retient ?
+            </label>
+            <textarea id="frein_souscription" name="frein_souscription" placeholder="Le prix, le manque de temps, une hésitation…"></textarea>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Q8 -->
+          <div class="question-group">
+            <span class="question-label">
+              <span class="question-num">8</span>
+              Est-ce que vous comptez continuer à utiliser PassCRPE ?
+            </span>
+            <div class="pill-group">
+              <div class="pill-option">
+                <input type="radio" name="continuer" id="cont-oui" value="oui">
+                <label for="cont-oui">Oui</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="continuer" id="cont-non" value="non">
+                <label for="cont-non">Non</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="continuer" id="cont-peut" value="peut_etre">
+                <label for="cont-peut">Peut-être</label>
+              </div>
+            </div>
+            <!-- Conditionnel si Non -->
+            <div class="conditional-block" id="frein-continuer-block">
+              <label class="question-label" for="frein_continuer">
+                Qu'est-ce qui vous ferait changer d'avis et continuer à utiliser PassCRPE ?
+              </label>
+              <textarea id="frein_continuer" name="frein_continuer" placeholder="Votre réponse…"></textarea>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Q9 -->
+          <div class="question-group">
+            <span class="question-label">
+              <span class="question-num">9</span>
+              Est-ce que vous recommanderiez PassCRPE à quelqu'un qui prépare le CRPE ?
+            </span>
+            <div class="pill-group">
+              <div class="pill-option">
+                <input type="radio" name="recommander" id="rec-oui" value="oui">
+                <label for="rec-oui">Oui</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="recommander" id="rec-non" value="non">
+                <label for="rec-non">Non</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="recommander" id="rec-sais-pas" value="je_ne_sais_pas">
+                <label for="rec-sais-pas">Je ne sais pas encore</label>
+              </div>
+            </div>
+          </div>
+
+        </div><!-- /card -->
+
+        <div class="card">
+
+          <!-- Q10 -->
+          <div class="question-group">
+            <span class="question-label">
+              <span class="question-num">10</span>
+              Utilisez-vous d'autres outils pour préparer le CRPE ?
+            </span>
+            <div class="pill-group">
+              <div class="pill-option">
+                <input type="radio" name="autres_outils" id="ao-oui" value="oui">
+                <label for="ao-oui">Oui</label>
+              </div>
+              <div class="pill-option">
+                <input type="radio" name="autres_outils" id="ao-non" value="non">
+                <label for="ao-non">Non</label>
+              </div>
+            </div>
+            <!-- Conditionnel si Oui -->
+            <div class="conditional-block" id="lesquels-block">
+              <label class="question-label" for="lesquels_outils">
+                Lesquels, et qu'est-ce qu'ils ont que PassCRPE n'a pas ?
+              </label>
+              <textarea id="lesquels_outils" name="lesquels_outils" placeholder="Annales, manuels, autres apps…"></textarea>
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Q11 -->
+          <div class="question-group">
+            <label class="question-label" for="suggestions">
+              <span class="question-num">11</span>
+              Quel autre service ou outil aimeriez-vous qu'on propose sur PassCRPE ?
+            </label>
+            <textarea id="suggestions" name="suggestions" placeholder="Vos idées sont précieuses…"></textarea>
+          </div>
+
+          <div class="submit-wrap">
+            <button type="submit" class="submit-btn" id="submit-btn">
+              Envoyer mon avis
+            </button>
+            <p class="submit-note">Vos réponses sont anonymes et nous aident à améliorer l'application.</p>
+            <div class="form-alert" id="form-alert"></div>
+          </div>
+
+        </div><!-- /card -->
+
+      </form>
+    </div><!-- /form-screen -->
+
+    <!-- SUCCESS -->
+    <div id="success-screen">
+      <div class="card">
+        <div class="success-icon">🙏</div>
+        <h2>Merci pour votre retour !</h2>
+        <p>Votre avis nous aide à améliorer PassCRPE pour tous les futurs candidats au CRPE.</p>
+        <a href="/" class="back-btn">Retour à l'accueil</a>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    /* ── Rating 0-10 ── */
+    let selectedNote = null;
+    document.querySelectorAll('.rating-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        selectedNote = parseInt(btn.dataset.value, 10);
+        document.getElementById('note_globale').value = selectedNote;
+      });
+    });
+
+    /* ── Blocs conditionnels ── */
+    document.querySelectorAll('input[name="continuer"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        const block = document.getElementById('frein-continuer-block');
+        block.style.display = radio.value === 'non' ? 'block' : 'none';
+        if (radio.value !== 'non') document.getElementById('frein_continuer').value = '';
+      });
+    });
+
+    document.querySelectorAll('input[name="autres_outils"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        const block = document.getElementById('lesquels-block');
+        block.style.display = radio.value === 'oui' ? 'block' : 'none';
+        if (radio.value !== 'oui') document.getElementById('lesquels_outils').value = '';
+      });
+    });
+
+    /* ── Soumission ── */
+    document.getElementById('feedback-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const alert = document.getElementById('form-alert');
+      alert.className = 'form-alert';
+      alert.textContent = '';
+
+      // Validation obligatoire : Q1 et Q2
+      if (selectedNote === null) {
+        alert.className = 'form-alert error';
+        alert.textContent = 'Veuillez attribuer une note à votre expérience (question 1).';
+        document.getElementById('rating-row').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+      const peut_aider = document.querySelector('input[name="peut_aider"]:checked')?.value;
+      if (!peut_aider) {
+        alert.className = 'form-alert error';
+        alert.textContent = 'Veuillez répondre à la question 2.';
+        return;
+      }
+
+      const btn = document.getElementById('submit-btn');
+      btn.disabled = true;
+      btn.textContent = 'Envoi en cours…';
+
+      const payload = {
+        note_globale:        selectedNote,
+        peut_aider,
+        pourquoi:            document.getElementById('pourquoi').value.trim() || null,
+        plus_apprecie:       document.getElementById('plus_apprecie').value.trim() || null,
+        moins_apprecie:      document.getElementById('moins_apprecie').value.trim() || null,
+        calibrage_questions: document.querySelector('input[name="calibrage_questions"]:checked')?.value || null,
+        frein_souscription:  document.getElementById('frein_souscription').value.trim() || null,
+        continuer:           document.querySelector('input[name="continuer"]:checked')?.value || null,
+        frein_continuer:     document.getElementById('frein_continuer').value.trim() || null,
+        recommander:         document.querySelector('input[name="recommander"]:checked')?.value || null,
+        autres_outils:       document.querySelector('input[name="autres_outils"]:checked')?.value || null,
+        lesquels_outils:     document.getElementById('lesquels_outils').value.trim() || null,
+        suggestions:         document.getElementById('suggestions').value.trim() || null,
+        user_id:             null,
+      };
+
+      // Essaye de récupérer le user_id depuis la session Supabase
+      try {
+        const sb = window.supabase?.createClient(
+          'https://zqwcermgfvcusuwjfviz.supabase.co',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8'
+        );
+        if (sb) {
+          const { data } = await sb.auth.getSession();
+          if (data?.session?.user?.id) payload.user_id = data.session.user.id;
+        }
+      } catch (_) {}
+
+      try {
+        const res = await fetch('/api/feedback/trial', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          const body = await res.json().catch(() => ({}));
+          throw new Error(body.error || `Erreur ${res.status}`);
+        }
+        document.getElementById('form-screen').style.display = 'none';
+        document.getElementById('success-screen').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } catch (err) {
+        alert.className = 'form-alert error';
+        alert.textContent = 'Une erreur est survenue. Veuillez réessayer.';
+        btn.disabled = false;
+        btn.textContent = 'Envoyer mon avis';
+      }
+    });
+  </script>
+
+  <!-- Supabase JS (pour récupérer la session) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+</body>
+</html>
