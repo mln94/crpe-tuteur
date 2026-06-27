@@ -207,6 +207,16 @@
     }
     textarea::placeholder { color: var(--gray-400); }
 
+    /* ── PILL CHECKBOX (même style que radio) ── */
+    .pill-check input[type="checkbox"] {
+      position: absolute; opacity: 0; width: 0; height: 0;
+    }
+    .pill-check input:checked + label {
+      background: var(--indigo-600); color: #fff;
+      border-color: var(--indigo-600);
+      box-shadow: 0 2px 8px rgba(79,70,229,.25);
+    }
+
     /* ── CONDITIONAL BLOCK ── */
     .conditional-block {
       display: none;
@@ -299,7 +309,7 @@
     <div class="hero">
       <div class="hero-badge">✍️ &nbsp;2 minutes</div>
       <h1>Votre avis compte vraiment</h1>
-      <p>Vous venez de terminer votre essai gratuit. Aidez-nous à améliorer PassCRPE en répondant à ces quelques questions.</p>
+      <p>Vous venez de terminer votre essai gratuit. Aidez-nous à améliorer PassCRPE en répondant à ces quelques questions. Vous n'avez pas encore souscrit à l'offre.</p>
     </div>
 
     <!-- FORM -->
@@ -424,11 +434,44 @@
 
           <!-- Q7 -->
           <div class="question-group">
-            <label class="question-label" for="frein_souscription">
+            <span class="question-label">
               <span class="question-num">7</span>
               Vous n'avez pas encore souscrit à l'offre. Qu'est-ce qui vous retient ?
-            </label>
-            <textarea id="frein_souscription" name="frein_souscription" placeholder="Le prix, le manque de temps, une hésitation…"></textarea>
+            </span>
+            <div class="pill-group" id="frein-group">
+              <div class="pill-option pill-check">
+                <input type="checkbox" name="frein" id="fr-prix" value="Le prix">
+                <label for="fr-prix">Le prix</label>
+              </div>
+              <div class="pill-option pill-check">
+                <input type="checkbox" name="frein" id="fr-temps" value="Je manque de temps pour me former en ligne">
+                <label for="fr-temps">Manque de temps</label>
+              </div>
+              <div class="pill-option pill-check">
+                <input type="checkbox" name="frein" id="fr-incertain" value="Je veux d'abord voir si ça m'aide vraiment">
+                <label for="fr-incertain">Je veux d'abord voir si ça m'aide vraiment</label>
+              </div>
+              <div class="pill-option pill-check">
+                <input type="checkbox" name="frein" id="fr-concours" value="Je ne suis pas sûr(e) de passer le concours cette année">
+                <label for="fr-concours">Pas sûr(e) de passer le concours cette année</label>
+              </div>
+              <div class="pill-option pill-check">
+                <input type="checkbox" name="frein" id="fr-comparer" value="Je veux comparer avec d'autres outils">
+                <label for="fr-comparer">Comparer avec d'autres outils</label>
+              </div>
+              <div class="pill-option pill-check">
+                <input type="checkbox" name="frein" id="fr-papier" value="Je préfère les supports papier / annales">
+                <label for="fr-papier">Je préfère les supports papier / annales</label>
+              </div>
+              <div class="pill-option pill-check">
+                <input type="checkbox" name="frein" id="fr-autre" value="autre">
+                <label for="fr-autre">Autre</label>
+              </div>
+            </div>
+            <div class="conditional-block" id="frein-autre-block">
+              <label class="question-label" for="frein_autre_texte">Précisez :</label>
+              <textarea id="frein_autre_texte" placeholder="Votre réponse…"></textarea>
+            </div>
           </div>
 
           <div class="divider"></div>
@@ -563,6 +606,13 @@
       });
     });
 
+    /* ── Q7 : "Autre" conditionnel ── */
+    document.getElementById('fr-autre').addEventListener('change', function () {
+      const block = document.getElementById('frein-autre-block');
+      block.style.display = this.checked ? 'block' : 'none';
+      if (!this.checked) document.getElementById('frein_autre_texte').value = '';
+    });
+
     /* ── Blocs conditionnels ── */
     document.querySelectorAll('input[name="continuer"]').forEach(radio => {
       radio.addEventListener('change', () => {
@@ -613,7 +663,13 @@
         plus_apprecie:       document.getElementById('plus_apprecie').value.trim() || null,
         moins_apprecie:      document.getElementById('moins_apprecie').value.trim() || null,
         calibrage_questions: document.querySelector('input[name="calibrage_questions"]:checked')?.value || null,
-        frein_souscription:  document.getElementById('frein_souscription').value.trim() || null,
+        frein_souscription:  (() => {
+          const checked = [...document.querySelectorAll('input[name="frein"]:checked')].map(cb => cb.value);
+          const autreTexte = document.getElementById('frein_autre_texte').value.trim();
+          const parts = checked.filter(v => v !== 'autre');
+          if (checked.includes('autre') && autreTexte) parts.push('Autre : ' + autreTexte);
+          return parts.length ? parts.join(', ') : null;
+        })(),
         continuer:           document.querySelector('input[name="continuer"]:checked')?.value || null,
         frein_continuer:     document.getElementById('frein_continuer').value.trim() || null,
         recommander:         document.querySelector('input[name="recommander"]:checked')?.value || null,
