@@ -374,7 +374,7 @@ app.post('/api/klaviyo/trial-ended', async (req, res) => {
 /* ── Formulaire avis post-essai ── */
 app.post('/api/feedback/trial', async (req, res) => {
   const {
-    note_globale, peut_aider, pourquoi, plus_apprecie, moins_apprecie,
+    email, note_globale, peut_aider, pourquoi, plus_apprecie, moins_apprecie,
     exercices_attendus, corrections_utiles, manquait,
     calibrage_questions, frein_souscription, continuer, frein_continuer,
     recommander, autres_outils, lesquels_outils, suggestions,
@@ -384,6 +384,7 @@ app.post('/api/feedback/trial', async (req, res) => {
     return res.status(400).json({ error: 'Champs obligatoires manquants.' });
 
   const { error } = await supabaseAdmin.from('avis_trial').insert({
+    email:                email || null,
     note_globale:         Number(note_globale),
     peut_aider,
     pourquoi:             pourquoi || null,

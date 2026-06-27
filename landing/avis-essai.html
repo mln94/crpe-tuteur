@@ -654,6 +654,9 @@
   </main>
 
   <script>
+    /* ── Email depuis l'URL ── */
+    const _email = new URLSearchParams(window.location.search).get('email') || null;
+
     /* ── Rating 0-10 ── */
     let selectedNote = null;
     document.querySelectorAll('.rating-btn').forEach(btn => {
@@ -738,6 +741,7 @@
         autres_outils:       document.querySelector('input[name="autres_outils"]:checked')?.value || null,
         lesquels_outils:     document.getElementById('lesquels_outils').value.trim() || null,
         suggestions:         document.getElementById('suggestions').value.trim() || null,
+        email:               _email,
       };
 
       try {
