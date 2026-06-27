@@ -334,7 +334,7 @@
         values: ['trop_faciles', 'bien_calibrees', 'trop_difficiles', 'ca_variait'],
       },
       {
-        id: 'frein_souscription', type: 'checkbox',
+        id: 'frein_souscription', type: 'radio',
         label: "Vous n'avez pas encore souscrit à l'offre. Qu'est-ce qui vous retient ?",
         options: [
           'Le prix',
@@ -426,35 +426,27 @@
         </div>`;
 
       } else if (q.type === 'radio') {
+        const curVal = answers[q.id];
         inner += `<div class="pill-group">
           ${q.options.map((opt, i) =>
-            `<div class="pill${answers[q.id] === q.values[i] ? ' selected' : ''}" data-val="${q.values[i]}">
-              <span class="pill-letter">${letters[i]}</span>${opt}
-            </div>`
-          ).join('')}
-        </div>`;
-
-      } else if (q.type === 'checkbox') {
-        const selectedVals = answers[q.id]?.vals || [];
-        inner += `<div class="pill-group" id="cb-group">
-          ${q.options.map((opt, i) =>
-            `<div class="pill${selectedVals.includes(q.values[i]) ? ' selected' : ''}" data-val="${q.values[i]}" data-cb="true">
+            `<div class="pill${curVal === q.values[i] || (q.values[i] === '__autre__' && curVal?.startsWith('Autre')) ? ' selected' : ''}" data-val="${q.values[i]}">
               <span class="pill-letter">${letters[i]}</span>${opt}
             </div>`
           ).join('')}
         </div>`;
         if (q.hasOther) {
-          const showOther = selectedVals.includes('__autre__');
-          inner += `<div id="other-wrap" style="${showOther ? '' : 'display:none;margin-top:0'}margin-top:16px">
-            <textarea class="q-textarea" id="cb-other" placeholder="Précisez…" style="min-height:44px">${answers[q.id]?.other || ''}</textarea>
+          const showOther = curVal?.startsWith('Autre');
+          const otherText = showOther ? curVal.replace(/^Autre : ?/, '') : '';
+          inner += `<div id="other-wrap" style="${showOther ? '' : 'display:none;'}margin-top:16px">
+            <textarea class="q-textarea" id="autre-input" placeholder="Précisez…" style="min-height:44px">${otherText}</textarea>
+          </div>
+          <div id="autre-actions" class="q-actions" style="${showOther ? '' : 'display:none;'}margin-top:8px">
+            <button class="btn-continue" id="btn-cont">
+              Continuer
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
           </div>`;
         }
-        inner += `<div class="q-actions">
-          <button class="btn-continue" id="btn-cont">
-            Continuer
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-        </div>`;
 
       } else if (q.type === 'textarea') {
         const val = answers[q.id] || '';
@@ -488,37 +480,36 @@
       if (q.type === 'radio') {
         el.querySelectorAll('.pill').forEach(pill => {
           pill.addEventListener('click', () => {
-            answers[q.id] = pill.dataset.val;
+            const val = pill.dataset.val;
             el.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
             pill.classList.add('selected');
-            setTimeout(() => advance(), 350);
-          });
-        });
-      }
 
-      if (q.type === 'checkbox') {
-        const selectedVals = answers[q.id]?.vals ? [...answers[q.id].vals] : [];
-        el.querySelectorAll('[data-cb]').forEach(pill => {
-          pill.addEventListener('click', () => {
-            const val = pill.dataset.val;
-            if (selectedVals.includes(val)) {
-              selectedVals.splice(selectedVals.indexOf(val), 1);
-              pill.classList.remove('selected');
+            if (q.hasOther && val === '__autre__') {
+              answers[q.id] = 'Autre';
+              el.querySelector('#other-wrap').style.display = 'block';
+              el.querySelector('#autre-actions').style.display = 'flex';
+              setTimeout(() => el.querySelector('#autre-input')?.focus(), 50);
             } else {
-              selectedVals.push(val);
-              pill.classList.add('selected');
+              answers[q.id] = val;
+              if (q.hasOther) {
+                el.querySelector('#other-wrap').style.display = 'none';
+                el.querySelector('#autre-actions').style.display = 'none';
+              }
+              setTimeout(() => advance(), 350);
             }
-            const otherWrap = el.querySelector('#other-wrap');
-            if (otherWrap) otherWrap.style.display = selectedVals.includes('__autre__') ? 'block' : 'none';
-            answers[q.id] = { vals: selectedVals, other: el.querySelector('#cb-other')?.value || '' };
           });
         });
-        const cbOther = el.querySelector('#cb-other');
-        if (cbOther) cbOther.addEventListener('input', () => {
-          if (!answers[q.id]) answers[q.id] = { vals: [], other: '' };
-          answers[q.id].other = cbOther.value;
-        });
-        el.querySelector('#btn-cont')?.addEventListener('click', advance);
+
+        if (q.hasOther) {
+          const ta = el.querySelector('#autre-input');
+          ta?.addEventListener('input', () => {
+            answers[q.id] = 'Autre' + (ta.value.trim() ? ' : ' + ta.value.trim() : '');
+          });
+          ta?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); advance(); }
+          });
+          el.querySelector('#btn-cont')?.addEventListener('click', advance);
+        }
       }
 
       if (q.type === 'textarea') {
@@ -587,20 +578,7 @@
     /* ── Sérialiser les réponses ── */
     function serializeAnswers() {
       const out = { email };
-      QUESTIONS.forEach(q => {
-        if (q.type === 'checkbox') {
-          const val = answers[q.id];
-          if (val) {
-            const parts = (val.vals || []).filter(v => v !== '__autre__');
-            if (val.vals?.includes('__autre__') && val.other) parts.push('Autre : ' + val.other);
-            out[q.id] = parts.length ? parts.join(', ') : null;
-          } else {
-            out[q.id] = null;
-          }
-        } else {
-          out[q.id] = answers[q.id] ?? null;
-        }
-      });
+      QUESTIONS.forEach(q => { out[q.id] = answers[q.id] ?? null; });
       return out;
     }
 
