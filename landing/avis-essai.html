@@ -7,7 +7,6 @@
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-TMLHJT3Q');</script>
-  <!-- End Google Tag Manager -->
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -19,730 +18,597 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --indigo-50:   #eef2ff;
-      --indigo-100:  #e0e7ff;
-      --indigo-500:  #6366f1;
-      --indigo-600:  #4f46e5;
-      --indigo-700:  #4338ca;
-      --gray-50:     #f9fafb;
-      --gray-100:    #f3f4f6;
-      --gray-200:    #e5e7eb;
-      --gray-300:    #d1d5db;
-      --gray-400:    #9ca3af;
-      --gray-500:    #6b7280;
-      --gray-600:    #4b5563;
-      --gray-700:    #374151;
-      --gray-800:    #1f2937;
-      --gray-900:    #111827;
-      --emerald-50:  #ecfdf5;
-      --emerald-600: #059669;
-      --red-50:      #fef2f2;
-      --red-600:     #dc2626;
+      --indigo-500: #6366f1;
+      --indigo-600: #4f46e5;
+      --indigo-700: #4338ca;
+      --gray-100:   #f3f4f6;
+      --gray-200:   #e5e7eb;
+      --gray-300:   #d1d5db;
+      --gray-400:   #9ca3af;
+      --gray-500:   #6b7280;
+      --gray-600:   #4b5563;
+      --gray-700:   #374151;
+      --gray-900:   #111827;
     }
 
-    html { scroll-behavior: smooth; }
-
-    body {
+    html, body {
+      height: 100%;
       font-family: 'Inter', system-ui, sans-serif;
-      color: var(--gray-800);
-      background: linear-gradient(160deg, #f0f4ff 0%, #fff 55%, #f5f3ff 100%);
-      min-height: 100vh;
+      background: #fff;
+      color: var(--gray-900);
+      overflow: hidden;
+    }
+
+    /* ── PROGRESS BAR ── */
+    #progress-bar-wrap {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 4px; background: var(--gray-100); z-index: 100;
+    }
+    #progress-bar {
+      height: 100%;
+      background: var(--indigo-600);
+      transition: width .4s ease;
     }
 
     /* ── NAV ── */
-    nav {
-      background: rgba(255,255,255,0.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--gray-100);
-      padding: 0 24px;
-      position: sticky; top: 0; z-index: 10;
-    }
-    .nav-inner {
-      max-width: 680px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      height: 60px;
+    #nav {
+      position: fixed; top: 4px; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 24px; z-index: 99;
     }
     .nav-logo {
-      display: flex; align-items: center; gap: 8px;
+      display: flex; align-items: center; gap: 7px;
       text-decoration: none;
     }
     .nav-logo-icon {
-      width: 34px; height: 34px;
-      background: var(--indigo-600);
-      border-radius: 9px;
+      width: 28px; height: 28px;
+      background: var(--indigo-600); border-radius: 7px;
       display: flex; align-items: center; justify-content: center;
     }
-    .nav-logo-icon svg { width: 18px; height: 18px; color: #fff; }
-    .nav-logo-text { font-size: 16px; font-weight: 800; color: var(--indigo-700); letter-spacing: -0.3px; }
+    .nav-logo-icon svg { width: 15px; height: 15px; color: #fff; }
+    .nav-logo-text { font-size: 14px; font-weight: 800; color: var(--indigo-700); }
+    #nav-counter { font-size: 13px; color: var(--gray-400); font-weight: 600; }
 
-    /* ── LAYOUT ── */
-    main {
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 40px 20px 80px;
-    }
-
-    /* ── HERO ── */
-    .hero {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: var(--indigo-50);
-      color: var(--indigo-600);
-      font-size: 12px; font-weight: 700;
-      letter-spacing: .8px; text-transform: uppercase;
-      padding: 5px 12px; border-radius: 20px;
-      margin-bottom: 16px;
-    }
-    .hero h1 {
-      font-size: 26px; font-weight: 800;
-      color: var(--gray-900); letter-spacing: -.5px;
-      line-height: 1.25; margin-bottom: 10px;
-    }
-    .hero p {
-      font-size: 15px; color: var(--gray-500); line-height: 1.6;
+    /* ── STAGE ── */
+    #stage {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      padding: 80px 24px 100px;
+      overflow: hidden;
     }
 
-    /* ── CARD ── */
-    .card {
-      background: #fff;
-      border-radius: 20px;
-      box-shadow: 0 4px 32px rgba(99,102,241,.08), 0 1px 6px rgba(0,0,0,.05);
-      padding: 36px;
-      margin-bottom: 16px;
+    /* ── QUESTION SLIDE ── */
+    .q-slide {
+      position: absolute;
+      width: 100%; max-width: 680px;
+      padding: 0 24px;
+      display: flex; flex-direction: column; gap: 28px;
+      transition: transform .35s cubic-bezier(.4,0,.2,1), opacity .35s ease;
     }
-    @media (max-width: 520px) { .card { padding: 24px 18px; } }
+    .q-slide.enter-right  { transform: translateX(60px);  opacity: 0; pointer-events: none; }
+    .q-slide.exit-left    { transform: translateX(-60px); opacity: 0; pointer-events: none; }
+    .q-slide.enter-left   { transform: translateX(-60px); opacity: 0; pointer-events: none; }
+    .q-slide.exit-right   { transform: translateX(60px);  opacity: 0; pointer-events: none; }
+    .q-slide.active       { transform: translateX(0);     opacity: 1; }
 
-    /* ── QUESTION ── */
-    .question-group { margin-bottom: 36px; }
-    .question-group:last-child { margin-bottom: 0; }
-
-    .question-label {
-      display: block;
-      font-size: 15px; font-weight: 700;
-      color: var(--gray-900); line-height: 1.4;
-      margin-bottom: 14px;
+    /* ── QUESTION LABEL ── */
+    .q-num {
+      font-size: 13px; font-weight: 700;
+      color: var(--indigo-600); letter-spacing: .5px;
+      display: flex; align-items: center; gap: 6px;
     }
-    .question-num {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 24px; height: 24px;
-      background: var(--indigo-600); color: #fff;
-      border-radius: 50%; font-size: 11px; font-weight: 800;
-      margin-right: 8px; flex-shrink: 0; vertical-align: middle;
+    .q-num::after { content: '→'; font-size: 11px; }
+    .q-label {
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 800; line-height: 1.25;
+      color: var(--gray-900); letter-spacing: -.4px;
     }
 
-    /* ── RATING 0-10 ── */
-    .rating-row {
-      display: flex; flex-wrap: wrap; gap: 8px;
-    }
+    /* ── RATING ── */
+    .rating-row { display: flex; flex-wrap: wrap; gap: 10px; }
     .rating-btn {
-      width: 44px; height: 44px;
-      border: 1.5px solid var(--gray-200);
-      border-radius: 10px;
-      background: #fff;
-      font-size: 14px; font-weight: 700;
-      color: var(--gray-600);
-      cursor: pointer;
-      transition: all .15s;
+      width: 52px; height: 52px;
+      border: 2px solid var(--gray-200);
+      border-radius: 12px; background: #fff;
+      font-size: 16px; font-weight: 700; color: var(--gray-600);
+      cursor: pointer; transition: all .15s;
       display: flex; align-items: center; justify-content: center;
     }
-    .rating-btn:hover { border-color: var(--indigo-500); color: var(--indigo-600); }
+    .rating-btn:hover { border-color: var(--indigo-500); color: var(--indigo-600); transform: scale(1.05); }
     .rating-btn.selected {
       background: var(--indigo-600); color: #fff;
       border-color: var(--indigo-600);
-      box-shadow: 0 2px 8px rgba(79,70,229,.30);
+      box-shadow: 0 4px 14px rgba(79,70,229,.35);
     }
     .rating-labels {
       display: flex; justify-content: space-between;
-      font-size: 11px; color: var(--gray-400);
-      margin-top: 6px; padding: 0 2px;
+      font-size: 12px; color: var(--gray-400); margin-top: -12px;
     }
 
-    /* ── PILL RADIO ── */
-    .pill-group {
-      display: flex; flex-wrap: wrap; gap: 8px;
+    /* ── PILL OPTIONS ── */
+    .pill-group { display: flex; flex-wrap: wrap; gap: 10px; }
+    .pill {
+      padding: 11px 22px;
+      border: 2px solid var(--gray-200);
+      border-radius: 10px; background: #fff;
+      font-size: 15px; font-weight: 600; color: var(--gray-700);
+      cursor: pointer; transition: all .15s; user-select: none;
     }
-    .pill-option { position: relative; }
-    .pill-option input[type="radio"] {
-      position: absolute; opacity: 0; width: 0; height: 0;
-    }
-    .pill-option label {
-      display: inline-block;
-      padding: 9px 18px;
-      border: 1.5px solid var(--gray-200);
-      border-radius: 10px;
-      background: #fff;
-      font-size: 14px; font-weight: 600;
-      color: var(--gray-700);
-      cursor: pointer;
-      transition: all .15s;
-      user-select: none;
-    }
-    .pill-option label:hover { border-color: var(--indigo-400); color: var(--indigo-600); }
-    .pill-option input:checked + label {
+    .pill:hover { border-color: var(--indigo-500); color: var(--indigo-600); }
+    .pill.selected {
       background: var(--indigo-600); color: #fff;
       border-color: var(--indigo-600);
-      box-shadow: 0 2px 8px rgba(79,70,229,.25);
+      box-shadow: 0 3px 12px rgba(79,70,229,.30);
     }
+    .pill-letter {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; border-radius: 4px;
+      background: var(--gray-100); color: var(--gray-500);
+      font-size: 11px; font-weight: 800; margin-right: 8px;
+      transition: all .15s;
+    }
+    .pill.selected .pill-letter { background: rgba(255,255,255,.25); color: #fff; }
 
     /* ── TEXTAREA ── */
-    textarea {
+    .q-textarea {
       width: 100%;
-      padding: 12px 14px;
-      border: 1.5px solid var(--gray-200);
-      border-radius: 12px;
-      font-size: 14px; font-family: inherit;
-      color: var(--gray-900); line-height: 1.6;
-      resize: vertical; min-height: 90px;
-      outline: none;
-      transition: border-color .15s, box-shadow .15s;
+      background: transparent;
+      border: none; border-bottom: 2px solid var(--gray-200);
+      padding: 12px 0; font-size: 18px;
+      font-family: inherit; color: var(--gray-900);
+      outline: none; resize: none; min-height: 60px;
+      transition: border-color .2s;
+      line-height: 1.6;
     }
-    textarea:focus {
-      border-color: var(--indigo-500);
-      box-shadow: 0 0 0 3px rgba(99,102,241,.12);
-    }
-    textarea::placeholder { color: var(--gray-400); }
+    .q-textarea:focus { border-bottom-color: var(--indigo-500); }
+    .q-textarea::placeholder { color: var(--gray-300); }
 
-    /* ── PILL CHECKBOX (même style que radio) ── */
-    .pill-check input[type="checkbox"] {
-      position: absolute; opacity: 0; width: 0; height: 0;
-    }
-    .pill-check input:checked + label {
-      background: var(--indigo-600); color: #fff;
-      border-color: var(--indigo-600);
-      box-shadow: 0 2px 8px rgba(79,70,229,.25);
-    }
-
-    /* ── CONDITIONAL BLOCK ── */
-    .conditional-block {
-      display: none;
-      margin-top: 16px;
-      padding: 16px;
-      background: var(--gray-50);
-      border-radius: 12px;
-      border-left: 3px solid var(--indigo-200);
-    }
-    .conditional-block .question-label {
-      font-size: 14px; font-weight: 600;
-      color: var(--gray-700); margin-bottom: 10px;
-    }
-
-    /* ── DIVIDER ── */
-    .divider {
-      height: 1px; background: var(--gray-100);
-      margin: 36px 0;
-    }
-
-    /* ── SUBMIT ── */
-    .submit-wrap { margin-top: 32px; text-align: center; }
-    .submit-btn {
+    /* ── ACTIONS ── */
+    .q-actions { display: flex; align-items: center; gap: 16px; }
+    .btn-continue {
       display: inline-flex; align-items: center; gap: 8px;
       background: var(--indigo-600); color: #fff;
-      border: none; border-radius: 14px;
-      padding: 14px 36px;
-      font-size: 15px; font-weight: 700; font-family: inherit;
-      cursor: pointer;
-      box-shadow: 0 4px 20px rgba(79,70,229,.30);
-      transition: background .2s, transform .15s, box-shadow .2s;
+      border: none; border-radius: 10px;
+      padding: 12px 24px; font-size: 14px; font-weight: 700;
+      font-family: inherit; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(79,70,229,.30);
+      transition: background .2s, transform .15s;
     }
-    .submit-btn:hover { background: var(--indigo-700); transform: translateY(-1px); }
-    .submit-btn:disabled { opacity: .6; cursor: not-allowed; transform: none; box-shadow: none; }
-    .submit-note {
-      font-size: 12px; color: var(--gray-400);
-      margin-top: 10px; line-height: 1.5;
+    .btn-continue:hover { background: var(--indigo-700); transform: translateY(-1px); }
+    .btn-continue:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-continue svg { width: 14px; height: 14px; }
+    .btn-skip {
+      font-size: 13px; font-weight: 600; color: var(--gray-400);
+      background: none; border: none; cursor: pointer;
+      font-family: inherit; transition: color .15s;
+    }
+    .btn-skip:hover { color: var(--gray-600); }
+    .key-hint {
+      font-size: 12px; color: var(--gray-300);
+      display: flex; align-items: center; gap: 4px;
+    }
+    kbd {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 2px 6px; border-radius: 4px;
+      border: 1px solid var(--gray-200); background: var(--gray-100);
+      font-size: 11px; font-weight: 700; font-family: inherit;
+      color: var(--gray-500);
     }
 
-    /* ── ALERT ── */
-    .form-alert {
-      border-radius: 12px; padding: 12px 16px;
-      font-size: 13px; font-weight: 500; line-height: 1.5;
-      margin-top: 16px; display: none;
+    /* ── BACK BUTTON ── */
+    #btn-back {
+      position: fixed; bottom: 28px; left: 24px;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 600; color: var(--gray-400);
+      background: none; border: none; cursor: pointer;
+      font-family: inherit; transition: color .15s;
     }
-    .form-alert.error   { background: var(--red-50);     color: var(--red-600); display: block; }
-    .form-alert.success { background: var(--emerald-50); color: var(--emerald-600); display: block; }
+    #btn-back:hover { color: var(--gray-700); }
+    #btn-back svg { width: 14px; height: 14px; }
 
-    /* ── SUCCESS STATE ── */
-    #success-screen { display: none; text-align: center; padding: 60px 20px; }
-    .success-icon {
-      width: 72px; height: 72px;
-      background: var(--emerald-50); border-radius: 50%;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 32px; margin: 0 auto 20px;
+    /* ── SUCCESS ── */
+    #success-screen {
+      display: none; position: fixed; inset: 0;
+      background: #fff; align-items: center; justify-content: center;
+      flex-direction: column; text-align: center; padding: 40px;
+      animation: fadeIn .4s ease;
     }
-    #success-screen h2 { font-size: 22px; font-weight: 800; color: var(--gray-900); margin-bottom: 10px; }
-    #success-screen p  { font-size: 15px; color: var(--gray-500); line-height: 1.6; max-width: 380px; margin: 0 auto 28px; }
-    .back-btn {
-      display: inline-block;
-      background: var(--indigo-600); color: #fff;
+    #success-screen.visible { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+    .success-emoji { font-size: 56px; margin-bottom: 20px; }
+    #success-screen h2 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+    #success-screen p { font-size: 16px; color: var(--gray-500); max-width: 380px; line-height: 1.6; margin-bottom: 28px; }
+    .btn-home {
+      display: inline-block; background: var(--indigo-600); color: #fff;
       text-decoration: none; border-radius: 12px;
-      padding: 12px 28px; font-size: 14px; font-weight: 700;
+      padding: 13px 32px; font-size: 15px; font-weight: 700;
       transition: background .2s;
     }
-    .back-btn:hover { background: var(--indigo-700); }
+    .btn-home:hover { background: var(--indigo-700); }
+
+    /* ── SUBMIT ERROR ── */
+    #submit-error {
+      display: none; position: fixed; bottom: 24px; right: 24px;
+      background: #fef2f2; color: #dc2626;
+      border-radius: 10px; padding: 12px 16px;
+      font-size: 13px; font-weight: 600;
+      box-shadow: 0 4px 16px rgba(0,0,0,.1);
+    }
   </style>
 </head>
 <body>
-  <!-- Google Tag Manager (noscript) -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TMLHJT3Q"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
-  <nav>
-    <div class="nav-inner">
-      <a href="/" class="nav-logo">
-        <div class="nav-logo-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
-          </svg>
-        </div>
-        <span class="nav-logo-text">PassCRPE</span>
-      </a>
-    </div>
-  </nav>
+  <!-- Progress -->
+  <div id="progress-bar-wrap"><div id="progress-bar" style="width:0%"></div></div>
 
-  <main>
-
-    <!-- HERO -->
-    <div class="hero">
-      <div class="hero-badge">✍️ &nbsp;2 minutes</div>
-      <h1>Votre avis compte vraiment</h1>
-      <p>Vous venez de terminer votre essai gratuit sur PassCRPE, mais vous n'avez pas encore souscrit à l'offre. Avant tout, on aimerait comprendre ce que vous en avez pensé. Vos retours nous aident vraiment à améliorer la plateforme.</p>
-    </div>
-
-    <!-- FORM -->
-    <div id="form-screen">
-      <form id="feedback-form" novalidate>
-
-        <div class="card">
-
-          <!-- Q1 -->
-          <div class="question-group">
-            <span class="question-label">
-              <span class="question-num">1</span>
-              Sur une note de 0 à 10, comment évalueriez-vous votre expérience globale sur PassCRPE ?
-            </span>
-            <div class="rating-row" id="rating-row">
-              <button type="button" class="rating-btn" data-value="0">0</button>
-              <button type="button" class="rating-btn" data-value="1">1</button>
-              <button type="button" class="rating-btn" data-value="2">2</button>
-              <button type="button" class="rating-btn" data-value="3">3</button>
-              <button type="button" class="rating-btn" data-value="4">4</button>
-              <button type="button" class="rating-btn" data-value="5">5</button>
-              <button type="button" class="rating-btn" data-value="6">6</button>
-              <button type="button" class="rating-btn" data-value="7">7</button>
-              <button type="button" class="rating-btn" data-value="8">8</button>
-              <button type="button" class="rating-btn" data-value="9">9</button>
-              <button type="button" class="rating-btn" data-value="10">10</button>
-            </div>
-            <div class="rating-labels"><span>Très décevant</span><span>Excellent</span></div>
-            <input type="hidden" id="note_globale" name="note_globale">
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- Q2 -->
-          <div class="question-group">
-            <span class="question-label">
-              <span class="question-num">2</span>
-              Est-ce que vous pensez que PassCRPE peut vous aider à préparer le CRPE ?
-            </span>
-            <div class="pill-group">
-              <div class="pill-option">
-                <input type="radio" name="peut_aider" id="pa-oui" value="oui">
-                <label for="pa-oui">Oui</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="peut_aider" id="pa-non" value="non">
-                <label for="pa-non">Non</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="peut_aider" id="pa-sais-pas" value="je_ne_sais_pas">
-                <label for="pa-sais-pas">Je ne sais pas encore</label>
-              </div>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- Q3 -->
-          <div class="question-group">
-            <label class="question-label" for="pourquoi">
-              <span class="question-num">3</span>
-              Pourquoi ?
-            </label>
-            <textarea id="pourquoi" name="pourquoi" placeholder="Expliquez en quelques mots…"></textarea>
-          </div>
-
-        </div><!-- /card -->
-
-        <div class="card">
-
-          <!-- Q4 -->
-          <div class="question-group">
-            <label class="question-label" for="plus_apprecie">
-              <span class="question-num">4</span>
-              Qu'est-ce que vous avez le plus apprécié ?
-            </label>
-            <textarea id="plus_apprecie" name="plus_apprecie" placeholder="Ce qui vous a le plus plu…"></textarea>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- Q5 -->
-          <div class="question-group">
-            <label class="question-label" for="moins_apprecie">
-              <span class="question-num">5</span>
-              Qu'est-ce que vous avez le moins apprécié ?
-            </label>
-            <textarea id="moins_apprecie" name="moins_apprecie" placeholder="Ce qui vous a déplu ou manqué…"></textarea>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- Q6 -->
-          <div class="question-group">
-            <span class="question-label">
-              <span class="question-num">6</span>
-              Est-ce que les exercices correspondaient à ce que vous attendiez ?
-            </span>
-            <div class="pill-group">
-              <div class="pill-option">
-                <input type="radio" name="exercices_attendus" id="ea-oui" value="oui">
-                <label for="ea-oui">Oui</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="exercices_attendus" id="ea-pas-vraiment" value="pas_vraiment">
-                <label for="ea-pas-vraiment">Pas vraiment</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="exercices_attendus" id="ea-non" value="non">
-                <label for="ea-non">Non</label>
-              </div>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- Q7 -->
-          <div class="question-group">
-            <span class="question-label">
-              <span class="question-num">7</span>
-              Est-ce que les corrections vous ont appris quelque chose ?
-            </span>
-            <div class="pill-group">
-              <div class="pill-option">
-                <input type="radio" name="corrections_utiles" id="cu-oui" value="oui">
-                <label for="cu-oui">Oui</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="corrections_utiles" id="cu-pas-vraiment" value="pas_vraiment">
-                <label for="cu-pas-vraiment">Pas vraiment</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="corrections_utiles" id="cu-non" value="non">
-                <label for="cu-non">Non</label>
-              </div>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- Q8 -->
-          <div class="question-group">
-            <label class="question-label" for="manquait">
-              <span class="question-num">8</span>
-              Est-ce qu'il y a quelque chose qui vous a manqué ?
-            </label>
-            <textarea id="manquait" name="manquait" placeholder="Une fonctionnalité, un type d'exercice, un retour particulier…"></textarea>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- Q9 (ex-Q6) -->
-          <div class="question-group">
-            <span class="question-label">
-              <span class="question-num">9</span>
-              Les questions vous ont-elles semblé trop faciles, trop difficiles ou bien calibrées pour le CRPE ?
-            </span>
-            <div class="pill-group">
-              <div class="pill-option">
-                <input type="radio" name="calibrage_questions" id="cal-faciles" value="trop_faciles">
-                <label for="cal-faciles">Trop faciles</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="calibrage_questions" id="cal-bien" value="bien_calibrees">
-                <label for="cal-bien">Bien calibrées</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="calibrage_questions" id="cal-diff" value="trop_difficiles">
-                <label for="cal-diff">Trop difficiles</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="calibrage_questions" id="cal-variait" value="ca_variait">
-                <label for="cal-variait">Ça variait</label>
-              </div>
-            </div>
-          </div>
-
-        </div><!-- /card -->
-
-        <div class="card">
-
-          <!-- Q10 -->
-          <div class="question-group">
-            <span class="question-label">
-              <span class="question-num">10</span>
-              Vous n'avez pas encore souscrit à l'offre. Qu'est-ce qui vous retient ?
-            </span>
-            <div class="pill-group" id="frein-group">
-              <div class="pill-option pill-check">
-                <input type="checkbox" name="frein" id="fr-prix" value="Le prix">
-                <label for="fr-prix">Le prix</label>
-              </div>
-              <div class="pill-option pill-check">
-                <input type="checkbox" name="frein" id="fr-temps" value="Je manque de temps pour me former en ligne">
-                <label for="fr-temps">Manque de temps</label>
-              </div>
-              <div class="pill-option pill-check">
-                <input type="checkbox" name="frein" id="fr-incertain" value="Je veux d'abord voir si ça m'aide vraiment">
-                <label for="fr-incertain">Je veux d'abord voir si ça m'aide vraiment</label>
-              </div>
-              <div class="pill-option pill-check">
-                <input type="checkbox" name="frein" id="fr-concours" value="Je ne suis pas sûr(e) de passer le concours cette année">
-                <label for="fr-concours">Pas sûr(e) de passer le concours cette année</label>
-              </div>
-              <div class="pill-option pill-check">
-                <input type="checkbox" name="frein" id="fr-comparer" value="Je veux comparer avec d'autres outils">
-                <label for="fr-comparer">Comparer avec d'autres outils</label>
-              </div>
-              <div class="pill-option pill-check">
-                <input type="checkbox" name="frein" id="fr-papier" value="Je préfère les supports papier / annales">
-                <label for="fr-papier">Je préfère les supports papier / annales</label>
-              </div>
-              <div class="pill-option pill-check">
-                <input type="checkbox" name="frein" id="fr-autre" value="autre">
-                <label for="fr-autre">Autre</label>
-              </div>
-            </div>
-            <div class="conditional-block" id="frein-autre-block">
-              <label class="question-label" for="frein_autre_texte">Précisez :</label>
-              <textarea id="frein_autre_texte" placeholder="Votre réponse…"></textarea>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- Q11 -->
-          <div class="question-group">
-            <span class="question-label">
-              <span class="question-num">11</span>
-              Est-ce que vous comptez continuer à utiliser PassCRPE ?
-            </span>
-            <div class="pill-group">
-              <div class="pill-option">
-                <input type="radio" name="continuer" id="cont-oui" value="oui">
-                <label for="cont-oui">Oui</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="continuer" id="cont-non" value="non">
-                <label for="cont-non">Non</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="continuer" id="cont-peut" value="peut_etre">
-                <label for="cont-peut">Peut-être</label>
-              </div>
-            </div>
-            <!-- Conditionnel si Non -->
-            <div class="conditional-block" id="frein-continuer-block">
-              <label class="question-label" for="frein_continuer">
-                Qu'est-ce qui vous ferait changer d'avis et continuer à utiliser PassCRPE ?
-              </label>
-              <textarea id="frein_continuer" name="frein_continuer" placeholder="Votre réponse…"></textarea>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- Q12 -->
-          <div class="question-group">
-            <span class="question-label">
-              <span class="question-num">12</span>
-              Est-ce que vous recommanderiez PassCRPE à quelqu'un qui prépare le CRPE ?
-            </span>
-            <div class="pill-group">
-              <div class="pill-option">
-                <input type="radio" name="recommander" id="rec-oui" value="oui">
-                <label for="rec-oui">Oui</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="recommander" id="rec-non" value="non">
-                <label for="rec-non">Non</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="recommander" id="rec-sais-pas" value="je_ne_sais_pas">
-                <label for="rec-sais-pas">Je ne sais pas encore</label>
-              </div>
-            </div>
-          </div>
-
-        </div><!-- /card -->
-
-        <div class="card">
-
-          <!-- Q13 -->
-          <div class="question-group">
-            <span class="question-label">
-              <span class="question-num">13</span>
-              Utilisez-vous d'autres outils pour préparer le CRPE ?
-            </span>
-            <div class="pill-group">
-              <div class="pill-option">
-                <input type="radio" name="autres_outils" id="ao-oui" value="oui">
-                <label for="ao-oui">Oui</label>
-              </div>
-              <div class="pill-option">
-                <input type="radio" name="autres_outils" id="ao-non" value="non">
-                <label for="ao-non">Non</label>
-              </div>
-            </div>
-            <!-- Conditionnel si Oui -->
-            <div class="conditional-block" id="lesquels-block">
-              <label class="question-label" for="lesquels_outils">
-                Lesquels, et qu'est-ce qu'ils ont que PassCRPE n'a pas ?
-              </label>
-              <textarea id="lesquels_outils" name="lesquels_outils" placeholder="Annales, manuels, autres apps…"></textarea>
-            </div>
-          </div>
-
-          <div class="divider"></div>
-
-          <!-- Q14 -->
-          <div class="question-group">
-            <label class="question-label" for="suggestions">
-              <span class="question-num">14</span>
-              Quel autre service ou outil aimeriez-vous qu'on propose sur PassCRPE ?
-            </label>
-            <textarea id="suggestions" name="suggestions" placeholder="Vos idées sont précieuses…"></textarea>
-          </div>
-
-          <div class="submit-wrap">
-            <button type="submit" class="submit-btn" id="submit-btn">
-              Envoyer mon avis
-            </button>
-            <p class="submit-note">Vos réponses sont anonymes et nous aident à améliorer l'application.</p>
-            <div class="form-alert" id="form-alert"></div>
-          </div>
-
-        </div><!-- /card -->
-
-      </form>
-    </div><!-- /form-screen -->
-
-    <!-- SUCCESS -->
-    <div id="success-screen">
-      <div class="card">
-        <div class="success-icon">🙏</div>
-        <h2>Merci pour votre retour !</h2>
-        <p>Votre avis nous aide à améliorer PassCRPE pour tous les futurs candidats au CRPE.</p>
-        <a href="/" class="back-btn">Retour à l'accueil</a>
+  <!-- Nav -->
+  <div id="nav">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
       </div>
-    </div>
+      <span class="nav-logo-text">PassCRPE</span>
+    </a>
+    <span id="nav-counter"></span>
+  </div>
 
-  </main>
+  <!-- Questions stage -->
+  <div id="stage"></div>
+
+  <!-- Back -->
+  <button id="btn-back" style="display:none">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Précédent
+  </button>
+
+  <!-- Success -->
+  <div id="success-screen">
+    <div class="success-emoji">🙏</div>
+    <h2>Merci pour votre retour !</h2>
+    <p>Votre avis nous aide à améliorer PassCRPE pour tous les futurs candidats au CRPE.</p>
+    <a href="/" class="btn-home">Retour à l'accueil</a>
+  </div>
+
+  <div id="submit-error">Une erreur est survenue. Veuillez réessayer.</div>
 
   <script>
-    /* ── Email depuis l'URL ── */
-    const _email = new URLSearchParams(window.location.search).get('email') || null;
+  (function () {
+    const email = new URLSearchParams(window.location.search).get('email') || null;
+    const answers = {};
+    let current = 0;
+    let slideEl = null;
 
-    /* ── Rating 0-10 ── */
-    let selectedNote = null;
-    document.querySelectorAll('.rating-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
-        btn.classList.add('selected');
-        selectedNote = parseInt(btn.dataset.value, 10);
-        document.getElementById('note_globale').value = selectedNote;
+    /* ── Définition des questions ── */
+    const QUESTIONS = [
+      {
+        id: 'note_globale', type: 'rating', required: true,
+        label: 'Sur une note de 0 à 10, comment évalueriez-vous votre expérience globale sur PassCRPE ?',
+        min: 'Très décevant', max: 'Excellent',
+      },
+      {
+        id: 'peut_aider', type: 'radio', required: true,
+        label: 'Est-ce que vous pensez que PassCRPE peut vous aider à préparer le CRPE ?',
+        options: ['Oui', 'Non', 'Je ne sais pas encore'],
+        values: ['oui', 'non', 'je_ne_sais_pas'],
+      },
+      {
+        id: 'pourquoi', type: 'textarea',
+        label: 'Pourquoi ?',
+        placeholder: 'Expliquez en quelques mots…',
+      },
+      {
+        id: 'plus_apprecie', type: 'textarea',
+        label: "Qu'est-ce que vous avez le plus apprécié ?",
+        placeholder: 'Ce qui vous a le plus plu…',
+      },
+      {
+        id: 'moins_apprecie', type: 'textarea',
+        label: "Qu'est-ce que vous avez le moins apprécié ?",
+        placeholder: 'Ce qui vous a déplu ou manqué…',
+      },
+      {
+        id: 'exercices_attendus', type: 'radio',
+        label: 'Est-ce que les exercices correspondaient à ce que vous attendiez ?',
+        options: ['Oui', 'Pas vraiment', 'Non'],
+        values: ['oui', 'pas_vraiment', 'non'],
+      },
+      {
+        id: 'corrections_utiles', type: 'radio',
+        label: 'Est-ce que les corrections vous ont appris quelque chose ?',
+        options: ['Oui', 'Pas vraiment', 'Non'],
+        values: ['oui', 'pas_vraiment', 'non'],
+      },
+      {
+        id: 'manquait', type: 'textarea',
+        label: "Est-ce qu'il y a quelque chose qui vous a manqué ?",
+        placeholder: 'Une fonctionnalité, un type d\'exercice…',
+      },
+      {
+        id: 'calibrage_questions', type: 'radio',
+        label: 'Les questions vous ont-elles semblé trop faciles, trop difficiles ou bien calibrées pour le CRPE ?',
+        options: ['Trop faciles', 'Bien calibrées', 'Trop difficiles', 'Ça variait'],
+        values: ['trop_faciles', 'bien_calibrees', 'trop_difficiles', 'ca_variait'],
+      },
+      {
+        id: 'frein_souscription', type: 'checkbox',
+        label: "Vous n'avez pas encore souscrit à l'offre. Qu'est-ce qui vous retient ?",
+        options: [
+          'Le prix',
+          'Manque de temps',
+          'Je veux d\'abord voir si ça m\'aide vraiment',
+          'Pas sûr(e) de passer le concours cette année',
+          'Comparer avec d\'autres outils',
+          'Je préfère les supports papier / annales',
+          'Autre',
+        ],
+        values: [
+          'Le prix',
+          'Je manque de temps pour me former en ligne',
+          'Je veux d\'abord voir si ça m\'aide vraiment',
+          'Je ne suis pas sûr(e) de passer le concours cette année',
+          'Je veux comparer avec d\'autres outils',
+          'Je préfère les supports papier / annales',
+          '__autre__',
+        ],
+        hasOther: true,
+      },
+      {
+        id: 'continuer', type: 'radio',
+        label: 'Est-ce que vous comptez continuer à utiliser PassCRPE ?',
+        options: ['Oui', 'Non', 'Peut-être'],
+        values: ['oui', 'non', 'peut_etre'],
+      },
+      {
+        id: 'frein_continuer', type: 'textarea',
+        label: "Qu'est-ce qui vous ferait changer d'avis et continuer à utiliser PassCRPE ?",
+        placeholder: 'Votre réponse…',
+        conditional: () => answers['continuer'] === 'non',
+      },
+      {
+        id: 'recommander', type: 'radio',
+        label: 'Est-ce que vous recommanderiez PassCRPE à quelqu\'un qui prépare le CRPE ?',
+        options: ['Oui', 'Non', 'Je ne sais pas encore'],
+        values: ['oui', 'non', 'je_ne_sais_pas'],
+      },
+      {
+        id: 'autres_outils', type: 'radio',
+        label: 'Utilisez-vous d\'autres outils pour préparer le CRPE ?',
+        options: ['Oui', 'Non'],
+        values: ['oui', 'non'],
+      },
+      {
+        id: 'lesquels_outils', type: 'textarea',
+        label: "Lesquels, et qu'est-ce qu'ils ont que PassCRPE n'a pas ?",
+        placeholder: 'Annales, manuels, autres apps…',
+        conditional: () => answers['autres_outils'] === 'oui',
+      },
+      {
+        id: 'suggestions', type: 'textarea',
+        label: 'Quel autre service ou outil aimeriez-vous qu\'on propose sur PassCRPE ?',
+        placeholder: 'Vos idées sont précieuses…',
+        isLast: true,
+      },
+    ];
+
+    /* ── Questions actives (filtre les conditionnelles) ── */
+    function activeQuestions() {
+      return QUESTIONS.filter(q => !q.conditional || q.conditional());
+    }
+
+    /* ── Rendu d'une question ── */
+    function renderQuestion(q, idx, total) {
+      const el = document.createElement('div');
+      el.className = 'q-slide';
+      el.dataset.qid = q.id;
+
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const isLast = idx === total - 1;
+
+      let inner = `
+        <div>
+          <div class="q-num">${idx + 1} sur ${total}</div>
+          <div class="q-label">${q.label}</div>
+        </div>
+      `;
+
+      if (q.type === 'rating') {
+        inner += `<div>
+          <div class="rating-row" id="rating-row">
+            ${[0,1,2,3,4,5,6,7,8,9,10].map(n =>
+              `<button type="button" class="rating-btn${answers[q.id] === n ? ' selected' : ''}" data-val="${n}">${n}</button>`
+            ).join('')}
+          </div>
+          <div class="rating-labels"><span>${q.min}</span><span>${q.max}</span></div>
+        </div>`;
+
+      } else if (q.type === 'radio') {
+        inner += `<div class="pill-group">
+          ${q.options.map((opt, i) =>
+            `<div class="pill${answers[q.id] === q.values[i] ? ' selected' : ''}" data-val="${q.values[i]}">
+              <span class="pill-letter">${letters[i]}</span>${opt}
+            </div>`
+          ).join('')}
+        </div>`;
+
+      } else if (q.type === 'checkbox') {
+        const selectedVals = answers[q.id]?.vals || [];
+        inner += `<div class="pill-group" id="cb-group">
+          ${q.options.map((opt, i) =>
+            `<div class="pill${selectedVals.includes(q.values[i]) ? ' selected' : ''}" data-val="${q.values[i]}" data-cb="true">
+              <span class="pill-letter">${letters[i]}</span>${opt}
+            </div>`
+          ).join('')}
+        </div>`;
+        if (q.hasOther) {
+          const showOther = selectedVals.includes('__autre__');
+          inner += `<div id="other-wrap" style="${showOther ? '' : 'display:none;margin-top:0'}margin-top:16px">
+            <textarea class="q-textarea" id="cb-other" placeholder="Précisez…" style="min-height:44px">${answers[q.id]?.other || ''}</textarea>
+          </div>`;
+        }
+        inner += `<div class="q-actions">
+          <button class="btn-continue" id="btn-cont">
+            Continuer
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>`;
+
+      } else if (q.type === 'textarea') {
+        const val = answers[q.id] || '';
+        inner += `<div>
+          <textarea class="q-textarea" id="ta-input" placeholder="${q.placeholder || ''}" rows="3">${val}</textarea>
+        </div>
+        <div class="q-actions">
+          <button class="btn-continue" id="btn-cont">
+            ${isLast ? 'Envoyer mon avis' : 'Continuer'}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          ${!q.required && !isLast ? `<button class="btn-skip" id="btn-skip">Passer</button>` : ''}
+          <span class="key-hint"><kbd>Entrée</kbd> pour continuer</span>
+        </div>`;
+      }
+
+      el.innerHTML = inner;
+
+      /* Events */
+      if (q.type === 'rating') {
+        el.querySelectorAll('.rating-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            answers[q.id] = parseInt(btn.dataset.val, 10);
+            el.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            setTimeout(() => advance(), 350);
+          });
+        });
+      }
+
+      if (q.type === 'radio') {
+        el.querySelectorAll('.pill').forEach(pill => {
+          pill.addEventListener('click', () => {
+            answers[q.id] = pill.dataset.val;
+            el.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+            pill.classList.add('selected');
+            setTimeout(() => advance(), 350);
+          });
+        });
+      }
+
+      if (q.type === 'checkbox') {
+        const selectedVals = answers[q.id]?.vals ? [...answers[q.id].vals] : [];
+        el.querySelectorAll('[data-cb]').forEach(pill => {
+          pill.addEventListener('click', () => {
+            const val = pill.dataset.val;
+            if (selectedVals.includes(val)) {
+              selectedVals.splice(selectedVals.indexOf(val), 1);
+              pill.classList.remove('selected');
+            } else {
+              selectedVals.push(val);
+              pill.classList.add('selected');
+            }
+            const otherWrap = el.querySelector('#other-wrap');
+            if (otherWrap) otherWrap.style.display = selectedVals.includes('__autre__') ? 'block' : 'none';
+            answers[q.id] = { vals: selectedVals, other: el.querySelector('#cb-other')?.value || '' };
+          });
+        });
+        const cbOther = el.querySelector('#cb-other');
+        if (cbOther) cbOther.addEventListener('input', () => {
+          if (!answers[q.id]) answers[q.id] = { vals: [], other: '' };
+          answers[q.id].other = cbOther.value;
+        });
+        el.querySelector('#btn-cont')?.addEventListener('click', advance);
+      }
+
+      if (q.type === 'textarea') {
+        const ta = el.querySelector('#ta-input');
+        ta?.addEventListener('input', () => { answers[q.id] = ta.value; });
+        ta?.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); advance(); }
+        });
+        el.querySelector('#btn-cont')?.addEventListener('click', () => {
+          if (q.isLast) { submitForm(); } else { advance(); }
+        });
+        el.querySelector('#btn-skip')?.addEventListener('click', advance);
+        setTimeout(() => ta?.focus(), 50);
+      }
+
+      return el;
+    }
+
+    /* ── Navigation ── */
+    function goTo(idx, direction = 'forward') {
+      const qs = activeQuestions();
+      const total = qs.length;
+      const q = qs[idx];
+
+      updateProgress(idx, total);
+      document.getElementById('nav-counter').textContent = `${idx + 1} / ${total}`;
+      document.getElementById('btn-back').style.display = idx > 0 ? 'flex' : 'none';
+
+      const newSlide = renderQuestion(q, idx, total);
+      newSlide.classList.add(direction === 'forward' ? 'enter-right' : 'enter-left');
+      document.getElementById('stage').appendChild(newSlide);
+
+      if (slideEl) {
+        const exitClass = direction === 'forward' ? 'exit-left' : 'exit-right';
+        slideEl.classList.add(exitClass);
+        const old = slideEl;
+        setTimeout(() => old.remove(), 380);
+      }
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          newSlide.classList.remove('enter-right', 'enter-left');
+          newSlide.classList.add('active');
+        });
       });
-    });
 
-    /* ── Q7 : "Autre" conditionnel ── */
-    document.getElementById('fr-autre').addEventListener('change', function () {
-      const block = document.getElementById('frein-autre-block');
-      block.style.display = this.checked ? 'block' : 'none';
-      if (!this.checked) document.getElementById('frein_autre_texte').value = '';
-    });
+      slideEl = newSlide;
+      current = idx;
+    }
 
-    /* ── Blocs conditionnels ── */
-    document.querySelectorAll('input[name="continuer"]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        const block = document.getElementById('frein-continuer-block');
-        block.style.display = radio.value === 'non' ? 'block' : 'none';
-        if (radio.value !== 'non') document.getElementById('frein_continuer').value = '';
+    function advance() {
+      const qs = activeQuestions();
+      if (current < qs.length - 1) {
+        goTo(current + 1, 'forward');
+      }
+    }
+
+    function back() {
+      if (current > 0) goTo(current - 1, 'backward');
+    }
+
+    function updateProgress(idx, total) {
+      document.getElementById('progress-bar').style.width = `${((idx + 1) / total) * 100}%`;
+    }
+
+    /* ── Sérialiser les réponses ── */
+    function serializeAnswers() {
+      const out = { email };
+      QUESTIONS.forEach(q => {
+        if (q.type === 'checkbox') {
+          const val = answers[q.id];
+          if (val) {
+            const parts = (val.vals || []).filter(v => v !== '__autre__');
+            if (val.vals?.includes('__autre__') && val.other) parts.push('Autre : ' + val.other);
+            out[q.id] = parts.length ? parts.join(', ') : null;
+          } else {
+            out[q.id] = null;
+          }
+        } else {
+          out[q.id] = answers[q.id] ?? null;
+        }
       });
-    });
-
-    document.querySelectorAll('input[name="autres_outils"]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        const block = document.getElementById('lesquels-block');
-        block.style.display = radio.value === 'oui' ? 'block' : 'none';
-        if (radio.value !== 'oui') document.getElementById('lesquels_outils').value = '';
-      });
-    });
+      return out;
+    }
 
     /* ── Soumission ── */
-    document.getElementById('feedback-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const alert = document.getElementById('form-alert');
-      alert.className = 'form-alert';
-      alert.textContent = '';
-
-      // Validation obligatoire : Q1 et Q2
-      if (selectedNote === null) {
-        alert.className = 'form-alert error';
-        alert.textContent = 'Veuillez attribuer une note à votre expérience (question 1).';
-        document.getElementById('rating-row').scrollIntoView({ behavior: 'smooth', block: 'center' });
-        return;
-      }
-      const peut_aider = document.querySelector('input[name="peut_aider"]:checked')?.value;
-      if (!peut_aider) {
-        alert.className = 'form-alert error';
-        alert.textContent = 'Veuillez répondre à la question 2.';
-        return;
-      }
-
-      const btn = document.getElementById('submit-btn');
-      btn.disabled = true;
-      btn.textContent = 'Envoi en cours…';
-
-      const payload = {
-        note_globale:        selectedNote,
-        peut_aider,
-        pourquoi:            document.getElementById('pourquoi').value.trim() || null,
-        plus_apprecie:       document.getElementById('plus_apprecie').value.trim() || null,
-        moins_apprecie:      document.getElementById('moins_apprecie').value.trim() || null,
-        exercices_attendus:  document.querySelector('input[name="exercices_attendus"]:checked')?.value || null,
-        corrections_utiles:  document.querySelector('input[name="corrections_utiles"]:checked')?.value || null,
-        manquait:            document.getElementById('manquait').value.trim() || null,
-        calibrage_questions: document.querySelector('input[name="calibrage_questions"]:checked')?.value || null,
-        frein_souscription:  (() => {
-          const checked = [...document.querySelectorAll('input[name="frein"]:checked')].map(cb => cb.value);
-          const autreTexte = document.getElementById('frein_autre_texte').value.trim();
-          const parts = checked.filter(v => v !== 'autre');
-          if (checked.includes('autre') && autreTexte) parts.push('Autre : ' + autreTexte);
-          return parts.length ? parts.join(', ') : null;
-        })(),
-        continuer:           document.querySelector('input[name="continuer"]:checked')?.value || null,
-        frein_continuer:     document.getElementById('frein_continuer').value.trim() || null,
-        recommander:         document.querySelector('input[name="recommander"]:checked')?.value || null,
-        autres_outils:       document.querySelector('input[name="autres_outils"]:checked')?.value || null,
-        lesquels_outils:     document.getElementById('lesquels_outils').value.trim() || null,
-        suggestions:         document.getElementById('suggestions').value.trim() || null,
-        email:               _email,
-      };
+    async function submitForm() {
+      const payload = serializeAnswers();
+      const btn = slideEl?.querySelector('#btn-cont');
+      if (btn) { btn.disabled = true; btn.textContent = 'Envoi…'; }
 
       try {
         const res = await fetch('/api/feedback/trial', {
@@ -750,21 +616,25 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(payload),
         });
-        if (!res.ok) {
-          const body = await res.json().catch(() => ({}));
-          throw new Error(body.error || `Erreur ${res.status}`);
-        }
-        document.getElementById('form-screen').style.display = 'none';
-        document.getElementById('success-screen').style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      } catch (err) {
-        alert.className = 'form-alert error';
-        alert.textContent = 'Une erreur est survenue. Veuillez réessayer.';
-        btn.disabled = false;
-        btn.textContent = 'Envoyer mon avis';
+        if (!res.ok) throw new Error();
+        document.getElementById('progress-bar').style.width = '100%';
+        document.getElementById('stage').style.display = 'none';
+        document.getElementById('btn-back').style.display = 'none';
+        document.getElementById('nav-counter').textContent = '';
+        document.getElementById('success-screen').classList.add('visible');
+      } catch {
+        document.getElementById('submit-error').style.display = 'block';
+        setTimeout(() => document.getElementById('submit-error').style.display = 'none', 4000);
+        if (btn) { btn.disabled = false; btn.textContent = 'Envoyer mon avis'; }
       }
-    });
-  </script>
+    }
 
+    /* ── Back button ── */
+    document.getElementById('btn-back').addEventListener('click', back);
+
+    /* ── Démarrage ── */
+    goTo(0);
+  })();
+  </script>
 </body>
 </html>
