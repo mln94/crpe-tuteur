@@ -13,6 +13,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Votre avis sur PassCRPE</title>
   <meta name="robots" content="noindex, nofollow" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
@@ -654,6 +655,20 @@
   </main>
 
   <script>
+    /* ── Session Supabase récupérée au chargement ── */
+    let _userId = null;
+    (function () {
+      try {
+        const sb = window.supabase.createClient(
+          'https://zqwcermgfvcusuwjfviz.supabase.co',
+          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8'
+        );
+        sb.auth.getSession().then(({ data }) => {
+          if (data?.session?.user?.id) _userId = data.session.user.id;
+        });
+      } catch (_) {}
+    })();
+
     /* ── Rating 0-10 ── */
     let selectedNote = null;
     document.querySelectorAll('.rating-btn').forEach(btn => {
@@ -738,20 +753,8 @@
         autres_outils:       document.querySelector('input[name="autres_outils"]:checked')?.value || null,
         lesquels_outils:     document.getElementById('lesquels_outils').value.trim() || null,
         suggestions:         document.getElementById('suggestions').value.trim() || null,
-        user_id:             null,
+        user_id:             _userId,
       };
-
-      // Essaye de récupérer le user_id depuis la session Supabase
-      try {
-        const sb = window.supabase?.createClient(
-          'https://zqwcermgfvcusuwjfviz.supabase.co',
-          'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8'
-        );
-        if (sb) {
-          const { data } = await sb.auth.getSession();
-          if (data?.session?.user?.id) payload.user_id = data.session.user.id;
-        }
-      } catch (_) {}
 
       try {
         const res = await fetch('/api/feedback/trial', {
@@ -775,7 +778,5 @@
     });
   </script>
 
-  <!-- Supabase JS (pour récupérer la session) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 </body>
 </html>
