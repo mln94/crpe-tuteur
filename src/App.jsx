@@ -683,6 +683,15 @@ async function fetchObjectives(topic, niveau) {
   }
 }
 
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
 async function fetchQuestionsFromBanque(topic, niveau) {
   const thematique = TOPIC_TO_THEMATIQUE[topic];
   const classe = NIVEAU_TO_CLASSE[niveau];
@@ -692,14 +701,13 @@ async function fetchQuestionsFromBanque(topic, niveau) {
       thematique: `eq.${thematique}`,
       niveau:     `eq.${classe}`,
       select:     'id,thematique,sous_categorie,objectif,texte_support,question,reponse_ideale,niveau_difficulte,synthese_cours,definition_mots_cles',
-      order:      'id.asc',
     });
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/questions_generees?${params}`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/questions_v2?${params}`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
     });
     if (!res.ok) return [];
     const data = await res.json();
-    return data.filter(q => q.question && q.reponse_ideale);
+    return shuffleArray(data.filter(q => q.question && q.reponse_ideale));
   } catch {
     return [];
   }
