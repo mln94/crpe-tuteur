@@ -662,6 +662,63 @@ const TOPIC_TO_THEMATIQUE = {
 };
 const NIVEAU_TO_CLASSE = { '5eme': '5e', '4eme': '4e', '3eme': '3e' };
 
+const MATH_THEMATIQUES = [
+  {
+    id: 'nombres',
+    label: 'Nombres et calculs',
+    description: 'Opérations, fractions, puissances, calcul littéral',
+    icon: Calculator,
+    colors: { bg: 'bg-emerald-100', icon: 'text-emerald-600' },
+  },
+  {
+    id: 'geometrie',
+    label: 'Espace et géométrie',
+    description: 'Figures planes, transformations, Pythagore, Thalès',
+    icon: Lightbulb,
+    colors: { bg: 'bg-sky-100', icon: 'text-sky-600' },
+  },
+  {
+    id: 'proportionnalite',
+    label: 'Proportionnalité, fonctions',
+    description: 'Proportionnalité, fonctions affines, graphiques',
+    icon: BarChart2,
+    colors: { bg: 'bg-violet-100', icon: 'text-violet-600' },
+  },
+  {
+    id: 'donnees',
+    label: 'Organisation et gestion de données et probabilités',
+    description: 'Statistiques, probabilités, diagrammes',
+    icon: ListChecks,
+    colors: { bg: 'bg-amber-100', icon: 'text-amber-600' },
+  },
+  {
+    id: 'informatique',
+    label: 'La pensée informatique',
+    description: 'Algorithmes, programmation, logique',
+    icon: AlignLeft,
+    colors: { bg: 'bg-rose-100', icon: 'text-rose-600' },
+  },
+];
+
+async function fetchExercicesMaths(thematique, classe) {
+  if (!thematique || !classe || !SUPABASE_URL || !SUPABASE_KEY) return [];
+  try {
+    const params = new URLSearchParams({
+      thematique: `eq.${thematique}`,
+      classe:     `eq.${classe}`,
+      select:     'id,objectif_id,objectif_apprentissage,thematique,sous_categorie,classe,enonce,question,reponse_ideale,figure_svg,synthese_cours,definition_mots_cles',
+      order:      'id.asc',
+    });
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?${params}`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+    });
+    if (!res.ok) return [];
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
 async function fetchObjectives(topic, niveau) {
   const thematique = TOPIC_TO_THEMATIQUE[topic];
   const classe = NIVEAU_TO_CLASSE[niveau];
@@ -2621,7 +2678,7 @@ function ProgressRow({ label, current, target, met, formatVal }) {
 // ---------------------------------------------------------------------------
 // HomeView
 // ---------------------------------------------------------------------------
-function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, freeQsUsed, onPaymentConfirmed }) {
+function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, freeQsUsed, onPaymentConfirmed, onStartMathBanque }) {
   const mathsSession   = storage.get('crpe_session_maths');
   const francaisSession = storage.get('crpe_session_francais');
   const mathsSaved    = !!mathsSession?.displayMessages?.length;
@@ -2810,6 +2867,26 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, f
           />
         </div>
       </div>
+
+      {/* Banque d'exercices maths */}
+      {!isLocked && (
+        <div className="flex-shrink-0">
+          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Exercices guidés</p>
+          <button
+            onClick={onStartMathBanque}
+            className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3.5 flex items-center gap-4 hover:shadow-md active:scale-[0.98] transition-all text-left"
+          >
+            <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
+              <Calculator className="w-5 h-5 text-emerald-600" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-bold text-gray-900 text-sm leading-tight">Banque d'exercices — Maths</h3>
+              <p className="text-[11px] text-gray-400 leading-snug mt-0.5">222 exercices · 5 thématiques · Corrigés par IA</p>
+            </div>
+            <ChevronRight className="w-4 h-4 text-gray-300 flex-shrink-0" />
+          </button>
+        </div>
+      )}
 
       {/* Progression vers le niveau intermédiaire */}
       {!isLocked && (
@@ -3072,6 +3149,296 @@ function HistoryView() {
           })}
         </div>
       ))}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// MathBanqueView — math exercise bank with 5-thematic menu
+// ---------------------------------------------------------------------------
+function MathBanqueView({ onBack }) {
+  const [step, setStep]                   = useState('thematique');
+  const [selectedThematique, setSelectedThematique] = useState(null);
+  const [exercises, setExercises]         = useState([]);
+  const [loadingEx, setLoadingEx]         = useState(false);
+  const [currentIdx, setCurrentIdx]       = useState(0);
+  const [phase, setPhase]                 = useState('question');
+  const [userAnswer, setUserAnswer]       = useState('');
+  const [correction, setCorrection]       = useState('');
+  const [showSynthese, setShowSynthese]   = useState(false);
+  const [showDefs, setShowDefs]           = useState(false);
+  const inputRef = useRef(null);
+  const bottomRef = useRef(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [phase, correction, showSynthese, showDefs]);
+
+  const handleThematiqueSelect = (label) => {
+    setSelectedThematique(label);
+    setStep('classe');
+  };
+
+  const handleClasseSelect = async (classeId) => {
+    const classe = NIVEAU_TO_CLASSE[classeId];
+    setLoadingEx(true);
+    setStep('exercises');
+    setCurrentIdx(0);
+    setPhase('question');
+    setUserAnswer('');
+    setCorrection('');
+    const data = await fetchExercicesMaths(selectedThematique, classe);
+    setExercises(shuffleArray(data));
+    setLoadingEx(false);
+    setTimeout(() => inputRef.current?.focus(), 150);
+  };
+
+  const handleSubmit = async () => {
+    if (!userAnswer.trim()) return;
+    const ex = exercises[currentIdx];
+    setPhase('correcting');
+    setCorrection('');
+    const correctionPrompt = `Tu es un correcteur expert en mathématiques pour le CRPE (cycle 4).
+
+Thématique : ${ex.thematique}
+Sous-catégorie : ${ex.sous_categorie}
+Objectif : ${ex.objectif_apprentissage}
+Niveau : ${ex.classe} — Facile
+
+Énoncé :
+${ex.enonce}
+
+Question :
+${ex.question}
+
+Réponse attendue (ne pas divulguer directement, sert uniquement à évaluer) :
+${ex.reponse_ideale}
+
+Réponse du candidat :
+${userAnswer}
+
+---
+
+Fournis une correction structurée et bienveillante, sans astérisques ni tirets en début de ligne :
+
+Sur le fond : [2-3 phrases : résultat correct ou non, démarche, erreurs de raisonnement ou de calcul]
+
+Sur la forme : [1-2 phrases : rédaction de la démarche, notation, vocabulaire mathématique]
+
+Note calcul : X/10
+Note méthode : X/10
+Note CRPE : X/10
+Note globale : X/10
+
+Réponse type CRPE :
+[Correction complète avec toutes les étapes détaillées]`;
+
+    try {
+      await streamClaude(
+        [{ role: 'user', content: correctionPrompt }],
+        'Tu es un correcteur expert en mathématiques cycle 4 pour le CRPE. Sois précis, bienveillant et rigoureux.',
+        (chunk) => setCorrection(chunk),
+        (final) => { setCorrection(final); setPhase('answered'); },
+      );
+    } catch {
+      setCorrection('Erreur lors de la correction. Vérifiez votre connexion.');
+      setPhase('answered');
+    }
+  };
+
+  const handleNext = () => {
+    if (currentIdx + 1 >= exercises.length) { setPhase('done'); return; }
+    setCurrentIdx(i => i + 1);
+    setPhase('question');
+    setUserAnswer('');
+    setCorrection('');
+    setShowSynthese(false);
+    setShowDefs(false);
+    setTimeout(() => inputRef.current?.focus(), 150);
+  };
+
+  // ── Step: thématique ──────────────────────────────────────────────────────
+  if (step === 'thematique') {
+    return (
+      <div className="flex-1 overflow-y-auto px-4 pt-6 pb-24">
+        <button onClick={onBack} className="flex items-center gap-1.5 text-gray-500 text-sm mb-6 hover:text-gray-700 transition-colors">
+          <ChevronLeft className="w-4 h-4" />Retour
+        </button>
+        <div className="mb-6">
+          <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center mb-3">
+            <Calculator className="w-6 h-6 text-emerald-600" />
+          </div>
+          <h1 className="text-2xl font-bold text-gray-900">Maths — Banque d'exercices</h1>
+          <p className="text-gray-500 text-sm mt-1">Choisissez une thématique à travailler</p>
+        </div>
+        <div className="flex flex-col gap-3">
+          {MATH_THEMATIQUES.map((th) => {
+            const Icon = th.icon;
+            return (
+              <button key={th.id} onClick={() => handleThematiqueSelect(th.label)}
+                className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-4 hover:shadow-md active:scale-[0.98] transition-all text-left">
+                <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${th.colors.bg}`}>
+                  <Icon className={`w-5 h-5 ${th.colors.icon}`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900 text-sm leading-tight">{th.label}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{th.description}</p>
+                </div>
+                <ChevronRight className="w-4 h-4 text-gray-300 flex-shrink-0" />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  }
+
+  // ── Step: classe ─────────────────────────────────────────────────────────
+  if (step === 'classe') {
+    return <ClassPickerView onSelect={handleClasseSelect} onBack={() => setStep('thematique')} />;
+  }
+
+  // ── Loading ──────────────────────────────────────────────────────────────
+  if (loadingEx) {
+    return (
+      <div className="flex-1 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-emerald-500 animate-spin" />
+      </div>
+    );
+  }
+
+  // ── Empty / Done ─────────────────────────────────────────────────────────
+  if (phase === 'done' || exercises.length === 0) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center px-4 gap-4 text-center">
+        <GraduationCap className="w-12 h-12 text-emerald-400" />
+        <h2 className="text-xl font-bold text-gray-800">
+          {exercises.length === 0 ? 'Aucun exercice disponible' : 'Série terminée !'}
+        </h2>
+        <p className="text-gray-500 text-sm">
+          {exercises.length === 0
+            ? 'Les exercices pour cette thématique arrivent bientôt.'
+            : `Bravo ! ${exercises.length} exercice${exercises.length > 1 ? 's' : ''} complété${exercises.length > 1 ? 's' : ''}.`}
+        </p>
+        <button onClick={onBack} className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 transition-all">
+          Retour au menu
+        </button>
+      </div>
+    );
+  }
+
+  // ── Exercise view ────────────────────────────────────────────────────────
+  const ex = exercises[currentIdx];
+  const thInfo = MATH_THEMATIQUES.find(t => t.label === ex?.thematique);
+
+  return (
+    <div className="flex-1 flex flex-col min-h-0">
+      {/* Header */}
+      <div className="px-4 pt-4 pb-3 border-b border-gray-100 bg-white flex items-center justify-between flex-shrink-0 gap-2">
+        <button onClick={onBack} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors flex-shrink-0">
+          <ChevronLeft className="w-4 h-4" />Retour
+        </button>
+        <div className="text-center min-w-0">
+          <p className="text-xs font-semibold text-gray-900 truncate">{ex?.sous_categorie}</p>
+          <p className="text-[10px] text-gray-400">{currentIdx + 1}/{exercises.length} · {ex?.classe}</p>
+        </div>
+        <div className="flex gap-1.5 flex-shrink-0">
+          <button onClick={() => { setShowSynthese(s => !s); setShowDefs(false); }}
+            className={`text-xs px-2 py-1 rounded-lg font-medium transition-all ${showSynthese ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>
+            Cours
+          </button>
+          <button onClick={() => { setShowDefs(s => !s); setShowSynthese(false); }}
+            className={`text-xs px-2 py-1 rounded-lg font-medium transition-all ${showDefs ? 'bg-sky-100 text-sky-700' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>
+            Défs
+          </button>
+        </div>
+      </div>
+
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3">
+
+        {/* Synthèse de cours */}
+        {showSynthese && ex?.synthese_cours && (
+          <div className="bg-emerald-50 rounded-2xl border border-emerald-100 p-4">
+            <p className="text-xs font-semibold text-emerald-700 mb-1.5">Synthèse de cours</p>
+            <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-wrap">{ex.synthese_cours}</p>
+          </div>
+        )}
+
+        {/* Définitions */}
+        {showDefs && ex?.definition_mots_cles && (
+          <div className="bg-sky-50 rounded-2xl border border-sky-100 p-4">
+            <p className="text-xs font-semibold text-sky-700 mb-1.5">Définitions</p>
+            <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-wrap">{ex.definition_mots_cles}</p>
+          </div>
+        )}
+
+        {/* Exercise card */}
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+          <div className="flex items-center gap-2 mb-3 flex-wrap">
+            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${thInfo?.colors.bg || 'bg-emerald-50'} ${thInfo?.colors.icon || 'text-emerald-700'}`}>
+              Exercice {currentIdx + 1} · Facile
+            </span>
+            <span className="text-[10px] text-gray-400">{ex?.thematique}</span>
+          </div>
+          {ex?.enonce && (
+            <p className="text-sm text-gray-700 leading-relaxed mb-3 whitespace-pre-wrap">{ex.enonce}</p>
+          )}
+          {ex?.figure_svg && (
+            <div
+              className="flex justify-center my-3 bg-gray-50 rounded-xl p-2 overflow-x-auto"
+              dangerouslySetInnerHTML={{ __html: ex.figure_svg }}
+            />
+          )}
+          <p className="text-sm font-semibold text-gray-900">{ex?.question}</p>
+        </div>
+
+        {/* Answer input */}
+        {phase === 'question' && (
+          <div className="flex flex-col gap-2">
+            <textarea
+              ref={inputRef}
+              value={userAnswer}
+              onChange={e => setUserAnswer(e.target.value)}
+              onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSubmit(); }}
+              placeholder="Rédigez votre réponse ici…"
+              className="w-full px-4 py-3 rounded-2xl border border-gray-200 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-100 text-sm resize-none outline-none bg-white"
+              rows={4}
+            />
+            <button
+              onClick={handleSubmit}
+              disabled={!userAnswer.trim()}
+              className="self-end flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
+            >
+              <Send className="w-3.5 h-3.5" />Corriger
+            </button>
+          </div>
+        )}
+
+        {/* Correction */}
+        {(phase === 'correcting' || phase === 'answered') && (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+            <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-3">Correction</p>
+            {phase === 'correcting' && !correction && (
+              <div className="flex items-center gap-2 text-gray-400 text-sm">
+                <Loader2 className="w-4 h-4 animate-spin" />Correction en cours…
+              </div>
+            )}
+            {correction && (
+              <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{correction}</p>
+            )}
+          </div>
+        )}
+
+        {phase === 'answered' && (
+          <button onClick={handleNext}
+            className="w-full py-3 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 transition-all flex items-center justify-center gap-2">
+            {currentIdx + 1 >= exercises.length ? 'Terminer la série' : 'Exercice suivant →'}
+          </button>
+        )}
+
+        <div ref={bottomRef} />
+      </div>
     </div>
   );
 }
@@ -4811,6 +5178,7 @@ function AppContent({ authUser }) {
   const [francaisMode, setFrancaisMode] = useState(null);
   const [pendingStart, setPendingStart] = useState(null);
   const [showBanqueView, setShowBanqueView] = useState(false);
+  const [showMathBanqueView, setShowMathBanqueView] = useState(false);
   const [banqueSession, setBanqueSession] = useState(null);
   const [autoResumeBanque, setAutoResumeBanque] = useState(false);
   const [dbFreeQsUsed, setDbFreeQsUsed] = useState(null);
@@ -5001,7 +5369,9 @@ function AppContent({ authUser }) {
       <div
         className="flex flex-col flex-1 min-h-0 max-w-3xl mx-auto w-full"
       >
-        {showTopicPicker ? (
+        {showMathBanqueView ? (
+          <MathBanqueView onBack={() => setShowMathBanqueView(false)} />
+        ) : showTopicPicker ? (
           <SubjectPickerView
             onSelect={handleTopicSelect}
             onBack={() => { setShowTopicPicker(false); setPendingStart(null); }}
@@ -5046,6 +5416,7 @@ function AppContent({ authUser }) {
                 isLocked={isLockedApp}
                 freeQsUsed={dbFreeQsUsed ?? 0}
                 onPaymentConfirmed={refreshPaidStatus}
+                onStartMathBanque={() => setShowMathBanqueView(true)}
               />
             )}
             {activeTab === 'chat' && chatMatiere && (
