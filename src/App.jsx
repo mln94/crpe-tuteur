@@ -2678,7 +2678,7 @@ function ProgressRow({ label, current, target, met, formatVal }) {
 // ---------------------------------------------------------------------------
 // HomeView
 // ---------------------------------------------------------------------------
-function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, freeQsUsed, onPaymentConfirmed, onStartMathBanque }) {
+function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, freeQsUsed, onPaymentConfirmed }) {
   const mathsSession   = storage.get('crpe_session_maths');
   const francaisSession = storage.get('crpe_session_francais');
   const mathsSaved    = !!mathsSession?.displayMessages?.length;
@@ -2867,26 +2867,6 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, f
           />
         </div>
       </div>
-
-      {/* Banque d'exercices maths */}
-      {!isLocked && (
-        <div className="flex-shrink-0">
-          <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Exercices guidés</p>
-          <button
-            onClick={onStartMathBanque}
-            className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3.5 flex items-center gap-4 hover:shadow-md active:scale-[0.98] transition-all text-left"
-          >
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
-              <Calculator className="w-5 h-5 text-emerald-600" />
-            </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-bold text-gray-900 text-sm leading-tight">Banque d'exercices — Maths</h3>
-              <p className="text-[11px] text-gray-400 leading-snug mt-0.5">222 exercices · 5 thématiques · Corrigés par IA</p>
-            </div>
-            <ChevronRight className="w-4 h-4 text-gray-300 flex-shrink-0" />
-          </button>
-        </div>
-      )}
 
       {/* Progression vers le niveau intermédiaire */}
       {!isLocked && (
@@ -5267,6 +5247,10 @@ function AppContent({ authUser }) {
       setActiveTab('chat');
       return;
     }
+    if (matiere === 'maths') {
+      setShowMathBanqueView(true);
+      return;
+    }
     setPendingStart({ matiere, isNew });
     if (matiere === 'francais') {
       setFrancaisMode('questions');
@@ -5416,7 +5400,6 @@ function AppContent({ authUser }) {
                 isLocked={isLockedApp}
                 freeQsUsed={dbFreeQsUsed ?? 0}
                 onPaymentConfirmed={refreshPaidStatus}
-                onStartMathBanque={() => setShowMathBanqueView(true)}
               />
             )}
             {activeTab === 'chat' && chatMatiere && (
