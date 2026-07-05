@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blog CRPE — Conseils, méthode et actus pour réussir le CRPE 2027</title>
+  <meta name="description" content="Retrouvez tous nos conseils, guides et témoignages pour préparer le CRPE 2027 en français et mathématiques." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --indigo-50:  #eef2ff;
+      --indigo-100: #e0e7ff;
+      --indigo-200: #c7d2fe;
+      --indigo-500: #6366f1;
+      --indigo-600: #4f46e5;
+      --indigo-700: #4338ca;
+      --emerald-500: #10b981;
+      --gray-50:    #f9fafb;
+      --gray-100:   #f3f4f6;
+      --gray-200:   #e5e7eb;
+      --gray-400:   #9ca3af;
+      --gray-500:   #6b7280;
+      --gray-600:   #4b5563;
+      --gray-700:   #374151;
+      --gray-800:   #1f2937;
+      --gray-900:   #111827;
+    }
+
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; color: var(--gray-800); background: #fff; overflow-x: hidden; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .nav-inner {
+      max-width: 1120px; margin: 0 auto;
+      padding: 0 24px; height: 64px;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: var(--indigo-600);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon svg { width: 18px; height: 18px; color: #fff; }
+    .nav-logo-text { font-size: 15px; font-weight: 800; color: var(--gray-900); letter-spacing: -.3px; }
+    .nav-links { display: flex; gap: 28px; list-style: none; }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--gray-600); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--gray-900); }
+    .nav-cta {
+      font-size: 13px; font-weight: 700; padding: 8px 18px; border-radius: 8px;
+      background: var(--indigo-600); color: #fff; text-decoration: none;
+      transition: background .15s; white-space: nowrap;
+    }
+    .nav-cta:hover { background: var(--indigo-700); }
+    @media (max-width: 768px) { .nav-links { display: none; } }
+
+    /* ── HERO BLOG ── */
+    .blog-hero {
+      background: linear-gradient(135deg, var(--indigo-50) 0%, #fff 60%, #f0fdf4 100%);
+      padding: 64px 24px 48px;
+      text-align: center;
+    }
+    .blog-hero .eyebrow {
+      display: inline-block;
+      font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--indigo-600); background: var(--indigo-50);
+      border: 1px solid var(--indigo-100); border-radius: 20px;
+      padding: 4px 14px; margin-bottom: 18px;
+    }
+    .blog-hero h1 { font-size: clamp(28px, 5vw, 44px); font-weight: 900; color: var(--gray-900); line-height: 1.15; letter-spacing: -.5px; }
+    .blog-hero p { font-size: 16px; color: var(--gray-500); margin-top: 12px; max-width: 520px; margin-left: auto; margin-right: auto; }
+
+    /* ── FILTER TAGS ── */
+    .filter-bar {
+      max-width: 1120px; margin: 0 auto;
+      padding: 32px 24px 0;
+      display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .filter-tag {
+      font-size: 13px; font-weight: 600; padding: 6px 14px; border-radius: 20px;
+      border: 1.5px solid var(--gray-200); color: var(--gray-600); background: #fff;
+      cursor: pointer; transition: all .15s; text-decoration: none;
+    }
+    .filter-tag:hover, .filter-tag.active {
+      background: var(--indigo-600); color: #fff; border-color: var(--indigo-600);
+    }
+
+    /* ── GRID ── */
+    .blog-grid {
+      max-width: 1120px; margin: 0 auto;
+      padding: 32px 24px 80px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 28px;
+    }
+
+    /* ── CARD ── */
+    .blog-card {
+      border: 1px solid var(--gray-100); border-radius: 16px;
+      overflow: hidden; background: #fff;
+      transition: box-shadow .2s, transform .2s;
+      display: flex; flex-direction: column;
+    }
+    .blog-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,.08); transform: translateY(-2px); }
+
+    .blog-card-thumb {
+      height: 160px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 48px;
+    }
+    .blog-card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+
+    .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .card-tag {
+      font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .tag-methode  { background: #eef2ff; color: var(--indigo-600); }
+    .tag-maths    { background: #ecfdf5; color: #059669; }
+    .tag-francais { background: #fdf4ff; color: #9333ea; }
+    .tag-concours { background: #fff7ed; color: #ea580c; }
+    .tag-temoignage { background: #f0f9ff; color: #0284c7; }
+
+    .blog-card-body h2 {
+      font-size: 17px; font-weight: 800; color: var(--gray-900); line-height: 1.35;
+      letter-spacing: -.2px;
+    }
+    .blog-card-body p { font-size: 14px; color: var(--gray-500); line-height: 1.6; flex: 1; }
+
+    .card-meta { display: flex; align-items: center; justify-content: space-between; margin-top: auto; }
+    .card-date { font-size: 12px; color: var(--gray-400); }
+    .card-read {
+      font-size: 13px; font-weight: 700; color: var(--indigo-600);
+      text-decoration: none; display: flex; align-items: center; gap: 4px;
+      transition: gap .15s;
+    }
+    .card-read:hover { gap: 8px; }
+
+    /* ── FEATURED ── */
+    .blog-featured {
+      max-width: 1120px; margin: 0 auto;
+      padding: 0 24px;
+    }
+    .featured-card {
+      border: 1px solid var(--gray-100); border-radius: 20px;
+      overflow: hidden; background: #fff;
+      display: grid; grid-template-columns: 1fr 1fr;
+      transition: box-shadow .2s;
+    }
+    .featured-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,.08); }
+    .featured-thumb {
+      background: linear-gradient(135deg, var(--indigo-600) 0%, #818cf8 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 72px; min-height: 260px;
+    }
+    .featured-body { padding: 36px; display: flex; flex-direction: column; gap: 14px; justify-content: center; }
+    .featured-eyebrow {
+      font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--indigo-600);
+    }
+    .featured-body h2 { font-size: clamp(20px, 2.5vw, 28px); font-weight: 900; color: var(--gray-900); line-height: 1.25; letter-spacing: -.3px; }
+    .featured-body p { font-size: 15px; color: var(--gray-500); line-height: 1.65; }
+    .featured-cta {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 14px; font-weight: 700; color: var(--indigo-600);
+      text-decoration: none; margin-top: 4px; transition: gap .15s;
+    }
+    .featured-cta:hover { gap: 10px; }
+    @media (max-width: 640px) {
+      .featured-card { grid-template-columns: 1fr; }
+      .featured-thumb { min-height: 140px; }
+    }
+
+    /* ── SECTION TITLE ── */
+    .section-label {
+      max-width: 1120px; margin: 48px auto 0;
+      padding: 0 24px;
+      font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--gray-400);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--gray-900); color: var(--gray-400);
+      padding: 48px 24px 28px;
+    }
+    .footer-inner { max-width: 1120px; margin: 0 auto; }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px; margin-bottom: 40px;
+    }
+    .footer-brand p { font-size: 13px; line-height: 1.7; color: var(--gray-400); max-width: 280px; margin-top: 8px; }
+    .footer-col h4 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 14px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .footer-col ul a { font-size: 13px; color: var(--gray-400); text-decoration: none; transition: color .15s; }
+    .footer-col ul a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid #374151;
+      padding-top: 20px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom p { font-size: 12px; }
+    .footer-legal { display: flex; gap: 20px; }
+    .footer-legal a { font-size: 12px; color: var(--gray-400); text-decoration: none; }
+    .footer-legal a:hover { color: #fff; }
+    @media (max-width: 768px) {
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+    @media (max-width: 480px) {
+      .footer-top { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">PassCRPE</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#crpe">Le concours</a></li>
+      <li><a href="index.html#fonctionnalites">Fonctionnalités</a></li>
+      <li><a href="index.html#matieres">Matières</a></li>
+      <li><a href="index.html#temoignages">Avis</a></li>
+      <li><a href="blog.html" class="active">Blog</a></li>
+    </ul>
+    <a href="index.html" class="nav-cta">Commencer gratuitement →</a>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
+<div class="blog-hero">
+  <div class="eyebrow">Blog PassCRPE</div>
+  <h1>Conseils, méthode et actus<br>pour réussir le CRPE 2027</h1>
+  <p>Guides pratiques, analyses du programme et témoignages de candidats pour préparer le concours avec méthode.</p>
+</div>
+
+<!-- ═══════════════════════════════ FILTER TAGS ═══════════════════════════════ -->
+<div class="filter-bar">
+  <a href="#" class="filter-tag active">Tous</a>
+  <a href="#" class="filter-tag">Méthode</a>
+  <a href="#" class="filter-tag">Mathématiques</a>
+  <a href="#" class="filter-tag">Français</a>
+  <a href="#" class="filter-tag">Le concours</a>
+  <a href="#" class="filter-tag">Témoignages</a>
+</div>
+
+<!-- ═══════════════════════════════ ARTICLE À LA UNE ═══════════════════════════════ -->
+<div class="section-label">À la une</div>
+<div class="blog-featured">
+  <article class="featured-card">
+    <div class="featured-thumb">📚</div>
+    <div class="featured-body">
+      <div class="featured-eyebrow">Méthode · 8 min de lecture</div>
+      <h2>Comment organiser ses révisions pour le CRPE 2027 en partant de zéro</h2>
+      <p>Vous commencez votre préparation et ne savez pas par où débuter ? Ce guide vous donne un plan de révision semaine par semaine, adapté à votre profil et à votre date de concours.</p>
+      <a href="#" class="featured-cta">Lire l'article <span>→</span></a>
+    </div>
+  </article>
+</div>
+
+<!-- ═══════════════════════════════ TOUS LES ARTICLES ═══════════════════════════════ -->
+<div class="section-label">Tous les articles</div>
+<div class="blog-grid">
+
+  <article class="blog-card">
+    <div class="blog-card-thumb" style="background:#ecfdf5">🔢</div>
+    <div class="blog-card-body">
+      <div class="card-tags">
+        <span class="card-tag tag-maths">Mathématiques</span>
+      </div>
+      <h2>Les 5 erreurs les plus fréquentes à l'épreuve de maths du CRPE</h2>
+      <p>Analyse des copies des sessions précédentes : voici les pièges dans lesquels tombent le plus souvent les candidats, et comment les éviter.</p>
+      <div class="card-meta">
+        <span class="card-date">À venir</span>
+        <a href="#" class="card-read">Lire <span>→</span></a>
+      </div>
+    </div>
+  </article>
+
+  <article class="blog-card">
+    <div class="blog-card-thumb" style="background:#fdf4ff">✍️</div>
+    <div class="blog-card-body">
+      <div class="card-tags">
+        <span class="card-tag tag-francais">Français</span>
+        <span class="card-tag tag-methode">Méthode</span>
+      </div>
+      <h2>Maîtriser le paragraphe argumenté en français : méthode complète</h2>
+      <p>Structure, connecteurs logiques, exemples littéraires : tout ce qu'il faut savoir pour rédiger un paragraphe qui convainc le jury du CRPE.</p>
+      <div class="card-meta">
+        <span class="card-date">À venir</span>
+        <a href="#" class="card-read">Lire <span>→</span></a>
+      </div>
+    </div>
+  </article>
+
+  <article class="blog-card">
+    <div class="blog-card-thumb" style="background:#fff7ed">🎓</div>
+    <div class="blog-card-body">
+      <div class="card-tags">
+        <span class="card-tag tag-concours">Le concours</span>
+      </div>
+      <h2>CRPE 2027 : tout comprendre sur les académies qui recrutent le plus</h2>
+      <p>Créteil, Versailles, Lyon… Les chiffres du recrutement par académie pour mieux choisir vos vœux et maximiser vos chances d'affectation.</p>
+      <div class="card-meta">
+        <span class="card-date">À venir</span>
+        <a href="#" class="card-read">Lire <span>→</span></a>
+      </div>
+    </div>
+  </article>
+
+  <article class="blog-card">
+    <div class="blog-card-thumb" style="background:#f0f9ff">💬</div>
+    <div class="blog-card-body">
+      <div class="card-tags">
+        <span class="card-tag tag-temoignage">Témoignage</span>
+      </div>
+      <h2>« J'ai réussi le CRPE en 5 mois en travaillant à temps plein » — Sophie, Nantes</h2>
+      <p>Sophie nous raconte sa méthode, ses outils et les moments de doute qu'elle a surmontés pour décrocher le concours en un seul essai.</p>
+      <div class="card-meta">
+        <span class="card-date">À venir</span>
+        <a href="#" class="card-read">Lire <span>→</span></a>
+      </div>
+    </div>
+  </article>
+
+  <article class="blog-card">
+    <div class="blog-card-thumb" style="background:#ecfdf5">📐</div>
+    <div class="blog-card-body">
+      <div class="card-tags">
+        <span class="card-tag tag-maths">Mathématiques</span>
+        <span class="card-tag tag-methode">Méthode</span>
+      </div>
+      <h2>Programme de maths cycle 4 : ce que le jury attend vraiment de vous</h2>
+      <p>Décryptage du programme officiel (5e, 4e, 3e) pour identifier les notions prioritaires et celles qui peuvent vous différencier à l'épreuve.</p>
+      <div class="card-meta">
+        <span class="card-date">À venir</span>
+        <a href="#" class="card-read">Lire <span>→</span></a>
+      </div>
+    </div>
+  </article>
+
+  <article class="blog-card">
+    <div class="blog-card-thumb" style="background:#fdf4ff">📖</div>
+    <div class="blog-card-body">
+      <div class="card-tags">
+        <span class="card-tag tag-francais">Français</span>
+      </div>
+      <h2>Comprendre le programme de français cycle 4 en 10 minutes</h2>
+      <p>Lecture, écriture, oral, étude de la langue : une synthèse claire des objectifs du programme officiel pour ne rien manquer à l'épreuve.</p>
+      <div class="card-meta">
+        <span class="card-date">À venir</span>
+        <a href="#" class="card-read">Lire <span>→</span></a>
+      </div>
+    </div>
+  </article>
+
+</div>
+
+<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:12px">
+          <div class="nav-logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:#fff">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <span class="nav-logo-text">PassCRPE</span>
+        </div>
+        <p>Préparez le CRPE 2027 avec PassCRPE : des milliers d'exercices en français et mathématiques adaptés à votre niveau, des corrections selon les exigences du jury et des conseils personnalisés pour progresser.</p>
+      </div>
+      <div class="footer-col">
+        <h4>L'outil</h4>
+        <ul>
+          <li><a href="index.html#fonctionnalites">Fonctionnalités</a></li>
+          <li><a href="index.html#matieres">Mathématiques</a></li>
+          <li><a href="index.html#matieres">Français</a></li>
+          <li><a href="index.html">S'inscrire</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Le concours</h4>
+        <ul>
+          <li><a href="index.html#crpe">Qu'est-ce que le CRPE ?</a></li>
+          <li><a href="index.html#faq">Conditions d'inscription</a></li>
+          <li><a href="index.html#faq">Les épreuves</a></li>
+          <li><a href="index.html#faq">Les académies</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Ressources</h4>
+        <ul>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+          <li><a href="index.html#temoignages">Témoignages</a></li>
+          <li><a href="mailto:contact@passcrpe.fr">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 PassCRPE. Tous droits réservés.</p>
+      <div class="footer-legal">
+        <a href="#">Mentions légales</a>
+        <a href="#">Politique de confidentialité</a>
+        <a href="#">CGU</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
