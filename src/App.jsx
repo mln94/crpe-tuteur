@@ -3471,13 +3471,13 @@ Réponse type CRPE :
           </div>
         )}
 
-        {/* Quick-reply buttons */}
-        {opts.length > 0 && (
-          <QuickReplies options={opts} onSelect={handleOption} />
-        )}
-
         <div ref={bottomRef} className="h-4" />
       </div>
+
+      {/* Quick-reply buttons */}
+      {opts.length > 0 && (
+        <QuickReplies options={opts} onSelect={handleOption} />
+      )}
 
       {/* Input */}
       <div className="px-3 pt-2 border-t border-gray-100 bg-white flex-shrink-0" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 96px)' }}>
