@@ -200,7 +200,7 @@ Niveaux : **Très facile** → **Facile** → **Intermédiaire** → **Difficile
 
 - Prénom : ${profile.prenom}
 - Type de concours : ${profile.concours}
-- Niveau de diplôme : ${profile.diplome}
+- Académie : ${profile.academie || 'non précisée'}
 
 Dans ton message d'accueil, utilise ces informations directement. Personnalise la session avec le prénom "${profile.prenom}". Ne pose PAS ces questions — commence immédiatement par le message d'accueil puis annonce le premier thème du programme.
 ${niveauSection}`;
@@ -616,7 +616,7 @@ Niveaux : **Très facile** → **Facile** → **Intermédiaire** → **Difficile
 
 - Prénom : ${profile.prenom}
 - Type de concours : ${profile.concours}
-- Niveau de diplôme : ${profile.diplome}
+- Académie : ${profile.academie || 'non précisée'}
 
 Dans ton message d'accueil, utilise ces informations directement. Personnalise la session avec le prénom "${profile.prenom}". Ne pose PAS ces questions — commence immédiatement par le message d'accueil puis annonce le premier thème du programme.
 ${niveauSection}`;
@@ -1229,7 +1229,7 @@ Passe à l'exercice suivant. Réinitialise le compteur à 1.
 
 - Prénom : ${profile.prenom}
 - Type de concours : ${profile.concours}
-- Niveau de diplôme : ${profile.diplome}
+- Académie : ${profile.academie || 'non précisée'}
 ${niveauSection}`;
 }
 
@@ -1327,7 +1327,7 @@ Si l'utilisateur répond **[O]** : passe à l'exercice suivant, en changeant de 
 
 - Prénom : ${profile.prenom}
 - Type de concours : ${profile.concours}
-- Niveau de diplôme : ${profile.diplome}`;
+- Académie : ${profile.academie || 'non précisée'}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -2803,7 +2803,7 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, f
           <h1 className="text-xl font-bold text-gray-900 leading-tight">{profile.prenom} 👋</h1>
         </div>
         <span className="text-[10px] text-gray-400 bg-gray-100 rounded-full px-2.5 py-1 font-medium">
-          {profile.concours} · {profile.diplome}
+          {profile.concours}{profile.academie ? ` · ${profile.academie}` : ''}
         </span>
       </div>
 
@@ -4338,122 +4338,105 @@ function ModePickerView({ onSelect, onBack }) {
 }
 
 // ---------------------------------------------------------------------------
-// Onboarding — 3 steps: prenom → concours → diplome
+// Onboarding — single page: prenom + concours + academie
 // ---------------------------------------------------------------------------
+const CONCOURS_LIST = [
+  'Concours externe et externe spécial — Bac+3',
+  'Concours externe et externe spécial — Bac+5',
+  'Troisième concours',
+  'Second concours interne et interne spécial (langues régionales)',
+  'Concours interne exceptionnel',
+  'Premier concours interne',
+  "Concours spécifiques à l'académie de Mayotte",
+];
+
+const ACADEMIES_LIST = [
+  'Je ne sais pas encore',
+  'Aix-Marseille', 'Amiens', 'Besançon', 'Bordeaux', 'Caen',
+  'Clermont-Ferrand', 'Créteil', 'Dijon', 'Grenoble', 'Guadeloupe',
+  'Guyane', 'La Réunion', 'Lille', 'Limoges', 'Lyon',
+  'Martinique', 'Mayotte', 'Montpellier', 'Nancy-Metz', 'Nantes',
+  'Nice', 'Normandie', 'Orléans-Tours', 'Paris', 'Poitiers',
+  'Reims', 'Rennes', 'Rouen', 'Strasbourg', 'Toulouse', 'Versailles',
+];
+
 function Onboarding({ onComplete }) {
-  const [step, setStep] = useState(0);
   const [prenom, setPrenom] = useState('');
   const [concours, setConcours] = useState('');
-  const [diplome, setDiplome] = useState('');
+  const [academie, setAcademie] = useState('');
 
-  const canNext = [
-    prenom.trim().length > 0,
-    concours !== '',
-    diplome !== '',
-  ][step];
+  const canSubmit = prenom.trim().length > 0 && concours !== '' && academie !== '';
 
-  const next = () => {
-    if (step < 2) setStep(step + 1);
-    else onComplete({ prenom: prenom.trim(), concours, diplome });
+  const handleSubmit = () => {
+    if (!canSubmit) return;
+    onComplete({ prenom: prenom.trim(), concours, academie });
   };
 
-  const CONCOURS = ['externe', 'interne', '3e concours'];
-  const DIPLOMES = ['bac+3', 'bac+5'];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-emerald-50 flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-emerald-50 flex flex-col items-center justify-center px-5 py-4">
       <div className="w-full max-w-sm">
-        <div className="flex justify-center mb-8">
-          <div className="w-20 h-20 bg-indigo-600 rounded-3xl flex items-center justify-center shadow-lg">
-            <GraduationCap className="w-10 h-10 text-white" />
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <div className="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center shadow-md flex-shrink-0">
+            <GraduationCap className="w-5 h-5 text-white" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-gray-900 leading-tight">CRPE Tuteur IA</h1>
+            <p className="text-gray-500 text-xs">Votre tuteur intelligent pour le concours</p>
           </div>
         </div>
-        <h1 className="text-3xl font-bold text-gray-900 text-center mb-1">CRPE Tuteur IA</h1>
-        <p className="text-gray-500 text-center text-sm mb-8">
-          Votre tuteur intelligent pour le concours
-        </p>
 
-        {/* Progress dots */}
-        <div className="flex justify-center gap-2 mb-6">
-          {[0, 1, 2].map((i) => (
-            <div
-              key={i}
-              className={`h-1.5 rounded-full transition-all ${i === step ? 'w-6 bg-indigo-600' : i < step ? 'w-3 bg-indigo-300' : 'w-3 bg-gray-200'}`}
-            />
-          ))}
-        </div>
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
+            Votre prénom
+          </label>
+          <input
+            type="text"
+            value={prenom}
+            onChange={(e) => setPrenom(e.target.value)}
+            placeholder="Prénom…"
+            autoFocus
+            className="w-full px-3 py-2 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all text-sm mb-4"
+          />
 
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-          {step === 0 && (
-            <>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Comment vous appelez-vous ?
-              </label>
-              <input
-                type="text"
-                value={prenom}
-                onChange={(e) => setPrenom(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && canNext && next()}
-                placeholder="Votre prénom…"
-                autoFocus
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all"
-              />
-            </>
-          )}
+          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">
+            Concours préparé
+          </label>
+          <div className="flex flex-col gap-1 mb-4">
+            {CONCOURS_LIST.map((c) => (
+              <button
+                key={c}
+                onClick={() => setConcours(c)}
+                className={`py-1.5 px-3 rounded-xl border-2 text-xs font-medium text-left transition-all ${
+                  concours === c
+                    ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
+                    : 'border-gray-100 bg-white text-gray-600 hover:border-gray-200'
+                }`}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
 
-          {step === 1 && (
-            <>
-              <p className="text-sm font-medium text-gray-700 mb-3">
-                Bonjour {prenom} ! Quel concours préparez-vous ?
-              </p>
-              <div className="flex flex-col gap-2">
-                {CONCOURS.map((c) => (
-                  <button
-                    key={c}
-                    onClick={() => setConcours(c)}
-                    className={`py-3 px-4 rounded-xl border-2 text-sm font-medium text-left transition-all capitalize ${
-                      concours === c
-                        ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                        : 'border-gray-100 bg-white text-gray-600 hover:border-gray-200'
-                    }`}
-                  >
-                    Concours {c}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
-
-          {step === 2 && (
-            <>
-              <p className="text-sm font-medium text-gray-700 mb-3">
-                Quel est votre niveau de diplôme ?
-              </p>
-              <div className="flex flex-col gap-2">
-                {DIPLOMES.map((d) => (
-                  <button
-                    key={d}
-                    onClick={() => setDiplome(d)}
-                    className={`py-3 px-4 rounded-xl border-2 text-sm font-medium text-left transition-all uppercase ${
-                      diplome === d
-                        ? 'border-indigo-500 bg-indigo-50 text-indigo-700'
-                        : 'border-gray-100 bg-white text-gray-600 hover:border-gray-200'
-                    }`}
-                  >
-                    {d}
-                  </button>
-                ))}
-              </div>
-            </>
-          )}
+          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1">
+            Académie
+          </label>
+          <select
+            value={academie}
+            onChange={(e) => setAcademie(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-white mb-4"
+          >
+            <option value="">Choisir une académie…</option>
+            {ACADEMIES_LIST.map((a) => (
+              <option key={a} value={a}>{a}</option>
+            ))}
+          </select>
 
           <button
-            onClick={next}
-            disabled={!canNext}
-            className="w-full mt-5 bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
+            onClick={handleSubmit}
+            disabled={!canSubmit}
+            className="w-full bg-indigo-600 text-white py-2.5 rounded-xl font-semibold hover:bg-indigo-700 active:bg-indigo-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 text-sm"
           >
-            {step < 2 ? 'Continuer' : 'Commencer →'}
-            <ChevronRight className="w-4 h-4" />
+            Commencer <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       </div>
@@ -4773,11 +4756,11 @@ function ProfileView({ profile, authUser, onUpdateProfile }) {
   const [editing, setEditing]   = useState(false);
   const [prenom, setPrenom]     = useState(profile?.prenom   || '');
   const [concours, setConcours] = useState(profile?.concours || '');
-  const [diplome, setDiplome]   = useState(profile?.diplome  || '');
+  const [academie, setAcademie] = useState(profile?.academie || '');
   const [loggingOut, setLoggingOut] = useState(false);
 
   const handleSave = () => {
-    onUpdateProfile({ ...profile, prenom: prenom.trim(), concours, diplome });
+    onUpdateProfile({ ...profile, prenom: prenom.trim(), concours, academie });
     setEditing(false);
   };
 
@@ -4786,9 +4769,7 @@ function ProfileView({ profile, authUser, onUpdateProfile }) {
     await sbClient.auth.signOut();
   };
 
-  const CONCOURS = ['externe', 'interne', '3e concours'];
-  const DIPLOMES = ['bac+3', 'bac+5'];
-  const initial  = profile?.prenom?.[0]?.toUpperCase() || '?';
+  const initial = profile?.prenom?.[0]?.toUpperCase() || '?';
 
   return (
     <div className="flex-1 overflow-y-auto px-4 pt-6 pb-24">
@@ -4819,14 +4800,14 @@ function ProfileView({ profile, authUser, onUpdateProfile }) {
           ) : (
             <div className="flex gap-3">
               <button
-                onClick={() => { setEditing(false); setPrenom(profile?.prenom || ''); setConcours(profile?.concours || ''); setDiplome(profile?.diplome || ''); }}
+                onClick={() => { setEditing(false); setPrenom(profile?.prenom || ''); setConcours(profile?.concours || ''); setAcademie(profile?.academie || ''); }}
                 className="text-xs text-gray-400 font-medium hover:text-gray-600 transition-colors"
               >
                 Annuler
               </button>
               <button
                 onClick={handleSave}
-                disabled={!prenom.trim() || !concours || !diplome}
+                disabled={!prenom.trim() || !concours || !academie}
                 className="text-xs text-indigo-600 font-semibold hover:text-indigo-700 disabled:opacity-40 transition-colors"
               >
                 Enregistrer
@@ -4849,30 +4830,29 @@ function ProfileView({ profile, authUser, onUpdateProfile }) {
             <div>
               <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">Concours</label>
               <div className="flex flex-col gap-1.5">
-                {CONCOURS.map(c => (
+                {CONCOURS_LIST.map(c => (
                   <button key={c} onClick={() => setConcours(c)}
-                    className={`py-2.5 px-3 rounded-xl border-2 text-sm font-medium text-left capitalize transition-all ${
+                    className={`py-2 px-3 rounded-xl border-2 text-xs font-medium text-left transition-all ${
                       concours === c ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-gray-100 text-gray-600 hover:border-gray-200'
                     }`}
                   >
-                    Concours {c}
+                    {c}
                   </button>
                 ))}
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">Diplôme</label>
-              <div className="flex gap-2">
-                {DIPLOMES.map(d => (
-                  <button key={d} onClick={() => setDiplome(d)}
-                    className={`flex-1 py-2.5 rounded-xl border-2 text-sm font-medium uppercase transition-all ${
-                      diplome === d ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-gray-100 text-gray-600 hover:border-gray-200'
-                    }`}
-                  >
-                    {d}
-                  </button>
+              <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">Académie</label>
+              <select
+                value={academie}
+                onChange={e => setAcademie(e.target.value)}
+                className="w-full px-3 py-2.5 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-400 focus:border-transparent bg-white"
+              >
+                <option value="">Choisir une académie…</option>
+                {ACADEMIES_LIST.map(a => (
+                  <option key={a} value={a}>{a}</option>
                 ))}
-              </div>
+              </select>
             </div>
           </div>
         ) : (
@@ -4883,11 +4863,11 @@ function ProfileView({ profile, authUser, onUpdateProfile }) {
             </div>
             <div className="flex items-center justify-between py-2.5 border-b border-gray-50">
               <span className="text-xs text-gray-400 font-medium">Concours</span>
-              <span className="text-sm font-semibold text-gray-800 capitalize">Concours {profile?.concours}</span>
+              <span className="text-sm font-semibold text-gray-800">{profile?.concours}</span>
             </div>
             <div className="flex items-center justify-between py-2.5">
-              <span className="text-xs text-gray-400 font-medium">Diplôme</span>
-              <span className="text-sm font-semibold text-gray-800 uppercase">{profile?.diplome}</span>
+              <span className="text-xs text-gray-400 font-medium">Académie</span>
+              <span className="text-sm font-semibold text-gray-800">{profile?.academie || '—'}</span>
             </div>
           </div>
         )}
@@ -5288,9 +5268,9 @@ function AppContent({ authUser }) {
     if (saved) {
       setProfile(saved);
     } else if (authUser?.user_metadata) {
-      const { prenom, nom, concours, diplome } = authUser.user_metadata;
-      if (prenom && concours && diplome) {
-        const p = { prenom: prenom.trim(), concours, diplome };
+      const { prenom, concours, academie } = authUser.user_metadata;
+      if (prenom && concours) {
+        const p = { prenom: prenom.trim(), concours, academie: academie || '' };
         storage.set('crpe_profile', p);
         setProfile(p);
       }
