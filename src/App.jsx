@@ -759,7 +759,7 @@ async function fetchQuestionsFromBanque(topic, niveau) {
       niveau:     `eq.${classe}`,
       select:     'id,thematique,sous_categorie,objectif,texte_support,question,reponse_ideale,niveau_difficulte,synthese_cours,definition_mots_cles',
     });
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/questions_v2?${params}`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/exercices_francais_v?${params}`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
     });
     if (!res.ok) return [];
