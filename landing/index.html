@@ -1385,18 +1385,53 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div id="registerFields" style="display:none; flex-direction:column; gap:14px">
         <div class="auth-field">
           <label class="auth-label">Type de concours</label>
-          <div style="display:flex; flex-direction:column; gap:6px">
-            <label class="auth-radio-item"><input type="radio" name="concours" value="externe" /> Concours externe</label>
-            <label class="auth-radio-item"><input type="radio" name="concours" value="interne" /> Concours interne</label>
-            <label class="auth-radio-item"><input type="radio" name="concours" value="3e concours" /> 3e concours</label>
+          <div style="display:flex; flex-direction:column; gap:5px">
+            <label class="auth-radio-item"><input type="radio" name="concours" value="Concours externe et externe spécial — Bac+3" /> Concours externe et externe spécial — Bac+3</label>
+            <label class="auth-radio-item"><input type="radio" name="concours" value="Concours externe et externe spécial — Bac+5" /> Concours externe et externe spécial — Bac+5</label>
+            <label class="auth-radio-item"><input type="radio" name="concours" value="Troisième concours" /> Troisième concours</label>
+            <label class="auth-radio-item"><input type="radio" name="concours" value="Second concours interne et interne spécial (langues régionales)" /> Second concours interne et interne spécial (langues régionales)</label>
+            <label class="auth-radio-item"><input type="radio" name="concours" value="Concours interne exceptionnel" /> Concours interne exceptionnel</label>
+            <label class="auth-radio-item"><input type="radio" name="concours" value="Premier concours interne" /> Premier concours interne</label>
+            <label class="auth-radio-item"><input type="radio" name="concours" value="Concours spécifiques à l'académie de Mayotte" /> Concours spécifiques à l'académie de Mayotte</label>
           </div>
         </div>
         <div class="auth-field">
-          <label class="auth-label">Niveau de diplôme</label>
-          <div style="display:flex; gap:8px">
-            <label class="auth-radio-item" style="flex:1"><input type="radio" name="diplome" value="bac+3" /> Bac+3</label>
-            <label class="auth-radio-item" style="flex:1"><input type="radio" name="diplome" value="bac+5" /> Bac+5</label>
-          </div>
+          <label class="auth-label" for="authAcademie">Académie</label>
+          <select class="auth-input" id="authAcademie">
+            <option value="">Choisir une académie…</option>
+            <option value="Je ne sais pas encore">Je ne sais pas encore</option>
+            <option value="Aix-Marseille">Aix-Marseille</option>
+            <option value="Amiens">Amiens</option>
+            <option value="Besançon">Besançon</option>
+            <option value="Bordeaux">Bordeaux</option>
+            <option value="Caen">Caen</option>
+            <option value="Clermont-Ferrand">Clermont-Ferrand</option>
+            <option value="Créteil">Créteil</option>
+            <option value="Dijon">Dijon</option>
+            <option value="Grenoble">Grenoble</option>
+            <option value="Guadeloupe">Guadeloupe</option>
+            <option value="Guyane">Guyane</option>
+            <option value="La Réunion">La Réunion</option>
+            <option value="Lille">Lille</option>
+            <option value="Limoges">Limoges</option>
+            <option value="Lyon">Lyon</option>
+            <option value="Martinique">Martinique</option>
+            <option value="Mayotte">Mayotte</option>
+            <option value="Montpellier">Montpellier</option>
+            <option value="Nancy-Metz">Nancy-Metz</option>
+            <option value="Nantes">Nantes</option>
+            <option value="Nice">Nice</option>
+            <option value="Normandie">Normandie</option>
+            <option value="Orléans-Tours">Orléans-Tours</option>
+            <option value="Paris">Paris</option>
+            <option value="Poitiers">Poitiers</option>
+            <option value="Reims">Reims</option>
+            <option value="Rennes">Rennes</option>
+            <option value="Rouen">Rouen</option>
+            <option value="Strasbourg">Strasbourg</option>
+            <option value="Toulouse">Toulouse</option>
+            <option value="Versailles">Versailles</option>
+          </select>
         </div>
         <div class="auth-field">
           <label class="auth-label" for="authPhone">Téléphone <span style="font-weight:400; color:#94a3b8">(optionnel)</span></label>
@@ -1759,14 +1794,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const prenom   = document.getElementById('authPrenom').value.trim();
     const nom      = document.getElementById('authNom').value.trim();
     const concours = authMode === 'register' ? (document.querySelector('input[name="concours"]:checked')?.value || '') : '';
-    const diplome  = authMode === 'register' ? (document.querySelector('input[name="diplome"]:checked')?.value  || '') : '';
+    const academie = authMode === 'register' ? (document.getElementById('authAcademie')?.value || '') : '';
     const phoneCode   = document.getElementById('authPhoneCode')?.value || '+33';
     const phoneNumber = document.getElementById('authPhone')?.value.trim() || '';
     const telephone   = authMode === 'register' && phoneNumber ? `${phoneCode} ${phoneNumber}` : '';
     const btn      = document.getElementById('authSubmit');
 
     if (!email || !password) return;
-    if (authMode === 'register' && (!prenom || !concours || !diplome)) {
+    if (authMode === 'register' && (!prenom || !concours || !academie)) {
       showAuthMessage('Veuillez remplir tous les champs.', 'error');
       return;
     }
@@ -1790,7 +1825,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const { data: signUpData, error } = await sb.auth.signUp({
         email,
         password,
-        options: { data: { prenom, nom, concours, diplome } }
+        options: { data: { prenom, nom, concours, academie } }
       });
       if (error) {
         showAuthMessage(translateSupabaseError(error.message), 'error');
