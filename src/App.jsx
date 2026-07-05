@@ -1661,15 +1661,18 @@ const OPTION_LABELS = {
   '1': 'Version intermédiaire',
 };
 
-function QuickReplies({ options, onSelect }) {
+function QuickReplies({ options, onSelect, color = 'indigo' }) {
   if (!options.length) return null;
+  const cls = color === 'emerald'
+    ? 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100 active:bg-emerald-200'
+    : 'bg-indigo-50 border-indigo-200 text-indigo-700 hover:bg-indigo-100 active:bg-indigo-200';
   return (
     <div className="flex flex-wrap gap-2 px-4 pt-1 pb-3">
       {options.map((opt) => (
         <button
           key={opt}
           onClick={() => onSelect(`[${opt}]`)}
-          className="px-3 py-1.5 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-full text-xs font-semibold hover:bg-indigo-100 active:bg-indigo-200 transition-all"
+          className={`px-3 py-1.5 border rounded-full text-xs font-semibold transition-all ${cls}`}
         >
           {OPTION_LABELS[opt] ?? `[${opt}]`}
         </button>
@@ -3476,7 +3479,7 @@ Réponse type CRPE :
 
       {/* Quick-reply buttons */}
       {opts.length > 0 && (
-        <QuickReplies options={opts} onSelect={handleOption} />
+        <QuickReplies options={opts} onSelect={handleOption} color="emerald" />
       )}
 
       {/* Input */}
