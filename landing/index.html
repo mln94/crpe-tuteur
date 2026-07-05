@@ -1384,16 +1384,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <div id="registerFields" style="display:none; flex-direction:column; gap:14px">
         <div class="auth-field">
-          <label class="auth-label">Type de concours</label>
-          <div style="display:flex; flex-direction:column; gap:5px">
-            <label class="auth-radio-item"><input type="radio" name="concours" value="Concours externe et externe spécial — Bac+3" /> Concours externe et externe spécial — Bac+3</label>
-            <label class="auth-radio-item"><input type="radio" name="concours" value="Concours externe et externe spécial — Bac+5" /> Concours externe et externe spécial — Bac+5</label>
-            <label class="auth-radio-item"><input type="radio" name="concours" value="Troisième concours" /> Troisième concours</label>
-            <label class="auth-radio-item"><input type="radio" name="concours" value="Second concours interne et interne spécial (langues régionales)" /> Second concours interne et interne spécial (langues régionales)</label>
-            <label class="auth-radio-item"><input type="radio" name="concours" value="Concours interne exceptionnel" /> Concours interne exceptionnel</label>
-            <label class="auth-radio-item"><input type="radio" name="concours" value="Premier concours interne" /> Premier concours interne</label>
-            <label class="auth-radio-item"><input type="radio" name="concours" value="Concours spécifiques à l'académie de Mayotte" /> Concours spécifiques à l'académie de Mayotte</label>
-          </div>
+          <label class="auth-label" for="authConcours">Type de concours</label>
+          <select class="auth-input" id="authConcours">
+            <option value="">Choisir un concours…</option>
+            <option value="Concours externe et externe spécial — Bac+3">Concours externe et externe spécial — Bac+3</option>
+            <option value="Concours externe et externe spécial — Bac+5">Concours externe et externe spécial — Bac+5</option>
+            <option value="Troisième concours">Troisième concours</option>
+            <option value="Second concours interne et interne spécial (langues régionales)">Second concours interne et interne spécial (langues régionales)</option>
+            <option value="Concours interne exceptionnel">Concours interne exceptionnel</option>
+            <option value="Premier concours interne">Premier concours interne</option>
+            <option value="Concours spécifiques à l'académie de Mayotte">Concours spécifiques à l'académie de Mayotte</option>
+          </select>
         </div>
         <div class="auth-field">
           <label class="auth-label" for="authAcademie">Académie</label>
@@ -1793,7 +1794,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const password = document.getElementById('authPassword').value;
     const prenom   = document.getElementById('authPrenom').value.trim();
     const nom      = document.getElementById('authNom').value.trim();
-    const concours = authMode === 'register' ? (document.querySelector('input[name="concours"]:checked')?.value || '') : '';
+    const concours = authMode === 'register' ? (document.getElementById('authConcours')?.value || '') : '';
     const academie = authMode === 'register' ? (document.getElementById('authAcademie')?.value || '') : '';
     const phoneCode   = document.getElementById('authPhoneCode')?.value || '+33';
     const phoneNumber = document.getElementById('authPhone')?.value.trim() || '';
