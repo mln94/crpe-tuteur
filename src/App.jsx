@@ -3145,40 +3145,74 @@ function MathBanqueView({ onBack }) {
   const [phase, setPhase]                 = useState('question');
   const [userAnswer, setUserAnswer]       = useState('');
   const [correction, setCorrection]       = useState('');
-  const [showSynthese, setShowSynthese]   = useState(false);
-  const [showDefs, setShowDefs]           = useState(false);
-  const inputRef = useRef(null);
-  const bottomRef = useRef(null);
+  const [streamingText, setStreamingText] = useState('');
+  const [loading, setLoading]             = useState(false);
+  const [synthese, setSynthese]     = useState({ open: false, content: '', minimized: false });
+  const [definitions, setDefinitions] = useState({ open: false, content: '', minimized: false });
+  const tentativeRef = useRef(1);
+  const inputRef     = useRef(null);
+  const bottomRef    = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [phase, correction, showSynthese, showDefs]);
+  }, [phase, correction, streamingText]);
 
-  const handleThematiqueSelect = (label) => {
-    setSelectedThematique(label);
-    setStep('classe');
-  };
+  const ex = exercises[currentIdx];
 
-  const handleClasseSelect = async (classeId) => {
-    const classe = NIVEAU_TO_CLASSE[classeId];
-    setLoadingEx(true);
-    setStep('exercises');
-    setCurrentIdx(0);
-    setPhase('question');
-    setUserAnswer('');
-    setCorrection('');
-    const data = await fetchExercicesMaths(selectedThematique, classe);
-    setExercises(shuffleArray(data));
-    setLoadingEx(false);
-    setTimeout(() => inputRef.current?.focus(), 150);
+  function getOptions() {
+    if (!ex || phase === 'correcting' || phase === 'done') return [];
+    const s = ex.synthese_cours        ? ['S'] : [];
+    const d = ex.definition_mots_cles ? ['D'] : [];
+    if (phase === 'question')  return ['R', ...s, ...d, 'O'];
+    if (phase === 'answered')  return [...(tentativeRef.current === 1 ? ['N'] : []), 'R', ...s, ...d, 'O'];
+    if (phase === 'revealed')  return [...s, ...d, 'O'];
+    return [];
+  }
+
+  const handleOption = (optStr) => {
+    const opt = optStr.replace(/[\[\]]/g, '');
+    if (opt === 'R') { setPhase('revealed'); return; }
+    if (opt === 'S') {
+      if (ex?.synthese_cours) setSynthese({ open: true, content: ex.synthese_cours, minimized: false });
+      return;
+    }
+    if (opt === 'D') {
+      if (ex?.definition_mots_cles) setDefinitions({ open: true, content: ex.definition_mots_cles, minimized: false });
+      return;
+    }
+    if (opt === 'N') {
+      tentativeRef.current = 2;
+      setPhase('question');
+      setUserAnswer('');
+      setCorrection('');
+      setStreamingText('');
+      setTimeout(() => inputRef.current?.focus(), 150);
+      return;
+    }
+    if (opt === 'O') {
+      if (currentIdx + 1 >= exercises.length) { setPhase('done'); return; }
+      tentativeRef.current = 1;
+      setCurrentIdx(i => i + 1);
+      setPhase('question');
+      setUserAnswer('');
+      setCorrection('');
+      setStreamingText('');
+      setSynthese({ open: false, content: '', minimized: false });
+      setDefinitions({ open: false, content: '', minimized: false });
+      setTimeout(() => inputRef.current?.focus(), 150);
+      return;
+    }
   };
 
   const handleSubmit = async () => {
-    if (!userAnswer.trim()) return;
-    const ex = exercises[currentIdx];
+    if (!userAnswer.trim() || loading) return;
+    const tentative = tentativeRef.current;
+    setLoading(true);
     setPhase('correcting');
     setCorrection('');
-    const correctionPrompt = `Tu es un correcteur expert en mathématiques pour le CRPE (cycle 4).
+    setStreamingText('');
+
+    const prompt = `Tu es un correcteur expert en mathématiques pour le CRPE (cycle 4).
 
 Thématique : ${ex.thematique}
 Sous-catégorie : ${ex.sous_categorie}
@@ -3194,7 +3228,7 @@ ${ex.question}
 Réponse attendue (ne pas divulguer directement, sert uniquement à évaluer) :
 ${ex.reponse_ideale}
 
-Réponse du candidat :
+Réponse du candidat (tentative ${tentative}) :
 ${userAnswer}
 
 ---
@@ -3215,26 +3249,22 @@ Réponse type CRPE :
 
     try {
       await streamClaude(
-        [{ role: 'user', content: correctionPrompt }],
+        [{ role: 'user', content: prompt }],
         'Tu es un correcteur expert en mathématiques cycle 4 pour le CRPE. Sois précis, bienveillant et rigoureux.',
-        (chunk) => setCorrection(chunk),
-        (final) => { setCorrection(final); setPhase('answered'); },
+        (chunk) => setStreamingText(chunk),
+        (final) => { setStreamingText(''); setCorrection(final); setPhase('answered'); },
       );
     } catch {
+      setStreamingText('');
       setCorrection('Erreur lors de la correction. Vérifiez votre connexion.');
       setPhase('answered');
     }
+    setLoading(false);
+    setTimeout(() => inputRef.current?.focus(), 100);
   };
 
-  const handleNext = () => {
-    if (currentIdx + 1 >= exercises.length) { setPhase('done'); return; }
-    setCurrentIdx(i => i + 1);
-    setPhase('question');
-    setUserAnswer('');
-    setCorrection('');
-    setShowSynthese(false);
-    setShowDefs(false);
-    setTimeout(() => inputRef.current?.focus(), 150);
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(); }
   };
 
   // ── Step: thématique ──────────────────────────────────────────────────────
@@ -3255,7 +3285,7 @@ Réponse type CRPE :
           {MATH_THEMATIQUES.map((th) => {
             const Icon = th.icon;
             return (
-              <button key={th.id} onClick={() => handleThematiqueSelect(th.label)}
+              <button key={th.id} onClick={() => { setSelectedThematique(th.label); setStep('classe'); }}
                 className="w-full bg-white rounded-2xl border border-gray-100 shadow-sm p-4 flex items-center gap-4 hover:shadow-md active:scale-[0.98] transition-all text-left">
                 <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${th.colors.bg}`}>
                   <Icon className={`w-5 h-5 ${th.colors.icon}`} />
@@ -3275,7 +3305,23 @@ Réponse type CRPE :
 
   // ── Step: classe ─────────────────────────────────────────────────────────
   if (step === 'classe') {
-    return <ClassPickerView onSelect={handleClasseSelect} onBack={() => setStep('thematique')} />;
+    return (
+      <ClassPickerView
+        onSelect={async (classeId) => {
+          const classe = NIVEAU_TO_CLASSE[classeId];
+          setLoadingEx(true);
+          setStep('exercises');
+          setCurrentIdx(0); setPhase('question');
+          setUserAnswer(''); setCorrection(''); setStreamingText('');
+          tentativeRef.current = 1;
+          const data = await fetchExercicesMaths(selectedThematique, classe);
+          setExercises(shuffleArray(data));
+          setLoadingEx(false);
+          setTimeout(() => inputRef.current?.focus(), 150);
+        }}
+        onBack={() => setStep('thematique')}
+      />
+    );
   }
 
   // ── Loading ──────────────────────────────────────────────────────────────
@@ -3308,53 +3354,82 @@ Réponse type CRPE :
   }
 
   // ── Exercise view ────────────────────────────────────────────────────────
-  const ex = exercises[currentIdx];
   const thInfo = MATH_THEMATIQUES.find(t => t.label === ex?.thematique);
+  const opts   = getOptions();
+  const inputDisabled = phase !== 'question' || loading;
 
   return (
-    <div className="flex-1 flex flex-col min-h-0">
+    <div className="flex flex-col flex-1 min-h-0">
+
+      {/* Panneaux latéraux synthèse + définitions */}
+      {(synthese.open || definitions.open) && (
+        <div className="fixed top-0 right-0 bottom-0 w-96 z-50 flex flex-col shadow-2xl">
+          {synthese.open && (
+            <div className={`flex flex-col bg-white border-l border-gray-200 transition-all ${synthese.minimized ? 'flex-shrink-0' : 'flex-1 min-h-0'}`}>
+              <div className="flex items-center justify-between px-4 py-3 bg-indigo-600 flex-shrink-0">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-white" />
+                  <span className="text-sm font-semibold text-white">Synthèse du cours</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <button onClick={() => setSynthese(s => ({ ...s, minimized: !s.minimized }))} className="text-white/70 hover:text-white transition-colors">
+                    {synthese.minimized ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                  </button>
+                  <button onClick={() => setSynthese({ open: false, content: '', minimized: false })} className="text-white/70 hover:text-white transition-colors">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+              {!synthese.minimized && (
+                <div className="flex-1 overflow-y-auto px-5 py-4 text-sm">
+                  <MessageContent text={synthese.content} />
+                </div>
+              )}
+            </div>
+          )}
+          {definitions.open && (
+            <div className={`flex flex-col bg-white border-l border-gray-200 transition-all ${definitions.minimized ? 'flex-shrink-0' : 'flex-1 min-h-0'} ${synthese.open ? 'border-t-2 border-t-violet-200' : ''}`}>
+              <div className="flex items-center justify-between px-4 py-3 bg-violet-600 flex-shrink-0">
+                <div className="flex items-center gap-2">
+                  <ListChecks className="w-4 h-4 text-white" />
+                  <span className="text-sm font-semibold text-white">Définitions des mots clés</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <button onClick={() => setDefinitions(d => ({ ...d, minimized: !d.minimized }))} className="text-white/70 hover:text-white transition-colors">
+                    {definitions.minimized ? <ChevronDown className="w-4 h-4" /> : <ChevronUp className="w-4 h-4" />}
+                  </button>
+                  <button onClick={() => setDefinitions({ open: false, content: '', minimized: false })} className="text-white/70 hover:text-white transition-colors">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+              {!definitions.minimized && (
+                <div className="flex-1 overflow-y-auto px-5 py-4 text-sm">
+                  <MessageContent text={definitions.content} />
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Header */}
-      <div className="px-4 pt-4 pb-3 border-b border-gray-100 bg-white flex items-center justify-between flex-shrink-0 gap-2">
-        <button onClick={onBack} className="flex items-center gap-1 text-gray-500 text-sm hover:text-gray-700 transition-colors flex-shrink-0">
-          <ChevronLeft className="w-4 h-4" />Retour
+      <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-white flex-shrink-0">
+        <button onClick={onBack} className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0">
+          <ChevronLeft className="w-5 h-5" />
         </button>
-        <div className="text-center min-w-0">
+        <div className="flex flex-col items-center min-w-0">
           <p className="text-xs font-semibold text-gray-900 truncate">{ex?.sous_categorie}</p>
           <p className="text-[10px] text-gray-400">{currentIdx + 1}/{exercises.length} · {ex?.classe}</p>
         </div>
-        <div className="flex gap-1.5 flex-shrink-0">
-          <button onClick={() => { setShowSynthese(s => !s); setShowDefs(false); }}
-            className={`text-xs px-2 py-1 rounded-lg font-medium transition-all ${showSynthese ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>
-            Cours
-          </button>
-          <button onClick={() => { setShowDefs(s => !s); setShowSynthese(false); }}
-            className={`text-xs px-2 py-1 rounded-lg font-medium transition-all ${showDefs ? 'bg-sky-100 text-sky-700' : 'bg-gray-100 text-gray-500 hover:bg-gray-200'}`}>
-            Défs
-          </button>
-        </div>
+        <div className="w-5" />
       </div>
 
       {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 flex flex-col gap-3">
-
-        {/* Synthèse de cours */}
-        {showSynthese && ex?.synthese_cours && (
-          <div className="bg-emerald-50 rounded-2xl border border-emerald-100 p-4">
-            <p className="text-xs font-semibold text-emerald-700 mb-1.5">Synthèse de cours</p>
-            <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-wrap">{ex.synthese_cours}</p>
-          </div>
-        )}
-
-        {/* Définitions */}
-        {showDefs && ex?.definition_mots_cles && (
-          <div className="bg-sky-50 rounded-2xl border border-sky-100 p-4">
-            <p className="text-xs font-semibold text-sky-700 mb-1.5">Définitions</p>
-            <p className="text-xs text-gray-700 leading-relaxed whitespace-pre-wrap">{ex.definition_mots_cles}</p>
-          </div>
-        )}
+      <div className="flex-1 overflow-y-auto">
 
         {/* Exercise card */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+        <div className="mx-4 mt-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
           <div className="flex items-center gap-2 mb-3 flex-wrap">
             <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${thInfo?.colors.bg || 'bg-emerald-50'} ${thInfo?.colors.icon || 'text-emerald-700'}`}>
               Exercice {currentIdx + 1} · Facile
@@ -3373,54 +3448,59 @@ Réponse type CRPE :
           <p className="text-sm font-semibold text-gray-900">{ex?.question}</p>
         </div>
 
-        {/* Correction */}
+        {/* Correction (streaming or final) */}
         {(phase === 'correcting' || phase === 'answered') && (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
+          <div className="mx-4 mt-3 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
             <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-3">Correction</p>
-            {phase === 'correcting' && !correction && (
+            {phase === 'correcting' && !streamingText && (
               <div className="flex items-center gap-2 text-gray-400 text-sm">
                 <Loader2 className="w-4 h-4 animate-spin" />Correction en cours…
               </div>
             )}
-            {correction && (
-              <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-wrap">{correction}</p>
+            {(streamingText || correction) && (
+              <MessageContent text={streamingText || correction} />
             )}
           </div>
         )}
 
-        {phase === 'answered' && (
-          <button onClick={handleNext}
-            className="w-full py-3 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 transition-all flex items-center justify-center gap-2">
-            {currentIdx + 1 >= exercises.length ? 'Terminer la série' : 'Exercice suivant →'}
-          </button>
+        {/* Réponse idéale (after [R]) */}
+        {phase === 'revealed' && (
+          <div className="mx-4 mt-3 bg-indigo-50 rounded-2xl border border-indigo-100 p-4">
+            <p className="text-[10px] font-semibold text-indigo-500 uppercase tracking-wide mb-3">Réponse type CRPE</p>
+            <MessageContent text={ex?.reponse_ideale || ''} />
+          </div>
         )}
 
-        <div ref={bottomRef} />
+        {/* Quick-reply buttons */}
+        {opts.length > 0 && (
+          <QuickReplies options={opts} onSelect={handleOption} />
+        )}
+
+        <div ref={bottomRef} className="h-4" />
       </div>
 
-      {/* Answer input — same design as French section */}
-      {phase === 'question' && (
-        <div className="px-3 pt-2 border-t border-gray-100 bg-white flex-shrink-0" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 96px)' }}>
-          <div className="flex gap-2 items-end">
-            <textarea
-              ref={inputRef}
-              value={userAnswer}
-              onChange={e => setUserAnswer(e.target.value)}
-              onKeyDown={e => { if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSubmit(); }}
-              placeholder="Votre réponse…"
-              rows={4}
-              className="flex-1 resize-none border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent transition-all"
-            />
-            <button
-              onClick={handleSubmit}
-              disabled={!userAnswer.trim()}
-              className="w-10 h-10 bg-emerald-600 text-white rounded-xl flex items-center justify-center hover:bg-emerald-700 active:bg-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex-shrink-0"
-            >
-              <Send className="w-4 h-4" />
-            </button>
-          </div>
+      {/* Input */}
+      <div className="px-3 pt-2 border-t border-gray-100 bg-white flex-shrink-0" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 96px)' }}>
+        <div className="flex gap-2 items-end">
+          <textarea
+            ref={inputRef}
+            value={userAnswer}
+            onChange={e => setUserAnswer(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder={inputDisabled ? '' : 'Votre réponse…'}
+            disabled={inputDisabled}
+            rows={4}
+            className="flex-1 resize-none border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent disabled:opacity-50 transition-all"
+          />
+          <button
+            onClick={handleSubmit}
+            disabled={!userAnswer.trim() || inputDisabled}
+            className="w-10 h-10 bg-emerald-600 text-white rounded-xl flex items-center justify-center hover:bg-emerald-700 active:bg-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex-shrink-0"
+          >
+            {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+          </button>
         </div>
-      )}
+      </div>
     </div>
   );
 }
