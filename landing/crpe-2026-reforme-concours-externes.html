@@ -51,43 +51,13 @@
     h1 { font-size: clamp(26px, 4vw, 40px); font-weight: 900; color: var(--gray-900); line-height: 1.2; letter-spacing: -.4px; margin-bottom: 16px; }
     .article-meta { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--gray-400); margin-bottom: 32px; flex-wrap: wrap; }
 
-    /* INTRO */
-    .intro-box { background: var(--indigo-50); border-left: 4px solid var(--indigo-600); border-radius: 0 12px 12px 0; padding: 20px 24px; margin-bottom: 36px; font-size: 16px; line-height: 1.7; color: var(--gray-700); }
-    .intro-box strong { color: #3730a3; }
-
     /* BODY */
     .article-body { font-size: 16px; line-height: 1.8; color: var(--gray-700); }
     .article-body h2 { font-size: 22px; font-weight: 800; color: var(--gray-900); margin: 40px 0 14px; letter-spacing: -.2px; }
     .article-body p { margin-bottom: 18px; }
     .article-body strong { color: var(--gray-900); }
-    .article-body ul { margin: 0 0 18px 22px; }
+    .article-body ul, .article-body ol { margin: 0 0 18px 24px; }
     .article-body li { margin-bottom: 8px; }
-
-    /* STEPS */
-    .step-list { list-style: none; margin: 0 0 28px; padding: 0; display: flex; flex-direction: column; gap: 16px; }
-    .step-item { display: flex; gap: 16px; align-items: flex-start; }
-    .step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--indigo-600); color: #fff; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
-    .step-content h3 { margin: 0 0 4px; font-size: 15px; font-weight: 700; color: var(--gray-900); }
-    .step-content p { margin: 0; font-size: 14px; color: var(--gray-600); line-height: 1.6; }
-
-    /* SALARY */
-    .salary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0 28px; }
-    .salary-card { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 16px 20px; }
-    .salary-card .label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--gray-400); margin-bottom: 4px; }
-    .salary-card .amount { font-size: 24px; font-weight: 900; color: var(--indigo-600); }
-    .salary-card .sublabel { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
-    @media (max-width: 480px) { .salary-row { grid-template-columns: 1fr; } }
-
-    /* ALERTS */
-    .alert { border-radius: 12px; padding: 16px 20px; margin: 24px 0; font-size: 15px; line-height: 1.65; }
-    .alert-orange { background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; }
-    .alert-indigo { background: var(--indigo-50); border: 1px solid var(--indigo-100); color: #3730a3; }
-    .alert strong { display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
-
-    /* FEATURE LIST */
-    .feature-list { list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-    .feature-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; color: var(--gray-700); }
-    .feature-list li::before { content: "✓"; color: var(--indigo-600); font-weight: 800; flex-shrink: 0; }
 
     /* TABLE */
     .table-wrap { overflow-x: auto; margin: 24px 0 36px; border-radius: 12px; border: 1px solid var(--gray-200); }
@@ -188,69 +158,38 @@
     <span>⏱ 5 min de lecture</span>
   </div>
 
-  <div class="intro-box">
-    À partir de 2026, vous pouvez passer le CRPE dès votre licence (Bac+3), et si vous réussissez, vous entrez automatiquement dans une <strong>formation rémunérée de 2 ans</strong> au lieu du Master MEEF classique. C'est un changement majeur.
-  </div>
-
   <div class="article-body">
+
+    <p>À partir de 2026, vous pouvez passer le CRPE dès votre licence (Bac+3), et si vous réussissez, vous entrez automatiquement dans une <strong>formation rémunérée de 2 ans</strong> au lieu du Master MEEF classique. C'est un changement majeur.</p>
 
     <p>Et oui, cela signifie que le Master MEEF tel qu'on le connaît <strong>disparaît progressivement</strong>. À partir de 2026, il n'y aura plus de candidatures possibles pour le Master 1 MEEF (mentions premier degré, second degré et encadrement éducatif). Seul le Master MEEF mention "Pratique et ingénierie de la formation" continuera d'exister.</p>
 
-    <div class="alert alert-orange">
-      <strong>⚠️ Exception</strong>
-      Les étudiants en dernière année de Master en 2026 pourront passer la session 2027 du CRPE.
-    </div>
+    <p><strong>Exception :</strong> Les étudiants en dernière année de Master en 2026 pourront passer la session 2027 du CRPE.</p>
 
     <h2>Comment ça marche concrètement ?</h2>
 
-    <p>L'objectif de cette réforme est de créer un parcours plus clair, plus attractif et surtout plus professionnalisant. Dès la licence, vous suivrez une préparation adaptée aux exigences du métier de professeur des écoles. Un parcours cohérent, professionnalisé et rémunéré à partir du master.</p>
+    <p>L'objectif de cette réforme est de créer un parcours plus clair, plus attractif et surtout plus professionnalisant. Dès la licence, vous suivrez une préparation adaptée aux exigences du métier de professeur des écoles.</p>
 
-    <ul class="step-list">
-      <li class="step-item">
-        <div class="step-num">1</div>
-        <div class="step-content">
-          <h3>Passer le CRPE en Bac+3 (à partir de 2026)</h3>
-          <p>Vous êtes en L3 (3e année de licence) ? Vous pouvez maintenant vous inscrire au CRPE. Le programme de l'épreuve est basé sur le <strong>cycle 4 (classes 5e–4e–3e)</strong>, pas sur le cycle complet de l'école primaire.</p>
-        </div>
-      </li>
-      <li class="step-item">
-        <div class="step-num">2</div>
-        <div class="step-content">
-          <h3>Réussir le concours = Master M2E automatique ET rémunéré</h3>
-          <p>Si vous réussissez, vous n'avez pas à chercher un master par vous-même. L'État vous place automatiquement en <strong>Master Enseignement et Éducation (M2E)</strong>. Et voici ce qui change tout : vous êtes rémunéré pendant cette formation.</p>
-        </div>
-      </li>
-      <li class="step-item">
-        <div class="step-num">3</div>
-        <div class="step-content">
-          <h3>Titularisation et engagement de 4 ans</h3>
-          <p>Après les 2 ans de formation, vous êtes titularisé comme professeur des écoles. Vous vous engagez à rester <strong>4 ans dans le poste</strong>. L'État vous finance 2 ans de formation, vous lui donnez 4 ans de service en retour.</p>
-        </div>
-      </li>
-    </ul>
+    <ol>
+      <li><strong>Passer le CRPE en Bac+3 (à partir de 2026)</strong><br>Vous êtes en L3 (3e année de licence) ? Vous pouvez maintenant vous inscrire au CRPE. Le programme de l'épreuve est basé sur le <strong>cycle 4 (classes 5e–4e–3e)</strong>, pas sur le cycle complet de l'école primaire.</li>
+      <li><strong>Réussir le concours = Master M2E automatique ET rémunéré</strong><br>Si vous réussissez, vous n'avez pas à chercher un master par vous-même. L'État vous place automatiquement en <strong>Master Enseignement et Éducation (M2E)</strong>, et vous êtes rémunéré pendant cette formation.</li>
+      <li><strong>Titularisation et engagement de 4 ans</strong><br>Après les 2 ans de formation, vous êtes titularisé comme professeur des écoles. Vous vous engagez à rester <strong>4 ans dans le poste</strong>. L'État vous finance 2 ans de formation, vous lui donnez 4 ans de service en retour.</li>
+    </ol>
 
     <h2>La rémunération pendant le Master M2E</h2>
 
-    <div class="salary-row">
-      <div class="salary-card">
-        <div class="label">M1 — Élève-fonctionnaire</div>
-        <div class="amount">~1 400 €</div>
-        <div class="sublabel">nets par mois</div>
-      </div>
-      <div class="salary-card">
-        <div class="label">M2 — Fonctionnaire stagiaire</div>
-        <div class="amount">~1 800 €</div>
-        <div class="sublabel">nets par mois</div>
-      </div>
-    </div>
+    <ul>
+      <li><strong>M1 — Élève-fonctionnaire :</strong> ~1 400 € nets par mois</li>
+      <li><strong>M2 — Fonctionnaire stagiaire :</strong> ~1 800 € nets par mois</li>
+    </ul>
 
     <p><a href="https://www.devenirenseignant.gouv.fr/le-master-m2e-une-formation-professionnalisante-pour-les-futurs-enseignants-et-conseillers-d-1527" target="_blank" rel="noopener" style="color:#4f46e5;font-weight:600;">→ En savoir plus sur le Master M2E</a></p>
 
     <h2>La formation spéciale LPE</h2>
 
-    <p>À partir de 2026, le gouvernement crée une nouvelle voie spéciale : la <strong>Licence Professorat des Écoles (LPE)</strong>, proposée sur tout le territoire. C'est une licence spécialisée conçue pour devenir professeur des écoles. Elle ajoute de la cohérence, de la continuité, de la clarté et de la professionnalisation à votre parcours.</p>
+    <p>À partir de 2026, le gouvernement crée une nouvelle voie spéciale : la <strong>Licence Professorat des Écoles (LPE)</strong>, proposée sur tout le territoire. C'est une licence spécialisée conçue pour devenir professeur des écoles.</p>
 
-    <ul class="feature-list">
+    <ul>
       <li>10 semaines de stage minimum intégrées sur les 3 années</li>
       <li>Enseignement disciplinaire renforcé (français, mathématiques)</li>
       <li>Préparation au CRPE dès la L1 (pas seulement en L3)</li>
@@ -258,10 +197,7 @@
 
     <p><a href="https://www.devenirenseignant.gouv.fr/avant-le-concours-preparer-une-licence-pour-devenir-enseignant-1542" target="_blank" rel="noopener" style="color:#4f46e5;font-weight:600;">→ En savoir plus sur la Licence Professorat des Écoles</a></p>
 
-    <div class="alert alert-indigo">
-      <strong>🎯 Le concours spécial LPE (à partir de 2028)</strong>
-      Les étudiants LPE n'auront que <strong>2 épreuves d'admission</strong>, alors que les étudiants en L3 classique devront passer 2 épreuves d'admissibilité + 2 épreuves d'admission (4 au total).
-    </div>
+    <p><strong>Le concours spécial LPE (à partir de 2028) :</strong> Les étudiants LPE n'auront que <strong>2 épreuves d'admission</strong>, alors que les étudiants en L3 classique devront passer 2 épreuves d'admissibilité + 2 épreuves d'admission (4 au total).</p>
 
     <h2>Ce qu'il faut faire maintenant</h2>
 
