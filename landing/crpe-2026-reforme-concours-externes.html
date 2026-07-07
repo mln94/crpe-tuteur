@@ -2,206 +2,126 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8" />
-  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CRPE 2026 : qu'est-ce qui change pour les concours externes ? — Blog PassCRPE</title>
-  <meta name="description" content="À partir de 2026, le CRPE se passe dès la licence (Bac+3) et ouvre sur un Master M2E rémunéré. Voici ce qui change concrètement, étape par étape." />
+  <title>CRPE 2026 : Qu'est-ce qui change pour les concours externes ? — Blog PassCRPE</title>
+  <meta name="description" content="À partir de 2026, vous pouvez passer le CRPE dès la licence (Bac+3). Découvrez tout ce qui change : Master M2E rémunéré, Licence LPE, parcours professionnalisant." />
+  <link rel="canonical" href="https://www.passcrpe.fr/blog/crpe-2026-reforme-concours-externes" />
+  <meta property="og:title" content="CRPE 2026 : Qu'est-ce qui change pour les concours externes ?" />
+  <meta property="og:description" content="À partir de 2026, vous pouvez passer le CRPE dès la licence (Bac+3). Master M2E rémunéré, Licence LPE, nouveau parcours : tout ce qui change." />
+  <meta property="og:type" content="article" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --indigo-50:  #eef2ff;
-      --indigo-100: #e0e7ff;
-      --indigo-200: #c7d2fe;
-      --indigo-500: #6366f1;
-      --indigo-600: #4f46e5;
-      --indigo-700: #4338ca;
-      --emerald-500: #10b981;
-      --amber-50: #fffbeb;
-      --amber-200: #fde68a;
-      --amber-700: #b45309;
-      --gray-50:    #f9fafb;
-      --gray-100:   #f3f4f6;
-      --gray-200:   #e5e7eb;
-      --gray-400:   #9ca3af;
-      --gray-500:   #6b7280;
-      --gray-600:   #4b5563;
-      --gray-700:   #374151;
-      --gray-800:   #1f2937;
-      --gray-900:   #111827;
+      --indigo-50: #eef2ff; --indigo-100: #e0e7ff;
+      --indigo-600: #4f46e5; --indigo-700: #4338ca;
+      --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+      --gray-300: #d1d5db; --gray-400: #9ca3af; --gray-500: #6b7280;
+      --gray-600: #4b5563; --gray-700: #374151; --gray-800: #1f2937; --gray-900: #111827;
     }
-
     html { scroll-behavior: smooth; }
     body { font-family: 'Inter', system-ui, sans-serif; color: var(--gray-800); background: #fff; overflow-x: hidden; }
 
-    /* ── NAV ── */
-    nav {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(255,255,255,.92);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--gray-100);
-    }
-    .nav-inner {
-      max-width: 1120px; margin: 0 auto;
-      padding: 0 24px; height: 64px;
-      display: flex; align-items: center; justify-content: space-between; gap: 24px;
-    }
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--gray-100); }
+    .nav-inner { max-width: 1120px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
     .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-logo-icon {
-      width: 34px; height: 34px; border-radius: 9px;
-      background: var(--indigo-600);
-      display: flex; align-items: center; justify-content: center;
-    }
+    .nav-logo-icon { width: 34px; height: 34px; border-radius: 9px; background: var(--indigo-600); display: flex; align-items: center; justify-content: center; }
     .nav-logo-icon svg { width: 18px; height: 18px; color: #fff; }
     .nav-logo-text { font-size: 15px; font-weight: 800; color: var(--gray-900); letter-spacing: -.3px; }
     .nav-links { display: flex; gap: 28px; list-style: none; }
     .nav-links a { font-size: 14px; font-weight: 500; color: var(--gray-600); text-decoration: none; transition: color .15s; }
     .nav-links a:hover, .nav-links a.active { color: var(--gray-900); }
-    .nav-cta {
-      font-size: 13px; font-weight: 700; padding: 8px 18px; border-radius: 8px;
-      background: var(--indigo-600); color: #fff; text-decoration: none;
-      transition: background .15s; white-space: nowrap;
-    }
+    .nav-cta { font-size: 13px; font-weight: 700; padding: 8px 18px; border-radius: 8px; background: var(--indigo-600); color: #fff; text-decoration: none; transition: background .15s; white-space: nowrap; }
     .nav-cta:hover { background: var(--indigo-700); }
     @media (max-width: 768px) { .nav-links { display: none; } }
 
-    /* ── ARTICLE HERO ── */
-    .article-hero {
-      background: linear-gradient(135deg, var(--indigo-50) 0%, #fff 60%, #f0fdf4 100%);
-      padding: 56px 24px 40px;
-      text-align: center;
-    }
-    .article-hero .breadcrumb {
-      font-size: 13px; color: var(--gray-500); margin-bottom: 18px;
-    }
-    .article-hero .breadcrumb a { color: var(--gray-500); text-decoration: none; }
-    .article-hero .breadcrumb a:hover { color: var(--indigo-600); }
-    .article-eyebrow {
-      display: inline-block;
-      font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
-      color: var(--indigo-600); background: var(--indigo-50);
-      border: 1px solid var(--indigo-100); border-radius: 20px;
-      padding: 4px 14px; margin-bottom: 18px;
-    }
-    .article-hero h1 {
-      font-size: clamp(26px, 4.5vw, 42px); font-weight: 900; color: var(--gray-900);
-      line-height: 1.18; letter-spacing: -.5px; max-width: 760px; margin: 0 auto;
-    }
-    .article-hero .lead {
-      font-size: 17px; color: var(--gray-500); margin-top: 16px; max-width: 640px;
-      margin-left: auto; margin-right: auto; line-height: 1.6;
-    }
-
-    /* ── ARTICLE BODY ── */
+    /* LAYOUT */
     .article-wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--gray-500); text-decoration: none; margin-bottom: 32px; transition: color .15s; }
+    .back-link:hover { color: var(--indigo-600); }
 
-    .article-wrap h2 {
-      font-size: clamp(22px, 3vw, 28px); font-weight: 800; color: var(--gray-900);
-      letter-spacing: -.3px; margin: 44px 0 16px;
-    }
-    .article-wrap h2:first-child { margin-top: 0; }
-    .article-wrap h3 {
-      font-size: 18px; font-weight: 700; color: var(--gray-900);
-      margin: 28px 0 10px;
-    }
-    .article-wrap p {
-      font-size: 16.5px; line-height: 1.75; color: var(--gray-700); margin-bottom: 16px;
-    }
-    .article-wrap ul, .article-wrap ol {
-      margin: 0 0 16px 22px; color: var(--gray-700); font-size: 16.5px; line-height: 1.75;
-    }
-    .article-wrap li { margin-bottom: 6px; }
-    .article-wrap strong { color: var(--gray-900); font-weight: 700; }
-    .article-wrap a { color: var(--indigo-600); font-weight: 600; text-decoration: none; }
-    .article-wrap a:hover { text-decoration: underline; }
+    /* HEADER */
+    .article-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .article-tag { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; }
+    .tag-concours { background: #fff7ed; color: #ea580c; }
+    .tag-reforme  { background: var(--indigo-50); color: var(--indigo-600); }
+    h1 { font-size: clamp(26px, 4vw, 40px); font-weight: 900; color: var(--gray-900); line-height: 1.2; letter-spacing: -.4px; margin-bottom: 16px; }
+    .article-meta { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--gray-400); margin-bottom: 32px; flex-wrap: wrap; }
 
-    .callout {
-      background: var(--indigo-50); border: 1px solid var(--indigo-100);
-      border-radius: 12px; padding: 16px 20px; margin: 20px 0;
-      font-size: 15.5px; color: var(--indigo-700); font-weight: 600; line-height: 1.6;
-    }
-    .callout.warn {
-      background: var(--amber-50); border-color: var(--amber-200); color: var(--amber-700);
-    }
+    /* INTRO */
+    .intro-box { background: var(--indigo-50); border-left: 4px solid var(--indigo-600); border-radius: 0 12px 12px 0; padding: 20px 24px; margin-bottom: 36px; font-size: 16px; line-height: 1.7; color: var(--gray-700); }
+    .intro-box strong { color: #3730a3; }
 
-    .exception-note {
-      font-size: 14.5px; color: var(--gray-500); border-left: 3px solid var(--gray-200);
-      padding-left: 14px; margin: 16px 0 24px; line-height: 1.65;
-    }
+    /* BODY */
+    .article-body { font-size: 16px; line-height: 1.8; color: var(--gray-700); }
+    .article-body h2 { font-size: 22px; font-weight: 800; color: var(--gray-900); margin: 40px 0 14px; letter-spacing: -.2px; }
+    .article-body p { margin-bottom: 18px; }
+    .article-body strong { color: var(--gray-900); }
+    .article-body ul { margin: 0 0 18px 22px; }
+    .article-body li { margin-bottom: 8px; }
 
-    .table-wrap { overflow-x: auto; margin: 20px 0 28px; border: 1px solid var(--gray-100); border-radius: 12px; }
-    table { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 520px; }
-    thead th {
-      background: var(--gray-50); color: var(--gray-500); font-weight: 700;
-      text-transform: uppercase; letter-spacing: .04em; font-size: 12px;
-      text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--gray-100);
-    }
-    tbody th {
-      text-align: left; padding: 12px 16px; font-weight: 700; color: var(--gray-900);
-      border-bottom: 1px solid var(--gray-100); white-space: nowrap;
-    }
-    tbody td {
-      padding: 12px 16px; color: var(--gray-700); border-bottom: 1px solid var(--gray-100);
-    }
-    tbody tr:last-child th, tbody tr:last-child td { border-bottom: none; }
+    /* STEPS */
+    .step-list { list-style: none; margin: 0 0 28px; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+    .step-item { display: flex; gap: 16px; align-items: flex-start; }
+    .step-num { width: 32px; height: 32px; border-radius: 50%; background: var(--indigo-600); color: #fff; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+    .step-content h3 { margin: 0 0 4px; font-size: 15px; font-weight: 700; color: var(--gray-900); }
+    .step-content p { margin: 0; font-size: 14px; color: var(--gray-600); line-height: 1.6; }
 
-    .links-list { list-style: none; margin: 0; display: flex; flex-direction: column; gap: 10px; }
-    .links-list a {
-      display: inline-flex; align-items: center; gap: 6px;
-    }
+    /* SALARY */
+    .salary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 16px 0 28px; }
+    .salary-card { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 12px; padding: 16px 20px; }
+    .salary-card .label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--gray-400); margin-bottom: 4px; }
+    .salary-card .amount { font-size: 24px; font-weight: 900; color: var(--indigo-600); }
+    .salary-card .sublabel { font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+    @media (max-width: 480px) { .salary-row { grid-template-columns: 1fr; } }
 
-    .article-cta {
-      margin-top: 48px; padding: 32px; border-radius: 16px;
-      background: linear-gradient(135deg, var(--indigo-600) 0%, #818cf8 100%);
-      text-align: center;
-    }
-    .article-cta h3 { color: #fff; font-size: 20px; margin: 0 0 8px; }
-    .article-cta p { color: rgba(255,255,255,0.85); font-size: 14.5px; margin: 0 0 18px; }
-    .article-cta a {
-      display: inline-flex; align-items: center; gap: 6px;
-      background: #fff; color: var(--indigo-600); font-weight: 700; font-size: 14px;
-      padding: 11px 24px; border-radius: 8px; text-decoration: none;
-    }
+    /* ALERTS */
+    .alert { border-radius: 12px; padding: 16px 20px; margin: 24px 0; font-size: 15px; line-height: 1.65; }
+    .alert-orange { background: #fff7ed; border: 1px solid #fed7aa; color: #9a3412; }
+    .alert-indigo { background: var(--indigo-50); border: 1px solid var(--indigo-100); color: #3730a3; }
+    .alert strong { display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
 
-    /* ── FOOTER ── */
-    footer {
-      background: var(--gray-900); color: var(--gray-400);
-      padding: 48px 24px 28px;
-    }
-    .footer-inner { max-width: 1120px; margin: 0 auto; }
-    .footer-top {
-      display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr;
-      gap: 40px; margin-bottom: 40px;
-    }
-    .footer-brand p { font-size: 13px; line-height: 1.7; color: var(--gray-400); max-width: 280px; margin-top: 8px; }
-    .footer-col h4 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 14px; }
-    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
-    .footer-col ul a { font-size: 13px; color: var(--gray-400); text-decoration: none; transition: color .15s; }
-    .footer-col ul a:hover { color: #fff; }
-    .footer-bottom {
-      border-top: 1px solid #374151;
-      padding-top: 20px;
-      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
-    }
+    /* FEATURE LIST */
+    .feature-list { list-style: none; margin: 0 0 24px; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+    .feature-list li { display: flex; gap: 10px; align-items: flex-start; font-size: 15px; color: var(--gray-700); }
+    .feature-list li::before { content: "✓"; color: var(--indigo-600); font-weight: 800; flex-shrink: 0; }
+
+    /* TABLE */
+    .table-wrap { overflow-x: auto; margin: 24px 0 36px; border-radius: 12px; border: 1px solid var(--gray-200); }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead { background: var(--indigo-600); color: #fff; }
+    thead th { padding: 12px 16px; font-weight: 700; text-align: left; white-space: nowrap; }
+    tbody tr:nth-child(even) { background: var(--gray-50); }
+    td { padding: 12px 16px; color: var(--gray-700); border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+    tbody tr:last-child td { border-bottom: none; }
+
+    /* HASHTAGS */
+    .hashtag-section { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--gray-100); }
+    .hashtag-section .ht-label { font-size: 12px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+    .hashtag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .hashtag { font-size: 13px; font-weight: 600; color: var(--indigo-600); background: var(--indigo-50); border: 1px solid var(--indigo-100); border-radius: 20px; padding: 5px 14px; }
+
+    /* CTA */
+    .article-cta { margin-top: 48px; background: linear-gradient(135deg, var(--indigo-600) 0%, #818cf8 100%); border-radius: 20px; padding: 36px; text-align: center; color: #fff; }
+    .article-cta h3 { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+    .article-cta p { font-size: 15px; opacity: .85; margin-bottom: 22px; }
+    .article-cta a { display: inline-block; background: #fff; color: var(--indigo-700); font-size: 14px; font-weight: 800; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
+    .article-cta a:hover { opacity: .9; }
+
+    /* FOOTER */
+    footer { background: var(--gray-900); color: var(--gray-400); padding: 32px 24px; }
+    .footer-bottom { max-width: 1120px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
     .footer-bottom p { font-size: 12px; }
     .footer-legal { display: flex; gap: 20px; }
     .footer-legal a { font-size: 12px; color: var(--gray-400); text-decoration: none; }
     .footer-legal a:hover { color: #fff; }
-    @media (max-width: 768px) {
-      .footer-top { grid-template-columns: 1fr 1fr; }
-      .footer-brand { grid-column: 1 / -1; }
-    }
-    @media (max-width: 480px) {
-      .footer-top { grid-template-columns: 1fr; }
-    }
   </style>
 </head>
 <body>
 
-<!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
 <nav>
   <div class="nav-inner">
     <a href="/" class="nav-logo">
@@ -216,178 +136,173 @@
       <li><a href="/#crpe">Le concours</a></li>
       <li><a href="/#fonctionnalites">Fonctionnalités</a></li>
       <li><a href="/#matieres">Matières</a></li>
-      <li><a href="/#temoignages">Avis</a></li>
       <li><a href="/blog" class="active">Blog</a></li>
     </ul>
     <a href="/?auth=open" class="nav-cta">Commencer gratuitement →</a>
   </div>
 </nav>
 
-<!-- ═══════════════════════════════ ARTICLE HERO ═══════════════════════════════ -->
-<div class="article-hero">
-  <div class="breadcrumb"><a href="/blog">Blog</a> → Le concours</div>
-  <div class="article-eyebrow">Le concours · 7 min de lecture</div>
-  <h1>CRPE 2026 : qu'est-ce qui change pour les concours externes ?</h1>
-  <p class="lead">À partir de 2026, vous pouvez passer le CRPE dès votre licence (Bac+3), et si vous réussissez, vous entrez automatiquement dans une formation rémunérée de 2 ans au lieu du Master MEEF classique.</p>
-</div>
+<div class="article-wrap">
 
-<!-- ═══════════════════════════════ ARTICLE BODY ═══════════════════════════════ -->
-<article class="article-wrap">
+  <a href="/blog" class="back-link">← Retour au blog</a>
 
-  <h2>Le changement en une phrase</h2>
-  <p>C'est un changement majeur. Et oui, cela signifie que le Master MEEF tel qu'on le connaît disparaît progressivement. À partir de 2026, il n'y aura plus de candidatures possibles pour le Master 1 MEEF (mentions premier degré, second degré et encadrement éducatif). Seul le Master MEEF mention « Pratique et ingénierie de la formation » continuera d'exister.</p>
-
-  <div class="exception-note">
-    <strong>Exception :</strong> les étudiants en dernière année de Master en 2026 pourront passer la session 2027 du CRPE.
+  <div class="article-tags">
+    <span class="article-tag tag-concours">Le concours</span>
+    <span class="article-tag tag-reforme">Réforme 2026</span>
+  </div>
+  <h1>CRPE 2026 : Qu'est-ce qui change pour les concours externes ?</h1>
+  <div class="article-meta">
+    <span>📅 Juillet 2026</span>
+    <span>·</span>
+    <span>⏱ 5 min de lecture</span>
   </div>
 
-  <h2>Comment ça marche concrètement ?</h2>
-  <p>L'objectif de cette réforme est de créer un parcours plus clair, plus attractif et surtout plus professionnalisant. Dès la licence, vous suivrez une préparation adaptée aux exigences du métier de professeur des écoles ou de conseiller principal d'éducation. Un parcours cohérent, professionnalisé et rémunéré à partir du master.</p>
-
-  <h3>Étape 1 : passer le CRPE en Bac+3 (à partir de 2026)</h3>
-  <p>Vous êtes en L3 (3<sup>e</sup> année de licence) ? Vous pouvez maintenant vous inscrire au CRPE. Le programme de l'épreuve est basé sur le <strong>cycle 4</strong> (classes 5e-4e-3e), pas sur le cycle complet de l'école primaire.</p>
-
-  <h3>Étape 2 : réussir le concours = Master M2E automatique et rémunéré</h3>
-  <p>Si vous réussissez, vous n'avez pas à chercher un master par vous-même. L'État vous place automatiquement en Master Enseignement et Éducation (M2E).</p>
-
-  <div class="callout">Et voici ce qui change TOUT : vous êtes rémunéré pendant cette formation.</div>
-
-  <ul>
-    <li><strong>En M1 :</strong> vous êtes élève-fonctionnaire avec une rémunération d'environ 1 400 € nets par mois.</li>
-    <li><strong>En M2 :</strong> vous êtes fonctionnaire stagiaire avec une rémunération d'environ 1 800 € nets par mois.</li>
-  </ul>
-
-  <ul class="links-list" style="margin-bottom:24px;">
-    <li><a href="#">En savoir plus sur le Master M2E →</a></li>
-  </ul>
-
-  <h3>Étape 3 : titularisation et engagement de 4 ans</h3>
-  <p>Après les 2 ans de formation, vous êtes titularisé comme professeur des écoles.</p>
-
-  <div class="callout warn">Mais attention : vous vous engagez à rester 4 ans dans le poste. C'est l'accord implicite — l'État vous finance 2 ans de formation, vous lui donnez 4 ans de service en retour.</div>
-
-  <h2>La formation spéciale LPE</h2>
-  <p>À partir de 2026, le gouvernement crée une nouvelle voie spéciale. Une Licence Professorat des Écoles (LPE) sera proposée sur tout le territoire. C'est une licence spécialisée conçue pour devenir professeur des écoles. Elle ajoute de la cohérence, de la continuité, de la clarté et de la professionnalisation à votre parcours.</p>
-
-  <p>Cette licence inclut :</p>
-  <ul>
-    <li>10 semaines de stage minimum intégrées sur les 3 années</li>
-    <li>Un enseignement disciplinaire renforcé (français, mathématiques)</li>
-    <li>Une préparation au CRPE dès L1 (pas seulement en L3)</li>
-  </ul>
-
-  <ul class="links-list" style="margin-bottom:24px;">
-    <li><a href="#">En savoir plus sur la Licence Professorat des Écoles →</a></li>
-  </ul>
-
-  <h3>Le détail important : le concours spécial LPE (2028+)</h3>
-  <p>À partir de 2028, il y aura un concours externe spécial réservé exclusivement aux étudiants en dernière année de LPE.</p>
-  <p><strong>Voici l'avantage :</strong> les étudiants LPE n'auront que 2 épreuves d'admission, alors que les étudiants en L3 classique devront passer 2 épreuves d'admissibilité + 2 épreuves d'admission (4 au total).</p>
-
-  <h2>Ce qu'il faut faire maintenant</h2>
-  <p><strong>Si vous êtes en L3 (2025-2026) :</strong> inscrivez-vous au CRPE Bac+3 2026.</p>
-  <p><strong>Si vous avez un Master MEEF :</strong> passez le CRPE Bac+5 en 2026 ou 2027. Après, c'est fini — pas de 3<sup>e</sup> chance.</p>
-
-  <h2>Résumé : avant / après</h2>
-  <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          <th>Avant 2026</th>
-          <th>À partir de 2026</th>
-          <th>À partir de 2028</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <th>Voies d'accès CRPE</th>
-          <td>Bac+5 uniquement</td>
-          <td>Bac+3 + Bac+5</td>
-          <td>Bac+3 + Concours LPE</td>
-        </tr>
-        <tr>
-          <th>Master</th>
-          <td>MEEF</td>
-          <td>M2E rémunéré</td>
-          <td>M2E (même système)</td>
-        </tr>
-        <tr>
-          <th>Nombre de voies</th>
-          <td>1 seule</td>
-          <td>2 voies possibles (Bac+3, Bac+5)</td>
-          <td>3 voies (Bac+3, LPE, Bac+5 fin 2027)</td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="intro-box">
+    À partir de 2026, vous pouvez passer le CRPE dès votre licence (Bac+3), et si vous réussissez, vous entrez automatiquement dans une <strong>formation rémunérée de 2 ans</strong> au lieu du Master MEEF classique. C'est un changement majeur.
   </div>
 
-  <p>Voilà. C'est le changement en substance.</p>
+  <div class="article-body">
 
-  <h2>Liens utiles</h2>
-  <ul class="links-list">
-    <li><a href="#">Master M2E : une formation professionnalisante →</a></li>
-    <li><a href="#">Licence Professorat des Écoles →</a></li>
-  </ul>
+    <p>Et oui, cela signifie que le Master MEEF tel qu'on le connaît <strong>disparaît progressivement</strong>. À partir de 2026, il n'y aura plus de candidatures possibles pour le Master 1 MEEF (mentions premier degré, second degré et encadrement éducatif). Seul le Master MEEF mention "Pratique et ingénierie de la formation" continuera d'exister.</p>
+
+    <div class="alert alert-orange">
+      <strong>⚠️ Exception</strong>
+      Les étudiants en dernière année de Master en 2026 pourront passer la session 2027 du CRPE.
+    </div>
+
+    <h2>Comment ça marche concrètement ?</h2>
+
+    <p>L'objectif de cette réforme est de créer un parcours plus clair, plus attractif et surtout plus professionnalisant. Dès la licence, vous suivrez une préparation adaptée aux exigences du métier de professeur des écoles. Un parcours cohérent, professionnalisé et rémunéré à partir du master.</p>
+
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h3>Passer le CRPE en Bac+3 (à partir de 2026)</h3>
+          <p>Vous êtes en L3 (3e année de licence) ? Vous pouvez maintenant vous inscrire au CRPE. Le programme de l'épreuve est basé sur le <strong>cycle 4 (classes 5e–4e–3e)</strong>, pas sur le cycle complet de l'école primaire.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h3>Réussir le concours = Master M2E automatique ET rémunéré</h3>
+          <p>Si vous réussissez, vous n'avez pas à chercher un master par vous-même. L'État vous place automatiquement en <strong>Master Enseignement et Éducation (M2E)</strong>. Et voici ce qui change tout : vous êtes rémunéré pendant cette formation.</p>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h3>Titularisation et engagement de 4 ans</h3>
+          <p>Après les 2 ans de formation, vous êtes titularisé comme professeur des écoles. Vous vous engagez à rester <strong>4 ans dans le poste</strong>. L'État vous finance 2 ans de formation, vous lui donnez 4 ans de service en retour.</p>
+        </div>
+      </li>
+    </ul>
+
+    <h2>La rémunération pendant le Master M2E</h2>
+
+    <div class="salary-row">
+      <div class="salary-card">
+        <div class="label">M1 — Élève-fonctionnaire</div>
+        <div class="amount">~1 400 €</div>
+        <div class="sublabel">nets par mois</div>
+      </div>
+      <div class="salary-card">
+        <div class="label">M2 — Fonctionnaire stagiaire</div>
+        <div class="amount">~1 800 €</div>
+        <div class="sublabel">nets par mois</div>
+      </div>
+    </div>
+
+    <h2>La formation spéciale LPE</h2>
+
+    <p>À partir de 2026, le gouvernement crée une nouvelle voie spéciale : la <strong>Licence Professorat des Écoles (LPE)</strong>, proposée sur tout le territoire. C'est une licence spécialisée conçue pour devenir professeur des écoles. Elle ajoute de la cohérence, de la continuité, de la clarté et de la professionnalisation à votre parcours.</p>
+
+    <ul class="feature-list">
+      <li>10 semaines de stage minimum intégrées sur les 3 années</li>
+      <li>Enseignement disciplinaire renforcé (français, mathématiques)</li>
+      <li>Préparation au CRPE dès la L1 (pas seulement en L3)</li>
+    </ul>
+
+    <div class="alert alert-indigo">
+      <strong>🎯 Le concours spécial LPE (à partir de 2028)</strong>
+      Les étudiants LPE n'auront que <strong>2 épreuves d'admission</strong>, alors que les étudiants en L3 classique devront passer 2 épreuves d'admissibilité + 2 épreuves d'admission (4 au total).
+    </div>
+
+    <h2>Ce qu'il faut faire maintenant</h2>
+
+    <p><strong>Si vous êtes en L3 (2025–2026) :</strong> Inscrivez-vous au CRPE Bac+3 2026.</p>
+    <p><strong>Si vous avez un Master MEEF :</strong> Passez le CRPE Bac+5 en 2026 ou 2027. Après 2027, cette voie disparaît. Pas de 3e chance.</p>
+
+    <h2>Résumé : Avant / Après</h2>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Critère</th>
+            <th>Avant 2026</th>
+            <th>À partir de 2026</th>
+            <th>À partir de 2028</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Diplôme requis</strong></td>
+            <td>Bac+5 (Master MEEF)</td>
+            <td>Bac+3 ou Bac+5</td>
+            <td>Bac+3, LPE ou Bac+5 (fin 2027)</td>
+          </tr>
+          <tr>
+            <td><strong>Formation post-concours</strong></td>
+            <td>Master MEEF (non rémunéré)</td>
+            <td>Master M2E rémunéré</td>
+            <td>Master M2E (même système)</td>
+          </tr>
+          <tr>
+            <td><strong>Nombre de voies</strong></td>
+            <td>1 seule</td>
+            <td>2 voies (Bac+3, Bac+5)</td>
+            <td>3 voies (Bac+3, LPE, Bac+5 fin 2027)</td>
+          </tr>
+          <tr>
+            <td><strong>Épreuves</strong></td>
+            <td>4 épreuves</td>
+            <td>4 épreuves (L3 classique)</td>
+            <td>2 épreuves pour les étudiants LPE</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="hashtag-section">
+      <p class="ht-label">Tags</p>
+      <div class="hashtag-list">
+        <span class="hashtag">#CRPE2026</span>
+        <span class="hashtag">#RéformeCRPE</span>
+        <span class="hashtag">#Bac+3</span>
+        <span class="hashtag">#MasterM2E</span>
+        <span class="hashtag">#LicenceProfessoratDesÉcoles</span>
+        <span class="hashtag">#ConcoursExternesCRPE</span>
+      </div>
+    </div>
+
+  </div>
 
   <div class="article-cta">
-    <h3>Prêt·e à préparer le CRPE 2026 sur le programme cycle 4 ?</h3>
-    <p>Essai gratuit · 299 € à l'issue de l'essai · Sans carte bancaire</p>
+    <h3>Préparez le CRPE 2026 avec PassCRPE</h3>
+    <p>Des milliers d'exercices en français et mathématiques, corrigés par IA selon les exigences du jury.</p>
     <a href="/?auth=open">Commencer gratuitement →</a>
   </div>
 
-</article>
+</div>
 
-<!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div class="footer-brand">
-        <div class="nav-logo" style="margin-bottom:12px">
-          <div class="nav-logo-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:#fff">
-              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
-            </svg>
-          </div>
-          <span class="nav-logo-text">PassCRPE</span>
-        </div>
-        <p>Préparez le CRPE 2027 avec PassCRPE : des milliers d'exercices en français et mathématiques adaptés à votre niveau, des corrections selon les exigences du jury et des conseils personnalisés pour progresser.</p>
-      </div>
-      <div class="footer-col">
-        <h4>L'outil</h4>
-        <ul>
-          <li><a href="/#fonctionnalites">Fonctionnalités</a></li>
-          <li><a href="/#matieres">Mathématiques</a></li>
-          <li><a href="/#matieres">Français</a></li>
-          <li><a href="/">S'inscrire</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Le concours</h4>
-        <ul>
-          <li><a href="/#crpe">Qu'est-ce que le CRPE ?</a></li>
-          <li><a href="/#faq">Conditions d'inscription</a></li>
-          <li><a href="/#faq">Les épreuves</a></li>
-          <li><a href="/#faq">Les académies</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Ressources</h4>
-        <ul>
-          <li><a href="/blog">Blog</a></li>
-          <li><a href="/#faq">FAQ</a></li>
-          <li><a href="/#temoignages">Témoignages</a></li>
-          <li><a href="mailto:contact@passcrpe.fr">Contact</a></li>
-        </ul>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>© 2026 PassCRPE. Tous droits réservés.</p>
-      <div class="footer-legal">
-        <a href="#">Mentions légales</a>
-        <a href="#">Politique de confidentialité</a>
-        <a href="#">CGU</a>
-      </div>
+  <div class="footer-bottom">
+    <p>© 2026 PassCRPE. Tous droits réservés.</p>
+    <div class="footer-legal">
+      <a href="#">Mentions légales</a>
+      <a href="#">Politique de confidentialité</a>
+      <a href="/blog">Blog</a>
     </div>
   </div>
 </footer>
