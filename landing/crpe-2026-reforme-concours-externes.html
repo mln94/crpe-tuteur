@@ -108,8 +108,8 @@
     .article-cta { margin-top: 48px; background: linear-gradient(135deg, var(--indigo-600) 0%, #818cf8 100%); border-radius: 20px; padding: 36px; text-align: center; color: #fff; }
     .article-cta h3 { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
     .article-cta p { font-size: 15px; opacity: .85; margin-bottom: 22px; }
-    .article-cta a { display: inline-block; background: #fff; color: var(--indigo-700); font-size: 14px; font-weight: 800; padding: 12px 28px; border-radius: 10px; text-decoration: none; }
-    .article-cta a:hover { opacity: .9; }
+    .article-cta a, .article-cta button { display: inline-block; background: #fff; color: var(--indigo-700); font-size: 14px; font-weight: 800; padding: 12px 28px; border-radius: 10px; text-decoration: none; border: none; cursor: pointer; font-family: inherit; }
+    .article-cta a:hover, .article-cta button:hover { opacity: .9; }
 
     /* FOOTER */
     footer { background: var(--gray-900); color: var(--gray-400); padding: 32px 24px; }
@@ -118,6 +118,38 @@
     .footer-legal { display: flex; gap: 20px; }
     .footer-legal a { font-size: 12px; color: var(--gray-400); text-decoration: none; }
     .footer-legal a:hover { color: #fff; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <style>
+    .auth-overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,.6); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center; padding:20px; }
+    .auth-overlay.open { display:flex; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+    .auth-card { background:#fff; border-radius:20px; box-shadow:0 24px 64px rgba(0,0,0,.22); width:100%; max-width:440px; padding:40px 40px 36px; position:relative; animation:fadeUp .28s ease forwards; max-height:90vh; overflow-y:auto; }
+    .auth-close { position:absolute; top:18px; right:18px; background:none; border:none; cursor:pointer; color:#94a3b8; font-size:22px; line-height:1; padding:4px 8px; border-radius:8px; transition:background .15s,color .15s; }
+    .auth-close:hover { background:#f1f5f9; color:#334155; }
+    .auth-logo { display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom:24px; }
+    .auth-logo-icon { width:36px; height:36px; background:#4f46e5; border-radius:10px; display:flex; align-items:center; justify-content:center; }
+    .auth-logo-icon svg { width:18px; height:18px; color:#fff; }
+    .auth-logo-name { font-weight:800; font-size:17px; color:#0f172a; }
+    .auth-tabs { display:flex; background:#f1f5f9; border-radius:12px; padding:4px; margin-bottom:28px; }
+    .auth-tab { flex:1; padding:9px 12px; border:none; background:none; border-radius:9px; font-family:inherit; font-size:14px; font-weight:600; color:#64748b; cursor:pointer; transition:all .2s; }
+    .auth-tab.active { background:#fff; color:#0f172a; box-shadow:0 1px 4px rgba(0,0,0,.12); }
+    .auth-form { display:flex; flex-direction:column; gap:14px; }
+    .auth-field { display:flex; flex-direction:column; gap:6px; }
+    .auth-label { font-size:13px; font-weight:600; color:#374151; }
+    .auth-input { width:100%; box-sizing:border-box; padding:11px 14px; border:1.5px solid #e2e8f0; border-radius:10px; font-family:inherit; font-size:14.5px; color:#0f172a; transition:border-color .2s,box-shadow .2s; outline:none; background:#fff; }
+    .auth-input:focus { border-color:#4f46e5; box-shadow:0 0 0 3px rgba(99,102,241,.12); }
+    .auth-submit { margin-top:4px; padding:13px; border:none; border-radius:12px; background:#4f46e5; color:#fff; font-family:inherit; font-size:15px; font-weight:700; cursor:pointer; transition:background .2s; width:100%; }
+    .auth-submit:hover { background:#4338ca; }
+    .auth-submit:disabled { background:#c7d2fe; cursor:not-allowed; }
+    .auth-message { font-size:13px; font-weight:600; text-align:center; min-height:18px; margin-top:4px; border-radius:8px; padding:8px 12px; }
+    .auth-message.success { color:#166534; background:#dcfce7; }
+    .auth-message.error { color:#991b1b; background:#fee2e2; }
+    .auth-footer-link { text-align:center; font-size:13px; color:#64748b; margin-top:16px; }
+    .auth-footer-link button { background:none; border:none; color:#4f46e5; font-weight:700; cursor:pointer; font-family:inherit; font-size:13px; padding:0; }
+    .auth-name-row { display:flex; gap:12px; }
+    .auth-name-row .auth-field { flex:1; min-width:0; }
+    @media (max-width:480px) { .auth-card { padding:32px 24px 28px; } .auth-name-row { flex-direction:column; } }
   </style>
 </head>
 <body>
@@ -138,7 +170,7 @@
       <li><a href="/#matieres">Matières</a></li>
       <li><a href="/blog" class="active">Blog</a></li>
     </ul>
-    <a href="/?auth=open" class="nav-cta">Commencer gratuitement →</a>
+    <button onclick="openAuth()" class="nav-cta" style="border:none;cursor:pointer;font-family:inherit;">Commencer gratuitement →</button>
   </div>
 </nav>
 
@@ -291,7 +323,7 @@
   <div class="article-cta">
     <h3>Préparez le CRPE 2026 avec PassCRPE</h3>
     <p>Des milliers d'exercices en français et mathématiques, corrigés par IA selon les exigences du jury.</p>
-    <a href="/?auth=open">Commencer gratuitement →</a>
+    <button onclick="openAuth()">Commencer gratuitement →</button>
   </div>
 
 </div>
@@ -307,5 +339,120 @@
   </div>
 </footer>
 
+<!-- AUTH MODAL -->
+<div id="authOverlay" class="auth-overlay">
+  <div class="auth-card">
+    <button class="auth-close" onclick="closeAuth()" aria-label="Fermer">✕</button>
+    <div class="auth-logo">
+      <div class="auth-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+      <span class="auth-logo-name">PassCRPE</span>
+    </div>
+    <div class="auth-tabs" id="authTabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Se connecter</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">S'inscrire</button>
+    </div>
+    <form class="auth-form" id="authForm" onsubmit="submitAuthForm(event)">
+      <div class="auth-name-row" id="nameRow" style="display:none">
+        <div class="auth-field"><label class="auth-label" for="authPrenom">Prénom</label><input class="auth-input" type="text" id="authPrenom" placeholder="Marie" autocomplete="given-name" /></div>
+        <div class="auth-field"><label class="auth-label" for="authNom">Nom</label><input class="auth-input" type="text" id="authNom" placeholder="Dupont" autocomplete="family-name" /></div>
+      </div>
+      <div id="registerFields" style="display:none; flex-direction:column; gap:14px">
+        <div class="auth-field">
+          <label class="auth-label" for="authConcours">Type de concours</label>
+          <select class="auth-input" id="authConcours">
+            <option value="">Choisir un concours…</option>
+            <option>Concours externe et externe spécial — Bac+3</option>
+            <option>Concours externe et externe spécial — Bac+5</option>
+            <option>Troisième concours</option>
+            <option>Second concours interne et interne spécial (langues régionales)</option>
+            <option>Concours interne exceptionnel</option>
+            <option>Premier concours interne</option>
+            <option>Concours spécifiques à l'académie de Mayotte</option>
+          </select>
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="authAcademie">Académie</label>
+          <select class="auth-input" id="authAcademie">
+            <option value="">Choisir une académie…</option>
+            <option>Je ne sais pas encore</option>
+            <option>Aix-Marseille</option><option>Amiens</option><option>Besançon</option><option>Bordeaux</option><option>Caen</option><option>Clermont-Ferrand</option><option>Créteil</option><option>Dijon</option><option>Grenoble</option><option>Guadeloupe</option><option>Guyane</option><option>La Réunion</option><option>Lille</option><option>Limoges</option><option>Lyon</option><option>Martinique</option><option>Mayotte</option><option>Montpellier</option><option>Nancy-Metz</option><option>Nantes</option><option>Nice</option><option>Normandie</option><option>Orléans-Tours</option><option>Paris</option><option>Poitiers</option><option>Reims</option><option>Rennes</option><option>Rouen</option><option>Strasbourg</option><option>Toulouse</option><option>Versailles</option>
+          </select>
+        </div>
+      </div>
+      <div class="auth-field"><label class="auth-label" for="authEmail">Adresse e-mail</label><input class="auth-input" type="email" id="authEmail" placeholder="vous@exemple.fr" required autocomplete="email" /></div>
+      <div class="auth-field"><label class="auth-label" for="authPassword">Mot de passe</label><input class="auth-input" type="password" id="authPassword" placeholder="••••••••" required autocomplete="current-password" minlength="8" /></div>
+      <div id="consentRow" style="display:none">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12px;color:#4b5563;line-height:1.5;">
+          <input type="checkbox" id="authConsent" style="flex-shrink:0;margin-top:3px;accent-color:#4f46e5;width:15px;height:15px;" />
+          Je consens à recevoir des e-mails de PassCRPE, ainsi que des offres de partenaires.
+        </label>
+      </div>
+      <button type="submit" class="auth-submit" id="authSubmit">Se connecter</button>
+    </form>
+    <div class="auth-message" id="authMessage"></div>
+    <div id="resendBlock" style="display:none;text-align:center;margin-top:12px">
+      <p style="font-size:13px;color:#64748b;margin-bottom:8px">Vous n'avez pas reçu l'e-mail ?</p>
+      <button id="resendBtn" class="auth-submit" style="width:auto;padding:10px 20px;font-size:13px" onclick="resendConfirmation()">Renvoyer l'e-mail</button>
+    </div>
+    <div class="auth-footer-link" id="authToggle">Pas encore de compte ? <button onclick="switchTab('register')">Créer un compte</button></div>
+  </div>
+</div>
+
+<script>
+  let _sb = null, authMode = 'login', _lastEmail = '';
+  function getSB() {
+    if (!_sb) _sb = window.supabase.createClient('https://zqwcermgfvcusuwjfviz.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8');
+    return _sb;
+  }
+  function openAuth() { document.getElementById('authOverlay').classList.add('open'); document.body.style.overflow='hidden'; switchTab('login'); clearAuthMessage(); }
+  function closeAuth() { document.getElementById('authOverlay').classList.remove('open'); document.body.style.overflow=''; document.getElementById('authForm').style.display=''; document.getElementById('authForm').reset(); document.getElementById('authTabs').style.display=''; document.getElementById('authToggle').style.display=''; document.getElementById('resendBlock').style.display='none'; clearAuthMessage(); }
+  document.getElementById('authOverlay').addEventListener('click', e => { if (e.target===document.getElementById('authOverlay')) closeAuth(); });
+  document.addEventListener('keydown', e => { if (e.key==='Escape') closeAuth(); });
+  function switchTab(mode) {
+    authMode=mode; const isLogin=mode==='login';
+    document.getElementById('tabLogin').classList.toggle('active',isLogin);
+    document.getElementById('tabRegister').classList.toggle('active',!isLogin);
+    document.getElementById('nameRow').style.display=isLogin?'none':'flex';
+    document.getElementById('registerFields').style.display=isLogin?'none':'flex';
+    document.getElementById('consentRow').style.display=isLogin?'none':'block';
+    document.getElementById('authSubmit').textContent=isLogin?'Se connecter':'Créer mon compte';
+    document.getElementById('authToggle').innerHTML=isLogin?'Pas encore de compte ? <button onclick="switchTab(\'register\')">Créer un compte</button>':'Déjà un compte ? <button onclick="switchTab(\'login\')">Se connecter</button>';
+    clearAuthMessage();
+  }
+  function clearAuthMessage() { const m=document.getElementById('authMessage'); m.textContent=''; m.className='auth-message'; }
+  function showAuthMessage(t,type) { const m=document.getElementById('authMessage'); m.textContent=t; m.className='auth-message '+type; }
+  async function submitAuthForm(e) {
+    e.preventDefault();
+    const email=document.getElementById('authEmail').value.trim();
+    const password=document.getElementById('authPassword').value;
+    const prenom=document.getElementById('authPrenom').value.trim();
+    const nom=document.getElementById('authNom').value.trim();
+    const concours=authMode==='register'?(document.getElementById('authConcours')?.value||''):'';
+    const academie=authMode==='register'?(document.getElementById('authAcademie')?.value||''):'';
+    const btn=document.getElementById('authSubmit');
+    if (!email||!password) return;
+    if (authMode==='register'&&(!prenom||!concours||!academie)) { showAuthMessage('Veuillez remplir tous les champs.','error'); return; }
+    if (authMode==='register'&&!document.getElementById('authConsent').checked) { showAuthMessage('Veuillez cocher la case de consentement.','error'); return; }
+    clearAuthMessage(); btn.disabled=true; btn.textContent='Chargement…';
+    const sb=getSB();
+    if (authMode==='register') {
+      const {data,error}=await sb.auth.signUp({email,password,options:{data:{prenom,nom,concours,academie}}});
+      if (error) { showAuthMessage(error.message,'error'); }
+      else { _lastEmail=email; document.getElementById('authForm').style.display='none'; document.getElementById('authTabs').style.display='none'; document.getElementById('authToggle').style.display='none'; document.getElementById('resendBlock').style.display='block'; showAuthMessage('✓ E-mail de confirmation envoyé à '+email+'. Vérifiez vos spams.','success'); }
+    } else {
+      const {data,error}=await sb.auth.signInWithPassword({email,password});
+      if (error) { showAuthMessage(error.message,'error'); }
+      else { showAuthMessage('✓ Connexion réussie ! Redirection…','success'); setTimeout(()=>{ window.location.href=window.location.port==='3001'?'http://localhost:5173':'/app'; },800); }
+    }
+    btn.disabled=false; btn.textContent=authMode==='register'?'Créer mon compte':'Se connecter';
+  }
+  async function resendConfirmation() {
+    const btn=document.getElementById('resendBtn'); btn.disabled=true; btn.textContent='Envoi…';
+    const {error}=await getSB().auth.resend({type:'signup',email:_lastEmail});
+    btn.textContent=error?'Erreur, réessayez':'✓ E-mail renvoyé !';
+    if (!error) setTimeout(()=>{ btn.textContent='Renvoyer l\'e-mail'; btn.disabled=false; },4000);
+    else btn.disabled=false;
+  }
+</script>
 </body>
 </html>

@@ -110,6 +110,7 @@
       overflow: hidden; background: #fff;
       transition: box-shadow .2s, transform .2s;
       display: flex; flex-direction: column;
+      cursor: pointer; text-decoration: none; color: inherit;
     }
     .blog-card:hover { box-shadow: 0 8px 32px rgba(0,0,0,.08); transform: translateY(-2px); }
 
@@ -156,8 +157,10 @@
       overflow: hidden; background: #fff;
       display: grid; grid-template-columns: 1fr 1fr;
       transition: box-shadow .2s;
+      cursor: pointer; text-decoration: none; color: inherit;
     }
     .featured-card:hover { box-shadow: 0 12px 40px rgba(0,0,0,.08); }
+    .featured-tag-pill { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; padding: 3px 10px; border-radius: 20px; background: var(--indigo-50); color: var(--indigo-600); margin-top: 6px; }
     .featured-thumb {
       background: linear-gradient(135deg, var(--indigo-600) 0%, #818cf8 100%);
       display: flex; align-items: center; justify-content: center;
@@ -267,112 +270,81 @@
 <!-- ═══════════════════════════════ ARTICLE À LA UNE ═══════════════════════════════ -->
 <div class="section-label">À la une</div>
 <div class="blog-featured">
-  <article class="featured-card">
+  <a href="/blog/crpe-2026-reforme-concours-externes" class="featured-card">
     <div class="featured-thumb">📢</div>
     <div class="featured-body">
       <div class="featured-eyebrow">Le concours · 7 min de lecture</div>
+      <span class="featured-tag-pill">Réforme CRPE 2026</span>
       <h2>CRPE 2026 : qu'est-ce qui change pour les concours externes ?</h2>
       <p>À partir de 2026, vous pouvez passer le CRPE dès votre licence (Bac+3), et si vous réussissez, vous entrez automatiquement dans une formation rémunérée de 2 ans au lieu du Master MEEF classique.</p>
-      <a href="/blog/crpe-2026-reforme-concours-externes" class="featured-cta">Lire l'article <span>→</span></a>
+      <span class="featured-cta">Lire l'article <span>→</span></span>
     </div>
-  </article>
+  </a>
 </div>
 
 <!-- ═══════════════════════════════ TOUS LES ARTICLES ═══════════════════════════════ -->
 <div class="section-label">Tous les articles</div>
 <div class="blog-grid">
 
-  <article class="blog-card">
+  <a class="blog-card" href="#">
     <div class="blog-card-thumb" style="background:#ecfdf5">🔢</div>
     <div class="blog-card-body">
-      <div class="card-tags">
-        <span class="card-tag tag-maths">Mathématiques</span>
-      </div>
+      <div class="card-tags"><span class="card-tag tag-maths">Mathématiques</span></div>
       <h2>Les 5 erreurs les plus fréquentes à l'épreuve de maths du CRPE</h2>
       <p>Analyse des copies des sessions précédentes : voici les pièges dans lesquels tombent le plus souvent les candidats, et comment les éviter.</p>
-      <div class="card-meta">
-        <span class="card-date">À venir</span>
-        <a href="#" class="card-read">Lire <span>→</span></a>
-      </div>
+      <div class="card-meta"><span class="card-date">À venir</span><span class="card-read">Lire <span>→</span></span></div>
     </div>
-  </article>
+  </a>
 
-  <article class="blog-card">
+  <a class="blog-card" href="#">
     <div class="blog-card-thumb" style="background:#fdf4ff">✍️</div>
     <div class="blog-card-body">
-      <div class="card-tags">
-        <span class="card-tag tag-francais">Français</span>
-        <span class="card-tag tag-methode">Méthode</span>
-      </div>
+      <div class="card-tags"><span class="card-tag tag-francais">Français</span><span class="card-tag tag-methode">Méthode</span></div>
       <h2>Maîtriser le paragraphe argumenté en français : méthode complète</h2>
       <p>Structure, connecteurs logiques, exemples littéraires : tout ce qu'il faut savoir pour rédiger un paragraphe qui convainc le jury du CRPE.</p>
-      <div class="card-meta">
-        <span class="card-date">À venir</span>
-        <a href="#" class="card-read">Lire <span>→</span></a>
-      </div>
+      <div class="card-meta"><span class="card-date">À venir</span><span class="card-read">Lire <span>→</span></span></div>
     </div>
-  </article>
+  </a>
 
-  <article class="blog-card">
+  <a class="blog-card" href="#">
     <div class="blog-card-thumb" style="background:#fff7ed">🎓</div>
     <div class="blog-card-body">
-      <div class="card-tags">
-        <span class="card-tag tag-concours">Le concours</span>
-      </div>
+      <div class="card-tags"><span class="card-tag tag-concours">Le concours</span></div>
       <h2>CRPE 2027 : tout comprendre sur les académies qui recrutent le plus</h2>
       <p>Créteil, Versailles, Lyon… Les chiffres du recrutement par académie pour mieux choisir vos vœux et maximiser vos chances d'affectation.</p>
-      <div class="card-meta">
-        <span class="card-date">À venir</span>
-        <a href="#" class="card-read">Lire <span>→</span></a>
-      </div>
+      <div class="card-meta"><span class="card-date">À venir</span><span class="card-read">Lire <span>→</span></span></div>
     </div>
-  </article>
+  </a>
 
-  <article class="blog-card">
+  <a class="blog-card" href="#">
     <div class="blog-card-thumb" style="background:#f0f9ff">💬</div>
     <div class="blog-card-body">
-      <div class="card-tags">
-        <span class="card-tag tag-temoignage">Témoignage</span>
-      </div>
+      <div class="card-tags"><span class="card-tag tag-temoignage">Témoignage</span></div>
       <h2>« J'ai réussi le CRPE en 5 mois en travaillant à temps plein » — Sophie, Nantes</h2>
       <p>Sophie nous raconte sa méthode, ses outils et les moments de doute qu'elle a surmontés pour décrocher le concours en un seul essai.</p>
-      <div class="card-meta">
-        <span class="card-date">À venir</span>
-        <a href="#" class="card-read">Lire <span>→</span></a>
-      </div>
+      <div class="card-meta"><span class="card-date">À venir</span><span class="card-read">Lire <span>→</span></span></div>
     </div>
-  </article>
+  </a>
 
-  <article class="blog-card">
+  <a class="blog-card" href="#">
     <div class="blog-card-thumb" style="background:#ecfdf5">📐</div>
     <div class="blog-card-body">
-      <div class="card-tags">
-        <span class="card-tag tag-maths">Mathématiques</span>
-        <span class="card-tag tag-methode">Méthode</span>
-      </div>
+      <div class="card-tags"><span class="card-tag tag-maths">Mathématiques</span><span class="card-tag tag-methode">Méthode</span></div>
       <h2>Programme de maths cycle 4 : ce que le jury attend vraiment de vous</h2>
       <p>Décryptage du programme officiel (5e, 4e, 3e) pour identifier les notions prioritaires et celles qui peuvent vous différencier à l'épreuve.</p>
-      <div class="card-meta">
-        <span class="card-date">À venir</span>
-        <a href="#" class="card-read">Lire <span>→</span></a>
-      </div>
+      <div class="card-meta"><span class="card-date">À venir</span><span class="card-read">Lire <span>→</span></span></div>
     </div>
-  </article>
+  </a>
 
-  <article class="blog-card">
+  <a class="blog-card" href="#">
     <div class="blog-card-thumb" style="background:#fdf4ff">📖</div>
     <div class="blog-card-body">
-      <div class="card-tags">
-        <span class="card-tag tag-francais">Français</span>
-      </div>
+      <div class="card-tags"><span class="card-tag tag-francais">Français</span></div>
       <h2>Comprendre le programme de français cycle 4 en 10 minutes</h2>
       <p>Lecture, écriture, oral, étude de la langue : une synthèse claire des objectifs du programme officiel pour ne rien manquer à l'épreuve.</p>
-      <div class="card-meta">
-        <span class="card-date">À venir</span>
-        <a href="#" class="card-read">Lire <span>→</span></a>
-      </div>
+      <div class="card-meta"><span class="card-date">À venir</span><span class="card-read">Lire <span>→</span></span></div>
     </div>
-  </article>
+  </a>
 
 </div>
 
