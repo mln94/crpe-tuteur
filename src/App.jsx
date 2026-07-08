@@ -4899,7 +4899,7 @@ const SUPPORT_CATEGORIES = [
   'Autre',
 ];
 
-function SupportView({ authUser }) {
+function SupportView({ authUser, onUnreadChange }) {
   const [category, setCategory] = useState('');
   const [message, setMessage]   = useState('');
   const [sending, setSending]   = useState(false);
@@ -4921,7 +4921,15 @@ function SupportView({ authUser }) {
       const { data } = await sbClient.from('support_tickets')
         .select('*')
         .order('created_at', { ascending: false });
-      setTickets(data || []);
+      const list = data || [];
+      setTickets(list);
+      const unread = list.filter(t => t.admin_reply && !t.user_seen_reply);
+      if (unread.length > 0) {
+        await sbClient.from('support_tickets')
+          .update({ user_seen_reply: true })
+          .in('id', unread.map(t => t.id));
+        onUnreadChange?.(0);
+      }
     } catch {}
     setLoadingTickets(false);
   }
@@ -5040,7 +5048,7 @@ function SupportView({ authUser }) {
 
 // BottomNav
 // ---------------------------------------------------------------------------
-function BottomNav({ active, onChange }) {
+function BottomNav({ active, onChange, unreadSupport = 0 }) {
   const tabs = [
     { id: 'home',    label: 'Accueil',    icon: Home          },
     { id: 'chat',    label: 'Session',    icon: MessageCircle },
@@ -5060,7 +5068,12 @@ function BottomNav({ active, onChange }) {
               active === id ? 'text-indigo-600' : 'text-gray-400 hover:text-gray-600'
             }`}
           >
-            <Icon className={`w-5 h-5 ${active === id ? 'stroke-[2.5]' : ''}`} />
+            <div className="relative">
+              <Icon className={`w-5 h-5 ${active === id ? 'stroke-[2.5]' : ''}`} />
+              {id === 'support' && unreadSupport > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 bg-red-500 rounded-full border border-white" />
+              )}
+            </div>
             {label}
             {active === id && <div className="w-1 h-1 rounded-full bg-indigo-600" />}
           </button>
@@ -5380,6 +5393,7 @@ function AppContent({ authUser }) {
   const [autoResumeBanque, setAutoResumeBanque] = useState(false);
   const [dbFreeQsUsed, setDbFreeQsUsed] = useState(null);
   const [dbPaid, setDbPaid]             = useState(null); // null = chargement
+  const [unreadSupport, setUnreadSupport] = useState(0);
 
   // isPaid : DB prioritaire, fallback localStorage si DB indisponible
   const isPaidApp   = dbPaid !== null ? dbPaid : storage.get('crpe_paid') === true;
@@ -5431,6 +5445,11 @@ function AppContent({ authUser }) {
     if (userId) {
       fetchLastActiveSession(userId).then(row => { if (row) setBanqueSession(row); });
       refreshFreeQsCount(userId);
+      sbClient.from('support_tickets')
+        .select('id', { count: 'exact', head: true })
+        .eq('user_seen_reply', false)
+        .not('admin_reply', 'is', null)
+        .then(({ count }) => setUnreadSupport(count || 0));
     }
     refreshPaidStatus();
     setReady(false);
@@ -5634,7 +5653,7 @@ function AppContent({ authUser }) {
             )}
             {activeTab === 'history' && <HistoryView />}
             {activeTab === 'stats'   && <StatsView />}
-            {activeTab === 'support' && <SupportView authUser={authUser} />}
+            {activeTab === 'support' && <SupportView authUser={authUser} onUnreadChange={setUnreadSupport} />}
             {activeTab === 'profile' && (
               <ProfileView
                 profile={profile}
@@ -5645,7 +5664,7 @@ function AppContent({ authUser }) {
           </>
         )}
       </div>
-      <BottomNav active={activeTab} onChange={handleTabChange} />
+      <BottomNav active={activeTab} onChange={handleTabChange} unreadSupport={unreadSupport} />
     </div>
   );
 }

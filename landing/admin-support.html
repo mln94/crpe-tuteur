@@ -255,6 +255,7 @@
       admin_reply: reply,
       admin_replied_at: new Date().toISOString(),
       status,
+      user_seen_reply: false,
     }).eq('id', id);
     if (error) { document.getElementById('replyMsg').textContent = 'Erreur : ' + error.message; return; }
     document.getElementById('replyMsg').innerHTML = '<span style="color:#059669;font-weight:600">✓ Réponse enregistrée</span>';
