@@ -3,7 +3,7 @@ import {
   GraduationCap, Calculator, BookMarked, Home, MessageCircle,
   BookOpen, Send, Loader2, RotateCcw, ChevronRight, ChevronDown,
   ChevronUp, Trash2, X, AlertCircle, ChevronLeft, PenLine, AlignLeft, ListChecks,
-  BarChart2, LogOut, User, Lightbulb, ClipboardList,
+  BarChart2, LogOut, User, Lightbulb, ClipboardList, HelpCircle, CheckCircle2,
 } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
@@ -4887,6 +4887,157 @@ function ProfileView({ profile, authUser, onUpdateProfile }) {
 }
 
 // ---------------------------------------------------------------------------
+// ---------------------------------------------------------------------------
+// SupportView
+// ---------------------------------------------------------------------------
+const SUPPORT_CATEGORIES = [
+  'Problème technique',
+  'Question sur les exercices',
+  'Question sur mon compte',
+  'Facturation',
+  'Suggestion d\'amélioration',
+  'Autre',
+];
+
+function SupportView({ authUser }) {
+  const [category, setCategory] = useState('');
+  const [message, setMessage]   = useState('');
+  const [sending, setSending]   = useState(false);
+  const [sent, setSent]         = useState(false);
+  const [error, setError]       = useState('');
+  const [tickets, setTickets]   = useState([]);
+  const [loadingTickets, setLoadingTickets] = useState(true);
+
+  const prenom = authUser?.user_metadata?.prenom || '';
+  const email  = authUser?.email || '';
+
+  useEffect(() => {
+    loadTickets();
+  }, []);
+
+  async function loadTickets() {
+    setLoadingTickets(true);
+    try {
+      const { data } = await sbClient.from('support_tickets')
+        .select('*')
+        .order('created_at', { ascending: false });
+      setTickets(data || []);
+    } catch {}
+    setLoadingTickets(false);
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+    if (!category || !message.trim()) { setError('Veuillez remplir tous les champs.'); return; }
+    setSending(true); setError('');
+    const { error: err } = await sbClient.from('support_tickets').insert({
+      user_id: authUser.id,
+      user_email: email,
+      user_prenom: prenom,
+      category,
+      message: message.trim(),
+    });
+    if (err) { setError('Une erreur est survenue. Réessayez.'); setSending(false); return; }
+    setSent(true); setSending(false);
+    setCategory(''); setMessage('');
+    loadTickets();
+  }
+
+  const statusLabel = { open: 'En attente', answered: 'Répondu', closed: 'Clôturé' };
+  const statusColor = { open: 'bg-amber-50 text-amber-700', answered: 'bg-emerald-50 text-emerald-700', closed: 'bg-gray-100 text-gray-500' };
+
+  return (
+    <div className="flex-1 overflow-y-auto px-4 pt-6 pb-24">
+      <div className="max-w-lg mx-auto">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-xl bg-indigo-50 flex items-center justify-center">
+            <HelpCircle className="w-5 h-5 text-indigo-600" />
+          </div>
+          <div>
+            <h1 className="text-lg font-bold text-gray-900">Support</h1>
+            <p className="text-xs text-gray-400">Une question ? On vous répond.</p>
+          </div>
+        </div>
+
+        {/* Form */}
+        <div className="bg-white border border-gray-100 rounded-2xl p-5 mb-6 shadow-sm">
+          <h2 className="text-sm font-700 text-gray-700 mb-4 font-semibold">Envoyer un message</h2>
+          {sent ? (
+            <div className="flex flex-col items-center gap-3 py-6 text-center">
+              <CheckCircle2 className="w-10 h-10 text-emerald-500" />
+              <p className="font-semibold text-gray-800">Message envoyé !</p>
+              <p className="text-sm text-gray-500">Nous vous répondrons par e-mail sous 24–48h.</p>
+              <button onClick={() => setSent(false)} className="mt-2 text-sm text-indigo-600 font-semibold">
+                Envoyer un autre message
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5">Catégorie</label>
+                <select
+                  value={category}
+                  onChange={e => setCategory(e.target.value)}
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 bg-gray-50 focus:outline-none focus:border-indigo-400"
+                >
+                  <option value="">Choisir une catégorie…</option>
+                  {SUPPORT_CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5">Message</label>
+                <textarea
+                  value={message}
+                  onChange={e => setMessage(e.target.value)}
+                  rows={5}
+                  placeholder="Décrivez votre question ou problème…"
+                  className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 bg-gray-50 focus:outline-none focus:border-indigo-400 resize-none"
+                />
+              </div>
+              {error && <p className="text-xs text-red-500">{error}</p>}
+              <button
+                type="submit"
+                disabled={sending}
+                className="flex items-center justify-center gap-2 bg-indigo-600 text-white text-sm font-semibold py-3 rounded-xl hover:bg-indigo-700 transition-colors disabled:opacity-50"
+              >
+                {sending ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
+                {sending ? 'Envoi…' : 'Envoyer'}
+              </button>
+            </form>
+          )}
+        </div>
+
+        {/* Ticket history */}
+        {!loadingTickets && tickets.length > 0 && (
+          <div>
+            <h2 className="text-sm font-semibold text-gray-500 mb-3">Vos messages</h2>
+            <div className="flex flex-col gap-3">
+              {tickets.map(t => (
+                <div key={t.id} className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-xs font-semibold text-gray-500">{t.category}</span>
+                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusColor[t.status]}`}>
+                      {statusLabel[t.status]}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-700 leading-relaxed">{t.message}</p>
+                  {t.admin_reply && (
+                    <div className="mt-3 pt-3 border-t border-gray-100">
+                      <p className="text-xs font-semibold text-indigo-600 mb-1">Réponse PassCRPE</p>
+                      <p className="text-sm text-gray-700 leading-relaxed">{t.admin_reply}</p>
+                    </div>
+                  )}
+                  <p className="text-xs text-gray-300 mt-2">{new Date(t.created_at).toLocaleDateString('fr-FR')}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 // BottomNav
 // ---------------------------------------------------------------------------
 function BottomNav({ active, onChange }) {
@@ -4895,6 +5046,7 @@ function BottomNav({ active, onChange }) {
     { id: 'chat',    label: 'Session',    icon: MessageCircle },
     { id: 'history', label: 'Historique', icon: BookOpen      },
     { id: 'stats',   label: 'Stats',      icon: BarChart2     },
+    { id: 'support', label: 'Support',    icon: HelpCircle    },
     { id: 'profile', label: 'Profil',     icon: User          },
   ];
   return (
@@ -5482,6 +5634,7 @@ function AppContent({ authUser }) {
             )}
             {activeTab === 'history' && <HistoryView />}
             {activeTab === 'stats'   && <StatsView />}
+            {activeTab === 'support' && <SupportView authUser={authUser} />}
             {activeTab === 'profile' && (
               <ProfileView
                 profile={profile}

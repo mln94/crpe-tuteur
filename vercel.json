@@ -5,6 +5,7 @@
     { "source": "/api/:path*", "destination": "/api/index" },
     { "source": "/avis-essai", "destination": "/avis-essai.html" },
     { "source": "/blog", "destination": "/blog.html" },
-    { "source": "/blog/crpe-2026-reforme-concours-externes", "destination": "/crpe-2026-reforme-concours-externes.html" }
+    { "source": "/blog/crpe-2026-reforme-concours-externes", "destination": "/crpe-2026-reforme-concours-externes.html" },
+    { "source": "/admin-support", "destination": "/admin-support.html" }
   ]
 }
