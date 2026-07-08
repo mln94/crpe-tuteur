@@ -364,6 +364,31 @@
       margin-top: 10px; letter-spacing: 0.3px;
     }
 
+    /* ── BÉNÉFICES ── */
+    .benefits-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 56px;
+    }
+    @media (max-width: 768px) { .benefits-grid { grid-template-columns: 1fr; } }
+    .benefit-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 32px;
+      border: 1.5px solid var(--gray-100);
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .benefit-icon {
+      width: 52px; height: 52px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; flex-shrink: 0;
+    }
+    .benefit-card h3 { font-size: 17px; font-weight: 800; color: var(--gray-900); }
+    .benefit-card p { font-size: 14px; color: var(--gray-500); line-height: 1.7; }
+    .benefit-card ul { padding-left: 18px; display: flex; flex-direction: column; gap: 5px; }
+    .benefit-card li { font-size: 14px; color: var(--gray-500); line-height: 1.6; }
+
     /* ── HOW IT WORKS ── */
     .steps {
       display: grid;
@@ -1101,24 +1126,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="container">
     <div class="section-eyebrow">Ce que vous obtenez</div>
     <h2 class="section-title">Tout ce qu'il faut pour réussir</h2>
-    <div style="display:flex; flex-direction:column; gap:36px; max-width:680px; margin:0 auto;">
+    <div class="benefits-grid">
 
-      <div>
-        <p style="font-size:18px; font-weight:800; color:var(--gray-900); margin-bottom:12px;">✅ Des milliers d'exercices</p>
-        <ul style="list-style:disc; padding-left:22px; display:flex; flex-direction:column; gap:6px; color:var(--gray-600); font-size:15px; line-height:1.6;">
+      <div class="benefit-card fade-up">
+        <div class="benefit-icon fi-indigo">📚</div>
+        <h3>Des milliers d'exercices</h3>
+        <ul>
           <li><strong>Français :</strong> Grammaire, conjugaison, orthographe, compréhension, littérature</li>
           <li><strong>Mathématiques :</strong> Numération, calcul, géométrie, résolution de problèmes, statistiques</li>
         </ul>
       </div>
 
-      <div>
-        <p style="font-size:18px; font-weight:800; color:var(--gray-900); margin-bottom:8px;">✅ Tous les exercices sont corrigés</p>
-        <p style="color:var(--gray-600); font-size:15px; line-height:1.7;">Chaque exercice a une correction complète. Pas juste "la réponse". L'explication du pourquoi et du comment.</p>
+      <div class="benefit-card fade-up" style="animation-delay:.1s">
+        <div class="benefit-icon fi-emerald">✔️</div>
+        <h3>Tous les exercices sont corrigés</h3>
+        <p>Chaque exercice a une correction complète. Pas juste "la réponse". L'explication du pourquoi et du comment.</p>
       </div>
 
-      <div>
-        <p style="font-size:18px; font-weight:800; color:var(--gray-900); margin-bottom:8px;">✅ Vos réponses commentées</p>
-        <p style="color:var(--gray-600); font-size:15px; line-height:1.7;">Vous répondez → PassCRPE compare votre réponse → Vous voyez exactement où vous vous êtes trompé → Explication personnalisée.</p>
+      <div class="benefit-card fade-up" style="animation-delay:.2s">
+        <div class="benefit-icon fi-amber">💬</div>
+        <h3>Vos réponses commentées</h3>
+        <p>Vous répondez → PassCRPE compare votre réponse → Vous voyez exactement où vous vous êtes trompé → Explication personnalisée.</p>
       </div>
 
     </div>
