@@ -326,6 +326,22 @@
     .challenge-card h3 { font-size: 17px; font-weight: 700; color: var(--gray-800); margin-bottom: 8px; }
     .challenge-card p { font-size: 14px; color: var(--gray-500); line-height: 1.6; }
 
+    /* ── AGITATION ── */
+    .agitation-section { background: var(--gray-900); }
+    .agitation-section .section-eyebrow { color: #f87171; }
+    .agitation-section .section-title { color: #fff; }
+    .agitation-section .section-sub { color: #9ca3af; }
+    .agitation-list { display: flex; flex-direction: column; gap: 1px; margin-top: 48px; }
+    .agitation-item {
+      display: flex; gap: 24px; align-items: flex-start;
+      padding: 28px 0;
+      border-top: 1px solid rgba(255,255,255,.08);
+    }
+    .agitation-item:last-child { border-bottom: 1px solid rgba(255,255,255,.08); }
+    .agitation-emoji { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+    .agitation-item h3 { font-size: 17px; font-weight: 700; color: #f9fafb; margin-bottom: 6px; }
+    .agitation-item p { font-size: 15px; color: #9ca3af; line-height: 1.7; margin: 0; }
+
     /* ── FEATURES ── */
     .features { background: var(--gray-50); }
     .features-grid {
@@ -978,26 +994,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 
 <!-- ═══════════════════════════════ AGITATION ═══════════════════════════════ -->
-<section>
+<section class="agitation-section">
   <div class="container">
     <div class="section-eyebrow">Ce que ça provoque</div>
     <h2 class="section-title">Et le jour de l'épreuve, ça se voit.</h2>
     <p class="section-sub">Beaucoup de candidats arrivent avec de la bonne volonté, des heures passées sur des annales, des fiches remplies. Mais sans méthode, sans feedback, sans cap clair, tout ça ne suffit pas.</p>
-    <div class="challenge-grid">
-      <div class="challenge-card c1">
-        <div class="challenge-emoji">⏳</div>
-        <h3>Des heures de travail qui ne portent pas leurs fruits</h3>
-        <p>Sans savoir si vos réponses sont au niveau CRPE, vous avancez dans le flou. Vous travaillez dur, mais vous ne savez pas si vous progressez vraiment.</p>
+    <div class="agitation-list">
+      <div class="agitation-item">
+        <span class="agitation-emoji">⏳</span>
+        <div>
+          <h3>Des heures de travail qui ne portent pas leurs fruits</h3>
+          <p>Sans savoir si vos réponses sont au niveau CRPE, vous avancez dans le flou. Vous travaillez dur, mais vous ne savez pas si vous progressez vraiment.</p>
+        </div>
       </div>
-      <div class="challenge-card c2">
-        <div class="challenge-emoji">😓</div>
-        <h3>Une frustration qui s'accumule</h3>
-        <p>Vous refaites les mêmes erreurs sans comprendre pourquoi. Vous ne savez pas ce qui vous manque. Et plus l'épreuve approche, plus le doute s'installe.</p>
+      <div class="agitation-item">
+        <span class="agitation-emoji">😓</span>
+        <div>
+          <h3>Une frustration qui s'accumule</h3>
+          <p>Vous refaites les mêmes erreurs sans comprendre pourquoi. Vous ne savez pas ce qui vous manque. Et plus l'épreuve approche, plus le doute s'installe.</p>
+        </div>
       </div>
-      <div class="challenge-card c3">
-        <div class="challenge-emoji">📉</div>
-        <h3>Le jour J, vous n'êtes pas à 100%</h3>
-        <p>Pas parce que vous n'avez pas travaillé, mais parce que vous n'avez pas travaillé de la bonne façon. C'est la différence entre s'entraîner et se préparer vraiment.</p>
+      <div class="agitation-item">
+        <span class="agitation-emoji">📉</span>
+        <div>
+          <h3>Le jour J, vous n'êtes pas à 100%</h3>
+          <p>Pas parce que vous n'avez pas travaillé, mais parce que vous n'avez pas travaillé de la bonne façon. C'est la différence entre s'entraîner et se préparer vraiment.</p>
+        </div>
       </div>
     </div>
   </div>
