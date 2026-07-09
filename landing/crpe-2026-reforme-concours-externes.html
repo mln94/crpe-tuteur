@@ -51,6 +51,9 @@
     .nav-links a:hover, .nav-links a.active { color: var(--gray-900); }
     .nav-cta { font-size: 13px; font-weight: 700; padding: 8px 18px; border-radius: 8px; background: var(--indigo-600); color: #fff; text-decoration: none; transition: background .15s; white-space: nowrap; }
     .nav-cta:hover { background: var(--indigo-700); }
+    .nav-login { font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 8px; background: transparent; color: var(--gray-700); border: 1.5px solid var(--gray-200); text-decoration: none; transition: border-color .15s, color .15s; white-space: nowrap; cursor: pointer; font-family: inherit; }
+    .nav-login:hover { border-color: var(--indigo-600); color: var(--indigo-600); }
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
     @media (max-width: 768px) { .nav-links { display: none; } }
 
     /* LAYOUT */
@@ -158,7 +161,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li><a href="/#matieres">Matières</a></li>
       <li><a href="/blog" class="active">Blog</a></li>
     </ul>
-    <button onclick="openAuth()" class="nav-cta cta-commencer" style="border:none;cursor:pointer;font-family:inherit;">Commencer gratuitement →</button>
+    <div class="nav-actions">
+      <button onclick="openAuth('login')" class="nav-login">Se connecter</button>
+      <button onclick="openAuth()" class="nav-cta cta-commencer" style="border:none;cursor:pointer;font-family:inherit;">Commencer gratuitement →</button>
+    </div>
   </div>
 </nav>
 
@@ -361,7 +367,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!_sb) _sb = window.supabase.createClient('https://zqwcermgfvcusuwjfviz.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8');
     return _sb;
   }
-  function openAuth() { document.getElementById('authOverlay').classList.add('open'); document.body.style.overflow='hidden'; switchTab('login'); clearAuthMessage(); }
+  function openAuth(tab) { document.getElementById('authOverlay').classList.add('open'); document.body.style.overflow='hidden'; switchTab(tab || 'register'); clearAuthMessage(); }
   function closeAuth() { document.getElementById('authOverlay').classList.remove('open'); document.body.style.overflow=''; document.getElementById('authForm').style.display=''; document.getElementById('authForm').reset(); document.getElementById('authTabs').style.display=''; document.getElementById('authToggle').style.display=''; document.getElementById('resendBlock').style.display='none'; clearAuthMessage(); }
   document.getElementById('authOverlay').addEventListener('click', e => { if (e.target===document.getElementById('authOverlay')) closeAuth(); });
   document.addEventListener('keydown', e => { if (e.key==='Escape') closeAuth(); });
