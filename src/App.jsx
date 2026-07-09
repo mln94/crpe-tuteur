@@ -3229,6 +3229,8 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
   const [streamingText, setStreamingText]       = useState('');
   const [synthese, setSynthese]                 = useState({ open: false, content: '', minimized: false });
   const [definitions, setDefinitions]           = useState({ open: false, content: '', minimized: false });
+  const [figureSVG, setFigureSVG]               = useState(null);
+  const [figureLoading, setFigureLoading]       = useState(false);
   const tentativeRef = useRef(1);
   const inputRef     = useRef(null);
   const bottomRef    = useRef(null);
@@ -3236,6 +3238,57 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, options, streamingText]);
+
+  const generateAndSaveFigure = async (exercise) => {
+    if (!exercise) return;
+    if (exercise.figure_svg) { setFigureSVG(exercise.figure_svg); return; }
+    setFigureSVG(null);
+    setFigureLoading(true);
+    const prompt = `Génère un SVG pédagogique précis pour cet exercice de mathématiques CRPE cycle 4.
+
+Thématique : ${exercise.thematique}
+Sous-catégorie : ${exercise.sous_categorie}
+${exercise.enonce ? `Énoncé : ${exercise.enonce}\n` : ''}Question : ${exercise.question}
+
+Consignes SVG :
+- viewBox="0 0 320 200" width="320" height="200"
+- Fond blanc, style épuré et professionnel
+- Couleurs sobres : #374151 pour traits/textes, #6366f1 pour éléments clés, #10b981 pour secondaires
+- Police sans-serif, taille 11-13px, lisible
+- Géométrie → figure annotée (côtes, angles, points nommés)
+- Statistiques/données → tableau SVG avec les valeurs de l'énoncé
+- Fonctions → repère orthogonal avec courbe ou droite
+- Fractions → disque ou rectangle divisé
+- Probabilités → arbre ou tableau
+- Proportionnalité → tableau à double entrée
+- Nombres/calcul → représentation sur droite graduée ou schéma numérique
+
+Réponds UNIQUEMENT avec le code SVG complet (de <svg à </svg>), rien d'autre.`;
+    try {
+      let svgResult = '';
+      await streamClaude(
+        [{ role: 'user', content: prompt }],
+        'Tu es un expert en figures SVG mathématiques pour le CRPE. Réponds uniquement avec du SVG valide.',
+        (chunk) => { svgResult = chunk; },
+        (final) => {
+          const match = final.match(/<svg[\s\S]*?<\/svg>/i);
+          const svg = match ? match[0] : null;
+          if (svg) {
+            setFigureSVG(svg);
+            // Persiste en DB pour éviter de régénérer
+            if (exercise.id && SUPABASE_URL && SUPABASE_KEY) {
+              fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?id=eq.${exercise.id}`, {
+                method: 'PATCH',
+                headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
+                body: JSON.stringify({ figure_svg: svg }),
+              }).catch(() => {});
+            }
+          }
+        },
+      );
+    } catch { /* silencieux */ }
+    setFigureLoading(false);
+  };
 
   const ex = exercises[currentIdx];
 
@@ -3275,6 +3328,7 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
       const msg = buildMathQuestionMessage(exercises[0], 1);
       setMessages([{ role: 'assistant', content: msg }]);
       setOptions(extractOptions(msg));
+      generateAndSaveFigure(exercises[0]);
     }
     setTimeout(() => inputRef.current?.focus(), 100);
   };
@@ -3316,6 +3370,7 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
         setMessages(prev => [...prev, { role: 'user', content: '[O]' }, { role: 'assistant', content: doneMsg }]);
         setOptions([]);
         setPhase('done');
+        setFigureSVG(null);
         return;
       }
       const nextIdx = currentIdx + 1;
@@ -3327,6 +3382,7 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
       setMessages(updated);
       setOptions(extractOptions(nextMsg));
       setPhase('question');
+      generateAndSaveFigure(nextEx);
       setTimeout(() => inputRef.current?.focus(), 100);
       return;
     }
@@ -3492,6 +3548,7 @@ ${tentative === 1
             const msg = buildMathQuestionMessage(shuffled[0], 1);
             setMessages([{ role: 'assistant', content: msg }]);
             setOptions(extractOptions(msg));
+            generateAndSaveFigure(shuffled[0]);
           }
           setTimeout(() => inputRef.current?.focus(), 150);
         }}
@@ -3604,6 +3661,20 @@ ${tentative === 1
           <RotateCcw className="w-3 h-3" /> Nouvelle session
         </button>
       </div>
+
+      {/* Visuel de l'exercice */}
+      {(figureLoading || figureSVG) && phase !== 'done' && (
+        <div className="flex-shrink-0 mx-4 mt-3 mb-1 bg-white rounded-2xl border border-gray-100 shadow-sm p-3 flex items-center justify-center min-h-[120px]">
+          {figureLoading ? (
+            <div className="flex items-center gap-2 text-gray-400 text-xs">
+              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              Génération du visuel…
+            </div>
+          ) : (
+            <div className="overflow-x-auto max-w-full" dangerouslySetInnerHTML={{ __html: figureSVG }} />
+          )}
+        </div>
+      )}
 
       {/* Chat area */}
       <div className="flex-1 overflow-y-auto px-4 pt-4 pb-2">
