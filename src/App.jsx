@@ -793,8 +793,9 @@ async function fetchProgressionStats(userId) {
   }
   try {
     const params = new URLSearchParams({
-      user_id: `eq.${userId}`,
-      select:  'id_question_completee,note_ecriture,note_orthographe,note_crpe,thematique',
+      user_id:   `eq.${userId}`,
+      tentative: 'eq.1',
+      select:    'note_ecriture,note_orthographe,note_crpe,thematique',
     });
     const res = await fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs?${params}`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
@@ -810,9 +811,7 @@ async function fetchProgressionStats(userId) {
     ]);
     const francaisRows = rows.filter(r => francaisThematiques.has(r.thematique));
 
-    const completedFacile = new Set(
-      francaisRows.filter(r => r.id_question_completee).map(r => r.id_question_completee)
-    ).size;
+    const completedFacile = francaisRows.length;
 
     const mean = (arr) => {
       const valid = arr.filter(v => v != null);
@@ -4162,43 +4161,45 @@ ${tentative === 1
           };
           if (tentative === 1) {
             supabaseInsertReturningId('reponses_utilisateurs', {
-              user_id:                userIdRef.current,
-              session_id:             dbSessionIdRef.current,
+              user_id:       userIdRef.current,
+              session_id:    dbSessionIdRef.current,
               classe,
-              thematique:             q?.thematique     || null,
-              sous_categorie:         q?.sous_categorie  || null,
-              objectif:               q?.objectif        || null,
-              question:               q?.question        || null,
-              texte_support:          q?.texte_support   || null,
-              reponse:                content,
-              reponse_ideale:         q?.reponse_ideale  || null,
+              thematique:    q?.thematique    || null,
+              sous_categorie: q?.sous_categorie || null,
+              objectif:      q?.objectif       || null,
+              question:      q?.question       || null,
+              texte_support: q?.texte_support  || null,
+              reponse:       content,
+              reponse_ideale: q?.reponse_ideale || null,
               conseils,
-              tentative:              1,
-              id_question_completee:  q?.id              ?? null,
+              tentative:     1,
+              // pas d'id_question_completee : FK → questions_generees, incompatible avec exercices_français
               ...noteFields,
-            }).then(saveBanqueFautesEtErreurs);
-            // Increment free question counter (only on first attempt = one question answered)
+            }).then((reponseId) => {
+              saveBanqueFautesEtErreurs(reponseId);
+              if (!isLocked && typeof onQuestionAnswered === 'function') {
+                onQuestionAnswered(userIdRef.current);
+              }
+            });
             if (!isLocked) {
               const newCount = (storage.get('crpe_free_questions_used') || 0) + 1;
               storage.set('crpe_free_questions_used', newCount);
               setFreeQsUsed(newCount);
-              if (typeof onQuestionAnswered === 'function') onQuestionAnswered(userIdRef.current);
             }
           } else {
             supabaseInsertReturningId('reponses_utilisateurs', {
-              user_id:                userIdRef.current,
-              session_id:             dbSessionIdRef.current,
+              user_id:       userIdRef.current,
+              session_id:    dbSessionIdRef.current,
               classe,
-              thematique:             q?.thematique     || null,
-              sous_categorie:         q?.sous_categorie  || null,
-              objectif:               q?.objectif        || null,
-              question:               q?.question        || null,
-              texte_support:          q?.texte_support   || null,
-              reponse:                content,
-              reponse_ideale:         q?.reponse_ideale  || null,
+              thematique:    q?.thematique    || null,
+              sous_categorie: q?.sous_categorie || null,
+              objectif:      q?.objectif       || null,
+              question:      q?.question       || null,
+              texte_support: q?.texte_support  || null,
+              reponse:       content,
+              reponse_ideale: q?.reponse_ideale || null,
               conseils,
-              tentative:              2,
-              id_question_completee:  q?.id              ?? null,
+              tentative:     2,
               ...noteFields,
             }).then(saveBanqueFautesEtErreurs);
           }
