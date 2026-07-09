@@ -3217,41 +3217,71 @@ function HistoryView() {
 // MathBanqueView — math exercise bank with 5-thematic menu
 // ---------------------------------------------------------------------------
 function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
-  const [step, setStep]                   = useState('thematique');
+  const [step, setStep]                         = useState('thematique');
   const [selectedThematique, setSelectedThematique] = useState(null);
-  const [exercises, setExercises]         = useState([]);
-  const [loadingEx, setLoadingEx]         = useState(false);
-  const [currentIdx, setCurrentIdx]       = useState(0);
-  const [phase, setPhase]                 = useState('question');
-  const [userAnswer, setUserAnswer]       = useState('');
-  const [correction, setCorrection]       = useState('');
-  const [streamingText, setStreamingText] = useState('');
-  const [loading, setLoading]             = useState(false);
-  const [synthese, setSynthese]     = useState({ open: false, content: '', minimized: false });
-  const [definitions, setDefinitions] = useState({ open: false, content: '', minimized: false });
+  const [exercises, setExercises]               = useState([]);
+  const [loadingEx, setLoadingEx]               = useState(false);
+  const [currentIdx, setCurrentIdx]             = useState(0);
+  const [phase, setPhase]                       = useState('question');
+  const [messages, setMessages]                 = useState([]);
+  const [options, setOptions]                   = useState([]);
+  const [input, setInput]                       = useState('');
+  const [loading, setLoading]                   = useState(false);
+  const [streamingText, setStreamingText]       = useState('');
+  const [synthese, setSynthese]                 = useState({ open: false, content: '', minimized: false });
+  const [definitions, setDefinitions]           = useState({ open: false, content: '', minimized: false });
   const tentativeRef = useRef(1);
   const inputRef     = useRef(null);
   const bottomRef    = useRef(null);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [phase, correction, streamingText]);
+  }, [messages, options, streamingText]);
 
   const ex = exercises[currentIdx];
 
-  function getOptions() {
-    if (!ex || phase === 'correcting' || phase === 'done') return [];
-    const s = ex.synthese_cours        ? ['S'] : [];
-    const d = ex.definition_mots_cles ? ['D'] : [];
-    if (phase === 'question')  return ['R', ...s, ...d, 'O'];
-    if (phase === 'answered')  return [...(tentativeRef.current === 1 ? ['N'] : []), 'R', ...s, ...d, 'O'];
-    if (phase === 'revealed')  return [...s, ...d, 'O'];
-    return [];
+  function buildMathQuestionMessage(ex, num) {
+    const s = ex.synthese_cours        ? '**[S]**' : '';
+    const d = ex.definition_mots_cles ? '**[D]**' : '';
+    const opts = ['**[R]**', s, d, '**[O]**'].filter(Boolean).join(' ');
+    return [
+      `Exercice ${num} · ${ex.sous_categorie}`,
+      `Niveau de difficulté : Facile`,
+      `Sous-catégorie : ${ex.sous_categorie}`,
+      `Objectif : ${ex.objectif_apprentissage}`,
+      ex.enonce ? `\n${ex.enonce}` : '',
+      `\nQuestion : ${ex.question}`,
+      '',
+      opts,
+    ].filter(l => l !== undefined).join('\n').trim();
   }
+
+  function buildMathReponseMessage(ex, num) {
+    const s = ex.synthese_cours        ? '**[S]**' : '';
+    const d = ex.definition_mots_cles ? '**[D]**' : '';
+    const opts = [s, d, '**[O]**'].filter(Boolean).join(' ');
+    return `Réponse type CRPE — Exercice ${num}\n\n${ex.reponse_ideale}\n\n${opts}`;
+  }
+
+  const restartSession = () => {
+    tentativeRef.current = 1;
+    setCurrentIdx(0);
+    setPhase('question');
+    setInput('');
+    setLoading(false);
+    setStreamingText('');
+    setSynthese({ open: false, content: '', minimized: false });
+    setDefinitions({ open: false, content: '', minimized: false });
+    if (exercises.length > 0) {
+      const msg = buildMathQuestionMessage(exercises[0], 1);
+      setMessages([{ role: 'assistant', content: msg }]);
+      setOptions(extractOptions(msg));
+    }
+    setTimeout(() => inputRef.current?.focus(), 100);
+  };
 
   const handleOption = (optStr) => {
     const opt = optStr.replace(/[\[\]]/g, '');
-    if (opt === 'R') { setPhase('revealed'); return; }
     if (opt === 'S') {
       if (ex?.synthese_cours) setSynthese({ open: true, content: ex.synthese_cours, minimized: false });
       return;
@@ -3262,35 +3292,62 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
     }
     if (opt === 'N') {
       tentativeRef.current = 2;
+      const retryMsg = "Tentative 2 — Relisez l'énoncé et améliorez votre réponse.";
+      const updated = [...messages, { role: 'user', content: '[N]' }, { role: 'assistant', content: retryMsg }];
+      setMessages(updated);
+      setOptions([]);
       setPhase('question');
-      setUserAnswer('');
-      setCorrection('');
-      setStreamingText('');
-      setTimeout(() => inputRef.current?.focus(), 150);
+      setTimeout(() => inputRef.current?.focus(), 100);
+      return;
+    }
+    if (opt === 'R') {
+      const reponseMsg = buildMathReponseMessage(ex, currentIdx + 1);
+      const updated = [...messages, { role: 'user', content: '[R]' }, { role: 'assistant', content: reponseMsg }];
+      setMessages(updated);
+      setOptions(extractOptions(reponseMsg));
+      setPhase('revealed');
       return;
     }
     if (opt === 'O') {
-      if (currentIdx + 1 >= exercises.length) { setPhase('done'); return; }
-      tentativeRef.current = 1;
-      setCurrentIdx(i => i + 1);
-      setPhase('question');
-      setUserAnswer('');
-      setCorrection('');
-      setStreamingText('');
       setSynthese({ open: false, content: '', minimized: false });
       setDefinitions({ open: false, content: '', minimized: false });
-      setTimeout(() => inputRef.current?.focus(), 150);
+      if (currentIdx + 1 >= exercises.length) {
+        const n = exercises.length;
+        const doneMsg = `Vous avez terminé les ${n} exercice${n > 1 ? 's' : ''} disponibles. Bravo !\n\nVos réponses ont été enregistrées dans votre historique.`;
+        setMessages(prev => [...prev, { role: 'user', content: '[O]' }, { role: 'assistant', content: doneMsg }]);
+        setOptions([]);
+        setPhase('done');
+        return;
+      }
+      const nextIdx = currentIdx + 1;
+      const nextEx  = exercises[nextIdx];
+      tentativeRef.current = 1;
+      setCurrentIdx(nextIdx);
+      const nextMsg = buildMathQuestionMessage(nextEx, nextIdx + 1);
+      const updated = [...messages, { role: 'user', content: '[O]' }, { role: 'assistant', content: nextMsg }];
+      setMessages(updated);
+      setOptions(extractOptions(nextMsg));
+      setPhase('question');
+      setTimeout(() => inputRef.current?.focus(), 100);
       return;
     }
   };
 
-  const handleSubmit = async () => {
-    if (!userAnswer.trim() || loading) return;
-    const tentative = tentativeRef.current;
+  const send = async (text) => {
+    const content = text.trim();
+    if (!content || loading) return;
+    if (/^\[[A-Z0-9+>]\]$/.test(content)) { handleOption(content); setInput(''); return; }
+
+    const tentative  = tentativeRef.current;
+    const userMsg    = { role: 'user', content };
+    const msgsBefore = [...messages, userMsg];
+
+    setInput('');
+    setMessages(msgsBefore);
+    setOptions([]);
     setLoading(true);
-    setPhase('correcting');
-    setCorrection('');
     setStreamingText('');
+    setPhase('correction');
 
     const prompt = `Tu es un correcteur expert en mathématiques pour le CRPE (cycle 4).
 
@@ -3300,7 +3357,7 @@ Objectif : ${ex.objectif_apprentissage}
 Niveau : ${ex.classe} — Facile
 
 Énoncé :
-${ex.enonce}
+${ex.enonce || ''}
 
 Question :
 ${ex.question}
@@ -3309,7 +3366,7 @@ Réponse attendue (ne pas divulguer directement, sert uniquement à évaluer) :
 ${ex.reponse_ideale}
 
 Réponse du candidat (tentative ${tentative}) :
-${userAnswer}
+${content}
 
 ---
 
@@ -3324,8 +3381,10 @@ Note méthode : X/10
 Note CRPE : X/10
 Note globale : X/10
 
-Réponse type CRPE :
-[Correction complète avec toutes les étapes détaillées]`;
+${tentative === 1
+  ? '**[N]** **[R]** **[S]** **[D]** **[O]**'
+  : '**[R]** **[S]** **[D]** **[O]**'
+}`;
 
     try {
       await streamClaude(
@@ -3334,34 +3393,38 @@ Réponse type CRPE :
         (chunk) => setStreamingText(chunk),
         (final) => {
           setStreamingText('');
-          setCorrection(final);
+          const finalMsgs = [...msgsBefore, { role: 'assistant', content: final }];
+          setMessages(finalMsgs);
+          setOptions(extractOptions(final));
           setPhase('answered');
-          if (tentative === 1) {
-            const userId = authUser?.id || storage.get('crpe_user_id');
-            if (userId) {
-              const mathNotes = extractNotesFromText(final);
-              supabaseInsert('reponses_utilisateurs', {
-                user_id:      userId,
-                session_id:   `math_sess_${userId}_${Date.now()}`,
-                classe:       ex.classe || null,
-                thematique:   ex.thematique || null,
-                sous_categorie: ex.sous_categorie || null,
-                objectif:     ex.objectif_apprentissage || null,
-                question:     ex.question || null,
-                reponse:      userAnswer,
-                reponse_ideale: ex.reponse_ideale || null,
-                tentative:    1,
-                note_crpe:    mathNotes.crpe   ?? null,
-                note_globale: mathNotes.globale ?? null,
-              });
-              if (typeof onQuestionAnswered === 'function') onQuestionAnswered(userId);
+          const userId = authUser?.id || storage.get('crpe_user_id');
+          if (userId) {
+            const mathNotes = extractNotesFromText(final);
+            supabaseInsert('reponses_utilisateurs', {
+              user_id:        userId,
+              session_id:     `math_sess_${userId}_${Date.now()}`,
+              classe:         ex.classe || null,
+              thematique:     ex.thematique || null,
+              sous_categorie: ex.sous_categorie || null,
+              objectif:       ex.objectif_apprentissage || null,
+              question:       ex.question || null,
+              reponse:        content,
+              reponse_ideale: ex.reponse_ideale || null,
+              tentative,
+              note_crpe:    mathNotes.crpe   ?? null,
+              note_globale: mathNotes.globale ?? null,
+            });
+            if (tentative === 1 && typeof onQuestionAnswered === 'function') {
+              onQuestionAnswered(userId);
             }
           }
         },
       );
     } catch {
       setStreamingText('');
-      setCorrection('Erreur lors de la correction. Vérifiez votre connexion.');
+      const errMsg = 'Erreur lors de la correction. Veuillez réessayer.\n\n**[O]**';
+      setMessages(prev => [...prev, { role: 'assistant', content: errMsg }]);
+      setOptions(extractOptions(errMsg));
       setPhase('answered');
     }
     setLoading(false);
@@ -3369,7 +3432,7 @@ Réponse type CRPE :
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit(); }
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(input); }
   };
 
   // ── Step: thématique ──────────────────────────────────────────────────────
@@ -3416,12 +3479,21 @@ Réponse type CRPE :
           const classe = NIVEAU_TO_CLASSE[classeId];
           setLoadingEx(true);
           setStep('exercises');
-          setCurrentIdx(0); setPhase('question');
-          setUserAnswer(''); setCorrection(''); setStreamingText('');
+          setCurrentIdx(0);
+          setPhase('question');
           tentativeRef.current = 1;
+          setInput('');
+          setMessages([]);
+          setOptions([]);
           const data = await fetchExercicesMaths(selectedThematique, classe);
-          setExercises(shuffleArray(data));
+          const shuffled = shuffleArray(data);
+          setExercises(shuffled);
           setLoadingEx(false);
+          if (shuffled.length > 0) {
+            const msg = buildMathQuestionMessage(shuffled[0], 1);
+            setMessages([{ role: 'assistant', content: msg }]);
+            setOptions(extractOptions(msg));
+          }
           setTimeout(() => inputRef.current?.focus(), 150);
         }}
         onBack={() => setStep('thematique')}
@@ -3439,18 +3511,12 @@ Réponse type CRPE :
   }
 
   // ── Empty / Done ─────────────────────────────────────────────────────────
-  if (phase === 'done' || exercises.length === 0) {
+  if (exercises.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center px-4 gap-4 text-center">
         <GraduationCap className="w-12 h-12 text-emerald-400" />
-        <h2 className="text-xl font-bold text-gray-800">
-          {exercises.length === 0 ? 'Aucun exercice disponible' : 'Série terminée !'}
-        </h2>
-        <p className="text-gray-500 text-sm">
-          {exercises.length === 0
-            ? 'Les exercices pour cette thématique arrivent bientôt.'
-            : `Bravo ! ${exercises.length} exercice${exercises.length > 1 ? 's' : ''} complété${exercises.length > 1 ? 's' : ''}.`}
-        </p>
+        <h2 className="text-xl font-bold text-gray-800">Aucun exercice disponible</h2>
+        <p className="text-gray-500 text-sm">Les exercices pour cette thématique arrivent bientôt.</p>
         <button onClick={onBack} className="px-5 py-2.5 bg-emerald-600 text-white rounded-xl text-sm font-semibold hover:bg-emerald-700 transition-all">
           Retour au menu
         </button>
@@ -3458,20 +3524,18 @@ Réponse type CRPE :
     );
   }
 
-  // ── Exercise view ────────────────────────────────────────────────────────
-  const thInfo = MATH_THEMATIQUES.find(t => t.label === ex?.thematique);
-  const opts   = getOptions();
-  const inputDisabled = phase !== 'question' || loading;
+  // ── Chat view ─────────────────────────────────────────────────────────────
+  const inputDisabled = loading || phase !== 'question';
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
 
-      {/* Panneaux latéraux synthèse + définitions */}
+      {/* Panneaux latéraux */}
       {(synthese.open || definitions.open) && (
         <div className="fixed top-0 right-0 bottom-0 w-96 z-50 flex flex-col shadow-2xl">
           {synthese.open && (
             <div className={`flex flex-col bg-white border-l border-gray-200 transition-all ${synthese.minimized ? 'flex-shrink-0' : 'flex-1 min-h-0'}`}>
-              <div className="flex items-center justify-between px-4 py-3 bg-indigo-600 flex-shrink-0">
+              <div className="flex items-center justify-between px-4 py-3 bg-emerald-600 flex-shrink-0">
                 <div className="flex items-center gap-2">
                   <BookOpen className="w-4 h-4 text-white" />
                   <span className="text-sm font-semibold text-white">Synthèse du cours</span>
@@ -3520,68 +3584,41 @@ Réponse type CRPE :
 
       {/* Header */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-white flex-shrink-0">
-        <button onClick={onBack} className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0">
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <div className="flex flex-col items-center min-w-0">
-          <p className="text-xs font-semibold text-gray-900 truncate">{ex?.sous_categorie}</p>
-          <p className="text-[10px] text-gray-400">{currentIdx + 1}/{exercises.length} · {ex?.classe}</p>
-        </div>
-        <div className="w-5" />
-      </div>
-
-      {/* Scrollable content */}
-      <div className="flex-1 overflow-y-auto">
-
-        {/* Exercise card */}
-        <div className="mx-4 mt-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-          <div className="flex items-center gap-2 mb-3 flex-wrap">
-            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${thInfo?.colors.bg || 'bg-emerald-50'} ${thInfo?.colors.icon || 'text-emerald-700'}`}>
-              Exercice {currentIdx + 1} · Facile
+        <div className="flex items-center gap-3 min-w-0">
+          <button onClick={onBack} className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0">
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <div className="flex flex-col min-w-0">
+            <span className="text-xs font-semibold px-2 py-0.5 rounded-full self-start bg-emerald-100 text-emerald-700">
+              Mathématiques
             </span>
-            <span className="text-[10px] text-gray-400">{ex?.thematique}</span>
+            <p className="text-xs text-gray-400 mt-1 truncate">
+              {ex?.thematique}
+              <span className="mx-1 text-gray-300">·</span>
+              {ex?.classe}
+              <span className="mx-1 text-gray-300">·</span>
+              <span className="font-medium text-gray-500">Cycle 4</span>
+            </p>
           </div>
-          {ex?.enonce && (
-            <p className="text-sm text-gray-700 leading-relaxed mb-3 whitespace-pre-wrap">{ex.enonce}</p>
-          )}
-          {ex?.figure_svg && (
-            <div
-              className="flex justify-center my-3 bg-gray-50 rounded-xl p-2 overflow-x-auto"
-              dangerouslySetInnerHTML={{ __html: ex.figure_svg }}
-            />
-          )}
-          <p className="text-sm font-semibold text-gray-900">{ex?.question}</p>
         </div>
-
-        {/* Correction (streaming or final) */}
-        {(phase === 'correcting' || phase === 'answered') && (
-          <div className="mx-4 mt-3 bg-white rounded-2xl border border-gray-100 shadow-sm p-4">
-            <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-3">Correction</p>
-            {phase === 'correcting' && !streamingText && (
-              <div className="flex items-center gap-2 text-gray-400 text-sm">
-                <Loader2 className="w-4 h-4 animate-spin" />Correction en cours…
-              </div>
-            )}
-            {(streamingText || correction) && (
-              <MessageContent text={streamingText || correction} />
-            )}
-          </div>
-        )}
-
-        {/* Réponse idéale (after [R]) */}
-        {phase === 'revealed' && (
-          <div className="mx-4 mt-3 bg-indigo-50 rounded-2xl border border-indigo-100 p-4">
-            <p className="text-[10px] font-semibold text-indigo-500 uppercase tracking-wide mb-3">Réponse type CRPE</p>
-            <MessageContent text={ex?.reponse_ideale || ''} />
-          </div>
-        )}
-
-        <div ref={bottomRef} className="h-4" />
+        <button onClick={restartSession} className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 ml-3">
+          <RotateCcw className="w-3 h-3" /> Nouvelle session
+        </button>
       </div>
 
-      {/* Quick-reply buttons */}
-      {opts.length > 0 && (
-        <QuickReplies options={opts} onSelect={handleOption} color="emerald" />
+      {/* Chat area */}
+      <div className="flex-1 overflow-y-auto px-4 pt-4 pb-2">
+        {messages.map((msg, i) => {
+          if (msg.role === 'user' && /^\[[A-Z0-9+>]\]$/.test(msg.content.trim())) return null;
+          return <ChatBubble key={i} msg={msg} />;
+        })}
+        {loading && !streamingText && <TypingIndicator />}
+        {streamingText && <ChatBubble msg={{ role: 'assistant', content: streamingText }} isStreaming />}
+        <div ref={bottomRef} />
+      </div>
+
+      {!loading && options.length > 0 && (
+        <QuickReplies options={options} onSelect={send} color="emerald" />
       )}
 
       {/* Input */}
@@ -3589,8 +3626,8 @@ Réponse type CRPE :
         <div className="flex gap-2 items-end">
           <textarea
             ref={inputRef}
-            value={userAnswer}
-            onChange={e => setUserAnswer(e.target.value)}
+            value={input}
+            onChange={e => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder={inputDisabled ? '' : 'Votre réponse…'}
             disabled={inputDisabled}
@@ -3598,8 +3635,8 @@ Réponse type CRPE :
             className="flex-1 resize-none border border-gray-200 rounded-xl px-3 py-2.5 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-emerald-400 focus:border-transparent disabled:opacity-50 transition-all"
           />
           <button
-            onClick={handleSubmit}
-            disabled={!userAnswer.trim() || inputDisabled}
+            onClick={() => send(input)}
+            disabled={!input.trim() || inputDisabled}
             className="w-10 h-10 bg-emerald-600 text-white rounded-xl flex items-center justify-center hover:bg-emerald-700 active:bg-emerald-800 disabled:opacity-40 disabled:cursor-not-allowed transition-all flex-shrink-0"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
