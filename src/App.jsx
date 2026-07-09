@@ -836,9 +836,11 @@ async function fetchProgressionStats(userId) {
 }
 
 async function fetchMathProgressionStats(userId) {
-  if (!SUPABASE_URL || !SUPABASE_KEY || !userId) return { byThematique: {}, total: 0 };
+  if (!SUPABASE_URL || !SUPABASE_KEY || !userId) {
+    return { byThematique: {}, total: 0, avgGlobal: null, avgCrpe: null, unlocked: false };
+  }
   try {
-    const params = new URLSearchParams({ user_id: `eq.${userId}`, tentative: 'eq.1', select: 'thematique' });
+    const params = new URLSearchParams({ user_id: `eq.${userId}`, tentative: 'eq.1', select: 'thematique,note_crpe,note_globale' });
     const res = await fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs?${params}`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
     });
@@ -849,15 +851,22 @@ async function fetchMathProgressionStats(userId) {
     const byThematique = {};
     MATH_THEMATIQUES.forEach(t => { byThematique[t.label] = 0; });
     let total = 0;
+    const crpeVals = [], globalVals = [];
     rows.forEach(r => {
       if (mathLabels.has(r.thematique)) {
         byThematique[r.thematique] = (byThematique[r.thematique] || 0) + 1;
         total++;
+        if (r.note_crpe   != null) crpeVals.push(r.note_crpe);
+        if (r.note_globale != null) globalVals.push(r.note_globale);
       }
     });
-    return { byThematique, total };
+    const mean = arr => arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length * 10) / 10 : null;
+    const avgCrpe   = mean(crpeVals);
+    const avgGlobal = mean(globalVals);
+    const unlocked  = total >= 100 && (avgGlobal ?? 0) >= 7 && (avgCrpe ?? 0) >= 8;
+    return { byThematique, total, avgGlobal, avgCrpe, unlocked };
   } catch {
-    return { byThematique: {}, total: 0 };
+    return { byThematique: {}, total: 0, avgGlobal: null, avgCrpe: null, unlocked: false };
   }
 }
 
@@ -2692,7 +2701,7 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, i
 
   const [francaisAvgs, setFrancaisAvgs] = useState(null);
   const [progression, setProgression]     = useState({ completedFacile: 0, avgGlobal: null, avgCrpe: null, unlocked: false });
-  const [mathProgression, setMathProgression] = useState({ byThematique: {}, total: 0 });
+  const [mathProgression, setMathProgression] = useState({ byThematique: {}, total: 0, avgGlobal: null, avgCrpe: null, unlocked: false });
   const [showPaywall, setShowPaywall]     = useState(false);
 
   useEffect(() => {
@@ -2953,36 +2962,50 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, i
       {!isLockedMaths && (
       <div className="flex-shrink-0">
         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Progression Mathématiques</p>
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3 space-y-2.5">
-          <div className="flex items-center gap-2 pb-1 border-b border-gray-50">
-            <div className="w-6 h-6 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
-              <Calculator className="w-3.5 h-3.5 text-emerald-600" />
+        {mathProgression.unlocked ? (
+          <div className="bg-emerald-50 rounded-2xl border border-emerald-200 px-4 py-3 flex items-center gap-3">
+            <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
+              <GraduationCap className="w-4 h-4 text-emerald-600" />
             </div>
             <div>
-              <p className="text-xs font-bold text-gray-700">Exercices réalisés</p>
-              <p className="text-[9px] text-gray-400">{mathProgression.total} exercice{mathProgression.total !== 1 ? 's' : ''} complété{mathProgression.total !== 1 ? 's' : ''} · objectif {FREE_QUESTION_LIMIT} par thématique</p>
+              <p className="text-sm font-bold text-emerald-800">Niveau intermédiaire débloqué !</p>
+              <p className="text-[10px] text-emerald-600 mt-0.5">Les questions intermédiaires en maths sont maintenant disponibles.</p>
             </div>
           </div>
-          {[
-            { label: 'Nombres et calculs',      key: 'Nombres et calculs' },
-            { label: 'Géométrie',               key: 'Espace et géométrie' },
-            { label: 'Proportionnalité',        key: 'Proportionnalité, fonctions' },
-            { label: 'Données et probabilités', key: 'Organisation et gestion de données et probabilités' },
-            { label: 'Pensée informatique',     key: 'La pensée informatique' },
-          ].map(({ label, key }) => {
-            const count = mathProgression.byThematique[key] ?? 0;
-            return (
-              <ProgressRow
-                key={key}
-                label={label}
-                current={count}
-                target={FREE_QUESTION_LIMIT}
-                met={count >= FREE_QUESTION_LIMIT}
-                formatVal={v => `${v}/${FREE_QUESTION_LIMIT}`}
-              />
-            );
-          })}
-        </div>
+        ) : (
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3 space-y-2.5">
+            <div className="flex items-center gap-2 pb-1 border-b border-gray-50">
+              <div className="w-6 h-6 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
+                <span className="text-xs">🔒</span>
+              </div>
+              <div>
+                <p className="text-xs font-bold text-gray-700">Débloquer le niveau intermédiaire</p>
+                <p className="text-[9px] text-gray-400">3 critères à remplir en Mathématiques</p>
+              </div>
+            </div>
+            <ProgressRow
+              label="Exercices maths (facile)"
+              current={mathProgression.total}
+              target={100}
+              met={mathProgression.total >= 100}
+              formatVal={v => `${v}/100`}
+            />
+            <ProgressRow
+              label="Moyenne globale"
+              current={mathProgression.avgGlobal ?? 0}
+              target={7}
+              met={(mathProgression.avgGlobal ?? 0) >= 7}
+              formatVal={v => v > 0 ? `${v}/10` : '—/10'}
+            />
+            <ProgressRow
+              label="Moyenne CRPE"
+              current={mathProgression.avgCrpe ?? 0}
+              target={8}
+              met={(mathProgression.avgCrpe ?? 0) >= 8}
+              formatVal={v => v > 0 ? `${v}/10` : '—/10'}
+            />
+          </div>
+        )}
       </div>
       )}
 
@@ -3326,6 +3349,7 @@ Réponse type CRPE :
           if (tentative === 1) {
             const userId = authUser?.id || storage.get('crpe_user_id');
             if (userId) {
+              const mathNotes = extractNotesFromText(final);
               supabaseInsert('reponses_utilisateurs', {
                 user_id:      userId,
                 session_id:   `math_sess_${userId}_${Date.now()}`,
@@ -3337,6 +3361,8 @@ Réponse type CRPE :
                 reponse:      userAnswer,
                 reponse_ideale: ex.reponse_ideale || null,
                 tentative:    1,
+                note_crpe:    mathNotes.crpe   ?? null,
+                note_globale: mathNotes.globale ?? null,
               });
               if (typeof onQuestionAnswered === 'function') onQuestionAnswered(userId);
             }
