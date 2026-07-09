@@ -1473,6 +1473,7 @@ function stripEcritureLines(text) {
     .filter(line => !/^PUZZLE_GAME:/i.test(line.trim()))
     .filter(line => !/^PUZZLE:/i.test(line.trim()))
     .filter(line => !/^ORTHO:/i.test(line.trim()))
+    .filter(line => !/^SYNTAXE:/i.test(line.trim()))
     .filter(line => !/^IDEAL:/i.test(line.trim()))
     .join('\n');
 }
@@ -1581,6 +1582,7 @@ function MessageContent({ text }) {
       {text.split('\n')
         .filter(line => !/^\s*\*\*\[[A-Z+>]\]\*\*/.test(line))
         .filter(line => !/^ORTHO:/i.test(line.trim()))
+        .filter(line => !/^SYNTAXE:/i.test(line.trim()))
         .filter(line => !/^IDEAL:/i.test(line.trim()))
         .map((line, i) => renderLine(line, i))}
     </div>
