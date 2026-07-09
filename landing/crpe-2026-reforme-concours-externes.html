@@ -367,7 +367,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!_sb) _sb = window.supabase.createClient('https://zqwcermgfvcusuwjfviz.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8');
     return _sb;
   }
-  function openAuth(tab) { document.getElementById('authOverlay').classList.add('open'); document.body.style.overflow='hidden'; switchTab(tab || 'register'); clearAuthMessage(); }
+  function openAuth(tab) { document.getElementById('authOverlay').classList.add('open'); document.body.style.overflow='hidden'; switchTab(tab || 'register'); document.getElementById('authTabs').style.display = tab ? 'none' : ''; clearAuthMessage(); }
   function closeAuth() { document.getElementById('authOverlay').classList.remove('open'); document.body.style.overflow=''; document.getElementById('authForm').style.display=''; document.getElementById('authForm').reset(); document.getElementById('authTabs').style.display=''; document.getElementById('authToggle').style.display=''; document.getElementById('resendBlock').style.display='none'; clearAuthMessage(); }
   document.getElementById('authOverlay').addEventListener('click', e => { if (e.target===document.getElementById('authOverlay')) closeAuth(); });
   document.addEventListener('keydown', e => { if (e.key==='Escape') closeAuth(); });

@@ -1667,7 +1667,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (e && e.preventDefault) e.preventDefault();
     document.getElementById('authOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
-    switchTab(tab || 'register');
+    const t = tab || 'register';
+    switchTab(t);
+    // Masquer les onglets si le point d'entrée est explicite (login ou register)
+    document.getElementById('authTabs').style.display = tab ? 'none' : '';
     clearAuthMessage();
   }
 
