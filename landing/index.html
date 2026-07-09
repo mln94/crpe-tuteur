@@ -1906,8 +1906,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const params = Object.fromEntries(new URLSearchParams(hash));
     if (params.type !== 'signup' || !params.access_token) return;
 
-    // Nettoyer le hash pour éviter le re-déclenchement au refresh
-    history.replaceState(null, '', window.location.pathname + window.location.search);
+    // Afficher le popup une seule fois par session (sans effacer l'URL)
+    if (sessionStorage.getItem('emailConfirmShown')) return;
+    sessionStorage.setItem('emailConfirmShown', '1');
 
     // Afficher le popup
     const overlay = document.getElementById('confirmOverlay');
