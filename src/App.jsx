@@ -1749,78 +1749,11 @@ const FREE_QUESTION_LIMIT = 10;
 const CONTACT_EMAIL       = 'mohamed.necib94310@gmail.com';
 const CRPE_PRICE_LABEL    = '399,00 €'; // doit rester aligné avec CRPE_PRICE dans app.js
 
+const PAYPAL_NCP_URL = 'https://www.paypal.com/ncp/payment/NZPAQVSVRHYLL';
+
 function PaywallModal({ questionsUsed, onUnlock, onClose }) {
-  const paypalContainerRef = useRef(null);
-  const [paying, setPaying] = useState(false);
-  const [payError, setPayError] = useState(null);
-  const [sdkReady, setSdkReady] = useState(!!window.paypal?.Buttons);
-
-  // Le SDK PayPal est chargé en <script async> dans index.html : il peut ne pas
-  // encore être prêt au montage de la modale, donc on patiente en sondant.
-  useEffect(() => {
-    if (sdkReady) return;
-    const interval = setInterval(() => {
-      if (window.paypal?.Buttons) {
-        setSdkReady(true);
-        clearInterval(interval);
-      }
-    }, 200);
-    const timeout = setTimeout(() => {
-      clearInterval(interval);
-      if (!window.paypal?.Buttons) {
-        setPayError('Le module de paiement PayPal n\'a pas pu se charger. Vérifiez votre connexion et rechargez la page.');
-      }
-    }, 10000);
-    return () => { clearInterval(interval); clearTimeout(timeout); };
-  }, [sdkReady]);
-
-  useEffect(() => {
-    if (!sdkReady || !paypalContainerRef.current) return;
-
-    const buttons = window.paypal.Buttons({
-      style: { layout: 'horizontal', color: 'blue', shape: 'pill', label: 'pay', height: 45 },
-      createOrder: async () => {
-        setPayError(null);
-        const { data } = await sbClient.auth.getSession();
-        const token = data.session?.access_token;
-        if (!token) throw new Error('Vous devez être connecté pour payer.');
-        const res = await fetch('/api/paypal/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-        });
-        const json = await res.json();
-        if (!res.ok) throw new Error(json.error || 'Erreur de création de la commande');
-        return json.id;
-      },
-      onApprove: async (data) => {
-        setPaying(true);
-        try {
-          const { data: sess } = await sbClient.auth.getSession();
-          const token = sess.session?.access_token;
-          const res = await fetch('/api/paypal/capture-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ orderID: data.orderID }),
-          });
-          const json = await res.json();
-          if (!res.ok || json.status !== 'COMPLETED') throw new Error(json.error || 'Paiement non confirmé');
-          storage.set('crpe_paid', true); // cache local
-          onUnlock();
-        } catch (e) {
-          setPayError(e.message);
-        } finally {
-          setPaying(false);
-        }
-      },
-      onError: (err) => {
-        console.error('[PayPal]', err);
-        setPayError('Une erreur est survenue avec PayPal. Réessayez.');
-      },
-    });
-
-    buttons.render(paypalContainerRef.current);
-    return () => { try { buttons.close(); } catch { /* déjà démonté */ } };
-  }, [sdkReady]);
+  const [checking, setChecking] = useState(false);
+  const [checkMsg, setCheckMsg] = useState(null);
 
   const FEATURES = [
     { icon: '📚', text: 'Questions illimitées — toutes thématiques (grammaire, lecture, vocabulaire, écriture, culture littéraire)' },
@@ -1880,14 +1813,42 @@ function PaywallModal({ questionsUsed, onUnlock, onClose }) {
             <span className="text-lg font-bold text-indigo-600">{CRPE_PRICE_LABEL}</span>
           </div>
 
-          {/* PayPal Smart Button */}
-          <div ref={paypalContainerRef} />
-          {paying && (
-            <p className="text-xs text-gray-400 text-center">Confirmation du paiement…</p>
-          )}
-          {payError && (
-            <p className="text-xs text-red-500 text-center">{payError}</p>
-          )}
+          {/* Bouton PayPal */}
+          <a
+            href={PAYPAL_NCP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 w-full bg-[#0070ba] hover:bg-[#003087] text-white font-bold py-3 rounded-xl transition-colors text-sm"
+          >
+            <svg viewBox="0 0 24 24" className="w-5 h-5 fill-current" xmlns="http://www.w3.org/2000/svg">
+              <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.313 2.48 1.067 4.258-.569 4.01-3.19 6.231-7.073 6.231h-2.13c-.524 0-.968.382-1.05.9L9.076 18.56l-.405 2.338a.38.38 0 0 1-.376.32c0 .055.003.11.002.12h-1.22z"/>
+              <path d="M20.502 5.093c-.057.36-.12.712-.2 1.054C19.25 11.026 16 13.174 11.54 13.174H9.41a1.04 1.04 0 0 0-1.027.88L7.19 21.337h3.885a.898.898 0 0 0 .886-.757l.036-.19.703-4.455.045-.246a.898.898 0 0 1 .886-.758h.558c3.612 0 6.44-1.467 7.265-5.71.346-1.78.167-3.265-.951-4.128z"/>
+            </svg>
+            Payer avec PayPal — {CRPE_PRICE_LABEL}
+          </a>
+
+          {/* Vérifier après paiement */}
+          <div className="text-center">
+            <button
+              onClick={async () => {
+                setChecking(true);
+                setCheckMsg(null);
+                const paid = await fetchPaidStatus();
+                if (paid) {
+                  storage.set('crpe_paid', true);
+                  onUnlock();
+                } else {
+                  setCheckMsg('Paiement non encore reçu. Attendez quelques secondes puis réessayez.');
+                  setChecking(false);
+                }
+              }}
+              disabled={checking}
+              className="text-xs text-indigo-600 font-semibold hover:underline disabled:opacity-50"
+            >
+              {checking ? 'Vérification…' : 'J\'ai déjà payé — vérifier mon accès'}
+            </button>
+            {checkMsg && <p className="text-xs text-gray-500 mt-1">{checkMsg}</p>}
+          </div>
 
           {/* Zone rassurante */}
           <div className="border border-gray-200 rounded-2xl px-4 py-4">
