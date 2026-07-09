@@ -2907,105 +2907,95 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, i
         </div>
       </div>
 
-      {/* Progression vers le niveau intermédiaire */}
-      {!isLockedFrancais && (
+      {/* Progression Français + Mathématiques — côte à côte */}
+      {(!isLockedFrancais || !isLockedMaths) && (
       <div className="flex-shrink-0">
-        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Progression Français</p>
-        {progression.unlocked ? (
-          <div className="bg-emerald-50 rounded-2xl border border-emerald-200 px-4 py-3 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
-              <GraduationCap className="w-4 h-4 text-emerald-600" />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-emerald-800">Niveau intermédiaire débloqué !</p>
-              <p className="text-[10px] text-emerald-600 mt-0.5">Les questions intermédiaires sont maintenant disponibles.</p>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3 space-y-2.5">
-            <div className="flex items-center gap-2 pb-1 border-b border-gray-50">
-              <div className="w-6 h-6 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
-                <span className="text-xs">🔒</span>
-              </div>
-              <div>
-                <p className="text-xs font-bold text-gray-700">Débloquer le niveau intermédiaire</p>
-                <p className="text-[9px] text-gray-400">3 critères à remplir en Français</p>
-              </div>
-            </div>
-            <ProgressRow
-              label="Questions faciles (Français)"
-              current={progression.completedFacile}
-              target={100}
-              met={progression.completedFacile > 100}
-              formatVal={v => `${v}/100`}
-            />
-            <ProgressRow
-              label="Moyenne globale"
-              current={progression.avgGlobal ?? 0}
-              target={7}
-              met={(progression.avgGlobal ?? 0) >= 7}
-              formatVal={v => v > 0 ? `${v}/10` : '—/10'}
-            />
-            <ProgressRow
-              label="Moyenne CRPE"
-              current={progression.avgCrpe ?? 0}
-              target={8}
-              met={(progression.avgCrpe ?? 0) >= 8}
-              formatVal={v => v > 0 ? `${v}/10` : '—/10'}
-            />
-          </div>
-        )}
-      </div>
-      )}
+        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Progression</p>
+        <div className="flex gap-2">
 
-      {/* Progression Mathématiques */}
-      {!isLockedMaths && (
-      <div className="flex-shrink-0">
-        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Progression Mathématiques</p>
-        {mathProgression.unlocked ? (
-          <div className="bg-emerald-50 rounded-2xl border border-emerald-200 px-4 py-3 flex items-center gap-3">
-            <div className="w-8 h-8 rounded-xl bg-emerald-100 flex items-center justify-center flex-shrink-0">
-              <GraduationCap className="w-4 h-4 text-emerald-600" />
-            </div>
-            <div>
-              <p className="text-sm font-bold text-emerald-800">Niveau intermédiaire débloqué !</p>
-              <p className="text-[10px] text-emerald-600 mt-0.5">Les questions intermédiaires en maths sont maintenant disponibles.</p>
-            </div>
-          </div>
-        ) : (
-          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3 space-y-2.5">
-            <div className="flex items-center gap-2 pb-1 border-b border-gray-50">
-              <div className="w-6 h-6 rounded-lg bg-gray-100 flex items-center justify-center flex-shrink-0">
-                <span className="text-xs">🔒</span>
+          {/* ── Français ── */}
+          {!isLockedFrancais && (
+          <div className="flex-1 min-w-0">
+            <p className="text-[9px] font-semibold text-indigo-400 uppercase tracking-wide mb-1.5 text-center">Français</p>
+            {progression.unlocked ? (
+              <div className="bg-emerald-50 rounded-2xl border border-emerald-200 px-3 py-3 flex flex-col items-center gap-1.5 text-center h-full justify-center">
+                <GraduationCap className="w-5 h-5 text-emerald-600" />
+                <p className="text-[11px] font-bold text-emerald-800 leading-tight">Intermédiaire débloqué !</p>
               </div>
-              <div>
-                <p className="text-xs font-bold text-gray-700">Débloquer le niveau intermédiaire</p>
-                <p className="text-[9px] text-gray-400">3 critères à remplir en Mathématiques</p>
+            ) : (
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-3 py-2.5 space-y-2">
+                <div className="flex items-center gap-1.5 pb-1.5 border-b border-gray-50">
+                  <span className="text-[10px]">🔒</span>
+                  <p className="text-[10px] font-bold text-gray-700 leading-tight">Débloquer l'intermédiaire</p>
+                </div>
+                <ProgressRow
+                  label="Questions faciles"
+                  current={progression.completedFacile}
+                  target={100}
+                  met={progression.completedFacile > 100}
+                  formatVal={v => `${v}/100`}
+                />
+                <ProgressRow
+                  label="Moy. globale"
+                  current={progression.avgGlobal ?? 0}
+                  target={7}
+                  met={(progression.avgGlobal ?? 0) >= 7}
+                  formatVal={v => v > 0 ? `${v}/10` : '—/10'}
+                />
+                <ProgressRow
+                  label="Moy. CRPE"
+                  current={progression.avgCrpe ?? 0}
+                  target={8}
+                  met={(progression.avgCrpe ?? 0) >= 8}
+                  formatVal={v => v > 0 ? `${v}/10` : '—/10'}
+                />
               </div>
-            </div>
-            <ProgressRow
-              label="Exercices maths (facile)"
-              current={mathProgression.total}
-              target={100}
-              met={mathProgression.total >= 100}
-              formatVal={v => `${v}/100`}
-            />
-            <ProgressRow
-              label="Moyenne globale"
-              current={mathProgression.avgGlobal ?? 0}
-              target={7}
-              met={(mathProgression.avgGlobal ?? 0) >= 7}
-              formatVal={v => v > 0 ? `${v}/10` : '—/10'}
-            />
-            <ProgressRow
-              label="Moyenne CRPE"
-              current={mathProgression.avgCrpe ?? 0}
-              target={8}
-              met={(mathProgression.avgCrpe ?? 0) >= 8}
-              formatVal={v => v > 0 ? `${v}/10` : '—/10'}
-            />
+            )}
           </div>
-        )}
+          )}
+
+          {/* ── Mathématiques ── */}
+          {!isLockedMaths && (
+          <div className="flex-1 min-w-0">
+            <p className="text-[9px] font-semibold text-emerald-500 uppercase tracking-wide mb-1.5 text-center">Maths</p>
+            {mathProgression.unlocked ? (
+              <div className="bg-emerald-50 rounded-2xl border border-emerald-200 px-3 py-3 flex flex-col items-center gap-1.5 text-center h-full justify-center">
+                <GraduationCap className="w-5 h-5 text-emerald-600" />
+                <p className="text-[11px] font-bold text-emerald-800 leading-tight">Intermédiaire débloqué !</p>
+              </div>
+            ) : (
+              <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-3 py-2.5 space-y-2">
+                <div className="flex items-center gap-1.5 pb-1.5 border-b border-gray-50">
+                  <span className="text-[10px]">🔒</span>
+                  <p className="text-[10px] font-bold text-gray-700 leading-tight">Débloquer l'intermédiaire</p>
+                </div>
+                <ProgressRow
+                  label="Exercices faciles"
+                  current={mathProgression.total}
+                  target={100}
+                  met={mathProgression.total >= 100}
+                  formatVal={v => `${v}/100`}
+                />
+                <ProgressRow
+                  label="Moy. globale"
+                  current={mathProgression.avgGlobal ?? 0}
+                  target={7}
+                  met={(mathProgression.avgGlobal ?? 0) >= 7}
+                  formatVal={v => v > 0 ? `${v}/10` : '—/10'}
+                />
+                <ProgressRow
+                  label="Moy. CRPE"
+                  current={mathProgression.avgCrpe ?? 0}
+                  target={8}
+                  met={(mathProgression.avgCrpe ?? 0) >= 8}
+                  formatVal={v => v > 0 ? `${v}/10` : '—/10'}
+                />
+              </div>
+            )}
+          </div>
+          )}
+
+        </div>
       </div>
       )}
 
