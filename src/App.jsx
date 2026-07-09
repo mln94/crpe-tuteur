@@ -1533,8 +1533,8 @@ function renderLine(line, key) {
     const [, label, score, total] = noteMatch;
     const n = parseInt(score);
     const pct = Math.round((n / parseInt(total)) * 100);
-    const isEcriture  = label.includes('écriture');
-    const isOrtho     = label.includes('orthographe');
+    const isEcriture  = label.includes('écriture') || label.includes('calcul');
+    const isOrtho     = label.includes('orthographe') || label.includes('méthode') || label.includes('methode');
     const isCRPE      = label.includes('CRPE');
     const isGlobale   = label.includes('globale');
     const cfg = isEcriture
