@@ -3327,17 +3327,16 @@ Réponse type CRPE :
             const userId = authUser?.id || storage.get('crpe_user_id');
             if (userId) {
               supabaseInsert('reponses_utilisateurs', {
-                user_id:               userId,
-                session_id:            `math_sess_${userId}_${ex.id || ex.thematique}`,
-                classe:                ex.classe || null,
-                thematique:            ex.thematique || null,
-                sous_categorie:        ex.sous_categorie || null,
-                objectif:              ex.objectif_apprentissage || null,
-                question:              ex.question || null,
-                reponse:               userAnswer,
-                reponse_ideale:        ex.reponse_ideale || null,
-                tentative:             1,
-                id_question_completee: ex.id || null,
+                user_id:      userId,
+                session_id:   `math_sess_${userId}_${Date.now()}`,
+                classe:       ex.classe || null,
+                thematique:   ex.thematique || null,
+                sous_categorie: ex.sous_categorie || null,
+                objectif:     ex.objectif_apprentissage || null,
+                question:     ex.question || null,
+                reponse:      userAnswer,
+                reponse_ideale: ex.reponse_ideale || null,
+                tentative:    1,
               });
               if (typeof onQuestionAnswered === 'function') onQuestionAnswered(userId);
             }
