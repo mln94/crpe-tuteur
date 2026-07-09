@@ -924,11 +924,22 @@ async function fetchFreeQuestionsUsed(userId) {
   try {
     const { data, error } = await sbClient
       .from('reponses_utilisateurs')
-      .select('tentative')
+      .select('thematique')
       .eq('user_id', userId)
       .eq('tentative', 1);
     if (error) throw error;
-    return Array.isArray(data) ? data.length : null;
+    if (!Array.isArray(data)) return null;
+    const mathLabels = new Set(MATH_THEMATIQUES.map(t => t.label));
+    const francaisKeys = new Set([
+      ...Object.keys(TOPIC_TO_THEMATIQUE),
+      ...Object.values(TOPIC_TO_THEMATIQUE),
+    ]);
+    let francais = 0, maths = 0;
+    data.forEach(r => {
+      if (mathLabels.has(r.thematique)) maths++;
+      else if (francaisKeys.has(r.thematique)) francais++;
+    });
+    return { francais, maths };
   } catch (e) {
     console.warn('[fetchFreeQuestionsUsed]', e?.message);
     return null;
@@ -2644,7 +2655,7 @@ function ProgressRow({ label, current, target, met, formatVal }) {
 // ---------------------------------------------------------------------------
 // HomeView
 // ---------------------------------------------------------------------------
-function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, freeQsUsed, onPaymentConfirmed }) {
+function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, isLockedFrancais, isLockedMaths, freeQsFrancais, freeQsMaths, isPaid, onPaymentConfirmed }) {
   const mathsSession   = storage.get('crpe_session_maths');
   const francaisSession = storage.get('crpe_session_francais');
   const mathsSaved    = !!mathsSession?.displayMessages?.length;
@@ -2676,7 +2687,7 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, f
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Bonjour' : hour < 18 ? 'Bon après-midi' : 'Bonsoir';
 
-  function SubjectCard({ matiere, label, icon: Icon, accentClass, saved, scores, avgs, banqueSession, onResumeBanque }) {
+  function SubjectCard({ matiere, label, icon: Icon, accentClass, saved, scores, avgs, banqueSession: bSession, onResumeBanque: onResume, cardLocked, freeQs }) {
     const avg = avgScore(scores);
 
     const noteItems = [
@@ -2686,61 +2697,82 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, f
       { label: 'Globale',     val: avgs?.globale,     bg: 'bg-emerald-50', text: 'text-emerald-700 font-bold' },
     ];
     const hasDetailedScores = avgs && noteItems.some(n => n.val !== null);
+    const trialPct = Math.min((freeQs / FREE_QUESTION_LIMIT) * 100, 100);
 
     return (
-      <div className={`bg-white rounded-2xl border shadow-sm px-4 py-3.5 flex items-center gap-4 ${isLocked ? 'border-gray-200 opacity-75' : 'border-gray-100'}`}>
-        {/* Icône */}
-        <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isLocked ? 'bg-gray-100' : accentClass.bg}`}>
-          {isLocked
-            ? <span className="text-lg">🔒</span>
-            : <Icon className={`w-5 h-5 ${accentClass.icon}`} />
-          }
-        </div>
+      <div className={`bg-white rounded-2xl border shadow-sm px-4 py-3.5 ${cardLocked ? 'border-gray-200 opacity-75' : 'border-gray-100'}`}>
+        <div className="flex items-center gap-4">
+          {/* Icône */}
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${cardLocked ? 'bg-gray-100' : accentClass.bg}`}>
+            {cardLocked
+              ? <span className="text-lg">🔒</span>
+              : <Icon className={`w-5 h-5 ${accentClass.icon}`} />
+            }
+          </div>
 
-        {/* Titre + description */}
-        <div className="flex-1 min-w-0">
-          <h3 className="font-bold text-gray-900 text-sm leading-tight">{label}</h3>
-          <p className="text-[11px] text-gray-400 leading-snug">
-            {matiere === 'maths' ? 'Nombres, géométrie, fonctions…' : 'Grammaire, orthographe, texte…'}
-          </p>
-          {!isLocked && hasDetailedScores && (
-            <div className="flex gap-1.5 mt-1.5 flex-wrap">
-              {noteItems.filter(n => n.val !== null).map(({ label: lbl, val, bg, text }) => (
-                <span key={lbl} className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${bg} ${text}`}>
-                  {lbl} {val}/10
-                </span>
-              ))}
+          {/* Titre + description */}
+          <div className="flex-1 min-w-0">
+            <h3 className="font-bold text-gray-900 text-sm leading-tight">{label}</h3>
+            <p className="text-[11px] text-gray-400 leading-snug">
+              {matiere === 'maths' ? 'Nombres, géométrie, fonctions…' : 'Grammaire, orthographe, texte…'}
+            </p>
+            {!cardLocked && hasDetailedScores && (
+              <div className="flex gap-1.5 mt-1.5 flex-wrap">
+                {noteItems.filter(n => n.val !== null).map(({ label: lbl, val, bg, text }) => (
+                  <span key={lbl} className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${bg} ${text}`}>
+                    {lbl} {val}/10
+                  </span>
+                ))}
+              </div>
+            )}
+            {!cardLocked && !hasDetailedScores && avg !== null && (
+              <span className={`inline-block mt-1 text-[11px] font-semibold px-2 py-0.5 rounded-full ${accentClass.bg} ${accentClass.icon}`}>
+                Moy. {avg}/10
+              </span>
+            )}
+            {cardLocked && (
+              <span className="inline-block mt-1 text-[10px] font-medium text-red-400">
+                Essai terminé — {FREE_QUESTION_LIMIT}/{FREE_QUESTION_LIMIT} questions
+              </span>
+            )}
+          </div>
+
+          {/* Boutons */}
+          {!cardLocked && (
+            <div className="flex flex-col gap-1.5 flex-shrink-0">
+              {(saved || bSession) && (
+                <button
+                  onClick={() => bSession && onResume ? onResume() : onStart(matiere, false)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold border-2 ${accentClass.border} ${accentClass.text} hover:opacity-80 transition-all whitespace-nowrap`}
+                >
+                  Reprendre
+                </button>
+              )}
+              <button
+                onClick={() => onStart(matiere, true)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-semibold text-white transition-all ${accentClass.btn} whitespace-nowrap`}
+              >
+                {saved || bSession ? 'Nouvelle session' : 'Commencer →'}
+              </button>
             </div>
           )}
-          {!isLocked && !hasDetailedScores && avg !== null && (
-            <span className={`inline-block mt-1 text-[11px] font-semibold px-2 py-0.5 rounded-full ${accentClass.bg} ${accentClass.icon}`}>
-              Moy. {avg}/10
-            </span>
-          )}
-          {isLocked && (
-            <span className="inline-block mt-1 text-[10px] font-medium text-gray-400">
-              Accès limité — essai terminé
-            </span>
-          )}
         </div>
 
-        {/* Boutons */}
-        {!isLocked && (
-          <div className="flex flex-col gap-1.5 flex-shrink-0">
-            {(saved || banqueSession) && (
-              <button
-                onClick={() => banqueSession && onResumeBanque ? onResumeBanque() : onStart(matiere, false)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-semibold border-2 ${accentClass.border} ${accentClass.text} hover:opacity-80 transition-all whitespace-nowrap`}
-              >
-                Reprendre
-              </button>
-            )}
-            <button
-              onClick={() => onStart(matiere, true)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-semibold text-white transition-all ${accentClass.btn} whitespace-nowrap`}
-            >
-              {saved || banqueSession ? 'Nouvelle session' : 'Commencer →'}
-            </button>
+        {/* Barre de progression essai — masquée si payé */}
+        {!isPaid && (
+          <div className="mt-2.5 pt-2.5 border-t border-gray-50">
+            <div className="flex items-center justify-between mb-1">
+              <span className="text-[10px] text-gray-400">Questions d'essai</span>
+              <span className={`text-[10px] font-semibold ${cardLocked ? 'text-red-500' : 'text-gray-500'}`}>
+                {Math.min(freeQs, FREE_QUESTION_LIMIT)}/{FREE_QUESTION_LIMIT}
+              </span>
+            </div>
+            <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all ${cardLocked ? 'bg-red-400' : trialPct >= 70 ? 'bg-amber-400' : accentClass.btn.split(' ')[0]}`}
+                style={{ width: `${trialPct}%` }}
+              />
+            </div>
           </div>
         )}
       </div>
@@ -2809,6 +2841,8 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, f
             avgs={francaisAvgs}
             banqueSession={banqueSession}
             onResumeBanque={onResumeBanque}
+            cardLocked={isLockedFrancais}
+            freeQs={freeQsFrancais}
             accentClass={{
               bg: 'bg-indigo-100',
               icon: 'text-indigo-600',
@@ -2823,6 +2857,8 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, f
             icon={Calculator}
             saved={mathsSaved}
             scores={mathsScores}
+            cardLocked={isLockedMaths}
+            freeQs={freeQsMaths}
             accentClass={{
               bg: 'bg-emerald-100',
               icon: 'text-emerald-600',
@@ -2835,7 +2871,7 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, f
       </div>
 
       {/* Progression vers le niveau intermédiaire */}
-      {!isLocked && (
+      {!isLockedFrancais && (
       <div className="flex-shrink-0">
         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Progression Français</p>
         {progression.unlocked ? (
@@ -3102,7 +3138,7 @@ function HistoryView() {
 // ---------------------------------------------------------------------------
 // MathBanqueView — math exercise bank with 5-thematic menu
 // ---------------------------------------------------------------------------
-function MathBanqueView({ onBack }) {
+function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
   const [step, setStep]                   = useState('thematique');
   const [selectedThematique, setSelectedThematique] = useState(null);
   const [exercises, setExercises]         = useState([]);
@@ -3218,7 +3254,30 @@ Réponse type CRPE :
         [{ role: 'user', content: prompt }],
         'Tu es un correcteur expert en mathématiques cycle 4 pour le CRPE. Sois précis, bienveillant et rigoureux.',
         (chunk) => setStreamingText(chunk),
-        (final) => { setStreamingText(''); setCorrection(final); setPhase('answered'); },
+        (final) => {
+          setStreamingText('');
+          setCorrection(final);
+          setPhase('answered');
+          if (tentative === 1) {
+            const userId = authUser?.id || storage.get('crpe_user_id');
+            if (userId) {
+              supabaseInsert('reponses_utilisateurs', {
+                user_id:               userId,
+                session_id:            `math_sess_${userId}_${ex.id || ex.thematique}`,
+                classe:                ex.classe || null,
+                thematique:            ex.thematique || null,
+                sous_categorie:        ex.sous_categorie || null,
+                objectif:              ex.objectif_apprentissage || null,
+                question:              ex.question || null,
+                reponse:               userAnswer,
+                reponse_ideale:        ex.reponse_ideale || null,
+                tentative:             1,
+                id_question_completee: ex.id || null,
+              });
+              if (typeof onQuestionAnswered === 'function') onQuestionAnswered(userId);
+            }
+          }
+        },
       );
     } catch {
       setStreamingText('');
@@ -5359,8 +5418,12 @@ function AppContent({ authUser }) {
   const [unreadSupport, setUnreadSupport] = useState(0);
 
   // isPaid : DB prioritaire, fallback localStorage si DB indisponible
-  const isPaidApp   = dbPaid !== null ? dbPaid : storage.get('crpe_paid') === true;
-  const isLockedApp = dbFreeQsUsed !== null && !isPaidApp && dbFreeQsUsed >= FREE_QUESTION_LIMIT;
+  const isPaidApp        = dbPaid !== null ? dbPaid : storage.get('crpe_paid') === true;
+  const freeQsFrancais   = dbFreeQsUsed?.francais ?? 0;
+  const freeQsMaths      = dbFreeQsUsed?.maths    ?? 0;
+  const isLockedFrancais = dbFreeQsUsed !== null && !isPaidApp && freeQsFrancais >= FREE_QUESTION_LIMIT;
+  const isLockedMaths    = dbFreeQsUsed !== null && !isPaidApp && freeQsMaths    >= FREE_QUESTION_LIMIT;
+  const isLockedApp      = isLockedFrancais && isLockedMaths;
 
   const trialEndedFired = useRef(false);
   useEffect(() => {
@@ -5553,7 +5616,12 @@ function AppContent({ authUser }) {
         className="flex flex-col flex-1 min-h-0 max-w-3xl mx-auto w-full"
       >
         {showMathBanqueView ? (
-          <MathBanqueView onBack={() => setShowMathBanqueView(false)} />
+          <MathBanqueView
+            onBack={() => { setShowMathBanqueView(false); const uid = authUser?.id || storage.get('crpe_user_id'); if (uid) refreshFreeQsCount(uid); }}
+            authUser={authUser}
+            isLocked={isLockedMaths}
+            onQuestionAnswered={(uid) => refreshFreeQsCount(uid)}
+          />
         ) : showTopicPicker ? (
           <SubjectPickerView
             onSelect={handleTopicSelect}
@@ -5572,7 +5640,7 @@ function AppContent({ authUser }) {
           <BanqueQuestionsView
             topic={francaisTopic}
             niveau={sessionNiveau}
-            isLocked={isLockedApp}
+            isLocked={isLockedFrancais}
             onQuestionAnswered={(uid) => refreshFreeQsCount(uid)}
             onBack={() => {
               setShowBanqueView(false);
@@ -5597,7 +5665,11 @@ function AppContent({ authUser }) {
                 banqueSession={banqueSession}
                 onResumeBanque={handleResumeBanque}
                 isLocked={isLockedApp}
-                freeQsUsed={dbFreeQsUsed ?? 0}
+                isLockedFrancais={isLockedFrancais}
+                isLockedMaths={isLockedMaths}
+                freeQsFrancais={freeQsFrancais}
+                freeQsMaths={freeQsMaths}
+                isPaid={isPaidApp}
                 onPaymentConfirmed={refreshPaidStatus}
               />
             )}
