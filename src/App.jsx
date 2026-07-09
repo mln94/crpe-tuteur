@@ -835,6 +835,32 @@ async function fetchProgressionStats(userId) {
   }
 }
 
+async function fetchMathProgressionStats(userId) {
+  if (!SUPABASE_URL || !SUPABASE_KEY || !userId) return { byThematique: {}, total: 0 };
+  try {
+    const params = new URLSearchParams({ user_id: `eq.${userId}`, tentative: 'eq.1', select: 'thematique' });
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs?${params}`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+    });
+    if (!res.ok) throw new Error();
+    const rows = await res.json();
+    if (!Array.isArray(rows)) throw new Error();
+    const mathLabels = new Set(MATH_THEMATIQUES.map(t => t.label));
+    const byThematique = {};
+    MATH_THEMATIQUES.forEach(t => { byThematique[t.label] = 0; });
+    let total = 0;
+    rows.forEach(r => {
+      if (mathLabels.has(r.thematique)) {
+        byThematique[r.thematique] = (byThematique[r.thematique] || 0) + 1;
+        total++;
+      }
+    });
+    return { byThematique, total };
+  } catch {
+    return { byThematique: {}, total: 0 };
+  }
+}
+
 async function supabaseInsert(table, data) {
   if (!SUPABASE_URL || !SUPABASE_KEY) return;
   try {
@@ -2665,8 +2691,9 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, i
   const francaisScores = extractScores(francaisSession?.displayMessages);
 
   const [francaisAvgs, setFrancaisAvgs] = useState(null);
-  const [progression, setProgression]   = useState({ completedFacile: 0, avgGlobal: null, avgCrpe: null, unlocked: false });
-  const [showPaywall, setShowPaywall]   = useState(false);
+  const [progression, setProgression]     = useState({ completedFacile: 0, avgGlobal: null, avgCrpe: null, unlocked: false });
+  const [mathProgression, setMathProgression] = useState({ byThematique: {}, total: 0 });
+  const [showPaywall, setShowPaywall]     = useState(false);
 
   useEffect(() => {
     const userId = storage.get('crpe_user_id');
@@ -2682,6 +2709,7 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, i
         });
       }
     });
+    fetchMathProgressionStats(userId).then(stats => setMathProgression(stats));
   }, []);
 
   const hour = new Date().getHours();
@@ -2785,7 +2813,7 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, i
       {/* Paywall popup */}
       {showPaywall && (
         <PaywallModal
-          questionsUsed={freeQsUsed}
+          questionsUsed={freeQsFrancais + freeQsMaths}
           onUnlock={() => { setShowPaywall(false); if (onPaymentConfirmed) onPaymentConfirmed(); }}
           onClose={() => setShowPaywall(false)}
         />
@@ -2918,6 +2946,43 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, i
             />
           </div>
         )}
+      </div>
+      )}
+
+      {/* Progression Mathématiques */}
+      {!isLockedMaths && (
+      <div className="flex-shrink-0">
+        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide mb-2">Progression Mathématiques</p>
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm px-4 py-3 space-y-2.5">
+          <div className="flex items-center gap-2 pb-1 border-b border-gray-50">
+            <div className="w-6 h-6 rounded-lg bg-emerald-100 flex items-center justify-center flex-shrink-0">
+              <Calculator className="w-3.5 h-3.5 text-emerald-600" />
+            </div>
+            <div>
+              <p className="text-xs font-bold text-gray-700">Exercices réalisés</p>
+              <p className="text-[9px] text-gray-400">{mathProgression.total} exercice{mathProgression.total !== 1 ? 's' : ''} complété{mathProgression.total !== 1 ? 's' : ''} · objectif {FREE_QUESTION_LIMIT} par thématique</p>
+            </div>
+          </div>
+          {[
+            { label: 'Nombres et calculs',      key: 'Nombres et calculs' },
+            { label: 'Géométrie',               key: 'Espace et géométrie' },
+            { label: 'Proportionnalité',        key: 'Proportionnalité, fonctions' },
+            { label: 'Données et probabilités', key: 'Organisation et gestion de données et probabilités' },
+            { label: 'Pensée informatique',     key: 'La pensée informatique' },
+          ].map(({ label, key }) => {
+            const count = mathProgression.byThematique[key] ?? 0;
+            return (
+              <ProgressRow
+                key={key}
+                label={label}
+                current={count}
+                target={FREE_QUESTION_LIMIT}
+                met={count >= FREE_QUESTION_LIMIT}
+                formatVal={v => `${v}/${FREE_QUESTION_LIMIT}`}
+              />
+            );
+          })}
+        </div>
       </div>
       )}
 
