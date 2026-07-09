@@ -109,6 +109,9 @@
       white-space: nowrap;
     }
     .nav-cta:hover { background: var(--indigo-700); transform: translateY(-1px); }
+    .nav-login { font-size: 14px; font-weight: 600; padding: 9px 18px; border-radius: 10px; background: transparent; color: var(--gray-700); border: 1.5px solid var(--gray-200); text-decoration: none; transition: border-color .15s, color .15s; white-space: nowrap; cursor: pointer; }
+    .nav-login:hover { border-color: var(--indigo-600); color: var(--indigo-600); }
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
 
     /* ── HERO ── */
     .hero {
@@ -913,7 +916,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li><a href="#temoignages">Avis</a></li>
       <li><a href="/blog">Blog</a></li>
     </ul>
-    <a href="#" class="nav-cta cta-commencer" onclick="openAuth(event)">Commencer gratuitement →</a>
+    <div class="nav-actions">
+      <a href="#" class="nav-login" onclick="openAuth(event,'login')">Se connecter</a>
+      <a href="#" class="nav-cta cta-commencer" onclick="openAuth(event,'register')">Commencer gratuitement →</a>
+    </div>
   </div>
 </nav>
 
@@ -1657,16 +1663,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   let authMode = 'login';
 
-  function openAuth(e) {
-    if (e) e.preventDefault();
+  function openAuth(e, tab) {
+    if (e && e.preventDefault) e.preventDefault();
     document.getElementById('authOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
-    switchTab('login');
+    switchTab(tab || 'register');
     clearAuthMessage();
   }
 
-  if (new URLSearchParams(window.location.search).get('auth') === 'open') {
-    window.addEventListener('DOMContentLoaded', function() { openAuth(); });
+  const _authParam = new URLSearchParams(window.location.search).get('auth');
+  if (_authParam === 'open' || _authParam === 'register') {
+    window.addEventListener('DOMContentLoaded', function() { openAuth(null, 'register'); });
+  } else if (_authParam === 'login') {
+    window.addEventListener('DOMContentLoaded', function() { openAuth(null, 'login'); });
   }
 
   function closeAuth() {

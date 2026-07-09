@@ -77,6 +77,9 @@
       transition: background .15s; white-space: nowrap;
     }
     .nav-cta:hover { background: var(--indigo-700); }
+    .nav-login { font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 8px; background: transparent; color: var(--gray-700); border: 1.5px solid var(--gray-200); text-decoration: none; transition: border-color .15s, color .15s; white-space: nowrap; }
+    .nav-login:hover { border-color: var(--indigo-600); color: var(--indigo-600); }
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
     @media (max-width: 768px) { .nav-links { display: none; } }
 
     /* ── HERO BLOG ── */
@@ -267,7 +270,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li><a href="/#temoignages">Avis</a></li>
       <li><a href="/blog" class="active">Blog</a></li>
     </ul>
-    <a href="/?auth=open" class="nav-cta">Commencer gratuitement →</a>
+    <div class="nav-actions">
+      <a href="/?auth=login" class="nav-login">Se connecter</a>
+      <a href="/?auth=open" class="nav-cta">Commencer gratuitement →</a>
+    </div>
   </div>
 </nav>
 
