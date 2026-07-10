@@ -3239,9 +3239,23 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, options, streamingText]);
 
+  const normalizeSvg = (svg) => {
+    if (!svg) return null;
+    return svg.replace(/<svg([^>]*)>/i, (_, attrs) => {
+      let a = attrs;
+      const vbMatch = a.match(/viewBox=["']\s*[\d.]+\s+[\d.]+\s+([\d.]+)\s+([\d.]+)\s*["']/i);
+      const vbW = vbMatch ? vbMatch[1] : '320';
+      const vbH = vbMatch ? vbMatch[2] : '200';
+      if (!/\bwidth=/.test(a)) a += ` width="${vbW}"`;
+      if (!/\bheight=/.test(a)) a += ` height="${vbH}"`;
+      if (!/style=/.test(a)) a += ' style="max-width:100%;display:block"';
+      return `<svg${a}>`;
+    });
+  };
+
   const generateAndSaveFigure = async (exercise) => {
     if (!exercise) return;
-    if (exercise.figure_svg) { setFigureSVG(exercise.figure_svg); return; }
+    if (exercise.figure_svg) { setFigureSVG(normalizeSvg(exercise.figure_svg)); return; }
     setFigureSVG(null);
     setFigureLoading(true);
     const prompt = `Génère un SVG pédagogique précis pour cet exercice de mathématiques CRPE cycle 4.
@@ -3251,7 +3265,7 @@ Sous-catégorie : ${exercise.sous_categorie}
 ${exercise.enonce ? `Énoncé : ${exercise.enonce}\n` : ''}Question : ${exercise.question}
 
 Consignes SVG :
-- viewBox="0 0 320 200" width="320" height="200"
+- Attributs obligatoires sur la balise svg : viewBox="0 0 320 200" width="320" height="200"
 - Fond blanc, style épuré et professionnel
 - Couleurs sobres : #374151 pour traits/textes, #6366f1 pour éléments clés, #10b981 pour secondaires
 - Police sans-serif, taille 11-13px, lisible
@@ -3263,31 +3277,31 @@ Consignes SVG :
 - Proportionnalité → tableau à double entrée
 - Nombres/calcul → représentation sur droite graduée ou schéma numérique
 
-Réponds UNIQUEMENT avec le code SVG complet (de <svg à </svg>), rien d'autre.`;
+Réponds UNIQUEMENT avec le code SVG complet (de <svg à </svg>), sans markdown, sans texte avant ou après.`;
     try {
-      let svgResult = '';
       await streamClaude(
         [{ role: 'user', content: prompt }],
-        'Tu es un expert en figures SVG mathématiques pour le CRPE. Réponds uniquement avec du SVG valide.',
-        (chunk) => { svgResult = chunk; },
+        'Tu es un expert en figures SVG mathématiques pour le CRPE. Réponds uniquement avec du SVG valide, jamais de markdown.',
+        () => {},
         (final) => {
-          const match = final.match(/<svg[\s\S]*?<\/svg>/i);
-          const svg = match ? match[0] : null;
+          const match = final.match(/<svg[\s\S]*<\/svg>/i);
+          const svg = match ? normalizeSvg(match[0]) : null;
           if (svg) {
             setFigureSVG(svg);
-            // Persiste en DB pour éviter de régénérer
             if (exercise.id && SUPABASE_URL && SUPABASE_KEY) {
               fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?id=eq.${exercise.id}`, {
                 method: 'PATCH',
                 headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ figure_svg: svg }),
+                body: JSON.stringify({ figure_svg: match[0] }),
               }).catch(() => {});
             }
           }
+          setFigureLoading(false);
         },
       );
-    } catch { /* silencieux */ }
-    setFigureLoading(false);
+    } catch {
+      setFigureLoading(false);
+    }
   };
 
   const ex = exercises[currentIdx];
@@ -3664,14 +3678,14 @@ ${tentative === 1
 
       {/* Visuel de l'exercice */}
       {(figureLoading || figureSVG) && phase !== 'done' && (
-        <div className="flex-shrink-0 mx-4 mt-3 mb-1 bg-white rounded-2xl border border-gray-100 shadow-sm p-3 flex items-center justify-center min-h-[120px]">
+        <div className="flex-shrink-0 mx-4 mt-3 mb-1 bg-white rounded-2xl border border-gray-100 shadow-sm p-3 flex items-center justify-center" style={{ minHeight: '120px' }}>
           {figureLoading ? (
             <div className="flex items-center gap-2 text-gray-400 text-xs">
               <Loader2 className="w-3.5 h-3.5 animate-spin" />
               Génération du visuel…
             </div>
           ) : (
-            <div className="overflow-x-auto max-w-full" dangerouslySetInnerHTML={{ __html: figureSVG }} />
+            <div style={{ width: '100%', overflowX: 'auto', lineHeight: 0 }} dangerouslySetInnerHTML={{ __html: figureSVG }} />
           )}
         </div>
       )}
