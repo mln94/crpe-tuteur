@@ -1,0 +1,558 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="5260" font-family="Inter, Arial, sans-serif">
+  <defs>
+    <style>
+      text { font-family: Inter, Arial, sans-serif; }
+    </style>
+  </defs>
+  <!-- Background -->
+  <rect width="1100" height="5260" fill="#fafafa"/>
+  <!-- Header -->
+  <rect width="1100" height="60" fill="#4f46e5" rx="0"/>
+  <text x="20" y="22" fill="white" font-size="11" font-weight="600" opacity="0.8">BANQUE D&apos;ÉNONCÉS — MATHÉMATIQUES CYCLE 4</text>
+  <text x="20" y="44" fill="white" font-size="17" font-weight="700">100 Énoncés — Préparation CRPE</text>
+  <!-- Column headers -->
+  <rect y="60" width="1100" height="28" fill="#3730a3"/>
+  <text x="32" y="78" fill="white" font-size="11" font-weight="600" text-anchor="middle">N°</text>
+  <text x="61" y="78" fill="white" font-size="11" font-weight="600">Énoncé</text>
+
+  <rect x="0" y="88" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="88" x2="1100" y2="88" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="88" x2="55" y2="132" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="116" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">1</text>
+  <text x="65" y="116" fill="#1e1b4b" font-size="13">On considère l'expression suivante : A = (3x × 5y) / (3x × 2z), avec x ≠ 0.</text>
+  <rect x="0" y="132" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="132" x2="1100" y2="132" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="132" x2="55" y2="196" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="160" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">2</text>
+  <text x="65" y="160" fill="#1e1b4b" font-size="13">On considère un segment [AB] de longueur 8 cm et son milieu O. On effectue le demi-tour de centre O. L'image du point A par ce demi-</text>
+  <text x="65" y="180" fill="#1e1b4b" font-size="13">tour est le point A', et l'image du point B est le point B'.</text>
+  <rect x="0" y="196" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="196" x2="1100" y2="196" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="196" x2="55" y2="240" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="224" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">3</text>
+  <text x="65" y="224" fill="#1e1b4b" font-size="13">On considère l'expression B = (x + 3)(x + 5).</text>
+  <rect x="0" y="240" width="1100" height="124" fill="#f5f3ff"/>
+  <line x1="0" y1="240" x2="1100" y2="240" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="240" x2="55" y2="364" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="268" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">4</text>
+  <text x="65" y="268" fill="#1e1b4b" font-size="13">On considère le programme par blocs suivant :</text>
+  <text x="65" y="288" fill="#1e1b4b" font-size="13">• Entrée : l'utilisateur saisit un nombre entier appelé « age ».</text>
+  <text x="65" y="308" fill="#1e1b4b" font-size="13">• Le programme calcule : annee_naissance = 2024 - age</text>
+  <text x="65" y="328" fill="#1e1b4b" font-size="13">• Sortie : le programme affiche « Tu es né en » + annee_naissance</text>
+  <text x="65" y="348" fill="#1e1b4b" font-size="13">Ex. : si l'utilisateur saisit 13, le programme affiche « Tu es né en 2011 ».</text>
+  <rect x="0" y="364" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="364" x2="1100" y2="364" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="364" x2="55" y2="428" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="392" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">5</text>
+  <text x="65" y="392" fill="#1e1b4b" font-size="13">Dans un quadrillage, on considère la translation qui transforme le point A(1 ; 1) en son image A'(4 ; 3). Un triangle ABC a pour</text>
+  <text x="65" y="412" fill="#1e1b4b" font-size="13">sommets A(1 ; 1), B(3 ; 1) et C(2 ; 4).</text>
+  <rect x="0" y="428" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="428" x2="1100" y2="428" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="428" x2="55" y2="472" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="456" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">6</text>
+  <text x="65" y="456" fill="#1e1b4b" font-size="13">On considère un point O et une distance r = 5 cm. On s'intéresse à l'ensemble des points de l'espace selon leur distance à O.</text>
+  <rect x="0" y="472" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="472" x2="1100" y2="472" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="472" x2="55" y2="536" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="500" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">7</text>
+  <text x="65" y="500" fill="#1e1b4b" font-size="13">On considère quatre figures : un rectangle ABCD (6×4 cm), un losange EFGH (côté 5 cm), un carré IJKL (côté 3 cm), et un parallélogramme</text>
+  <text x="65" y="520" fill="#1e1b4b" font-size="13">MNOP (côtés 7 cm et 4 cm, sans angle droit).</text>
+  <rect x="0" y="536" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="536" x2="1100" y2="536" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="536" x2="55" y2="580" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="564" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">8</text>
+  <text x="65" y="564" fill="#1e1b4b" font-size="13">Deux droites (d1) et (d2) sont coupées par une sécante (s). On mesure un angle alterne-interne formé avec (d1) égal à 65°.</text>
+  <rect x="0" y="580" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="580" x2="1100" y2="580" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="580" x2="55" y2="644" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="608" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">9</text>
+  <text x="65" y="608" fill="#1e1b4b" font-size="13">En mathématiques, le périmètre d'un rectangle se calcule avec la formule P = 2 × (L + l) où L est la longueur et l est la largeur. On</text>
+  <text x="65" y="628" fill="#1e1b4b" font-size="13">souhaite écrire un programme par blocs qui demande la longueur et la largeur, puis calcule et affiche le périmètre.</text>
+  <rect x="0" y="644" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="644" x2="1100" y2="644" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="644" x2="55" y2="688" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="672" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">10</text>
+  <text x="65" y="672" fill="#1e1b4b" font-size="13">On dispose d'une sphère de centre O et de rayon r = 6 cm. Un plan P passe par le centre O et coupe la sphère.</text>
+  <rect x="0" y="688" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="688" x2="1100" y2="688" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="688" x2="55" y2="732" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="716" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">11</text>
+  <text x="65" y="716" fill="#1e1b4b" font-size="13">On considère l'inéquation : 2x ≥ 6.</text>
+  <rect x="0" y="732" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="732" x2="1100" y2="732" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="732" x2="55" y2="776" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="760" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">12</text>
+  <text x="65" y="760" fill="#1e1b4b" font-size="13">ABCD est un rectangle tel que AB = 8 cm et BC = 5 cm. Les diagonales AC et BD se coupent en O.</text>
+  <rect x="0" y="776" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="776" x2="1100" y2="776" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="776" x2="55" y2="840" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="804" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">13</text>
+  <text x="65" y="804" fill="#1e1b4b" font-size="13">Programme : mettre x à 4 / mettre y à 3 / mettre somme à (x + y) / mettre produit à (x * y) / mettre résultat à (somme + produit) /</text>
+  <text x="65" y="824" fill="#1e1b4b" font-size="13">Dire résultat.</text>
+  <rect x="0" y="840" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="840" x2="1100" y2="840" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="840" x2="55" y2="884" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="868" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">14</text>
+  <text x="65" y="868" fill="#1e1b4b" font-size="13">Dans le triangle ABC, M est le milieu de [AB] et N est le milieu de [AC]. On sait que AB = 8 cm, AC = 6 cm et BC = 10 cm.</text>
+  <rect x="0" y="884" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="884" x2="1100" y2="884" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="884" x2="55" y2="928" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="912" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">15</text>
+  <text x="65" y="912" fill="#1e1b4b" font-size="13">Dans un triangle ABC, on sait que l'angle en A mesure 50° et l'angle en B mesure 70°.</text>
+  <rect x="0" y="928" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="928" x2="1100" y2="928" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="928" x2="55" y2="972" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="956" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">16</text>
+  <text x="65" y="956" fill="#1e1b4b" font-size="13">On considère l'équation : 3x + 9 = 0.</text>
+  <rect x="0" y="972" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="972" x2="1100" y2="972" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="972" x2="55" y2="1036" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1000" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">17</text>
+  <text x="65" y="1000" fill="#1e1b4b" font-size="13">Programme : mettre a à 6 / mettre b à 4 / mettre c à (a - b) * 2 / mettre d à a + c. On souhaite prévoir les valeurs des variables</text>
+  <text x="65" y="1020" fill="#1e1b4b" font-size="13">avant exécution.</text>
+  <rect x="0" y="1036" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="1036" x2="1100" y2="1036" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1036" x2="55" y2="1080" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1064" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">18</text>
+  <text x="65" y="1064" fill="#1e1b4b" font-size="13">On considère un triangle RST avec RS = 6 cm, ST = 8 cm et RT = 10 cm.</text>
+  <rect x="0" y="1080" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="1080" x2="1100" y2="1080" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1080" x2="55" y2="1144" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1108" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">19</text>
+  <text x="65" y="1108" fill="#1e1b4b" font-size="13">Un parallélogramme ABCD a une base AB = 9 cm et une hauteur h = 6 cm. Une figure complexe est formée d'un rectangle 10×4 cm auquel on a</text>
+  <text x="65" y="1128" fill="#1e1b4b" font-size="13">ajouté un parallélogramme (base 5 cm, hauteur 3 cm).</text>
+  <rect x="0" y="1144" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="1144" x2="1100" y2="1144" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1144" x2="55" y2="1188" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1172" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">20</text>
+  <text x="65" y="1172" fill="#1e1b4b" font-size="13">On veut construire un triangle ABC tel que AB = 6 cm, BC = 4 cm et AC = 5 cm.</text>
+  <rect x="0" y="1188" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="1188" x2="1100" y2="1188" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1188" x2="55" y2="1252" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1216" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">21</text>
+  <text x="65" y="1216" fill="#1e1b4b" font-size="13">On considère trois solides : un pavé droit (8×5×4 cm), un cylindre (rayon 3 cm, hauteur 10 cm), et une boule (rayon 5 cm). On effectue</text>
+  <text x="65" y="1236" fill="#1e1b4b" font-size="13">des coupes par des plans.</text>
+  <rect x="0" y="1252" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="1252" x2="1100" y2="1252" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1252" x2="55" y2="1296" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1280" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">22</text>
+  <text x="65" y="1280" fill="#1e1b4b" font-size="13">On donne les trois expressions : E1 = (x + 4)² ; E2 = (x - 3)² ; E3 = (x + 5)(x - 5).</text>
+  <rect x="0" y="1296" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="1296" x2="1100" y2="1296" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1296" x2="55" y2="1360" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1324" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">23</text>
+  <text x="65" y="1324" fill="#1e1b4b" font-size="13">Programme : prix_unitaire = 5, quantite = 3, remise = 2, total = (prix_unitaire × quantite) - remise. Affichage : « Le total est : 13</text>
+  <text x="65" y="1344" fill="#1e1b4b" font-size="13">».</text>
+  <rect x="0" y="1360" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="1360" x2="1100" y2="1360" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1360" x2="55" y2="1404" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1388" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">24</text>
+  <text x="65" y="1388" fill="#1e1b4b" font-size="13">On cherche un nombre entier tel que, si on lui ajoute 7, on obtient le double de ce nombre.</text>
+  <rect x="0" y="1404" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="1404" x2="1100" y2="1404" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1404" x2="55" y2="1468" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1432" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">25</text>
+  <text x="65" y="1432" fill="#1e1b4b" font-size="13">Un jardinier veut gazonner un terrain en forme de parallélogramme. La base du terrain mesure 12 m et la hauteur mesure 800 cm. Le gazon</text>
+  <text x="65" y="1452" fill="#1e1b4b" font-size="13">coûte 5 € par m².</text>
+  <rect x="0" y="1468" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="1468" x2="1100" y2="1468" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1468" x2="55" y2="1512" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1496" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">26</text>
+  <text x="65" y="1496" fill="#1e1b4b" font-size="13">Une boule de pétanque a un rayon de 3,5 cm. On souhaite calculer son volume.</text>
+  <rect x="0" y="1512" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="1512" x2="1100" y2="1512" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1512" x2="55" y2="1556" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1540" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">27</text>
+  <text x="65" y="1540" fill="#1e1b4b" font-size="13">On considère un triangle équilatéral ABC de côté 6 cm. On trace les trois médiatrices des côtés [AB], [BC] et [AC].</text>
+  <rect x="0" y="1556" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="1556" x2="1100" y2="1556" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1556" x2="55" y2="1620" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1584" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">28</text>
+  <text x="65" y="1584" fill="#1e1b4b" font-size="13">(A) « Le triangle ABC est rectangle en C. » / (B) « AB² = AC² + BC². » Théorème : (A) ⟹ (B). Réciproque : (B) ⟹ (A). Contraposée :</text>
+  <text x="65" y="1604" fill="#1e1b4b" font-size="13">non-(B) ⟹ non-(A).</text>
+  <rect x="0" y="1620" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="1620" x2="1100" y2="1620" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1620" x2="55" y2="1684" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1648" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">29</text>
+  <text x="65" y="1648" fill="#1e1b4b" font-size="13">Bloc [Répéter 4 fois] : Dire « Bonjour ! » / Attendre 1 seconde. Ce programme utilise une boucle inconditionnelle qui répète les</text>
+  <text x="65" y="1668" fill="#1e1b4b" font-size="13">instructions un nombre fixé de fois.</text>
+  <rect x="0" y="1684" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="1684" x2="1100" y2="1684" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1684" x2="55" y2="1748" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1712" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">30</text>
+  <text x="65" y="1712" fill="#1e1b4b" font-size="13">Programme : Afficher « Bonjour ! » / « J'apprends à programmer. » / « Au revoir ! ». On souhaite modifier l'ordre d'affichage : « Au</text>
+  <text x="65" y="1732" fill="#1e1b4b" font-size="13">revoir ! » d'abord, puis « J'apprends à programmer. », puis « Bonjour ! ».</text>
+  <rect x="0" y="1748" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="1748" x2="1100" y2="1748" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1748" x2="55" y2="1792" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1776" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">31</text>
+  <text x="65" y="1776" fill="#1e1b4b" font-size="13">Un triangle ABC a une base [BC] de longueur 8 cm. La hauteur issue de A, perpendiculaire à (BC), mesure 5 cm.</text>
+  <rect x="0" y="1792" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="1792" x2="1100" y2="1792" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1792" x2="55" y2="1836" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1820" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">32</text>
+  <text x="65" y="1820" fill="#1e1b4b" font-size="13">Dans le triangle ABC, M sur [AB] et N sur [AC] tels que MN ∥ BC. On donne : AM = 4 cm, AB = 10 cm, AN = 3 cm.</text>
+  <rect x="0" y="1836" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="1836" x2="1100" y2="1836" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1836" x2="55" y2="1880" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1864" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">33</text>
+  <text x="65" y="1864" fill="#1e1b4b" font-size="13">Un programme doit vérifier si un entier saisi est positif ou négatif. Conditions : (A) nombre &gt; 0, (B) nombre &lt; 0, (C) nombre = 0.</text>
+  <rect x="0" y="1880" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="1880" x2="1100" y2="1880" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1880" x2="55" y2="1924" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1908" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">34</text>
+  <text x="65" y="1908" fill="#1e1b4b" font-size="13">Un cercle de centre O et de diamètre [AB] est tracé. Un point C est placé sur ce cercle, différent de A et de B.</text>
+  <rect x="0" y="1924" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="1924" x2="1100" y2="1924" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1924" x2="55" y2="1968" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1952" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">35</text>
+  <text x="65" y="1952" fill="#1e1b4b" font-size="13">On considère la fraction 18/24.</text>
+  <rect x="0" y="1968" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="1968" x2="1100" y2="1968" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="1968" x2="55" y2="2012" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="1996" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">36</text>
+  <text x="65" y="1996" fill="#1e1b4b" font-size="13">On considère un triangle ABC rectangle en B, avec AB = 3 cm, BC = 4 cm et AC = 5 cm.</text>
+  <rect x="0" y="2012" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="2012" x2="1100" y2="2012" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2012" x2="55" y2="2056" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2040" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">37</text>
+  <text x="65" y="2040" fill="#1e1b4b" font-size="13">On veut écrire un programme qui demande à l'utilisateur sa note sur 20, puis affiche « Reçu » si la note ≥ 10, et « Ajourné » sinon.</text>
+  <rect x="0" y="2056" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="2056" x2="1100" y2="2056" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2056" x2="55" y2="2120" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2084" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">38</text>
+  <text x="65" y="2084" fill="#1e1b4b" font-size="13">Un élève a calculé que la probabilité d'un événement est 30/45. Pour présenter ce résultat de façon simplifiée, il doit rendre cette</text>
+  <text x="65" y="2104" fill="#1e1b4b" font-size="13">fraction irréductible.</text>
+  <rect x="0" y="2120" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="2120" x2="1100" y2="2120" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2120" x2="55" y2="2164" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2148" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">39</text>
+  <text x="65" y="2148" fill="#1e1b4b" font-size="13">Dans le triangle ABC rectangle en B, on donne : AB = 6 cm et l'angle en A vaut 35°.</text>
+  <rect x="0" y="2164" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="2164" x2="1100" y2="2164" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2164" x2="55" y2="2228" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2192" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">40</text>
+  <text x="65" y="2192" fill="#1e1b4b" font-size="13">Dans un triangle ABC quelconque, on trace la hauteur issue de A (h_a), de B (h_b) et de C (h_c). Ces hauteurs se croisent en un point</text>
+  <text x="65" y="2212" fill="#1e1b4b" font-size="13">H.</text>
+  <rect x="0" y="2228" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="2228" x2="1100" y2="2228" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2228" x2="55" y2="2272" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2256" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">41</text>
+  <text x="65" y="2256" fill="#1e1b4b" font-size="13">Le triangle KLM est rectangle en L, avec K(0 ; 0), L(6 ; 0) et M(6 ; 4).</text>
+  <rect x="0" y="2272" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="2272" x2="1100" y2="2272" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2272" x2="55" y2="2316" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2300" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">42</text>
+  <text x="65" y="2300" fill="#1e1b4b" font-size="13">On considère les produits suivants : P1 = (-4) × 7 ; P2 = 5 × (-3) ; P3 = (-6) × (-2).</text>
+  <rect x="0" y="2316" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="2316" x2="1100" y2="2316" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2316" x2="55" y2="2360" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2344" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">43</text>
+  <text x="65" y="2344" fill="#1e1b4b" font-size="13">Programme : compteur ← 0 / compteur ← compteur + 1 / compteur ← compteur + 1 / compteur ← compteur + 3 / Afficher compteur.</text>
+  <rect x="0" y="2360" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="2360" x2="1100" y2="2360" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2360" x2="55" y2="2404" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2388" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">44</text>
+  <text x="65" y="2388" fill="#1e1b4b" font-size="13">Dans une classe de 30 élèves, 2/5 ont choisi l'option musique et 1/3 ont choisi l'option sport. Les autres n'ont pris aucune option.</text>
+  <rect x="0" y="2404" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="2404" x2="1100" y2="2404" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2404" x2="55" y2="2448" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2432" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">45</text>
+  <text x="65" y="2432" fill="#1e1b4b" font-size="13">On considère les quotients suivants : Q1 = (-20) ÷ 4 ; Q2 = 18 ÷ (-3) ; Q3 = (-15) ÷ (-5).</text>
+  <rect x="0" y="2448" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="2448" x2="1100" y2="2448" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2448" x2="55" y2="2492" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2476" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">46</text>
+  <text x="65" y="2476" fill="#1e1b4b" font-size="13">On considère un triangle ABC avec A(0 ; 4), B(0 ; 0) et C(6 ; 0). M est le milieu de [BC], N le milieu de [AC] et P le milieu de [AB].</text>
+  <rect x="0" y="2492" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="2492" x2="1100" y2="2492" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2492" x2="55" y2="2556" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2520" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">47</text>
+  <text x="65" y="2520" fill="#1e1b4b" font-size="13">On souhaite écrire un programme qui calcule et affiche le périmètre d'un rectangle. L'utilisateur saisit la longueur et la largeur.</text>
+  <text x="65" y="2540" fill="#1e1b4b" font-size="13">Formule : P = 2 × (longueur + largeur).</text>
+  <rect x="0" y="2556" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="2556" x2="1100" y2="2556" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2556" x2="55" y2="2600" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2584" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">48</text>
+  <text x="65" y="2584" fill="#1e1b4b" font-size="13">On considère deux points A et B dans le plan. On définit la translation qui transforme A en B (notée translation de vecteur AB).</text>
+  <rect x="0" y="2600" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="2600" x2="1100" y2="2600" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2600" x2="55" y2="2644" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2628" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">49</text>
+  <text x="65" y="2628" fill="#1e1b4b" font-size="13">On considère l'expression : E = (-3) × 4 + (-2) × (-5) - 12 ÷ (-4).</text>
+  <rect x="0" y="2644" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="2644" x2="1100" y2="2644" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2644" x2="55" y2="2708" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2672" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">50</text>
+  <text x="65" y="2672" fill="#1e1b4b" font-size="13">On souhaite construire un rectangle ABCD de longueur 8 cm et de largeur 5 cm, sans utiliser d'équerre, avec seulement une règle graduée</text>
+  <text x="65" y="2692" fill="#1e1b4b" font-size="13">et un compas.</text>
+  <rect x="0" y="2708" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="2708" x2="1100" y2="2708" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2708" x2="55" y2="2772" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2736" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">51</text>
+  <text x="65" y="2736" fill="#1e1b4b" font-size="13">En physique, on utilise les puissances de 10 avec des exposants négatifs pour les très petites mesures. Exemple : un atome a un</text>
+  <text x="65" y="2756" fill="#1e1b4b" font-size="13">diamètre d'environ 10⁻¹⁰ mètres.</text>
+  <rect x="0" y="2772" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="2772" x2="1100" y2="2772" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2772" x2="55" y2="2836" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2800" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">52</text>
+  <text x="65" y="2800" fill="#1e1b4b" font-size="13">Programme de calcul de l'aire d'un carré : Saisir cote / aire ← cote × cote / Afficher « Aire du carré : » / Afficher aire. On souhaite</text>
+  <text x="65" y="2820" fill="#1e1b4b" font-size="13">le modifier pour calculer l'aire d'un rectangle.</text>
+  <rect x="0" y="2836" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="2836" x2="1100" y2="2836" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2836" x2="55" y2="2880" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2864" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">53</text>
+  <text x="65" y="2864" fill="#1e1b4b" font-size="13">Un programme de calcul est décrit ainsi : « Choisir un nombre, lui ajouter 3, puis multiplier le résultat par -2. »</text>
+  <rect x="0" y="2880" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="2880" x2="1100" y2="2880" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2880" x2="55" y2="2944" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2908" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">54</text>
+  <text x="65" y="2908" fill="#1e1b4b" font-size="13">Dans un triangle ABC, M est le milieu du côté [BC]. On trace la médiane [AM] qui partage le triangle ABC en deux triangles : ABM et</text>
+  <text x="65" y="2928" fill="#1e1b4b" font-size="13">ACM.</text>
+  <rect x="0" y="2944" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="2944" x2="1100" y2="2944" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2944" x2="55" y2="2988" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="2972" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">55</text>
+  <text x="65" y="2972" fill="#1e1b4b" font-size="13">On souhaite calculer les expressions suivantes sans calculatrice en utilisant les propriétés des puissances.</text>
+  <rect x="0" y="2988" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="2988" x2="1100" y2="2988" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="2988" x2="55" y2="3052" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3016" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">56</text>
+  <text x="65" y="3016" fill="#1e1b4b" font-size="13">On dispose d'une droite graduée (unité 1 cm) : A est à l'abscisse 3, B est à l'abscisse −2 et C est entre A et B, à mi-distance de A et</text>
+  <text x="65" y="3036" fill="#1e1b4b" font-size="13">B.</text>
+  <rect x="0" y="3052" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="3052" x2="1100" y2="3052" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3052" x2="55" y2="3096" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3080" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">57</text>
+  <text x="65" y="3080" fill="#1e1b4b" font-size="13">On considère les fractions : F1 = 18/24 ; F2 = -35/49 ; F3 = 72/60.</text>
+  <rect x="0" y="3096" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="3096" x2="1100" y2="3096" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3096" x2="55" y2="3160" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3124" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">58</text>
+  <text x="65" y="3124" fill="#1e1b4b" font-size="13">En sciences, la notation scientifique s'écrit sous la forme a × 10ⁿ où 1 ≤ a &lt; 10 et n est un entier relatif, pour exprimer des nombres</text>
+  <text x="65" y="3144" fill="#1e1b4b" font-size="13">très grands ou très petits.</text>
+  <rect x="0" y="3160" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="3160" x2="1100" y2="3160" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3160" x2="55" y2="3204" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3188" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">59</text>
+  <text x="65" y="3188" fill="#1e1b4b" font-size="13">On considère un triangle isocèle ABC avec AB = AC = 5 cm et BC = 6 cm. M est le milieu de [BC].</text>
+  <rect x="0" y="3204" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="3204" x2="1100" y2="3204" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3204" x2="55" y2="3248" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3232" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">60</text>
+  <text x="65" y="3232" fill="#1e1b4b" font-size="13">Programme : a ← 5 / b ← 3 / c ← a + b / a ← c × 2 / Afficher a / Afficher b / Afficher c.</text>
+  <rect x="0" y="3248" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="3248" x2="1100" y2="3248" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3248" x2="55" y2="3292" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3276" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">61</text>
+  <text x="65" y="3276" fill="#1e1b4b" font-size="13">On considère les nombres suivants : 4, 1/3, -5, 2/7 et 1.</text>
+  <rect x="0" y="3292" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="3292" x2="1100" y2="3292" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3292" x2="55" y2="3336" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3320" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">62</text>
+  <text x="65" y="3320" fill="#1e1b4b" font-size="13">On considère un quadrillage avec les points A(1 ; 1), B(4 ; 3), C(2 ; 5), D(5 ; 7), E(4 ; 1).</text>
+  <rect x="0" y="3336" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="3336" x2="1100" y2="3336" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3336" x2="55" y2="3380" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3364" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">63</text>
+  <text x="65" y="3364" fill="#1e1b4b" font-size="13">La vitesse de la lumière est d'environ 3 × 10⁸ m/s. La distance Terre-Lune est d'environ 3,84 × 10⁸ mètres.</text>
+  <rect x="0" y="3380" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="3380" x2="1100" y2="3380" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3380" x2="55" y2="3424" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3408" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">64</text>
+  <text x="65" y="3408" fill="#1e1b4b" font-size="13">On considère les nombres suivants : 3/4 ; -7/2 ; 5 ; 0,6 ; 0,333... (développement décimal infini périodique).</text>
+  <rect x="0" y="3424" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="3424" x2="1100" y2="3424" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3424" x2="55" y2="3468" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3452" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">65</text>
+  <text x="65" y="3452" fill="#1e1b4b" font-size="13">On donne les fractions suivantes : 3/5, 7/2, -4/9 et 11/1.</text>
+  <rect x="0" y="3468" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="3468" x2="1100" y2="3468" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3468" x2="55" y2="3532" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3496" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">66</text>
+  <text x="65" y="3496" fill="#1e1b4b" font-size="13">Un programme détermine si un élève est admis à un voyage scolaire : conditions « moyenne ≥ 12 » ET « absences &lt; 5 ». Variables : «</text>
+  <text x="65" y="3516" fill="#1e1b4b" font-size="13">moyenne » et « absences ».</text>
+  <rect x="0" y="3532" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="3532" x2="1100" y2="3532" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3532" x2="55" y2="3576" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3560" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">67</text>
+  <text x="65" y="3560" fill="#1e1b4b" font-size="13">Paul a 12 ans (30 €/mois, +5 €/an) et Léo a 8 ans (18 €/mois, +7 €/an). À quel âge Léo recevra-t-il autant que Paul ?</text>
+  <rect x="0" y="3576" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="3576" x2="1100" y2="3576" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3576" x2="55" y2="3620" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3604" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">68</text>
+  <text x="65" y="3604" fill="#1e1b4b" font-size="13">On considère un quadrilatère ABCD dont les sommets sont A(0 ; 0), B(4 ; 0), C(5 ; 3) et D(1 ; 3).</text>
+  <rect x="0" y="3620" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="3620" x2="1100" y2="3620" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3620" x2="55" y2="3684" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3648" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">69</text>
+  <text x="65" y="3648" fill="#1e1b4b" font-size="13">Dans un repère (O ; I ; J), les points A(2 ; 3), B(−1 ; 4) et C(0 ; −2) sont placés. On cherche D tel que ABDC forme un</text>
+  <text x="65" y="3668" fill="#1e1b4b" font-size="13">parallélogramme.</text>
+  <rect x="0" y="3684" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="3684" x2="1100" y2="3684" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3684" x2="55" y2="3728" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3712" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">70</text>
+  <text x="65" y="3712" fill="#1e1b4b" font-size="13">On se place dans un repère. On donne le vecteur u(2 ; 3) et le vecteur v(−1 ; 4). Un point A a pour coordonnées (1 ; 0).</text>
+  <rect x="0" y="3728" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="3728" x2="1100" y2="3728" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3728" x2="55" y2="3772" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3756" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">71</text>
+  <text x="65" y="3756" fill="#1e1b4b" font-size="13">On considère les nombres rationnels : a = 3/7 ; b = -5/4 ; c = -2/3 ; d = 9/(-2).</text>
+  <rect x="0" y="3772" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="3772" x2="1100" y2="3772" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3772" x2="55" y2="3816" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3800" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">72</text>
+  <text x="65" y="3800" fill="#1e1b4b" font-size="13">On souhaite calculer les divisions suivantes : (2/3) ÷ (4/5) et (7/2) ÷ (7/6).</text>
+  <rect x="0" y="3816" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="3816" x2="1100" y2="3816" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3816" x2="55" y2="3860" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3844" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">73</text>
+  <text x="65" y="3844" fill="#1e1b4b" font-size="13">Programme TANT QUE : n ← 1 / TANT QUE n ≤ 5 FAIRE : Afficher n / n ← n + 1 / FIN TANT QUE / Afficher « Fin ! ».</text>
+  <rect x="0" y="3860" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="3860" x2="1100" y2="3860" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3860" x2="55" y2="3904" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3888" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">74</text>
+  <text x="65" y="3888" fill="#1e1b4b" font-size="13">On considère l'équation 2x + 3 = 9. Test : x=1 → 5, x=2 → 7, x=3 → 9. La solution est x = 3.</text>
+  <rect x="0" y="3904" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="3904" x2="1100" y2="3904" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3904" x2="55" y2="3948" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3932" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">75</text>
+  <text x="65" y="3932" fill="#1e1b4b" font-size="13">On considère les produits de fractions : P1 = (3/4) × (8/9) ; P2 = (-5/6) × (3/10) ; P3 = (-2/7) × (-7/4).</text>
+  <rect x="0" y="3948" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="3948" x2="1100" y2="3948" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3948" x2="55" y2="3992" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="3976" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">76</text>
+  <text x="65" y="3976" fill="#1e1b4b" font-size="13">On cherche les valeurs de x vérifiant l'équation x² = 9 par le calcul analytique et en lisant les solutions sur un graphique.</text>
+  <rect x="0" y="3992" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="3992" x2="1100" y2="3992" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="3992" x2="55" y2="4036" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4020" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">77</text>
+  <text x="65" y="4020" fill="#1e1b4b" font-size="13">On veut construire un parallélogramme ABCD tel que AB = 5 cm, AD = 3 cm et l'angle DAB = 60°.</text>
+  <rect x="0" y="4036" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="4036" x2="1100" y2="4036" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4036" x2="55" y2="4080" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4064" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">78</text>
+  <text x="65" y="4064" fill="#1e1b4b" font-size="13">On considère l'expression A = (1/2 + 1/3) × (3/4 - 1/6).</text>
+  <rect x="0" y="4080" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="4080" x2="1100" y2="4080" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4080" x2="55" y2="4144" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4108" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">79</text>
+  <text x="65" y="4108" fill="#1e1b4b" font-size="13">Un programme calcule la moyenne de trois notes : (1) saisie des données, (2) calcul de la moyenne, (3) affichage (« Très bien » si ≥</text>
+  <text x="65" y="4128" fill="#1e1b4b" font-size="13">14, « Bien » si 10-14, « À améliorer » sinon).</text>
+  <rect x="0" y="4144" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="4144" x2="1100" y2="4144" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4144" x2="55" y2="4208" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4172" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">80</text>
+  <text x="65" y="4172" fill="#1e1b4b" font-size="13">Une boulangerie vend des croissants à 1,20 € et des pains au chocolat à 1,50 €. Elle a vendu 35 croissants et 28 pains au chocolat le</text>
+  <text x="65" y="4192" fill="#1e1b4b" font-size="13">matin, puis 12 croissants l'après-midi.</text>
+  <rect x="0" y="4208" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="4208" x2="1100" y2="4208" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4208" x2="55" y2="4252" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4236" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">81</text>
+  <text x="65" y="4236" fill="#1e1b4b" font-size="13">On considère trois points A, B et C dans le plan. Les vecteurs AB et BC sont connus. On souhaite exprimer le vecteur AC.</text>
+  <rect x="0" y="4252" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="4252" x2="1100" y2="4252" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4252" x2="55" y2="4316" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4280" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">82</text>
+  <text x="65" y="4280" fill="#1e1b4b" font-size="13">On veut représenter en perspective cavalière un pavé droit de longueur 5 cm, de largeur 3 cm et de hauteur 4 cm. Les arêtes cachées</text>
+  <text x="65" y="4300" fill="#1e1b4b" font-size="13">sont en tirets.</text>
+  <rect x="0" y="4316" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="4316" x2="1100" y2="4316" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4316" x2="55" y2="4360" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4344" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">83</text>
+  <text x="65" y="4344" fill="#1e1b4b" font-size="13">Dans une classe de 30 élèves, les 3/5 pratiquent un sport. Parmi ces sportifs, les 2/3 pratiquent un sport collectif.</text>
+  <rect x="0" y="4360" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="4360" x2="1100" y2="4360" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4360" x2="55" y2="4424" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4388" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">84</text>
+  <text x="65" y="4388" fill="#1e1b4b" font-size="13">Une recette nécessite 3/4 de litre de lait. Lucas n'a que 1/3 de litre. Quelle fraction du lait nécessaire lui manque-t-il ? Combien de</text>
+  <text x="65" y="4408" fill="#1e1b4b" font-size="13">fois cette quantité représente-t-elle ce qu'il a ?</text>
+  <rect x="0" y="4424" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="4424" x2="1100" y2="4424" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4424" x2="55" y2="4488" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4452" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">85</text>
+  <text x="65" y="4452" fill="#1e1b4b" font-size="13">Quatre situations : A) 48 billes en 6 boîtes ; B) train 120 km en 2h → distance en 5h ; C) Marie 75 € − 32 € ; D) 25 élèves × 3</text>
+  <text x="65" y="4472" fill="#1e1b4b" font-size="13">cahiers.</text>
+  <rect x="0" y="4488" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="4488" x2="1100" y2="4488" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4488" x2="55" y2="4552" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4516" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">86</text>
+  <text x="65" y="4516" fill="#1e1b4b" font-size="13">Un jardinier veut clôturer un carré de gazon dont l'aire est de 64 m². Il veut connaître la longueur du côté pour acheter la bonne</text>
+  <text x="65" y="4536" fill="#1e1b4b" font-size="13">longueur de clôture.</text>
+  <rect x="0" y="4552" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="4552" x2="1100" y2="4552" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4552" x2="55" y2="4596" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4580" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">87</text>
+  <text x="65" y="4580" fill="#1e1b4b" font-size="13">ABCD est un parallélogramme avec AB = 7 cm, BC = 4 cm. Les diagonales [AC] et [BD] se coupent en I avec AI = 5 cm.</text>
+  <rect x="0" y="4596" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="4596" x2="1100" y2="4596" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4596" x2="55" y2="4660" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4624" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">88</text>
+  <text x="65" y="4624" fill="#1e1b4b" font-size="13">On souhaite écrire un programme qui demande un entier n puis affiche la table de multiplication de ce nombre (n×1 à n×10). Ex. : n=3 →</text>
+  <text x="65" y="4644" fill="#1e1b4b" font-size="13">« 3 x 1 = 3 », ..., « 3 x 10 = 30 ».</text>
+  <rect x="0" y="4660" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="4660" x2="1100" y2="4660" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4660" x2="55" y2="4704" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4688" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">89</text>
+  <text x="65" y="4688" fill="#1e1b4b" font-size="13">Un ruban de 7,2 m de long doit être découpé en morceaux de 0,4 m chacun.</text>
+  <rect x="0" y="4704" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="4704" x2="1100" y2="4704" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4704" x2="55" y2="4748" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4732" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">90</text>
+  <text x="65" y="4732" fill="#1e1b4b" font-size="13">Un pavé droit a pour dimensions : longueur 6 cm, largeur 4 cm, hauteur 3 cm. On veut construire son patron (le développé).</text>
+  <rect x="0" y="4748" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="4748" x2="1100" y2="4748" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4748" x2="55" y2="4792" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4776" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">91</text>
+  <text x="65" y="4776" fill="#1e1b4b" font-size="13">On considère le nombre a = 3.</text>
+  <rect x="0" y="4792" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="4792" x2="1100" y2="4792" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4792" x2="55" y2="4856" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4820" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">92</text>
+  <text x="65" y="4820" fill="#1e1b4b" font-size="13">Quatre solides : (A) pyramide à base carrée, (B) cylindre à bases circulaires, (C) cône à base circulaire, (D) tétraèdre (base</text>
+  <text x="65" y="4840" fill="#1e1b4b" font-size="13">triangulaire + 3 faces triangulaires).</text>
+  <rect x="0" y="4856" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="4856" x2="1100" y2="4856" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4856" x2="55" y2="4920" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4884" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">93</text>
+  <text x="65" y="4884" fill="#1e1b4b" font-size="13">Quadrilatère EFGH : diagonales [EG] = [FH] = 10 cm, se coupent en leur milieu I (EI = IG = FI = IH = 5 cm), et les diagonales sont</text>
+  <text x="65" y="4904" fill="#1e1b4b" font-size="13">perpendiculaires.</text>
+  <rect x="0" y="4920" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="4920" x2="1100" y2="4920" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4920" x2="55" y2="4964" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4948" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">94</text>
+  <text x="65" y="4948" fill="#1e1b4b" font-size="13">Voici une liste de nombres : +7 ; -3 ; 0 ; -0,5 ; +12 ; 0 ; -8 ; +0 ; 2,5.</text>
+  <rect x="0" y="4964" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="4964" x2="1100" y2="4964" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="4964" x2="55" y2="5008" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="4992" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">95</text>
+  <text x="65" y="4992" fill="#1e1b4b" font-size="13">Pour préparer une fête, Lucas achète 4 pizzas à 8,50 € et 6 boissons à 1,20 €. Il paie avec un billet de 50 €.</text>
+  <rect x="0" y="5008" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="5008" x2="1100" y2="5008" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="5008" x2="55" y2="5052" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="5036" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">96</text>
+  <text x="65" y="5036" fill="#1e1b4b" font-size="13">Un marchand vend des stylos par lots. En achetant 3 lots, Léa obtient 24 stylos au total.</text>
+  <rect x="0" y="5052" width="1100" height="44" fill="#ffffff"/>
+  <line x1="0" y1="5052" x2="1100" y2="5052" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="5052" x2="55" y2="5096" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="5080" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">97</text>
+  <text x="65" y="5080" fill="#1e1b4b" font-size="13">Pour un concours de calcul mental, mémoriser les carrés des entiers de 0 à 12. Un carré d'un entier n est n × n, noté n².</text>
+  <rect x="0" y="5096" width="1100" height="64" fill="#f5f3ff"/>
+  <line x1="0" y1="5096" x2="1100" y2="5096" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="5096" x2="55" y2="5160" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="5124" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">98</text>
+  <text x="65" y="5124" fill="#1e1b4b" font-size="13">Un plongeur se trouve à 12 mètres sous la surface de la mer. Un oiseau vole à 45 mètres au-dessus de la surface. La surface est prise</text>
+  <text x="65" y="5144" fill="#1e1b4b" font-size="13">comme référence (altitude 0).</text>
+  <rect x="0" y="5160" width="1100" height="64" fill="#ffffff"/>
+  <line x1="0" y1="5160" x2="1100" y2="5160" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="5160" x2="55" y2="5224" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="5188" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">99</text>
+  <text x="65" y="5188" fill="#1e1b4b" font-size="13">Trois solides : (A) cube d'arête 4 cm ; (B) pavé droit 5×3×6 cm ; (C) prisme droit à base triangle rectangle (côtés 3 et 4 cm) et</text>
+  <text x="65" y="5208" fill="#1e1b4b" font-size="13">hauteur 7 cm.</text>
+  <rect x="0" y="5224" width="1100" height="44" fill="#f5f3ff"/>
+  <line x1="0" y1="5224" x2="1100" y2="5224" stroke="#e0e7ff" stroke-width="0.5"/>
+  <line x1="55" y1="5224" x2="55" y2="5268" stroke="#e0e7ff" stroke-width="0.5"/>
+  <text x="32" y="5252" fill="#4f46e5" font-size="12" font-weight="700" text-anchor="middle">100</text>
+  <text x="65" y="5252" fill="#1e1b4b" font-size="13">Deux équations : (A) 5x = 35 / (B) x + 8 = 20.</text>
+  <rect width="1100" height="5260" fill="none" stroke="#c7d2fe" stroke-width="1.5" rx="0"/>
+</svg>

@@ -706,7 +706,7 @@ async function fetchExercicesMaths(thematique, classe) {
     const params = new URLSearchParams({
       thematique: `eq.${thematique}`,
       classe:     `eq.${classe}`,
-      select:     'id,objectif_id,objectif_apprentissage,thematique,sous_categorie,classe,enonce,question,reponse_ideale,figure_svg,synthese_cours,definition_mots_cles',
+      select:     'id,objectif_id,objectif_apprentissage,thematique,sous_categorie,classe,enonce,question,reponse_ideale,figure_path,figure_svg,synthese_cours,definition_mots_cles',
       order:      'id.asc',
     });
     const res = await fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?${params}`, {
@@ -1667,11 +1667,13 @@ function ChatBubble({ msg, isStreaming }) {
               </div>
             )}
             {msg.figure && (
-              <div
-                className="border-t border-gray-100 bg-gray-50 flex items-center justify-center p-3"
-                style={{ lineHeight: 0 }}
-                dangerouslySetInnerHTML={{ __html: msg.figure }}
-              />
+              <div className="border-t border-gray-100 bg-gray-50 flex items-center justify-center p-3">
+                {msg.figure.startsWith('<svg') ? (
+                  <div style={{ lineHeight: 0 }} dangerouslySetInnerHTML={{ __html: msg.figure }} />
+                ) : (
+                  <img src={msg.figure} alt="Figure de l'exercice" style={{ maxWidth: '100%', display: 'block' }} />
+                )}
+              </div>
             )}
           </>
         )}
@@ -3283,6 +3285,10 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
       ));
     };
 
+    if (exercise.figure_path) {
+      setTimeout(() => applyFigure(exercise.figure_path), 0);
+      return;
+    }
     if (exercise.figure_svg) {
       setTimeout(() => applyFigure(normalizeSvg(exercise.figure_svg)), 0);
       return;

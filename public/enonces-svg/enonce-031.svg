@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="340" font-family="Inter,Arial,sans-serif">
+<rect width="480" height="340" fill="#f5f3ff" rx="12"/>
+<rect x="10" y="10" width="42" height="23" rx="6" fill="#4f46e5"/>
+<text x="31" y="25" fill="white" font-size="11" font-weight="700" text-anchor="middle">#31</text>
+<rect x="60" y="60" width="360" height="220" rx="8" fill="white" stroke="#e0e7ff" stroke-width="1.5"/><text x="240" y="52" fill="#4f46e5" font-size="15" font-weight="700" text-anchor="middle">Aire d'un triangle</text><polygon points="100,260 380,260 200,120" fill="#ede9fe" stroke="#4f46e5" stroke-width="2"/><line x1="200" y1="120" x2="200" y2="260" stroke="#ef4444" stroke-width="2" stroke-dasharray="4 4"/><rect x="200" y="244" width="16" height="16" rx="0" fill="#ef4444" stroke="none"/><text x="175" y="195" fill="#ef4444" font-size="12" font-weight="700" text-anchor="start">h=5</text><text x="240" y="280" fill="#4f46e5" font-size="12" font-weight="600" text-anchor="middle">[BC] = 8 cm</text><rect x="60" y="298" width="360" height="28" rx="6" fill="#dcfce7" stroke="none"/><text x="240" y="317" fill="#15803d" font-size="12" font-weight="700" text-anchor="middle">Aire = (base × hauteur) ÷ 2 = (8 × 5) ÷ 2 = 20 cm²</text>
+</svg>
