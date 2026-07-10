@@ -1647,16 +1647,34 @@ function ChatBubble({ msg, isStreaming }) {
         </div>
       )}
       <div
-        className={`max-w-[82%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${
+        className={`max-w-[82%] rounded-2xl text-sm leading-relaxed overflow-hidden ${
           isUser
-            ? 'bg-indigo-600 text-white rounded-br-sm'
+            ? 'bg-indigo-600 text-white rounded-br-sm px-4 py-3'
             : `bg-white border border-gray-100 shadow-sm rounded-bl-sm ${isStreaming ? 'opacity-90' : ''}`
         }`}
       >
-        {isUser
-          ? <p className="whitespace-pre-wrap">{msg.content}</p>
-          : <MessageContent text={msg.content} />
-        }
+        {isUser ? (
+          <p className="whitespace-pre-wrap">{msg.content}</p>
+        ) : (
+          <>
+            {msg.figureLoading && (
+              <div className="flex items-center gap-2 text-gray-400 text-xs px-4 pt-3 pb-2 border-b border-gray-100">
+                <Loader2 className="w-3.5 h-3.5 animate-spin flex-shrink-0" />
+                Génération du visuel…
+              </div>
+            )}
+            {msg.figure && (
+              <div
+                className="border-b border-gray-100 bg-gray-50 flex items-center justify-center p-3"
+                style={{ lineHeight: 0 }}
+                dangerouslySetInnerHTML={{ __html: msg.figure }}
+              />
+            )}
+            <div className="px-4 py-3">
+              <MessageContent text={msg.content} />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -3229,8 +3247,6 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
   const [streamingText, setStreamingText]       = useState('');
   const [synthese, setSynthese]                 = useState({ open: false, content: '', minimized: false });
   const [definitions, setDefinitions]           = useState({ open: false, content: '', minimized: false });
-  const [figureSVG, setFigureSVG]               = useState(null);
-  const [figureLoading, setFigureLoading]       = useState(false);
   const tentativeRef = useRef(1);
   const inputRef     = useRef(null);
   const bottomRef    = useRef(null);
@@ -3253,11 +3269,29 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
     });
   };
 
-  const generateAndSaveFigure = async (exercise) => {
-    if (!exercise) return;
-    if (exercise.figure_svg) { setFigureSVG(normalizeSvg(exercise.figure_svg)); return; }
-    setFigureSVG(null);
-    setFigureLoading(true);
+  const generateAndSaveFigure = async (exercise, targetIdx) => {
+    if (!exercise || targetIdx === undefined || targetIdx < 0) return;
+
+    const applyFigure = (svg) => {
+      setMessages(prev => prev.map((m, i) =>
+        i === targetIdx ? { ...m, figure: svg, figureLoading: false } : m,
+      ));
+    };
+    const clearLoading = () => {
+      setMessages(prev => prev.map((m, i) =>
+        i === targetIdx ? { ...m, figureLoading: false } : m,
+      ));
+    };
+
+    if (exercise.figure_svg) {
+      setTimeout(() => applyFigure(normalizeSvg(exercise.figure_svg)), 0);
+      return;
+    }
+
+    setMessages(prev => prev.map((m, i) =>
+      i === targetIdx ? { ...m, figureLoading: true } : m,
+    ));
+
     const prompt = `Génère un SVG pédagogique précis pour cet exercice de mathématiques CRPE cycle 4.
 
 Thématique : ${exercise.thematique}
@@ -3287,7 +3321,7 @@ Réponds UNIQUEMENT avec le code SVG complet (de <svg à </svg>), sans markdown,
           const match = final.match(/<svg[\s\S]*<\/svg>/i);
           const svg = match ? normalizeSvg(match[0]) : null;
           if (svg) {
-            setFigureSVG(svg);
+            applyFigure(svg);
             if (exercise.id && SUPABASE_URL && SUPABASE_KEY) {
               fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?id=eq.${exercise.id}`, {
                 method: 'PATCH',
@@ -3295,12 +3329,13 @@ Réponds UNIQUEMENT avec le code SVG complet (de <svg à </svg>), sans markdown,
                 body: JSON.stringify({ figure_svg: match[0] }),
               }).catch(() => {});
             }
+          } else {
+            clearLoading();
           }
-          setFigureLoading(false);
         },
       );
     } catch {
-      setFigureLoading(false);
+      clearLoading();
     }
   };
 
@@ -3342,7 +3377,7 @@ Réponds UNIQUEMENT avec le code SVG complet (de <svg à </svg>), sans markdown,
       const msg = buildMathQuestionMessage(exercises[0], 1);
       setMessages([{ role: 'assistant', content: msg }]);
       setOptions(extractOptions(msg));
-      generateAndSaveFigure(exercises[0]);
+      generateAndSaveFigure(exercises[0], 0);
     }
     setTimeout(() => inputRef.current?.focus(), 100);
   };
@@ -3384,7 +3419,6 @@ Réponds UNIQUEMENT avec le code SVG complet (de <svg à </svg>), sans markdown,
         setMessages(prev => [...prev, { role: 'user', content: '[O]' }, { role: 'assistant', content: doneMsg }]);
         setOptions([]);
         setPhase('done');
-        setFigureSVG(null);
         return;
       }
       const nextIdx = currentIdx + 1;
@@ -3396,7 +3430,7 @@ Réponds UNIQUEMENT avec le code SVG complet (de <svg à </svg>), sans markdown,
       setMessages(updated);
       setOptions(extractOptions(nextMsg));
       setPhase('question');
-      generateAndSaveFigure(nextEx);
+      generateAndSaveFigure(nextEx, updated.length - 1);
       setTimeout(() => inputRef.current?.focus(), 100);
       return;
     }
@@ -3562,7 +3596,7 @@ ${tentative === 1
             const msg = buildMathQuestionMessage(shuffled[0], 1);
             setMessages([{ role: 'assistant', content: msg }]);
             setOptions(extractOptions(msg));
-            generateAndSaveFigure(shuffled[0]);
+            generateAndSaveFigure(shuffled[0], 0);
           }
           setTimeout(() => inputRef.current?.focus(), 150);
         }}
@@ -3675,20 +3709,6 @@ ${tentative === 1
           <RotateCcw className="w-3 h-3" /> Nouvelle session
         </button>
       </div>
-
-      {/* Visuel de l'exercice */}
-      {(figureLoading || figureSVG) && phase !== 'done' && (
-        <div className="flex-shrink-0 mx-4 mt-3 mb-1 bg-white rounded-2xl border border-gray-100 shadow-sm p-3 flex items-center justify-center" style={{ minHeight: '120px' }}>
-          {figureLoading ? (
-            <div className="flex items-center gap-2 text-gray-400 text-xs">
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
-              Génération du visuel…
-            </div>
-          ) : (
-            <div style={{ width: '100%', overflowX: 'auto', lineHeight: 0 }} dangerouslySetInnerHTML={{ __html: figureSVG }} />
-          )}
-        </div>
-      )}
 
       {/* Chat area */}
       <div className="flex-1 overflow-y-auto px-4 pt-4 pb-2">
