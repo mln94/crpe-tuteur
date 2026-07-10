@@ -1657,22 +1657,22 @@ function ChatBubble({ msg, isStreaming }) {
           <p className="whitespace-pre-wrap">{msg.content}</p>
         ) : (
           <>
+            <div className="px-4 py-3">
+              <MessageContent text={msg.content} />
+            </div>
             {msg.figureLoading && (
-              <div className="flex items-center gap-2 text-gray-400 text-xs px-4 pt-3 pb-2 border-b border-gray-100">
+              <div className="flex items-center gap-2 text-gray-400 text-xs px-4 pb-3 border-t border-gray-100 pt-2">
                 <Loader2 className="w-3.5 h-3.5 animate-spin flex-shrink-0" />
                 Génération du visuel…
               </div>
             )}
             {msg.figure && (
               <div
-                className="border-b border-gray-100 bg-gray-50 flex items-center justify-center p-3"
+                className="border-t border-gray-100 bg-gray-50 flex items-center justify-center p-3"
                 style={{ lineHeight: 0 }}
                 dangerouslySetInnerHTML={{ __html: msg.figure }}
               />
             )}
-            <div className="px-4 py-3">
-              <MessageContent text={msg.content} />
-            </div>
           </>
         )}
       </div>
