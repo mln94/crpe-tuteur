@@ -700,6 +700,23 @@ const MATH_THEMATIQUES = [
   },
 ];
 
+// Un même exercice peut être identifié soit par son id court, soit par son
+// libellé complet selon l'écran d'où provient l'enregistrement (Chat vs Banque).
+const FRANCAIS_THEMATIQUE_KEYS = new Set([
+  ...FRANCAIS_TOPICS.map(t => t.id),
+  ...Object.values(TOPIC_TO_THEMATIQUE),
+]);
+const MATH_THEMATIQUE_KEYS = new Set([
+  ...MATH_THEMATIQUES.map(t => t.id),
+  ...MATH_THEMATIQUES.map(t => t.label),
+]);
+function getMatiereFromThematique(thematique) {
+  if (!thematique) return null;
+  if (MATH_THEMATIQUE_KEYS.has(thematique)) return 'maths';
+  if (FRANCAIS_THEMATIQUE_KEYS.has(thematique)) return 'francais';
+  return null;
+}
+
 async function fetchExercicesMaths(thematique, classe) {
   if (!thematique || !classe || !SUPABASE_URL || !SUPABASE_KEY) return [];
   try {
@@ -3069,10 +3086,17 @@ function EmptyState({ icon: Icon, title, subtitle }) {
   );
 }
 
+const HISTORY_FILTERS = [
+  { id: 'all',      label: 'Tout' },
+  { id: 'francais', label: 'Français' },
+  { id: 'maths',    label: 'Maths' },
+];
+
 function HistoryView() {
   const [rows, setRows]         = useState([]);
   const [loading, setLoading]   = useState(true);
   const [expandedId, setExpandedId] = useState(null);
+  const [matiereFilter, setMatiereFilter] = useState('all');
 
   useEffect(() => {
     const userId = storage.get('crpe_user_id');
@@ -3105,8 +3129,16 @@ function HistoryView() {
   });
   const groups = [...groupMap.values()].sort((a, b) => b.latestDate.localeCompare(a.latestDate));
 
+  const matiereOf = (g) => getMatiereFromThematique((g.t1 || g.t2)?.thematique);
+  const counts = {
+    all:      groups.length,
+    francais: groups.filter(g => matiereOf(g) === 'francais').length,
+    maths:    groups.filter(g => matiereOf(g) === 'maths').length,
+  };
+  const filteredGroups = matiereFilter === 'all' ? groups : groups.filter(g => matiereOf(g) === matiereFilter);
+
   const dayMap = new Map();
-  groups.forEach(g => {
+  filteredGroups.forEach(g => {
     const d = new Date(g.latestDate);
     const key = d.toLocaleDateString('fr-FR', { weekday: 'long', day: '2-digit', month: 'long', year: 'numeric' });
     if (!dayMap.has(key)) { dayMap.set(key, []); byDay.push(key); }
@@ -3130,13 +3162,37 @@ function HistoryView() {
     <div className="flex-1 overflow-y-auto px-4 pt-6 pb-24">
       <h2 className="text-xl font-bold text-gray-900 mb-4">Historique</h2>
 
+      {/* Filtre Tout / Français / Maths */}
+      <div className="flex gap-1 bg-gray-100 rounded-xl p-1 mb-5">
+        {HISTORY_FILTERS.map(f => (
+          <button
+            key={f.id}
+            onClick={() => setMatiereFilter(f.id)}
+            className={`flex-1 py-1.5 rounded-lg text-sm font-semibold transition-all ${matiereFilter === f.id ? 'bg-white text-indigo-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+          >
+            {f.label} <span className="text-xs font-normal text-gray-400">({counts[f.id]})</span>
+          </button>
+        ))}
+      </div>
+
+      {!filteredGroups.length && (
+        <EmptyState
+          icon={BookOpen}
+          title="Aucune réponse enregistrée"
+          subtitle={matiereFilter === 'maths' ? "Complétez des exercices de maths pour voir votre historique ici." : "Complétez des exercices de français pour voir votre historique ici."}
+        />
+      )}
+
       {byDay.map(day => (
         <div key={day} className="mb-5">
           <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2 capitalize">{day}</p>
 
           {dayMap.get(day).map(g => {
             const ref  = g.t1 || g.t2;
-            const topicLabel = FRANCAIS_TOPICS.find(t => t.id === ref.thematique)?.label || ref.thematique || 'Français';
+            const gMatiere = matiereOf(g);
+            const topicLabel = FRANCAIS_TOPICS.find(t => t.id === ref.thematique)?.label
+              || MATH_THEMATIQUES.find(t => t.id === ref.thematique || t.label === ref.thematique)?.label
+              || ref.thematique || (gMatiere === 'maths' ? 'Maths' : 'Français');
             const gId  = ref.id;
             const isOpen = expandedId === gId;
             const time = new Date(g.latestDate).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
@@ -3184,8 +3240,10 @@ function HistoryView() {
                   onClick={() => setExpandedId(isOpen ? null : gId)}
                   className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-gray-50 transition-colors"
                 >
-                  <div className="w-8 h-8 rounded-xl bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                    <BookMarked className="w-3.5 h-3.5 text-indigo-600" />
+                  <div className={`w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0 ${gMatiere === 'maths' ? 'bg-emerald-100' : 'bg-indigo-100'}`}>
+                    {gMatiere === 'maths'
+                      ? <Calculator className="w-3.5 h-3.5 text-emerald-600" />
+                      : <BookMarked className="w-3.5 h-3.5 text-indigo-600" />}
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap">
