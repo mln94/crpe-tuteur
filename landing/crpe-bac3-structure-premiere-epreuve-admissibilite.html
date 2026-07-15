@@ -97,6 +97,17 @@
     .hashtag-list { display: flex; flex-wrap: wrap; gap: 8px; }
     .hashtag { font-size: 13px; font-weight: 600; color: var(--indigo-600); background: var(--indigo-50); border: 1px solid var(--indigo-100); border-radius: 20px; padding: 5px 14px; }
 
+    /* LIRE AUSSI */
+    .related-section { margin: 40px 0 0; padding-top: 28px; border-top: 1px solid var(--gray-100); }
+    .related-section .related-label { font-size: 12px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 14px; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .related-card { display: block; border: 1px solid var(--gray-200); border-radius: 14px; padding: 18px 20px; text-decoration: none; color: inherit; transition: box-shadow .2s, transform .2s, border-color .2s; }
+    .related-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.06); transform: translateY(-2px); border-color: var(--indigo-200); }
+    .related-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #ea580c; background: #fff7ed; border-radius: 20px; padding: 3px 10px; margin-bottom: 10px; }
+    .related-card h4 { font-size: 15px; font-weight: 800; color: var(--gray-900); line-height: 1.35; margin-bottom: 6px; }
+    .related-card p { font-size: 13px; color: var(--gray-500); line-height: 1.6; margin-bottom: 0; }
+    .related-card .related-cta { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 700; color: var(--indigo-600); margin-top: 10px; }
+
     /* CTA */
     .article-cta { margin-top: 48px; background: linear-gradient(135deg, var(--indigo-600) 0%, #818cf8 100%); border-radius: 20px; padding: 36px; text-align: center; color: #fff; }
     .article-cta h3 { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
@@ -191,7 +202,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <div class="article-body">
 
-    <p>Depuis <a href="/blog/crpe-2026-reforme-concours-externes" target="_blank" rel="noopener" style="color:#4f46e5;font-weight:600;">la réforme 2026</a>, les étudiants en licence (Bac+3) peuvent passer le CRPE externe sans attendre le Master MEEF. La première étape, c'est la <strong>première épreuve écrite d'admissibilité</strong>, commune au concours externe et aux concours externes spéciaux. Pour savoir exactement à quoi s'attendre, on a analysé en détail les <strong>trois sujets officiels de la session 2026</strong> (groupements 1, 2 et 3) : voici la structure complète de l'épreuve, son barème, et les types d'exercices qui reviennent d'un sujet à l'autre.</p>
+    <p>Depuis <a href="/blog/crpe-2026-reforme-concours-externes" target="_blank" rel="noopener" style="color:#4f46e5;font-weight:600;">la réforme 2026</a>, les étudiants en licence (Bac+3) peuvent passer le CRPE externe sans attendre le Master MEEF. La première étape, c'est la <strong>première épreuve écrite d'admissibilité</strong>, commune au concours externe et aux concours externes spéciaux. Pour savoir exactement à quoi s'attendre, on a analysé en détail les <strong>trois sujets officiels de la session 2026</strong> : voici la structure complète de l'épreuve, son barème, et les types d'exercices qui reviennent d'un sujet à l'autre.</p>
+
+    <p>Ces sujets sont répartis par <strong>groupement d'académies</strong> :</p>
+    <ul>
+      <li><strong>Groupe 1 :</strong> académies de métropole et de La Réunion</li>
+      <li><strong>Groupe 2 :</strong> académies de Guadeloupe, Guyane et Martinique</li>
+      <li><strong>Groupe 3 :</strong> académie de Polynésie française</li>
+    </ul>
 
     <h2>Une épreuve de 4 heures, en deux parties indépendantes</h2>
 
@@ -299,6 +317,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <span class="hashtag">#Français</span>
         <span class="hashtag">#Mathématiques</span>
         <span class="hashtag">#MéthodeDeTravail</span>
+      </div>
+    </div>
+
+    <div class="related-section">
+      <p class="related-label">Lire aussi</p>
+      <div class="related-grid">
+        <a href="/blog/crpe-2026-reforme-concours-externes" class="related-card">
+          <span class="related-tag">Le concours</span>
+          <h4>CRPE 2026 : qu'est-ce qui change pour les concours externes ?</h4>
+          <p>Master M2E rémunéré, Licence LPE, nouveau parcours : tout ce qui change pour les candidats à partir de 2026.</p>
+          <span class="related-cta">Lire l'article →</span>
+        </a>
       </div>
     </div>
 
