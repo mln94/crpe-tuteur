@@ -25,7 +25,7 @@
     "dev": "concurrently -k -n \"API,UI\" -c \"cyan,magenta\" \"node server.js\" \"vite\"",
     "server": "node server.js",
     "start": "vite",
-    "build": "vite build && cp landing/index.html dist/index.html && cp landing/avis-essai.html dist/avis-essai.html && cp landing/blog.html dist/blog.html && cp landing/crpe-2026-reforme-concours-externes.html dist/crpe-2026-reforme-concours-externes.html && cp landing/crpe-bac3-structure-premiere-epreuve-admissibilite.html dist/crpe-bac3-structure-premiere-epreuve-admissibilite.html && cp landing/admin-support.html dist/admin-support.html && cp landing/sitemap.xml dist/sitemap.xml && cp public/favicon.svg dist/favicon.svg",
+    "build": "vite build && cp landing/index.html dist/index.html && cp landing/avis-essai.html dist/avis-essai.html && cp landing/blog.html dist/blog.html && cp landing/crpe-2026-reforme-concours-externes.html dist/crpe-2026-reforme-concours-externes.html && cp landing/crpe-bac3-structure-premiere-epreuve-admissibilite.html dist/crpe-bac3-structure-premiere-epreuve-admissibilite.html && cp landing/admin-support.html dist/admin-support.html && cp landing/sitemap.xml dist/sitemap.xml && cp public/favicon.svg dist/favicon.svg && mkdir -p dist/images && cp public/images/*.jpg dist/images/",
     "preview": "vite preview"
   }
 }

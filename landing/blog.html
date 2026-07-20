@@ -136,7 +136,9 @@
       height: 160px;
       display: flex; align-items: center; justify-content: center;
       font-size: 48px;
+      overflow: hidden;
     }
+    .blog-card-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .blog-card-body { padding: 20px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
 
     .card-tags { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -187,7 +189,9 @@
       background: linear-gradient(135deg, var(--indigo-600) 0%, #818cf8 100%);
       display: flex; align-items: center; justify-content: center;
       font-size: 72px; min-height: 260px;
+      overflow: hidden;
     }
+    .featured-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .featured-body { padding: 36px; display: flex; flex-direction: column; gap: 14px; justify-content: center; }
     .featured-eyebrow {
       font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
@@ -298,7 +302,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="section-label">À la une</div>
 <div class="blog-featured">
   <a href="/blog/crpe-2026-reforme-concours-externes" class="featured-card">
-    <div class="featured-thumb">📢</div>
+    <div class="featured-thumb"><img src="/images/crpe-reforme-2026-livres.jpg" alt="Pile de livres, symbole de la préparation au concours CRPE" loading="lazy" /></div>
     <div class="featured-body">
       <div class="card-tags">
         <span class="card-tag tag-concours">Le concours</span>
@@ -324,7 +328,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <div class="section-label">Derniers articles</div>
 <div class="blog-grid">
   <a href="/blog/crpe-bac3-structure-premiere-epreuve-admissibilite" class="blog-card">
-    <div class="blog-card-thumb" style="background:var(--indigo-50);">📝</div>
+    <div class="blog-card-thumb"><img src="/images/crpe-bac3-epreuve-ecrite.jpg" alt="Élève rédigeant une copie d'épreuve écrite" loading="lazy" /></div>
     <div class="blog-card-body">
       <div class="card-tags">
         <span class="card-tag tag-concours">Le concours</span>
