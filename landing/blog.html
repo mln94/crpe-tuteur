@@ -218,6 +218,14 @@
       color: var(--gray-400);
     }
 
+    /* ── NO RESULTS ── */
+    .no-results {
+      display: none;
+      max-width: 1120px; margin: 24px auto 0;
+      padding: 0 24px 40px;
+      font-size: 14px; color: var(--gray-400);
+    }
+
     /* ── FOOTER ── */
     footer {
       background: var(--gray-900); color: var(--gray-400);
@@ -292,16 +300,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 <!-- ═══════════════════════════════ FILTER TAGS ═══════════════════════════════ -->
 <div class="filter-bar">
-  <a href="#" class="filter-tag active">Tous</a>
-  <a href="#" class="filter-tag">Le concours</a>
-  <a href="#" class="filter-tag">Concours externe</a>
-  <a href="#" class="filter-tag">Admissibilité</a>
+  <a href="#" class="filter-tag active" data-filter="tous">Tous</a>
+  <a href="#" class="filter-tag" data-filter="le-concours">Le concours</a>
+  <a href="#" class="filter-tag" data-filter="concours-externe">Concours externe</a>
+  <a href="#" class="filter-tag" data-filter="admissibilite">Admissibilité</a>
 </div>
 
 <!-- ═══════════════════════════════ ARTICLE À LA UNE ═══════════════════════════════ -->
-<div class="section-label">À la une</div>
-<div class="blog-featured">
-  <a href="/blog/crpe-2026-reforme-concours-externes" class="featured-card">
+<div class="section-label" id="featuredLabel">À la une</div>
+<div class="blog-featured" id="featuredSection">
+  <a href="/blog/crpe-2026-reforme-concours-externes" class="featured-card" data-tags="le-concours,concours-externe">
     <div class="featured-thumb"><img src="/images/crpe-reforme-2026-livres.jpg" alt="Pile de livres, symbole de la préparation au concours CRPE" loading="lazy" /></div>
     <div class="featured-body">
       <div class="card-tags">
@@ -325,9 +333,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <!-- ═══════════════════════════════ DERNIERS ARTICLES ═══════════════════════════════ -->
-<div class="section-label">Derniers articles</div>
-<div class="blog-grid">
-  <a href="/blog/crpe-bac3-structure-premiere-epreuve-admissibilite" class="blog-card">
+<div class="section-label" id="gridLabel">Derniers articles</div>
+<div class="blog-grid" id="blogGrid">
+  <a href="/blog/crpe-bac3-structure-premiere-epreuve-admissibilite" class="blog-card" data-tags="le-concours,concours-externe,admissibilite">
     <div class="blog-card-thumb"><img src="/images/crpe-bac3-epreuve-ecrite.jpg" alt="Élève rédigeant une copie d'épreuve écrite" loading="lazy" /></div>
     <div class="blog-card-body">
       <div class="card-tags">
@@ -344,6 +352,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </a>
 </div>
+<p id="noResults" class="no-results">Aucun article ne correspond à ce thème pour le moment.</p>
 
 
 <!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
@@ -399,6 +408,44 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 </footer>
+
+<script>
+  (function () {
+    var filterLinks = Array.prototype.slice.call(document.querySelectorAll('.filter-tag'));
+    var featuredItems = Array.prototype.slice.call(document.querySelectorAll('#featuredSection [data-tags]'));
+    var gridItems = Array.prototype.slice.call(document.querySelectorAll('#blogGrid [data-tags]'));
+    var featuredLabel = document.getElementById('featuredLabel');
+    var gridLabel = document.getElementById('gridLabel');
+    var noResults = document.getElementById('noResults');
+
+    function applyFilter(filter, items) {
+      var visibleCount = 0;
+      items.forEach(function (item) {
+        var tags = item.dataset.tags.split(',');
+        var match = filter === 'tous' || tags.indexOf(filter) !== -1;
+        item.style.display = match ? '' : 'none';
+        if (match) visibleCount++;
+      });
+      return visibleCount;
+    }
+
+    filterLinks.forEach(function (link) {
+      link.addEventListener('click', function (e) {
+        e.preventDefault();
+        filterLinks.forEach(function (l) { l.classList.remove('active'); });
+        link.classList.add('active');
+
+        var filter = link.dataset.filter;
+        var featuredVisible = applyFilter(filter, featuredItems);
+        var gridVisible = applyFilter(filter, gridItems);
+
+        if (featuredLabel) featuredLabel.style.display = featuredVisible > 0 ? '' : 'none';
+        if (gridLabel) gridLabel.style.display = gridVisible > 0 ? '' : 'none';
+        noResults.style.display = (featuredVisible + gridVisible) === 0 ? 'block' : 'none';
+      });
+    });
+  })();
+</script>
 
 </body>
 </html>
