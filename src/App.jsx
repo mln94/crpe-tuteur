@@ -3437,7 +3437,7 @@ Réponds UNIQUEMENT avec le code SVG complet (de <svg à </svg>), sans markdown,
     const d = ex.definition_mots_cles ? '**[D]**' : '';
     const opts = ['**[R]**', s, d, '**[O]**'].filter(Boolean).join(' ');
     return [
-      `Exercice ${num} · ${ex.sous_categorie}`,
+      `Exercice ${num} · ${ex.sous_categorie} (ID Supabase : ${ex.id})`,
       `Niveau de difficulté : Facile`,
       `Sous-catégorie : ${ex.sous_categorie}`,
       `Objectif : ${ex.objectif_apprentissage}`,
@@ -3994,7 +3994,7 @@ function buildQuestionMessage(q, num, hasHarder, topic = null) {
   if (hasHarder)               opts.push('**[1]**');
   opts.push('**[O]**');
   return [
-    `Exercice ${num} - ${q.sous_categorie}`,
+    `Exercice ${num} - ${q.sous_categorie} (ID Supabase : ${q.id})`,
     q.niveau_difficulte ? `Niveau de difficulté : ${q.niveau_difficulte}` : '',
     `Sous-catégorie : ${q.sous_categorie}`,
     `Objectif : ${q.objectif}`,
