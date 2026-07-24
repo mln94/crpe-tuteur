@@ -795,7 +795,7 @@ async function fetchCompletedQuestionIds(userId) {
       select:                'id_question_completee',
       id_question_completee: 'not.is.null',
     });
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs?${params}`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs_francais?${params}`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
     });
     if (!res.ok) return new Set();
@@ -814,7 +814,7 @@ async function fetchProgressionStats(userId) {
       tentative: 'eq.1',
       select:    'note_ecriture,note_orthographe,note_crpe,thematique',
     });
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs?${params}`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs_francais?${params}`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
     });
     if (!res.ok) throw new Error();
@@ -853,11 +853,11 @@ async function fetchProgressionStats(userId) {
 
 async function fetchMathProgressionStats(userId) {
   if (!SUPABASE_URL || !SUPABASE_KEY || !userId) {
-    return { byThematique: {}, total: 0, avgGlobal: null, avgCrpe: null, unlocked: false };
+    return { byThematique: {}, total: 0, avgGlobal: null, avgCrpe: null, avgCalcul: null, avgMethode: null, unlocked: false };
   }
   try {
-    const params = new URLSearchParams({ user_id: `eq.${userId}`, tentative: 'eq.1', select: 'thematique,note_crpe,note_globale' });
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs?${params}`, {
+    const params = new URLSearchParams({ user_id: `eq.${userId}`, tentative: 'eq.1', select: 'thematique,note_crpe,note_globale,note_calcul,note_methode' });
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs_math?${params}`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
     });
     if (!res.ok) throw new Error();
@@ -867,22 +867,26 @@ async function fetchMathProgressionStats(userId) {
     const byThematique = {};
     MATH_THEMATIQUES.forEach(t => { byThematique[t.label] = 0; });
     let total = 0;
-    const crpeVals = [], globalVals = [];
+    const crpeVals = [], globalVals = [], calculVals = [], methodeVals = [];
     rows.forEach(r => {
       if (mathLabels.has(r.thematique)) {
         byThematique[r.thematique] = (byThematique[r.thematique] || 0) + 1;
         total++;
-        if (r.note_crpe   != null) crpeVals.push(r.note_crpe);
+        if (r.note_crpe    != null) crpeVals.push(r.note_crpe);
         if (r.note_globale != null) globalVals.push(r.note_globale);
+        if (r.note_calcul  != null) calculVals.push(r.note_calcul);
+        if (r.note_methode != null) methodeVals.push(r.note_methode);
       }
     });
     const mean = arr => arr.length ? Math.round(arr.reduce((a, b) => a + b, 0) / arr.length * 10) / 10 : null;
-    const avgCrpe   = mean(crpeVals);
-    const avgGlobal = mean(globalVals);
+    const avgCrpe    = mean(crpeVals);
+    const avgGlobal  = mean(globalVals);
+    const avgCalcul  = mean(calculVals);
+    const avgMethode = mean(methodeVals);
     const unlocked  = total >= 100 && (avgGlobal ?? 0) >= 7 && (avgCrpe ?? 0) >= 8;
-    return { byThematique, total, avgGlobal, avgCrpe, unlocked };
+    return { byThematique, total, avgGlobal, avgCrpe, avgCalcul, avgMethode, unlocked };
   } catch {
-    return { byThematique: {}, total: 0, avgGlobal: null, avgCrpe: null, unlocked: false };
+    return { byThematique: {}, total: 0, avgGlobal: null, avgCrpe: null, avgCalcul: null, avgMethode: null, unlocked: false };
   }
 }
 
@@ -973,24 +977,16 @@ async function fetchActiveSession(userId, topic, niveau) {
 async function fetchFreeQuestionsUsed(userId) {
   if (!userId) return null;
   try {
-    const { data, error } = await sbClient
-      .from('reponses_utilisateurs')
-      .select('thematique')
-      .eq('user_id', userId)
-      .eq('tentative', 1);
-    if (error) throw error;
-    if (!Array.isArray(data)) return null;
-    const mathLabels = new Set(MATH_THEMATIQUES.map(t => t.label));
-    const francaisKeys = new Set([
-      ...Object.keys(TOPIC_TO_THEMATIQUE),
-      ...Object.values(TOPIC_TO_THEMATIQUE),
+    const [{ data: francaisData, error: francaisError }, { data: mathsData, error: mathsError }] = await Promise.all([
+      sbClient.from('reponses_utilisateurs_francais').select('id').eq('user_id', userId).eq('tentative', 1),
+      sbClient.from('reponses_utilisateurs_math').select('id').eq('user_id', userId).eq('tentative', 1),
     ]);
-    let francais = 0, maths = 0;
-    data.forEach(r => {
-      if (mathLabels.has(r.thematique)) maths++;
-      else if (francaisKeys.has(r.thematique)) francais++;
-    });
-    return { francais, maths };
+    if (francaisError) throw francaisError;
+    if (mathsError) throw mathsError;
+    return {
+      francais: Array.isArray(francaisData) ? francaisData.length : 0,
+      maths:    Array.isArray(mathsData)    ? mathsData.length    : 0,
+    };
   } catch (e) {
     console.warn('[fetchFreeQuestionsUsed]', e?.message);
     return null;
@@ -1127,6 +1123,8 @@ function extractNotesFromText(text) {
     const val = parseInt(m[2]);
     if (lbl.includes('écriture'))    notes.ecriture    = val;
     else if (lbl.includes('ortho'))  notes.orthographe = val;
+    else if (lbl.includes('calcul')) notes.calcul      = val;
+    else if (lbl.includes('méthode')) notes.methode    = val;
     else if (lbl.includes('crpe'))   notes.crpe        = val;
     else if (lbl.includes('global')) notes.globale     = val;
   }
@@ -2081,7 +2079,7 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
       ...noteFields,
       ...(tentativeRef.current === 2 ? { tentative: 2 } : {}),
     };
-    supabaseInsertReturningId('reponses_utilisateurs', reponseRecord)
+    supabaseInsertReturningId('reponses_utilisateurs_francais', reponseRecord)
       .then(reponseId => saveFautesEtErreurs(correctionText, reponseId));
 
     if (idealResponse && ex.question) {
@@ -2757,12 +2755,12 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, i
     });
     fetchMathProgressionStats(userId).then(stats => {
       setMathProgression(stats);
-      if (stats.avgGlobal !== null || stats.avgCrpe !== null) {
+      if (stats.avgGlobal !== null || stats.avgCrpe !== null || stats.avgCalcul !== null || stats.avgMethode !== null) {
         setMathsAvgs({
-          ecriture:    null,
-          orthographe: null,
-          crpe:        stats.avgCrpe,
-          globale:     stats.avgGlobal,
+          calcul:  stats.avgCalcul,
+          methode: stats.avgMethode,
+          crpe:    stats.avgCrpe,
+          globale: stats.avgGlobal,
         });
       }
     });
@@ -2777,10 +2775,12 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, i
     const noteItems = [
       { label: 'Écriture',    val: avgs?.ecriture,    bg: 'bg-blue-50',    text: 'text-blue-700'              },
       { label: 'Orthographe', val: avgs?.orthographe, bg: 'bg-rose-50',    text: 'text-rose-700'              },
+      { label: 'Calcul',      val: avgs?.calcul,      bg: 'bg-sky-50',     text: 'text-sky-700'               },
+      { label: 'Méthode',     val: avgs?.methode,     bg: 'bg-violet-50',  text: 'text-violet-700'            },
       { label: 'Niveau CRPE', val: avgs?.crpe,        bg: 'bg-amber-50',   text: 'text-amber-700'             },
       { label: 'Globale',     val: avgs?.globale,     bg: 'bg-emerald-50', text: 'text-emerald-700 font-bold' },
     ];
-    const hasDetailedScores = avgs && noteItems.some(n => n.val !== null);
+    const hasDetailedScores = avgs && noteItems.some(n => n.val != null);
     const trialPct = Math.min((freeQs / FREE_QUESTION_LIMIT) * 100, 100);
 
     return (
@@ -2802,7 +2802,7 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, i
             </p>
             {!cardLocked && hasDetailedScores && (
               <div className="flex gap-1.5 mt-1.5 flex-wrap">
-                {noteItems.filter(n => n.val !== null).map(({ label: lbl, val, bg, text }) => (
+                {noteItems.filter(n => n.val != null).map(({ label: lbl, val, bg, text }) => (
                   <span key={lbl} className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${bg} ${text}`}>
                     {lbl} {val}/10
                   </span>
@@ -3115,14 +3115,22 @@ function HistoryView() {
     if (!userId || !SUPABASE_URL || !SUPABASE_KEY) { setLoading(false); return; }
     const params = new URLSearchParams({
       user_id: `eq.${userId}`,
-      select: 'id,thematique,classe,objectif,sous_categorie,question,texte_support,reponse,reponse_ideale,conseils,note_ecriture,note_orthographe,note_crpe,created_at,tentative',
+      select: '*',
       order: 'created_at.desc',
     });
-    fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs?${params}`, {
-      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
-    })
-      .then(r => r.json())
-      .then(data => { if (Array.isArray(data)) setRows(data); setLoading(false); })
+    const headers = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
+    Promise.all([
+      fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs_francais?${params}`, { headers }).then(r => r.json()),
+      fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs_math?${params}`, { headers }).then(r => r.json()),
+    ])
+      .then(([francaisRows, mathRows]) => {
+        const tagged = [
+          ...(Array.isArray(francaisRows) ? francaisRows.map(r => ({ ...r, _matiere: 'francais' })) : []),
+          ...(Array.isArray(mathRows)     ? mathRows.map(r => ({ ...r, _matiere: 'maths' }))       : []),
+        ].sort((a, b) => b.created_at.localeCompare(a.created_at));
+        setRows(tagged);
+        setLoading(false);
+      })
       .catch(() => setLoading(false));
   }, []);
 
@@ -3141,7 +3149,7 @@ function HistoryView() {
   });
   const groups = [...groupMap.values()].sort((a, b) => b.latestDate.localeCompare(a.latestDate));
 
-  const matiereOf = (g) => getMatiereFromThematique((g.t1 || g.t2)?.thematique);
+  const matiereOf = (g) => (g.t1 || g.t2)?._matiere ?? getMatiereFromThematique((g.t1 || g.t2)?.thematique);
   const counts = {
     all:      groups.length,
     francais: groups.filter(g => matiereOf(g) === 'francais').length,
@@ -3214,7 +3222,7 @@ function HistoryView() {
             const bestG = bVals.length ? Math.round(bVals.reduce((a, b) => a + b, 0) / bVals.length * 10) / 10 : null;
 
             const TentativeBlock = ({ row, label, color }) => {
-              const vals = [row.note_ecriture, row.note_orthographe, row.note_crpe].filter(v => v != null);
+              const vals = [row.note_ecriture, row.note_orthographe, row.note_calcul, row.note_methode, row.note_crpe].filter(v => v != null);
               return (
                 <div className={`rounded-xl border px-3 py-3 space-y-3 ${color}`}>
                   <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400">{label}</p>
@@ -3239,6 +3247,8 @@ function HistoryView() {
                   <div className="flex gap-1.5 flex-wrap pt-1 border-t border-gray-100">
                     {row.note_ecriture    != null && <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-semibold">Écriture {row.note_ecriture}/10</span>}
                     {row.note_orthographe != null && <span className="text-[10px] px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 font-semibold">Ortho. {row.note_orthographe}/10</span>}
+                    {row.note_calcul      != null && <span className="text-[10px] px-2 py-0.5 rounded-full bg-sky-50 text-sky-700 font-semibold">Calcul {row.note_calcul}/10</span>}
+                    {row.note_methode     != null && <span className="text-[10px] px-2 py-0.5 rounded-full bg-violet-50 text-violet-700 font-semibold">Méthode {row.note_methode}/10</span>}
                     {row.note_crpe        != null && <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 font-semibold">CRPE {row.note_crpe}/10</span>}
                     {vals.length > 0 && <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 font-bold ml-auto">Moy. {Math.round(vals.reduce((a,b)=>a+b,0)/vals.length*10)/10}/10</span>}
                   </div>
@@ -3606,7 +3616,7 @@ ${tentative === 1
           const userId = authUser?.id || storage.get('crpe_user_id');
           if (userId) {
             const mathNotes = extractNotesFromText(final);
-            supabaseInsert('reponses_utilisateurs', {
+            supabaseInsert('reponses_utilisateurs_math', {
               user_id:        userId,
               session_id:     `math_sess_${userId}_${Date.now()}`,
               classe:         ex.classe || null,
@@ -3617,7 +3627,9 @@ ${tentative === 1
               reponse:        content,
               reponse_ideale: ex.reponse_ideale || null,
               tentative,
-              note_crpe:    mathNotes.crpe   ?? null,
+              note_calcul:  mathNotes.calcul  ?? null,
+              note_methode: mathNotes.methode ?? null,
+              note_crpe:    mathNotes.crpe    ?? null,
               note_globale: mathNotes.globale ?? null,
             });
             if (tentative === 1 && typeof onQuestionAnswered === 'function') {
@@ -4368,7 +4380,7 @@ ${tentative === 1
             });
           };
           if (tentative === 1) {
-            supabaseInsertReturningId('reponses_utilisateurs', {
+            supabaseInsertReturningId('reponses_utilisateurs_francais', {
               user_id:       userIdRef.current,
               session_id:    dbSessionIdRef.current,
               classe,
@@ -4395,7 +4407,7 @@ ${tentative === 1
               setFreeQsUsed(newCount);
             }
           } else {
-            supabaseInsertReturningId('reponses_utilisateurs', {
+            supabaseInsertReturningId('reponses_utilisateurs_francais', {
               user_id:       userIdRef.current,
               session_id:    dbSessionIdRef.current,
               classe,
@@ -4924,7 +4936,7 @@ function StatsView() {
       user_id: `eq.${userId}`,
       select: 'classe,note_ecriture,note_orthographe,note_crpe,note_globale,created_at',
     });
-    fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs?${params}`, {
+    fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs_francais?${params}`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
     })
       .then(r => r.json())
