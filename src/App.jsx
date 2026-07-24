@@ -3351,17 +3351,12 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
     });
   };
 
-  const generateAndSaveFigure = async (exercise, targetIdx) => {
+  const generateAndSaveFigure = (exercise, targetIdx) => {
     if (!exercise || targetIdx === undefined || targetIdx < 0) return;
 
     const applyFigure = (svg) => {
       setMessages(prev => prev.map((m, i) =>
         i === targetIdx ? { ...m, figure: svg, figureLoading: false } : m,
-      ));
-    };
-    const clearLoading = () => {
-      setMessages(prev => prev.map((m, i) =>
-        i === targetIdx ? { ...m, figureLoading: false } : m,
       ));
     };
 
@@ -3373,83 +3368,8 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
       setTimeout(() => applyFigure(normalizeSvg(exercise.figure_svg)), 0);
       return;
     }
-
-    setMessages(prev => prev.map((m, i) =>
-      i === targetIdx ? { ...m, figureLoading: true } : m,
-    ));
-
-    const prompt = `Génère un SVG pédagogique lisible pour cet exercice de mathématiques CRPE cycle 4.
-
-Thématique : ${exercise.thematique}
-Sous-catégorie : ${exercise.sous_categorie}
-${exercise.enonce ? `Énoncé : ${exercise.enonce}\n` : ''}Question : ${exercise.question}
-
-═══ ATTRIBUTS SVG OBLIGATOIRES ═══
-viewBox="0 0 320 220" width="320" height="220"
-Fond blanc. Marges internes : 30px minimum sur tous les bords.
-
-═══ RÈGLE ABSOLUE N°1 — LISIBILITÉ ═══
-JAMAIS de texte qui touche ou croise un trait, une forme ou un autre texte.
-- Labels de points : placés à 10-12px à l'extérieur du sommet, jamais sur un côté
-- Valeurs de côtés : au milieu du segment, décalées de 10px perpendiculairement vers l'extérieur
-- Angles : l'étiquette de l'angle est à l'intérieur de l'arc, jamais sur les côtés
-- Tout texte doit avoir font-family="Arial,sans-serif" font-size="12"
-
-═══ RÈGLE N°2 — REPÈRE ORTHOGONAL (si fonctions, coordonnées, droites) ═══
-- Axe horizontal x : flèche → à droite, label "x" à l'extrémité
-- Axe vertical y : flèche ↑ en haut, label "y" à l'extrémité
-- Graduations sur chaque axe : marques de 5px tous les 40px, valeurs numériques (-2,-1,0,1,2...)
-- Origine "O" placée à 10px en bas à gauche du croisement des axes
-- Les valeurs des graduations ne chevauchent jamais les axes
-
-═══ RÈGLE N°3 — TABLEAUX (statistiques, proportionnalité) ═══
-- Chaque cellule : rect avec stroke="#374151" stroke-width="1" fill="white"
-- Ligne d'en-têtes : fill="#e5e7eb" pour les cellules de titre
-- Hauteur de ligne uniforme : 30px minimum
-- Largeur de colonne uniforme et calculée pour tenir dans 280px
-- Texte centré dans chaque cellule : text-anchor="middle" dominant-baseline="middle"
-- Les données numériques sont dans les cellules, pas à l'extérieur du tableau
-
-═══ RÈGLE N°4 — ARBRE DE PROBABILITÉS ═══
-- Branches bien espacées, aucun croisement
-- Probabilité sur la branche (au milieu, décalée de 8px)
-- Résultat au bout de chaque branche à droite, jamais sur la ligne
-
-═══ TYPE DE FIGURE SELON LE CONTENU ═══
-- Géométrie → figure avec angles, côtés annotés proprement
-- Statistiques/données → tableau SVG structuré avec toutes les valeurs
-- Fonctions → repère avec courbe ou droite tracée et points clés
-- Fractions → disque ou rectangle divisé avec fraction indiquée
-- Probabilités → arbre ou tableau bien structuré
-- Proportionnalité → tableau à double entrée complet
-- Droite graduée → axe avec valeurs et points placés
-
-Réponds UNIQUEMENT avec le code SVG complet (de <svg à </svg>), sans markdown, sans texte avant ou après.`;
-    try {
-      await streamClaude(
-        [{ role: 'user', content: prompt }],
-        'Tu es un expert SVG pédagogique pour le CRPE. Règle absolue : aucun texte ne chevauche jamais un trait ou une autre étiquette. Repères toujours avec axes x et y gradués. Tableaux avec cellules bordées. Réponds uniquement avec du SVG valide.',
-        () => {},
-        (final) => {
-          const match = final.match(/<svg[\s\S]*<\/svg>/i);
-          const svg = match ? normalizeSvg(match[0]) : null;
-          if (svg) {
-            applyFigure(svg);
-            if (exercise.id && SUPABASE_URL && SUPABASE_KEY) {
-              fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?id=eq.${exercise.id}`, {
-                method: 'PATCH',
-                headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ figure_svg: match[0] }),
-              }).catch(() => {});
-            }
-          } else {
-            clearLoading();
-          }
-        },
-      );
-    } catch {
-      clearLoading();
-    }
+    // Pas de figure stockée pour cet exercice : on n'en génère plus à la
+    // volée, donc pas de spinner de chargement à afficher non plus.
   };
 
   const ex = exercises[currentIdx];
