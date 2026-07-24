@@ -8,6 +8,7 @@
     { "source": "/blog", "destination": "/blog.html" },
     { "source": "/blog/crpe-2026-reforme-concours-externes", "destination": "/crpe-2026-reforme-concours-externes.html" },
     { "source": "/blog/crpe-bac3-structure-premiere-epreuve-admissibilite", "destination": "/crpe-bac3-structure-premiere-epreuve-admissibilite.html" },
-    { "source": "/admin-support", "destination": "/admin-support.html" }
+    { "source": "/admin-support", "destination": "/admin-support.html" },
+    { "source": "/admin", "destination": "/app/index.html" }
   ]
 }

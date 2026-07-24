@@ -3,7 +3,7 @@ import {
   GraduationCap, Calculator, BookMarked, Home, MessageCircle,
   BookOpen, Send, Loader2, RotateCcw, ChevronRight, ChevronDown,
   ChevronUp, Trash2, X, AlertCircle, ChevronLeft, PenLine, AlignLeft, ListChecks,
-  BarChart2, LogOut, User, Lightbulb, ClipboardList, HelpCircle, CheckCircle2,
+  BarChart2, LogOut, User, Lightbulb, ClipboardList, HelpCircle, CheckCircle2, Lock,
 } from 'lucide-react';
 
 // ---------------------------------------------------------------------------
@@ -3337,20 +3337,6 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, options, streamingText]);
 
-  const normalizeSvg = (svg) => {
-    if (!svg) return null;
-    return svg.replace(/<svg([^>]*)>/i, (_, attrs) => {
-      let a = attrs;
-      const vbMatch = a.match(/viewBox=["']\s*[\d.]+\s+[\d.]+\s+([\d.]+)\s+([\d.]+)\s*["']/i);
-      const vbW = vbMatch ? vbMatch[1] : '320';
-      const vbH = vbMatch ? vbMatch[2] : '200';
-      if (!/\bwidth=/.test(a)) a += ` width="${vbW}"`;
-      if (!/\bheight=/.test(a)) a += ` height="${vbH}"`;
-      if (!/style=/.test(a)) a += ' style="max-width:100%;display:block"';
-      return `<svg${a}>`;
-    });
-  };
-
   const generateAndSaveFigure = (exercise, targetIdx) => {
     if (!exercise || targetIdx === undefined || targetIdx < 0) return;
 
@@ -3373,29 +3359,6 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
   };
 
   const ex = exercises[currentIdx];
-
-  function buildMathQuestionMessage(ex, num) {
-    const s = ex.synthese_cours        ? '**[S]**' : '';
-    const d = ex.definition_mots_cles ? '**[D]**' : '';
-    const opts = ['**[R]**', s, d, '**[O]**'].filter(Boolean).join(' ');
-    return [
-      `Exercice ${num} · ${ex.sous_categorie} (ID Supabase : ${ex.id})`,
-      `Niveau de difficulté : Facile`,
-      `Sous-catégorie : ${ex.sous_categorie}`,
-      `Objectif : ${ex.objectif_apprentissage}`,
-      ex.enonce ? `\n${ex.enonce}` : '',
-      `\nQuestion : ${ex.question}`,
-      '',
-      opts,
-    ].filter(l => l !== undefined).join('\n').trim();
-  }
-
-  function buildMathReponseMessage(ex, num) {
-    const s = ex.synthese_cours        ? '**[S]**' : '';
-    const d = ex.definition_mots_cles ? '**[D]**' : '';
-    const opts = [s, d, '**[O]**'].filter(Boolean).join(' ');
-    return `Réponse type CRPE — Exercice ${num}\n\n${ex.reponse_ideale}\n\n${opts}`;
-  }
 
   const restartSession = () => {
     tentativeRef.current = 1;
@@ -3955,6 +3918,43 @@ function buildReponseMessage(q, num) {
   if (q.definition_mots_cles) opts.push('**[D]**');
   opts.push('**[O]**');
   return `Réponse type CRPE — Exercice ${num}\n\n${q.reponse_ideale}\n\n${opts.join(' ')}`;
+}
+
+function normalizeSvg(svg) {
+  if (!svg) return null;
+  return svg.replace(/<svg([^>]*)>/i, (_, attrs) => {
+    let a = attrs;
+    const vbMatch = a.match(/viewBox=["']\s*[\d.]+\s+[\d.]+\s+([\d.]+)\s+([\d.]+)\s*["']/i);
+    const vbW = vbMatch ? vbMatch[1] : '320';
+    const vbH = vbMatch ? vbMatch[2] : '200';
+    if (!/\bwidth=/.test(a)) a += ` width="${vbW}"`;
+    if (!/\bheight=/.test(a)) a += ` height="${vbH}"`;
+    if (!/style=/.test(a)) a += ' style="max-width:100%;display:block"';
+    return `<svg${a}>`;
+  });
+}
+
+function buildMathQuestionMessage(ex, num) {
+  const s = ex.synthese_cours        ? '**[S]**' : '';
+  const d = ex.definition_mots_cles ? '**[D]**' : '';
+  const opts = ['**[R]**', s, d, '**[O]**'].filter(Boolean).join(' ');
+  return [
+    `Exercice ${num} · ${ex.sous_categorie} (ID Supabase : ${ex.id})`,
+    `Niveau de difficulté : Facile`,
+    `Sous-catégorie : ${ex.sous_categorie}`,
+    `Objectif : ${ex.objectif_apprentissage}`,
+    ex.enonce ? `\n${ex.enonce}` : '',
+    `\nQuestion : ${ex.question}`,
+    '',
+    opts,
+  ].filter(l => l !== undefined).join('\n').trim();
+}
+
+function buildMathReponseMessage(ex, num) {
+  const s = ex.synthese_cours        ? '**[S]**' : '';
+  const d = ex.definition_mots_cles ? '**[D]**' : '';
+  const opts = [s, d, '**[O]**'].filter(Boolean).join(' ');
+  return `Réponse type CRPE — Exercice ${num}\n\n${ex.reponse_ideale}\n\n${opts}`;
 }
 
 function BanqueQuestionsView({ topic, niveau, onBack, autoResume = false, resumeRow = null, isLocked = false, onQuestionAnswered }) {
@@ -5962,9 +5962,236 @@ function AppContent({ authUser }) {
   );
 }
 
+// ---------------------------------------------------------------------------
+// AdminView — /admin : preview any question exactly as students see it
+// ---------------------------------------------------------------------------
+const ADMIN_EMAIL = 'admin@passcrpe.fr';
+
+function AdminLogin() {
+  const [identifiant, setIdentifiant] = useState('');
+  const [password, setPassword]       = useState('');
+  const [error, setError]             = useState('');
+  const [loading, setLoading]         = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setLoading(true);
+    const email = identifiant.trim().toLowerCase() === 'admin' ? ADMIN_EMAIL : identifiant.trim();
+    const { error: authError } = await sbClient.auth.signInWithPassword({ email, password });
+    setLoading(false);
+    if (authError) setError('Identifiant ou mot de passe incorrect.');
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+      <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 w-full max-w-sm">
+        <div className="w-11 h-11 rounded-xl bg-indigo-100 flex items-center justify-center mb-4">
+          <Lock className="w-5 h-5 text-indigo-600" />
+        </div>
+        <h1 className="text-xl font-bold text-gray-900 mb-1">Administration</h1>
+        <p className="text-sm text-gray-500 mb-6">Accès réservé à l'équipe PassCRPE</p>
+
+        <label className="text-xs font-semibold text-gray-500 mb-1 block">Identifiant</label>
+        <input
+          value={identifiant}
+          onChange={e => setIdentifiant(e.target.value)}
+          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 mb-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          placeholder="admin"
+          autoFocus
+        />
+        <label className="text-xs font-semibold text-gray-500 mb-1 block">Mot de passe</label>
+        <input
+          type="password"
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          className="w-full border border-gray-200 rounded-xl px-3 py-2.5 mb-4 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-400"
+          placeholder="••••••••"
+        />
+        {error && <p className="text-xs text-red-500 mb-3">{error}</p>}
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-indigo-600 text-white rounded-xl py-2.5 text-sm font-semibold hover:bg-indigo-700 disabled:opacity-50 transition-colors"
+        >
+          {loading ? 'Connexion…' : 'Se connecter'}
+        </button>
+      </form>
+    </div>
+  );
+}
+
+function AdminQuestionBrowser({ onLogout }) {
+  const [matiere, setMatiere]           = useState('maths');
+  const [thematique, setThematique]     = useState(MATH_THEMATIQUES[0].label);
+  const [exercises, setExercises]       = useState([]);
+  const [loadingList, setLoadingList]   = useState(false);
+  const [selected, setSelected]         = useState(null);
+  const [showIdeale, setShowIdeale]     = useState(true);
+
+  const thematiqueOptions = matiere === 'maths'
+    ? MATH_THEMATIQUES.map(t => t.label)
+    : FRANCAIS_TOPICS.map(t => TOPIC_TO_THEMATIQUE[t.id]);
+
+  useEffect(() => {
+    setThematique(matiere === 'maths' ? MATH_THEMATIQUES[0].label : TOPIC_TO_THEMATIQUE[FRANCAIS_TOPICS[0].id]);
+    setSelected(null);
+  }, [matiere]);
+
+  useEffect(() => {
+    if (!thematique || !SUPABASE_URL || !SUPABASE_KEY) return;
+    setLoadingList(true);
+    setSelected(null);
+    const table = matiere === 'maths' ? 'exercices_maths' : 'exercices_francais_v';
+    const orderCol = matiere === 'maths' ? 'classe' : 'niveau';
+    const params = new URLSearchParams({
+      thematique: `eq.${thematique}`,
+      select: '*',
+      order: `${orderCol}.asc,id.asc`,
+    });
+    fetch(`${SUPABASE_URL}/rest/v1/${table}?${params}`, {
+      headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+    })
+      .then(r => r.json())
+      .then(data => { setExercises(Array.isArray(data) ? data : []); setLoadingList(false); })
+      .catch(() => setLoadingList(false));
+  }, [matiere, thematique]);
+
+  const previewMessages = (() => {
+    if (!selected) return [];
+    if (matiere === 'maths') {
+      const figure = selected.figure_path || (selected.figure_svg ? normalizeSvg(selected.figure_svg) : undefined);
+      const msgs = [{ role: 'assistant', content: buildMathQuestionMessage(selected, 1), figure }];
+      if (showIdeale && selected.reponse_ideale) {
+        msgs.push({ role: 'assistant', content: buildMathReponseMessage(selected, 1) });
+      }
+      return msgs;
+    }
+    const topicId = Object.keys(TOPIC_TO_THEMATIQUE).find(k => TOPIC_TO_THEMATIQUE[k] === selected.thematique) || null;
+    const msgs = [{ role: 'assistant', content: buildQuestionMessage(selected, 1, false, topicId) }];
+    if (showIdeale && selected.reponse_ideale) {
+      msgs.push({ role: 'assistant', content: buildReponseMessage(selected, 1) });
+    }
+    return msgs;
+  })();
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col md:flex-row">
+      {/* Colonne gauche : filtres + liste */}
+      <div className="w-full md:w-96 md:h-screen md:overflow-y-auto bg-white border-r border-gray-100 flex-shrink-0">
+        <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+          <h1 className="font-bold text-gray-900">Admin — Questions</h1>
+          <button onClick={onLogout} className="text-xs text-gray-400 hover:text-gray-600">Déconnexion</button>
+        </div>
+
+        <div className="p-4 border-b border-gray-100 space-y-3">
+          <div className="flex gap-1 bg-gray-100 rounded-xl p-1">
+            {['maths', 'francais'].map(m => (
+              <button
+                key={m}
+                onClick={() => setMatiere(m)}
+                className={`flex-1 py-1.5 rounded-lg text-sm font-semibold transition-all ${matiere === m ? 'bg-white text-indigo-700 shadow-sm' : 'text-gray-500 hover:text-gray-700'}`}
+              >
+                {m === 'maths' ? 'Mathématiques' : 'Français'}
+              </button>
+            ))}
+          </div>
+          <select
+            value={thematique}
+            onChange={e => setThematique(e.target.value)}
+            className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm"
+          >
+            {thematiqueOptions.map(t => <option key={t} value={t}>{t}</option>)}
+          </select>
+        </div>
+
+        <div>
+          {loadingList && (
+            <div className="p-6 flex justify-center"><Loader2 className="w-5 h-5 animate-spin text-indigo-400" /></div>
+          )}
+          {!loadingList && exercises.length === 0 && (
+            <p className="p-4 text-sm text-gray-400">Aucune question pour ce thème.</p>
+          )}
+          {!loadingList && exercises.map(ex => (
+            <button
+              key={ex.id}
+              onClick={() => setSelected(ex)}
+              className={`w-full text-left px-4 py-3 border-b border-gray-50 hover:bg-gray-50 transition-colors ${selected?.id === ex.id ? 'bg-indigo-50' : ''}`}
+            >
+              <div className="flex items-center gap-1.5 text-[11px] text-gray-400 mb-0.5">
+                <span className="font-semibold text-indigo-500">#{ex.id}</span>
+                <span>·</span>
+                <span>{matiere === 'maths' ? ex.classe : ex.niveau}</span>
+                {(ex.figure_path || ex.figure_svg) && <span title="Illustration">🖼️</span>}
+              </div>
+              <p className="text-xs text-gray-500 mb-1">{ex.sous_categorie}</p>
+              <p className="text-sm text-gray-800 line-clamp-2">{ex.question}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Colonne droite : aperçu */}
+      <div className="flex-1 flex flex-col">
+        <div className="p-4 border-b border-gray-100 bg-white flex items-center justify-between flex-wrap gap-2">
+          <span className="text-sm text-gray-500">
+            {selected ? `Aperçu — Exercice ID ${selected.id}` : 'Sélectionnez une question à gauche'}
+          </span>
+          {selected && (
+            <label className="flex items-center gap-2 text-xs text-gray-600">
+              <input type="checkbox" checked={showIdeale} onChange={e => setShowIdeale(e.target.checked)} />
+              Afficher la réponse idéale
+            </label>
+          )}
+        </div>
+        <div className="flex-1 overflow-y-auto px-4 py-6 max-w-2xl w-full mx-auto">
+          {selected ? (
+            previewMessages.map((msg, i) => <ChatBubble key={i} msg={msg} />)
+          ) : (
+            <div className="text-center text-gray-400 text-sm mt-16">
+              Choisissez une matière, un thème, puis une question.
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AdminView() {
+  const [authUser, setAuthUser] = useState(null);
+  const [checked, setChecked]   = useState(false);
+
+  useEffect(() => {
+    sbClient.auth.getSession().then(({ data }) => {
+      setAuthUser(data.session?.user ?? null);
+      setChecked(true);
+    });
+    const { data: { subscription } } = sbClient.auth.onAuthStateChange((_, session) => {
+      setAuthUser(session?.user ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  if (!checked) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-gray-50">
+        <Loader2 className="w-8 h-8 animate-spin text-indigo-500" />
+      </div>
+    );
+  }
+
+  if (authUser?.email !== ADMIN_EMAIL) {
+    return <AdminLogin />;
+  }
+
+  return <AdminQuestionBrowser onLogout={() => sbClient.auth.signOut()} />;
+}
+
 export default function App() {
   const [authUser, setAuthUser]       = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
+  const isAdminRoute = window.location.pathname === '/admin';
 
   useEffect(() => {
     sbClient.auth.getSession().then(({ data }) => {
@@ -5976,6 +6203,10 @@ export default function App() {
     });
     return () => subscription.unsubscribe();
   }, []);
+
+  if (isAdminRoute) {
+    return <AdminView />;
+  }
 
   if (!authChecked) {
     return (
