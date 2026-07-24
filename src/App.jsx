@@ -2736,6 +2736,7 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, i
   const francaisScores = extractScores(francaisSession?.displayMessages);
 
   const [francaisAvgs, setFrancaisAvgs] = useState(null);
+  const [mathsAvgs, setMathsAvgs]     = useState(null);
   const [progression, setProgression]     = useState({ completedFacile: 0, avgGlobal: null, avgCrpe: null, unlocked: false });
   const [mathProgression, setMathProgression] = useState({ byThematique: {}, total: 0, avgGlobal: null, avgCrpe: null, unlocked: false });
   const [showPaywall, setShowPaywall]     = useState(false);
@@ -2754,7 +2755,17 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, i
         });
       }
     });
-    fetchMathProgressionStats(userId).then(stats => setMathProgression(stats));
+    fetchMathProgressionStats(userId).then(stats => {
+      setMathProgression(stats);
+      if (stats.avgGlobal !== null || stats.avgCrpe !== null) {
+        setMathsAvgs({
+          ecriture:    null,
+          orthographe: null,
+          crpe:        stats.avgCrpe,
+          globale:     stats.avgGlobal,
+        });
+      }
+    });
   }, []);
 
   const hour = new Date().getHours();
@@ -2930,6 +2941,7 @@ function HomeView({ profile, onStart, banqueSession, onResumeBanque, isLocked, i
             icon={Calculator}
             saved={mathsSaved}
             scores={mathsScores}
+            avgs={mathsAvgs}
             cardLocked={isLockedMaths}
             freeQs={freeQsMaths}
             accentClass={{
