@@ -3313,6 +3313,91 @@ function HistoryView() {
 }
 
 // ---------------------------------------------------------------------------
+// NumberLineAnswer — interactive number line to build an inequality's
+// solution set (point + open/closed bracket + direction) and insert its
+// French mathematical notation into the answer field.
+// ---------------------------------------------------------------------------
+function NumberLineAnswer({ onInsert, min = -2, max = 8 }) {
+  const [point, setPoint]         = useState(null);
+  const [closed, setClosed]       = useState(true);
+  const [direction, setDirection] = useState('right');
+
+  const ticks = [];
+  for (let v = min; v <= max; v++) ticks.push(v);
+  const width = 320, height = 90, padding = 20;
+  const xFor = (v) => padding + ((v - min) / (max - min)) * (width - padding * 2);
+
+  const notation = point === null ? null : (
+    direction === 'right'
+      ? `${closed ? '[' : ']'}${point} ; +∞[`
+      : `]−∞ ; ${point}${closed ? ']' : '['}`
+  );
+
+  return (
+    <div className="border border-gray-200 rounded-xl p-3 mb-2 bg-gray-50">
+      <p className="text-[11px] font-semibold text-gray-500 mb-2">Représenter la solution sur une droite numérique</p>
+      <svg viewBox={`0 0 ${width} ${height}`} className="w-full" style={{ maxHeight: 90 }}>
+        <line x1={padding} y1={50} x2={width - padding} y2={50} stroke="#9ca3af" strokeWidth="1.5" />
+        {ticks.map(v => (
+          <g key={v}>
+            <line x1={xFor(v)} y1={45} x2={xFor(v)} y2={55} stroke="#9ca3af" strokeWidth="1.5" />
+            <text x={xFor(v)} y={70} fontSize="11" textAnchor="middle" fill="#6b7280">{v}</text>
+            <circle
+              cx={xFor(v)} cy={50} r={9}
+              fill="transparent"
+              onClick={() => setPoint(v)}
+              style={{ cursor: 'pointer' }}
+            />
+          </g>
+        ))}
+        {point !== null && direction === 'right' && (
+          <line x1={xFor(point)} y1={50} x2={width - padding} y2={50} stroke="#4f46e5" strokeWidth="3" markerEnd="url(#nla-arrow)" />
+        )}
+        {point !== null && direction === 'left' && (
+          <line x1={xFor(point)} y1={50} x2={padding} y2={50} stroke="#4f46e5" strokeWidth="3" markerEnd="url(#nla-arrow)" />
+        )}
+        {point !== null && (
+          <circle
+            cx={xFor(point)} cy={50} r={6}
+            fill={closed ? '#4f46e5' : 'white'}
+            stroke="#4f46e5" strokeWidth="2.5"
+          />
+        )}
+        <defs>
+          <marker id="nla-arrow" markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#4f46e5" />
+          </marker>
+        </defs>
+      </svg>
+
+      <div className="flex flex-wrap gap-2 mt-2">
+        <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+          <button onClick={() => setClosed(true)} className={`px-2.5 py-1 rounded-md text-xs font-semibold ${closed ? 'bg-white text-indigo-700 shadow-sm' : 'text-gray-500'}`}>Inclus (fermé)</button>
+          <button onClick={() => setClosed(false)} className={`px-2.5 py-1 rounded-md text-xs font-semibold ${!closed ? 'bg-white text-indigo-700 shadow-sm' : 'text-gray-500'}`}>Exclus (ouvert)</button>
+        </div>
+        <div className="flex gap-1 bg-gray-100 rounded-lg p-1">
+          <button onClick={() => setDirection('right')} className={`px-2.5 py-1 rounded-md text-xs font-semibold ${direction === 'right' ? 'bg-white text-indigo-700 shadow-sm' : 'text-gray-500'}`}>→ vers +∞</button>
+          <button onClick={() => setDirection('left')} className={`px-2.5 py-1 rounded-md text-xs font-semibold ${direction === 'left' ? 'bg-white text-indigo-700 shadow-sm' : 'text-gray-500'}`}>← vers −∞</button>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between mt-2">
+        <span className="text-xs text-gray-500">
+          {point === null ? 'Cliquez un point sur la droite' : <>Ensemble : <strong className="text-gray-700">x ∈ {notation}</strong></>}
+        </span>
+        <button
+          onClick={() => onInsert(`Sur la droite numérique : x ∈ ${notation}`)}
+          disabled={point === null}
+          className="text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg px-3 py-1.5 transition-colors"
+        >
+          Insérer dans ma réponse
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // MathBanqueView — math exercise bank with 5-thematic menu
 // ---------------------------------------------------------------------------
 function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
@@ -3725,6 +3810,9 @@ ${tentative === 1
 
       {/* Input */}
       <div className="px-3 pt-2 border-t border-gray-100 bg-white flex-shrink-0" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 96px)' }}>
+        {!inputDisabled && ex?.id === 11 && (
+          <NumberLineAnswer onInsert={(text) => setInput(prev => (prev ? `${prev}\n\n${text}` : text))} />
+        )}
         <div className="flex gap-2 items-end">
           <textarea
             ref={inputRef}
