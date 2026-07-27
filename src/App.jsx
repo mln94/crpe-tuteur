@@ -3443,14 +3443,7 @@ function AnswerTable({ rows, onInsert, title = 'Complétez le tableau' }) {
   );
 }
 
-const EXERCISE_ANSWER_TABLES = {
-  84: [
-    { key: 'necessaire', label: 'Quantité nécessaire (L)', placeholder: 'ex. 3/4' },
-    { key: 'disponible', label: 'Quantité disponible (L)', placeholder: 'ex. 1/3' },
-    { key: 'manquante',  label: 'Quantité manquante (L)',  placeholder: 'ex. 5/12' },
-    { key: 'rapport',    label: 'Rapport (fois plus grand)', placeholder: 'ex. 5/4' },
-  ],
-};
+const EXERCISE_ANSWER_TABLES = {};
 
 // ---------------------------------------------------------------------------
 // MathBanqueView — math exercise bank with 5-thematic menu
