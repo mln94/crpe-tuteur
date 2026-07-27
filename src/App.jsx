@@ -6116,6 +6116,7 @@ function AdminQuestionBrowser({ onLogout }) {
   const [loadingList, setLoadingList]   = useState(false);
   const [selected, setSelected]         = useState(null);
   const [showIdeale, setShowIdeale]     = useState(true);
+  const [demoInsert, setDemoInsert]     = useState('');
 
   const thematiqueOptions = matiere === 'maths'
     ? MATH_THEMATIQUES.map(t => t.label)
@@ -6124,12 +6125,14 @@ function AdminQuestionBrowser({ onLogout }) {
   useEffect(() => {
     setThematique(matiere === 'maths' ? MATH_THEMATIQUES[0].label : TOPIC_TO_THEMATIQUE[FRANCAIS_TOPICS[0].id]);
     setSelected(null);
+    setDemoInsert('');
   }, [matiere]);
 
   useEffect(() => {
     if (!thematique || !SUPABASE_URL || !SUPABASE_KEY) return;
     setLoadingList(true);
     setSelected(null);
+    setDemoInsert('');
     const table = matiere === 'maths' ? 'exercices_maths' : 'exercices_francais_v';
     const orderCol = matiere === 'maths' ? 'classe' : 'niveau';
     const params = new URLSearchParams({
@@ -6203,7 +6206,7 @@ function AdminQuestionBrowser({ onLogout }) {
           {!loadingList && exercises.map(ex => (
             <button
               key={ex.id}
-              onClick={() => setSelected(ex)}
+              onClick={() => { setSelected(ex); setDemoInsert(''); }}
               className={`w-full text-left px-4 py-3 border-b border-gray-50 hover:bg-gray-50 transition-colors ${selected?.id === ex.id ? 'bg-indigo-50' : ''}`}
             >
               <div className="flex items-center gap-1.5 text-[11px] text-gray-400 mb-0.5">
@@ -6234,7 +6237,21 @@ function AdminQuestionBrowser({ onLogout }) {
         </div>
         <div className="flex-1 overflow-y-auto px-4 py-6 max-w-2xl w-full mx-auto">
           {selected ? (
-            previewMessages.map((msg, i) => <ChatBubble key={i} msg={msg} />)
+            previewMessages.map((msg, i) => (
+              <div key={i}>
+                <ChatBubble msg={msg} />
+                {i === 0 && matiere === 'maths' && selected.id === 11 && (
+                  <>
+                    <NumberLineAnswer onInsert={setDemoInsert} />
+                    {demoInsert && (
+                      <p className="text-xs text-gray-400 italic mb-3 px-1">
+                        Texte qui serait inséré dans la réponse : « {demoInsert} »
+                      </p>
+                    )}
+                  </>
+                )}
+              </div>
+            ))
           ) : (
             <div className="text-center text-gray-400 text-sm mt-16">
               Choisissez une matière, un thème, puis une question.
