@@ -3398,6 +3398,61 @@ function NumberLineAnswer({ onInsert, min = -2, max = 8 }) {
 }
 
 // ---------------------------------------------------------------------------
+// AnswerTable — editable "étapes du calcul" table, inserts the filled
+// values as text into the answer field.
+// ---------------------------------------------------------------------------
+function AnswerTable({ rows, onInsert, title = 'Complétez le tableau' }) {
+  const [values, setValues] = useState({});
+  const filledCount = rows.filter(r => (values[r.key] || '').trim()).length;
+
+  return (
+    <div className="border border-gray-200 rounded-xl p-3 mb-2 bg-gray-50">
+      <p className="text-[11px] font-semibold text-gray-500 mb-2">{title}</p>
+      <div className="rounded-lg border border-gray-200 overflow-hidden bg-white">
+        <table className="w-full text-xs">
+          <tbody>
+            {rows.map((row, i) => (
+              <tr key={row.key} className={i > 0 ? 'border-t border-gray-100' : ''}>
+                <td className="px-2.5 py-2 text-gray-600 w-1/2">{row.label}</td>
+                <td className="px-2 py-1.5">
+                  <input
+                    value={values[row.key] || ''}
+                    onChange={e => setValues(v => ({ ...v, [row.key]: e.target.value }))}
+                    placeholder={row.placeholder || '…'}
+                    className="w-full border border-gray-200 rounded-md px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-indigo-400"
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex items-center justify-between mt-2">
+        <span className="text-xs text-gray-500">{filledCount}/{rows.length} lignes complétées</span>
+        <button
+          onClick={() => onInsert(
+            `Tableau complété :\n${rows.map(r => `${r.label} : ${(values[r.key] || '').trim() || '—'}`).join('\n')}`
+          )}
+          disabled={filledCount === 0}
+          className="text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-40 disabled:cursor-not-allowed rounded-lg px-3 py-1.5 transition-colors"
+        >
+          Insérer dans ma réponse
+        </button>
+      </div>
+    </div>
+  );
+}
+
+const EXERCISE_ANSWER_TABLES = {
+  84: [
+    { key: 'necessaire', label: 'Quantité nécessaire (L)', placeholder: 'ex. 3/4' },
+    { key: 'disponible', label: 'Quantité disponible (L)', placeholder: 'ex. 1/3' },
+    { key: 'manquante',  label: 'Quantité manquante (L)',  placeholder: 'ex. 5/12' },
+    { key: 'rapport',    label: 'Rapport (fois plus grand)', placeholder: 'ex. 5/4' },
+  ],
+};
+
+// ---------------------------------------------------------------------------
 // MathBanqueView — math exercise bank with 5-thematic menu
 // ---------------------------------------------------------------------------
 function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
@@ -3812,6 +3867,12 @@ ${tentative === 1
       <div className="px-3 pt-2 border-t border-gray-100 bg-white flex-shrink-0" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 96px)' }}>
         {!inputDisabled && ex?.id === 11 && (
           <NumberLineAnswer onInsert={(text) => setInput(prev => (prev ? `${prev}\n\n${text}` : text))} />
+        )}
+        {!inputDisabled && EXERCISE_ANSWER_TABLES[ex?.id] && (
+          <AnswerTable
+            rows={EXERCISE_ANSWER_TABLES[ex.id]}
+            onInsert={(text) => setInput(prev => (prev ? `${prev}\n\n${text}` : text))}
+          />
         )}
         <div className="flex gap-2 items-end">
           <textarea
@@ -6245,6 +6306,16 @@ function AdminQuestionBrowser({ onLogout }) {
                     <NumberLineAnswer onInsert={setDemoInsert} />
                     {demoInsert && (
                       <p className="text-xs text-gray-400 italic mb-3 px-1">
+                        Texte qui serait inséré dans la réponse : « {demoInsert} »
+                      </p>
+                    )}
+                  </>
+                )}
+                {i === 0 && matiere === 'maths' && EXERCISE_ANSWER_TABLES[selected.id] && (
+                  <>
+                    <AnswerTable rows={EXERCISE_ANSWER_TABLES[selected.id]} onInsert={setDemoInsert} />
+                    {demoInsert && (
+                      <p className="text-xs text-gray-400 italic mb-3 px-1 whitespace-pre-line">
                         Texte qui serait inséré dans la réponse : « {demoInsert} »
                       </p>
                     )}
