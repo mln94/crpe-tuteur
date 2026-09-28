@@ -1833,6 +1833,7 @@ const CRPE_PRICE_LABEL    = '399,00 €'; // doit rester aligné avec CRPE_PRICE
 
 function PaywallModal({ questionsUsed, onUnlock, onClose }) {
   const paypalContainerRef = useRef(null);
+  const paypalCardContainerRef = useRef(null);
   const [paying, setPaying] = useState(false);
   const [payError, setPayError] = useState(null);
   const [sdkReady, setSdkReady] = useState(!!window.paypal?.Buttons);
@@ -1861,49 +1862,67 @@ function PaywallModal({ questionsUsed, onUnlock, onClose }) {
   useEffect(() => {
     if (!sdkReady || !paypalContainerRef.current) return;
 
-    const buttons = window.paypal.Buttons({
-      style: { layout: 'horizontal', color: 'blue', shape: 'pill', label: 'pay', height: 45 },
-      createOrder: async () => {
-        setPayError(null);
-        const { data } = await sbClient.auth.getSession();
-        const token = data.session?.access_token;
-        if (!token) throw new Error('Vous devez être connecté pour payer.');
-        const res = await fetch('/api/paypal/create-order', {
+    // Partagé entre le bouton "PayPal" (compte) et le bouton "Carte" (invité) :
+    // les deux passent par la même commande côté serveur, donc le même custom_id
+    // et le même webhook de confirmation, quel que soit le moyen de paiement choisi.
+    const createOrder = async () => {
+      setPayError(null);
+      const { data } = await sbClient.auth.getSession();
+      const token = data.session?.access_token;
+      if (!token) throw new Error('Vous devez être connecté pour payer.');
+      const res = await fetch('/api/paypal/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error || 'Erreur de création de la commande');
+      return json.id;
+    };
+
+    const onApprove = async (data) => {
+      setPaying(true);
+      try {
+        const { data: sess } = await sbClient.auth.getSession();
+        const token = sess.session?.access_token;
+        const res = await fetch('/api/paypal/capture-order', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+          body: JSON.stringify({ orderID: data.orderID }),
         });
         const json = await res.json();
-        if (!res.ok) throw new Error(json.error || 'Erreur de création de la commande');
-        return json.id;
-      },
-      onApprove: async (data) => {
-        setPaying(true);
-        try {
-          const { data: sess } = await sbClient.auth.getSession();
-          const token = sess.session?.access_token;
-          const res = await fetch('/api/paypal/capture-order', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-            body: JSON.stringify({ orderID: data.orderID }),
-          });
-          const json = await res.json();
-          if (!res.ok || json.status !== 'COMPLETED') throw new Error(json.error || 'Paiement non confirmé');
-          storage.set('crpe_paid', true); // cache local
-          onUnlock();
-        } catch (e) {
-          setPayError(e.message);
-        } finally {
-          setPaying(false);
-        }
-      },
-      onError: (err) => {
-        console.error('[PayPal]', err);
-        setPayError('Une erreur est survenue avec PayPal. Réessayez.');
-      },
+        if (!res.ok || json.status !== 'COMPLETED') throw new Error(json.error || 'Paiement non confirmé');
+        storage.set('crpe_paid', true); // cache local
+        onUnlock();
+      } catch (e) {
+        setPayError(e.message);
+      } finally {
+        setPaying(false);
+      }
+    };
+
+    const onError = (err) => {
+      console.error('[PayPal]', err);
+      setPayError('Une erreur est survenue avec PayPal. Réessayez.');
+    };
+
+    const paypalButton = window.paypal.Buttons({
+      fundingSource: window.paypal.FUNDING.PAYPAL,
+      style: { layout: 'horizontal', color: 'blue', shape: 'pill', label: 'pay', height: 45 },
+      createOrder, onApprove, onError,
+    });
+    const cardButton = window.paypal.Buttons({
+      fundingSource: window.paypal.FUNDING.CARD,
+      style: { layout: 'horizontal', color: 'black', shape: 'pill', label: 'pay', height: 45 },
+      createOrder, onApprove, onError,
     });
 
-    buttons.render(paypalContainerRef.current);
-    return () => { try { buttons.close(); } catch { /* déjà démonté */ } };
+    if (paypalButton.isEligible()) paypalButton.render(paypalContainerRef.current);
+    if (paypalCardContainerRef.current && cardButton.isEligible()) cardButton.render(paypalCardContainerRef.current);
+
+    return () => {
+      try { paypalButton.close(); } catch { /* déjà démonté */ }
+      try { cardButton.close(); } catch { /* déjà démonté */ }
+    };
   }, [sdkReady]);
 
   const FEATURES = [
@@ -1964,8 +1983,19 @@ function PaywallModal({ questionsUsed, onUnlock, onClose }) {
             <span className="text-lg font-bold text-indigo-600">{CRPE_PRICE_LABEL}</span>
           </div>
 
-          {/* PayPal Smart Button */}
+          {/* PayPal Smart Button (compte) */}
           <div ref={paypalContainerRef} />
+
+          {/* Séparateur */}
+          <div className="flex items-center gap-2">
+            <div className="flex-1 h-px bg-gray-100" />
+            <span className="text-[10px] text-gray-400 uppercase tracking-wide">ou</span>
+            <div className="flex-1 h-px bg-gray-100" />
+          </div>
+
+          {/* Bouton carte (paiement invité, sans compte PayPal) */}
+          <div ref={paypalCardContainerRef} />
+
           {paying && (
             <p className="text-xs text-gray-400 text-center">Confirmation du paiement…</p>
           )}
