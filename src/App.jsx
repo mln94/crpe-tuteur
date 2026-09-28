@@ -1831,7 +1831,7 @@ const FREE_QUESTION_LIMIT = 10;
 const CONTACT_EMAIL       = 'mohamed.necib94310@gmail.com';
 const CRPE_PRICE_LABEL    = '399,00 €'; // doit rester aligné avec CRPE_PRICE dans app.js
 
-const PAYPAL_NCP_URL = 'https://www.paypal.com/ncp/payment/NZPAQVSVRHYLL';
+const PAYPAL_NCP_URL = 'https://www.sandbox.paypal.com/ncp/payment/Q79CDJJ26RM6G';
 
 function PaywallModal({ questionsUsed, onUnlock, onClose }) {
   const [checking, setChecking] = useState(false);
