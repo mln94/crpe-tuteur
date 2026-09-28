@@ -1829,7 +1829,7 @@ function SyntheseModal({ content, loading, onClose }) {
 // ---------------------------------------------------------------------------
 const FREE_QUESTION_LIMIT = 10;
 const CONTACT_EMAIL       = 'mohamed.necib94310@gmail.com';
-const CRPE_PRICE_LABEL    = '399,00 €'; // doit rester aligné avec CRPE_PRICE dans app.js
+const CRPE_PRICE_LABEL    = '1,00 €'; // TEMP: test live à 1€, remettre à 399,00 € après validation — doit rester aligné avec CRPE_PRICE dans app.js
 
 function PaywallModal({ questionsUsed, onUnlock, onClose }) {
   const paypalContainerRef = useRef(null);

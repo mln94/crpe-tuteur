@@ -56,7 +56,7 @@ async function markUserPaid(userId, email) {
 const PAYPAL_API_BASE = process.env.PAYPAL_ENV === 'live'
   ? 'https://api-m.paypal.com'
   : 'https://api-m.sandbox.paypal.com';
-const CRPE_PRICE = { currency_code: 'EUR', value: '399.00' };
+const CRPE_PRICE = { currency_code: 'EUR', value: '1.00' }; // TEMP: test live à 1€, remettre à 399.00 après validation
 
 async function getPaypalAccessToken() {
   const auth = Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString('base64');
