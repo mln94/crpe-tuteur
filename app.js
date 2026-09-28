@@ -33,10 +33,23 @@ async function getAuthenticatedUser(req) {
   return data.user;
 }
 
-async function markUserPaid(userId) {
+async function markUserPaid(userId, email) {
   await supabaseAdmin
     .from('profils_utilisateurs')
     .upsert({ user_id: userId, crpe_paid: true, paid_at: new Date().toISOString() }, { onConflict: 'user_id' });
+
+  // Klaviyo : paid_user = true — resynchronise même en flux webhook (pas d'email direct dans l'event PayPal)
+  try {
+    let resolvedEmail = email;
+    if (!resolvedEmail) {
+      const { data, error } = await supabaseAdmin.auth.admin.getUserById(userId);
+      if (error) throw error;
+      resolvedEmail = data?.user?.email;
+    }
+    if (resolvedEmail) await klaviyoSetPaidUser(resolvedEmail);
+  } catch (err) {
+    console.error('[markUserPaid] Klaviyo sync échouée (accès Supabase débloqué quand même) :', err.message);
+  }
 }
 
 /* ── PayPal ── */
@@ -101,7 +114,7 @@ app.post('/api/paypal/capture-order', async (req, res) => {
 
     const customId = capture.purchase_units?.[0]?.payments?.captures?.[0]?.custom_id;
     if (capture.status === 'COMPLETED' && customId === user.id) {
-      await markUserPaid(user.id);
+      await markUserPaid(user.id, user.email);
     }
     res.json({ status: capture.status });
   } catch (err) {
@@ -298,6 +311,32 @@ async function klaviyoSetEmailVerified(email) {
     throw new Error(err.errors?.[0]?.detail || `Erreur PATCH profil: ${patchRes.status}`);
   }
   console.log(`[Klaviyo] email_verified=true pour ${email}`);
+}
+
+/* ── Klaviyo : passer paid_user à true pour un email donné ── */
+async function klaviyoSetPaidUser(email) {
+  const searchRes = await fetch(
+    `${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`,
+    { headers: klaviyoHeaders() }
+  );
+  const searchData = await searchRes.json();
+  const profileId  = searchData.data?.[0]?.id;
+  if (!profileId) {
+    console.warn(`[Klaviyo] Profil introuvable pour ${email} (paid_user)`);
+    return;
+  }
+  const patchRes = await fetch(`${KLAVIYO_API_BASE}/profiles/${profileId}`, {
+    method: 'PATCH',
+    headers: klaviyoHeaders(),
+    body: JSON.stringify({
+      data: { type: 'profile', id: profileId, attributes: { properties: { paid_user: true, date_paid: new Date().toISOString() } } },
+    }),
+  });
+  if (!patchRes.ok) {
+    const err = await patchRes.json();
+    throw new Error(err.errors?.[0]?.detail || `Erreur PATCH profil: ${patchRes.status}`);
+  }
+  console.log(`[Klaviyo] paid_user=true pour ${email}`);
 }
 
 /* ── Route : confirmation e-mail depuis le front (access_token dans le hash) ─
