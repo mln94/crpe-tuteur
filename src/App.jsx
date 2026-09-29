@@ -3562,9 +3562,16 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
   const [streamingText, setStreamingText]       = useState('');
   const [synthese, setSynthese]                 = useState({ open: false, content: '', minimized: false });
   const [definitions, setDefinitions]           = useState({ open: false, content: '', minimized: false });
+  const [trialJustEnded, setTrialJustEnded]     = useState(false);
+  const [showPaywallHere, setShowPaywallHere]   = useState(false);
   const tentativeRef = useRef(1);
   const inputRef     = useRef(null);
   const bottomRef    = useRef(null);
+
+  // Si le verrou est activé (DB mise à jour en arrière-plan), afficher le message de fin d'essai
+  useEffect(() => {
+    if (isLocked) setTrialJustEnded(true);
+  }, [isLocked]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -3651,6 +3658,7 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
       return;
     }
     if (opt === 'O') {
+      if (isLocked) { setTrialJustEnded(true); return; }
       setSynthese({ open: false, content: '', minimized: false });
       setDefinitions({ open: false, content: '', minimized: false });
       if (currentIdx + 1 >= exercises.length) {
@@ -3868,7 +3876,7 @@ ${tentative === 1
   }
 
   // ── Chat view ─────────────────────────────────────────────────────────────
-  const inputDisabled = loading || phase !== 'question' || awaitingStart;
+  const inputDisabled = loading || phase !== 'question' || awaitingStart || trialJustEnded;
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -3976,10 +3984,40 @@ ${tentative === 1
             {streamingText && <ChatBubble msg={{ role: 'assistant', content: streamingText }} isStreaming />}
           </>
         )}
+        {trialJustEnded && (
+          <>
+            <ChatBubble msg={{
+              role: 'assistant',
+              content: `Vous avez utilisé toutes vos questions d'essai gratuites en **Mathématiques**.\n\nSi vous avez besoin d'un peu plus d'essai, ou simplement pour nous faire une remarque sur le produit, contactez-nous à **contact@passcrpe.fr**.\n\nSinon, vous pouvez débloquer l'accès complet dès maintenant, ou revenir à l'écran principal.`,
+            }} />
+            <div className="pl-11 mt-1 mb-2 flex flex-wrap gap-2">
+              <button
+                onClick={() => setShowPaywallHere(true)}
+                className="bg-indigo-600 text-white rounded-xl px-5 py-2.5 text-sm font-semibold hover:bg-indigo-700 active:bg-indigo-800 transition-all w-fit"
+              >
+                Débloquer l'accès complet
+              </button>
+              <button
+                onClick={onBack}
+                className="bg-white border border-gray-200 text-gray-700 rounded-xl px-5 py-2.5 text-sm font-semibold hover:bg-gray-50 transition-all w-fit"
+              >
+                Retour à l'accueil
+              </button>
+            </div>
+          </>
+        )}
         <div ref={bottomRef} />
       </div>
 
-      {!awaitingStart && !loading && options.length > 0 && (
+      {showPaywallHere && (
+        <PaywallModal
+          questionsUsed={FREE_QUESTION_LIMIT}
+          onUnlock={() => { setShowPaywallHere(false); onBack(); }}
+          onClose={() => setShowPaywallHere(false)}
+        />
+      )}
+
+      {!awaitingStart && !loading && !trialJustEnded && options.length > 0 && (
         <QuickReplies options={options} onSelect={send} color="emerald" />
       )}
 
@@ -4246,6 +4284,8 @@ function BanqueQuestionsView({ topic, niveau, onBack, autoResume = false, resume
   const [loading, setLoading]           = useState(false);
   const [streamingText, setStreamingText] = useState('');
   const [hasSavedSession, setHasSavedSession] = useState(false);
+  const [trialJustEnded, setTrialJustEnded] = useState(false);
+  const [showPaywallHere, setShowPaywallHere] = useState(false);
   const [starting, setStarting]         = useState(false);
 
   const [synthese, setSynthese]         = useState({ open: false, content: '', minimized: false });
@@ -4313,10 +4353,10 @@ function BanqueQuestionsView({ topic, niveau, onBack, autoResume = false, resume
     }
   }, [loadingQ]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Si le verrou est activé (DB mis à jour en arrière-plan), renvoyer à l'accueil
+  // Si le verrou est activé (DB mis à jour en arrière-plan), afficher le message de fin d'essai
   useEffect(() => {
-    if (isLocked) onBack();
-  }, [isLocked]); // eslint-disable-line react-hooks/exhaustive-deps
+    if (isLocked) setTrialJustEnded(true);
+  }, [isLocked]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -4470,7 +4510,7 @@ ${tentative === 1
       return;
     }
     if (opt === '[O]') {
-      if (isLocked) { onBack(); return; }
+      if (isLocked) { setTrialJustEnded(true); return; }
       setSynthese({ open: false, content: '', minimized: false });
       setDefinitions({ open: false, content: '', minimized: false });
       setArgumentation({ open: false, content: '', loading: false, minimized: false });
@@ -4651,7 +4691,7 @@ ${tentative === 1
     );
   }
 
-  const inputDisabled = awaitingStart || loading || phase !== 'question';
+  const inputDisabled = awaitingStart || loading || phase !== 'question' || trialJustEnded;
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -4797,10 +4837,40 @@ ${tentative === 1
             {streamingText && <ChatBubble msg={{ role: 'assistant', content: streamingText }} isStreaming />}
           </>
         )}
+        {trialJustEnded && (
+          <>
+            <ChatBubble msg={{
+              role: 'assistant',
+              content: `Vous avez utilisé toutes vos questions d'essai gratuites en **Français**.\n\nSi vous avez besoin d'un peu plus d'essai, ou simplement pour nous faire une remarque sur le produit, contactez-nous à **contact@passcrpe.fr**.\n\nSinon, vous pouvez débloquer l'accès complet dès maintenant, ou revenir à l'écran principal.`,
+            }} />
+            <div className="pl-11 mt-1 mb-2 flex flex-wrap gap-2">
+              <button
+                onClick={() => setShowPaywallHere(true)}
+                className="bg-indigo-600 text-white rounded-xl px-5 py-2.5 text-sm font-semibold hover:bg-indigo-700 active:bg-indigo-800 transition-all w-fit"
+              >
+                Débloquer l'accès complet
+              </button>
+              <button
+                onClick={onBack}
+                className="bg-white border border-gray-200 text-gray-700 rounded-xl px-5 py-2.5 text-sm font-semibold hover:bg-gray-50 transition-all w-fit"
+              >
+                Retour à l'accueil
+              </button>
+            </div>
+          </>
+        )}
         <div ref={bottomRef} />
       </div>
 
-      {!awaitingStart && !loading && options.length > 0 && (
+      {showPaywallHere && (
+        <PaywallModal
+          questionsUsed={FREE_QUESTION_LIMIT}
+          onUnlock={() => { setShowPaywallHere(false); onBack(); }}
+          onClose={() => setShowPaywallHere(false)}
+        />
+      )}
+
+      {!awaitingStart && !loading && !trialJustEnded && options.length > 0 && (
         <QuickReplies options={options} onSelect={send} />
       )}
 
