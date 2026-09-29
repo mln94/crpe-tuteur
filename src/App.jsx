@@ -3545,8 +3545,10 @@ const EXERCISE_ANSWER_TABLES = {};
 function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
   const [step, setStep]                         = useState('thematique');
   const [selectedThematique, setSelectedThematique] = useState(null);
+  const [selectedClasseId, setSelectedClasseId] = useState(null);
   const [exercises, setExercises]               = useState([]);
   const [loadingEx, setLoadingEx]               = useState(false);
+  const [awaitingStart, setAwaitingStart]       = useState(false);
   const [currentIdx, setCurrentIdx]             = useState(0);
   const [phase, setPhase]                       = useState('question');
   const [messages, setMessages]                 = useState([]);
@@ -3603,6 +3605,17 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
       generateAndSaveFigure(exercises[0], 0);
     }
     setTimeout(() => inputRef.current?.focus(), 100);
+  };
+
+  const startMathSession = () => {
+    setAwaitingStart(false);
+    if (exercises.length > 0) {
+      const msg = buildMathQuestionMessage(exercises[0], 1);
+      setMessages([{ role: 'assistant', content: msg }]);
+      setOptions(extractOptions(msg));
+      generateAndSaveFigure(exercises[0], 0);
+    }
+    setTimeout(() => inputRef.current?.focus(), 150);
   };
 
   const handleOption = (optStr) => {
@@ -3805,6 +3818,7 @@ ${tentative === 1
       <ClassPickerView
         onSelect={async (classeId) => {
           const classe = NIVEAU_TO_CLASSE[classeId];
+          setSelectedClasseId(classeId);
           setLoadingEx(true);
           setStep('exercises');
           setCurrentIdx(0);
@@ -3817,12 +3831,8 @@ ${tentative === 1
           const shuffled = shuffleArray(data);
           setExercises(shuffled);
           setLoadingEx(false);
-          if (shuffled.length > 0) {
-            const msg = buildMathQuestionMessage(shuffled[0], 1);
-            setMessages([{ role: 'assistant', content: msg }]);
-            setOptions(extractOptions(msg));
-            generateAndSaveFigure(shuffled[0], 0);
-          }
+          setAwaitingStart(shuffled.length > 0);
+          if (shuffled.length === 0) return;
           setTimeout(() => inputRef.current?.focus(), 150);
         }}
         onBack={() => setStep('thematique')}
@@ -3854,7 +3864,7 @@ ${tentative === 1
   }
 
   // ── Chat view ─────────────────────────────────────────────────────────────
-  const inputDisabled = loading || phase !== 'question';
+  const inputDisabled = loading || phase !== 'question' || awaitingStart;
 
   return (
     <div className="flex flex-col flex-1 min-h-0">
@@ -3937,16 +3947,35 @@ ${tentative === 1
 
       {/* Chat area */}
       <div className="flex-1 overflow-y-auto px-4 pt-4 pb-2">
-        {messages.map((msg, i) => {
-          if (msg.role === 'user' && /^\[[A-Z0-9+>]\]$/.test(msg.content.trim())) return null;
-          return <ChatBubble key={i} msg={msg} />;
-        })}
-        {loading && !streamingText && <TypingIndicator />}
-        {streamingText && <ChatBubble msg={{ role: 'assistant', content: streamingText }} isStreaming />}
+        {awaitingStart ? (
+          <>
+            <ChatBubble msg={{
+              role: 'assistant',
+              content: `Vous travaillez sur **${selectedThematique}** — **${getNiveauLabel(selectedClasseId)}** — **Cycle 4**.\n\nVoici comment fonctionne la session :\n\n1. Une question est posée, avec une figure si nécessaire.\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **2 tentatives** par question pour améliorer votre réponse.\n4. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n\n${exercises.length} exercice${exercises.length > 1 ? 's' : ''} disponible${exercises.length > 1 ? 's' : ''} pour cette sélection.`,
+            }} />
+            <div className="pl-11 mt-1 mb-2">
+              <button
+                onClick={startMathSession}
+                className="bg-emerald-600 text-white rounded-xl px-5 py-2.5 text-sm font-semibold hover:bg-emerald-700 active:bg-emerald-800 transition-all w-fit"
+              >
+                Je suis prêt·e
+              </button>
+            </div>
+          </>
+        ) : (
+          <>
+            {messages.map((msg, i) => {
+              if (msg.role === 'user' && /^\[[A-Z0-9+>]\]$/.test(msg.content.trim())) return null;
+              return <ChatBubble key={i} msg={msg} />;
+            })}
+            {loading && !streamingText && <TypingIndicator />}
+            {streamingText && <ChatBubble msg={{ role: 'assistant', content: streamingText }} isStreaming />}
+          </>
+        )}
         <div ref={bottomRef} />
       </div>
 
-      {!loading && options.length > 0 && (
+      {!awaitingStart && !loading && options.length > 0 && (
         <QuickReplies options={options} onSelect={send} color="emerald" />
       )}
 
@@ -4733,7 +4762,7 @@ ${tentative === 1
           <>
             <ChatBubble msg={{
               role: 'assistant',
-              content: `Vous travaillez sur **${topicLabel}** — **${niveauLabel}** — **Cycle 4**.\n\nVoici comment fonctionne la session :\n\n1. ${levelUnlocked ? 'La version **Facile** de chaque exercice est affichée en premier.' : 'Seules les questions de niveau **Facile** sont disponibles pour l\'instant.'}\n2. Rédigez votre réponse dans le champ ci-dessous — **Claude corrigera et notera votre production**.\n3. Vous avez **2 tentatives** par question pour améliorer votre réponse.\n4. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n5. ${levelUnlocked ? 'Si vous souhaitez aller plus loin, passez à la **version intermédiaire** du même exercice.' : 'Remplissez les critères sur la page d\'accueil pour débloquer le niveau intermédiaire.'}\n\n${pairs.length > 0 ? `${pairs.length} exercice${pairs.length > 1 ? 's' : ''} disponible${pairs.length > 1 ? 's' : ''} pour cette sélection.` : 'Aucun exercice disponible pour cette sélection.'}`,
+              content: `Vous travaillez sur **${topicLabel}** — **${niveauLabel}** — **Cycle 4**.\n\nVoici comment fonctionne la session :\n\n1. ${levelUnlocked ? 'La version **Facile** de chaque exercice est affichée en premier.' : 'Seules les questions de niveau **Facile** sont disponibles pour l\'instant.'}\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **2 tentatives** par question pour améliorer votre réponse.\n4. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n5. ${levelUnlocked ? 'Si vous souhaitez aller plus loin, passez à la **version intermédiaire** du même exercice.' : 'Remplissez les critères sur la page d\'accueil pour débloquer le niveau intermédiaire.'}\n\n${pairs.length > 0 ? `${pairs.length} exercice${pairs.length > 1 ? 's' : ''} disponible${pairs.length > 1 ? 's' : ''} pour cette sélection.` : 'Aucun exercice disponible pour cette sélection.'}`,
             }} />
             <div className="pl-11 mt-1 mb-2 flex flex-col gap-2">
               {hasSavedSession && (
