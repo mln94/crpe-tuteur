@@ -53,9 +53,10 @@ async function markUserPaid(userId, email) {
 }
 
 /* ── PayPal ── */
-const PAYPAL_API_BASE = process.env.PAYPAL_ENV === 'live'
-  ? 'https://api-m.paypal.com'
-  : 'https://api-m.sandbox.paypal.com';
+// Forcé en live (le toggle via PAYPAL_ENV posait problème sur Vercel).
+// Pour retester en sandbox : remplacer temporairement par 'https://api-m.sandbox.paypal.com'
+// et utiliser les identifiants sandbox (PAYPAL_CLIENT_ID/SECRET) correspondants.
+const PAYPAL_API_BASE = 'https://api-m.paypal.com';
 const CRPE_PRICE = { currency_code: 'EUR', value: '1.00' }; // TEMP: test live à 1€, remettre à 399.00 après validation
 
 async function getPaypalAccessToken() {
