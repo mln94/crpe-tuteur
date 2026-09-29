@@ -1829,7 +1829,8 @@ function SyntheseModal({ content, loading, onClose }) {
 // ---------------------------------------------------------------------------
 const FREE_QUESTION_LIMIT = 10;
 const CONTACT_EMAIL       = 'mohamed.necib94310@gmail.com';
-const CRPE_PRICE_LABEL    = '1,00 €'; // TEMP: test live à 1€, remettre à 399,00 € après validation — doit rester aligné avec CRPE_PRICE dans app.js
+const CRPE_PRICE_LABEL    = '360,00 € TTC'; // doit rester aligné avec CRPE_PRICE dans app.js
+const CRPE_PRICE_LABEL_HT = '299,00 € HT';
 
 function PaywallModal({ questionsUsed, onUnlock, onClose }) {
   const paypalContainerRef = useRef(null);
@@ -1926,7 +1927,7 @@ function PaywallModal({ questionsUsed, onUnlock, onClose }) {
   }, [sdkReady]);
 
   const FEATURES = [
-    { icon: '📚', text: 'Questions illimitées — toutes thématiques (grammaire, lecture, vocabulaire, écriture, culture littéraire)' },
+    { icon: '📚', text: 'Questions illimitées, toutes thématiques (grammaire, lecture, vocabulaire, écriture, culture littéraire)' },
     { icon: '🎯', text: 'Niveaux facile et intermédiaire débloqués dès que vous êtes prêt' },
     { icon: '🤖', text: 'Correction IA personnalisée après chaque réponse : note écriture, orthographe et niveau CRPE' },
     { icon: '📖', text: 'Synthèse de cours et définitions des mots clés pour chaque exercice' },
@@ -1979,8 +1980,11 @@ function PaywallModal({ questionsUsed, onUnlock, onClose }) {
 
           {/* Prix */}
           <div className="flex items-center justify-between">
-            <span className="text-sm font-semibold text-gray-700">Accès complet — paiement unique</span>
-            <span className="text-lg font-bold text-indigo-600">{CRPE_PRICE_LABEL}</span>
+            <span className="text-sm font-semibold text-gray-700">Accès complet, paiement unique</span>
+            <div className="text-right">
+              <span className="text-lg font-bold text-indigo-600 block">{CRPE_PRICE_LABEL}</span>
+              <span className="text-[11px] text-gray-400">{CRPE_PRICE_LABEL_HT}</span>
+            </div>
           </div>
 
           {/* PayPal Smart Button (compte) */}
@@ -2021,7 +2025,7 @@ function PaywallModal({ questionsUsed, onUnlock, onClose }) {
               disabled={checking}
               className="text-xs text-indigo-600 font-semibold hover:underline disabled:opacity-50"
             >
-              {checking ? 'Vérification…' : 'J\'ai déjà payé — vérifier mon accès'}
+              {checking ? 'Vérification…' : 'J\'ai déjà payé, vérifier mon accès'}
             </button>
             {checkMsg && <p className="text-xs text-gray-500 mt-1">{checkMsg}</p>}
           </div>
@@ -2032,7 +2036,7 @@ function PaywallModal({ questionsUsed, onUnlock, onClose }) {
               Pas encore prêt ?
             </p>
             <p className="text-xs text-gray-500 mt-1.5 leading-relaxed">
-              Pas de pression. Si vous avez des doutes ou des questions, contactez-nous — nous répondons personnellement pour vous aider à faire le bon choix pour votre préparation.
+              Pas de pression. Si vous avez des doutes ou des questions, contactez-nous : nous répondons personnellement pour vous aider à faire le bon choix pour votre préparation.
             </p>
             <p className="mt-2.5 text-xs font-semibold text-gray-700">
               ✉️ contact@passcrpe.fr

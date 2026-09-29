@@ -57,7 +57,7 @@ async function markUserPaid(userId, email) {
 // Pour retester en sandbox : remplacer temporairement par 'https://api-m.sandbox.paypal.com'
 // et utiliser les identifiants sandbox (PAYPAL_CLIENT_ID/SECRET) correspondants.
 const PAYPAL_API_BASE = 'https://api-m.paypal.com';
-const CRPE_PRICE = { currency_code: 'EUR', value: '1.00' }; // TEMP: test live à 1€, remettre à 399.00 après validation
+const CRPE_PRICE = { currency_code: 'EUR', value: '360.00' }; // 360,00 € TTC (299,00 € HT)
 
 async function getPaypalAccessToken() {
   const auth = Buffer.from(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`).toString('base64');
