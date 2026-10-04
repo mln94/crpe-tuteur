@@ -1007,6 +1007,34 @@ async function fetchPaidStatus() {
   }
 }
 
+// Compteur tenu à jour par un trigger Supabase :
+// { maths: { "<thématique>": { "5e": n } }, francais: { ... } }
+async function fetchQuestionsRepondues() {
+  try {
+    const { data, error } = await sbClient
+      .from('profils_utilisateurs')
+      .select('questions_repondues')
+      .limit(1)
+      .single();
+    if (error) throw error;
+    return data?.questions_repondues || {};
+  } catch {
+    return null;
+  }
+}
+
+// Phrase d'intro : nombre de questions déjà faites pour une thématique et une classe.
+// `thematiques` accepte plusieurs clés (le français est enregistré par id ou par libellé).
+function questionsReponduesPhrase(counts, matiere, thematiques, classe, niveauLabel) {
+  if (!counts || !classe) return '';
+  const byThem = counts[matiere] || {};
+  const n = [...new Set(thematiques.filter(Boolean))]
+    .reduce((sum, t) => sum + (Number(byThem[t]?.[classe]) || 0), 0);
+  return n > 0
+    ? `Vous avez déjà répondu à **${n} question${n > 1 ? 's' : ''}** de cette thématique en ${niveauLabel}.`
+    : `Vous n'avez encore répondu à aucune question de cette thématique en ${niveauLabel}.`;
+}
+
 async function fetchLastActiveSession(userId) {
   if (!SUPABASE_URL || !SUPABASE_KEY || !userId) return null;
   try {
@@ -2075,6 +2103,10 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
   const [error, setError] = useState(null);
   const [options, setOptions] = useState([]);
   const [awaitingStart, setAwaitingStart] = useState(false);
+  const [questionsRepondues, setQuestionsRepondues] = useState(null);
+  useEffect(() => {
+    if (awaitingStart) fetchQuestionsRepondues().then(setQuestionsRepondues);
+  }, [awaitingStart]);
   const [synthese, setSynthese]       = useState({ open: false, content: '', loading: false, minimized: false });
   const [definitions, setDefinitions] = useState({ open: false, content: '', loading: false, minimized: false });
   const [puzzleData, setPuzzleData] = useState(null);
@@ -2615,7 +2647,7 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
                     ? `Bienvenue dans **Apprendre à rédiger** — ${welcomeTopicLabel}${niveau ? ` · ${getNiveauLabel(niveau)}` : ''}.\n\nPour chaque exercice, une réponse correcte sur le fond mais **mal formulée** vous est présentée. Votre objectif : la reformuler en 3 à 5 phrases conformes aux attentes du CRPE.\n\nVous avez **3 options** :\n- Rédiger directement dans le champ ci-dessous\n- Demander une **aide** (mots clés et tournures)\n- Reconstituer la réponse en **mode puzzle guidé**\n\nUne note sur 10 vous est donnée après chaque rédaction. Vous avez **2 tentatives** par exercice.`
                       : mode === 'revision'
                         ? `Bienvenue dans **Révision mots clés & tournures**.\n\nJe vais vous proposer des exercices variés pour mémoriser et réutiliser les mots clés et tournures de phrases travaillés dans vos sessions précédentes.\n\nChaque exercice propose un type différent : compléter une phrase, reformuler avec une tournure, employer un mot clé en contexte…`
-                        : `Vous travaillez sur **${welcomeTopicLabel}**${niveau ? ` — **${getNiveauLabel(niveau)}**` : ''} — **Cycle 4**.\n\nVoici comment fonctionne la session :\n\n1. Une question est posée, avec un extrait d'un texte officiel si nécessaire.\n2. Vous rédigez votre réponse dans le champ ci-dessous.\n3. L'outil note votre production et vous donne des pistes pour l'améliorer.\n4. Vous pouvez proposer une deuxième réponse améliorée.\n5. À l'issue de votre second essai, une réponse type CRPE vous est proposée.\n\nPrêt·e à commencer ?`,
+                        : `Vous travaillez sur **${welcomeTopicLabel}**${niveau ? ` — **${getNiveauLabel(niveau)}**` : ''} — **Cycle 4**.\n\nVoici comment fonctionne la session :\n\n1. Une question est posée, avec un extrait d'un texte officiel si nécessaire.\n2. Vous rédigez votre réponse dans le champ ci-dessous.\n3. L'outil note votre production et vous donne des pistes pour l'améliorer.\n4. Vous pouvez proposer une deuxième réponse améliorée.\n5. À l'issue de votre second essai, une réponse type CRPE vous est proposée.\n\n${matiere !== 'maths' && questionsRepondues && niveau ? `${questionsReponduesPhrase(questionsRepondues, 'francais', [topic, welcomeTopicLabel], NIVEAU_TO_CLASSE[niveau], getNiveauLabel(niveau))}\n\n` : ''}Prêt·e à commencer ?`,
                 }} />
                 <div className="pl-11 mt-1 mb-2 flex flex-col gap-2">
                   {!objectivesReady && (
@@ -3579,6 +3611,7 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
   const [definitions, setDefinitions]           = useState({ open: false, content: '', minimized: false });
   const [trialJustEnded, setTrialJustEnded]     = useState(false);
   const [showPaywallHere, setShowPaywallHere]   = useState(false);
+  const [questionsRepondues, setQuestionsRepondues] = useState(null);
   const tentativeRef = useRef(1);
   const sessionIdRef = useRef(null);
   const inputRef     = useRef(null);
@@ -3588,6 +3621,10 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
   useEffect(() => {
     if (isLocked) setTrialJustEnded(true);
   }, [isLocked]);
+
+  useEffect(() => {
+    if (awaitingStart) fetchQuestionsRepondues().then(setQuestionsRepondues);
+  }, [awaitingStart]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -3985,7 +4022,7 @@ ${tentative === 1
           <>
             <ChatBubble msg={{
               role: 'assistant',
-              content: `Vous travaillez sur **${selectedThematique}** — **${getNiveauLabel(selectedClasseId)}** — **Cycle 4**.\n\nVoici comment fonctionne la session :\n\n1. Une question est posée, avec une figure si nécessaire.\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **2 tentatives** par question pour améliorer votre réponse.\n4. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n\n${exercises.length} exercice${exercises.length > 1 ? 's' : ''} disponible${exercises.length > 1 ? 's' : ''} pour cette sélection.`,
+              content: `Vous travaillez sur **${selectedThematique}** — **${getNiveauLabel(selectedClasseId)}** — **Cycle 4**.\n\nVoici comment fonctionne la session :\n\n1. Une question est posée, avec une figure si nécessaire.\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **2 tentatives** par question pour améliorer votre réponse.\n4. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'maths', [selectedThematique], NIVEAU_TO_CLASSE[selectedClasseId], getNiveauLabel(selectedClasseId))}\n\n` : ''}${exercises.length} exercice${exercises.length > 1 ? 's' : ''} disponible${exercises.length > 1 ? 's' : ''} pour cette sélection.`,
             }} />
             <div className="pl-11 mt-1 mb-2">
               <button
@@ -4302,6 +4339,10 @@ function BanqueQuestionsView({ topic, niveau, onBack, autoResume = false, resume
   const [options, setOptions]           = useState([]);
   const [input, setInput]               = useState('');
   const [awaitingStart, setAwaitingStart] = useState(true);
+  const [questionsRepondues, setQuestionsRepondues] = useState(null);
+  useEffect(() => {
+    if (awaitingStart) fetchQuestionsRepondues().then(setQuestionsRepondues);
+  }, [awaitingStart]);
   const [phase, setPhase]               = useState('question');
   const [loading, setLoading]           = useState(false);
   const [streamingText, setStreamingText] = useState('');
@@ -4828,7 +4869,7 @@ ${tentative === 1
           <>
             <ChatBubble msg={{
               role: 'assistant',
-              content: `Vous travaillez sur **${topicLabel}** — **${niveauLabel}** — **Cycle 4**.\n\nVoici comment fonctionne la session :\n\n1. ${levelUnlocked ? 'La version **Facile** de chaque exercice est affichée en premier.' : 'Seules les questions de niveau **Facile** sont disponibles pour l\'instant.'}\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **2 tentatives** par question pour améliorer votre réponse.\n4. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n5. ${levelUnlocked ? 'Si vous souhaitez aller plus loin, passez à la **version intermédiaire** du même exercice.' : 'Remplissez les critères sur la page d\'accueil pour débloquer le niveau intermédiaire.'}\n\n${pairs.length > 0 ? `${pairs.length} exercice${pairs.length > 1 ? 's' : ''} disponible${pairs.length > 1 ? 's' : ''} pour cette sélection.` : 'Aucun exercice disponible pour cette sélection.'}`,
+              content: `Vous travaillez sur **${topicLabel}** — **${niveauLabel}** — **Cycle 4**.\n\nVoici comment fonctionne la session :\n\n1. ${levelUnlocked ? 'La version **Facile** de chaque exercice est affichée en premier.' : 'Seules les questions de niveau **Facile** sont disponibles pour l\'instant.'}\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **2 tentatives** par question pour améliorer votre réponse.\n4. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n5. ${levelUnlocked ? 'Si vous souhaitez aller plus loin, passez à la **version intermédiaire** du même exercice.' : 'Remplissez les critères sur la page d\'accueil pour débloquer le niveau intermédiaire.'}\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'francais', [topic, topicLabel], classe, niveauLabel)}\n\n` : ''}${pairs.length > 0 ? `${pairs.length} exercice${pairs.length > 1 ? 's' : ''} disponible${pairs.length > 1 ? 's' : ''} pour cette sélection.` : 'Aucun exercice disponible pour cette sélection.'}`,
             }} />
             <div className="pl-11 mt-1 mb-2 flex flex-col gap-2">
               {hasSavedSession && (
