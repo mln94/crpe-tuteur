@@ -1110,8 +1110,21 @@ function extractConseils(text) {
   const m1 = text.match(/Note\s+globale\s*:\s*\d+\s*\/\s*10[^\n]*\n(?:ORTHO:.*\n)?(?:SYNTAXE:.*\n)?([\s\S]*?)(?=\s*Réponse type CRPE\s*:|\s*Souhaitez-vous|\s*Êtes-vous prêt|\s*\*\*\[|$)/);
   if (m1?.[1]?.trim()) return m1[1].trim();
   // Format banque de questions : conseils ("Sur le fond/forme/orthographe") puis notes
-  const m2 = text.match(/^([\s\S]+?)\n+Note\s+écriture\s*:/m);
+  // (français : "Note écriture", maths : "Note calcul")
+  const m2 = text.match(/^([\s\S]+?)\n+Note\s+(?:écriture|calcul)\s*:/m);
   return m2?.[1]?.trim() || null;
+}
+
+// Correction maths : les conseils ("Sur le fond", "Sur la forme") précèdent
+// les lignes "Note calcul/méthode/CRPE/globale : X/10".
+function extractMathConseils(text) {
+  const firstNote = text.search(/^[\s*_]*Note\s+(?:calcul|méthode|crpe|globale)\b/im);
+  const head = firstNote >= 0 ? text.slice(0, firstNote) : text;
+  const cleaned = head
+    .replace(/\*\*\[[A-Z0-9+>]\]\*\*/g, '')
+    .replace(/\*\*/g, '')
+    .trim();
+  return cleaned || null;
 }
 
 function extractNotesFromText(text) {
@@ -3565,6 +3578,7 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
   const [trialJustEnded, setTrialJustEnded]     = useState(false);
   const [showPaywallHere, setShowPaywallHere]   = useState(false);
   const tentativeRef = useRef(1);
+  const sessionIdRef = useRef(null);
   const inputRef     = useRef(null);
   const bottomRef    = useRef(null);
 
@@ -3602,6 +3616,7 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
 
   const restartSession = () => {
     tentativeRef.current = 1;
+    sessionIdRef.current = null;
     setCurrentIdx(0);
     setPhase('question');
     setInput('');
@@ -3620,6 +3635,7 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
 
   const startMathSession = () => {
     setAwaitingStart(false);
+    sessionIdRef.current = null;
     if (exercises.length > 0) {
       const msg = buildMathQuestionMessage(exercises[0], 1);
       setMessages([{ role: 'assistant', content: msg }]);
@@ -3751,9 +3767,12 @@ ${tentative === 1
           const userId = authUser?.id || storage.get('crpe_user_id');
           if (userId) {
             const mathNotes = extractNotesFromText(final);
+            // Un seul session_id par série d'exercices, pour que l'historique
+            // regroupe les tentatives 1 et 2 d'une même question.
+            if (!sessionIdRef.current) sessionIdRef.current = `math_sess_${userId}_${Date.now()}`;
             supabaseInsert('reponses_utilisateurs_math', {
               user_id:        userId,
-              session_id:     `math_sess_${userId}_${Date.now()}`,
+              session_id:     sessionIdRef.current,
               classe:         ex.classe || null,
               thematique:     ex.thematique || null,
               sous_categorie: ex.sous_categorie || null,
@@ -3766,6 +3785,7 @@ ${tentative === 1
               note_methode: mathNotes.methode ?? null,
               note_crpe:    mathNotes.crpe    ?? null,
               note_globale: mathNotes.globale ?? null,
+              conseils:     extractMathConseils(final),
             });
             if (tentative === 1 && typeof onQuestionAnswered === 'function') {
               onQuestionAnswered(userId);
