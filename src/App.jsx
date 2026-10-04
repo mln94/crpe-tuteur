@@ -1118,13 +1118,15 @@ function extractConseils(text) {
 // Correction maths : les conseils ("Sur le fond", "Sur la forme") précèdent
 // les lignes "Note calcul/méthode/CRPE/globale : X/10".
 function extractMathConseils(text) {
-  const firstNote = text.search(/^[\s*_]*Note\s+(?:calcul|méthode|crpe|globale)\b/im);
-  const head = firstNote >= 0 ? text.slice(0, firstNote) : text;
-  const cleaned = head
-    .replace(/\*\*\[[A-Z0-9+>]\]\*\*/g, '')
+  const clean = (t) => t
+    .replace(/\*\*\[[A-Z0-9+>]\][^\n]*/g, '')
     .replace(/\*\*/g, '')
     .trim();
-  return cleaned || null;
+  const firstNote = text.search(/^[\s*_]*Note\s+(?:calcul|méthode|crpe|globale)\b/im);
+  const head = clean(firstNote >= 0 ? text.slice(0, firstNote) : text);
+  if (head) return head;
+  // Notes placées avant les conseils : on garde tout sauf les lignes de note.
+  return clean(text.replace(/^[\s*_]*Note\s+[^\n]*:\s*\d+\s*\/\s*10[^\n]*$/gim, '')) || null;
 }
 
 function extractNotesFromText(text) {
