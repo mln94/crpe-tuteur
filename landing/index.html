@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    (function () {
+      var h = new URLSearchParams(window.location.hash.substring(1));
+      if (h.get('type') === 'signup' && h.get('access_token')) {
+        window.dataLayer.push({ event: 'inscription_confirmee' });
+      }
+    })();
+  </script>
   <!-- Google Tag Manager -->
   <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
