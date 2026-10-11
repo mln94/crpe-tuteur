@@ -164,8 +164,12 @@
       .site-nav { padding-left: 16px; padding-right: 16px; }
       .site-nav .nav-inner { padding-left: 0; padding-right: 0; gap: 10px; }
       .site-nav .nav-actions > .nav-login { display: none; }
-      .nav-mobile-only { display: block !important; }
-      .site-nav.menu-open .nav-links .nav-mobile-only > .nav-login { border: 0; border-radius: 0; background: none; color: var(--indigo-600); font-weight: 700; font-family: inherit; cursor: pointer; }
+      .nav-mobile-only { display: flex !important; }
+      /* Boutons de compte en bas du menu mobile */
+      .site-nav.menu-open .nav-links li.nav-menu-account { gap: 10px; padding-top: 14px; }
+      .site-nav.menu-open .nav-links li.nav-menu-account > a, .site-nav.menu-open .nav-links li.nav-menu-account > button { flex: 1 1 0; display: flex; align-items: center; justify-content: center; padding: 12px 10px; font-size: 15px; font-weight: 700; font-family: inherit; text-align: center; border-radius: 10px; cursor: pointer; }
+      .site-nav.menu-open .nav-links li.nav-menu-account > .nav-login { border: 1.5px solid var(--gray-200); background: #fff; color: var(--gray-700); }
+      .site-nav.menu-open .nav-links li.nav-menu-account > .nav-cta { border: 0; background: var(--indigo-600); color: #fff; }
       .site-nav .nav-cta { padding: 8px 14px; font-size: 13px; }
       .site-nav .nav-logo-text { font-size: 16px; }
     }
@@ -244,7 +248,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li><a href="/#matieres">Matières</a></li>
       <li><a href="/crpe-par-academie">CRPE par académie</a></li>
       <li><a href="/blog" class="active">Blog</a></li>
-      <li class="nav-mobile-only"><button onclick="openAuth('login')" class="nav-login">Se connecter</button></li>
+      <li class="nav-mobile-only nav-menu-account"><button onclick="openAuth('login')" class="nav-login">Se connecter</button><button onclick="openAuth('register')" class="nav-cta cta-commencer">Créer mon compte</button></li>
     </ul>
     <div class="nav-actions">
       <button onclick="openAuth('login')" class="nav-login">Se connecter</button>
