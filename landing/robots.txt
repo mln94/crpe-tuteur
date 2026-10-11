@@ -1,0 +1,13 @@
+# robots.txt — PassCRPE
+User-agent: *
+Allow: /
+
+# Application réservée aux candidats connectés (redirige vers l'accueil sinon)
+Disallow: /app/
+# Administration et support interne
+Disallow: /admin
+Disallow: /admin-support
+# API
+Disallow: /api/
+
+Sitemap: https://www.passcrpe.fr/sitemap.xml

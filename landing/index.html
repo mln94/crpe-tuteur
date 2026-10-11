@@ -68,7 +68,7 @@
       font-family: 'Inter', system-ui, sans-serif;
       color: var(--gray-800);
       background: #fff;
-      overflow-x: hidden;
+      overflow-x: clip;
     }
 
     /* ── NAV ── */
@@ -1664,20 +1664,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }, { threshold: 0.12 });
 
   document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-  /* ── Sticky nav active link ── */
-  const sections = document.querySelectorAll('section[id], header');
-  const navLinks = document.querySelectorAll('.nav-links a');
-  window.addEventListener('scroll', () => {
-    let current = '';
-    sections.forEach(s => {
-      if (window.scrollY >= s.offsetTop - 100) current = s.id || '';
-    });
-    navLinks.forEach(a => {
-      const href = a.getAttribute('href');
-      a.style.color = href && href === `#${current}` ? 'var(--indigo-600)' : '';
-    });
-  }, { passive: true });
 
   /* ═══════════════ AUTH MODAL ═══════════════ */
 

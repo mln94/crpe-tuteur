@@ -99,10 +99,11 @@ CSS = """
     .breadcrumb a:hover { color: var(--indigo-600); }
     .breadcrumb [aria-current] { color: var(--gray-700); font-weight: 600; }
 
-    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 24px 0 8px; }
-    .kpi { border: 1px solid var(--gray-200); border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 2px; }
-    .kpi-value { font-size: 26px; font-weight: 900; color: var(--gray-900); font-variant-numeric: tabular-nums; letter-spacing: -.4px; }
-    .kpi-label { font-size: 13px; color: var(--gray-500); line-height: 1.4; }
+    .kpis { display: flex; gap: 10px; margin: 24px 0 8px; overflow-x: auto; padding-bottom: 4px; }
+    .kpi { flex: 1 1 0; min-width: 118px; }
+    .kpi { border: 1px solid var(--gray-200); border-radius: 14px; padding: 14px 14px; display: flex; flex-direction: column; gap: 2px; }
+    .kpi-value { font-size: 22px; font-weight: 900; color: var(--gray-900); font-variant-numeric: tabular-nums; letter-spacing: -.4px; }
+    .kpi-label { font-size: 12px; color: var(--gray-500); line-height: 1.35; }
     .kpi-accent { background: var(--indigo-50); border-color: var(--indigo-100); }
     .kpi-accent .kpi-value { color: var(--indigo-700); }
 
