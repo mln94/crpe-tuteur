@@ -397,7 +397,9 @@ def page_hub():
     <div class="kpi"><span class="kpi-value">{fint(TOT['postes'])}</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">{fint(TOT['inscrits'])}</span><span class="kpi-label">inscrits</span></div>
     <div class="kpi"><span class="kpi-value">{fint(TOT['presents'])}</span><span class="kpi-label">présents</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(TOT['admissibles'])}</span><span class="kpi-label">candidats admissibles</span></div>
     <div class="kpi"><span class="kpi-value">{fint(TOT['admis'])}</span><span class="kpi-label">admis</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(TOT['inscritsLC'])}</span><span class="kpi-label">candidats inscrits sur liste complémentaire</span></div>
     <div class="kpi kpi-accent"><span class="kpi-value">{fpct(TAUX_NATIONAL)}</span><span class="kpi-label">taux de réussite national (admis / présents)</span></div>
   </section>
 
