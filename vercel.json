@@ -10,6 +10,7 @@
     { "source": "/blog/crpe-bac3-structure-premiere-epreuve-admissibilite", "destination": "/crpe-bac3-structure-premiere-epreuve-admissibilite.html" },
     { "source": "/blog/salaire-professeur-des-ecoles-remuneration", "destination": "/salaire-professeur-des-ecoles-remuneration.html" },
     { "source": "/crpe-par-academie", "destination": "/crpe-par-academie.html" },
+    { "source": "/crpe-par-academie/:slug", "destination": "/academies/:slug.html" },
     { "source": "/admin-support", "destination": "/admin-support.html" },
     { "source": "/admin", "destination": "/app/index.html" }
   ]

@@ -19,20 +19,14 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CRPE par académie : postes, barres et taux de réussite 2026 | PassCRPE</title>
-  <meta name="description" content="Quelle académie choisir pour le CRPE ? Comparez les 30 académies : postes, inscrits, candidats par poste, taux de réussite, barres d'admissibilité et d'admission, avec une carte cliquable." />
-  <!-- Données d'exemple : retirer ce noindex quand les chiffres officiels sont en place -->
-  <meta name="robots" content="noindex, follow" />
+  <title>CRPE par académie : postes, admis et taux de réussite 2026 | PassCRPE</title>
+  <meta name="description" content="Quelle académie choisir pour le CRPE ? Carte de France et comparatif des 30 académies : postes, inscrits, admis, taux de réussite et sélectivité, session 2026." />
   <link rel="canonical" href="https://www.passcrpe.fr/crpe-par-academie" />
-  <meta property="og:title" content="CRPE par académie : postes, barres et taux de réussite 2026" />
-  <meta property="og:description" content="Comparez les 30 académies du CRPE : postes, candidats par poste, taux de réussite et barres, avec une carte cliquable." />
+  <meta property="og:title" content="CRPE par académie : postes, admis et taux de réussite 2026" />
+  <meta property="og:description" content="Quelle académie choisir pour le CRPE ? Carte de France et comparatif des 30 académies : postes, inscrits, admis, taux de réussite et sélectivité, session 2026." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.passcrpe.fr/crpe-par-academie" />
-  <script type="application/ld+json">
-  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
-    {"@type":"ListItem","position":1,"name":"Accueil","item":"https://www.passcrpe.fr/"},
-    {"@type":"ListItem","position":2,"name":"CRPE par académie","item":"https://www.passcrpe.fr/crpe-par-academie"}]}
-  </script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://www.passcrpe.fr/"}, {"@type": "ListItem", "position": 2, "name": "CRPE par académie", "item": "https://www.passcrpe.fr/crpe-par-academie"}]}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
@@ -134,78 +128,103 @@
     .footer-legal a { font-size: 12px; color: var(--gray-400); text-decoration: none; }
     .footer-legal a:hover { color: #fff; }
 
-    /* HUB ACADÉMIES */
-    .hub-wrap { max-width: 1040px; margin: 0 auto; padding: 32px 24px 80px; font-size: 16px; line-height: 1.75; color: var(--gray-700); }
-    .hub-wrap h2 { font-size: 24px; font-weight: 800; color: var(--gray-900); margin: 48px 0 12px; letter-spacing: -.2px; }
-    .hub-wrap h3 { font-size: 17px; font-weight: 800; color: var(--gray-900); margin: 24px 0 8px; }
-    .hub-wrap p { margin-bottom: 16px; }
-    .hub-wrap ul { margin: 0 0 18px 22px; }
-    .hub-wrap li { margin-bottom: 6px; }
-    .hub-wrap strong { color: var(--gray-900); }
+    /* ACADÉMIES */
+    .acad-wrap { max-width: 1040px; margin: 0 auto; padding: 32px 24px 80px; font-size: 16px; line-height: 1.75; color: var(--gray-700); }
+    .acad-wrap h1 { margin-bottom: 14px; }
+    .acad-wrap h2 { font-size: 24px; font-weight: 800; color: var(--gray-900); margin: 48px 0 12px; letter-spacing: -.2px; }
+    .acad-wrap h3 { font-size: 17px; font-weight: 800; color: var(--gray-900); margin: 24px 0 8px; }
+    .acad-wrap p { margin-bottom: 16px; }
+    .acad-wrap ul { margin: 0 0 18px 22px; }
+    .acad-wrap li { margin-bottom: 6px; }
+    .acad-wrap strong { color: var(--gray-900); }
+    .lead { font-size: 17px; max-width: 780px; }
     .breadcrumb { display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--gray-400); margin-bottom: 20px; }
     .breadcrumb a { color: var(--gray-500); text-decoration: none; font-weight: 600; }
     .breadcrumb a:hover { color: var(--indigo-600); }
     .breadcrumb [aria-current] { color: var(--gray-700); font-weight: 600; }
-    .demo-banner { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; border-radius: 12px; padding: 12px 16px; font-size: 14px; margin-bottom: 24px; }
-    .demo-banner strong { color: #92400e; }
-    .hub-lead { font-size: 17px; max-width: 760px; }
-    .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 28px 0 8px; }
+
+    .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 24px 0 8px; }
     .kpi { border: 1px solid var(--gray-200); border-radius: 14px; padding: 16px 18px; display: flex; flex-direction: column; gap: 2px; }
     .kpi-value { font-size: 26px; font-weight: 900; color: var(--gray-900); font-variant-numeric: tabular-nums; letter-spacing: -.4px; }
-    .kpi-label { font-size: 13px; color: var(--gray-500); }
-    @media (max-width: 720px) { .kpis { grid-template-columns: repeat(2, 1fr); } }
+    .kpi-label { font-size: 13px; color: var(--gray-500); line-height: 1.4; }
+    .kpi-accent { background: var(--indigo-50); border-color: var(--indigo-100); }
+    .kpi-accent .kpi-value { color: var(--indigo-700); }
 
-    .map-card { border: 1px solid var(--gray-200); border-radius: 16px; padding: 20px; margin: 16px 0 8px; }
-    .tile-map { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); grid-auto-rows: 64px; gap: 6px; max-width: 760px; margin: 0 auto; }
-    .tile-map-dom { grid-template-columns: repeat(5, minmax(0, 1fr)); max-width: 560px; }
-    .map-sub { text-align: center; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--gray-400); margin: 18px 0 8px !important; }
-    .tile { border: none; border-radius: 10px; color: var(--gray-900); font-family: inherit; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; padding: 4px; text-align: center; transition: transform .15s, box-shadow .15s; min-width: 0; }
-    .tile:hover, .tile:focus-visible { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(79,70,229,.25); outline: none; }
-    .tile-dark { color: #fff; }
-    .tile-name { font-size: 12px; font-weight: 700; line-height: 1.15; overflow-wrap: anywhere; }
-    .tile-val { font-size: 11px; opacity: .85; font-variant-numeric: tabular-nums; }
-    .tile-short { display: none; font-size: 10px; font-weight: 700; line-height: 1.1; }
-    .legend { display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 12px; color: var(--gray-500); margin-top: 18px; }
-    .legend-bar { width: 160px; height: 10px; border-radius: 5px; background: linear-gradient(90deg, #e0e7ff, #a5b4fc, #6366f1, #4338ca); }
-    @media (max-width: 640px) {
-      .map-card { padding: 12px; }
-      .tile-map { grid-auto-rows: 44px; gap: 3px; }
-      .tile { border-radius: 6px; padding: 2px; }
-      .tile-name { display: none; }
-      .tile-short { display: block; }
-      .tile-val { display: none; }
-    }
+    .sel { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
+    .sel::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+    .sel-tres { background: #fef2f2; color: #b91c1c; }
+    .sel-moyen { background: #fffbeb; color: #b45309; }
+    .sel-peu { background: #f0fdf4; color: #15803d; }
 
-    .hub-wrap .table-wrap { margin: 16px 0 8px; }
-    .hub-wrap table { font-size: 14px; }
-    .hub-wrap thead th { padding: 0; }
-    .hub-wrap thead th button { all: unset; box-sizing: border-box; display: block; width: 100%; padding: 12px 14px; cursor: pointer; font-weight: 700; white-space: nowrap; }
-    .hub-wrap thead th button::after { content: attr(data-arrow); margin-left: 6px; font-size: 10px; }
-    .hub-wrap thead th button:focus-visible { outline: 2px solid #fff; outline-offset: -4px; }
-    .hub-wrap td { padding: 10px 14px; white-space: nowrap; }
-    .hub-wrap .num { text-align: right; font-variant-numeric: tabular-nums; }
-    .hub-wrap thead th.num button { text-align: right; }
-    @keyframes flash { from { background: #fde68a; } to { background: transparent; } }
-    .row-flash td { animation: flash 2s ease-out; }
+    .map-card { border: 1px solid var(--gray-200); border-radius: 16px; padding: 16px; margin: 16px 0 8px; }
+    .fr-map { display: block; width: 100%; max-width: 640px; height: auto; margin: 0 auto; }
+    .fr-map .land { fill: #eef2ff; stroke: #c7d2fe; stroke-width: 1.5; stroke-linejoin: round; }
+    .fr-map a { cursor: pointer; }
+    .fr-map circle { stroke: #fff; stroke-width: 2.5; transition: r .15s; }
+    .fr-map a:hover circle, .fr-map a:focus circle { r: 10; }
+    .fr-map text { font-size: 13px; font-weight: 700; fill: var(--gray-800); paint-order: stroke; stroke: #fff; stroke-width: 4px; stroke-linejoin: round; }
+    .fr-map a:hover text, .fr-map a:focus text { fill: var(--indigo-700); text-decoration: underline; }
+    .fr-map .current circle { stroke: var(--gray-900); stroke-width: 3; }
+    .fr-map .current text { font-size: 15px; font-weight: 900; }
+    .fr-map .dim { opacity: .45; }
+    .dom-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 10px; }
+    .dom-row .label { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--gray-400); align-self: center; margin-right: 4px; }
+    .chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--gray-200); border-radius: 20px; padding: 5px 12px; font-size: 13px; font-weight: 600; color: var(--gray-800); text-decoration: none; }
+    .chip:hover { border-color: var(--indigo-600); color: var(--indigo-700); }
+    .chip.current { border-color: var(--gray-900); font-weight: 800; }
+    .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .dot-tres { background: #dc2626; } .dot-moyen { background: #f59e0b; } .dot-peu { background: #16a34a; }
+    .legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; font-size: 13px; color: var(--gray-600); margin-top: 14px; }
+    .legend span { display: inline-flex; align-items: center; gap: 6px; }
 
-    .rank-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
-    .rank-card, .region-card { border: 1px solid var(--gray-200); border-radius: 14px; padding: 16px 18px; }
-    .rank-card h3, .region-card h3 { margin: 0 0 10px; font-size: 15px; }
-    .rank-card ol { margin: 0 0 0 20px; }
-    .rank-card li, .region-card li { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; margin-bottom: 4px; }
-    .rank-card li span, .region-card li span { color: var(--gray-500); font-variant-numeric: tabular-nums; white-space: nowrap; }
-    .rank-card li button, .region-card li button { all: unset; cursor: pointer; color: var(--indigo-600); font-weight: 600; }
-    .rank-card li button:hover, .region-card li button:hover { text-decoration: underline; }
-    .rank-card ol li { display: list-item; }
-    .rank-card ol li span { float: right; }
-    .region-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
-    .region-card ul { list-style: none; margin: 0; }
+    .acad-wrap .table-wrap { margin: 16px 0 8px; }
+    .acad-wrap table { font-size: 14px; }
+    .acad-wrap thead th { padding: 0; }
+    .acad-wrap thead th button { all: unset; box-sizing: border-box; display: block; width: 100%; padding: 12px 14px; cursor: pointer; font-weight: 700; white-space: nowrap; }
+    .acad-wrap thead th button::after { content: attr(data-arrow); margin-left: 6px; font-size: 10px; }
+    .acad-wrap thead th button:focus-visible { outline: 2px solid #fff; outline-offset: -4px; }
+    .acad-wrap td { padding: 10px 14px; white-space: nowrap; }
+    .acad-wrap td a { color: var(--indigo-600); font-weight: 700; text-decoration: none; }
+    .acad-wrap td a:hover { text-decoration: underline; }
+    .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .acad-wrap thead th.num button { text-align: right; }
 
+    .region-grid, .rank-grid, .voisins-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
+    .card { border: 1px solid var(--gray-200); border-radius: 14px; padding: 16px 18px; }
+    .card h3 { margin: 0 0 8px; font-size: 15px; }
+    .region-grid ul { list-style: none; margin: 0; }
+    .region-grid li { display: flex; justify-content: space-between; align-items: center; gap: 8px; font-size: 14px; margin-bottom: 4px; }
+    .region-grid li a { color: var(--indigo-600); font-weight: 600; text-decoration: none; }
+    .region-grid li a:hover { text-decoration: underline; }
+    .rank-big { font-size: 34px; font-weight: 900; color: var(--gray-900); line-height: 1.1; }
+    .rank-big small { font-size: 15px; font-weight: 600; color: var(--gray-400); }
+    .card p { font-size: 14px; margin: 6px 0 0; }
+    a.card { display: block; text-decoration: none; color: inherit; transition: box-shadow .2s, transform .2s, border-color .2s; }
+    a.card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.06); transform: translateY(-2px); border-color: var(--indigo-100); }
+    a.card h3 { color: var(--indigo-700); }
+
+    .funnel { display: flex; flex-direction: column; gap: 10px; margin: 16px 0 8px; }
+    .funnel-row { display: grid; grid-template-columns: 120px 1fr; align-items: center; gap: 12px; font-size: 14px; }
+    .funnel-label { font-weight: 700; color: var(--gray-800); }
+    .funnel-track { background: var(--gray-100); border-radius: 8px; height: 32px; position: relative; }
+    .funnel-bar { background: var(--indigo-600); border-radius: 8px; height: 100%; min-width: 4px; }
+    .funnel-val { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-weight: 700; font-variant-numeric: tabular-nums; color: var(--gray-900); paint-order: stroke; }
+    .funnel-row.light .funnel-bar { background: #a5b4fc; }
+
+    .callout { background: var(--indigo-50); border: 1px solid var(--indigo-100); border-radius: 14px; padding: 18px 22px; margin: 20px 0 24px; font-size: 15px; }
+    .callout strong { color: var(--indigo-700); }
     .faq details { border: 1px solid var(--gray-200); border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }
     .faq summary { cursor: pointer; font-weight: 700; color: var(--gray-900); }
     .faq details p { margin: 10px 0 0; }
     .updated { font-size: 13px; color: var(--gray-400); margin-top: 32px; }
-    @media (max-width: 520px) { .nav-inner { padding: 0 16px; } .nav-login { display: none; } .nav-cta { padding: 8px 12px; } .hub-wrap { padding: 24px 16px 64px; } }
+    .back-hub { display: inline-flex; margin-top: 24px; font-weight: 700; color: var(--indigo-600); text-decoration: none; }
+    .back-hub:hover { text-decoration: underline; }
+
+    @media (max-width: 640px) {
+      .fr-map text { font-size: 17px; }
+      .funnel-row { grid-template-columns: 92px 1fr; }
+    }
+    @media (max-width: 520px) { .nav-inner { padding: 0 16px; } .nav-login { display: none; } .nav-cta { padding: 8px 12px; } .acad-wrap { padding: 24px 16px 64px; } }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
@@ -278,6 +297,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li><a href="/#crpe">Le concours</a></li>
       <li><a href="/#fonctionnalites">Fonctionnalités</a></li>
       <li><a href="/#matieres">Matières</a></li>
+      <li><a href="/crpe-par-academie">CRPE par académie</a></li>
+      <li><a href="/crpe-par-academie" class="active">CRPE par académie</a></li>
       <li><a href="/blog">Blog</a></li>
     </ul>
     <div class="nav-actions">
@@ -286,76 +307,371 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 </nav>
-<div class="hub-wrap">
+
+<div class="acad-wrap">
 
   <nav class="breadcrumb" aria-label="Fil d'Ariane">
     <a href="/">Accueil</a><span>›</span><span aria-current="page">CRPE par académie</span>
   </nav>
 
-  <div class="demo-banner">
-    <strong>Données d'exemple.</strong> Les chiffres de cette page sont fictifs et servent uniquement à présenter la mise en page. Ils seront remplacés par les données officielles.
-  </div>
-
-  <h1>CRPE par académie : postes, barres et taux de réussite 2026</h1>
-  <p class="hub-lead">On ne passe pas le CRPE « en France », mais dans <strong>une académie</strong>. C'est elle qui organise le concours, fixe ses propres barres d'admission et, si vous êtes reçu, vous affecte dans l'une de ses écoles. Choisir son académie, c'est donc choisir à la fois ses chances de réussite et l'endroit où l'on va enseigner. Cette page compare les 30 académies pour vous aider à décider.</p>
+  <h1>CRPE par académie : postes, admis et taux de réussite 2026</h1>
+  <p class="lead">On ne passe pas le CRPE « en France », mais dans <strong>une académie</strong>. C'est elle qui organise le concours et, si vous êtes reçu, vous affecte dans l'une de ses écoles. Choisir son académie, c'est donc choisir à la fois ses chances de réussite et l'endroit où l'on va enseigner. <strong>Cliquez sur une académie de la carte</strong> pour découvrir ses résultats détaillés.</p>
 
   <section class="kpis" aria-label="Chiffres nationaux">
-    <div class="kpi"><span class="kpi-value" id="kpiPostes">–</span><span class="kpi-label">postes offerts</span></div>
-    <div class="kpi"><span class="kpi-value" id="kpiInscrits">–</span><span class="kpi-label">inscrits</span></div>
-    <div class="kpi"><span class="kpi-value" id="kpiAdmis">–</span><span class="kpi-label">admis</span></div>
-    <div class="kpi"><span class="kpi-value" id="kpiTaux">–</span><span class="kpi-label">taux de réussite national</span></div>
+    <div class="kpi"><span class="kpi-value">4 873</span><span class="kpi-label">postes offerts</span></div>
+    <div class="kpi"><span class="kpi-value">49 059</span><span class="kpi-label">inscrits</span></div>
+    <div class="kpi"><span class="kpi-value">27 109</span><span class="kpi-label">présents</span></div>
+    <div class="kpi"><span class="kpi-value">4 763</span><span class="kpi-label">admis</span></div>
+    <div class="kpi kpi-accent"><span class="kpi-value">17,57 %</span><span class="kpi-label">taux de réussite national (admis / présents)</span></div>
   </section>
 
   <h2>La carte des académies</h2>
-  <p>Chaque case représente une académie, placée à peu près à sa position géographique. La couleur indique le taux de réussite : plus elle est foncée, plus l'académie est accessible. Cliquez sur une académie pour voir sa ligne dans le tableau comparatif.</p>
-
+  <p>Chaque repère représente une académie, coloré selon sa sélectivité. Cliquez dessus pour ouvrir la page de l'académie.</p>
   <div class="map-card">
-    <div class="tile-map" id="tileMap" role="list"></div>
-    <p class="map-sub">Outre-mer</p>
-    <div class="tile-map tile-map-dom" id="tileMapDom" role="list"></div>
-    <div class="legend" aria-hidden="true">
-      <span>Plus sélective</span>
-      <span class="legend-bar"></span>
-      <span>Plus accessible</span>
-    </div>
+    <svg class="fr-map" viewBox="0 0 615 605" role="img" aria-label="Carte de France des académies du CRPE">
+      <path class="land" d="M308.1,35.2 L315.0,33.0 L340.1,52.0 L376.7,77.2 L401.8,85.6 L403.7,105.2 L424.9,116.4 L444.2,122.0 L462.3,123.7 L486.6,141.6 L509.7,147.2 L532.8,151.7 L517.4,178.0 L507.8,228.4 L484.6,236.8 L465.4,264.8 L451.9,295.6 L478.9,295.6 L486.6,323.6 L478.9,334.8 L490.4,362.8 L473.1,374.0 L484.6,407.6 L505.8,424.4 L507.0,442.3 L497.0,446.8 L471.2,474.8 L444.2,480.4 L423.0,469.2 L401.8,463.6 L382.5,458.0 L355.5,469.2 L336.2,486.0 L338.9,517.4 L317.0,522.4 L282.3,514.0 L243.7,497.2 L205.2,497.2 L162.8,472.0 L148.1,465.3 L160.8,452.4 L168.6,402.0 L172.4,346.0 L170.5,329.2 L155.1,295.6 L135.8,273.2 L120.4,245.2 L101.1,234.0 L54.8,217.2 L35.6,206.0 L33.6,183.6 L51.0,169.6 L81.8,161.2 L108.8,175.2 L139.6,169.6 L158.9,170.2 L155.1,138.8 L145.4,110.8 L168.6,110.8 L172.4,130.4 L209.0,133.2 L224.4,124.8 L220.6,122.0 L239.9,102.4 L270.7,88.4 L278.4,71.6 L278.4,43.6 Z"/><path class="land" d="M579.1,486.0 L584.9,508.4 L582.9,542.0 L579.1,564.4 L571.4,577.3 L556.0,567.2 L548.3,547.6 L548.3,525.2 L552.1,508.4 L575.2,502.8 Z"/>
+      <a href="/crpe-par-academie/aix-marseille" aria-label="Académie d&#x27;Aix-Marseille : moyennement sélective, 17,34 % de réussite"><circle cx="426.8" cy="456.3" r="7" fill="#f59e0b"/><text x="426.8" y="443.3" text-anchor="middle">Aix-Marseille</text></a><a href="/crpe-par-academie/amiens" aria-label="Académie d&#x27;Amiens : moyennement sélective, 16,52 % de réussite"><circle cx="305.4" cy="100.2" r="7" fill="#f59e0b"/><text x="293.4" y="105.2" text-anchor="end">Amiens</text></a><a href="/crpe-par-academie/besancon" aria-label="Académie de Besançon : moyennement sélective, 17,57 % de réussite"><circle cx="448.8" cy="248.6" r="7" fill="#f59e0b"/><text x="460.8" y="253.6" text-anchor="start">Besançon</text></a><a href="/crpe-par-academie/bordeaux" aria-label="Académie de Bordeaux : moyennement sélective, 12,71 % de réussite"><circle cx="194.4" cy="383.0" r="7" fill="#f59e0b"/><text x="182.4" y="388.0" text-anchor="end">Bordeaux</text></a><a href="/crpe-par-academie/clermont-ferrand" aria-label="Académie de Clermont-Ferrand : très sélective, 10,22 % de réussite"><circle cx="335.5" cy="330.3" r="7" fill="#dc2626"/><text x="335.5" y="353.3" text-anchor="middle">Clermont-Ferrand</text></a><a href="/crpe-par-academie/corse" aria-label="Académie de Corse : très sélective, 8,55 % de réussite"><circle cx="553.6" cy="545.9" r="7" fill="#dc2626"/><text x="565.6" y="550.9" text-anchor="start">Corse</text></a><a href="/crpe-par-academie/creteil" aria-label="Académie de Créteil : peu sélective, 49,25 % de réussite"><circle cx="326.6" cy="165.7" r="7" fill="#16a34a"/><text x="338.6" y="170.7" text-anchor="start">Créteil</text></a><a href="/crpe-par-academie/dijon" aria-label="Académie de Dijon : moyennement sélective, 19,09 % de réussite"><circle cx="411.0" cy="244.1" r="7" fill="#f59e0b"/><text x="399.0" y="249.1" text-anchor="end">Dijon</text></a><a href="/crpe-par-academie/grenoble" aria-label="Académie de Grenoble : peu sélective, 26,63 % de réussite"><circle cx="437.2" cy="363.4" r="7" fill="#16a34a"/><text x="449.2" y="368.4" text-anchor="start">Grenoble</text></a><a href="/crpe-par-academie/lille" aria-label="Académie de Lille : très sélective, 9,31 % de réussite"><circle cx="334.7" cy="58.7" r="7" fill="#dc2626"/><text x="346.7" y="63.7" text-anchor="start">Lille</text></a><a href="/crpe-par-academie/limoges" aria-label="Académie de Limoges : très sélective, 9,73 % de réussite"><circle cx="265.3" cy="327.5" r="7" fill="#dc2626"/><text x="253.3" y="332.5" text-anchor="end">Limoges</text></a><a href="/crpe-par-academie/lyon" aria-label="Académie de Lyon : moyennement sélective, 12,61 % de réussite"><circle cx="403.3" cy="331.4" r="7" fill="#f59e0b"/><text x="391.3" y="336.4" text-anchor="end">Lyon</text></a><a href="/crpe-par-academie/montpellier" aria-label="Académie de Montpellier : très sélective, 10,49 % de réussite"><circle cx="366.3" cy="451.8" r="7" fill="#dc2626"/><text x="366.3" y="474.8" text-anchor="middle">Montpellier</text></a><a href="/crpe-par-academie/nancy-metz" aria-label="Académie de Nancy-Metz : peu sélective, 20,86 % de réussite"><circle cx="455.0" cy="167.4" r="7" fill="#16a34a"/><text x="455.0" y="154.4" text-anchor="middle">Nancy-Metz</text></a><a href="/crpe-par-academie/nantes" aria-label="Académie de Nantes : moyennement sélective, 11,62 % de réussite"><circle cx="157.0" cy="249.7" r="7" fill="#f59e0b"/><text x="145.0" y="254.7" text-anchor="end">Nantes</text></a><a href="/crpe-par-academie/nice" aria-label="Académie de Nice : peu sélective, 19,64 % de réussite"><circle cx="496.6" cy="446.8" r="7" fill="#16a34a"/><text x="508.6" y="451.8" text-anchor="start">Nice</text></a><a href="/crpe-par-academie/normandie" aria-label="Académie de Normandie : moyennement sélective, 16,40 % de réussite"><circle cx="202.5" cy="139.9" r="7" fill="#f59e0b"/><text x="190.5" y="144.9" text-anchor="end">Normandie</text></a><a href="/crpe-par-academie/orleans-tours" aria-label="Académie d&#x27;Orléans-Tours : peu sélective, 27,33 % de réussite"><circle cx="290.4" cy="211.6" r="7" fill="#16a34a"/><text x="290.4" y="234.6" text-anchor="middle">Orléans-Tours</text></a><a href="/crpe-par-academie/paris" aria-label="Académie de Paris : peu sélective, 30,11 % de réussite"><circle cx="307.3" cy="150.0" r="7" fill="#16a34a"/><text x="307.3" y="137.0" text-anchor="middle">Paris</text></a><a href="/crpe-par-academie/poitiers" aria-label="Académie de Poitiers : moyennement sélective, 11,03 % de réussite"><circle cx="229.8" cy="285.5" r="7" fill="#f59e0b"/><text x="217.8" y="290.5" text-anchor="end">Poitiers</text></a><a href="/crpe-par-academie/reims" aria-label="Académie de Reims : moyennement sélective, 12,42 % de réussite"><circle cx="372.1" cy="135.4" r="7" fill="#f59e0b"/><text x="384.1" y="140.4" text-anchor="start">Reims</text></a><a href="/crpe-par-academie/rennes" aria-label="Académie de Rennes : très sélective, 6,86 % de réussite"><circle cx="152.0" cy="199.8" r="7" fill="#dc2626"/><text x="140.0" y="204.8" text-anchor="end">Rennes</text></a><a href="/crpe-par-academie/strasbourg" aria-label="Académie de Strasbourg : moyennement sélective, 15,88 % de réussite"><circle cx="515.5" cy="173.5" r="7" fill="#f59e0b"/><text x="515.5" y="196.5" text-anchor="middle">Strasbourg</text></a><a href="/crpe-par-academie/toulouse" aria-label="Académie de Toulouse : moyennement sélective, 11,53 % de réussite"><circle cx="272.2" cy="452.4" r="7" fill="#f59e0b"/><text x="272.2" y="475.4" text-anchor="middle">Toulouse</text></a><a href="/crpe-par-academie/versailles" aria-label="Académie de Versailles : peu sélective, 57,43 % de réussite"><circle cx="288.1" cy="164.0" r="7" fill="#16a34a"/><text x="276.1" y="169.0" text-anchor="end">Versailles</text></a>
+    </svg>
+    <div class="dom-row"><span class="label">Outre-mer</span><a class="chip" href="/crpe-par-academie/guadeloupe"><span class="dot dot-moyen"></span>Guadeloupe</a><a class="chip" href="/crpe-par-academie/guyane"><span class="dot dot-moyen"></span>Guyane</a><a class="chip" href="/crpe-par-academie/la-reunion"><span class="dot dot-tres"></span>La Réunion</a><a class="chip" href="/crpe-par-academie/martinique"><span class="dot dot-tres"></span>Martinique</a><a class="chip" href="/crpe-par-academie/mayotte"><span class="dot dot-peu"></span>Mayotte</a></div>
+    <div class="legend"><span><span class="dot dot-tres"></span>Très sélective</span><span><span class="dot dot-moyen"></span>Moyennement sélective</span><span><span class="dot dot-peu"></span>Peu sélective</span></div>
   </div>
 
   <h2>Le tableau comparatif des 30 académies</h2>
-  <p>Cliquez sur un en-tête de colonne pour trier le tableau. La barre d'admissibilité est la note minimale (sur 20) pour être convoqué aux oraux ; la barre d'admission est la note minimale pour être reçu au concours.</p>
-
+  <p>Cliquez sur un en-tête de colonne pour trier le tableau, et sur le nom d'une académie pour voir sa page.</p>
   <div class="table-wrap">
     <table id="acadTable">
       <thead>
         <tr>
-          <th><button data-sort="nom">Académie</button></th>
-          <th><button data-sort="region">Région académique</button></th>
-          <th class="num"><button data-sort="postes">Postes</button></th>
-          <th class="num"><button data-sort="inscrits">Inscrits</button></th>
-          <th class="num"><button data-sort="ratio">Candidats par poste</button></th>
-          <th class="num"><button data-sort="taux">Taux de réussite</button></th>
-          <th class="num"><button data-sort="barreAdmissibilite">Barre d'admissibilité</button></th>
-          <th class="num"><button data-sort="barreAdmission">Barre d'admission</button></th>
+          <th><button type="button" data-col="0" data-type="text">Académie</button></th>
+          <th class="num"><button type="button" data-col="1">Postes</button></th>
+          <th class="num"><button type="button" data-col="2">Inscrits</button></th>
+          <th class="num"><button type="button" data-col="3">Présents</button></th>
+          <th class="num"><button type="button" data-col="4">Admissibles</button></th>
+          <th class="num"><button type="button" data-col="5">Admis</button></th>
+          <th class="num"><button type="button" data-col="6">Taux de réussite</button></th>
+          <th><button type="button" data-col="7">Sélectivité</button></th>
         </tr>
       </thead>
-      <tbody id="acadBody"></tbody>
+      <tbody>
+        <tr>
+          <td data-v="Aix-Marseille"><a href="/crpe-par-academie/aix-marseille">Aix-Marseille</a></td>
+          <td class="num" data-v="227">227</td>
+          <td class="num" data-v="2500">2 500</td>
+          <td class="num" data-v="1309">1 309</td>
+          <td class="num" data-v="585">585</td>
+          <td class="num" data-v="227">227</td>
+          <td class="num" data-v="0.173415">17,34 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Amiens"><a href="/crpe-par-academie/amiens">Amiens</a></td>
+          <td class="num" data-v="148">148</td>
+          <td class="num" data-v="1445">1 445</td>
+          <td class="num" data-v="896">896</td>
+          <td class="num" data-v="383">383</td>
+          <td class="num" data-v="148">148</td>
+          <td class="num" data-v="0.165179">16,52 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Besançon"><a href="/crpe-par-academie/besancon">Besançon</a></td>
+          <td class="num" data-v="91">91</td>
+          <td class="num" data-v="881">881</td>
+          <td class="num" data-v="518">518</td>
+          <td class="num" data-v="291">291</td>
+          <td class="num" data-v="91">91</td>
+          <td class="num" data-v="0.175676">17,57 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Bordeaux"><a href="/crpe-par-academie/bordeaux">Bordeaux</a></td>
+          <td class="num" data-v="200">200</td>
+          <td class="num" data-v="2882">2 882</td>
+          <td class="num" data-v="1636">1 636</td>
+          <td class="num" data-v="541">541</td>
+          <td class="num" data-v="208">208</td>
+          <td class="num" data-v="0.127139">12,71 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Clermont-Ferrand"><a href="/crpe-par-academie/clermont-ferrand">Clermont-Ferrand</a></td>
+          <td class="num" data-v="57">57</td>
+          <td class="num" data-v="997">997</td>
+          <td class="num" data-v="558">558</td>
+          <td class="num" data-v="176">176</td>
+          <td class="num" data-v="57">57</td>
+          <td class="num" data-v="0.102151">10,22 %</td>
+          <td data-v="0"><span class="sel sel-tres">Très sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Corse"><a href="/crpe-par-academie/corse">Corse</a></td>
+          <td class="num" data-v="10">10</td>
+          <td class="num" data-v="263">263</td>
+          <td class="num" data-v="117">117</td>
+          <td class="num" data-v="41">41</td>
+          <td class="num" data-v="10">10</td>
+          <td class="num" data-v="0.085470">8,55 %</td>
+          <td data-v="0"><span class="sel sel-tres">Très sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Créteil"><a href="/crpe-par-academie/creteil">Créteil</a></td>
+          <td class="num" data-v="560">560</td>
+          <td class="num" data-v="2530">2 530</td>
+          <td class="num" data-v="1137">1 137</td>
+          <td class="num" data-v="873">873</td>
+          <td class="num" data-v="560">560</td>
+          <td class="num" data-v="0.492524">49,25 %</td>
+          <td data-v="2"><span class="sel sel-peu">Peu sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Dijon"><a href="/crpe-par-academie/dijon">Dijon</a></td>
+          <td class="num" data-v="101">101</td>
+          <td class="num" data-v="961">961</td>
+          <td class="num" data-v="529">529</td>
+          <td class="num" data-v="306">306</td>
+          <td class="num" data-v="101">101</td>
+          <td class="num" data-v="0.190926">19,09 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Grenoble"><a href="/crpe-par-academie/grenoble">Grenoble</a></td>
+          <td class="num" data-v="241">241</td>
+          <td class="num" data-v="1849">1 849</td>
+          <td class="num" data-v="905">905</td>
+          <td class="num" data-v="531">531</td>
+          <td class="num" data-v="241">241</td>
+          <td class="num" data-v="0.266298">26,63 %</td>
+          <td data-v="2"><span class="sel sel-peu">Peu sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Guadeloupe"><a href="/crpe-par-academie/guadeloupe">Guadeloupe</a></td>
+          <td class="num" data-v="23">23</td>
+          <td class="num" data-v="341">341</td>
+          <td class="num" data-v="166">166</td>
+          <td class="num" data-v="47">47</td>
+          <td class="num" data-v="23">23</td>
+          <td class="num" data-v="0.138554">13,86 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Guyane"><a href="/crpe-par-academie/guyane">Guyane</a></td>
+          <td class="num" data-v="106">106</td>
+          <td class="num" data-v="382">382</td>
+          <td class="num" data-v="197">197</td>
+          <td class="num" data-v="62">62</td>
+          <td class="num" data-v="27">27</td>
+          <td class="num" data-v="0.137056">13,71 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="La Réunion"><a href="/crpe-par-academie/la-reunion">La Réunion</a></td>
+          <td class="num" data-v="68">68</td>
+          <td class="num" data-v="1987">1 987</td>
+          <td class="num" data-v="1195">1 195</td>
+          <td class="num" data-v="236">236</td>
+          <td class="num" data-v="68">68</td>
+          <td class="num" data-v="0.056904">5,69 %</td>
+          <td data-v="0"><span class="sel sel-tres">Très sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Lille"><a href="/crpe-par-academie/lille">Lille</a></td>
+          <td class="num" data-v="255">255</td>
+          <td class="num" data-v="4208">4 208</td>
+          <td class="num" data-v="2739">2 739</td>
+          <td class="num" data-v="640">640</td>
+          <td class="num" data-v="255">255</td>
+          <td class="num" data-v="0.093100">9,31 %</td>
+          <td data-v="0"><span class="sel sel-tres">Très sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Limoges"><a href="/crpe-par-academie/limoges">Limoges</a></td>
+          <td class="num" data-v="33">33</td>
+          <td class="num" data-v="584">584</td>
+          <td class="num" data-v="339">339</td>
+          <td class="num" data-v="66">66</td>
+          <td class="num" data-v="33">33</td>
+          <td class="num" data-v="0.097345">9,73 %</td>
+          <td data-v="0"><span class="sel sel-tres">Très sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Lyon"><a href="/crpe-par-academie/lyon">Lyon</a></td>
+          <td class="num" data-v="174">174</td>
+          <td class="num" data-v="2464">2 464</td>
+          <td class="num" data-v="1380">1 380</td>
+          <td class="num" data-v="383">383</td>
+          <td class="num" data-v="174">174</td>
+          <td class="num" data-v="0.126087">12,61 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Martinique"><a href="/crpe-par-academie/martinique">Martinique</a></td>
+          <td class="num" data-v="19">19</td>
+          <td class="num" data-v="374">374</td>
+          <td class="num" data-v="173">173</td>
+          <td class="num" data-v="41">41</td>
+          <td class="num" data-v="19">19</td>
+          <td class="num" data-v="0.109827">10,98 %</td>
+          <td data-v="0"><span class="sel sel-tres">Très sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Mayotte"><a href="/crpe-par-academie/mayotte">Mayotte</a></td>
+          <td class="num" data-v="125">125</td>
+          <td class="num" data-v="764">764</td>
+          <td class="num" data-v="474">474</td>
+          <td class="num" data-v="200">200</td>
+          <td class="num" data-v="125">125</td>
+          <td class="num" data-v="0.263713">26,37 %</td>
+          <td data-v="2"><span class="sel sel-peu">Peu sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Montpellier"><a href="/crpe-par-academie/montpellier">Montpellier</a></td>
+          <td class="num" data-v="153">153</td>
+          <td class="num" data-v="2667">2 667</td>
+          <td class="num" data-v="1458">1 458</td>
+          <td class="num" data-v="442">442</td>
+          <td class="num" data-v="153">153</td>
+          <td class="num" data-v="0.104938">10,49 %</td>
+          <td data-v="0"><span class="sel sel-tres">Très sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Nancy-Metz"><a href="/crpe-par-academie/nancy-metz">Nancy-Metz</a></td>
+          <td class="num" data-v="179">179</td>
+          <td class="num" data-v="1365">1 365</td>
+          <td class="num" data-v="863">863</td>
+          <td class="num" data-v="358">358</td>
+          <td class="num" data-v="180">180</td>
+          <td class="num" data-v="0.208575">20,86 %</td>
+          <td data-v="2"><span class="sel sel-peu">Peu sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Nantes"><a href="/crpe-par-academie/nantes">Nantes</a></td>
+          <td class="num" data-v="127">127</td>
+          <td class="num" data-v="2104">2 104</td>
+          <td class="num" data-v="1093">1 093</td>
+          <td class="num" data-v="215">215</td>
+          <td class="num" data-v="127">127</td>
+          <td class="num" data-v="0.116194">11,62 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Nice"><a href="/crpe-par-academie/nice">Nice</a></td>
+          <td class="num" data-v="190">190</td>
+          <td class="num" data-v="1817">1 817</td>
+          <td class="num" data-v="947">947</td>
+          <td class="num" data-v="295">295</td>
+          <td class="num" data-v="186">186</td>
+          <td class="num" data-v="0.196410">19,64 %</td>
+          <td data-v="2"><span class="sel sel-peu">Peu sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Normandie"><a href="/crpe-par-academie/normandie">Normandie</a></td>
+          <td class="num" data-v="234">234</td>
+          <td class="num" data-v="2407">2 407</td>
+          <td class="num" data-v="1427">1 427</td>
+          <td class="num" data-v="468">468</td>
+          <td class="num" data-v="234">234</td>
+          <td class="num" data-v="0.163980">16,40 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Orléans-Tours"><a href="/crpe-par-academie/orleans-tours">Orléans-Tours</a></td>
+          <td class="num" data-v="202">202</td>
+          <td class="num" data-v="1373">1 373</td>
+          <td class="num" data-v="739">739</td>
+          <td class="num" data-v="506">506</td>
+          <td class="num" data-v="202">202</td>
+          <td class="num" data-v="0.273342">27,33 %</td>
+          <td data-v="2"><span class="sel sel-peu">Peu sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Paris"><a href="/crpe-par-academie/paris">Paris</a></td>
+          <td class="num" data-v="131">131</td>
+          <td class="num" data-v="1203">1 203</td>
+          <td class="num" data-v="435">435</td>
+          <td class="num" data-v="329">329</td>
+          <td class="num" data-v="131">131</td>
+          <td class="num" data-v="0.301149">30,11 %</td>
+          <td data-v="2"><span class="sel sel-peu">Peu sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Poitiers"><a href="/crpe-par-academie/poitiers">Poitiers</a></td>
+          <td class="num" data-v="77">77</td>
+          <td class="num" data-v="1208">1 208</td>
+          <td class="num" data-v="698">698</td>
+          <td class="num" data-v="254">254</td>
+          <td class="num" data-v="77">77</td>
+          <td class="num" data-v="0.110315">11,03 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Reims"><a href="/crpe-par-academie/reims">Reims</a></td>
+          <td class="num" data-v="77">77</td>
+          <td class="num" data-v="956">956</td>
+          <td class="num" data-v="620">620</td>
+          <td class="num" data-v="216">216</td>
+          <td class="num" data-v="77">77</td>
+          <td class="num" data-v="0.124194">12,42 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Rennes"><a href="/crpe-par-academie/rennes">Rennes</a></td>
+          <td class="num" data-v="71">71</td>
+          <td class="num" data-v="2076">2 076</td>
+          <td class="num" data-v="1122">1 122</td>
+          <td class="num" data-v="177">177</td>
+          <td class="num" data-v="77">77</td>
+          <td class="num" data-v="0.068627">6,86 %</td>
+          <td data-v="0"><span class="sel sel-tres">Très sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Strasbourg"><a href="/crpe-par-academie/strasbourg">Strasbourg</a></td>
+          <td class="num" data-v="111">111</td>
+          <td class="num" data-v="1207">1 207</td>
+          <td class="num" data-v="699">699</td>
+          <td class="num" data-v="260">260</td>
+          <td class="num" data-v="111">111</td>
+          <td class="num" data-v="0.158798">15,88 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Toulouse"><a href="/crpe-par-academie/toulouse">Toulouse</a></td>
+          <td class="num" data-v="184">184</td>
+          <td class="num" data-v="2780">2 780</td>
+          <td class="num" data-v="1596">1 596</td>
+          <td class="num" data-v="544">544</td>
+          <td class="num" data-v="184">184</td>
+          <td class="num" data-v="0.115288">11,53 %</td>
+          <td data-v="1"><span class="sel sel-moyen">Moyennement sélective</span></td>
+        </tr>
+        <tr>
+          <td data-v="Versailles"><a href="/crpe-par-academie/versailles">Versailles</a></td>
+          <td class="num" data-v="699">699</td>
+          <td class="num" data-v="2484">2 484</td>
+          <td class="num" data-v="1144">1 144</td>
+          <td class="num" data-v="891">891</td>
+          <td class="num" data-v="657">657</td>
+          <td class="num" data-v="0.574301">57,43 %</td>
+          <td data-v="2"><span class="sel sel-peu">Peu sélective</span></td>
+        </tr>
+      </tbody>
     </table>
   </div>
 
-  <h2>Les classements</h2>
-  <div class="rank-grid">
-    <div class="rank-card"><h3>Le plus de postes</h3><ol id="rankPostes"></ol></div>
-    <div class="rank-card"><h3>Les plus accessibles</h3><ol id="rankAccessibles"></ol></div>
-    <div class="rank-card"><h3>Les plus sélectives</h3><ol id="rankSelectives"></ol></div>
-    <div class="rank-card"><h3>Plus fortes hausses de postes</h3><ol id="rankHausses"></ol></div>
-  </div>
+  <h2>Comment est calculée la sélectivité ?</h2>
+  <p>Pour classer les académies, nous avons calculé pour chacune le <strong>taux de réussite</strong> : le nombre d'admis divisé par le nombre de candidats présents aux épreuves. Les académies sont ensuite réparties en trois groupes :</p>
+  <ul>
+    <li><span class="sel sel-tres">Très sélective</span> : les 25 % d'académies au taux de réussite le plus bas ;</li>
+    <li><span class="sel sel-moyen">Moyennement sélective</span> : les 50 % du milieu ;</li>
+    <li><span class="sel sel-peu">Peu sélective</span> : les 25 % au taux de réussite le plus haut.</li>
+  </ul>
 
   <h2>Les académies par région académique</h2>
   <p>Les académies sont regroupées en <strong>régions académiques</strong>. L'Île-de-France, par exemple, compte trois académies : Paris, Créteil et Versailles. Si vous hésitez entre deux académies proches de chez vous, comparez d'abord celles de votre région.</p>
-  <div class="region-grid" id="regionGrid"></div>
+  <div class="region-grid"><div class="card"><h3>Auvergne-Rhône-Alpes</h3><ul><li><a href="/crpe-par-academie/clermont-ferrand">Clermont-Ferrand</a><span class="dot dot-tres" title="Très sélective"></span></li><li><a href="/crpe-par-academie/grenoble">Grenoble</a><span class="dot dot-peu" title="Peu sélective"></span></li><li><a href="/crpe-par-academie/lyon">Lyon</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li></ul></div><div class="card"><h3>Bourgogne-Franche-Comté</h3><ul><li><a href="/crpe-par-academie/besancon">Besançon</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li><li><a href="/crpe-par-academie/dijon">Dijon</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li></ul></div><div class="card"><h3>Bretagne</h3><ul><li><a href="/crpe-par-academie/rennes">Rennes</a><span class="dot dot-tres" title="Très sélective"></span></li></ul></div><div class="card"><h3>Centre-Val de Loire</h3><ul><li><a href="/crpe-par-academie/orleans-tours">Orléans-Tours</a><span class="dot dot-peu" title="Peu sélective"></span></li></ul></div><div class="card"><h3>Corse</h3><ul><li><a href="/crpe-par-academie/corse">Corse</a><span class="dot dot-tres" title="Très sélective"></span></li></ul></div><div class="card"><h3>Grand Est</h3><ul><li><a href="/crpe-par-academie/nancy-metz">Nancy-Metz</a><span class="dot dot-peu" title="Peu sélective"></span></li><li><a href="/crpe-par-academie/reims">Reims</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li><li><a href="/crpe-par-academie/strasbourg">Strasbourg</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li></ul></div><div class="card"><h3>Guadeloupe</h3><ul><li><a href="/crpe-par-academie/guadeloupe">Guadeloupe</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li></ul></div><div class="card"><h3>Guyane</h3><ul><li><a href="/crpe-par-academie/guyane">Guyane</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li></ul></div><div class="card"><h3>Hauts-de-France</h3><ul><li><a href="/crpe-par-academie/amiens">Amiens</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li><li><a href="/crpe-par-academie/lille">Lille</a><span class="dot dot-tres" title="Très sélective"></span></li></ul></div><div class="card"><h3>Île-de-France</h3><ul><li><a href="/crpe-par-academie/creteil">Créteil</a><span class="dot dot-peu" title="Peu sélective"></span></li><li><a href="/crpe-par-academie/paris">Paris</a><span class="dot dot-peu" title="Peu sélective"></span></li><li><a href="/crpe-par-academie/versailles">Versailles</a><span class="dot dot-peu" title="Peu sélective"></span></li></ul></div><div class="card"><h3>La Réunion</h3><ul><li><a href="/crpe-par-academie/la-reunion">La Réunion</a><span class="dot dot-tres" title="Très sélective"></span></li></ul></div><div class="card"><h3>Martinique</h3><ul><li><a href="/crpe-par-academie/martinique">Martinique</a><span class="dot dot-tres" title="Très sélective"></span></li></ul></div><div class="card"><h3>Mayotte</h3><ul><li><a href="/crpe-par-academie/mayotte">Mayotte</a><span class="dot dot-peu" title="Peu sélective"></span></li></ul></div><div class="card"><h3>Normandie</h3><ul><li><a href="/crpe-par-academie/normandie">Normandie</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li></ul></div><div class="card"><h3>Nouvelle-Aquitaine</h3><ul><li><a href="/crpe-par-academie/bordeaux">Bordeaux</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li><li><a href="/crpe-par-academie/limoges">Limoges</a><span class="dot dot-tres" title="Très sélective"></span></li><li><a href="/crpe-par-academie/poitiers">Poitiers</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li></ul></div><div class="card"><h3>Occitanie</h3><ul><li><a href="/crpe-par-academie/montpellier">Montpellier</a><span class="dot dot-tres" title="Très sélective"></span></li><li><a href="/crpe-par-academie/toulouse">Toulouse</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li></ul></div><div class="card"><h3>Pays de la Loire</h3><ul><li><a href="/crpe-par-academie/nantes">Nantes</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li></ul></div><div class="card"><h3>Provence-Alpes-Côte d&#x27;Azur</h3><ul><li><a href="/crpe-par-academie/aix-marseille">Aix-Marseille</a><span class="dot dot-moyen" title="Moyennement sélective"></span></li><li><a href="/crpe-par-academie/nice">Nice</a><span class="dot dot-peu" title="Peu sélective"></span></li></ul></div></div>
 
   <h2>Comment choisir son académie pour le CRPE ?</h2>
   <ul>
-    <li><strong>Vos chances de réussite :</strong> regardez le nombre de candidats par poste et la barre d'admission. Une académie avec beaucoup de postes et peu de candidats par poste est en général plus accessible.</li>
+    <li><strong>Vos chances de réussite :</strong> regardez le taux de réussite et le nombre de candidats présents par poste. Une académie avec beaucoup de postes et peu de candidats est en général plus accessible.</li>
     <li><strong>Votre lieu de vie :</strong> si vous êtes reçu, vous serez affecté dans une école de cette académie. Une académie plus accessible mais loin de chez vous implique un déménagement, et un coût de la vie parfois plus élevé.</li>
     <li><strong>Votre affectation probable :</strong> dans une grande académie, l'école où vous serez affecté peut être loin de la ville principale. Renseignez-vous sur les départements qui la composent.</li>
   </ul>
@@ -367,7 +683,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="faq">
     <details>
       <summary>Quelle est l'académie la plus facile au CRPE ?</summary>
-      <p>Il n'y a pas d'académie « facile », mais certaines sont nettement plus accessibles que d'autres : celles qui offrent beaucoup de postes pour relativement peu de candidats. Triez le tableau ci-dessus par taux de réussite ou par nombre de candidats par poste pour les repérer, et tenez compte de l'endroit où vous êtes prêt à vivre.</p>
+      <p>Il n'y a pas d'académie « facile », mais certaines sont nettement plus accessibles. Lors de la session 2026, les taux de réussite les plus élevés étaient ceux de <a href="/crpe-par-academie/versailles" style="color:#4f46e5;font-weight:600;">Versailles</a> (57,43 %), <a href="/crpe-par-academie/creteil" style="color:#4f46e5;font-weight:600;">Créteil</a> (49,25 %), <a href="/crpe-par-academie/paris" style="color:#4f46e5;font-weight:600;">Paris</a> (30,11 %). À l'inverse, les plus bas étaient ceux de <a href="/crpe-par-academie/la-reunion" style="color:#4f46e5;font-weight:600;">La Réunion</a> (5,69 %), <a href="/crpe-par-academie/rennes" style="color:#4f46e5;font-weight:600;">Rennes</a> (6,86 %), <a href="/crpe-par-academie/corse" style="color:#4f46e5;font-weight:600;">Corse</a> (8,55 %).</p>
     </details>
     <details>
       <summary>Combien y a-t-il d'académies ?</summary>
@@ -403,7 +719,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
-  <p class="updated">Dernière mise à jour : 11 octobre 2026 · Sources : à venir (données d'exemple)</p>
+  <p class="updated">Dernière mise à jour : 11 octobre 2026 · Données : résultats du CRPE, session 2026</p>
 
   <div class="article-cta">
     <h3>Préparez le CRPE dans votre académie avec PassCRPE</h3>
@@ -414,142 +730,35 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <script>
-  // DONNÉES D'EXEMPLE (fictives) : à remplacer par les chiffres officiels.
-  // r/c = position approximative sur la carte en cases ; dom = outre-mer.
-  const ACADEMIES = [
-    { nom:'Lille', region:'Hauts-de-France', r:0, c:3, postes:780, postesAvant:720, inscrits:3900, admis:780, barreAdmissibilite:9.8, barreAdmission:10.4 },
-    { nom:'Normandie', region:'Normandie', r:1, c:1, postes:420, postesAvant:430, inscrits:2300, admis:420, barreAdmissibilite:10.6, barreAdmission:11.1 },
-    { nom:'Amiens', region:'Hauts-de-France', r:1, c:2, postes:360, postesAvant:320, inscrits:1400, admis:360, barreAdmissibilite:8.9, barreAdmission:9.6 },
-    { nom:'Reims', region:'Grand Est', r:1, c:4, postes:290, postesAvant:270, inscrits:1200, admis:290, barreAdmissibilite:9.1, barreAdmission:9.8 },
-    { nom:'Nancy-Metz', region:'Grand Est', r:1, c:5, postes:410, postesAvant:400, inscrits:2000, admis:410, barreAdmissibilite:9.9, barreAdmission:10.5 },
-    { nom:'Strasbourg', region:'Grand Est', r:1, c:6, postes:350, postesAvant:340, inscrits:1600, admis:350, barreAdmissibilite:9.6, barreAdmission:10.2 },
-    { nom:'Rennes', region:'Bretagne', r:2, c:0, postes:330, postesAvant:350, inscrits:2900, admis:330, barreAdmissibilite:12.1, barreAdmission:12.6 },
-    { nom:'Versailles', region:'Île-de-France', r:2, c:2, postes:1450, postesAvant:1300, inscrits:4800, admis:1450, barreAdmissibilite:8.4, barreAdmission:9.1 },
-    { nom:'Paris', region:'Île-de-France', r:2, c:3, postes:310, postesAvant:300, inscrits:2600, admis:310, barreAdmissibilite:11.8, barreAdmission:12.3 },
-    { nom:'Créteil', region:'Île-de-France', r:2, c:4, postes:1700, postesAvant:1500, inscrits:4200, admis:1700, barreAdmissibilite:7.6, barreAdmission:8.4 },
-    { nom:'Nantes', region:'Pays de la Loire', r:3, c:1, postes:450, postesAvant:460, inscrits:3400, admis:450, barreAdmissibilite:11.9, barreAdmission:12.4 },
-    { nom:'Orléans-Tours', region:'Centre-Val de Loire', r:3, c:2, postes:480, postesAvant:430, inscrits:2000, admis:480, barreAdmissibilite:9.3, barreAdmission:9.9 },
-    { nom:'Dijon', region:'Bourgogne-Franche-Comté', r:3, c:4, postes:260, postesAvant:250, inscrits:1300, admis:260, barreAdmissibilite:10.1, barreAdmission:10.7 },
-    { nom:'Besançon', region:'Bourgogne-Franche-Comté', r:3, c:5, postes:210, postesAvant:220, inscrits:1100, admis:210, barreAdmissibilite:10.3, barreAdmission:10.9 },
-    { nom:'Poitiers', region:'Nouvelle-Aquitaine', r:4, c:1, postes:280, postesAvant:280, inscrits:1700, admis:280, barreAdmissibilite:11.2, barreAdmission:11.7 },
-    { nom:'Limoges', region:'Nouvelle-Aquitaine', r:4, c:2, postes:120, postesAvant:130, inscrits:700, admis:120, barreAdmissibilite:11.0, barreAdmission:11.6 },
-    { nom:'Clermont-Ferrand', region:'Auvergne-Rhône-Alpes', r:4, c:3, postes:230, postesAvant:230, inscrits:1400, admis:230, barreAdmissibilite:11.3, barreAdmission:11.8 },
-    { nom:'Lyon', region:'Auvergne-Rhône-Alpes', r:4, c:4, postes:620, postesAvant:600, inscrits:3600, admis:620, barreAdmissibilite:11.1, barreAdmission:11.6 },
-    { nom:'Grenoble', region:'Auvergne-Rhône-Alpes', r:4, c:5, postes:590, postesAvant:560, inscrits:3100, admis:590, barreAdmissibilite:10.8, barreAdmission:11.3 },
-    { nom:'Bordeaux', region:'Nouvelle-Aquitaine', r:5, c:1, postes:520, postesAvant:540, inscrits:3800, admis:520, barreAdmissibilite:12.0, barreAdmission:12.5 },
-    { nom:'Toulouse', region:'Occitanie', r:5, c:2, postes:540, postesAvant:560, inscrits:4100, admis:540, barreAdmissibilite:12.3, barreAdmission:12.8 },
-    { nom:'Montpellier', region:'Occitanie', r:5, c:3, postes:480, postesAvant:470, inscrits:3500, admis:480, barreAdmissibilite:12.2, barreAdmission:12.7 },
-    { nom:'Aix-Marseille', region:'Provence-Alpes-Côte d\'Azur', r:5, c:4, postes:560, postesAvant:520, inscrits:3300, admis:560, barreAdmissibilite:10.9, barreAdmission:11.5 },
-    { nom:'Nice', region:'Provence-Alpes-Côte d\'Azur', r:5, c:5, postes:310, postesAvant:300, inscrits:1900, admis:310, barreAdmissibilite:11.4, barreAdmission:11.9 },
-    { nom:'Corse', region:'Corse', r:6, c:6, postes:45, postesAvant:40, inscrits:330, admis:45, barreAdmissibilite:11.6, barreAdmission:12.1 },
-    { nom:'Guadeloupe', region:'Guadeloupe', dom:true, postes:60, postesAvant:70, inscrits:500, admis:60, barreAdmissibilite:11.7, barreAdmission:12.2 },
-    { nom:'Martinique', region:'Martinique', dom:true, postes:40, postesAvant:45, inscrits:420, admis:40, barreAdmissibilite:12.4, barreAdmission:12.9 },
-    { nom:'Guyane', region:'Guyane', dom:true, postes:380, postesAvant:330, inscrits:700, admis:380, barreAdmissibilite:7.2, barreAdmission:8.0 },
-    { nom:'La Réunion', region:'La Réunion', dom:true, postes:240, postesAvant:250, inscrits:2100, admis:240, barreAdmissibilite:12.6, barreAdmission:13.1 },
-    { nom:'Mayotte', region:'Mayotte', dom:true, postes:420, postesAvant:380, inscrits:800, admis:420, barreAdmissibilite:7.0, barreAdmission:7.8 },
-  ].map(a => ({ ...a, ratio: a.inscrits / a.postes, taux: a.admis / a.inscrits, evol: a.postes - a.postesAvant }));
-
-  const fmtInt = n => n.toLocaleString('fr-FR');
-  const fmtPct = n => (n * 100).toLocaleString('fr-FR', { maximumFractionDigits: 1 }) + ' %';
-  const fmtNote = n => n.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
-  const fmtRatio = n => n.toLocaleString('fr-FR', { maximumFractionDigits: 1 });
-  const slug = s => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
-
-  // Chiffres nationaux
-  const tot = k => ACADEMIES.reduce((s, a) => s + a[k], 0);
-  document.getElementById('kpiPostes').textContent = fmtInt(tot('postes'));
-  document.getElementById('kpiInscrits').textContent = fmtInt(tot('inscrits'));
-  document.getElementById('kpiAdmis').textContent = fmtInt(tot('admis'));
-  document.getElementById('kpiTaux').textContent = fmtPct(tot('admis') / tot('inscrits'));
-
-  // Couleur des cases : du clair (sélective) au foncé (accessible)
-  const tMin = Math.min(...ACADEMIES.map(a => a.taux)), tMax = Math.max(...ACADEMIES.map(a => a.taux));
-  const SHADES = ['#e0e7ff', '#c7d2fe', '#a5b4fc', '#818cf8', '#6366f1', '#4f46e5', '#4338ca'];
-  const shade = t => SHADES[Math.min(SHADES.length - 1, Math.floor((t - tMin) / (tMax - tMin + 1e-9) * SHADES.length))];
-
-  // Noms courts affichés sur petit écran
-  const SHORT = { 'Normandie':'Norm.', 'Nancy-Metz':'Nancy', 'Strasbourg':'Strasb.', 'Versailles':'Versail.', 'Orléans-Tours':'Orléans', 'Besançon':'Besanç.', 'Clermont-Ferrand':'Clermont', 'Grenoble':'Grenob.', 'Bordeaux':'Bordx', 'Toulouse':'Toul.', 'Montpellier':'Montp.', 'Aix-Marseille':'Aix-Mars.', 'Guadeloupe':'Guadel.', 'Martinique':'Martiniq.', 'La Réunion':'Réunion', 'Poitiers':'Poitiers', 'Limoges':'Limoges' };
-
-  function tile(a) {
-    const b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'tile';
-    b.setAttribute('role', 'listitem');
-    const bg = shade(a.taux);
-    b.style.background = bg;
-    if (SHADES.indexOf(bg) >= 3) b.classList.add('tile-dark');
-    if (!a.dom) { b.style.gridRow = a.r + 1; b.style.gridColumn = a.c + 1; }
-    b.innerHTML = `<span class="tile-name">${a.nom}</span><span class="tile-short">${SHORT[a.nom] || a.nom}</span><span class="tile-val">${fmtPct(a.taux)}</span>`;
-    b.setAttribute('aria-label', b.title);
-    b.title = `${a.nom} : ${fmtPct(a.taux)} de réussite, ${fmtInt(a.postes)} postes`;
-    b.addEventListener('click', () => focusRow(a.nom));
-    return b;
-  }
-  ACADEMIES.forEach(a => (a.dom ? document.getElementById('tileMapDom') : document.getElementById('tileMap')).appendChild(tile(a)));
-
-  // Tableau triable
-  let sortKey = 'nom', sortDir = 1;
-  function renderTable() {
-    const rows = [...ACADEMIES].sort((x, y) => {
-      const a = x[sortKey], b = y[sortKey];
-      return (typeof a === 'string' ? a.localeCompare(b, 'fr') : a - b) * sortDir;
-    });
-    document.getElementById('acadBody').innerHTML = rows.map(a => `
-      <tr id="acad-${slug(a.nom)}">
-        <td><strong>${a.nom}</strong></td>
-        <td>${a.region}</td>
-        <td class="num">${fmtInt(a.postes)}</td>
-        <td class="num">${fmtInt(a.inscrits)}</td>
-        <td class="num">${fmtRatio(a.ratio)}</td>
-        <td class="num">${fmtPct(a.taux)}</td>
-        <td class="num">${fmtNote(a.barreAdmissibilite)}</td>
-        <td class="num">${fmtNote(a.barreAdmission)}</td>
-      </tr>`).join('');
-    document.querySelectorAll('#acadTable th button').forEach(btn => {
-      const active = btn.dataset.sort === sortKey;
-      btn.parentElement.setAttribute('aria-sort', active ? (sortDir === 1 ? 'ascending' : 'descending') : 'none');
-      btn.dataset.arrow = active ? (sortDir === 1 ? '▲' : '▼') : '';
-    });
-  }
-  document.querySelectorAll('#acadTable th button').forEach(btn => btn.addEventListener('click', () => {
-    const k = btn.dataset.sort;
-    if (k === sortKey) sortDir = -sortDir; else { sortKey = k; sortDir = (k === 'nom' || k === 'region') ? 1 : -1; }
-    renderTable();
-  }));
-  renderTable();
-
-  function focusRow(nom) {
-    const tr = document.getElementById('acad-' + slug(nom));
-    if (!tr) return;
-    tr.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    tr.classList.remove('row-flash'); void tr.offsetWidth; tr.classList.add('row-flash');
-  }
-
-  // Classements
-  const topN = (key, dir, fmt, n = 5) => [...ACADEMIES].sort((a, b) => (b[key] - a[key]) * dir).slice(0, n)
-    .map(a => `<li><button type="button" onclick="focusRow('${a.nom.replace(/'/g, "\\'")}')">${a.nom}</button><span>${fmt(a)}</span></li>`).join('');
-  document.getElementById('rankPostes').innerHTML = topN('postes', 1, a => fmtInt(a.postes) + ' postes');
-  document.getElementById('rankAccessibles').innerHTML = topN('taux', 1, a => fmtPct(a.taux));
-  document.getElementById('rankSelectives').innerHTML = topN('taux', -1, a => fmtPct(a.taux));
-  document.getElementById('rankHausses').innerHTML = topN('evol', 1, a => '+' + fmtInt(a.evol) + ' postes');
-
-  // Régions académiques
-  const regions = {};
-  ACADEMIES.forEach(a => (regions[a.region] = regions[a.region] || []).push(a));
-  document.getElementById('regionGrid').innerHTML = Object.keys(regions).sort((a, b) => a.localeCompare(b, 'fr')).map(r => `
-    <div class="region-card">
-      <h3>${r}</h3>
-      <ul>${regions[r].map(a => `<li><button type="button" onclick="focusRow('${a.nom.replace(/'/g, "\\'")}')">${a.nom}</button><span>${fmtInt(a.postes)} postes</span></li>`).join('')}</ul>
-    </div>`).join('');
+  // Tri du tableau comparatif
+  (function () {
+    const table = document.getElementById('acadTable');
+    const tbody = table.tBodies[0];
+    let col = 0, dir = 1;
+    table.querySelectorAll('th button').forEach(btn => btn.addEventListener('click', () => {
+      const c = +btn.dataset.col, text = btn.dataset.type === 'text';
+      if (c === col) dir = -dir; else { col = c; dir = text ? 1 : -1; }
+      const rows = [...tbody.rows].sort((a, b) => {
+        const x = a.cells[c].dataset.v, y = b.cells[c].dataset.v;
+        return (text ? x.localeCompare(y, 'fr') : x - y) * dir;
+      });
+      rows.forEach(r => tbody.appendChild(r));
+      table.querySelectorAll('th button').forEach(b => {
+        const on = +b.dataset.col === col;
+        b.dataset.arrow = on ? (dir === 1 ? '▲' : '▼') : '';
+        b.parentElement.setAttribute('aria-sort', on ? (dir === 1 ? 'ascending' : 'descending') : 'none');
+      });
+    }));
+  })();
 </script>
-
-
 <footer>
   <div class="footer-bottom">
     <p>© 2026 PassCRPE. Tous droits réservés.</p>
     <div class="footer-legal">
       <a href="#">Mentions légales</a>
       <a href="#">Politique de confidentialité</a>
+      <a href="/crpe-par-academie">CRPE par académie</a>
+      <a href="/crpe-par-academie">CRPE par académie</a>
       <a href="/blog">Blog</a>
     </div>
   </div>

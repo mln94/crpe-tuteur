@@ -1,0 +1,607 @@
+{
+ "session": "2026",
+ "source": "",
+ "academies": [
+  {
+   "nom": "Aix-Marseille",
+   "slug": "aix-marseille",
+   "region": "Provence-Alpes-Côte d'Azur",
+   "outreMer": false,
+   "lon": 5.45,
+   "lat": 43.53,
+   "libelle": "t",
+   "postes": 227,
+   "inscrits": 2500,
+   "presents": 1309,
+   "admissibles": 585,
+   "admis": 227,
+   "inscritsLC": 5,
+   "voisins": [
+    "nice",
+    "montpellier",
+    "grenoble",
+    "corse"
+   ]
+  },
+  {
+   "nom": "Amiens",
+   "slug": "amiens",
+   "region": "Hauts-de-France",
+   "outreMer": false,
+   "lon": 2.3,
+   "lat": 49.89,
+   "libelle": "l",
+   "postes": 148,
+   "inscrits": 1445,
+   "presents": 896,
+   "admissibles": 383,
+   "admis": 148,
+   "inscritsLC": 0,
+   "voisins": [
+    "lille",
+    "normandie",
+    "reims",
+    "versailles"
+   ]
+  },
+  {
+   "nom": "Besançon",
+   "slug": "besancon",
+   "region": "Bourgogne-Franche-Comté",
+   "outreMer": false,
+   "lon": 6.02,
+   "lat": 47.24,
+   "libelle": "r",
+   "postes": 91,
+   "inscrits": 881,
+   "presents": 518,
+   "admissibles": 291,
+   "admis": 91,
+   "inscritsLC": 11,
+   "voisins": [
+    "dijon",
+    "strasbourg",
+    "nancy-metz",
+    "lyon"
+   ]
+  },
+  {
+   "nom": "Bordeaux",
+   "slug": "bordeaux",
+   "region": "Nouvelle-Aquitaine",
+   "outreMer": false,
+   "lon": -0.58,
+   "lat": 44.84,
+   "libelle": "l",
+   "postes": 200,
+   "inscrits": 2882,
+   "presents": 1636,
+   "admissibles": 541,
+   "admis": 208,
+   "inscritsLC": 54,
+   "voisins": [
+    "toulouse",
+    "poitiers",
+    "limoges"
+   ]
+  },
+  {
+   "nom": "Clermont-Ferrand",
+   "slug": "clermont-ferrand",
+   "region": "Auvergne-Rhône-Alpes",
+   "outreMer": false,
+   "lon": 3.08,
+   "lat": 45.78,
+   "libelle": "b",
+   "postes": 57,
+   "inscrits": 997,
+   "presents": 558,
+   "admissibles": 176,
+   "admis": 57,
+   "inscritsLC": 5,
+   "voisins": [
+    "lyon",
+    "limoges",
+    "dijon",
+    "montpellier"
+   ]
+  },
+  {
+   "nom": "Corse",
+   "slug": "corse",
+   "region": "Corse",
+   "outreMer": false,
+   "lon": 8.74,
+   "lat": 41.93,
+   "libelle": "r",
+   "postes": 10,
+   "inscrits": 263,
+   "presents": 117,
+   "admissibles": 41,
+   "admis": 10,
+   "inscritsLC": 1,
+   "voisins": [
+    "nice",
+    "aix-marseille"
+   ]
+  },
+  {
+   "nom": "Créteil",
+   "slug": "creteil",
+   "region": "Île-de-France",
+   "outreMer": false,
+   "lon": 2.85,
+   "lat": 48.72,
+   "libelle": "r",
+   "postes": 560,
+   "inscrits": 2530,
+   "presents": 1137,
+   "admissibles": 873,
+   "admis": 560,
+   "inscritsLC": 42,
+   "voisins": [
+    "paris",
+    "versailles",
+    "reims",
+    "orleans-tours"
+   ]
+  },
+  {
+   "nom": "Dijon",
+   "slug": "dijon",
+   "region": "Bourgogne-Franche-Comté",
+   "outreMer": false,
+   "lon": 5.04,
+   "lat": 47.32,
+   "libelle": "l",
+   "postes": 101,
+   "inscrits": 961,
+   "presents": 529,
+   "admissibles": 306,
+   "admis": 101,
+   "inscritsLC": 20,
+   "voisins": [
+    "besancon",
+    "lyon",
+    "reims",
+    "orleans-tours"
+   ]
+  },
+  {
+   "nom": "Grenoble",
+   "slug": "grenoble",
+   "region": "Auvergne-Rhône-Alpes",
+   "outreMer": false,
+   "lon": 5.72,
+   "lat": 45.19,
+   "libelle": "r",
+   "postes": 241,
+   "inscrits": 1849,
+   "presents": 905,
+   "admissibles": 531,
+   "admis": 241,
+   "inscritsLC": 4,
+   "voisins": [
+    "lyon",
+    "aix-marseille",
+    "nice"
+   ]
+  },
+  {
+   "nom": "Guadeloupe",
+   "slug": "guadeloupe",
+   "region": "Guadeloupe",
+   "outreMer": true,
+   "lon": null,
+   "lat": null,
+   "libelle": null,
+   "postes": 23,
+   "inscrits": 341,
+   "presents": 166,
+   "admissibles": 47,
+   "admis": 23,
+   "inscritsLC": 8,
+   "voisins": [
+    "martinique",
+    "guyane"
+   ]
+  },
+  {
+   "nom": "Guyane",
+   "slug": "guyane",
+   "region": "Guyane",
+   "outreMer": true,
+   "lon": null,
+   "lat": null,
+   "libelle": null,
+   "postes": 106,
+   "inscrits": 382,
+   "presents": 197,
+   "admissibles": 62,
+   "admis": 27,
+   "inscritsLC": 0,
+   "voisins": [
+    "martinique",
+    "guadeloupe"
+   ]
+  },
+  {
+   "nom": "Lille",
+   "slug": "lille",
+   "region": "Hauts-de-France",
+   "outreMer": false,
+   "lon": 3.06,
+   "lat": 50.63,
+   "libelle": "r",
+   "postes": 255,
+   "inscrits": 4208,
+   "presents": 2739,
+   "admissibles": 640,
+   "admis": 255,
+   "inscritsLC": 25,
+   "voisins": [
+    "amiens",
+    "reims",
+    "normandie"
+   ]
+  },
+  {
+   "nom": "Limoges",
+   "slug": "limoges",
+   "region": "Nouvelle-Aquitaine",
+   "outreMer": false,
+   "lon": 1.26,
+   "lat": 45.83,
+   "libelle": "l",
+   "postes": 33,
+   "inscrits": 584,
+   "presents": 339,
+   "admissibles": 66,
+   "admis": 33,
+   "inscritsLC": 1,
+   "voisins": [
+    "poitiers",
+    "clermont-ferrand",
+    "bordeaux",
+    "toulouse"
+   ]
+  },
+  {
+   "nom": "Lyon",
+   "slug": "lyon",
+   "region": "Auvergne-Rhône-Alpes",
+   "outreMer": false,
+   "lon": 4.84,
+   "lat": 45.76,
+   "libelle": "l",
+   "postes": 174,
+   "inscrits": 2464,
+   "presents": 1380,
+   "admissibles": 383,
+   "admis": 174,
+   "inscritsLC": 22,
+   "voisins": [
+    "grenoble",
+    "clermont-ferrand",
+    "dijon"
+   ]
+  },
+  {
+   "nom": "Martinique",
+   "slug": "martinique",
+   "region": "Martinique",
+   "outreMer": true,
+   "lon": null,
+   "lat": null,
+   "libelle": null,
+   "postes": 19,
+   "inscrits": 374,
+   "presents": 173,
+   "admissibles": 41,
+   "admis": 19,
+   "inscritsLC": 0,
+   "voisins": [
+    "guadeloupe",
+    "guyane"
+   ]
+  },
+  {
+   "nom": "Mayotte",
+   "slug": "mayotte",
+   "region": "Mayotte",
+   "outreMer": true,
+   "lon": null,
+   "lat": null,
+   "libelle": null,
+   "postes": 125,
+   "inscrits": 764,
+   "presents": 474,
+   "admissibles": 200,
+   "admis": 125,
+   "inscritsLC": 25,
+   "voisins": [
+    "la-reunion"
+   ]
+  },
+  {
+   "nom": "Montpellier",
+   "slug": "montpellier",
+   "region": "Occitanie",
+   "outreMer": false,
+   "lon": 3.88,
+   "lat": 43.61,
+   "libelle": "b",
+   "postes": 153,
+   "inscrits": 2667,
+   "presents": 1458,
+   "admissibles": 442,
+   "admis": 153,
+   "inscritsLC": 5,
+   "voisins": [
+    "toulouse",
+    "aix-marseille",
+    "clermont-ferrand"
+   ]
+  },
+  {
+   "nom": "Nancy-Metz",
+   "slug": "nancy-metz",
+   "region": "Grand Est",
+   "outreMer": false,
+   "lon": 6.18,
+   "lat": 48.69,
+   "libelle": "t",
+   "postes": 179,
+   "inscrits": 1365,
+   "presents": 863,
+   "admissibles": 358,
+   "admis": 180,
+   "inscritsLC": 10,
+   "voisins": [
+    "strasbourg",
+    "reims",
+    "besancon"
+   ]
+  },
+  {
+   "nom": "Nantes",
+   "slug": "nantes",
+   "region": "Pays de la Loire",
+   "outreMer": false,
+   "lon": -1.55,
+   "lat": 47.22,
+   "libelle": "l",
+   "postes": 127,
+   "inscrits": 2104,
+   "presents": 1093,
+   "admissibles": 215,
+   "admis": 127,
+   "inscritsLC": 5,
+   "voisins": [
+    "rennes",
+    "poitiers",
+    "orleans-tours"
+   ]
+  },
+  {
+   "nom": "Nice",
+   "slug": "nice",
+   "region": "Provence-Alpes-Côte d'Azur",
+   "outreMer": false,
+   "lon": 7.26,
+   "lat": 43.7,
+   "libelle": "r",
+   "postes": 190,
+   "inscrits": 1817,
+   "presents": 947,
+   "admissibles": 295,
+   "admis": 186,
+   "inscritsLC": 0,
+   "voisins": [
+    "aix-marseille",
+    "corse",
+    "grenoble"
+   ]
+  },
+  {
+   "nom": "Normandie",
+   "slug": "normandie",
+   "region": "Normandie",
+   "outreMer": false,
+   "lon": -0.37,
+   "lat": 49.18,
+   "libelle": "l",
+   "postes": 234,
+   "inscrits": 2407,
+   "presents": 1427,
+   "admissibles": 468,
+   "admis": 234,
+   "inscritsLC": 31,
+   "voisins": [
+    "amiens",
+    "rennes",
+    "versailles",
+    "orleans-tours"
+   ]
+  },
+  {
+   "nom": "Orléans-Tours",
+   "slug": "orleans-tours",
+   "region": "Centre-Val de Loire",
+   "outreMer": false,
+   "lon": 1.91,
+   "lat": 47.9,
+   "libelle": "b",
+   "postes": 202,
+   "inscrits": 1373,
+   "presents": 739,
+   "admissibles": 506,
+   "admis": 202,
+   "inscritsLC": 30,
+   "voisins": [
+    "versailles",
+    "poitiers",
+    "nantes",
+    "dijon"
+   ]
+  },
+  {
+   "nom": "Paris",
+   "slug": "paris",
+   "region": "Île-de-France",
+   "outreMer": false,
+   "lon": 2.35,
+   "lat": 49.0,
+   "libelle": "t",
+   "postes": 131,
+   "inscrits": 1203,
+   "presents": 435,
+   "admissibles": 329,
+   "admis": 131,
+   "inscritsLC": 10,
+   "voisins": [
+    "creteil",
+    "versailles"
+   ]
+  },
+  {
+   "nom": "Poitiers",
+   "slug": "poitiers",
+   "region": "Nouvelle-Aquitaine",
+   "outreMer": false,
+   "lon": 0.34,
+   "lat": 46.58,
+   "libelle": "l",
+   "postes": 77,
+   "inscrits": 1208,
+   "presents": 698,
+   "admissibles": 254,
+   "admis": 77,
+   "inscritsLC": 0,
+   "voisins": [
+    "nantes",
+    "bordeaux",
+    "limoges",
+    "orleans-tours"
+   ]
+  },
+  {
+   "nom": "Reims",
+   "slug": "reims",
+   "region": "Grand Est",
+   "outreMer": false,
+   "lon": 4.03,
+   "lat": 49.26,
+   "libelle": "r",
+   "postes": 77,
+   "inscrits": 956,
+   "presents": 620,
+   "admissibles": 216,
+   "admis": 77,
+   "inscritsLC": 1,
+   "voisins": [
+    "amiens",
+    "nancy-metz",
+    "creteil",
+    "lille"
+   ]
+  },
+  {
+   "nom": "Rennes",
+   "slug": "rennes",
+   "region": "Bretagne",
+   "outreMer": false,
+   "lon": -1.68,
+   "lat": 48.11,
+   "libelle": "l",
+   "postes": 71,
+   "inscrits": 2076,
+   "presents": 1122,
+   "admissibles": 177,
+   "admis": 77,
+   "inscritsLC": 15,
+   "voisins": [
+    "nantes",
+    "normandie"
+   ]
+  },
+  {
+   "nom": "La Réunion",
+   "slug": "la-reunion",
+   "region": "La Réunion",
+   "outreMer": true,
+   "lon": null,
+   "lat": null,
+   "libelle": null,
+   "postes": 68,
+   "inscrits": 1987,
+   "presents": 1195,
+   "admissibles": 236,
+   "admis": 68,
+   "inscritsLC": 7,
+   "voisins": [
+    "mayotte"
+   ]
+  },
+  {
+   "nom": "Strasbourg",
+   "slug": "strasbourg",
+   "region": "Grand Est",
+   "outreMer": false,
+   "lon": 7.75,
+   "lat": 48.58,
+   "libelle": "b",
+   "postes": 111,
+   "inscrits": 1207,
+   "presents": 699,
+   "admissibles": 260,
+   "admis": 111,
+   "inscritsLC": 6,
+   "voisins": [
+    "nancy-metz",
+    "besancon"
+   ]
+  },
+  {
+   "nom": "Toulouse",
+   "slug": "toulouse",
+   "region": "Occitanie",
+   "outreMer": false,
+   "lon": 1.44,
+   "lat": 43.6,
+   "libelle": "b",
+   "postes": 184,
+   "inscrits": 2780,
+   "presents": 1596,
+   "admissibles": 544,
+   "admis": 184,
+   "inscritsLC": 7,
+   "voisins": [
+    "bordeaux",
+    "montpellier",
+    "limoges"
+   ]
+  },
+  {
+   "nom": "Versailles",
+   "slug": "versailles",
+   "region": "Île-de-France",
+   "outreMer": false,
+   "lon": 1.85,
+   "lat": 48.75,
+   "libelle": "l",
+   "postes": 699,
+   "inscrits": 2484,
+   "presents": 1144,
+   "admissibles": 891,
+   "admis": 657,
+   "inscritsLC": 0,
+   "voisins": [
+    "paris",
+    "creteil",
+    "orleans-tours",
+    "normandie"
+   ]
+  }
+ ]
+}
