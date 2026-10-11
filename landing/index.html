@@ -1803,8 +1803,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         options: { data: { prenom, nom, concours, academie } }
       });
       if (error) {
+        window.dataLayer.push({ event: 'sign_up_error', error_reason: error.message });
         showAuthMessage(translateSupabaseError(error.message), 'error');
       } else {
+        window.dataLayer.push({ event: 'sign_up', method: 'email' });
         // Klaviyo + Supabase profil — fire and forget
         fetch('/api/klaviyo/signup', {
           method: 'POST',
