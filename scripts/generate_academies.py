@@ -94,7 +94,8 @@ CSS = """
     .acad-wrap li { margin-bottom: 6px; }
     .acad-wrap strong { color: var(--gray-900); }
     .lead { font-size: 17px; max-width: 780px; }
-    .breadcrumb { display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--gray-400); margin-bottom: 20px; }
+    /* Le fil d'Ariane est un <nav> : on annule le menu figé (sticky, fond, bordure) hérité de la règle nav */
+    .breadcrumb { position: static; z-index: auto; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0; display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--gray-400); margin-bottom: 20px; }
     .breadcrumb a { color: var(--gray-500); text-decoration: none; font-weight: 600; }
     .breadcrumb a:hover { color: var(--indigo-600); }
     .breadcrumb [aria-current] { color: var(--gray-700); font-weight: 600; }
