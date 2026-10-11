@@ -158,6 +158,30 @@
       .footer-top { grid-template-columns: 1fr; }
     }
 
+    /* ── MENU MOBILE ── */
+    .nav-burger { display: none; width: 40px; height: 40px; flex-shrink: 0; align-items: center; justify-content: center; padding: 0; border: 1.5px solid var(--gray-200); border-radius: 10px; background: #fff; color: var(--gray-700); cursor: pointer; }
+    .nav-burger svg { width: 20px; height: 20px; }
+    .nav-burger .icon-close, .site-nav.menu-open .nav-burger .icon-open { display: none; }
+    .site-nav.menu-open .nav-burger .icon-close { display: block; }
+    .nav-mobile-only { display: none !important; }
+    @media (max-width: 1000px) {
+      .nav-burger { display: flex; }
+      .site-nav.menu-open .nav-links { display: flex; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; padding: 8px 16px 16px; background: #fff; border-bottom: 1px solid var(--gray-100); box-shadow: 0 12px 24px rgba(15,23,42,.08); }
+      .site-nav.menu-open .nav-links li { display: block; text-align: left; }
+      .site-nav.menu-open .nav-links li > a, .site-nav.menu-open .nav-links li > button { display: block; width: 100%; padding: 13px 4px; font-size: 16px; text-align: left; border-bottom: 1px solid var(--gray-100); }
+      .site-nav.menu-open .nav-links li:last-child > a, .site-nav.menu-open .nav-links li:last-child > button { border-bottom: 0; }
+    }
+    @media (max-width: 600px) {
+      .site-nav { padding-left: 16px; padding-right: 16px; }
+      .site-nav .nav-inner { padding-left: 0; padding-right: 0; gap: 10px; }
+      .site-nav .nav-actions > .nav-login { display: none; }
+      .nav-mobile-only { display: block !important; }
+      .site-nav.menu-open .nav-links .nav-mobile-only > .nav-login { border: 0; border-radius: 0; background: none; color: var(--indigo-600); font-weight: 700; font-family: inherit; cursor: pointer; }
+      .site-nav .nav-cta { padding: 8px 14px; font-size: 13px; }
+      .site-nav .nav-logo-text { font-size: 16px; }
+    }
+    @media (max-width: 400px) { .nav-cta-long { display: none; } }
+
     /* ACADÉMIES */
     .acad-wrap { max-width: 1040px; margin: 0 auto; padding: 32px 24px 80px; font-size: 16px; line-height: 1.75; color: var(--gray-700); }
     .acad-wrap h1 { margin-bottom: 14px; }
@@ -322,7 +346,7 @@ src="https://www.facebook.com/tr?id=2908206909538261&ev=PageView&noscript=1"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
-<nav>
+<nav class="site-nav">
   <div class="nav-inner">
     <a href="/" class="nav-logo">
       <div class="nav-logo-icon">
@@ -338,10 +362,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li><a href="/#matieres">Matières</a></li>
       <li><a href="/crpe-par-academie" class="active">CRPE par académie</a></li>
       <li><a href="/blog">Blog</a></li>
+      <li class="nav-mobile-only"><button onclick="openAuth('login')" class="nav-login">Se connecter</button></li>
     </ul>
     <div class="nav-actions">
       <button onclick="openAuth('login')" class="nav-login">Se connecter</button>
-      <button onclick="openAuth('register')" class="nav-cta cta-commencer" style="border:none;cursor:pointer;font-family:inherit;">Commencer gratuitement →</button>
+      <button onclick="openAuth('register')" class="nav-cta cta-commencer" style="border:none;cursor:pointer;font-family:inherit;">Commencer<span class="nav-cta-long"> gratuitement</span> →</button>
+      <button type="button" class="nav-burger" aria-label="Ouvrir le menu" aria-expanded="false" onclick="toggleMobileMenu(this)">
+        <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
     </div>
   </div>
 </nav>
@@ -951,6 +980,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!error) setTimeout(()=>{ btn.textContent='Renvoyer l\'e-mail'; btn.disabled=false; },4000);
     else btn.disabled=false;
   }
+</script>
+<script>
+  // Menu mobile : ouvre/ferme la liste des liens et la referme après un clic
+  function toggleMobileMenu(btn) {
+    var nav = btn.closest('.site-nav');
+    var open = nav.classList.toggle('menu-open');
+    btn.setAttribute('aria-expanded', open);
+    btn.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+  }
+  document.querySelectorAll('.site-nav .nav-links a, .site-nav .nav-links button').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var nav = el.closest('.site-nav'), btn = nav.querySelector('.nav-burger');
+      nav.classList.remove('menu-open'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', 'Ouvrir le menu');
+    });
+  });
 </script>
 </body>
 </html>
