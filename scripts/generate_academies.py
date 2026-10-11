@@ -14,7 +14,6 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE = os.path.join(ROOT, 'landing', 'crpe-bac3-structure-premiere-epreuve-admissibilite.html')
 SITE = 'https://www.passcrpe.fr'
 HUB_URL = '/crpe-par-academie'
-LINK = 'style="color:#4f46e5;font-weight:600;"'
 
 data = json.load(open(os.path.join(ROOT, 'scripts', 'academies-data.json'), encoding='utf-8'))
 SESSION = data['session']
@@ -170,9 +169,6 @@ CSS = """
 
     .callout { background: var(--indigo-50); border: 1px solid var(--indigo-100); border-radius: 14px; padding: 18px 22px; margin: 20px 0 24px; font-size: 15px; }
     .callout strong { color: var(--indigo-700); }
-    .faq details { border: 1px solid var(--gray-200); border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }
-    .faq summary { cursor: pointer; font-weight: 700; color: var(--gray-900); }
-    .faq details p { margin: 10px 0 0; }
     .updated { font-size: 13px; color: var(--gray-400); margin-top: 32px; }
     .back-hub { display: inline-flex; margin-top: 24px; font-weight: 700; color: var(--indigo-600); text-decoration: none; }
     .back-hub:hover { text-decoration: underline; }
@@ -367,9 +363,6 @@ def page_hub():
           <td class="num" data-v="{a['taux']:.6f}">{fpct(a['taux'])}</td>
           <td data-v="{['tres', 'moyen', 'peu'].index(SELECTIVITE[a['slug']])}">{sel_badge(a)}</td>
         </tr>''' for a in sorted(ACADS, key=lambda a: a['nom']))
-    best = sorted(ACADS, key=lambda a: -a['taux'])[:3]
-    worst = sorted(ACADS, key=lambda a: a['taux'])[:3]
-    links = lambda lst: ', '.join(f'<a href="{url(a)}" {LINK}>{escape(a["nom"])}</a> ({fpct(a["taux"])})' for a in lst)
 
     body = f'''<div class="acad-wrap">
 
@@ -429,22 +422,6 @@ def page_hub():
 
   <h3>Peut-on s'inscrire dans une académie où l'on n'habite pas ?</h3>
   <p>Oui. Vous choisissez librement l'académie dans laquelle vous passez le concours, sans condition de domicile. En revanche, vous ne pouvez vous inscrire que dans une seule académie par session pour un même concours.</p>
-
-  <h2>Questions fréquentes</h2>
-  <div class="faq">
-    <details>
-      <summary>Quelle est l'académie la plus facile au CRPE ?</summary>
-      <p>Il n'y a pas d'académie « facile », mais certaines sont nettement plus accessibles. Lors de la session {SESSION}, les taux de réussite les plus élevés étaient ceux de {links(best)}. À l'inverse, les plus bas étaient ceux de {links(worst)}.</p>
-    </details>
-    <details>
-      <summary>Combien y a-t-il d'académies ?</summary>
-      <p>La France compte 30 académies : 25 en métropole (dont la Corse) et 5 en outre-mer (Guadeloupe, Guyane, Martinique, La Réunion et Mayotte). Elles sont regroupées en régions académiques.</p>
-    </details>
-    <details>
-      <summary>Peut-on changer d'académie après le concours ?</summary>
-      <p>Pas immédiatement. Si vous êtes reçu, vous êtes affecté dans l'académie où vous avez passé le concours. Changer de département ensuite passe par les procédures de mobilité des enseignants, qui dépendent notamment de votre situation familiale et de votre ancienneté.</p>
-    </details>
-  </div>
 
   <div class="related-section">
     <p class="related-label">Lire aussi</p>
