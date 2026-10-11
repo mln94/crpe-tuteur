@@ -76,12 +76,13 @@ CSS_BASE = tpl[css_start:css_end]
 BODY_START = tpl[css_end:tpl.index('<div class="article-wrap">')]
 TAIL = tpl[tpl.index('<footer>'):]
 
+# Le gabarit contient déjà le lien vers le hub : on le marque comme actif et on retire l'état actif du blog
+NAV_HUB = f'<li><a href="{HUB_URL}">CRPE par académie</a></li>'
 NAV_BLOG = '<li><a href="/blog" class="active">Blog</a></li>'
-assert NAV_BLOG in BODY_START
-BODY_START = BODY_START.replace(NAV_BLOG, f'<li><a href="{HUB_URL}" class="active">CRPE par académie</a></li>\n      <li><a href="/blog">Blog</a></li>')
-FOOTER_BLOG = '      <a href="/blog">Blog</a>\n'
-assert FOOTER_BLOG in TAIL
-TAIL = TAIL.replace(FOOTER_BLOG, f'      <a href="{HUB_URL}">CRPE par académie</a>\n' + FOOTER_BLOG)
+assert BODY_START.count(NAV_HUB) == 1 and BODY_START.count(NAV_BLOG) == 1
+BODY_START = (BODY_START.replace(NAV_HUB, f'<li><a href="{HUB_URL}" class="active">CRPE par académie</a></li>')
+              .replace(NAV_BLOG, '<li><a href="/blog">Blog</a></li>'))
+assert TAIL.count(f'<a href="{HUB_URL}">CRPE par académie</a>') == 1
 
 CSS = """
     /* ACADÉMIES */
