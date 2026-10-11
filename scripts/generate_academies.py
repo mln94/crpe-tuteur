@@ -81,7 +81,7 @@ NAV_BLOG = '<li><a href="/blog" class="active">Blog</a></li>'
 assert BODY_START.count(NAV_HUB) == 1 and BODY_START.count(NAV_BLOG) == 1
 BODY_START = (BODY_START.replace(NAV_HUB, f'<li><a href="{HUB_URL}" class="active">CRPE par académie</a></li>')
               .replace(NAV_BLOG, '<li><a href="/blog">Blog</a></li>'))
-assert TAIL.count(f'<a href="{HUB_URL}">CRPE par académie</a>') == 1
+assert TAIL.count(f'<a href="{HUB_URL}">Les académies</a>') == 1  # pied de page commun
 
 CSS = """
     /* ACADÉMIES */
