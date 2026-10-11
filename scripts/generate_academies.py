@@ -173,6 +173,16 @@ CSS = """
     .back-hub { display: inline-flex; margin-top: 24px; font-weight: 700; color: var(--indigo-600); text-decoration: none; }
     .back-hub:hover { text-decoration: underline; }
 
+    .cta-section { background: linear-gradient(135deg, var(--indigo-600) 0%, #7c3aed 100%); padding: 96px 24px; text-align: center; position: relative; overflow: hidden; }
+    .cta-section::before { content: ''; position: absolute; top: -80px; left: -80px; width: 320px; height: 320px; background: rgba(255,255,255,0.06); border-radius: 50%; }
+    .cta-section::after { content: ''; position: absolute; bottom: -60px; right: -60px; width: 240px; height: 240px; background: rgba(255,255,255,0.04); border-radius: 50%; }
+    .cta-section h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 900; color: #fff; letter-spacing: -1px; line-height: 1.15; margin-bottom: 16px; position: relative; z-index: 1; }
+    .cta-section p { font-size: 18px; color: rgba(255,255,255,0.75); max-width: 520px; margin: 0 auto 40px; line-height: 1.6; position: relative; z-index: 1; }
+    .cta-form { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; position: relative; z-index: 1; }
+    .btn-white { display: inline-flex; align-items: center; gap: 8px; background: #fff; color: var(--indigo-700); padding: 14px 28px; border-radius: 12px; font-size: 15px; font-weight: 700; border: none; cursor: pointer; font-family: inherit; text-decoration: none; transition: transform .15s, box-shadow .2s; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,0.2); }
+    .cta-section .cta-note { font-size: 13px; color: rgba(255,255,255,0.55); margin: 16px 0 0; max-width: none; }
+
     @media (max-width: 640px) {
       .fr-map text { font-size: 17px; }
       .funnel-row { grid-template-columns: 92px 1fr; }
@@ -246,17 +256,28 @@ def page(title, description, canonical, breadcrumb_ld, body, og_title):
   <meta property="og:url" content="{SITE}{canonical}" />
   <script type="application/ld+json">{json.dumps(breadcrumb_ld, ensure_ascii=False)}</script>
 '''
-        + CSS_BASE + CSS + BODY_START + body + '\n' + TAIL)
+        + CSS_BASE + CSS + BODY_START + body + '\n' + BANNER + TAIL)
 
 def breadcrumb_ld(items):
     return {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
         {'@type': 'ListItem', 'position': i + 1, 'name': n, 'item': SITE + u} for i, (n, u) in enumerate(items)]}
 
-CTA = '''  <div class="article-cta">
-    <h3>Préparez le CRPE dans votre académie avec PassCRPE</h3>
-    <p>Des exercices de français et de mathématiques calqués sur les attendus du jury, corrigés par IA, pour maximiser vos chances, quelle que soit votre académie.</p>
-    <button onclick="openAuth('register')" class="cta-commencer">Commencer gratuitement →</button>
-  </div>'''
+# Bandeau d'inscription, identique à celui de la page d'accueil
+BANNER = '''<section class="cta-section" id="inscription">
+  <div class="container">
+    <h2>Commencez votre préparation aujourd'hui</h2>
+    <p>Rejoignez plus de 1 200 candidats qui se préparent intelligemment au CRPE. Accès immédiat, sans engagement.</p>
+    <div class="cta-form">
+      <button type="button" class="btn-white cta-commencer" onclick="openAuth('register')">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Commencer gratuitement
+      </button>
+    </div>
+    <p class="cta-note">Essai gratuit · 359 € TTC à l'issue de l'essai · Sans carte bancaire · Annulable à tout moment</p>
+  </div>
+</section>
+
+'''
 
 UPDATED = f'<p class="updated">Dernière mise à jour : 11 octobre 2026 · Données : résultats du CRPE, session {SESSION}</p>'
 
@@ -288,8 +309,8 @@ def page_academie(a):
   </nav>
 
   {sel_badge(a)}
-  <h1>CRPE académie {escape(de(nom))} : postes, admis et taux de réussite {SESSION}</h1>
-  <p class="lead">Lors de la session {SESSION} du CRPE, l'académie {escape(de(nom))} offrait <strong>{fint(a['postes'])} postes</strong>. Sur {fint(a['inscrits'])} inscrits, {fint(a['presents'])} candidats se sont présentés aux épreuves, {fint(a['admissibles'])} ont été admissibles et <strong>{fint(a['admis'])} ont été admis</strong>, soit un taux de réussite de <strong>{fpct(a['taux'])}</strong>, {compare} à la moyenne nationale ({fpct(TAUX_NATIONAL)}).</p>
+  <h1>CRPE {escape(nom)} : résultats {SESSION} de l'académie {escape(de(nom))}</h1>
+  <p class="lead">Voici les résultats du concours CRPE {SESSION} dans l'académie {escape(de(nom))}. Lors de cette session, l'académie {escape(de(nom))} offrait <strong>{fint(a['postes'])} postes</strong>. Sur {fint(a['inscrits'])} inscrits, {fint(a['presents'])} candidats se sont présentés aux épreuves, {fint(a['admissibles'])} ont été admissibles et <strong>{fint(a['admis'])} ont été admis</strong>, soit un taux de réussite de <strong>{fpct(a['taux'])}</strong>, {compare} à la moyenne nationale ({fpct(TAUX_NATIONAL)}).</p>
 
   <section class="kpis" aria-label="Chiffres clés">
     <div class="kpi"><span class="kpi-value">{fint(a['postes'])}</span><span class="kpi-label">postes offerts</span></div>
@@ -301,7 +322,7 @@ def page_academie(a):
     <div class="kpi"><span class="kpi-value">{fint(a['inscritsLC'])}</span><span class="kpi-label">inscrits sur liste complémentaire</span></div>
   </section>
 
-  <h2>Du nombre d'inscrits au nombre d'admis</h2>
+  <h2>Inscrits, résultats d'admissibilité et admis au CRPE</h2>
   <p>Toutes les personnes inscrites ne se présentent pas le jour des épreuves. Dans l'académie {escape(de(nom))}, <strong>{fpct(a['presents'] / a['inscrits'])}</strong> des inscrits étaient présents. Parmi les présents, <strong>{fpct(a['tauxAdmissibilite'])}</strong> ont été admissibles (moyenne nationale : {fpct(TAUX_ADMISSIBILITE_NATIONAL)}), et {fpct(a['taux'])} ont finalement été admis.</p>
   <div class="funnel">{funnel}</div>
   <ul>
@@ -309,7 +330,7 @@ def page_academie(a):
     {''.join(remarques)}
   </ul>
 
-  <h2>Les classements de l'académie {escape(de(nom))}</h2>
+  <h2>Taux de réussite CRPE : les classements de l'académie {escape(de(nom))}</h2>
   <p>Comment l'académie {escape(de(nom))} se situe-t-elle par rapport aux {N - 1} autres académies ?</p>
   <div class="rank-grid">
     <div class="card"><h3>Nombre de postes</h3><div class="rank-big">{rang(RANK_POSTES[s])} <small>sur {N}</small></div><p>{fint(a['postes'])} postes offerts.</p></div>
@@ -332,15 +353,14 @@ def page_academie(a):
 
   {UPDATED}
 
-{CTA}
 
 </div>'''
-    title = f'CRPE académie {de(nom)} : postes, admis et taux de réussite {SESSION} | PassCRPE'
-    desc = (f"CRPE {SESSION} dans l'académie {de(nom)} : {fint(a['postes'])} postes, {fint(a['inscrits'])} inscrits, "
+    title = f'CRPE {nom} {SESSION} : résultats, admis et taux de réussite | PassCRPE'
+    desc = (f"Résultats du CRPE {SESSION} dans l'académie {de(nom)} : {fint(a['postes'])} postes, {fint(a['inscrits'])} inscrits, "
             f"{fint(a['admis'])} admis, {fpct(a['taux'])} de réussite. Classements, sélectivité et académies voisines.").replace(' ', ' ').replace(' ', ' ')
     return page(title, desc, url(a),
                 breadcrumb_ld([('Accueil', '/'), ('CRPE par académie', HUB_URL), (f'Académie {de(nom)}', url(a))]),
-                body, f'CRPE académie {de(nom)} : postes, admis et taux de réussite {SESSION}')
+                body, f"CRPE {nom} : résultats {SESSION} de l'académie {de(nom)}")
 
 # ── Page hub ─────────────────────────────────────────────────────────────────
 def page_hub():
@@ -370,8 +390,8 @@ def page_hub():
     <a href="/">Accueil</a><span>›</span><span aria-current="page">CRPE par académie</span>
   </nav>
 
-  <h1>CRPE par académie : postes, admis et taux de réussite {SESSION}</h1>
-  <p class="lead">On ne passe pas le CRPE « en France », mais dans <strong>une académie</strong>. C'est elle qui organise le concours et, si vous êtes reçu, vous affecte dans l'une de ses écoles. Choisir son académie, c'est donc choisir à la fois ses chances de réussite et l'endroit où l'on va enseigner. <strong>Cliquez sur une académie de la carte</strong> pour découvrir ses résultats détaillés.</p>
+  <h1>Résultats du CRPE {SESSION} par académie : inscrits, admis et taux de réussite</h1>
+  <p class="lead">On ne passe pas le concours du CRPE « en France », mais dans <strong>une académie</strong>. C'est elle qui organise le concours et, si vous êtes reçu, vous affecte dans l'une de ses écoles. Choisir son académie, c'est donc choisir à la fois ses chances de réussite et l'endroit où l'on va enseigner. Voici les résultats du CRPE {SESSION} académie par académie : inscrits, résultats d'admissibilité, admis et taux de réussite. <strong>Cliquez sur une académie de la carte</strong> pour découvrir ses résultats détaillés.</p>
 
   <section class="kpis" aria-label="Chiffres nationaux">
     <div class="kpi"><span class="kpi-value">{fint(TOT['postes'])}</span><span class="kpi-label">postes offerts</span></div>
@@ -381,11 +401,11 @@ def page_hub():
     <div class="kpi kpi-accent"><span class="kpi-value">{fpct(TAUX_NATIONAL)}</span><span class="kpi-label">taux de réussite national (admis / présents)</span></div>
   </section>
 
-  <h2>La carte des académies</h2>
+  <h2>La carte des académies CRPE</h2>
   <p>Chaque repère représente une académie, coloré selon sa sélectivité. Cliquez dessus pour ouvrir la page de l'académie.</p>
   {carte()}
 
-  <h2>Le tableau comparatif des {N} académies</h2>
+  <h2>Résultats CRPE {SESSION} : le tableau comparatif des {N} académies</h2>
   <p>Cliquez sur un en-tête de colonne pour trier le tableau, et sur le nom d'une académie pour voir sa page.</p>
   <div class="table-wrap">
     <table id="acadTable">
@@ -406,14 +426,14 @@ def page_hub():
     </table>
   </div>
 
-  <h2>Comment est calculée la sélectivité ?</h2>
+  <h2>Taux de réussite CRPE : comment est calculée la sélectivité ?</h2>
   {METHODE}
 
-  <h2>Les académies par région académique</h2>
+  <h2>Les académies CRPE par région académique</h2>
   <p>Les académies sont regroupées en <strong>régions académiques</strong>. L'Île-de-France, par exemple, compte trois académies : Paris, Créteil et Versailles. Si vous hésitez entre deux académies proches de chez vous, comparez d'abord celles de votre région.</p>
   <div class="region-grid">{region_cards}</div>
 
-  <h2>Comment choisir son académie pour le CRPE ?</h2>
+  <h2>Comment choisir son académie pour le concours CRPE ?</h2>
   <ul>
     <li><strong>Vos chances de réussite :</strong> regardez le taux de réussite et le nombre de candidats présents par poste. Une académie avec beaucoup de postes et peu de candidats est en général plus accessible.</li>
     <li><strong>Votre lieu de vie :</strong> si vous êtes reçu, vous serez affecté dans une école de cette académie. Une académie plus accessible mais loin de chez vous implique un déménagement, et un coût de la vie parfois plus élevé.</li>
@@ -449,7 +469,6 @@ def page_hub():
 
   {UPDATED}
 
-{CTA}
 
 </div>
 
@@ -475,10 +494,10 @@ def page_hub():
     }}));
   }})();
 </script>'''
-    return page(f'CRPE par académie : postes, admis et taux de réussite {SESSION} | PassCRPE',
-                f"Quelle académie choisir pour le CRPE ? Carte de France et comparatif des {N} académies : postes, inscrits, admis, taux de réussite et sélectivité, session {SESSION}.",
+    return page(f'Résultats CRPE {SESSION} par académie : admis, inscrits et taux de réussite | PassCRPE',
+                f"Résultats du concours CRPE {SESSION} par académie : carte de France et comparatif des {N} académies CRPE, avec postes, inscrits, admis, résultats d'admissibilité et taux de réussite.",
                 HUB_URL, breadcrumb_ld([('Accueil', '/'), ('CRPE par académie', HUB_URL)]), body,
-                f'CRPE par académie : postes, admis et taux de réussite {SESSION}')
+                f'Résultats du CRPE {SESSION} par académie : inscrits, admis et taux de réussite')
 
 # ── Écriture ─────────────────────────────────────────────────────────────────
 out_dir = os.path.join(ROOT, 'landing', 'academies')
