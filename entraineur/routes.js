@@ -9,6 +9,7 @@ import { QUESTION_PROMPT, SYNTHESE_PROMPT, QUESTION_TOOL, SYNTHESE_TOOL, questio
 export const QUESTIONS_PER_SET     = 5;   // questions par série
 export const WEEKLY_REPORT_LIMIT   = 1;   // rapports par adresse e-mail et par semaine (recharge le lundi 0 h, heure de Paris)
 export const MAX_ANSWER_LENGTH     = 3000;
+export const REPORT_RETENTION_DAYS = 30;  // rapports et réponses supprimés après 30 jours
 const SET_MAX_AGE_MS               = 48 * 3600 * 1000; // une série de questions reste valable 48 h
 // Pas de liste Klaviyo : le segment « Lead magnet Entraîneur CRPE » se remplit avec la propriété lead_magnet = entraineur_crpe
 const KLAVIYO_REPORT_METRIC        = 'Rapport Entraîneur CRPE';
@@ -141,12 +142,8 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
     const consent_contact_sms = b.consent_contact_sms === true;
     if (!prenom || !nom) return { error: 'Merci d\'indiquer ton prénom et ton nom.' };
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || email.length > 254) return { error: 'Adresse e-mail invalide.' };
-    // Téléphone facultatif, mais nécessaire pour accepter d'être contacté par WhatsApp ou SMS
-    if (consent_contact_sms && !telephone) return { error: 'Indique ton numéro de téléphone pour être contacté(e) par WhatsApp ou SMS.' };
-    if (telephone) {
-      const digits = telephone.replace(/\D/g, '');
-      if (!/^\+?[\d\s.\-()]{6,30}$/.test(telephone) || digits.length < 9 || digits.length > 15) return { error: 'Numéro de téléphone invalide.' };
-    }
+    const digits = telephone.replace(/\D/g, '');
+    if (!/^\+?[\d\s.\-()]{6,30}$/.test(telephone) || digits.length < 9 || digits.length > 15) return { error: 'Numéro de téléphone invalide.' };
     const { data: existing } = await supabaseAdmin.from('entraineur_leads')
       .select('id, telephone, consent_conseils, consent_partenaires, consent_contact_sms').eq('email', email).maybeSingle();
     // Un consentement déjà donné n'est jamais retiré en silence (le retrait passe par le lien de désinscription)
@@ -256,6 +253,17 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
     return { out: null, usage };
   }
 
+  // Suppression définitive des rapports (et réponses) de plus de 30 jours, y compris les données de l'ancien parcours
+  async function purgeOldReports() {
+    const cutoff = new Date(Date.now() - REPORT_RETENTION_DAYS * 24 * 3600 * 1000).toISOString();
+    try {
+      await supabaseAdmin.from('entraineur_rapports').delete().lt('created_at', cutoff);
+      await supabaseAdmin.from('entraineur_questions_servies').delete().lt('served_at', cutoff);
+    } catch (e) {
+      console.error('[entraineur/purge]', e.message);
+    }
+  }
+
   // ── POST /api/entraineur/rapport : formulaire + réponses → rapport détaillé, puis e-mail via Klaviyo ──
   app.post('/api/entraineur/rapport', async (req, res) => {
     try {
@@ -301,6 +309,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       }).select('id').single();
       if (error) throw error;
 
+      await purgeOldReports();
       const url = `${SITE}${REPORT_PATH}${token}`;
       let emailed = false;
       try {
@@ -325,7 +334,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       if (!/^[A-Za-z0-9_-]{32,64}$/.test(token)) return fail(res, 404, 'Rapport introuvable.');
       const { data: r } = await supabaseAdmin.from('entraineur_rapports')
         .select('matiere, questions, synthese, note, created_at, entraineur_leads(prenom)').eq('token', token).maybeSingle();
-      if (!r) return fail(res, 404, 'Rapport introuvable.');
+      if (!r || Date.now() - new Date(r.created_at).getTime() > REPORT_RETENTION_DAYS * 24 * 3600 * 1000) return fail(res, 404, 'Rapport introuvable.');
       res.setHeader('Cache-Control', 'private, no-store');
       res.setHeader('X-Robots-Tag', 'noindex');
       res.json({

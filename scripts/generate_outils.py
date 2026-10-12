@@ -221,28 +221,11 @@ def page_outils():
 
 
 # ── /outils/entraineur-crpe ──────────────────────────────────────────────────
-FAQ = [
-    ("L'Entraîneur CRPE est-il vraiment gratuit ?",
-     f"Oui. Tu réponds à {QUESTIONS_PER_SET} questions, tu laisses ton prénom, ton nom et ton adresse e-mail, et tu reçois ton rapport détaillé gratuitement. Tu peux recevoir {WEEKLY_REPORT_LIMIT} rapport par semaine."),
-    ("Que contient le rapport ?",
-     "Pour chaque question : ta réponse, la réponse attendue, une note indicative, ce qui est juste, ce qui manque et tes erreurs de langue. Puis une analyse détaillée de ta manière de répondre (structure, justification, vocabulaire, rigueur, langue), tes habitudes récurrentes, tes 3 priorités de travail et un plan type de réponse."),
-    ("La note donnée par l'IA est-elle fiable ?",
-     "Elle est indicative. La correction est générée par une intelligence artificielle à partir d'un corrigé de référence : elle aide à progresser mais ne remplace pas un correcteur du concours et peut contenir des erreurs."),
-    ("Quel est le niveau des questions ?",
-     "Les questions sont de niveau cycle 4 (5e, 4e, 3e), le niveau attendu pour les connaissances disciplinaires en mathématiques et en français au CRPE."),
-    ("Je n'ai pas reçu l'e-mail, que faire ?",
-     "Vérifie tes courriers indésirables (spams) et l'onglet Promotions. L'e-mail arrive en général en quelques minutes. S'il n'arrive pas, écris-nous à contact@passcrpe.fr."),
-]
-
-
 def page_entraineur():
     ld, crumb = breadcrumb([('Accueil', '/'), ('Outils', '/outils'), ('Entraîneur CRPE', '/outils/entraineur-crpe')])
-    faq_ld = {'@context': 'https://schema.org', '@type': 'FAQPage', 'mainEntity': [
-        {'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': a}} for q, a in FAQ]}
     app_ld = {'@context': 'https://schema.org', '@type': 'WebApplication', 'name': 'Entraîneur CRPE',
               'url': SITE + '/outils/entraineur-crpe', 'applicationCategory': 'EducationalApplication',
               'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'EUR'}, 'inLanguage': 'fr'}
-    faq_html = ''.join(f'<details><summary>{escape(q)}</summary><p>{escape(a)}</p></details>' for q, a in FAQ)
     body = f'''<main class="page-wrap">
   {crumb}
   <h1>Entraîneur CRPE : réponds à {QUESTIONS_PER_SET} questions, reçois ton rapport détaillé</h1>
@@ -258,21 +241,22 @@ def page_entraineur():
   <h2 id="comment-ca-marche">Comment ça marche ?</h2>
   <ol class="steps-list">
     <li><strong>Choisis ta matière</strong>, mathématiques ou français : l'outil tire {QUESTIONS_PER_SET} questions au hasard dans notre banque de questions. La catégorie de chaque question est indiquée au-dessus de l'énoncé.</li>
-    <li><strong>Rédige tes réponses</strong> comme le jour du concours. Tes brouillons sont enregistrés sur ton appareil : tu peux revenir sur une question avant de terminer.</li>
-    <li><strong>Laisse ton prénom, ton nom et ton adresse e-mail</strong> à la fin : ton rapport détaillé t'est envoyé par e-mail. Tu peux recevoir {WEEKLY_REPORT_LIMIT} rapport par semaine (recharge chaque lundi à 0 h, heure de Paris).</li>
+    <li><strong>Rédige tes réponses</strong> comme le jour du concours. Tu peux revenir sur une question tant que tu n'as pas terminé. Rien n'est enregistré sur ton appareil : si tu fermes la page avant la fin, tes réponses sont perdues.</li>
+    <li><strong>Laisse ton prénom, ton nom, ton adresse e-mail et ton numéro de téléphone</strong> à la fin : ton rapport détaillé t'est envoyé par e-mail. Tu peux recevoir {WEEKLY_REPORT_LIMIT} rapport par semaine (recharge chaque lundi à 0 h, heure de Paris).</li>
     <li><strong>Ton rapport</strong> reprend chaque réponse avec la réponse attendue, une note indicative et des conseils, puis analyse ta manière de répondre : structure, justification, vocabulaire, rigueur et langue, avec tes 3 priorités de travail.</li>
     <li><strong>La correction est générée par une intelligence artificielle</strong> : la note est indicative, elle ne remplace pas un correcteur et peut contenir des erreurs.</li>
-    <li><strong>Tes réponses</strong> sont enregistrées avec ton rapport pour te l'envoyer et améliorer l'outil, puis supprimées au bout de 12 mois au maximum. Elles ne sont ni publiées ni revendues. Détails dans notre <a href="/politique-de-confidentialite">politique de confidentialité</a>.</li>
+    <li><strong>Pense à télécharger ton rapport</strong> : il reste consultable <strong>30 jours</strong> grâce au lien reçu par e-mail, et tu peux l'enregistrer en PDF en un clic. Passé ce délai, tes réponses et ton rapport sont définitivement supprimés. Ils ne sont ni publiés ni revendus. Détails dans notre <a href="/politique-de-confidentialite">politique de confidentialité</a>.</li>
     <li><strong>Niveau cycle 4</strong> (5e, 4e, 3e) : c'est le niveau attendu pour les connaissances disciplinaires du CRPE en mathématiques et en français.</li>
   </ol>
 
-  <h2>Questions fréquentes</h2>
-  <div class="faq">{faq_html}</div>
+  <h2>Pourquoi te demande-t-on tes coordonnées ?</h2>
+  <p>Construire cet outil nous a demandé beaucoup de travail : une banque de questions de niveau cycle 4, un correcteur exigeant et un rapport complet sur ta manière de répondre. Nous te l'offrons gratuitement ; en échange, nous te demandons simplement de nous laisser tes coordonnées.</p>
+  <p>Elles servent à t'envoyer ton rapport et, si tu l'acceptes avec les cases prévues, à te faire profiter d'informations utiles sur le CRPE, de la part de PassCRPE ou de nos partenaires. Rien d'autre : elles ne sont jamais revendues, et tu peux te désinscrire à tout moment.</p>
 </main>
 ''' + COMMON_JS + ENTRAINEUR_JS
     return page(f"Entraîneur CRPE gratuit : {QUESTIONS_PER_SET} questions de maths ou de français et un rapport détaillé | PassCRPE",
                 f"Entraîne-toi gratuitement au CRPE : réponds à {QUESTIONS_PER_SET} questions de maths ou de français de niveau cycle 4 et reçois par e-mail un rapport détaillé sur tes réponses et ta manière de répondre.",
-                '/outils/entraineur-crpe', body, f"Entraîneur CRPE : réponds à {QUESTIONS_PER_SET} questions, reçois ton rapport détaillé", [ld, faq_ld, app_ld])
+                '/outils/entraineur-crpe', body, f"Entraîneur CRPE : réponds à {QUESTIONS_PER_SET} questions, reçois ton rapport détaillé", [ld, app_ld])
 
 
 # Fonctions partagées par l'outil et la page du rapport
@@ -309,8 +293,9 @@ ENTRAINEUR_JS = r'''<script>
   // step : 'choose' | 'answer' | 'form' | 'sending' | 'sent'
   var state = { step: 'choose', serie: null, index: 0, busy: false, error: '', formError: '', email: '', limitReset: null };
 
-  function save() { try { if (state.serie) localStorage.setItem(KEY, JSON.stringify({ serie: state.serie, index: state.index })); else localStorage.removeItem(KEY); } catch (e) {} }
-  function restore() { try { var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && s.serie && s.serie.questions && s.serie.questions.length === N) { state.serie = s.serie; state.index = Math.min(s.index || 0, N); state.step = state.index >= N ? 'form' : 'answer'; } } catch (e) {} }
+  // Rien n'est enregistré sur l'appareil : les réponses restent en mémoire le temps de la page (et on efface d'anciennes données éventuelles)
+  try { localStorage.removeItem(KEY); } catch (e) {}
+  function save() {}
   function track(event, params) { try { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event: event }, params || {})); } catch (e) {} }
   function post(path, payload) {
     return fetch(API + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
@@ -337,7 +322,7 @@ ENTRAINEUR_JS = r'''<script>
     return progressHtml() + '<p class="step-label">Question ' + (i + 1) + ' sur ' + N + '</p>' + EC.questionHtml(q, s.matiere) +
       '<form class="answer" id="answerForm"><label for="answer">Ta réponse</label>' +
       '<textarea id="answer" maxlength="' + MAX_LEN + '" placeholder="Rédige ta réponse comme le jour du concours : démarche, justification, vocabulaire précis." aria-describedby="answerCount">' + esc(s.reponses[i] || '') + '</textarea>' +
-      '<div class="answer-meta"><span>Brouillon enregistré sur cet appareil</span><span id="answerCount"></span></div>' +
+      '<div class="answer-meta"><span>Ne ferme pas la page avant la fin</span><span id="answerCount"></span></div>' +
       '<div class="actions" style="margin-top:12px">' +
       (i > 0 ? '<button class="btn btn-ghost" type="button" data-act="prev">← Précédente</button>' : '') +
       '<button class="btn btn-primary" type="submit">' + (i === N - 1 ? 'Terminer' : 'Question suivante →') + '</button></div>' +
@@ -347,17 +332,17 @@ ENTRAINEUR_JS = r'''<script>
   function formHtml() {
     var n = answered();
     return progressHtml() + '<form class="lead-form" id="leadForm" novalidate><h3>Reçois ton rapport détaillé par e-mail</h3>' +
-      '<p>Tu as répondu à <strong>' + n + ' question' + (n > 1 ? 's' : '') + ' sur ' + N + '</strong>. Laisse ton prénom, ton nom et ton adresse e-mail : ton rapport (correction de chaque réponse et analyse de ta manière de répondre) t\'est envoyé gratuitement.</p>' +
+      '<p>Tu as répondu à <strong>' + n + ' question' + (n > 1 ? 's' : '') + ' sur ' + N + '</strong>. Laisse ton prénom, ton nom, ton adresse e-mail et ton numéro de téléphone : ton rapport (correction de chaque réponse et analyse de ta manière de répondre) t\'est envoyé gratuitement. C\'est la seule contrepartie que nous te demandons pour cet outil.</p>' +
       '<div class="field-row"><div class="field"><label for="lf-prenom">Prénom</label><input id="lf-prenom" name="prenom" autocomplete="given-name" required maxlength="80"><span class="field-hint">Pour personnaliser ton rapport et nos e-mails.</span></div>' +
       '<div class="field"><label for="lf-nom">Nom</label><input id="lf-nom" name="nom" autocomplete="family-name" required maxlength="80"><span class="field-hint">Pour identifier ton rapport.</span></div></div>' +
       '<div class="field"><label for="lf-email">Adresse e-mail</label><input id="lf-email" name="email" type="email" autocomplete="email" required maxlength="254"><span class="field-hint">Pour t\'envoyer ton rapport et, seulement si tu l\'acceptes, nos conseils de préparation.</span></div>' +
-      '<div class="field"><label for="lf-tel">Numéro de téléphone (facultatif)</label><input id="lf-tel" name="telephone" type="tel" autocomplete="tel" maxlength="30" placeholder="06 12 34 56 78"><span class="field-hint">Pour être contacté(e) par WhatsApp, SMS ou téléphone : te proposer une offre, partager un contenu ou avoir ton retour sur ton parcours de préparation.</span></div>' +
+      '<div class="field"><label for="lf-tel">Numéro de téléphone</label><input id="lf-tel" name="telephone" type="tel" autocomplete="tel" required maxlength="30" placeholder="06 12 34 56 78"><span class="field-hint">Pour être contacté(e) par WhatsApp, SMS ou téléphone : te proposer une offre, partager un contenu ou avoir ton retour sur ton parcours de préparation.</span></div>' +
       '<label class="check"><input type="checkbox" name="consent_conseils"> <span>J\'accepte de recevoir par e-mail les conseils de préparation et les actualités de PassCRPE (facultatif).</span></label>' +
       '<label class="check"><input type="checkbox" name="consent_partenaires"> <span>J\'accepte de recevoir des offres de partenaires de PassCRPE (facultatif).</span></label>' +
-      '<label class="check"><input type="checkbox" name="consent_contact_sms"> <span>J\'accepte d\'être contacté(e) par WhatsApp ou SMS pour recevoir des offres, des contenus ou donner mon avis sur ma préparation (facultatif, numéro requis).</span></label>' +
+      '<label class="check"><input type="checkbox" name="consent_contact_sms"> <span>J\'accepte d\'être contacté(e) par WhatsApp ou SMS pour recevoir des offres, des contenus ou donner mon avis sur ma préparation (facultatif).</span></label>' +
       (state.formError ? '<div class="notice notice-error" role="alert">' + esc(state.formError) + '</div>' : '') +
       '<div class="actions" style="margin-top:12px"><button class="btn btn-ghost" type="button" data-act="prev">← Revoir mes réponses</button><button class="btn btn-primary" type="submit">Recevoir mon rapport</button></div>' +
-      '<p class="legal">Les cases facultatives n\'ont aucun effet sur l\'envoi de ton rapport. Tes données sont traitées par PassCRPE pour générer et t\'envoyer ton rapport (outil d\'envoi : Klaviyo ; correction par intelligence artificielle : Anthropic, sans tes coordonnées) et, si tu l\'acceptes, t\'envoyer nos e-mails. Si tu le donnes, ton numéro peut servir à t\'appeler (offre, contenu, retour sur ta préparation), et à t\'écrire par WhatsApp ou SMS seulement si tu as coché la case correspondante. Tu peux te désinscrire à tout moment et exercer tes droits d\'accès, de rectification et de suppression en écrivant à contact@passcrpe.fr. En savoir plus : <a href="/politique-de-confidentialite" target="_blank" rel="noopener">politique de confidentialité</a>.</p></form>';
+      '<p class="legal">Les cases facultatives n\'ont aucun effet sur l\'envoi de ton rapport. Tes données sont traitées par PassCRPE pour générer et t\'envoyer ton rapport (outil d\'envoi : Klaviyo ; correction par intelligence artificielle : Anthropic, sans tes coordonnées) et, si tu l\'acceptes, t\'envoyer nos e-mails. Ton numéro peut servir à t\'appeler (offre, contenu, retour sur ta préparation), et à t\'écrire par WhatsApp ou SMS seulement si tu as coché la case correspondante. Tu peux te désinscrire à tout moment et exercer tes droits d\'accès, de rectification et de suppression en écrivant à contact@passcrpe.fr. En savoir plus : <a href="/politique-de-confidentialite" target="_blank" rel="noopener">politique de confidentialité</a>.</p></form>';
   }
 
   function render() {
@@ -369,7 +354,7 @@ ENTRAINEUR_JS = r'''<script>
     else if (state.step === 'sent') html += state.reportUrl
       ? '<div class="sent"><div class="sent-icon" aria-hidden="true">✓</div><h3>Ton rapport est prêt</h3><p>L\'e-mail n\'a pas pu partir pour le moment : garde ce lien pour retrouver ton rapport.</p><a class="btn btn-primary" href="' + esc(state.reportUrl) + '">Voir mon rapport</a></div>'
       : '<div class="sent"><div class="sent-icon" aria-hidden="true">✓</div><h3>Ton rapport t\'a été envoyé par e-mail</h3><p>Tu vas le recevoir à <strong>' + esc(state.email) + '</strong> d\'ici quelques minutes. Pense à vérifier tes courriers indésirables et l\'onglet Promotions.</p></div>';
-    else if (state.step === 'limit') html += '<div class="notice notice-info">Tu as déjà reçu un rapport cette semaine avec cette adresse e-mail. Tu pourras en demander un nouveau à partir du ' + resetLabel(state.limitReset) + ' à 0 h. Tes réponses restent enregistrées sur cet appareil d\'ici là.</div>' +
+    else if (state.step === 'limit') html += '<div class="notice notice-info">Tu as déjà reçu un rapport cette semaine avec cette adresse e-mail. Tu pourras en demander un nouveau à partir du ' + resetLabel(state.limitReset) + ' à 0 h. </div>' +
       '<div class="actions" style="margin-top:12px"><button class="btn btn-ghost" type="button" data-act="back-form">Revenir au formulaire</button></div>';
     body.innerHTML = html;
     updateCount();
@@ -406,8 +391,7 @@ ENTRAINEUR_JS = r'''<script>
       prenom: f.prenom.value.trim(), nom: f.nom.value.trim(), email: f.email.value.trim(), telephone: f.telephone.value.trim(),
       consent_conseils: f.consent_conseils.checked, consent_partenaires: f.consent_partenaires.checked, consent_contact_sms: f.consent_contact_sms.checked,
     };
-    if (!payload.prenom || !payload.nom || !payload.email) { state.formError = 'Merci d\'indiquer ton prénom, ton nom et ton adresse e-mail.'; render(); return; }
-    if (payload.consent_contact_sms && !payload.telephone) { state.formError = 'Indique ton numéro de téléphone pour être contacté(e) par WhatsApp ou SMS.'; render(); return; }
+    if (!payload.prenom || !payload.nom || !payload.email || !payload.telephone) { state.formError = 'Merci d\'indiquer ton prénom, ton nom, ton adresse e-mail et ton numéro de téléphone.'; render(); return; }
     if (!answered()) { state.formError = 'Réponds au moins à une question avant de demander ton rapport.'; render(); return; }
     state.formError = ''; state.error = ''; state.step = 'sending'; render(); scrollTop();
     post('/rapport', payload).then(function (d) {
@@ -439,7 +423,6 @@ ENTRAINEUR_JS = r'''<script>
   });
   body.addEventListener('input', function (e) { if (e.target.id === 'answer') { keepAnswer(); updateCount(); } });
 
-  restore();
   render();
 })();
 </script>'''.replace('__N__', str(QUESTIONS_PER_SET))
@@ -475,7 +458,8 @@ RAPPORT_JS = r'''<script>
       '<h1>Ton rapport détaillé' + (d.prenom ? ', ' + esc(d.prenom) : '') + '</h1>' +
       '<div class="report-score"><div><span class="score-big">' + note(d.note) + '</span><span class="score-sub">note indicative moyenne</span></div>' + level(s.niveau) + '</div>' +
       '<p class="lead">' + esc(s.appreciation_globale) + '</p>' +
-      '<div class="actions no-print" style="margin:8px 0 8px"><button class="btn btn-ghost" type="button" onclick="window.print()">Télécharger en PDF</button></div>' +
+      '<div class="notice notice-info no-print" style="margin:8px 0">Ton rapport reste disponible <strong>30 jours</strong> avec ce lien, puis il est supprimé. <strong>Pense à le télécharger</strong> pour le garder.</div>' +
+      '<div class="actions no-print" style="margin:8px 0 8px"><button class="btn btn-primary" type="button" onclick="window.print()">Télécharger mon rapport en PDF</button></div>' +
       '<h2>Ta manière de répondre</h2>' + DIMS.map(function (k) { return '<h3>' + k[1] + '</h3><p>' + esc(s.analyse[k[0]]) + '</p>'; }).join('') +
       '<h3>Tes habitudes récurrentes</h3>' + list(s.habitudes) +
       '<h3>Tes points forts</h3>' + list(s.points_forts) +
@@ -522,7 +506,7 @@ def page_confidentialite():
   <h2>2. Données collectées</h2>
   <ul>
     <li><strong>Inscription à l'application PassCRPE</strong> : prénom, nom, adresse e-mail, mot de passe (chiffré), numéro de téléphone (facultatif), concours et académie visés.</li>
-    <li><strong>Entraîneur CRPE</strong> : prénom, nom, adresse e-mail, numéro de téléphone (facultatif), choix de consentement, réponses rédigées et rapport détaillé généré (consultable via un lien personnel envoyé par e-mail). Nous n'enregistrons pas ton adresse IP.</li>
+    <li><strong>Entraîneur CRPE</strong> : prénom, nom, adresse e-mail, numéro de téléphone, choix de consentement, réponses rédigées et rapport détaillé généré (consultable via un lien personnel envoyé par e-mail). Nous n'enregistrons pas ton adresse IP.</li>
     <li><strong>Utilisation de l'application</strong> : réponses aux exercices, progression, échanges avec le support.</li>
     <li><strong>Paiement</strong> : le paiement est traité par PayPal ; PassCRPE ne reçoit pas tes coordonnées bancaires.</li>
     <li><strong>Mesure d'audience et publicité</strong> : cookies Google Analytics (via Google Tag Manager) et Meta Pixel.</li>
@@ -534,7 +518,7 @@ def page_confidentialite():
     <li>Calculer les quotas de questions et éviter les abus : intérêt légitime.</li>
     <li>Corriger tes réponses avec une intelligence artificielle et améliorer la qualité des corrections : exécution du service et intérêt légitime.</li>
     <li>T'envoyer nos conseils de préparation, nos actualités ou des offres de partenaires par e-mail : <strong>uniquement avec ton consentement</strong>, que tu peux retirer à tout moment.</li>
-    <li>Te contacter par téléphone avec le numéro donné (facultatif) dans l'Entraîneur CRPE, pour te proposer une offre, partager un contenu ou recueillir ton retour sur ton parcours de préparation : intérêt légitime, tu peux t'y opposer à tout moment.</li>
+    <li>Te contacter par téléphone avec le numéro donné dans l'Entraîneur CRPE, pour te proposer une offre, partager un contenu ou recueillir ton retour sur ton parcours de préparation : intérêt légitime, tu peux t'y opposer à tout moment.</li>
     <li>Te contacter par WhatsApp ou SMS pour les mêmes raisons : <strong>uniquement si tu as coché la case correspondante</strong>. Tu peux retirer ton accord à tout moment (répondre STOP ou écrire à contact@passcrpe.fr).</li>
     <li>Mesure d'audience et publicité ciblée : ton consentement aux cookies.</li>
   </ul>
@@ -555,7 +539,7 @@ def page_confidentialite():
   <ul>
     <li>Compte de l'application : pendant la durée de ton accès, puis 3 ans après ta dernière activité.</li>
     <li>Contacts de l'Entraîneur CRPE et prospects : 3 ans à compter du dernier contact de ta part.</li>
-    <li>Réponses et rapports de l'Entraîneur CRPE : 12 mois au maximum.</li>
+    <li>Réponses et rapports de l'Entraîneur CRPE : 30 jours, puis suppression définitive.</li>
     <li>Données de facturation : 10 ans (obligation légale).</li>
     <li>Cookies : 13 mois au maximum.</li>
   </ul>
@@ -565,7 +549,7 @@ def page_confidentialite():
   <p>Si tu estimes que tes droits ne sont pas respectés, tu peux adresser une réclamation à la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>).</p>
 
   <h2>7. Cookies</h2>
-  <p>Le site utilise des cookies nécessaires à son fonctionnement (connexion à l'application et accès à l'Entraîneur CRPE) et, sous réserve de ton consentement, des cookies de mesure d'audience et de publicité.</p>
+  <p>Le site utilise des cookies nécessaires à son fonctionnement (connexion à l'application) et, sous réserve de ton consentement, des cookies de mesure d'audience et de publicité.</p>
 
   <h2>8. Sécurité</h2>
   <p>Les données sont transmises de façon chiffrée (HTTPS) et l'accès aux bases de données est restreint. Les corrections par intelligence artificielle sont générées côté serveur.</p>
