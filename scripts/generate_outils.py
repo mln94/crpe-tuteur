@@ -210,7 +210,7 @@ def page_outils():
       <div class="tool-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
       <span class="tool-badge">Gratuit</span>
       <h2>Entraîneur CRPE</h2>
-      <p>Réponds à 5 questions de maths ou de français tirées au hasard et reçois par e-mail un rapport détaillé : correction de chaque réponse et analyse de ta manière de répondre.</p>
+      <p><strong>Apprends à rédiger tes réponses comme le jury du CRPE l'attend.</strong> Réponds à 5 questions de maths ou de français, comme le jour du concours, puis reçois par e-mail un rapport détaillé : chaque réponse corrigée selon les critères du jury (justification, vocabulaire précis, rigueur, qualité de la langue) et des conseils concrets pour mieux rédiger.</p>
       <a class="btn btn-primary" href="/outils/entraineur-crpe">Essayer gratuitement</a>
     </article>
   </div>
@@ -229,7 +229,7 @@ def page_entraineur():
     body = f'''<main class="page-wrap">
   {crumb}
   <h1>Entraîneur CRPE : réponds à {QUESTIONS_PER_SET} questions, reçois ton rapport détaillé</h1>
-  <p class="lead">Choisis une matière, rédige tes réponses à {QUESTIONS_PER_SET} questions de maths ou de français tirées au hasard, et reçois gratuitement par e-mail un rapport détaillé : la correction de chaque réponse et une analyse de ta manière de répondre, conforme aux attentes du CRPE.</p>
+  <p class="lead">Au CRPE, avoir la bonne réponse ne suffit pas : le jury attend une réponse <strong>rédigée, justifiée et rigoureuse</strong>, avec un vocabulaire précis et une langue maîtrisée. Entraîne-toi sur {QUESTIONS_PER_SET} questions de maths ou de français tirées au hasard, puis reçois gratuitement par e-mail un rapport détaillé qui corrige chaque réponse selon ces attentes et analyse ta manière de rédiger.</p>
 
   <section class="tool" id="outil" aria-label="Entraîneur CRPE">
     <div class="tool-counter" id="counter" aria-live="polite">Gratuit · {QUESTIONS_PER_SET} questions · rapport détaillé par e-mail</div>
