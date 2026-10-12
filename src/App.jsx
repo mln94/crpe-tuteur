@@ -5887,7 +5887,7 @@ function SupportTicketCard({ ticket: t, statusLabel, statusColor, onReply, onClo
 function BottomNav({ active, onChange, unreadSupport = 0 }) {
   const tabs = [
     { id: 'home',    label: 'Accueil',    icon: Home          },
-    { id: 'chat',    label: 'Session',    icon: MessageCircle },
+    { id: 'chat',    label: 'Reprendre',  icon: RotateCcw     },
     { id: 'history', label: 'Historique', icon: BookOpen      },
     { id: 'stats',   label: 'Stats',      icon: BarChart2     },
     { id: 'support', label: 'Support',    icon: HelpCircle    },
@@ -6394,6 +6394,8 @@ function AppContent({ authUser }) {
   };
 
   const handleTabChange = (tab) => {
+    // « Reprendre » pendant une série de questions : on y est déjà, rien à faire
+    if (tab === 'chat' && (showMathBanqueView || showBanqueView)) return;
     // Les écrans de questions (banques maths/français, choix du thème ou de la classe) s'affichent à la place des onglets :
     // on les ferme comme le bouton retour, sinon le clic sur un onglet n'a aucun effet visible
     if (showMathBanqueView || showBanqueView || showTopicPicker || showClassPicker) {
@@ -6409,8 +6411,13 @@ function AppContent({ authUser }) {
         refreshFreeQsCount(uid);
       }
     }
-    if (tab === 'chat' && !chatMatiere) {
-      setActiveTab('home');
+    // « Reprendre » : relance la dernière session non fermée (une session se ferme avec « Nouvelle session »)
+    if (tab === 'chat') {
+      if (chatMatiere) { setActiveTab('chat'); return; }              // conversation déjà ouverte pendant cette visite
+      if (banqueSession) { handleResumeBanque(); return; }             // série de questions de français en cours
+      if (storage.get('crpe_session_francais')?.displayMessages?.length) { handleStart('francais', false); return; }
+      if (storage.get('crpe_session_maths')?.displayMessages?.length)    { handleStart('maths', false); return; }
+      setActiveTab('home');                                            // aucune session en cours : on choisit sur l'accueil
       return;
     }
     setActiveTab(tab);
