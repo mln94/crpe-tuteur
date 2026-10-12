@@ -217,6 +217,9 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
         properties: {
           report_url: url,
           prenom,
+          // Date du rapport déjà rédigée en français, heure de Paris (ex. « 12 octobre 2026 »)
+          date_rapport: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris' }),
+          date_rapport_courte: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Paris' }),
           matiere: MATIERE_LABEL[matiere],
           note_globale: String(note).replace('.', ','),
           niveau: NIVEAU_LABEL[synthese.niveau],
