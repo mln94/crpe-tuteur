@@ -6394,6 +6394,21 @@ function AppContent({ authUser }) {
   };
 
   const handleTabChange = (tab) => {
+    // Les écrans de questions (banques maths/français, choix du thème ou de la classe) s'affichent à la place des onglets :
+    // on les ferme comme le bouton retour, sinon le clic sur un onglet n'a aucun effet visible
+    if (showMathBanqueView || showBanqueView || showTopicPicker || showClassPicker) {
+      setShowMathBanqueView(false);
+      setShowBanqueView(false);
+      setShowTopicPicker(false);
+      setShowClassPicker(false);
+      setAutoResumeBanque(false);
+      setPendingStart(null);
+      const uid = authUser?.id || storage.get('crpe_user_id');
+      if (uid) {
+        fetchLastActiveSession(uid).then(row => setBanqueSession(row ?? null));
+        refreshFreeQsCount(uid);
+      }
+    }
     if (tab === 'chat' && !chatMatiere) {
       setActiveTab('home');
       return;

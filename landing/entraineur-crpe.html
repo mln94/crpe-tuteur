@@ -240,7 +240,7 @@
     .breadcrumb a:hover { color: var(--indigo-600); }
     .breadcrumb [aria-current] { color: var(--gray-700); font-weight: 600; }
 
-    .tool-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
+    .tool-cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 24px; }
     .tool-card { display: flex; flex-direction: column; gap: 10px; padding: 22px; border: 1px solid var(--gray-200); border-radius: 16px; background: #fff; box-shadow: 0 1px 3px rgba(15,23,42,.04); }
     .tool-card-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--indigo-50); color: var(--indigo-600); display: flex; align-items: center; justify-content: center; }
     .tool-card-icon svg { width: 22px; height: 22px; }
@@ -249,6 +249,14 @@
     .tool-card:hover { border-color: var(--indigo-600); box-shadow: 0 8px 24px rgba(79,70,229,.12); transform: translateY(-2px); }
     .tool-card .btn::after { content: ''; position: absolute; inset: 0; border-radius: 16px; } /* toute la carte ouvre l'outil */
     .tool-card p { margin: 0; font-size: 15px; color: var(--gray-500); flex: 1; }
+    .tool-card-text { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+    .tool-card-title { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .tool-card-title .tool-badge { align-self: center; }
+    .tool-card-icon { flex-shrink: 0; }
+    @media (min-width: 720px) {
+      .tool-card { flex-direction: row; align-items: center; gap: 22px; padding: 22px 26px; }
+      .tool-card .btn { flex-shrink: 0; }
+    }
     .tool-badge { align-self: flex-start; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #065f46; background: #d1fae5; padding: 3px 9px; border-radius: 20px; }
 
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: 12px; border: 0; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; transition: background .15s, border-color .15s, color .15s; }

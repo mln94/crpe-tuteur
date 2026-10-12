@@ -63,7 +63,7 @@ CSS = """
     .breadcrumb a:hover { color: var(--indigo-600); }
     .breadcrumb [aria-current] { color: var(--gray-700); font-weight: 600; }
 
-    .tool-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
+    .tool-cards { display: grid; grid-template-columns: 1fr; gap: 16px; margin-top: 24px; }
     .tool-card { display: flex; flex-direction: column; gap: 10px; padding: 22px; border: 1px solid var(--gray-200); border-radius: 16px; background: #fff; box-shadow: 0 1px 3px rgba(15,23,42,.04); }
     .tool-card-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--indigo-50); color: var(--indigo-600); display: flex; align-items: center; justify-content: center; }
     .tool-card-icon svg { width: 22px; height: 22px; }
@@ -72,6 +72,14 @@ CSS = """
     .tool-card:hover { border-color: var(--indigo-600); box-shadow: 0 8px 24px rgba(79,70,229,.12); transform: translateY(-2px); }
     .tool-card .btn::after { content: ''; position: absolute; inset: 0; border-radius: 16px; } /* toute la carte ouvre l'outil */
     .tool-card p { margin: 0; font-size: 15px; color: var(--gray-500); flex: 1; }
+    .tool-card-text { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+    .tool-card-title { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+    .tool-card-title .tool-badge { align-self: center; }
+    .tool-card-icon { flex-shrink: 0; }
+    @media (min-width: 720px) {
+      .tool-card { flex-direction: row; align-items: center; gap: 22px; padding: 22px 26px; }
+      .tool-card .btn { flex-shrink: 0; }
+    }
     .tool-badge { align-self: flex-start; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #065f46; background: #d1fae5; padding: 3px 9px; border-radius: 20px; }
 
     .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: 12px; border: 0; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; transition: background .15s, border-color .15s, color .15s; }
@@ -227,9 +235,10 @@ def page_outils():
   <div class="tool-cards">
     <article class="tool-card">
       <div class="tool-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
-      <span class="tool-badge">Gratuit</span>
-      <h2>Entraîneur CRPE</h2>
+      <div class="tool-card-text">
+      <div class="tool-card-title"><h2>Entraîneur CRPE</h2><span class="tool-badge">Gratuit</span></div>
       <p><strong>Apprends à rédiger tes réponses comme le jury du CRPE l'attend.</strong> Réponds à 5 questions de maths ou de français, comme le jour du concours, puis reçois par e-mail un rapport détaillé : chaque réponse corrigée selon les critères du jury (justification, vocabulaire précis, rigueur, qualité de la langue) et des conseils concrets pour mieux rédiger.</p>
+      </div>
       <a class="btn btn-primary" href="/outils/entraineur-crpe">Essayer gratuitement</a>
     </article>
   </div>
