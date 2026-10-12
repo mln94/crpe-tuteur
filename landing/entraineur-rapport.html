@@ -484,13 +484,13 @@ window.EC = (function () {
   function level(n) { return '<span class="level level-' + esc(n) + '">' + esc(LEVELS[n] || n) + '</span>'; }
 
   fetch('/api/entraineur/rapport/' + encodeURIComponent(token)).then(function (r) { return r.json().then(function (d) { d._status = r.status; return d; }); }).then(function (d) {
-    if (d._status !== 200) { el.innerHTML = '<h1>Rapport introuvable</h1><p>Ce lien n\'est pas valide ou a expiré. <a href="/outils/entraineur-crpe">Refaire une série de questions</a>.</p>'; return; }
+    if (d._status !== 200) { el.innerHTML = '<h1>Rapport introuvable</h1><p>Ce lien n\'est pas valide ou a expiré.</p>'; return; }
     var s = d.synthese, date = new Date(d.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
     var html = '<p class="report-kicker">Entraîneur CRPE · ' + esc(EC.SUBJECTS[d.matiere]) + ' · ' + esc(date) + '</p>' +
       '<h1>Ton rapport détaillé' + (d.prenom ? ', ' + esc(d.prenom) : '') + '</h1>' +
       '<div class="report-score"><div><span class="score-big">' + note(d.note) + '</span><span class="score-sub">note indicative moyenne</span></div>' + level(s.niveau) + '</div>' +
       '<p class="lead">' + esc(s.appreciation_globale) + '</p>' +
-      '<div class="actions no-print" style="margin:8px 0 8px"><button class="btn btn-ghost" type="button" onclick="window.print()">Télécharger en PDF</button><a class="btn btn-primary" href="/outils/entraineur-crpe">Refaire une série</a></div>' +
+      '<div class="actions no-print" style="margin:8px 0 8px"><button class="btn btn-ghost" type="button" onclick="window.print()">Télécharger en PDF</button></div>' +
       '<h2>Ta manière de répondre</h2>' + DIMS.map(function (k) { return '<h3>' + k[1] + '</h3><p>' + esc(s.analyse[k[0]]) + '</p>'; }).join('') +
       '<h3>Tes habitudes récurrentes</h3>' + list(s.habitudes) +
       '<h3>Tes points forts</h3>' + list(s.points_forts) +
