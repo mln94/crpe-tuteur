@@ -272,7 +272,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       const reponses = Array.isArray(req.body?.reponses) ? req.body.reponses.map(r => String(r || '').trim()) : [];
       if (reponses.length !== QUESTIONS_PER_SET) return fail(res, 400, 'Réponses incomplètes.');
       if (reponses.some(r => r.length > MAX_ANSWER_LENGTH)) return fail(res, 400, `Chaque réponse est limitée à ${MAX_ANSWER_LENGTH} caractères.`);
-      if (reponses.every(r => r.length === 0)) return fail(res, 400, 'Réponds au moins à une question avant de demander ton rapport.');
+      if (reponses.some(r => r.length === 0)) return fail(res, 400, `Réponds aux ${QUESTIONS_PER_SET} questions avant de demander ton rapport.`);
 
       const saved = await saveLead(req.body || {});
       if (saved.error) return fail(res, 400, saved.error);

@@ -56,6 +56,9 @@ CSS = """
     .tool-card-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--indigo-50); color: var(--indigo-600); display: flex; align-items: center; justify-content: center; }
     .tool-card-icon svg { width: 22px; height: 22px; }
     .tool-card h2 { font-size: 19px; margin: 0; }
+    .tool-card { position: relative; transition: border-color .15s, box-shadow .15s, transform .15s; }
+    .tool-card:hover { border-color: var(--indigo-600); box-shadow: 0 8px 24px rgba(79,70,229,.12); transform: translateY(-2px); }
+    .tool-card .btn::after { content: ''; position: absolute; inset: 0; border-radius: 16px; } /* toute la carte ouvre l'outil */
     .tool-card p { margin: 0; font-size: 15px; color: var(--gray-500); flex: 1; }
     .tool-badge { align-self: flex-start; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #065f46; background: #d1fae5; padding: 3px 9px; border-radius: 20px; }
 
@@ -133,6 +136,10 @@ CSS = """
     @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
     .check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; margin-bottom: 8px; line-height: 1.45; cursor: pointer; }
     .check input { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--indigo-600); flex-shrink: 0; }
+    .why-box { background: var(--gray-50, #f9fafb); border: 1px solid var(--gray-100); border-radius: 12px; padding: 12px 14px; margin: 4px 0 14px; font-size: 14px; }
+    .why-box h4 { font-size: 14px; font-weight: 800; color: var(--gray-900); margin: 0 0 6px; }
+    .why-box p { margin: 0 0 8px; }
+    .why-box p:last-child { margin-bottom: 0; }
     .legal { font-size: 12px; color: var(--gray-500); line-height: 1.55; margin-top: 10px; }
 
     .steps-list { counter-reset: s; list-style: none; margin-left: 0 !important; }
@@ -249,9 +256,6 @@ def page_entraineur():
     <li><strong>Niveau cycle 4</strong> (5e, 4e, 3e) : c'est le niveau attendu pour les connaissances disciplinaires du CRPE en mathématiques et en français.</li>
   </ol>
 
-  <h2>Pourquoi te demande-t-on tes coordonnées ?</h2>
-  <p>Construire cet outil nous a demandé beaucoup de travail : une banque de questions de niveau cycle 4, un correcteur exigeant et un rapport complet sur ta manière de répondre. Nous te l'offrons gratuitement ; en échange, nous te demandons simplement de nous laisser tes coordonnées.</p>
-  <p>Elles servent à t'envoyer ton rapport et, si tu l'acceptes avec les cases prévues, à te faire profiter d'informations utiles sur le CRPE, de la part de PassCRPE ou de nos partenaires. Rien d'autre : elles ne sont jamais revendues, et tu peux te désinscrire à tout moment.</p>
 </main>
 ''' + COMMON_JS + ENTRAINEUR_JS
     return page(f"Entraîneur CRPE gratuit : {QUESTIONS_PER_SET} questions de maths ou de français et un rapport détaillé | PassCRPE",
@@ -303,7 +307,6 @@ ENTRAINEUR_JS = r'''<script>
       .catch(function () { return { _status: 0, error: 'Connexion impossible. Vérifie ta connexion internet.' }; });
   }
   function resetLabel(iso) { return new Date(iso).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Paris' }); }
-  function answered() { return state.serie ? state.serie.reponses.filter(function (r) { return r && r.trim(); }).length : 0; }
 
   function chooserHtml() {
     return '<div><h3 style="margin-top:0">Choisis ta matière</h3><div class="subject-choice">' +
@@ -326,13 +329,25 @@ ENTRAINEUR_JS = r'''<script>
       '<div class="actions" style="margin-top:12px">' +
       (i > 0 ? '<button class="btn btn-ghost" type="button" data-act="prev">← Précédente</button>' : '') +
       '<button class="btn btn-primary" type="submit">' + (i === N - 1 ? 'Terminer' : 'Question suivante →') + '</button></div>' +
-      '<p style="font-size:13px;color:var(--gray-500);margin-top:8px">Tu sèches ? Passe à la suite : la réponse attendue sera dans ton rapport.</p></form>';
+      '<p style="font-size:13px;color:var(--gray-500);margin-top:8px">Les ' + N + ' questions doivent avoir une réponse pour recevoir ton rapport. Tu sèches ? Écris ce que tu sais : le rapport t\'expliquera la réponse attendue.</p></form>';
+  }
+
+  // Questions encore sans réponse : le formulaire ne peut pas partir tant qu'il en reste
+  function missing() { return state.serie ? state.serie.reponses.map(function (r, i) { return r && r.trim() ? -1 : i; }).filter(function (i) { return i >= 0; }) : []; }
+  function missingHtml() {
+    var m = missing();
+    if (!m.length) return '';
+    return '<div class="notice notice-error" role="alert"><strong>Il te reste ' + m.length + ' question' + (m.length > 1 ? 's' : '') + ' sans réponse.</strong> Réponds aux ' + N + ' questions pour recevoir ton rapport : si tu sèches, écris ce que tu sais.' +
+      '<div class="actions" style="margin-top:10px">' + m.map(function (i) { return '<button class="btn btn-ghost" type="button" data-act="goto" data-index="' + i + '">Question ' + (i + 1) + '</button>'; }).join('') + '</div></div>';
   }
 
   function formHtml() {
-    var n = answered();
     return progressHtml() + '<form class="lead-form" id="leadForm" novalidate><h3>Reçois ton rapport détaillé par e-mail</h3>' +
-      '<p>Tu as répondu à <strong>' + n + ' question' + (n > 1 ? 's' : '') + ' sur ' + N + '</strong>. Laisse ton prénom, ton nom, ton adresse e-mail et ton numéro de téléphone : ton rapport (correction de chaque réponse et analyse de ta manière de répondre) t\'est envoyé gratuitement. C\'est la seule contrepartie que nous te demandons pour cet outil.</p>' +
+      missingHtml() +
+      '<p>Laisse ton prénom, ton nom, ton adresse e-mail et ton numéro de téléphone : ton rapport (correction de chaque réponse et analyse de ta manière de rédiger) t\'est envoyé gratuitement.</p>' +
+      '<div class="why-box"><h4>Pourquoi te demande-t-on tes coordonnées ?</h4>' +
+      '<p>Créer cet outil nous a demandé beaucoup de travail : une banque de questions de niveau cycle 4, un correcteur aussi exigeant que le jury et un rapport complet sur ta manière de rédiger. Nous te l\'offrons gratuitement ; en échange, nous te demandons simplement tes coordonnées.</p>' +
+      '<p>Elles servent à t\'envoyer ton rapport et, si tu l\'acceptes en cochant les cases ci-dessous, à te transmettre des informations utiles sur le CRPE, de la part de PassCRPE ou de nos partenaires. Rien d\'autre : elles ne sont jamais revendues et tu peux te désinscrire à tout moment.</p></div>' +
       '<div class="field-row"><div class="field"><label for="lf-prenom">Prénom</label><input id="lf-prenom" name="prenom" autocomplete="given-name" required maxlength="80"><span class="field-hint">Pour personnaliser ton rapport et nos e-mails.</span></div>' +
       '<div class="field"><label for="lf-nom">Nom</label><input id="lf-nom" name="nom" autocomplete="family-name" required maxlength="80"><span class="field-hint">Pour identifier ton rapport.</span></div></div>' +
       '<div class="field"><label for="lf-email">Adresse e-mail</label><input id="lf-email" name="email" type="email" autocomplete="email" required maxlength="254"><span class="field-hint">Pour t\'envoyer ton rapport et, seulement si tu l\'acceptes, nos conseils de préparation.</span></div>' +
@@ -341,7 +356,7 @@ ENTRAINEUR_JS = r'''<script>
       '<label class="check"><input type="checkbox" name="consent_partenaires"> <span>J\'accepte de recevoir des offres de partenaires de PassCRPE (facultatif).</span></label>' +
       '<label class="check"><input type="checkbox" name="consent_contact_sms"> <span>J\'accepte d\'être contacté(e) par WhatsApp ou SMS pour recevoir des offres, des contenus ou donner mon avis sur ma préparation (facultatif).</span></label>' +
       (state.formError ? '<div class="notice notice-error" role="alert">' + esc(state.formError) + '</div>' : '') +
-      '<div class="actions" style="margin-top:12px"><button class="btn btn-ghost" type="button" data-act="prev">← Revoir mes réponses</button><button class="btn btn-primary" type="submit">Recevoir mon rapport</button></div>' +
+      '<div class="actions" style="margin-top:12px"><button class="btn btn-ghost" type="button" data-act="prev">← Revoir mes réponses</button><button class="btn btn-primary" type="submit"' + (missing().length ? ' disabled title="Réponds d\'abord aux ' + N + ' questions"' : '') + '>Recevoir mon rapport</button></div>' +
       '<p class="legal">Les cases facultatives n\'ont aucun effet sur l\'envoi de ton rapport. Tes données sont traitées par PassCRPE pour générer et t\'envoyer ton rapport (outil d\'envoi : Klaviyo ; correction par intelligence artificielle : Anthropic, sans tes coordonnées) et, si tu l\'acceptes, t\'envoyer nos e-mails. Ton numéro peut servir à t\'appeler (offre, contenu, retour sur ta préparation), et à t\'écrire par WhatsApp ou SMS seulement si tu as coché la case correspondante. Tu peux te désinscrire à tout moment et exercer tes droits d\'accès, de rectification et de suppression en écrivant à contact@passcrpe.fr. En savoir plus : <a href="/politique-de-confidentialite" target="_blank" rel="noopener">politique de confidentialité</a>.</p></form>';
   }
 
@@ -392,7 +407,7 @@ ENTRAINEUR_JS = r'''<script>
       consent_conseils: f.consent_conseils.checked, consent_partenaires: f.consent_partenaires.checked, consent_contact_sms: f.consent_contact_sms.checked,
     };
     if (!payload.prenom || !payload.nom || !payload.email || !payload.telephone) { state.formError = 'Merci d\'indiquer ton prénom, ton nom, ton adresse e-mail et ton numéro de téléphone.'; render(); return; }
-    if (!answered()) { state.formError = 'Réponds au moins à une question avant de demander ton rapport.'; render(); return; }
+    if (missing().length) { state.formError = 'Réponds aux ' + N + ' questions avant de demander ton rapport.'; render(); return; }
     state.formError = ''; state.error = ''; state.step = 'sending'; render(); scrollTop();
     post('/rapport', payload).then(function (d) {
       if (d._status === 200) {
@@ -411,6 +426,7 @@ ENTRAINEUR_JS = r'''<script>
     if (act === 'start') start(el.getAttribute('data-matiere'));
     else if (act === 'prev') { keepAnswer(); state.index = Math.max(0, (state.step === 'form' ? N : state.index) - 1); state.step = 'answer'; save(); render(); scrollTop(); }
     else if (act === 'back-form') { state.step = 'form'; render(); }
+    else if (act === 'goto') { state.index = +el.getAttribute('data-index'); state.step = 'answer'; render(); scrollTop(); }
   });
   body.addEventListener('submit', function (e) {
     e.preventDefault();
