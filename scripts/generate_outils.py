@@ -521,7 +521,7 @@ def page_confidentialite():
 
   <h2>2. Données collectées</h2>
   <ul>
-    <li><strong>Inscription à l'application PassCRPE</strong> : prénom, nom, adresse e-mail, mot de passe (chiffré), numéro de téléphone (facultatif), concours et académie visés.</li>
+    <li><strong>Inscription à l'application PassCRPE</strong> : prénom, nom, adresse e-mail, mot de passe (chiffré), numéro de téléphone, concours et académie visés.</li>
     <li><strong>Entraîneur CRPE</strong> : prénom, nom, adresse e-mail, numéro de téléphone, choix de consentement, réponses rédigées et rapport détaillé généré (consultable via un lien personnel envoyé par e-mail). Nous n'enregistrons pas ton adresse IP.</li>
     <li><strong>Utilisation de l'application</strong> : réponses aux exercices, progression, échanges avec le support.</li>
     <li><strong>Paiement</strong> : le paiement est traité par PayPal ; PassCRPE ne reçoit pas tes coordonnées bancaires.</li>

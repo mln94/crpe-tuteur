@@ -1478,7 +1478,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </select>
         </div>
         <div class="auth-field">
-          <label class="auth-label" for="authPhone">Téléphone <span style="font-weight:400; color:#94a3b8">(optionnel)</span></label>
+          <label class="auth-label" for="authPhone">Téléphone</label>
           <div class="auth-phone-row">
             <select class="auth-phone-select" id="authPhoneCode">
               <option value="+33" selected>🇫🇷 +33</option>
@@ -1675,7 +1675,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
               <option value="+260">🇿🇲 Zambie +260</option>
               <option value="+263">🇿🇼 Zimbabwe +263</option>
             </select>
-            <input class="auth-input" type="tel" id="authPhone" placeholder="6 12 34 56 78" autocomplete="tel-national" style="flex:1; width:auto;" />
+            <input class="auth-input" type="tel" id="authPhone" placeholder="6 12 34 56 78" autocomplete="tel-national" style="flex:1; width:auto;" maxlength="20" />
           </div>
         </div>
       </div>
@@ -1846,8 +1846,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const btn      = document.getElementById('authSubmit');
 
     if (!email || !password) return;
-    if (authMode === 'register' && (!prenom || !concours || !academie)) {
+    if (authMode === 'register' && (!prenom || !concours || !academie || !phoneNumber)) {
       showAuthMessage('Veuillez remplir tous les champs.', 'error');
+      return;
+    }
+    // Téléphone obligatoire à l'inscription : 6 à 15 chiffres
+    const phoneDigits = phoneNumber.replace(/\D/g, '').length;
+    if (authMode === 'register' && (phoneDigits < 6 || phoneDigits > 15)) {
+      showAuthMessage('Veuillez indiquer un numéro de téléphone valide.', 'error');
       return;
     }
     clearAuthMessage();
@@ -1869,7 +1875,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const { data: signUpData, error } = await sb.auth.signUp({
         email,
         password,
-        options: { data: { prenom, nom, concours, academie, consent_conseils, consent_partenaires, consent_version: '2026-10-12', consent_at: new Date().toISOString() } }
+        options: { data: { prenom, nom, concours, academie, telephone, consent_conseils, consent_partenaires, consent_version: '2026-10-12', consent_at: new Date().toISOString() } }
       });
       if (error) {
         window.dataLayer.push({ event: 'sign_up_error', error_reason: error.message });
