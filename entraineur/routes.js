@@ -220,6 +220,10 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
           // Date du rapport déjà rédigée en français, heure de Paris (ex. « 12 octobre 2026 »)
           date_rapport: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris' }),
           date_rapport_courte: new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Paris' }),
+          // Nom du rapport : prénom_entraineur_crpe_JJ-MM-AAAA (ex. « Marie_entraineur_crpe_12-10-2026 »)
+          nom_rapport: `${String(prenom || 'rapport').trim().replace(/\s+/g, '-')}_entraineur_crpe_${new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Paris' }).replace(/\//g, '-')}`,
+          // Dernier jour où le lien fonctionne (le rapport est supprimé après 30 jours)
+          date_expiration: new Date(Date.now() + (REPORT_RETENTION_DAYS - 1) * 24 * 3600 * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris' }),
           matiere: MATIERE_LABEL[matiere],
           note_globale: String(note).replace('.', ','),
           niveau: NIVEAU_LABEL[synthese.niveau],

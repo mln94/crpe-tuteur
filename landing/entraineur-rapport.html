@@ -540,7 +540,9 @@ window.EC = (function () {
     html += '<p class="legal" style="margin-top:24px">Correction générée par une intelligence artificielle à partir d\'un corrigé de référence : les notes sont indicatives et peuvent contenir des erreurs. Elles ne remplacent pas un correcteur du concours.</p>' +
       '<div class="report-cta no-print"><h2>Envie d\'aller plus loin ?</h2><p>Avec PassCRPE, entraîne-toi sur des milliers d\'exercices corrigés en français et en maths, adaptés à ton niveau.</p><a class="btn btn-primary" href="/">Découvrir PassCRPE</a></div>';
     el.innerHTML = html;
-    document.title = 'Ton rapport Entraîneur CRPE' + (d.prenom ? ' · ' + d.prenom : '') + ' | PassCRPE';
+    // Le titre sert de nom au PDF : prénom_entraineur_crpe_JJ-MM-AAAA, comme dans l'e-mail
+    document.title = (d.prenom ? d.prenom.trim().replace(/\s+/g, '-') : 'rapport') + '_entraineur_crpe_' +
+      new Date(d.created_at).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: 'Europe/Paris' }).replace(/\//g, '-');
   }).catch(function () { el.innerHTML = '<p class="notice notice-error">Impossible de charger ton rapport. Vérifie ta connexion et recharge la page.</p>'; });
 })();
 </script>
