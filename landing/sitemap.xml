@@ -227,4 +227,22 @@
     <priority>0.6</priority>
   </url>
 
+  <url>
+    <loc>https://www.passcrpe.fr/outils</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.passcrpe.fr/outils/entraineur-crpe</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://www.passcrpe.fr/politique-de-confidentialite</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.2</priority>
+  </url>
 </urlset>

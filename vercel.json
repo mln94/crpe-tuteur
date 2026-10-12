@@ -11,7 +11,15 @@
     { "source": "/blog/salaire-professeur-des-ecoles-remuneration", "destination": "/salaire-professeur-des-ecoles-remuneration.html" },
     { "source": "/crpe-par-academie", "destination": "/crpe-par-academie.html" },
     { "source": "/crpe-par-academie/:slug", "destination": "/academies/:slug.html" },
+    { "source": "/outils", "destination": "/outils.html" },
+    { "source": "/outils/entraineur-crpe", "destination": "/entraineur-crpe.html" },
+    { "source": "/politique-de-confidentialite", "destination": "/politique-de-confidentialite.html" },
     { "source": "/admin-support", "destination": "/admin-support.html" },
     { "source": "/admin", "destination": "/app/index.html" }
-  ]
+  ],
+  "functions": {
+    "api/index.js": {
+      "maxDuration": 60
+    }
+  }
 }

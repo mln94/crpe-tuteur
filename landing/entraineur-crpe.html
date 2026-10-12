@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-TMLHJT3Q');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P4BXMJXQT5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-P4BXMJXQT5');
+  </script>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entraîneur CRPE gratuit : questions de maths et de français corrigées par l&#x27;IA | PassCRPE</title>
+  <meta name="description" content="Entraîne-toi gratuitement au CRPE : une question de maths ou de français de niveau cycle 4, ta réponse rédigée et un mini-rapport de correction par l&#x27;IA, avec 3 tentatives." />
+  <link rel="canonical" href="https://www.passcrpe.fr/outils/entraineur-crpe" />
+  <meta property="og:title" content="Entraîneur CRPE : rédige ta réponse, l&#x27;IA te corrige" />
+  <meta property="og:description" content="Entraîne-toi gratuitement au CRPE : une question de maths ou de français de niveau cycle 4, ta réponse rédigée et un mini-rapport de correction par l&#x27;IA, avec 3 tentatives." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.passcrpe.fr/outils/entraineur-crpe" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://www.passcrpe.fr/"}, {"@type": "ListItem", "position": 2, "name": "Outils", "item": "https://www.passcrpe.fr/outils"}, {"@type": "ListItem", "position": 3, "name": "Entraîneur CRPE", "item": "https://www.passcrpe.fr/outils/entraineur-crpe"}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "L'Entraîneur CRPE est-il vraiment gratuit ?", "acceptedAnswer": {"@type": "Answer", "text": "Oui. Tu as 1 question gratuite sans inscription, puis 5 questions par semaine avec une inscription gratuite. Aucun paiement n'est demandé."}}, {"@type": "Question", "name": "La note donnée par l'IA est-elle fiable ?", "acceptedAnswer": {"@type": "Answer", "text": "Elle est indicative. La correction est générée par une intelligence artificielle à partir d'un corrigé de référence : elle aide à progresser mais ne remplace pas un correcteur du concours et peut contenir des erreurs."}}, {"@type": "Question", "name": "Quel est le niveau des questions ?", "acceptedAnswer": {"@type": "Answer", "text": "Les questions sont de niveau cycle 4 (5e, 4e, 3e), le niveau attendu pour les connaissances disciplinaires en mathématiques et en français au CRPE."}}, {"@type": "Question", "name": "Que deviennent mes réponses ?", "acceptedAnswer": {"@type": "Answer", "text": "Elles sont enregistrées avec leur rapport de correction pour faire fonctionner l'outil et l'améliorer, et conservées 12 mois au maximum. Elles ne sont ni publiées ni revendues."}}, {"@type": "Question", "name": "Pourquoi 3 tentatives par question ?", "acceptedAnswer": {"@type": "Answer", "text": "Pour t'entraîner comme un candidat : tu rédiges, tu lis les conseils, tu améliores ta réponse. Les tentatives ne consomment pas de question supplémentaire."}}]}</script>
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "WebApplication", "name": "Entraîneur CRPE", "url": "https://www.passcrpe.fr/outils/entraineur-crpe", "applicationCategory": "EducationalApplication", "offers": {"@type": "Offer", "price": "0", "priceCurrency": "EUR"}, "inLanguage": "fr"}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --indigo-50: #eef2ff; --indigo-100: #e0e7ff;
+      --indigo-600: #4f46e5; --indigo-700: #4338ca;
+      --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+      --gray-300: #d1d5db; --gray-400: #9ca3af; --gray-500: #6b7280;
+      --gray-600: #4b5563; --gray-700: #374151; --gray-800: #1f2937; --gray-900: #111827;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', system-ui, sans-serif; color: var(--gray-800); background: #fff; overflow-x: clip; }
+
+    /* NAV */
+    nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--gray-100); }
+    .nav-inner { max-width: 1120px; margin: 0 auto; padding: 0 24px; height: 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon { width: 34px; height: 34px; border-radius: 9px; background: var(--indigo-600); display: flex; align-items: center; justify-content: center; }
+    .nav-logo-icon svg { width: 18px; height: 18px; color: #fff; }
+    .nav-logo-text { font-size: 15px; font-weight: 800; color: var(--gray-900); letter-spacing: -.3px; }
+    .nav-links { display: flex; flex: 1; align-items: center; justify-content: center; gap: 28px; list-style: none; }
+    .nav-links li { display: flex; align-items: center; text-align: center; }
+    .nav-links a { white-space: nowrap; }
+    @media (max-width: 1200px) { .nav-links { gap: 18px; } }
+    @media (max-width: 960px) { .nav-links { gap: 12px; } .nav-links a { font-size: 13px; } }
+    .nav-links a { font-size: 14px; font-weight: 500; color: var(--gray-600); text-decoration: none; transition: color .15s; }
+    .nav-links a:hover, .nav-links a.active { color: var(--gray-900); }
+    .nav-cta { font-size: 13px; font-weight: 700; padding: 8px 18px; border-radius: 8px; background: var(--indigo-600); color: #fff; text-decoration: none; transition: background .15s; white-space: nowrap; }
+    .nav-cta:hover { background: var(--indigo-700); }
+    .nav-login { font-size: 13px; font-weight: 600; padding: 8px 16px; border-radius: 8px; background: transparent; color: var(--gray-700); border: 1.5px solid var(--gray-200); text-decoration: none; transition: border-color .15s, color .15s; white-space: nowrap; cursor: pointer; font-family: inherit; }
+    .nav-login:hover { border-color: var(--indigo-600); color: var(--indigo-600); }
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+    @media (max-width: 1000px) { .nav-links { display: none; } }
+
+    /* LAYOUT */
+    .article-wrap { max-width: 720px; margin: 0 auto; padding: 48px 24px 80px; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--gray-500); text-decoration: none; margin-bottom: 32px; transition: color .15s; }
+    .back-link:hover { color: var(--indigo-600); }
+
+    /* HEADER */
+    .article-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+    .article-tag { font-size: 11px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; padding: 4px 12px; border-radius: 20px; }
+    .tag-concours { background: #fff7ed; color: #ea580c; }
+    .tag-externe  { background: var(--indigo-50); color: var(--indigo-600); }
+    .tag-admissibilite { background: #f0fdfa; color: #0d9488; }
+    h1 { font-size: clamp(26px, 4vw, 40px); font-weight: 900; color: var(--gray-900); line-height: 1.2; letter-spacing: -.4px; margin-bottom: 16px; }
+    .article-meta { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--gray-400); margin-bottom: 32px; flex-wrap: wrap; }
+    .article-hero { width: 100%; height: 320px; object-fit: cover; border-radius: 16px; margin-bottom: 32px; display: block; }
+    @media (max-width: 640px) { .article-hero { height: 200px; } }
+
+    /* BODY */
+    .article-body { font-size: 16px; line-height: 1.8; color: var(--gray-700); }
+    .article-body h2 { font-size: 22px; font-weight: 800; color: var(--gray-900); margin: 40px 0 14px; letter-spacing: -.2px; }
+    .article-body h3 { font-size: 17px; font-weight: 800; color: var(--gray-900); margin: 26px 0 10px; letter-spacing: -.1px; }
+    .article-body p { margin-bottom: 18px; }
+    .article-body strong { color: var(--gray-900); }
+    .article-body ul, .article-body ol { margin: 0 0 18px 24px; }
+    .article-body li { margin-bottom: 6px; }
+
+    /* CALLOUT */
+    .callout { background: var(--indigo-50); border: 1px solid var(--indigo-100); border-radius: 14px; padding: 18px 22px; margin: 24px 0 32px; font-size: 14.5px; color: var(--gray-700); }
+    .callout strong { color: var(--indigo-700); }
+
+    /* TABLE */
+    .table-wrap { overflow-x: auto; margin: 24px 0 36px; border-radius: 12px; border: 1px solid var(--gray-200); }
+    table { width: 100%; border-collapse: collapse; font-size: 14px; }
+    thead { background: var(--indigo-600); color: #fff; }
+    thead th { padding: 12px 16px; font-weight: 700; text-align: left; white-space: nowrap; }
+    tbody tr:nth-child(even) { background: var(--gray-50); }
+    td { padding: 12px 16px; color: var(--gray-700); border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+    tbody tr:last-child td { border-bottom: none; }
+
+    /* HASHTAGS */
+    .hashtag-section { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--gray-100); }
+    .hashtag-section .ht-label { font-size: 12px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+    .hashtag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .hashtag { font-size: 13px; font-weight: 600; color: var(--indigo-600); background: var(--indigo-50); border: 1px solid var(--indigo-100); border-radius: 20px; padding: 5px 14px; }
+
+    /* LIRE AUSSI */
+    .related-section { margin: 40px 0 0; padding-top: 28px; border-top: 1px solid var(--gray-100); }
+    .related-section .related-label { font-size: 12px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 14px; }
+    .related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .related-card { display: block; border: 1px solid var(--gray-200); border-radius: 14px; padding: 18px 20px; text-decoration: none; color: inherit; transition: box-shadow .2s, transform .2s, border-color .2s; }
+    .related-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,.06); transform: translateY(-2px); border-color: var(--indigo-200); }
+    .related-tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #ea580c; background: #fff7ed; border-radius: 20px; padding: 3px 10px; margin-bottom: 10px; }
+    .related-card h4 { font-size: 15px; font-weight: 800; color: var(--gray-900); line-height: 1.35; margin-bottom: 6px; }
+    .related-card p { font-size: 13px; color: var(--gray-500); line-height: 1.6; margin-bottom: 0; }
+    .related-card .related-cta { display: inline-flex; align-items: center; gap: 4px; font-size: 13px; font-weight: 700; color: var(--indigo-600); margin-top: 10px; }
+
+    /* CTA */
+    .article-cta { margin-top: 48px; background: linear-gradient(135deg, var(--indigo-600) 0%, #818cf8 100%); border-radius: 20px; padding: 36px; text-align: center; color: #fff; }
+    .article-cta h3 { font-size: 22px; font-weight: 900; margin-bottom: 10px; }
+    .article-cta p { font-size: 15px; opacity: .85; margin-bottom: 22px; }
+    .article-cta a, .article-cta button { display: inline-block; background: #fff; color: var(--indigo-700); font-size: 14px; font-weight: 800; padding: 12px 28px; border-radius: 10px; text-decoration: none; border: none; cursor: pointer; font-family: inherit; }
+    .article-cta a:hover, .article-cta button:hover { opacity: .9; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--gray-900); color: var(--gray-400);
+      padding: 48px 24px 28px;
+    }
+    .footer-inner { max-width: 1120px; margin: 0 auto; }
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px; margin-bottom: 40px;
+    }
+    .footer-brand p { font-size: 13px; line-height: 1.7; color: var(--gray-400); max-width: 280px; margin-top: 8px; }
+    .footer-brand .nav-logo-text { color: #fff; font-size: 20px; }
+    .footer-col h4 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 14px; }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .footer-col ul a { font-size: 13px; color: var(--gray-400); text-decoration: none; transition: color .15s; }
+    .footer-col ul a:hover { color: #fff; }
+    .footer-bottom {
+      border-top: 1px solid #374151;
+      padding-top: 20px;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+    }
+    .footer-bottom p { font-size: 12px; }
+    .footer-legal { display: flex; gap: 20px; }
+    .footer-legal a { font-size: 12px; color: var(--gray-400); text-decoration: none; }
+    .footer-legal a:hover { color: #fff; }
+    @media (max-width: 768px) {
+      .footer-top { grid-template-columns: 1fr 1fr; }
+      .footer-brand { grid-column: 1 / -1; }
+    }
+    @media (max-width: 480px) {
+      .footer-top { grid-template-columns: 1fr; }
+    }
+
+    /* ── MENU MOBILE ── */
+    .nav-burger { display: none; width: 40px; height: 40px; flex-shrink: 0; align-items: center; justify-content: center; padding: 0; border: 1.5px solid var(--gray-200); border-radius: 10px; background: #fff; color: var(--gray-700); cursor: pointer; }
+    .nav-burger svg { width: 20px; height: 20px; }
+    .nav-burger .icon-close, .site-nav.menu-open .nav-burger .icon-open { display: none; }
+    .site-nav.menu-open .nav-burger .icon-close { display: block; }
+    .nav-mobile-only { display: none !important; }
+    @media (max-width: 1000px) {
+      .nav-burger { display: flex; }
+      .site-nav.menu-open .nav-links { display: flex; position: absolute; top: 100%; left: 0; right: 0; flex-direction: column; align-items: stretch; gap: 0; padding: 8px 16px 16px; background: #fff; border-bottom: 1px solid var(--gray-100); box-shadow: 0 12px 24px rgba(15,23,42,.08); }
+      .site-nav.menu-open .nav-links li { display: block; text-align: left; }
+      .site-nav.menu-open .nav-links li > a, .site-nav.menu-open .nav-links li > button { display: block; width: 100%; padding: 13px 4px; font-size: 16px; text-align: left; border-bottom: 1px solid var(--gray-100); }
+      .site-nav.menu-open .nav-links li:last-child > a, .site-nav.menu-open .nav-links li:last-child > button { border-bottom: 0; }
+    }
+    @media (max-width: 600px) {
+      .site-nav { padding-left: 16px; padding-right: 16px; }
+      .site-nav .nav-inner { padding-left: 0; padding-right: 0; gap: 10px; }
+      .site-nav .nav-actions > .nav-login { display: none; }
+      .nav-mobile-only { display: flex !important; }
+      /* Boutons de compte en bas du menu mobile */
+      .site-nav.menu-open .nav-links li.nav-menu-account { gap: 10px; padding-top: 14px; }
+      .site-nav.menu-open .nav-links li.nav-menu-account > a, .site-nav.menu-open .nav-links li.nav-menu-account > button { flex: 1 1 0; display: flex; align-items: center; justify-content: center; padding: 12px 10px; font-size: 15px; font-weight: 700; font-family: inherit; text-align: center; border-radius: 10px; cursor: pointer; }
+      .site-nav.menu-open .nav-links li.nav-menu-account > .nav-login { border: 1.5px solid var(--gray-200); background: #fff; color: var(--gray-700); }
+      .site-nav.menu-open .nav-links li.nav-menu-account > .nav-cta { border: 0; background: var(--indigo-600); color: #fff; }
+      .site-nav .nav-cta { padding: 8px 14px; font-size: 13px; }
+      .site-nav .nav-logo-text { font-size: 16px; }
+    }
+    @media (max-width: 400px) { .nav-cta-long { display: none; } }
+
+    /* ── MENU RESSOURCES ── */
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-toggle, .nav-sub-toggle { display: inline-flex; align-items: center; gap: 4px; padding: 0; border: 0; background: none; font-family: inherit; font-size: 14px; font-weight: 500; color: var(--gray-600); cursor: pointer; white-space: nowrap; transition: color .15s; }
+    .nav-dropdown-toggle:hover, .nav-dropdown-toggle.active, .nav-dropdown.open > .nav-dropdown-toggle { color: var(--gray-900); }
+    .nav-dropdown-toggle svg, .nav-sub-toggle svg { width: 14px; height: 14px; transition: transform .15s; }
+    .nav-dropdown.open > .nav-dropdown-toggle svg, .nav-sub-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+    .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 14px); left: 50%; transform: translateX(-50%); min-width: 220px; padding: 8px; text-align: left; background: #fff; border: 1px solid var(--gray-100); border-radius: 12px; box-shadow: 0 12px 32px rgba(15,23,42,.12); z-index: 120; }
+    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
+    .nav-sub-toggle { display: flex; width: 100%; justify-content: space-between; padding: 10px 12px; border-radius: 8px; color: var(--gray-700); font-weight: 600; }
+    .nav-sub-toggle:hover { background: var(--gray-50, #f9fafb); }
+    .nav-sub-menu { display: none; padding: 2px 0 4px; }
+    .nav-links .nav-dropdown-link { display: block; padding: 10px 12px; border-radius: 8px; font-size: 14px; font-weight: 600; color: var(--gray-700); }
+    .nav-links .nav-dropdown-link:hover { background: var(--gray-50, #f9fafb); color: var(--indigo-600); }
+    .nav-sub-toggle[aria-expanded="true"] + .nav-sub-menu { display: block; }
+    .nav-links .nav-sub-menu a { display: block; padding: 8px 12px 8px 24px; border-radius: 8px; font-size: 14px; }
+    .nav-links .nav-sub-menu a:hover { background: var(--gray-50, #f9fafb); color: var(--indigo-600); }
+    @media (max-width: 960px) { .nav-dropdown-toggle { font-size: 13px; } }
+    @media (max-width: 1000px) {
+      .site-nav.menu-open .nav-links li.nav-dropdown > .nav-dropdown-toggle { display: flex; width: 100%; justify-content: space-between; padding: 13px 4px; font-size: 16px; color: var(--gray-600); border-bottom: 1px solid var(--gray-100); }
+      .site-nav.menu-open .nav-dropdown-menu { position: static; transform: none; min-width: 0; padding: 4px 0 8px 12px; border: 0; border-bottom: 1px solid var(--gray-100); border-radius: 0; box-shadow: none; }
+      .site-nav.menu-open .nav-sub-toggle { padding: 12px 4px; font-size: 15px; }
+      .site-nav.menu-open .nav-links .nav-dropdown-link { padding: 12px 4px; font-size: 15px; }
+      .site-nav.menu-open .nav-links .nav-sub-menu a { padding: 10px 4px 10px 16px; font-size: 15px; }
+    }
+
+    /* OUTILS */
+    .page-wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 72px; font-size: 16px; line-height: 1.7; color: var(--gray-700); }
+    .page-wrap h1 { font-size: clamp(28px, 4.5vw, 40px); font-weight: 900; color: var(--gray-900); line-height: 1.15; letter-spacing: -.5px; margin-bottom: 14px; }
+    .page-wrap h2 { font-size: 23px; font-weight: 800; color: var(--gray-900); margin: 44px 0 12px; letter-spacing: -.2px; }
+    .page-wrap h3 { font-size: 17px; font-weight: 800; color: var(--gray-900); margin: 22px 0 8px; }
+    .page-wrap p { margin-bottom: 14px; }
+    .page-wrap ul, .page-wrap ol { margin: 0 0 16px 22px; }
+    .page-wrap li { margin-bottom: 6px; }
+    .page-wrap strong { color: var(--gray-900); }
+    .page-wrap a { color: var(--indigo-600); }
+    .lead { font-size: 17px; }
+    .breadcrumb { position: static; z-index: auto; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0; display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--gray-400); margin-bottom: 20px; }
+    .breadcrumb a { color: var(--gray-500); text-decoration: none; font-weight: 600; }
+    .breadcrumb a:hover { color: var(--indigo-600); }
+    .breadcrumb [aria-current] { color: var(--gray-700); font-weight: 600; }
+
+    .tool-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; margin-top: 24px; }
+    .tool-card { display: flex; flex-direction: column; gap: 10px; padding: 22px; border: 1px solid var(--gray-200); border-radius: 16px; background: #fff; box-shadow: 0 1px 3px rgba(15,23,42,.04); }
+    .tool-card-icon { width: 44px; height: 44px; border-radius: 12px; background: var(--indigo-50); color: var(--indigo-600); display: flex; align-items: center; justify-content: center; }
+    .tool-card-icon svg { width: 22px; height: 22px; }
+    .tool-card h2 { font-size: 19px; margin: 0; }
+    .tool-card p { margin: 0; font-size: 15px; color: var(--gray-500); flex: 1; }
+    .tool-badge { align-self: flex-start; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: #065f46; background: #d1fae5; padding: 3px 9px; border-radius: 20px; }
+
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 12px 20px; border-radius: 12px; border: 0; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; text-decoration: none; transition: background .15s, border-color .15s, color .15s; }
+    .btn-primary { background: var(--indigo-600); color: #fff !important; }
+    .btn-primary:hover { background: var(--indigo-700); }
+    .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+    .btn-ghost { background: #fff; color: var(--gray-700) !important; border: 1.5px solid var(--gray-200); }
+    .btn-ghost:hover { border-color: var(--indigo-600); color: var(--indigo-600) !important; }
+    .btn-ghost:disabled { opacity: .5; cursor: not-allowed; }
+    :focus-visible { outline: 3px solid var(--indigo-600); outline-offset: 2px; }
+
+    /* Outil */
+    .tool { margin-top: 24px; border: 1px solid var(--gray-200); border-radius: 18px; background: #fff; box-shadow: 0 4px 24px rgba(15,23,42,.06); overflow: hidden; }
+    .tool-counter { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 18px; background: var(--indigo-50); border-bottom: 1px solid var(--indigo-100); font-size: 14px; color: var(--indigo-700); font-weight: 600; }
+    .tool-counter button { background: none; border: 0; padding: 0; font: inherit; color: var(--indigo-700); text-decoration: underline; cursor: pointer; }
+    .tool-body { padding: 22px 18px 24px; }
+    .tool-body > * + * { margin-top: 16px; }
+    .subject-choice { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .subject-btn { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; padding: 18px; border: 2px solid var(--gray-200); border-radius: 14px; background: #fff; font-family: inherit; text-align: left; cursor: pointer; transition: border-color .15s, background .15s; }
+    .subject-btn:hover { border-color: var(--indigo-600); background: var(--indigo-50); }
+    .subject-btn strong { font-size: 17px; }
+    .subject-btn span { font-size: 13px; color: var(--gray-500); line-height: 1.4; }
+    @media (max-width: 480px) { .subject-choice { grid-template-columns: 1fr; } }
+    .badges { display: flex; flex-wrap: wrap; gap: 6px; }
+    .badge { font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; background: var(--gray-100); color: var(--gray-700); }
+    .badge-subject { background: var(--indigo-600); color: #fff; }
+    .question-box { padding: 16px; border-radius: 14px; background: var(--gray-50, #f9fafb); border: 1px solid var(--gray-100); }
+    .question-box .label { display: block; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--gray-400); margin-bottom: 4px; }
+    .question-box p { margin: 0 0 12px; white-space: normal; }
+    .question-box p:last-child { margin-bottom: 0; }
+    .question-box .q { font-weight: 700; color: var(--gray-900); }
+    .support { border-left: 3px solid var(--indigo-200, #c7d2fe); padding-left: 12px; font-style: italic; }
+    .figure { margin: 4px 0 12px; }
+    .figure img { display: block; max-width: 100%; height: auto; background: #fff; border-radius: 8px; }
+    .answer label { display: block; font-weight: 700; color: var(--gray-900); margin-bottom: 6px; }
+    .answer textarea { width: 100%; min-height: 170px; padding: 12px 14px; border: 1.5px solid var(--gray-200); border-radius: 12px; font-family: inherit; font-size: 15px; line-height: 1.6; resize: vertical; }
+    .answer textarea:focus { outline: none; border-color: var(--indigo-600); }
+    .answer-meta { display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+    .answer-meta .over { color: #b91c1c; font-weight: 700; }
+    .actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .notice { padding: 14px 16px; border-radius: 12px; font-size: 15px; }
+    .notice-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .notice-info { background: var(--indigo-50); color: var(--indigo-700); border: 1px solid var(--indigo-100); }
+    .loading { display: flex; align-items: center; gap: 10px; color: var(--gray-500); font-weight: 600; }
+    .spinner { width: 18px; height: 18px; border: 3px solid var(--indigo-100); border-top-color: var(--indigo-600); border-radius: 50%; animation: spin .8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .report { border: 1px solid var(--gray-200); border-radius: 14px; overflow: hidden; }
+    .report > summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 12px 16px; background: var(--gray-50, #f9fafb); font-weight: 700; color: var(--gray-900); }
+    .report > summary::-webkit-details-marker { display: none; }
+    .report-body { padding: 14px 16px 6px; font-size: 15px; }
+    .report-body h4 { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--gray-500); margin: 14px 0 6px; }
+    .report-body h4:first-child { margin-top: 0; }
+    .report-body ul { margin: 0 0 8px 18px; }
+    .report-body blockquote { margin: 0 0 4px; padding: 2px 10px; border-left: 3px solid var(--gray-200); color: var(--gray-500); font-style: italic; }
+    .level { font-size: 12px; font-weight: 800; padding: 3px 10px; border-radius: 20px; }
+    .level-a_retravailler { background: #fee2e2; color: #991b1b; }
+    .level-en_bonne_voie { background: #fef3c7; color: #92400e; }
+    .level-attendu_atteint { background: #d1fae5; color: #065f46; }
+    .note20 { font-size: 15px; font-weight: 900; color: var(--gray-900); }
+    .tip { background: #ecfdf5; border: 1px solid #a7f3d0; border-radius: 10px; padding: 10px 12px; margin: 6px 0 10px; }
+    .progress-note { background: var(--indigo-50); border-radius: 10px; padding: 10px 12px; margin-bottom: 10px; }
+    .corrige { border: 2px solid #a7f3d0; background: #f0fdf4; border-radius: 14px; padding: 16px; }
+    .corrige h3 { margin-top: 0; color: #065f46; }
+
+    .lead-form { border: 1px solid var(--indigo-100); border-radius: 14px; padding: 18px; background: #fff; }
+    .lead-form h3 { margin-top: 0; }
+    .field { margin-bottom: 12px; }
+    .field label { display: block; font-size: 14px; font-weight: 700; color: var(--gray-900); margin-bottom: 4px; }
+    .field input { width: 100%; padding: 11px 12px; border: 1.5px solid var(--gray-200); border-radius: 10px; font-family: inherit; font-size: 15px; }
+    .field input:focus { outline: none; border-color: var(--indigo-600); }
+    .field-hint { display: block; font-size: 12px; color: var(--gray-500); margin-top: 3px; line-height: 1.45; }
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 480px) { .field-row { grid-template-columns: 1fr; } }
+    .check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; margin-bottom: 8px; line-height: 1.45; cursor: pointer; }
+    .check input { margin-top: 3px; width: 16px; height: 16px; accent-color: var(--indigo-600); flex-shrink: 0; }
+    .legal { font-size: 12px; color: var(--gray-500); line-height: 1.55; margin-top: 10px; }
+
+    .steps-list { counter-reset: s; list-style: none; margin-left: 0 !important; }
+    .steps-list li { counter-increment: s; position: relative; padding-left: 40px; margin-bottom: 12px; }
+    .steps-list li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; background: var(--indigo-600); color: #fff; font-size: 14px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+    .faq details { border-bottom: 1px solid var(--gray-200); padding: 12px 0; }
+    .faq summary { cursor: pointer; font-weight: 700; color: var(--gray-900); }
+    .faq details p { margin: 8px 0 0; }
+    .placeholder { background: #fef3c7; padding: 0 4px; border-radius: 4px; }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <style>
+    .auth-overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,.6); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center; padding:20px; }
+    .auth-overlay.open { display:flex; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+    .auth-card { background:#fff; border-radius:20px; box-shadow:0 24px 64px rgba(0,0,0,.22); width:100%; max-width:440px; padding:40px 40px 36px; position:relative; animation:fadeUp .28s ease forwards; max-height:90vh; overflow-y:auto; }
+    .auth-close { position:absolute; top:18px; right:18px; background:none; border:none; cursor:pointer; color:#94a3b8; font-size:22px; line-height:1; padding:4px 8px; border-radius:8px; transition:background .15s,color .15s; }
+    .auth-close:hover { background:#f1f5f9; color:#334155; }
+    .auth-logo { display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom:24px; }
+    .auth-logo-icon { width:36px; height:36px; background:#4f46e5; border-radius:10px; display:flex; align-items:center; justify-content:center; }
+    .auth-logo-icon svg { width:18px; height:18px; color:#fff; }
+    .auth-logo-name { font-weight:800; font-size:17px; color:#0f172a; }
+    .auth-tabs { display:flex; background:#f1f5f9; border-radius:12px; padding:4px; margin-bottom:28px; }
+    .auth-tab { flex:1; padding:9px 12px; border:none; background:none; border-radius:9px; font-family:inherit; font-size:14px; font-weight:600; color:#64748b; cursor:pointer; transition:all .2s; }
+    .auth-tab.active { background:#fff; color:#0f172a; box-shadow:0 1px 4px rgba(0,0,0,.12); }
+    .auth-form { display:flex; flex-direction:column; gap:14px; }
+    .auth-field { display:flex; flex-direction:column; gap:6px; }
+    .auth-label { font-size:13px; font-weight:600; color:#374151; }
+    .auth-input { width:100%; box-sizing:border-box; padding:11px 14px; border:1.5px solid #e2e8f0; border-radius:10px; font-family:inherit; font-size:14.5px; color:#0f172a; transition:border-color .2s,box-shadow .2s; outline:none; background:#fff; }
+    .auth-input:focus { border-color:#4f46e5; box-shadow:0 0 0 3px rgba(99,102,241,.12); }
+    .auth-submit { margin-top:4px; padding:13px; border:none; border-radius:12px; background:#4f46e5; color:#fff; font-family:inherit; font-size:15px; font-weight:700; cursor:pointer; transition:background .2s; width:100%; }
+    .auth-submit:hover { background:#4338ca; }
+    .auth-submit:disabled { background:#c7d2fe; cursor:not-allowed; }
+    .auth-message { font-size:13px; font-weight:600; text-align:center; min-height:18px; margin-top:4px; border-radius:8px; padding:8px 12px; }
+    .auth-message.success { color:#166534; background:#dcfce7; }
+    .auth-message.error { color:#991b1b; background:#fee2e2; }
+    .auth-footer-link { text-align:center; font-size:13px; color:#64748b; margin-top:16px; }
+    .auth-footer-link button { background:none; border:none; color:#4f46e5; font-weight:700; cursor:pointer; font-family:inherit; font-size:13px; padding:0; }
+    .auth-name-row { display:flex; gap:12px; }
+    .auth-name-row .auth-field { flex:1; min-width:0; }
+    @media (max-width:480px) { .auth-card { padding:32px 24px 28px; } .auth-name-row { flex-direction:column; } }
+  </style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2908206909538261');
+fbq('track', 'PageView');
+</script>
+<!-- End Meta Pixel Code -->
+</head>
+<body>
+<!-- Meta Pixel Code (noscript) -->
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2908206909538261&ev=PageView&noscript=1"
+/></noscript>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TMLHJT3Q"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+<nav class="site-nav">
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">PassCRPE</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="/#crpe">Le concours</a></li>
+      <li><a href="/#fonctionnalites">Fonctionnalités</a></li>
+      <li><a href="/#matieres">Matières</a></li>
+      <li class="nav-dropdown">
+        <button type="button" class="nav-dropdown-toggle active" aria-expanded="false" onclick="toggleNavDropdown(this)">Ressources <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <button type="button" class="nav-sub-toggle" aria-expanded="false" onclick="toggleNavSub(this)">CRPE par académie <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="nav-sub-menu">
+            <a href="/crpe-par-academie">Session 2026</a>
+            <a href="/crpe-par-academie">Session 2027</a>
+          </div>
+          <a class="nav-dropdown-link" href="/outils">Outils</a>
+        </div>
+      </li>
+      <li><a href="/blog">Blog</a></li>
+      <li class="nav-mobile-only nav-menu-account"><button onclick="openAuth('login')" class="nav-login">Se connecter</button><button onclick="openAuth('register')" class="nav-cta cta-commencer">Créer mon compte</button></li>
+    </ul>
+    <div class="nav-actions">
+      <button onclick="openAuth('login')" class="nav-login">Se connecter</button>
+      <button onclick="openAuth('register')" class="nav-cta cta-commencer" style="border:none;cursor:pointer;font-family:inherit;">Commencer<span class="nav-cta-long"> gratuitement</span> →</button>
+      <button type="button" class="nav-burger" aria-label="Ouvrir le menu" aria-expanded="false" onclick="toggleMobileMenu(this)">
+        <svg class="icon-open" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<main class="page-wrap">
+  <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="/">Accueil</a> <span aria-hidden="true">›</span> <a href="/outils">Outils</a> <span aria-hidden="true">›</span> <span aria-current="page">Entraîneur CRPE</span></nav>
+  <h1>Entraîneur CRPE : rédige ta réponse, l'IA te corrige</h1>
+  <p class="lead">Choisis une matière, réponds à une question de maths ou de français tirée au hasard et reçois un mini-rapport de correction conforme aux attentes du CRPE : note indicative, points forts, points à améliorer et conseils.</p>
+
+  <section class="tool" id="outil" aria-label="Entraîneur CRPE">
+    <div class="tool-counter" id="counter" aria-live="polite">Chargement…</div>
+    <div class="tool-body" id="toolBody" aria-live="polite">
+      <div class="loading"><span class="spinner" aria-hidden="true"></span>Chargement de l'outil…</div>
+    </div>
+  </section>
+
+  <h2 id="comment-ca-marche">Comment ça marche ?</h2>
+  <ol class="steps-list">
+    <li><strong>Choisis ta matière</strong>, mathématiques ou français : l'outil tire une question au hasard dans notre banque de questions, en évitant celles que tu as déjà vues. Sa catégorie est indiquée au-dessus de l'énoncé.</li>
+    <li><strong>1 question gratuite sans inscription</strong>, puis <strong>5 questions par semaine</strong> avec une inscription gratuite. Le compteur se recharge chaque lundi à 0 h (heure de Paris).</li>
+    <li><strong>3 tentatives par question</strong> : chaque réponse reçoit un mini-rapport. Après la 3e tentative, ou si tu cliques sur « Voir la réponse », la réponse attendue s'affiche avec une explication.</li>
+    <li><strong>Les tentatives ne consomment pas de question</strong> : seul le tirage d'une nouvelle question compte dans ton quota.</li>
+    <li><strong>La correction est générée par une intelligence artificielle</strong> : la note est indicative, elle ne remplace pas un correcteur et peut contenir des erreurs.</li>
+    <li><strong>Tes réponses</strong> sont enregistrées avec leur rapport pour faire fonctionner l'outil et l'améliorer, puis supprimées au bout de 12 mois au maximum. Elles ne sont ni publiées ni revendues. Détails dans notre <a href="/politique-de-confidentialite">politique de confidentialité</a>.</li>
+    <li><strong>Niveau cycle 4</strong> (5e, 4e, 3e) : c'est le niveau attendu pour les connaissances disciplinaires du CRPE en mathématiques et en français.</li>
+  </ol>
+
+  <h2>Questions fréquentes</h2>
+  <div class="faq"><details><summary>L&#x27;Entraîneur CRPE est-il vraiment gratuit ?</summary><p>Oui. Tu as 1 question gratuite sans inscription, puis 5 questions par semaine avec une inscription gratuite. Aucun paiement n&#x27;est demandé.</p></details><details><summary>La note donnée par l&#x27;IA est-elle fiable ?</summary><p>Elle est indicative. La correction est générée par une intelligence artificielle à partir d&#x27;un corrigé de référence : elle aide à progresser mais ne remplace pas un correcteur du concours et peut contenir des erreurs.</p></details><details><summary>Quel est le niveau des questions ?</summary><p>Les questions sont de niveau cycle 4 (5e, 4e, 3e), le niveau attendu pour les connaissances disciplinaires en mathématiques et en français au CRPE.</p></details><details><summary>Que deviennent mes réponses ?</summary><p>Elles sont enregistrées avec leur rapport de correction pour faire fonctionner l&#x27;outil et l&#x27;améliorer, et conservées 12 mois au maximum. Elles ne sont ni publiées ni revendues.</p></details><details><summary>Pourquoi 3 tentatives par question ?</summary><p>Pour t&#x27;entraîner comme un candidat : tu rédiges, tu lis les conseils, tu améliores ta réponse. Les tentatives ne consomment pas de question supplémentaire.</p></details></div>
+</main>
+<script>
+(function () {
+  var API = '/api/entraineur';
+  var MAX_LEN = 3000, MAX_ATTEMPTS = 3;
+  var LEVELS = { a_retravailler: 'À retravailler', en_bonne_voie: 'En bonne voie', attendu_atteint: 'Attendu du CRPE atteint' };
+  var SUBJECTS = { maths: 'Mathématiques', francais: 'Français' };
+  var state = { lead: null, quota: null, current: null, busy: false, error: '', showForm: false, formError: '' };
+  var body = document.getElementById('toolBody');
+  var counter = document.getElementById('counter');
+
+  // ── Utilitaires ──
+  function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  // Texte de la base : échappé, sauts de ligne conservés, puissances (2^3, x^(n+1)) en exposant
+  function rich(v) {
+    return esc(v).replace(/([\w)\]²³])\^(\(([^)]{1,12})\)|-?[\w.]{1,6})/g, function (_, b, e, inner) { return b + '<sup>' + (inner || e) + '</sup>'; }).replace(/\n/g, '<br>');
+  }
+  function plural(n, w) { return n + ' ' + w + (n > 1 ? 's' : ''); }
+  function store(key, val) { try { if (val == null) localStorage.removeItem(key); else localStorage.setItem(key, val); } catch (e) {} }
+  function load(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+  function track(event, params) { try { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event: event }, params || {})); } catch (e) {} }
+
+  function api(path, payload) {
+    var opts = payload ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) } : {};
+    opts.credentials = 'same-origin';
+    return fetch(API + path, opts).then(function (r) {
+      return r.json().catch(function () { return {}; }).then(function (d) { d._status = r.status; return d; });
+    }).catch(function () { return { _status: 0, error: 'Connexion impossible. Vérifie ta connexion internet.' }; });
+  }
+
+  function resetLabel(iso) {
+    if (!iso) return '';
+    var d = new Date(iso);
+    return d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Paris' });
+  }
+
+  // ── Compteur ──
+  function renderCounter() {
+    var q = state.quota;
+    if (!q) { counter.textContent = ''; return; }
+    if (q.type === 'anon') {
+      counter.innerHTML = q.remaining > 0
+        ? '<span>1 question gratuite sans inscription</span><button type="button" data-act="show-form">S\'inscrire pour ' + 5 + ' questions par semaine</button>'
+        : '<span>Question gratuite utilisée</span><button type="button" data-act="show-form">Débloquer 5 questions par semaine</button>';
+    } else {
+      counter.innerHTML = '<span>' + (state.lead ? 'Bonjour ' + esc(state.lead.prenom) + ' · ' : '') + 'Il te reste ' + q.remaining + ' question' + (q.remaining > 1 ? 's' : '') + ' sur ' + q.limit + ' cette semaine — prochaine recharge ' + resetLabel(q.resetAt) + '</span>';
+    }
+  }
+
+  // ── Rapport ──
+  function list(items) { return items && items.length ? '<ul>' + items.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '<p>Rien à signaler.</p>'; }
+  function reportHtml(a, open) {
+    var r = a.rapport;
+    var html = '<details class="report"' + (open ? ' open' : '') + '><summary><span>Tentative ' + a.tentative + ' · <span class="level level-' + esc(r.niveau) + '">' + esc(LEVELS[r.niveau] || r.niveau) + '</span></span><span class="note20">' + String(r.note).replace('.', ',') + '/20</span></summary><div class="report-body">';
+    if (r.progression) html += '<div class="progress-note"><strong>Ta progression :</strong> ' + esc(r.progression) + '</div>';
+    html += '<h4>Appréciation</h4><p>' + esc(r.appreciation) + '</p>';
+    html += '<h4>Points forts</h4>' + list(r.points_forts);
+    html += '<h4>Points à améliorer</h4>' + (r.points_a_ameliorer.length ? '<ul>' + r.points_a_ameliorer.map(function (p) {
+      return '<li>' + (p.citation ? '<blockquote>« ' + esc(p.citation) + ' »</blockquote>' : '') + esc(p.commentaire) + '</li>'; }).join('') + '</ul>' : '<p>Rien à signaler.</p>');
+    html += '<h4>Éléments attendus manquants</h4>' + list(r.elements_manquants);
+    html += '<h4>Plan conseillé</h4>' + (r.plan_conseille.length ? '<ol>' + r.plan_conseille.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ol>' : '<p>—</p>');
+    html += '<h4>Langue</h4>' + (r.langue.length ? '<ul>' + r.langue.map(function (l) {
+      return '<li>« ' + esc(l.citation) + ' » → <strong>' + esc(l.correction) + '</strong> <span class="badge">' + esc(l.type) + '</span></li>'; }).join('') + '</ul>' : '<p>Aucune erreur relevée.</p>');
+    html += '<h4>Conseil pour la prochaine tentative</h4><div class="tip">' + esc(r.conseil) + '</div>';
+    return html + '</div></details>';
+  }
+
+  // ── Formulaire d'accès ──
+  function formHtml() {
+    var reason = state.quota && state.quota.type === 'anon' && state.quota.remaining <= 0
+      ? '<p>Tu as utilisé ta question gratuite. <strong>Inscris-toi gratuitement pour obtenir 5 questions par semaine.</strong></p>'
+      : '<p>Inscris-toi gratuitement pour obtenir <strong>5 questions par semaine</strong>.</p>';
+    return '<form class="lead-form" id="leadForm" novalidate><h3>Accès gratuit à l\'Entraîneur CRPE</h3>' + reason +
+      '<div class="field-row"><div class="field"><label for="lf-prenom">Prénom</label><input id="lf-prenom" name="prenom" autocomplete="given-name" required maxlength="80"><span class="field-hint">Pour personnaliser tes conseils et nos e-mails.</span></div>' +
+      '<div class="field"><label for="lf-nom">Nom</label><input id="lf-nom" name="nom" autocomplete="family-name" required maxlength="80"><span class="field-hint">Pour identifier ton accès.</span></div></div>' +
+      '<div class="field"><label for="lf-email">Adresse e-mail</label><input id="lf-email" name="email" type="email" autocomplete="email" required maxlength="254"><span class="field-hint">Pour te donner accès à tes 5 questions par semaine, retrouver ton compteur sur un autre appareil et, seulement si tu l\'acceptes, recevoir nos conseils de préparation.</span></div>' +
+      '<div class="field"><label for="lf-tel">Numéro de téléphone</label><input id="lf-tel" name="telephone" type="tel" autocomplete="tel" required maxlength="30" placeholder="06 12 34 56 78"><span class="field-hint">Pour être contacté(e) par WhatsApp, SMS ou téléphone : te proposer une offre, partager un contenu ou avoir ton retour sur ton parcours de préparation.</span></div>' +
+      '<label class="check"><input type="checkbox" name="consent_conseils"> <span>J\'accepte de recevoir par e-mail les conseils de préparation et les actualités de PassCRPE (facultatif).</span></label>' +
+      '<label class="check"><input type="checkbox" name="consent_partenaires"> <span>J\'accepte de recevoir des offres de partenaires de PassCRPE (facultatif).</span></label>' +
+      (state.formError ? '<div class="notice notice-error" role="alert">' + esc(state.formError) + '</div>' : '') +
+      '<div class="actions" style="margin-top:12px"><button class="btn btn-primary" type="submit"' + (state.busy ? ' disabled' : '') + '>' + (state.busy ? 'Envoi…' : 'Accéder à mes 5 questions') + '</button>' +
+      (state.current ? '<button class="btn btn-ghost" type="button" data-act="hide-form">Plus tard</button>' : '') + '</div>' +
+      '<p class="legal">Les cases facultatives n\'ont aucun effet sur ton accès à l\'outil. Tes données sont traitées par PassCRPE pour te donner accès à l\'Entraîneur CRPE et, si tu l\'acceptes, t\'envoyer nos e-mails (outil d\'envoi : Klaviyo). Ton numéro peut être utilisé pour te contacter par WhatsApp, SMS ou téléphone (offre, contenu, retour sur ta préparation). Tu peux te désinscrire à tout moment grâce au lien présent dans chaque e-mail, et exercer tes droits d\'accès, de rectification et de suppression en écrivant à contact@passcrpe.fr. En savoir plus : <a href="/politique-de-confidentialite" target="_blank" rel="noopener">politique de confidentialité</a>.</p></form>';
+  }
+
+  // ── Écrans ──
+  function chooserHtml(title) {
+    return '<div><h3 style="margin-top:0">' + (title || 'Choisis ta matière') + '</h3><div class="subject-choice">' +
+      '<button type="button" class="subject-btn" data-act="new" data-matiere="maths"><strong>Mathématiques</strong><span>Nombres et calculs, géométrie, proportionnalité, données et probabilités, pensée informatique</span></button>' +
+      '<button type="button" class="subject-btn" data-act="new" data-matiere="francais"><strong>Français</strong><span>Lecture, écriture, vocabulaire et orthographe lexicale, grammaire et orthographe grammaticale</span></button>' +
+      '</div></div>';
+  }
+
+  function questionHtml(c) {
+    var html = '<div class="badges"><span class="badge badge-subject">' + esc(SUBJECTS[c.matiere]) + '</span><span class="badge">' + esc(c.categorie) + '</span><span class="badge">Cycle 4' + (c.classe ? ' · ' + esc(c.classe) : '') + '</span></div>';
+    html += '<div class="question-box">';
+    if (c.enonce) html += '<span class="label">Énoncé</span><p>' + rich(c.enonce) + '</p>';
+    if (c.figure) {
+      var src = c.figure.type === 'path' ? esc(c.figure.src) : 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(c.figure.svg);
+      html += '<div class="figure"><img src="' + src + '" alt="Figure accompagnant l\'énoncé" loading="lazy"></div>';
+    }
+    if (c.texte_support) html += '<span class="label">Texte support</span><p class="support">' + rich(c.texte_support) + '</p>';
+    html += '<span class="label">Question</span><p class="q">' + rich(c.question) + '</p></div>';
+    return html;
+  }
+
+  function nextQuestionHtml() {
+    var q = state.quota, html = '';
+    if (q && q.remaining <= 0) {
+      if (q.type === 'anon') return formHtml();
+      return '<div class="notice notice-info">Tu as utilisé tes ' + q.limit + ' questions de la semaine. Prochaine recharge ' + resetLabel(q.resetAt) + ' à 0 h.</div>';
+    }
+    return html + chooserHtml('Une autre question ?') + '<p style="font-size:13px;color:var(--gray-500);margin-top:8px">Une nouvelle question consomme 1 question de ton quota.</p>';
+  }
+
+  function render() {
+    renderCounter();
+    var c = state.current, html = '';
+    if (state.error) html += '<div class="notice notice-error" role="alert">' + esc(state.error) + '</div>';
+
+    if (!c) {
+      var q = state.quota;
+      if (state.showForm || (q && q.remaining <= 0 && q.type === 'anon')) html += formHtml();
+      else if (q && q.remaining <= 0) html += nextQuestionHtml();
+      else html += chooserHtml();
+      body.innerHTML = html; return;
+    }
+
+    html += questionHtml(c);
+    var attempts = c.attempts || [];
+    attempts.forEach(function (a, i) { html += reportHtml(a, i === attempts.length - 1); });
+
+    if (c.revealed && c.corrige) {
+      html += '<div class="corrige"><h3>Réponse attendue</h3><p>' + rich(c.corrige.reponse_ideale) + '</p>' +
+        (c.corrige.explication ? '<h3>Explication</h3><p>' + esc(c.corrige.explication).replace(/\n/g, '<br>') + '</p>' : '') +
+        (c.corrige.synthese ? '<h3>À retenir</h3><p>' + rich(c.corrige.synthese) + '</p>' : '') + '</div>';
+      html += state.showForm ? formHtml() : nextQuestionHtml();
+    } else if (state.busy) {
+      html += '<div class="loading" role="status"><span class="spinner" aria-hidden="true"></span>Correction en cours… (quelques secondes)</div>';
+    } else {
+      var n = attempts.length + 1;
+      var draft = load('entraineur-draft-' + c.servieId) || '';
+      html += '<form class="answer" id="answerForm"><label for="answer">Ta réponse — tentative ' + n + ' sur ' + MAX_ATTEMPTS + '</label>' +
+        '<textarea id="answer" maxlength="' + MAX_LEN + '" placeholder="Rédige ta réponse comme le jour du concours : démarche, justification, vocabulaire précis." aria-describedby="answerCount">' + esc(draft) + '</textarea>' +
+        '<div class="answer-meta"><span>Brouillon enregistré sur cet appareil</span><span id="answerCount"></span></div>' +
+        '<div class="actions" style="margin-top:12px"><button class="btn btn-primary" type="submit">Envoyer ma réponse</button>' +
+        '<button class="btn btn-ghost" type="button" data-act="reveal"' + (attempts.length ? '' : ' disabled title="Disponible après une première tentative"') + '>Voir la réponse</button></div></form>';
+      if (state.showForm) html += formHtml();
+    }
+    body.innerHTML = html;
+    updateCount();
+  }
+
+  function updateCount() {
+    var t = document.getElementById('answer'), out = document.getElementById('answerCount');
+    if (!t || !out) return;
+    out.textContent = t.value.length + ' / ' + MAX_LEN + ' caractères';
+    out.className = t.value.length > MAX_LEN ? 'over' : '';
+  }
+
+  // ── Actions ──
+  function newQuestion(matiere) {
+    state.busy = true; state.error = ''; render();
+    api('/question', { matiere: matiere }).then(function (d) {
+      state.busy = false;
+      if (d.quota) state.quota = d.quota;
+      if (d._status === 200) { state.current = d.question; state.showForm = false; track('entraineur_question', { matiere: matiere }); }
+      else if (d.error === 'signup_required') { state.current = null; state.showForm = true; }
+      else if (d.error === 'weekly_limit') { state.current = null; }
+      else state.error = d.error || 'Une erreur est survenue.';
+      render();
+      document.getElementById('outil').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }
+
+  function submitAnswer() {
+    var t = document.getElementById('answer'); if (!t) return;
+    var reponse = t.value.trim();
+    if (reponse.length < 5) { state.error = 'Rédige ta réponse avant de l\'envoyer.'; render(); return; }
+    if (reponse.length > MAX_LEN) { state.error = 'Ta réponse dépasse ' + MAX_LEN + ' caractères.'; render(); return; }
+    var c = state.current;
+    state.busy = true; state.error = ''; render();
+    api('/correct', { servieId: c.servieId, reponse: reponse }).then(function (d) {
+      state.busy = false;
+      if (d._status === 200) {
+        c.attempts = (c.attempts || []).concat([d.attempt]);
+        if (d.revealed) { c.revealed = true; c.corrige = d.corrige; }
+        store('entraineur-draft-' + c.servieId, null);
+        track('entraineur_correction', { tentative: d.attempt.tentative, matiere: c.matiere });
+      } else state.error = d.error || 'La correction a échoué. Réessaie.';
+      render();
+    });
+  }
+
+  function reveal() {
+    var c = state.current;
+    state.busy = true; state.error = ''; render();
+    api('/reveal', { servieId: c.servieId }).then(function (d) {
+      state.busy = false;
+      if (d._status === 200) { c.revealed = true; c.corrige = d.corrige; }
+      else state.error = d.error || 'Impossible d\'afficher la réponse.';
+      render();
+    });
+  }
+
+  function submitLead(form) {
+    var f = form.elements;
+    var payload = {
+      prenom: f.prenom.value.trim(), nom: f.nom.value.trim(), email: f.email.value.trim(), telephone: f.telephone.value.trim(),
+      consent_conseils: f.consent_conseils.checked, consent_partenaires: f.consent_partenaires.checked,
+    };
+    if (!payload.prenom || !payload.nom || !payload.email || !payload.telephone) { state.formError = 'Merci de remplir tous les champs.'; render(); return; }
+    state.busy = true; state.formError = ''; render();
+    api('/lead', payload).then(function (d) {
+      state.busy = false;
+      if (d._status === 200) {
+        state.lead = d.lead; state.quota = d.quota; state.showForm = false;
+        track('entraineur_lead', { existing: !!d.existing });
+      } else state.formError = d.error || 'Inscription impossible pour le moment.';
+      render();
+    });
+  }
+
+  body.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-act]'); if (!el || state.busy) return;
+    var act = el.getAttribute('data-act');
+    if (act === 'new') newQuestion(el.getAttribute('data-matiere'));
+    else if (act === 'reveal') reveal();
+    else if (act === 'hide-form') { state.showForm = false; render(); }
+  });
+  counter.addEventListener('click', function (e) {
+    if (e.target.closest('[data-act="show-form"]')) { state.showForm = true; state.formError = ''; render(); var f = document.getElementById('lf-prenom'); if (f) f.focus(); }
+  });
+  body.addEventListener('submit', function (e) {
+    e.preventDefault();
+    if (state.busy) return;
+    if (e.target.id === 'answerForm') submitAnswer();
+    else if (e.target.id === 'leadForm') submitLead(e.target);
+  });
+  body.addEventListener('input', function (e) {
+    if (e.target.id === 'answer' && state.current) { store('entraineur-draft-' + state.current.servieId, e.target.value); updateCount(); }
+  });
+
+  api('/status').then(function (d) {
+    if (d._status !== 200) { state.error = d.error || 'Le service est momentanément indisponible.'; render(); return; }
+    state.lead = d.lead; state.quota = d.quota; state.current = d.current;
+    render();
+  });
+})();
+</script>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="nav-logo" style="margin-bottom:12px">
+          <div class="nav-logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:#fff">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+            </svg>
+          </div>
+          <span class="nav-logo-text">PassCRPE</span>
+        </div>
+        <p>Préparez le CRPE 2027 avec PassCRPE : des milliers d'exercices en français et mathématiques adaptés à votre niveau, des corrections selon les exigences du jury et des conseils personnalisés pour progresser.</p>
+      </div>
+      <div class="footer-col">
+        <h4>L'outil</h4>
+        <ul>
+          <li><a href="/#fonctionnalites">Fonctionnalités</a></li>
+          <li><a href="/#matieres">Mathématiques</a></li>
+          <li><a href="/#matieres">Français</a></li>
+          <li><a href="/">S'inscrire</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Le concours</h4>
+        <ul>
+          <li><a href="/#crpe">Qu'est-ce que le CRPE ?</a></li>
+          <li><a href="/#faq">Conditions d'inscription</a></li>
+          <li><a href="/#faq">Les épreuves</a></li>
+          <li><a href="/crpe-par-academie">CRPE par académie</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Ressources</h4>
+        <ul>
+          <li><a href="/blog">Blog</a></li>
+          <li><a href="/outils">Outils</a></li>
+          <li><a href="/#faq">FAQ</a></li>
+          <li><a href="/#temoignages">Témoignages</a></li>
+          <li><a href="mailto:contact@passcrpe.fr">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 PassCRPE. Tous droits réservés.</p>
+      <div class="footer-legal">
+        <a href="#">Mentions légales</a>
+        <a href="/politique-de-confidentialite">Politique de confidentialité</a>
+        <a href="#">CGU</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- AUTH MODAL -->
+<div id="authOverlay" class="auth-overlay">
+  <div class="auth-card">
+    <button class="auth-close" onclick="closeAuth()" aria-label="Fermer">✕</button>
+    <div class="auth-logo">
+      <div class="auth-logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+      <span class="auth-logo-name">PassCRPE</span>
+    </div>
+    <div class="auth-tabs" id="authTabs">
+      <button class="auth-tab active" id="tabLogin" onclick="switchTab('login')">Se connecter</button>
+      <button class="auth-tab" id="tabRegister" onclick="switchTab('register')">S'inscrire</button>
+    </div>
+    <form class="auth-form" id="authForm" onsubmit="submitAuthForm(event)">
+      <div class="auth-name-row" id="nameRow" style="display:none">
+        <div class="auth-field"><label class="auth-label" for="authPrenom">Prénom</label><input class="auth-input" type="text" id="authPrenom" placeholder="Marie" autocomplete="given-name" /></div>
+        <div class="auth-field"><label class="auth-label" for="authNom">Nom</label><input class="auth-input" type="text" id="authNom" placeholder="Dupont" autocomplete="family-name" /></div>
+      </div>
+      <div id="registerFields" style="display:none; flex-direction:column; gap:14px">
+        <div class="auth-field">
+          <label class="auth-label" for="authConcours">Type de concours</label>
+          <select class="auth-input" id="authConcours">
+            <option value="">Choisir un concours…</option>
+            <option>Concours externe et externe spécial — Bac+3</option>
+            <option>Concours externe et externe spécial — Bac+5</option>
+            <option>Troisième concours</option>
+            <option>Second concours interne et interne spécial (langues régionales)</option>
+            <option>Concours interne exceptionnel</option>
+            <option>Premier concours interne</option>
+            <option>Concours spécifiques à l'académie de Mayotte</option>
+          </select>
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="authAcademie">Académie</label>
+          <select class="auth-input" id="authAcademie">
+            <option value="">Choisir une académie…</option>
+            <option>Je ne sais pas encore</option>
+            <option>Aix-Marseille</option><option>Amiens</option><option>Besançon</option><option>Bordeaux</option><option>Caen</option><option>Clermont-Ferrand</option><option>Créteil</option><option>Dijon</option><option>Grenoble</option><option>Guadeloupe</option><option>Guyane</option><option>La Réunion</option><option>Lille</option><option>Limoges</option><option>Lyon</option><option>Martinique</option><option>Mayotte</option><option>Montpellier</option><option>Nancy-Metz</option><option>Nantes</option><option>Nice</option><option>Normandie</option><option>Orléans-Tours</option><option>Paris</option><option>Poitiers</option><option>Reims</option><option>Rennes</option><option>Rouen</option><option>Strasbourg</option><option>Toulouse</option><option>Versailles</option>
+          </select>
+        </div>
+      </div>
+      <div class="auth-field"><label class="auth-label" for="authEmail">Adresse e-mail</label><input class="auth-input" type="email" id="authEmail" placeholder="vous@exemple.fr" required autocomplete="email" /></div>
+      <div class="auth-field"><label class="auth-label" for="authPassword">Mot de passe</label><input class="auth-input" type="password" id="authPassword" placeholder="••••••••" required autocomplete="current-password" minlength="8" /></div>
+      <div id="consentRow" style="display:none">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12px;color:#4b5563;line-height:1.5;margin-bottom:8px;">
+          <input type="checkbox" id="authConsentConseils" style="flex-shrink:0;margin-top:3px;accent-color:#4f46e5;width:15px;height:15px;" />
+          <span>J'accepte de recevoir par e-mail les conseils de préparation et les actualités de PassCRPE (facultatif).</span>
+        </label>
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:12px;color:#4b5563;line-height:1.5;">
+          <input type="checkbox" id="authConsentPartenaires" style="flex-shrink:0;margin-top:3px;accent-color:#4f46e5;width:15px;height:15px;" />
+          <span>J'accepte de recevoir des offres de partenaires de PassCRPE (facultatif).</span>
+        </label>
+        <p style="font-size:11px;color:#6b7280;line-height:1.5;margin-top:8px;">Ces cases sont facultatives et n'ont aucun effet sur ton inscription. Tu peux te désinscrire à tout moment grâce au lien présent dans chaque e-mail. En savoir plus : <a href="/politique-de-confidentialite" target="_blank" rel="noopener" style="color:#4f46e5;">politique de confidentialité</a>.</p>
+      </div>
+      <button type="submit" class="auth-submit" id="authSubmit">Se connecter</button>
+    </form>
+    <div class="auth-message" id="authMessage"></div>
+    <div id="resendBlock" style="display:none;text-align:center;margin-top:12px">
+      <p style="font-size:13px;color:#64748b;margin-bottom:8px">Vous n'avez pas reçu l'e-mail ?</p>
+      <button id="resendBtn" class="auth-submit" style="width:auto;padding:10px 20px;font-size:13px" onclick="resendConfirmation()">Renvoyer l'e-mail</button>
+    </div>
+    <div class="auth-footer-link" id="authToggle">Pas encore de compte ? <button onclick="switchTab('register')">Créer un compte</button></div>
+  </div>
+</div>
+
+<script>
+  let _sb = null, authMode = 'login', _lastEmail = '';
+  function getSB() {
+    if (!_sb) _sb = window.supabase.createClient('https://zqwcermgfvcusuwjfviz.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8');
+    return _sb;
+  }
+  function openAuth(tab) { document.getElementById('authOverlay').classList.add('open'); document.body.style.overflow='hidden'; switchTab(tab || 'register'); document.getElementById('authTabs').style.display = tab ? 'none' : ''; clearAuthMessage(); }
+  function closeAuth() { document.getElementById('authOverlay').classList.remove('open'); document.body.style.overflow=''; document.getElementById('authForm').style.display=''; document.getElementById('authForm').reset(); document.getElementById('authTabs').style.display=''; document.getElementById('authToggle').style.display=''; document.getElementById('resendBlock').style.display='none'; clearAuthMessage(); }
+  document.getElementById('authOverlay').addEventListener('click', e => { if (e.target===document.getElementById('authOverlay')) closeAuth(); });
+  document.addEventListener('keydown', e => { if (e.key==='Escape') closeAuth(); });
+  function switchTab(mode) {
+    authMode=mode; const isLogin=mode==='login';
+    document.getElementById('tabLogin').classList.toggle('active',isLogin);
+    document.getElementById('tabRegister').classList.toggle('active',!isLogin);
+    document.getElementById('nameRow').style.display=isLogin?'none':'flex';
+    document.getElementById('registerFields').style.display=isLogin?'none':'flex';
+    document.getElementById('consentRow').style.display=isLogin?'none':'block';
+    document.getElementById('authSubmit').textContent=isLogin?'Se connecter':'Créer mon compte';
+    document.getElementById('authToggle').innerHTML=isLogin?'Pas encore de compte ? <button onclick="switchTab(\'register\')">Créer un compte</button>':'Déjà un compte ? <button onclick="switchTab(\'login\')">Se connecter</button>';
+    clearAuthMessage();
+  }
+  function clearAuthMessage() { const m=document.getElementById('authMessage'); m.textContent=''; m.className='auth-message'; }
+  function showAuthMessage(t,type) { const m=document.getElementById('authMessage'); m.textContent=t; m.className='auth-message '+type; }
+  async function submitAuthForm(e) {
+    e.preventDefault();
+    const email=document.getElementById('authEmail').value.trim();
+    const password=document.getElementById('authPassword').value;
+    const prenom=document.getElementById('authPrenom').value.trim();
+    const nom=document.getElementById('authNom').value.trim();
+    const concours=authMode==='register'?(document.getElementById('authConcours')?.value||''):'';
+    const academie=authMode==='register'?(document.getElementById('authAcademie')?.value||''):'';
+    const btn=document.getElementById('authSubmit');
+    if (!email||!password) return;
+    if (authMode==='register'&&(!prenom||!concours||!academie)) { showAuthMessage('Veuillez remplir tous les champs.','error'); return; }
+    clearAuthMessage(); btn.disabled=true; btn.textContent='Chargement…';
+    const sb=getSB();
+    if (authMode==='register') {
+      const {data,error}=await sb.auth.signUp({email,password,options:{data:{prenom,nom,concours,academie,consent_conseils:document.getElementById('authConsentConseils').checked,consent_partenaires:document.getElementById('authConsentPartenaires').checked,consent_version:'2026-10-12',consent_at:new Date().toISOString()}}});
+      if (error) { window.dataLayer.push({event:'sign_up_error',error_reason:error.message}); showAuthMessage(error.message,'error'); }
+      else { window.dataLayer.push({event:'sign_up',method:'email'}); _lastEmail=email; document.getElementById('authForm').style.display='none'; document.getElementById('authTabs').style.display='none'; document.getElementById('authToggle').style.display='none'; document.getElementById('resendBlock').style.display='block'; showAuthMessage('✓ E-mail de confirmation envoyé à '+email+'. Vérifiez vos spams.','success'); }
+    } else {
+      const {data,error}=await sb.auth.signInWithPassword({email,password});
+      if (error) { showAuthMessage(error.message,'error'); }
+      else { showAuthMessage('✓ Connexion réussie ! Redirection…','success'); setTimeout(()=>{ window.location.href=window.location.port==='3001'?'http://localhost:5173':'/app'; },800); }
+    }
+    btn.disabled=false; btn.textContent=authMode==='register'?'Créer mon compte':'Se connecter';
+  }
+  async function resendConfirmation() {
+    const btn=document.getElementById('resendBtn'); btn.disabled=true; btn.textContent='Envoi…';
+    const {error}=await getSB().auth.resend({type:'signup',email:_lastEmail});
+    btn.textContent=error?'Erreur, réessayez':'✓ E-mail renvoyé !';
+    if (!error) setTimeout(()=>{ btn.textContent='Renvoyer l\'e-mail'; btn.disabled=false; },4000);
+    else btn.disabled=false;
+  }
+</script>
+<script>
+  // Menu mobile : ouvre/ferme la liste des liens et la referme après un clic
+  function toggleMobileMenu(btn) {
+    var nav = btn.closest('.site-nav');
+    var open = nav.classList.toggle('menu-open');
+    btn.setAttribute('aria-expanded', open);
+    btn.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+  }
+  document.querySelectorAll('.site-nav .nav-links a, .site-nav .nav-links .nav-mobile-only button').forEach(function (el) {
+    el.addEventListener('click', function () {
+      var nav = el.closest('.site-nav'), btn = nav.querySelector('.nav-burger');
+      nav.classList.remove('menu-open'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', 'Ouvrir le menu');
+    });
+  });
+</script>
+<script>
+  // Menu « Ressources » : ouverture au clic, sous-menu des sessions, fermeture au clic à l'extérieur
+  function toggleNavDropdown(btn) {
+    var dd = btn.parentElement, open = dd.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+  }
+  function toggleNavSub(btn) {
+    btn.setAttribute('aria-expanded', btn.getAttribute('aria-expanded') !== 'true');
+  }
+  document.addEventListener('click', function (e) {
+    document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+      if (!dd.contains(e.target)) { dd.classList.remove('open'); dd.querySelector('.nav-dropdown-toggle').setAttribute('aria-expanded', 'false'); }
+    });
+  });
+</script>
+</body>
+</html>

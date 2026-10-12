@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
+import { registerEntraineurRoutes } from './entraineur/routes.js';
 
 config();
 
@@ -174,7 +175,7 @@ function klaviyoHeaders() {
   };
 }
 
-async function klaviyoSubscribePipeline(email, prenom, nom, listId, properties = {}, extraAttrs = {}) {
+async function klaviyoSubscribePipeline(email, prenom, nom, listId, properties = {}, extraAttrs = {}, subscribeMarketing = true) {
   // 1. Créer le profil (ou récupérer l'ID existant en cas de 409)
   const profileRes = await fetch(`${KLAVIYO_API_BASE}/profiles`, {
     method: 'POST',
@@ -213,7 +214,8 @@ async function klaviyoSubscribePipeline(email, prenom, nom, listId, properties =
     throw new Error(err.errors?.[0]?.detail || `Erreur ajout à la liste: ${listRes.status}`);
   }
 
-  // 3. Consentement e-mail marketing
+  // 3. Consentement e-mail marketing (seulement si la personne l'a donné)
+  if (!subscribeMarketing) return;
   const consentRes = await fetch(`${KLAVIYO_API_BASE}/profile-subscription-bulk-create-jobs`, {
     method: 'POST',
     headers: klaviyoHeaders(),
@@ -268,11 +270,16 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
 app.post('/api/klaviyo/signup', async (req, res) => {
   if (!klaviyoGuard(res)) return;
   const { prenom, nom, email, user_id, telephone } = req.body || {};
+  // Cases facultatives de l'inscription : l'abonnement aux e-mails marketing n'est fait qu'avec le consentement « conseils »
+  const consent_conseils = req.body?.consent_conseils === true;
+  const consent_partenaires = req.body?.consent_partenaires === true;
   if (!prenom || !nom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ error: 'Données invalides.' });
   try {
     const phoneAttrs = telephone ? { phone_number: telephone } : {};
-    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP, { email_verified: false, trial: true, paid_user: false, form_trial: false }, phoneAttrs);
+    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP,
+      { email_verified: false, trial: true, paid_user: false, form_trial: false, consent_conseils, consent_partenaires },
+      phoneAttrs, consent_conseils);
 
     // Créer la ligne profil Supabase avec trial = true
     if (user_id) {
@@ -527,7 +534,13 @@ async function logConsommation({ meta, model, usage, dureeMs, success }) {
 const CHAT_MODEL = 'claude-sonnet-4-6';
 
 app.post('/api/chat', async (req, res) => {
-  const { messages, system, meta } = req.body;
+  // Réservé aux candidats connectés : sans ça, n'importe qui pourrait utiliser la clé Anthropic
+  const user = await getAuthenticatedUser(req);
+  if (!user) return res.status(401).json({ error: 'Connexion requise.' });
+
+  const { messages, system } = req.body;
+  // L'identifiant utilisateur vient du jeton, pas du navigateur
+  const meta = { ...(req.body.meta || {}), user_id: user.id };
   const startedAt = Date.now();
 
   res.setHeader('Content-Type', 'text/event-stream');
@@ -558,6 +571,10 @@ app.post('/api/chat', async (req, res) => {
     logConsommation({ meta, model: CHAT_MODEL, usage: null, dureeMs: Date.now() - startedAt, success: false });
   }
 });
+
+/* ── Entraîneur CRPE (outil gratuit) ── */
+// Même modèle que les corrections de l'application (CHAT_MODEL)
+registerEntraineurRoutes(app, { supabaseAdmin, anthropic: client, model: CHAT_MODEL, klaviyoHeaders, klaviyoApiBase: KLAVIYO_API_BASE });
 
 /* ── Static (dev local uniquement — sur Vercel ces fichiers sont servis directement depuis dist/) ── */
 app.use(express.static(path.join(__dirname, 'landing')));
