@@ -288,18 +288,20 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
         .select('id', { count: 'exact', head: true }).eq('lead_id', lead.id).gte('created_at', start.toISOString());
       if ((count || 0) >= WEEKLY_REPORT_LIMIT) return fail(res, 429, 'weekly_limit', { resetAt: nextReset(start).toISOString() });
 
-      // Correction : chaque réponse en parallèle, puis la synthèse sur la manière de répondre
+      // Correction : les 5 réponses et la synthèse sur la manière de répondre, toutes en parallèle (temps limité sur Vercel)
       const rows = await fetchQuestions(set.m, set.ids, true);
       if (rows.length !== QUESTIONS_PER_SET) return fail(res, 409, 'Une question n\'est plus disponible. Recommence une nouvelle série.');
       const items = rows.map((q, i) => ({ ...publicQuestion(set.m, q), reponse: reponses[i], reponse_attendue: q.reponse_ideale }));
-      const evals = await Promise.all(items.map(it => it.reponse
-        ? callTool(QUESTION_PROMPT, QUESTION_TOOL, questionMessage({ matiere: set.m, q: it, reponse: it.reponse }), validateQuestion, 1800)
-        : Promise.resolve({ out: { note: 0, niveau: 'a_retravailler', appreciation: 'Pas de réponse.', points_forts: [], points_a_ameliorer: [],
-            elements_manquants: ['Une réponse rédigée'], langue: [], explication: 'Consulte la réponse attendue ci-dessous.' }, usage: { input_tokens: 0, output_tokens: 0 } })));
-      if (evals.some(e => !e.out)) return fail(res, 502, 'Le rapport n\'a pas pu être généré. Réessaie dans quelques instants.');
+      const vide = { out: { note: 0, niveau: 'a_retravailler', appreciation: 'Pas de réponse.', points_forts: [], points_a_ameliorer: [],
+        elements_manquants: ['Une réponse rédigée'], langue: [], explication: 'Consulte la réponse attendue ci-dessous.' }, usage: { input_tokens: 0, output_tokens: 0 } };
+      const [synth, ...evals] = await Promise.all([
+        callTool(SYNTHESE_PROMPT, SYNTHESE_TOOL, syntheseMessage({ matiere: set.m, items }), validateSynthese, 3000),
+        ...items.map(it => it.reponse
+          ? callTool(QUESTION_PROMPT, QUESTION_TOOL, questionMessage({ matiere: set.m, q: it, reponse: it.reponse }), validateQuestion, 1800)
+          : Promise.resolve(vide)),
+      ]);
+      if (!synth.out || evals.some(e => !e.out)) return fail(res, 502, 'Le rapport n\'a pas pu être généré. Réessaie dans quelques instants.');
       items.forEach((it, i) => { it.evaluation = evals[i].out; });
-      const synth = await callTool(SYNTHESE_PROMPT, SYNTHESE_TOOL, syntheseMessage({ matiere: set.m, items }), validateSynthese, 3000);
-      if (!synth.out) return fail(res, 502, 'Le rapport n\'a pas pu être généré. Réessaie dans quelques instants.');
 
       const note = Math.round(items.reduce((n, it) => n + it.evaluation.note, 0) / items.length * 2) / 2;
       const usage = [...evals, synth].reduce((u, e) => ({ input_tokens: u.input_tokens + e.usage.input_tokens, output_tokens: u.output_tokens + e.usage.output_tokens }), { input_tokens: 0, output_tokens: 0 });

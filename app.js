@@ -574,7 +574,15 @@ app.post('/api/chat', async (req, res) => {
 
 /* ── Entraîneur CRPE (outil gratuit) ── */
 // Même modèle que les corrections de l'application (CHAT_MODEL)
-registerEntraineurRoutes(app, { supabaseAdmin, anthropic: client, model: CHAT_MODEL, klaviyoHeaders, klaviyoApiBase: KLAVIYO_API_BASE });
+// Clé dédiée à l'Entraîneur (consommation suivie à part dans la console Anthropic), sinon la clé de l'application
+const entraineurClient = process.env.ANTHROPIC_API_KEY_ENTRAINEUR
+  ? new Anthropic({
+      apiKey: process.env.ANTHROPIC_API_KEY_ENTRAINEUR,
+      // Une clé utilisateur (sk-ant-usr-…) doit préciser l'espace de travail à facturer
+      ...(process.env.ANTHROPIC_WORKSPACE_ID_ENTRAINEUR ? { defaultHeaders: { 'anthropic-workspace-id': process.env.ANTHROPIC_WORKSPACE_ID_ENTRAINEUR } } : {}),
+    })
+  : client;
+registerEntraineurRoutes(app, { supabaseAdmin, anthropic: entraineurClient, model: CHAT_MODEL, klaviyoHeaders, klaviyoApiBase: KLAVIYO_API_BASE });
 
 /* ── Static (dev local uniquement — sur Vercel ces fichiers sont servis directement depuis dist/) ── */
 app.use(express.static(path.join(__dirname, 'landing')));

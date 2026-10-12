@@ -49,7 +49,7 @@ Sortie : appelle uniquement l'outil "evaluation_question", sans aucun texte auto
 
 export const SYNTHESE_PROMPT = `${COMMUN}
 
-Ta tâche : à partir des 5 réponses du candidat et de leurs évaluations, rédiger une analyse détaillée de SA MANIÈRE DE RÉPONDRE
+Ta tâche : à partir des 5 réponses du candidat et des corrigés de référence, rédiger une analyse détaillée de SA MANIÈRE DE RÉPONDRE
 (pas un résumé question par question) : comment il structure ses réponses, justifie, utilise le vocabulaire disciplinaire, sa rigueur,
 sa maîtrise de la langue, et les habitudes qui reviennent d'une réponse à l'autre. Appuie chaque constat sur des exemples tirés de ses réponses.
 Termine par ses priorités de travail et un plan type pour bien rédiger une réponse au CRPE dans cette matière.
@@ -146,8 +146,8 @@ export function syntheseMessage({ matiere, items }) {
   const blocs = items.map((it, i) => [
     `── Question ${i + 1} (${it.categorie}) ──`,
     enonceBlock(it),
+    `Corrigé de référence :\n${it.reponse_attendue}`,
     `<reponse_candidat>\n${sanitize(it.reponse) || '(aucune réponse)'}\n</reponse_candidat>`,
-    `Évaluation : ${JSON.stringify(it.evaluation)}`,
   ].join('\n\n'));
   return [`Matière : ${matiere === 'maths' ? 'Mathématiques' : 'Français'}`, 'Niveau : cycle 4', '', ...blocs].join('\n\n');
 }
