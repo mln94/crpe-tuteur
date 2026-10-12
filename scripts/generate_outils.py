@@ -46,6 +46,18 @@ CSS = """
     .page-wrap strong { color: var(--gray-900); }
     .page-wrap a { color: var(--indigo-600); }
     .lead { font-size: 17px; }
+    .page-wide { max-width: 1120px; }
+    .page-wide .lead { max-width: 820px; }
+    .answer-layout > * + *, .lead-layout > * + * { margin-top: 16px; }
+    @media (min-width: 900px) {
+      .page-wide .tool-body { padding: 26px 28px 28px; }
+      .answer-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+      .lead-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); gap: 28px; align-items: start; }
+      .answer-layout > * + *, .lead-layout > * + * { margin-top: 0; }
+      .answer-q { position: sticky; top: 84px; }
+      .answer-layout .answer textarea { min-height: 320px; }
+      .page-wide .steps-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 36px; }
+    }
     .breadcrumb { position: static; z-index: auto; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0; display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--gray-400); margin-bottom: 20px; }
     .breadcrumb a { color: var(--gray-500); text-decoration: none; font-weight: 600; }
     .breadcrumb a:hover { color: var(--indigo-600); }
@@ -233,7 +245,7 @@ def page_entraineur():
     app_ld = {'@context': 'https://schema.org', '@type': 'WebApplication', 'name': 'Entraîneur CRPE',
               'url': SITE + '/outils/entraineur-crpe', 'applicationCategory': 'EducationalApplication',
               'offers': {'@type': 'Offer', 'price': '0', 'priceCurrency': 'EUR'}, 'inLanguage': 'fr'}
-    body = f'''<main class="page-wrap">
+    body = f'''<main class="page-wrap page-wide">
   {crumb}
   <h1>Entraîneur CRPE : réponds à {QUESTIONS_PER_SET} questions, reçois ton rapport détaillé</h1>
   <p class="lead">Au CRPE, avoir la bonne réponse ne suffit pas : le jury attend une réponse <strong>rédigée, justifiée et rigoureuse</strong>, avec un vocabulaire précis et une langue maîtrisée. Entraîne-toi sur {QUESTIONS_PER_SET} questions de maths ou de français tirées au hasard, puis reçois gratuitement par e-mail un rapport détaillé qui corrige chaque réponse selon ces attentes et analyse ta manière de rédiger.</p>
@@ -322,14 +334,15 @@ ENTRAINEUR_JS = r'''<script>
 
   function answerHtml() {
     var s = state.serie, i = state.index, q = s.questions[i];
-    return progressHtml() + '<p class="step-label">Question ' + (i + 1) + ' sur ' + N + '</p>' + EC.questionHtml(q, s.matiere) +
+    return progressHtml() + '<p class="step-label">Question ' + (i + 1) + ' sur ' + N + '</p>' +
+      '<div class="answer-layout"><div class="answer-q">' + EC.questionHtml(q, s.matiere) + '</div>' +
       '<form class="answer" id="answerForm"><label for="answer">Ta réponse</label>' +
       '<textarea id="answer" maxlength="' + MAX_LEN + '" placeholder="Rédige ta réponse comme le jour du concours : démarche, justification, vocabulaire précis." aria-describedby="answerCount">' + esc(s.reponses[i] || '') + '</textarea>' +
       '<div class="answer-meta"><span>Ne ferme pas la page avant la fin</span><span id="answerCount"></span></div>' +
       '<div class="actions" style="margin-top:12px">' +
       (i > 0 ? '<button class="btn btn-ghost" type="button" data-act="prev">← Précédente</button>' : '') +
       '<button class="btn btn-primary" type="submit">' + (i === N - 1 ? 'Terminer' : 'Question suivante →') + '</button></div>' +
-      '<p style="font-size:13px;color:var(--gray-500);margin-top:8px">Les ' + N + ' questions doivent avoir une réponse pour recevoir ton rapport. Tu sèches ? Écris ce que tu sais : le rapport t\'expliquera la réponse attendue.</p></form>';
+      '<p style="font-size:13px;color:var(--gray-500);margin-top:8px">Les ' + N + ' questions doivent avoir une réponse pour recevoir ton rapport. Tu sèches ? Écris ce que tu sais : le rapport t\'expliquera la réponse attendue.</p></form></div>';
   }
 
   // Questions encore sans réponse : le formulaire ne peut pas partir tant qu'il en reste
@@ -344,19 +357,23 @@ ENTRAINEUR_JS = r'''<script>
   function formHtml() {
     return progressHtml() + '<form class="lead-form" id="leadForm" novalidate><h3>Reçois ton rapport détaillé par e-mail</h3>' +
       missingHtml() +
+      '<div class="lead-layout"><div class="lead-intro">' +
       '<p>Laisse ton prénom, ton nom, ton adresse e-mail et ton numéro de téléphone : ton rapport (correction de chaque réponse et analyse de ta manière de rédiger) t\'est envoyé gratuitement.</p>' +
       '<div class="why-box"><h4>Pourquoi te demande-t-on tes coordonnées ?</h4>' +
       '<p>Créer cet outil nous a demandé beaucoup de travail : une banque de questions de niveau cycle 4, un correcteur aussi exigeant que le jury et un rapport complet sur ta manière de rédiger. Nous te l\'offrons gratuitement ; en échange, nous te demandons simplement tes coordonnées.</p>' +
       '<p>Elles servent à t\'envoyer ton rapport et, si tu l\'acceptes en cochant les cases ci-dessous, à te transmettre des informations utiles sur le CRPE, de la part de PassCRPE ou de nos partenaires. Rien d\'autre : elles ne sont jamais revendues et tu peux te désinscrire à tout moment.</p></div>' +
+      '</div><div class="lead-fields">' +
       '<div class="field-row"><div class="field"><label for="lf-prenom">Prénom</label><input id="lf-prenom" name="prenom" autocomplete="given-name" required maxlength="80"><span class="field-hint">Pour personnaliser ton rapport et nos e-mails.</span></div>' +
       '<div class="field"><label for="lf-nom">Nom</label><input id="lf-nom" name="nom" autocomplete="family-name" required maxlength="80"><span class="field-hint">Pour identifier ton rapport.</span></div></div>' +
-      '<div class="field"><label for="lf-email">Adresse e-mail</label><input id="lf-email" name="email" type="email" autocomplete="email" required maxlength="254"><span class="field-hint">Pour t\'envoyer ton rapport et, seulement si tu l\'acceptes, nos conseils de préparation.</span></div>' +
+      '<div class="field-row"><div class="field"><label for="lf-email">Adresse e-mail</label><input id="lf-email" name="email" type="email" autocomplete="email" required maxlength="254"><span class="field-hint">Pour t\'envoyer ton rapport et, seulement si tu l\'acceptes, nos conseils de préparation.</span></div>' +
       '<div class="field"><label for="lf-tel">Numéro de téléphone</label><input id="lf-tel" name="telephone" type="tel" autocomplete="tel" required maxlength="30" placeholder="06 12 34 56 78"><span class="field-hint">Pour être contacté(e) par WhatsApp, SMS ou téléphone : te proposer une offre, partager un contenu ou avoir ton retour sur ton parcours de préparation.</span></div>' +
+      '</div>' +
       '<label class="check"><input type="checkbox" name="consent_conseils"> <span>J\'accepte de recevoir par e-mail les conseils de préparation et les actualités de PassCRPE (facultatif).</span></label>' +
       '<label class="check"><input type="checkbox" name="consent_partenaires"> <span>J\'accepte de recevoir des offres de partenaires de PassCRPE (facultatif).</span></label>' +
       '<label class="check"><input type="checkbox" name="consent_contact_sms"> <span>J\'accepte d\'être contacté(e) par WhatsApp ou SMS pour recevoir des offres, des contenus ou donner mon avis sur ma préparation (facultatif).</span></label>' +
       (state.formError ? '<div class="notice notice-error" role="alert">' + esc(state.formError) + '</div>' : '') +
       '<div class="actions" style="margin-top:12px"><button class="btn btn-ghost" type="button" data-act="prev">← Revoir mes réponses</button><button class="btn btn-primary" type="submit"' + (missing().length ? ' disabled title="Réponds d\'abord aux ' + N + ' questions"' : '') + '>Recevoir mon rapport</button></div>' +
+      '</div></div>' +
       '<p class="legal">Les cases facultatives n\'ont aucun effet sur l\'envoi de ton rapport. Tes données sont traitées par PassCRPE pour générer et t\'envoyer ton rapport (outil d\'envoi : Klaviyo ; correction par intelligence artificielle : Anthropic, sans tes coordonnées) et, si tu l\'acceptes, t\'envoyer nos e-mails. Ton numéro peut servir à t\'appeler (offre, contenu, retour sur ta préparation), et à t\'écrire par WhatsApp ou SMS seulement si tu as coché la case correspondante. Tu peux te désinscrire à tout moment et exercer tes droits d\'accès, de rectification et de suppression en écrivant à contact@passcrpe.fr. En savoir plus : <a href="/politique-de-confidentialite" target="_blank" rel="noopener">politique de confidentialité</a>.</p></form>';
   }
 
