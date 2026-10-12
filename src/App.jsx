@@ -5601,19 +5601,35 @@ function SupportView({ authUser, onUnreadChange }) {
     setLoadingTickets(true);
     try {
       const { data } = await sbClient.from('support_tickets')
-        .select('*')
+        .select('*, support_messages(id, author, body, created_at)')
         .order('created_at', { ascending: false });
-      const list = data || [];
+      const list = (data || []).map(t => ({
+        ...t,
+        support_messages: [...(t.support_messages || [])].sort((a, b) => a.created_at.localeCompare(b.created_at)),
+      }));
       setTickets(list);
-      const unread = list.filter(t => t.admin_reply && !t.user_seen_reply);
-      if (unread.length > 0) {
-        await sbClient.from('support_tickets')
-          .update({ user_seen_reply: true })
-          .in('id', unread.map(t => t.id));
+      if (list.some(t => t.admin_reply && !t.user_seen_reply)) {
+        await sbClient.rpc('support_mark_seen');
         onUnreadChange?.(0);
       }
     } catch {}
     setLoadingTickets(false);
+  }
+
+  // Réponse du candidat dans la conversation : la demande repasse « En attente »
+  async function sendFollowup(ticketId, body) {
+    const { error: err } = await sbClient.rpc('support_user_reply', { p_ticket: ticketId, p_body: body });
+    if (err) return 'Une erreur est survenue. Réessayez.';
+    await loadTickets();
+    return null;
+  }
+
+  // Clôture par le candidat avec sa note de satisfaction (1 à 5)
+  async function closeWithRating(ticketId, satisfaction) {
+    const { error: err } = await sbClient.rpc('support_user_close', { p_ticket: ticketId, p_satisfaction: satisfaction });
+    if (err) return 'Une erreur est survenue. Réessayez.';
+    await loadTickets();
+    return null;
   }
 
   async function handleSubmit(e) {
@@ -5656,7 +5672,7 @@ function SupportView({ authUser, onUnreadChange }) {
             <div className="flex flex-col items-center gap-3 py-6 text-center">
               <CheckCircle2 className="w-10 h-10 text-emerald-500" />
               <p className="font-semibold text-gray-800">Message envoyé !</p>
-              <p className="text-sm text-gray-500">Nous vous répondrons par e-mail sous 24–48h.</p>
+              <p className="text-sm text-gray-500">Nous vous répondrons ici, dans « Vos messages », sous 24–48h.</p>
               <button onClick={() => setSent(false)} className="mt-2 text-sm text-indigo-600 font-semibold">
                 Envoyer un autre message
               </button>
@@ -5703,27 +5719,161 @@ function SupportView({ authUser, onUnreadChange }) {
             <h2 className="text-sm font-semibold text-gray-500 mb-3">Vos messages</h2>
             <div className="flex flex-col gap-3">
               {tickets.map(t => (
-                <div key={t.id} className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-xs font-semibold text-gray-500">{t.category}</span>
-                    <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusColor[t.status]}`}>
-                      {statusLabel[t.status]}
-                    </span>
-                  </div>
-                  <p className="text-sm text-gray-700 leading-relaxed">{t.message}</p>
-                  {t.admin_reply && (
-                    <div className="mt-3 pt-3 border-t border-gray-100">
-                      <p className="text-xs font-semibold text-indigo-600 mb-1">Réponse PassCRPE</p>
-                      <p className="text-sm text-gray-700 leading-relaxed">{t.admin_reply}</p>
-                    </div>
-                  )}
-                  <p className="text-xs text-gray-300 mt-2">{new Date(t.created_at).toLocaleDateString('fr-FR')}</p>
-                </div>
+                <SupportTicketCard
+                  key={t.id}
+                  ticket={t}
+                  statusLabel={statusLabel}
+                  statusColor={statusColor}
+                  onReply={sendFollowup}
+                  onClose={closeWithRating}
+                />
               ))}
             </div>
           </div>
         )}
       </div>
+    </div>
+  );
+}
+
+const SATISFACTION_LEVELS = [
+  { value: 1, emoji: '😞', label: 'Pas du tout satisfait' },
+  { value: 2, emoji: '🙁', label: 'Peu satisfait' },
+  { value: 3, emoji: '😐', label: 'Moyennement satisfait' },
+  { value: 4, emoji: '🙂', label: 'Satisfait' },
+  { value: 5, emoji: '😍', label: 'Très satisfait' },
+];
+
+// Une demande de support : conversation, réponse du candidat, clôture et note de satisfaction
+function SupportTicketCard({ ticket: t, statusLabel, statusColor, onReply, onClose }) {
+  const [reply, setReply]       = useState('');
+  const [rating, setRating]     = useState(0);
+  const [closing, setClosing]   = useState(false);
+  const [busy, setBusy]         = useState(false);
+  const [error, setError]       = useState('');
+
+  const messages    = t.support_messages || [];
+  const hasAnswer   = messages.some(m => m.author === 'admin');
+  const isClosed    = t.status === 'closed';
+  const canRate     = hasAnswer && !t.satisfaction;
+  const showRating  = canRate && (closing || isClosed);
+  const rated       = SATISFACTION_LEVELS.find(l => l.value === t.satisfaction);
+
+  async function handleReply(e) {
+    e.preventDefault();
+    if (!reply.trim()) return;
+    setBusy(true); setError('');
+    const err = await onReply(t.id, reply.trim());
+    setBusy(false);
+    if (err) setError(err); else setReply('');
+  }
+
+  async function handleRate() {
+    if (!rating) { setError('Choisissez une note.'); return; }
+    setBusy(true); setError('');
+    const err = await onClose(t.id, rating);
+    setBusy(false);
+    if (err) setError(err); else setClosing(false);
+  }
+
+  return (
+    <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-xs font-semibold text-gray-500">{t.category}</span>
+        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusColor[t.status]}`}>
+          {statusLabel[t.status]}
+        </span>
+      </div>
+      <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{t.message}</p>
+      <p className="text-xs text-gray-300 mt-2">{new Date(t.created_at).toLocaleDateString('fr-FR')}</p>
+
+      {messages.map(m => (
+        <div key={m.id} className={`mt-3 pt-3 border-t border-gray-100 ${m.author === 'admin' ? '' : 'pl-3 border-l-2 border-l-gray-200'}`}>
+          <p className={`text-xs font-semibold mb-1 ${m.author === 'admin' ? 'text-indigo-600' : 'text-gray-500'}`}>
+            {m.author === 'admin' ? 'Réponse PassCRPE' : 'Vous'}
+          </p>
+          <p className="text-sm text-gray-700 leading-relaxed whitespace-pre-line">{m.body}</p>
+          <p className="text-xs text-gray-300 mt-1">{new Date(m.created_at).toLocaleDateString('fr-FR')}</p>
+        </div>
+      ))}
+
+      {/* Répondre (tant que la demande n'est pas clôturée) */}
+      {!isClosed && !closing && (
+        <form onSubmit={handleReply} className="mt-3 pt-3 border-t border-gray-100 flex flex-col gap-2">
+          <textarea
+            value={reply}
+            onChange={e => setReply(e.target.value)}
+            rows={2}
+            placeholder={hasAnswer ? 'Répondre à PassCRPE…' : 'Ajouter une précision…'}
+            className="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-800 bg-gray-50 focus:outline-none focus:border-indigo-400 resize-none"
+          />
+          <div className="flex items-center gap-2 flex-wrap">
+            <button
+              type="submit"
+              disabled={busy || !reply.trim()}
+              className="flex items-center gap-1.5 bg-indigo-600 text-white text-xs font-semibold px-3 py-2 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+            >
+              <Send className="w-3.5 h-3.5" /> Répondre
+            </button>
+            {hasAnswer && (
+              <button
+                type="button"
+                onClick={() => { setClosing(true); setError(''); }}
+                className="flex items-center gap-1.5 text-xs font-semibold px-3 py-2 rounded-lg border border-gray-200 text-gray-600 hover:border-emerald-400 hover:text-emerald-700 transition-colors"
+              >
+                <CheckCircle2 className="w-3.5 h-3.5" /> Ma question est résolue
+              </button>
+            )}
+          </div>
+        </form>
+      )}
+
+      {/* Note de satisfaction : à la clôture, ou après une clôture par PassCRPE */}
+      {showRating && (
+        <div className="mt-3 pt-3 border-t border-gray-100">
+          <p className="text-sm font-semibold text-gray-800 mb-2">
+            {isClosed ? 'Cette demande est clôturée. Êtes-vous satisfait de la réponse ?' : 'Avant de clôturer, êtes-vous satisfait de la réponse ?'}
+          </p>
+          <div className="flex gap-1.5 mb-2">
+            {SATISFACTION_LEVELS.map(l => (
+              <button
+                key={l.value}
+                type="button"
+                title={l.label}
+                aria-label={l.label}
+                onClick={() => setRating(l.value)}
+                className={`flex-1 text-2xl py-1.5 rounded-xl border transition-colors ${rating === l.value ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:bg-gray-50'}`}
+              >
+                {l.emoji}
+              </button>
+            ))}
+          </div>
+          {rating > 0 && <p className="text-xs text-gray-500 mb-2">{SATISFACTION_LEVELS[rating - 1].label}</p>}
+          <div className="flex gap-2">
+            <button
+              type="button"
+              onClick={handleRate}
+              disabled={busy || !rating}
+              className="bg-indigo-600 text-white text-xs font-semibold px-3 py-2 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+            >
+              {isClosed ? 'Envoyer ma note' : 'Clôturer la demande'}
+            </button>
+            {!isClosed && (
+              <button type="button" onClick={() => { setClosing(false); setRating(0); }} className="text-xs font-semibold px-3 py-2 text-gray-500">
+                Annuler
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+
+      {rated && (
+        <p className="mt-3 pt-3 border-t border-gray-100 text-xs text-gray-500">
+          Votre avis : {rated.emoji} {rated.label}. Merci !
+        </p>
+      )}
+
+      {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
     </div>
   );
 }

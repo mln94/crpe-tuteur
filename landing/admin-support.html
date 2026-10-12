@@ -86,6 +86,11 @@
     .btn-reply:hover { background: #4338ca; }
     .btn-close { padding: 10px 20px; border: 1.5px solid #e5e7eb; border-radius: 10px; background: #fff; color: #374151; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
     .btn-close:hover { background: #f3f4f6; }
+    .badge-rating { font-size: 12px; font-weight: 700; color: #065f46; background: #d1fae5; padding: 4px 10px; border-radius: 20px; }
+    .ticket-rating { font-size: 11px; font-weight: 700; color: #6b7280; margin-left: 6px; }
+    .msg-admin { border-color: #a5f3fc; background: #f0fdff; }
+    .msg-admin .detail-section-label { color: #0e7490; }
+    .msg-date { font-size: 12px; color: #9ca3af; margin-top: 8px; }
     .success-msg { font-size: 13px; font-weight: 600; color: #059669; }
 
     @media (max-width: 768px) {
@@ -125,6 +130,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="top-bar">
     <div class="top-bar-title">🎓 PassCRPE — Support</div>
     <div class="top-bar-right">
+      <span class="badge-rating" id="avgRating" style="display:none"></span>
       <span class="badge-count" id="openCount">0 en attente</span>
       <button class="logout-btn" onclick="doLogout()">Déconnexion</button>
     </div>
@@ -158,6 +164,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   let currentFilter = 'all';
   let selectedId = null;
 
+  const STATUS = { open: 'En attente', answered: 'Répondu', closed: 'Clôturé' };
+  const SATISFACTION = { 1: '😞 Pas du tout satisfait', 2: '🙁 Peu satisfait', 3: '😐 Moyennement satisfait', 4: '🙂 Satisfait', 5: '😍 Très satisfait' };
+  // Les messages viennent des candidats : on échappe tout avant de l'insérer dans la page
+  const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const escBr = v => esc(v).replace(/\n/g, '<br>');
+
   // Check existing session
   SB.auth.getSession().then(({ data }) => {
     if (data.session?.user?.email === ADMIN_EMAIL) showDashboard();
@@ -188,10 +200,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   async function loadTickets() {
-    const { data } = await SB.from('support_tickets').select('*').order('created_at', { ascending: false });
-    allTickets = data || [];
+    const { data } = await SB.from('support_tickets')
+      .select('*, support_messages(id, author, body, created_at)')
+      .order('created_at', { ascending: false });
+    allTickets = (data || []).map(t => ({
+      ...t,
+      support_messages: [...(t.support_messages || [])].sort((a, b) => a.created_at.localeCompare(b.created_at)),
+    }));
     const open = allTickets.filter(t => t.status === 'open').length;
     document.getElementById('openCount').textContent = open + ' en attente';
+    // Satisfaction moyenne sur les demandes notées
+    const rated = allTickets.filter(t => t.satisfaction);
+    const avg = document.getElementById('avgRating');
+    if (rated.length) {
+      const mean = rated.reduce((n, t) => n + t.satisfaction, 0) / rated.length;
+      avg.textContent = `Satisfaction ${mean.toFixed(1).replace('.', ',')}/5 (${rated.length} avis)`;
+      avg.style.display = '';
+    } else avg.style.display = 'none';
     renderList();
   }
 
@@ -209,12 +234,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     el.innerHTML = filtered.map(t => `
       <div class="ticket-item ${t.id === selectedId ? 'selected' : ''}" onclick="selectTicket('${t.id}')">
         <div class="ticket-meta">
-          <span class="ticket-prenom">${t.user_prenom || t.user_email}</span>
+          <span class="ticket-prenom">${esc(t.user_prenom || t.user_email)}</span>
           <span class="ticket-date">${new Date(t.created_at).toLocaleDateString('fr-FR')}</span>
         </div>
-        <div class="ticket-category">${t.category}</div>
-        <div class="ticket-preview">${t.message}</div>
-        <span class="status-pill status-${t.status}">${{open:'En attente',answered:'Répondu',closed:'Clôturé'}[t.status]}</span>
+        <div class="ticket-category">${esc(t.category)}</div>
+        <div class="ticket-preview">${esc((t.support_messages.at(-1) || t).body || t.message)}</div>
+        <span class="status-pill status-${t.status}">${STATUS[t.status]}</span>${t.satisfaction ? `<span class="ticket-rating">${SATISFACTION[t.satisfaction].split(' ')[0]} ${t.satisfaction}/5</span>` : ''}
       </div>
     `).join('');
   }
@@ -226,54 +251,69 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     renderList();
     document.getElementById('layout').classList.add('show-detail');
     const d = document.getElementById('ticketDetail');
+    const closedInfo = t.status === 'closed'
+      ? `Clôturée ${t.closed_by === 'user' ? 'par le candidat' : t.closed_by === 'admin' ? 'par vous' : ''}${t.closed_at ? ' le ' + new Date(t.closed_at).toLocaleString('fr-FR') : ''}`
+      : '';
     d.innerHTML = `
       <div class="detail-header">
-        <div class="detail-name">${t.user_prenom || '—'}</div>
-        <div class="detail-email">${t.user_email}</div>
-        <span class="detail-badge status-${t.status} status-pill">${{open:'En attente',answered:'Répondu',closed:'Clôturé'}[t.status]}</span>
+        <div class="detail-name">${esc(t.user_prenom || '—')}</div>
+        <div class="detail-email">${esc(t.user_email)}</div>
+        <span class="detail-badge status-${t.status} status-pill">${STATUS[t.status]}</span>
       </div>
 
       <div class="detail-section">
         <div class="detail-section-label">Catégorie</div>
-        <div class="detail-message">${t.category}</div>
+        <div class="detail-message">${esc(t.category)}</div>
       </div>
 
       <div class="detail-section">
         <div class="detail-section-label">Message de l'utilisateur</div>
-        <div class="detail-message">${t.message.replace(/\n/g, '<br>')}</div>
-        <div style="font-size:12px;color:#9ca3af;margin-top:8px">${new Date(t.created_at).toLocaleString('fr-FR')}</div>
+        <div class="detail-message">${escBr(t.message)}</div>
+        <div class="msg-date">${new Date(t.created_at).toLocaleString('fr-FR')}</div>
       </div>
 
-      ${t.admin_reply ? `
-        <div class="detail-section" style="border-color:#a5f3fc;background:#f0fdff">
-          <div class="detail-section-label" style="color:#0e7490">Votre réponse</div>
-          <div class="detail-message">${t.admin_reply.replace(/\n/g, '<br>')}</div>
-          <div style="font-size:12px;color:#9ca3af;margin-top:8px">${new Date(t.admin_replied_at).toLocaleString('fr-FR')}</div>
+      ${t.support_messages.map(m => `
+        <div class="detail-section ${m.author === 'admin' ? 'msg-admin' : ''}">
+          <div class="detail-section-label">${m.author === 'admin' ? 'Votre réponse' : 'Réponse du candidat'}</div>
+          <div class="detail-message">${escBr(m.body)}</div>
+          <div class="msg-date">${new Date(m.created_at).toLocaleString('fr-FR')}</div>
         </div>
-      ` : ''}
+      `).join('')}
 
-      <div class="detail-section">
-        <div class="detail-section-label">Répondre</div>
-        <div class="reply-form">
-          <textarea class="reply-textarea" id="replyText" placeholder="Votre réponse…">${t.admin_reply || ''}</textarea>
-          <div class="reply-actions">
-            <button class="btn-reply" onclick="sendReply('${t.id}', 'answered')">Envoyer la réponse</button>
-            <button class="btn-close" onclick="closeTicket('${t.id}')">Clôturer</button>
+      ${t.status === 'closed' ? `
+        <div class="detail-section">
+          <div class="detail-section-label">Clôture</div>
+          <div class="detail-message">${closedInfo}</div>
+          <div class="detail-message" style="margin-top:8px"><strong>Satisfaction :</strong> ${t.satisfaction ? `${SATISFACTION[t.satisfaction]} (${t.satisfaction}/5)` : 'pas encore notée'}</div>
+        </div>
+      ` : `
+        <div class="detail-section">
+          <div class="detail-section-label">Répondre</div>
+          <div class="reply-form">
+            <textarea class="reply-textarea" id="replyText" placeholder="Votre réponse…"></textarea>
+            <div class="reply-actions">
+              <button class="btn-reply" onclick="sendReply('${t.id}')">Envoyer la réponse</button>
+              <button class="btn-close" onclick="closeTicket('${t.id}')">Clôturer</button>
+            </div>
+            <div id="replyMsg" style="font-size:13px;margin-top:4px"></div>
           </div>
-          <div id="replyMsg" style="font-size:13px;margin-top:4px"></div>
         </div>
-      </div>
+      `}
     `;
   }
 
-  async function sendReply(id, status) {
+  async function sendReply(id) {
     const reply = document.getElementById('replyText').value.trim();
     if (!reply) { document.getElementById('replyMsg').textContent = 'Réponse vide.'; return; }
     document.getElementById('replyMsg').textContent = 'Envoi…';
+    // La réponse s'ajoute à la conversation ; admin_reply garde la dernière réponse (pastille « non lu » côté candidat)
+    const { error: msgErr } = await SB.from('support_messages').insert({ ticket_id: id, author: 'admin', body: reply });
+    if (msgErr) { document.getElementById('replyMsg').textContent = 'Erreur : ' + msgErr.message; return; }
+    const now = new Date().toISOString();
     const { error } = await SB.from('support_tickets').update({
       admin_reply: reply,
-      admin_replied_at: new Date().toISOString(),
-      status,
+      admin_replied_at: now,
+      status: 'answered',
       user_seen_reply: false,
     }).eq('id', id);
     if (error) { document.getElementById('replyMsg').textContent = 'Erreur : ' + error.message; return; }
@@ -283,7 +323,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   async function closeTicket(id) {
-    await SB.from('support_tickets').update({ status: 'closed' }).eq('id', id);
+    await SB.from('support_tickets').update({ status: 'closed', closed_at: new Date().toISOString(), closed_by: 'admin' }).eq('id', id);
     await loadTickets();
     document.getElementById('ticketDetail').innerHTML = '<div class="detail-empty">Ticket clôturé</div>';
     selectedId = null;
