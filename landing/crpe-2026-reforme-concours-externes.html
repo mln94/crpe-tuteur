@@ -174,6 +174,28 @@
       .site-nav .nav-logo-text { font-size: 16px; }
     }
     @media (max-width: 400px) { .nav-cta-long { display: none; } }
+
+    /* ── MENU RESSOURCES ── */
+    .nav-dropdown { position: relative; }
+    .nav-dropdown-toggle, .nav-sub-toggle { display: inline-flex; align-items: center; gap: 4px; padding: 0; border: 0; background: none; font-family: inherit; font-size: 14px; font-weight: 500; color: var(--gray-600); cursor: pointer; white-space: nowrap; transition: color .15s; }
+    .nav-dropdown-toggle:hover, .nav-dropdown-toggle.active, .nav-dropdown.open > .nav-dropdown-toggle { color: var(--gray-900); }
+    .nav-dropdown-toggle svg, .nav-sub-toggle svg { width: 14px; height: 14px; transition: transform .15s; }
+    .nav-dropdown.open > .nav-dropdown-toggle svg, .nav-sub-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+    .nav-dropdown-menu { display: none; position: absolute; top: calc(100% + 14px); left: 50%; transform: translateX(-50%); min-width: 220px; padding: 8px; text-align: left; background: #fff; border: 1px solid var(--gray-100); border-radius: 12px; box-shadow: 0 12px 32px rgba(15,23,42,.12); z-index: 120; }
+    .nav-dropdown.open > .nav-dropdown-menu { display: block; }
+    .nav-sub-toggle { display: flex; width: 100%; justify-content: space-between; padding: 10px 12px; border-radius: 8px; color: var(--gray-700); font-weight: 600; }
+    .nav-sub-toggle:hover { background: var(--gray-50, #f9fafb); }
+    .nav-sub-menu { display: none; padding: 2px 0 4px; }
+    .nav-sub-toggle[aria-expanded="true"] + .nav-sub-menu { display: block; }
+    .nav-links .nav-sub-menu a { display: block; padding: 8px 12px 8px 24px; border-radius: 8px; font-size: 14px; }
+    .nav-links .nav-sub-menu a:hover { background: var(--gray-50, #f9fafb); color: var(--indigo-600); }
+    @media (max-width: 960px) { .nav-dropdown-toggle { font-size: 13px; } }
+    @media (max-width: 1000px) {
+      .site-nav.menu-open .nav-links li.nav-dropdown > .nav-dropdown-toggle { display: flex; width: 100%; justify-content: space-between; padding: 13px 4px; font-size: 16px; color: var(--gray-600); border-bottom: 1px solid var(--gray-100); }
+      .site-nav.menu-open .nav-dropdown-menu { position: static; transform: none; min-width: 0; padding: 4px 0 8px 12px; border: 0; border-bottom: 1px solid var(--gray-100); border-radius: 0; box-shadow: none; }
+      .site-nav.menu-open .nav-sub-toggle { padding: 12px 4px; font-size: 15px; }
+      .site-nav.menu-open .nav-links .nav-sub-menu a { padding: 10px 4px 10px 16px; font-size: 15px; }
+    }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
@@ -246,7 +268,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <li><a href="/#crpe">Le concours</a></li>
       <li><a href="/#fonctionnalites">Fonctionnalités</a></li>
       <li><a href="/#matieres">Matières</a></li>
-      <li><a href="/crpe-par-academie">CRPE par académie</a></li>
+      <li class="nav-dropdown">
+        <button type="button" class="nav-dropdown-toggle" aria-expanded="false" onclick="toggleNavDropdown(this)">Ressources <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        <div class="nav-dropdown-menu">
+          <button type="button" class="nav-sub-toggle" aria-expanded="false" onclick="toggleNavSub(this)">CRPE par académie <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="nav-sub-menu">
+            <a href="/crpe-par-academie">Session 2026</a>
+            <a href="/crpe-par-academie">Session 2027</a>
+          </div>
+        </div>
+      </li>
       <li><a href="/blog" class="active">Blog</a></li>
       <li class="nav-mobile-only nav-menu-account"><button onclick="openAuth('login')" class="nav-login">Se connecter</button><button onclick="openAuth('register')" class="nav-cta cta-commencer">Créer mon compte</button></li>
     </ul>
@@ -562,10 +593,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     btn.setAttribute('aria-expanded', open);
     btn.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
   }
-  document.querySelectorAll('.site-nav .nav-links a, .site-nav .nav-links button').forEach(function (el) {
+  document.querySelectorAll('.site-nav .nav-links a, .site-nav .nav-links .nav-mobile-only button').forEach(function (el) {
     el.addEventListener('click', function () {
       var nav = el.closest('.site-nav'), btn = nav.querySelector('.nav-burger');
       nav.classList.remove('menu-open'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-label', 'Ouvrir le menu');
+    });
+  });
+</script>
+<script>
+  // Menu « Ressources » : ouverture au clic, sous-menu des sessions, fermeture au clic à l'extérieur
+  function toggleNavDropdown(btn) {
+    var dd = btn.parentElement, open = dd.classList.toggle('open');
+    btn.setAttribute('aria-expanded', open);
+  }
+  function toggleNavSub(btn) {
+    btn.setAttribute('aria-expanded', btn.getAttribute('aria-expanded') !== 'true');
+  }
+  document.addEventListener('click', function (e) {
+    document.querySelectorAll('.nav-dropdown.open').forEach(function (dd) {
+      if (!dd.contains(e.target)) { dd.classList.remove('open'); dd.querySelector('.nav-dropdown-toggle').setAttribute('aria-expanded', 'false'); }
     });
   });
 </script>
