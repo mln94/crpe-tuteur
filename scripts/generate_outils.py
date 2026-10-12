@@ -14,7 +14,6 @@ TEMPLATE = os.path.join(ROOT, 'landing', 'crpe-bac3-structure-premiere-epreuve-a
 SITE = 'https://www.passcrpe.fr'
 
 # Réglages affichés dans les textes (les vraies limites sont dans entraineur/routes.js)
-ANON_QUESTION_LIMIT = 1
 WEEKLY_QUESTION_LIMIT = 5
 
 # ── Gabarit commun ───────────────────────────────────────────────────────────
@@ -193,7 +192,7 @@ def page_outils():
 # ── /outils/entraineur-crpe ──────────────────────────────────────────────────
 FAQ = [
     ("L'Entraîneur CRPE est-il vraiment gratuit ?",
-     f"Oui. Tu as {ANON_QUESTION_LIMIT} question gratuite sans inscription, puis {WEEKLY_QUESTION_LIMIT} questions par semaine avec une inscription gratuite. Aucun paiement n'est demandé."),
+     f"Oui. Il suffit de laisser ton prénom, ton nom et ton adresse e-mail pour obtenir {WEEKLY_QUESTION_LIMIT} questions par semaine. Aucun paiement n'est demandé."),
     ("La note donnée par l'IA est-elle fiable ?",
      "Elle est indicative. La correction est générée par une intelligence artificielle à partir d'un corrigé de référence : elle aide à progresser mais ne remplace pas un correcteur du concours et peut contenir des erreurs."),
     ("Quel est le niveau des questions ?",
@@ -228,7 +227,7 @@ def page_entraineur():
   <h2 id="comment-ca-marche">Comment ça marche ?</h2>
   <ol class="steps-list">
     <li><strong>Choisis ta matière</strong>, mathématiques ou français : l'outil tire une question au hasard dans notre banque de questions, en évitant celles que tu as déjà vues. Sa catégorie est indiquée au-dessus de l'énoncé.</li>
-    <li><strong>{ANON_QUESTION_LIMIT} question gratuite sans inscription</strong>, puis <strong>{WEEKLY_QUESTION_LIMIT} questions par semaine</strong> avec une inscription gratuite. Le compteur se recharge chaque lundi à 0 h (heure de Paris).</li>
+    <li><strong>Accès gratuit avec ton prénom, ton nom et ton e-mail</strong> : tu obtiens <strong>{WEEKLY_QUESTION_LIMIT} questions par semaine</strong>. Le compteur se recharge chaque lundi à 0 h (heure de Paris).</li>
     <li><strong>3 tentatives par question</strong> : chaque réponse reçoit un mini-rapport. Après la 3e tentative, ou si tu cliques sur « Voir la réponse », la réponse attendue s'affiche avec une explication.</li>
     <li><strong>Les tentatives ne consomment pas de question</strong> : seul le tirage d'une nouvelle question compte dans ton quota.</li>
     <li><strong>La correction est générée par une intelligence artificielle</strong> : la note est indicative, elle ne remplace pas un correcteur et peut contenir des erreurs.</li>
@@ -251,7 +250,7 @@ ENTRAINEUR_JS = r'''<script>
   var MAX_LEN = 3000, MAX_ATTEMPTS = 3;
   var LEVELS = { a_retravailler: 'À retravailler', en_bonne_voie: 'En bonne voie', attendu_atteint: 'Attendu du CRPE atteint' };
   var SUBJECTS = { maths: 'Mathématiques', francais: 'Français' };
-  var state = { lead: null, quota: null, current: null, busy: false, error: '', showForm: false, formError: '' };
+  var state = { lead: null, quota: null, current: null, busy: false, error: '', formError: '' };
   var body = document.getElementById('toolBody');
   var counter = document.getElementById('counter');
 
@@ -283,14 +282,8 @@ ENTRAINEUR_JS = r'''<script>
   // ── Compteur ──
   function renderCounter() {
     var q = state.quota;
-    if (!q) { counter.textContent = ''; return; }
-    if (q.type === 'anon') {
-      counter.innerHTML = q.remaining > 0
-        ? '<span>1 question gratuite sans inscription</span><button type="button" data-act="show-form">S\'inscrire pour ' + 5 + ' questions par semaine</button>'
-        : '<span>Question gratuite utilisée</span><button type="button" data-act="show-form">Débloquer 5 questions par semaine</button>';
-    } else {
-      counter.innerHTML = '<span>' + (state.lead ? 'Bonjour ' + esc(state.lead.prenom) + ' · ' : '') + 'Il te reste ' + q.remaining + ' question' + (q.remaining > 1 ? 's' : '') + ' sur ' + q.limit + ' cette semaine — prochaine recharge ' + resetLabel(q.resetAt) + '</span>';
-    }
+    if (!state.lead || !q) { counter.innerHTML = '<span>Accès gratuit · 5 questions par semaine</span>'; return; }
+    counter.innerHTML = '<span>Bonjour ' + esc(state.lead.prenom) + ' · Il te reste ' + q.remaining + ' question' + (q.remaining > 1 ? 's' : '') + ' sur ' + q.limit + ' cette semaine — prochaine recharge ' + resetLabel(q.resetAt) + '</span>';
   }
 
   // ── Rapport ──
@@ -313,20 +306,19 @@ ENTRAINEUR_JS = r'''<script>
 
   // ── Formulaire d'accès ──
   function formHtml() {
-    var reason = state.quota && state.quota.type === 'anon' && state.quota.remaining <= 0
-      ? '<p>Tu as utilisé ta question gratuite. <strong>Inscris-toi gratuitement pour obtenir 5 questions par semaine.</strong></p>'
-      : '<p>Inscris-toi gratuitement pour obtenir <strong>5 questions par semaine</strong>.</p>';
+    var reason = '<p>Laisse ton prénom, ton nom et ton adresse e-mail pour accéder gratuitement à <strong>5 questions par semaine</strong>.</p>';
     return '<form class="lead-form" id="leadForm" novalidate><h3>Accès gratuit à l\'Entraîneur CRPE</h3>' + reason +
       '<div class="field-row"><div class="field"><label for="lf-prenom">Prénom</label><input id="lf-prenom" name="prenom" autocomplete="given-name" required maxlength="80"><span class="field-hint">Pour personnaliser tes conseils et nos e-mails.</span></div>' +
       '<div class="field"><label for="lf-nom">Nom</label><input id="lf-nom" name="nom" autocomplete="family-name" required maxlength="80"><span class="field-hint">Pour identifier ton accès.</span></div></div>' +
       '<div class="field"><label for="lf-email">Adresse e-mail</label><input id="lf-email" name="email" type="email" autocomplete="email" required maxlength="254"><span class="field-hint">Pour te donner accès à tes 5 questions par semaine, retrouver ton compteur sur un autre appareil et, seulement si tu l\'acceptes, recevoir nos conseils de préparation.</span></div>' +
-      '<div class="field"><label for="lf-tel">Numéro de téléphone</label><input id="lf-tel" name="telephone" type="tel" autocomplete="tel" required maxlength="30" placeholder="06 12 34 56 78"><span class="field-hint">Pour être contacté(e) par WhatsApp, SMS ou téléphone : te proposer une offre, partager un contenu ou avoir ton retour sur ton parcours de préparation.</span></div>' +
+      '<div class="field"><label for="lf-tel">Numéro de téléphone (facultatif)</label><input id="lf-tel" name="telephone" type="tel" autocomplete="tel" maxlength="30" placeholder="06 12 34 56 78"><span class="field-hint">Pour être contacté(e) par WhatsApp, SMS ou téléphone : te proposer une offre, partager un contenu ou avoir ton retour sur ton parcours de préparation.</span></div>' +
       '<label class="check"><input type="checkbox" name="consent_conseils"> <span>J\'accepte de recevoir par e-mail les conseils de préparation et les actualités de PassCRPE (facultatif).</span></label>' +
       '<label class="check"><input type="checkbox" name="consent_partenaires"> <span>J\'accepte de recevoir des offres de partenaires de PassCRPE (facultatif).</span></label>' +
+      '<label class="check"><input type="checkbox" name="consent_contact_sms"> <span>J\'accepte d\'être contacté(e) par WhatsApp ou SMS pour recevoir des offres, des contenus ou donner mon avis sur ma préparation (facultatif, numéro requis).</span></label>' +
       (state.formError ? '<div class="notice notice-error" role="alert">' + esc(state.formError) + '</div>' : '') +
       '<div class="actions" style="margin-top:12px"><button class="btn btn-primary" type="submit"' + (state.busy ? ' disabled' : '') + '>' + (state.busy ? 'Envoi…' : 'Accéder à mes 5 questions') + '</button>' +
-      (state.current ? '<button class="btn btn-ghost" type="button" data-act="hide-form">Plus tard</button>' : '') + '</div>' +
-      '<p class="legal">Les cases facultatives n\'ont aucun effet sur ton accès à l\'outil. Tes données sont traitées par PassCRPE pour te donner accès à l\'Entraîneur CRPE et, si tu l\'acceptes, t\'envoyer nos e-mails (outil d\'envoi : Klaviyo). Ton numéro peut être utilisé pour te contacter par WhatsApp, SMS ou téléphone (offre, contenu, retour sur ta préparation). Tu peux te désinscrire à tout moment grâce au lien présent dans chaque e-mail, et exercer tes droits d\'accès, de rectification et de suppression en écrivant à contact@passcrpe.fr. En savoir plus : <a href="/politique-de-confidentialite" target="_blank" rel="noopener">politique de confidentialité</a>.</p></form>';
+      '</div>' +
+      '<p class="legal">Les cases facultatives n\'ont aucun effet sur ton accès à l\'outil. Tes données sont traitées par PassCRPE pour te donner accès à l\'Entraîneur CRPE et, si tu l\'acceptes, t\'envoyer nos e-mails (outil d\'envoi : Klaviyo). Si tu le donnes, ton numéro peut servir à t\'appeler (offre, contenu, retour sur ta préparation), et à t\'écrire par WhatsApp ou SMS seulement si tu as coché la case correspondante. Tu peux te désinscrire à tout moment grâce au lien présent dans chaque e-mail, et exercer tes droits d\'accès, de rectification et de suppression en écrivant à contact@passcrpe.fr. En savoir plus : <a href="/politique-de-confidentialite" target="_blank" rel="noopener">politique de confidentialité</a>.</p></form>';
   }
 
   // ── Écrans ──
@@ -353,7 +345,6 @@ ENTRAINEUR_JS = r'''<script>
   function nextQuestionHtml() {
     var q = state.quota, html = '';
     if (q && q.remaining <= 0) {
-      if (q.type === 'anon') return formHtml();
       return '<div class="notice notice-info">Tu as utilisé tes ' + q.limit + ' questions de la semaine. Prochaine recharge ' + resetLabel(q.resetAt) + ' à 0 h.</div>';
     }
     return html + chooserHtml('Une autre question ?') + '<p style="font-size:13px;color:var(--gray-500);margin-top:8px">Une nouvelle question consomme 1 question de ton quota.</p>';
@@ -366,7 +357,7 @@ ENTRAINEUR_JS = r'''<script>
 
     if (!c) {
       var q = state.quota;
-      if (state.showForm || (q && q.remaining <= 0 && q.type === 'anon')) html += formHtml();
+      if (!state.lead) html += formHtml();
       else if (q && q.remaining <= 0) html += nextQuestionHtml();
       else html += chooserHtml();
       body.innerHTML = html; return;
@@ -380,7 +371,7 @@ ENTRAINEUR_JS = r'''<script>
       html += '<div class="corrige"><h3>Réponse attendue</h3><p>' + rich(c.corrige.reponse_ideale) + '</p>' +
         (c.corrige.explication ? '<h3>Explication</h3><p>' + esc(c.corrige.explication).replace(/\n/g, '<br>') + '</p>' : '') +
         (c.corrige.synthese ? '<h3>À retenir</h3><p>' + rich(c.corrige.synthese) + '</p>' : '') + '</div>';
-      html += state.showForm ? formHtml() : nextQuestionHtml();
+      html += nextQuestionHtml();
     } else if (state.busy) {
       html += '<div class="loading" role="status"><span class="spinner" aria-hidden="true"></span>Correction en cours… (quelques secondes)</div>';
     } else {
@@ -391,7 +382,6 @@ ENTRAINEUR_JS = r'''<script>
         '<div class="answer-meta"><span>Brouillon enregistré sur cet appareil</span><span id="answerCount"></span></div>' +
         '<div class="actions" style="margin-top:12px"><button class="btn btn-primary" type="submit">Envoyer ma réponse</button>' +
         '<button class="btn btn-ghost" type="button" data-act="reveal"' + (attempts.length ? '' : ' disabled title="Disponible après une première tentative"') + '>Voir la réponse</button></div></form>';
-      if (state.showForm) html += formHtml();
     }
     body.innerHTML = html;
     updateCount();
@@ -410,8 +400,8 @@ ENTRAINEUR_JS = r'''<script>
     api('/question', { matiere: matiere }).then(function (d) {
       state.busy = false;
       if (d.quota) state.quota = d.quota;
-      if (d._status === 200) { state.current = d.question; state.showForm = false; track('entraineur_question', { matiere: matiere }); }
-      else if (d.error === 'signup_required') { state.current = null; state.showForm = true; }
+      if (d._status === 200) { state.current = d.question; track('entraineur_question', { matiere: matiere }); }
+      else if (d.error === 'lead_required') { state.lead = null; state.current = null; }
       else if (d.error === 'weekly_limit') { state.current = null; }
       else state.error = d.error || 'Une erreur est survenue.';
       render();
@@ -453,14 +443,15 @@ ENTRAINEUR_JS = r'''<script>
     var f = form.elements;
     var payload = {
       prenom: f.prenom.value.trim(), nom: f.nom.value.trim(), email: f.email.value.trim(), telephone: f.telephone.value.trim(),
-      consent_conseils: f.consent_conseils.checked, consent_partenaires: f.consent_partenaires.checked,
+      consent_conseils: f.consent_conseils.checked, consent_partenaires: f.consent_partenaires.checked, consent_contact_sms: f.consent_contact_sms.checked,
     };
-    if (!payload.prenom || !payload.nom || !payload.email || !payload.telephone) { state.formError = 'Merci de remplir tous les champs.'; render(); return; }
+    if (!payload.prenom || !payload.nom || !payload.email) { state.formError = 'Merci d\'indiquer ton prénom, ton nom et ton adresse e-mail.'; render(); return; }
+    if (payload.consent_contact_sms && !payload.telephone) { state.formError = 'Indique ton numéro de téléphone pour être contacté(e) par WhatsApp ou SMS.'; render(); return; }
     state.busy = true; state.formError = ''; render();
     api('/lead', payload).then(function (d) {
       state.busy = false;
       if (d._status === 200) {
-        state.lead = d.lead; state.quota = d.quota; state.showForm = false;
+        state.lead = d.lead; state.quota = d.quota;
         track('entraineur_lead', { existing: !!d.existing });
       } else state.formError = d.error || 'Inscription impossible pour le moment.';
       render();
@@ -472,10 +463,6 @@ ENTRAINEUR_JS = r'''<script>
     var act = el.getAttribute('data-act');
     if (act === 'new') newQuestion(el.getAttribute('data-matiere'));
     else if (act === 'reveal') reveal();
-    else if (act === 'hide-form') { state.showForm = false; render(); }
-  });
-  counter.addEventListener('click', function (e) {
-    if (e.target.closest('[data-act="show-form"]')) { state.showForm = true; state.formError = ''; render(); var f = document.getElementById('lf-prenom'); if (f) f.focus(); }
   });
   body.addEventListener('submit', function (e) {
     e.preventDefault();
@@ -515,7 +502,7 @@ def page_confidentialite():
   <h2>2. Données collectées</h2>
   <ul>
     <li><strong>Inscription à l'application PassCRPE</strong> : prénom, nom, adresse e-mail, mot de passe (chiffré), numéro de téléphone (facultatif), concours et académie visés.</li>
-    <li><strong>Entraîneur CRPE</strong> : prénom, nom, adresse e-mail, numéro de téléphone, choix de consentement, réponses rédigées et rapports de correction, questions consultées. Avant inscription, un identifiant anonyme aléatoire est enregistré dans un cookie ; nous n'enregistrons pas ton adresse IP.</li>
+    <li><strong>Entraîneur CRPE</strong> : prénom, nom, adresse e-mail, numéro de téléphone (facultatif), choix de consentement, réponses rédigées et rapports de correction, questions consultées. Nous n'enregistrons pas ton adresse IP.</li>
     <li><strong>Utilisation de l'application</strong> : réponses aux exercices, progression, échanges avec le support.</li>
     <li><strong>Paiement</strong> : le paiement est traité par PayPal ; PassCRPE ne reçoit pas tes coordonnées bancaires.</li>
     <li><strong>Mesure d'audience et publicité</strong> : cookies Google Analytics (via Google Tag Manager) et Meta Pixel.</li>
@@ -527,7 +514,8 @@ def page_confidentialite():
     <li>Calculer les quotas de questions et éviter les abus : intérêt légitime.</li>
     <li>Corriger tes réponses avec une intelligence artificielle et améliorer la qualité des corrections : exécution du service et intérêt légitime.</li>
     <li>T'envoyer nos conseils de préparation, nos actualités ou des offres de partenaires par e-mail : <strong>uniquement avec ton consentement</strong>, que tu peux retirer à tout moment.</li>
-    <li>Te contacter par WhatsApp, SMS ou téléphone avec le numéro donné dans l'Entraîneur CRPE, pour te proposer une offre, partager un contenu ou recueillir ton retour sur ton parcours de préparation. Tu peux t'y opposer à tout moment (répondre STOP ou écrire à contact@passcrpe.fr).</li>
+    <li>Te contacter par téléphone avec le numéro donné (facultatif) dans l'Entraîneur CRPE, pour te proposer une offre, partager un contenu ou recueillir ton retour sur ton parcours de préparation : intérêt légitime, tu peux t'y opposer à tout moment.</li>
+    <li>Te contacter par WhatsApp ou SMS pour les mêmes raisons : <strong>uniquement si tu as coché la case correspondante</strong>. Tu peux retirer ton accord à tout moment (répondre STOP ou écrire à contact@passcrpe.fr).</li>
     <li>Mesure d'audience et publicité ciblée : ton consentement aux cookies.</li>
   </ul>
 
@@ -557,7 +545,7 @@ def page_confidentialite():
   <p>Si tu estimes que tes droits ne sont pas respectés, tu peux adresser une réclamation à la CNIL (<a href="https://www.cnil.fr" target="_blank" rel="noopener">cnil.fr</a>).</p>
 
   <h2>7. Cookies</h2>
-  <p>Le site utilise des cookies nécessaires à son fonctionnement (connexion à l'application, identifiant anonyme et accès à l'Entraîneur CRPE) et, sous réserve de ton consentement, des cookies de mesure d'audience et de publicité.</p>
+  <p>Le site utilise des cookies nécessaires à son fonctionnement (connexion à l'application et accès à l'Entraîneur CRPE) et, sous réserve de ton consentement, des cookies de mesure d'audience et de publicité.</p>
 
   <h2>8. Sécurité</h2>
   <p>Les données sont transmises de façon chiffrée (HTTPS) et l'accès aux bases de données est restreint. Les corrections par intelligence artificielle sont générées côté serveur.</p>

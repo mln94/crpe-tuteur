@@ -1,11 +1,11 @@
 // Entraîneur CRPE : API du lead magnet (tirage de questions, quotas, correction IA, révélation du corrigé).
+// L'outil n'est accessible qu'après le formulaire (prénom, nom, e-mail) : pas de mode anonyme.
 // Toutes les tables entraineur_* sont fermées au navigateur (RLS sans règle) : seul ce serveur y accède.
 import crypto from 'crypto';
 import { SYSTEM_PROMPT, REPORT_TOOL, buildUserMessage, validateReport } from './prompt.js';
 
 // ── Réglages faciles à modifier ──
-export const ANON_QUESTION_LIMIT   = 1;   // questions au total sans inscription
-export const WEEKLY_QUESTION_LIMIT = 5;   // questions par semaine avec inscription (recharge le lundi 0 h, heure de Paris)
+export const WEEKLY_QUESTION_LIMIT = 5;   // questions par semaine (recharge le lundi 0 h, heure de Paris)
 export const MAX_ATTEMPTS          = 3;   // tentatives par question
 export const MAX_ANSWER_LENGTH     = 3000;
 export const CORRECTIONS_PER_HOUR  = 10;  // limite de fréquence des corrections par personne
@@ -34,7 +34,6 @@ const SOURCE = {
   francais: { table: 'exercices_francais_v', cols: 'id, thematique, niveau, texte_support, question' },
 };
 
-const ANON_COOKIE = 'pc_anon';
 const LEAD_COOKIE = 'pc_lead';
 const YEAR_MS = 365 * 24 * 3600 * 1000;
 
@@ -42,7 +41,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
   const SECRET = process.env.ENTRAINEUR_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || '';
   const hmac = v => crypto.createHmac('sha256', SECRET).update(v).digest('hex');
 
-  // ── Cookies et identité (identifiant anonyme haché, jamais d'adresse IP) ──
+  // ── Cookie d'accès signé, posé après le formulaire ──
   function readCookies(req) {
     const out = {};
     for (const part of (req.headers.cookie || '').split(';')) {
@@ -53,22 +52,14 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
   }
   function setCookie(req, res, name, value) {
     const secure = process.env.NODE_ENV === 'production' || req.headers['x-forwarded-proto'] === 'https';
-    const cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${YEAR_MS / 1000}; HttpOnly; SameSite=Lax${secure ? '; Secure' : ''}`;
-    const prev = res.getHeader('Set-Cookie');
-    res.setHeader('Set-Cookie', prev ? [].concat(prev, cookie) : cookie);
+    res.setHeader('Set-Cookie', `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${YEAR_MS / 1000}; HttpOnly; SameSite=Lax${secure ? '; Secure' : ''}`);
   }
-  function identify(req, res) {
-    const cookies = readCookies(req);
-    let anonId = cookies[ANON_COOKIE];
-    if (!anonId || !/^[a-f0-9]{48}$/.test(anonId)) {
-      anonId = crypto.randomBytes(24).toString('hex');
-      setCookie(req, res, ANON_COOKIE, anonId);
-    }
-    let leadId = null;
-    const signed = cookies[LEAD_COOKIE] || '';
-    const [id, sig] = signed.split('.');
-    if (id && sig && crypto.timingSafeEqual(Buffer.from(hmac(`lead:${id}`)), Buffer.from(sig.padEnd(64, '0').slice(0, 64)))) leadId = id;
-    return { anonHash: hmac(`anon:${anonId}`), leadId };
+  function leadIdFrom(req) {
+    const [id, sig] = (readCookies(req)[LEAD_COOKIE] || '').split('.');
+    if (!id || !sig || !/^[0-9a-f-]{36}$/.test(id)) return null;
+    const expected = Buffer.from(hmac(`lead:${id}`));
+    const given = Buffer.from(sig.padEnd(64, '0').slice(0, 64));
+    return crypto.timingSafeEqual(expected, given) ? id : null;
   }
 
   // ── Semaine : lundi 0 h, heure de Paris ──
@@ -92,18 +83,12 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
     return data || null;
   }
 
-  async function quotaFor(ident, lead) {
-    if (lead) {
-      const start = parisWeekStart();
-      const { count } = await supabaseAdmin.from('entraineur_questions_servies')
-        .select('id', { count: 'exact', head: true }).eq('lead_id', lead.id).gte('served_at', start.toISOString());
-      const used = count || 0;
-      return { type: 'lead', limit: WEEKLY_QUESTION_LIMIT, used, remaining: Math.max(0, WEEKLY_QUESTION_LIMIT - used), resetAt: nextReset(start).toISOString() };
-    }
+  async function quotaFor(lead) {
+    const start = parisWeekStart();
     const { count } = await supabaseAdmin.from('entraineur_questions_servies')
-      .select('id', { count: 'exact', head: true }).eq('anon_id_hash', ident.anonHash).is('lead_id', null);
+      .select('id', { count: 'exact', head: true }).eq('lead_id', lead.id).gte('served_at', start.toISOString());
     const used = count || 0;
-    return { type: 'anon', limit: ANON_QUESTION_LIMIT, used, remaining: Math.max(0, ANON_QUESTION_LIMIT - used), resetAt: null };
+    return { limit: WEEKLY_QUESTION_LIMIT, used, remaining: Math.max(0, WEEKLY_QUESTION_LIMIT - used), resetAt: nextReset(start).toISOString() };
   }
 
   // Liste des questions disponibles (id + catégorie), gardée 10 minutes en mémoire
@@ -138,7 +123,6 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
     return data;
   }
 
-  const ownsServie = (s, ident) => s && ((ident.leadId && s.lead_id === ident.leadId) || s.anon_id_hash === ident.anonHash);
   const publicAttempt = t => ({ tentative: t.tentative, reponse: t.reponse, rapport: t.rapport, created_at: t.created_at });
 
   async function corrigeFor(servie, attempts) {
@@ -166,16 +150,14 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
   // ── GET /api/entraineur/status : contact, compteur et question en cours ──
   app.get('/api/entraineur/status', async (req, res) => {
     try {
-      const ident = identify(req, res);
-      const lead = await loadLead(ident.leadId);
-      const quota = await quotaFor(ident, lead);
-      let q = supabaseAdmin.from('entraineur_questions_servies').select('*').order('served_at', { ascending: false }).limit(1)
-        .gte('served_at', new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString());
-      q = lead ? q.or(`lead_id.eq.${lead.id},anon_id_hash.eq.${ident.anonHash}`) : q.eq('anon_id_hash', ident.anonHash);
-      const { data: last } = await q;
+      const lead = await loadLead(leadIdFrom(req));
+      if (!lead) return res.json({ lead: null, quota: null, current: null });
+      const { data: last } = await supabaseAdmin.from('entraineur_questions_servies').select('*').eq('lead_id', lead.id)
+        .gte('served_at', new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString())
+        .order('served_at', { ascending: false }).limit(1);
       res.json({
-        lead: lead ? { prenom: lead.prenom } : null,
-        quota,
+        lead: { prenom: lead.prenom },
+        quota: await quotaFor(lead),
         current: last?.[0] ? await servieState(last[0]) : null,
       });
     } catch (e) {
@@ -189,15 +171,13 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
     try {
       const matiere = req.body?.matiere;
       if (!SOURCE[matiere]) return fail(res, 400, 'Matière invalide.');
-      const ident = identify(req, res);
-      const lead = await loadLead(ident.leadId);
-      const quota = await quotaFor(ident, lead);
-      if (quota.remaining <= 0) return fail(res, 403, quota.type === 'anon' ? 'signup_required' : 'weekly_limit', { quota });
+      const lead = await loadLead(leadIdFrom(req));
+      if (!lead) return fail(res, 401, 'lead_required');
+      const quota = await quotaFor(lead);
+      if (quota.remaining <= 0) return fail(res, 403, 'weekly_limit', { quota });
 
-      // Évite les questions déjà vues par cette personne (sur ce navigateur et avec son e-mail)
-      let seenQ = supabaseAdmin.from('entraineur_questions_servies').select('question_id').eq('matiere', matiere);
-      seenQ = lead ? seenQ.or(`lead_id.eq.${lead.id},anon_id_hash.eq.${ident.anonHash}`) : seenQ.eq('anon_id_hash', ident.anonHash);
-      const { data: seenRows } = await seenQ;
+      // Évite les questions déjà vues par cette personne
+      const { data: seenRows } = await supabaseAdmin.from('entraineur_questions_servies').select('question_id').eq('matiere', matiere).eq('lead_id', lead.id);
       const seen = new Set((seenRows || []).map(r => r.question_id));
       const all = await questionPool(matiere);
       if (!all.length) return fail(res, 503, 'Aucune question disponible pour le moment.');
@@ -205,15 +185,14 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       const pick = (fresh.length ? fresh : all)[crypto.randomInt((fresh.length ? fresh : all).length)];
 
       const { data: servie, error } = await supabaseAdmin.from('entraineur_questions_servies').insert({
-        lead_id: lead?.id || null,
-        anon_id_hash: lead ? null : ident.anonHash,
+        lead_id: lead.id,
         matiere,
         question_id: pick.id,
         categorie: pick.thematique,
       }).select('*').single();
       if (error) throw error;
 
-      res.json({ question: await servieState(servie), quota: await quotaFor(ident, lead) });
+      res.json({ question: await servieState(servie), quota: await quotaFor(lead) });
     } catch (e) {
       console.error('[entraineur/question]', e.message);
       fail(res, 500, 'Impossible de tirer une question pour le moment.');
@@ -228,20 +207,26 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       const nom = String(b.nom || '').trim().slice(0, 80);
       const email = String(b.email || '').trim().toLowerCase();
       const telephone = String(b.telephone || '').trim();
-      if (!prenom || !nom) return fail(res, 400, 'Merci d\'indiquer ton prénom et ton nom.');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || email.length > 254) return fail(res, 400, 'Adresse e-mail invalide.');
-      const digits = telephone.replace(/\D/g, '');
-      if (!/^\+?[\d\s.\-()]{6,30}$/.test(telephone) || digits.length < 9 || digits.length > 15) return fail(res, 400, 'Numéro de téléphone invalide.');
       const consent_conseils = b.consent_conseils === true;
       const consent_partenaires = b.consent_partenaires === true;
+      const consent_contact_sms = b.consent_contact_sms === true;
+      if (!prenom || !nom) return fail(res, 400, 'Merci d\'indiquer ton prénom et ton nom.');
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || email.length > 254) return fail(res, 400, 'Adresse e-mail invalide.');
+      // Téléphone facultatif, mais nécessaire pour accepter d'être contacté par WhatsApp ou SMS
+      if (consent_contact_sms && !telephone) return fail(res, 400, 'Indique ton numéro de téléphone pour être contacté(e) par WhatsApp ou SMS.');
+      if (telephone) {
+        const digits = telephone.replace(/\D/g, '');
+        if (!/^\+?[\d\s.\-()]{6,30}$/.test(telephone) || digits.length < 9 || digits.length > 15) return fail(res, 400, 'Numéro de téléphone invalide.');
+      }
 
-      const ident = identify(req, res);
-      const { data: existing } = await supabaseAdmin.from('entraineur_leads').select('id, consent_conseils, consent_partenaires').eq('email', email).maybeSingle();
+      const { data: existing } = await supabaseAdmin.from('entraineur_leads').select('id, telephone, consent_conseils, consent_partenaires, consent_contact_sms').eq('email', email).maybeSingle();
       // Un consentement déjà donné n'est jamais retiré en silence (le retrait passe par le lien de désinscription)
       const row = {
-        prenom, nom, email, telephone,
+        prenom, nom, email,
+        telephone: telephone || existing?.telephone || null,
         consent_conseils: consent_conseils || !!existing?.consent_conseils,
         consent_partenaires: consent_partenaires || !!existing?.consent_partenaires,
+        consent_contact_sms: consent_contact_sms || !!existing?.consent_contact_sms,
         consent_version: CONSENT_VERSION, updated_at: new Date().toISOString(),
       };
       const { data: lead, error } = existing
@@ -253,13 +238,13 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
 
       // Klaviyo : liste Lead_magnet_ecrire_crpe ; abonnement marketing seulement si la case « conseils » est cochée
       try {
-        await klaviyoAddLead({ prenom, nom, email, telephone, consent_conseils, consent_partenaires });
+        await klaviyoAddLead({ prenom, nom, email, telephone: row.telephone, consent_conseils: row.consent_conseils, consent_partenaires: row.consent_partenaires, consent_contact_sms: row.consent_contact_sms });
         await supabaseAdmin.from('entraineur_leads').update({ klaviyo_synced_at: new Date().toISOString() }).eq('id', lead.id);
       } catch (e) {
         console.error('[entraineur/klaviyo]', e.message);
       }
 
-      res.json({ lead: { prenom: lead.prenom }, existing: !!existing, quota: await quotaFor(ident, lead) });
+      res.json({ lead: { prenom: lead.prenom }, existing: !!existing, quota: await quotaFor(lead) });
     } catch (e) {
       console.error('[entraineur/lead]', e.message);
       fail(res, 500, 'Inscription impossible pour le moment. Réessaie dans quelques instants.');
@@ -274,13 +259,13 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
     return null;
   }
 
-  async function klaviyoAddLead({ prenom, nom, email, telephone, consent_conseils, consent_partenaires }) {
+  async function klaviyoAddLead({ prenom, nom, email, telephone, consent_conseils, consent_partenaires, consent_contact_sms }) {
     if (!process.env.KLAVIYO_PRIVATE_API_KEY) throw new Error('KLAVIYO_PRIVATE_API_KEY manquante');
-    const phone = toE164(telephone);
+    const phone = telephone ? toE164(telephone) : null;
     const attributes = {
       email, first_name: prenom, last_name: nom,
       ...(phone ? { phone_number: phone } : {}),
-      properties: { lead_magnet: 'entraineur_crpe', telephone_saisi: telephone, consent_conseils, consent_partenaires, consent_version: CONSENT_VERSION },
+      properties: { lead_magnet: 'entraineur_crpe', telephone_saisi: telephone || null, consent_conseils, consent_partenaires, consent_contact_sms, consent_version: CONSENT_VERSION },
     };
     let r = await fetch(`${klaviyoApiBase}/profiles`, { method: 'POST', headers: klaviyoHeaders(), body: JSON.stringify({ data: { type: 'profile', attributes } }) });
     if (r.status === 400 && phone) { // numéro refusé par Klaviyo : on garde le profil sans phone_number
@@ -318,11 +303,11 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
   }
 
   async function loadOwnedServie(req, res) {
-    const ident = identify(req, res);
+    const leadId = leadIdFrom(req);
     const servieId = String(req.body?.servieId || '');
-    if (!/^[0-9a-f-]{36}$/.test(servieId)) return { ident, servie: null };
-    const { data: servie } = await supabaseAdmin.from('entraineur_questions_servies').select('*').eq('id', servieId).maybeSingle();
-    return { ident, servie: ownsServie(servie, ident) ? servie : null };
+    if (!leadId || !/^[0-9a-f-]{36}$/.test(servieId)) return { leadId, servie: null };
+    const { data: servie } = await supabaseAdmin.from('entraineur_questions_servies').select('*').eq('id', servieId).eq('lead_id', leadId).maybeSingle();
+    return { leadId, servie: servie || null };
   }
 
   // Appel au modèle avec sortie forcée dans l'outil rapport_correction ; une nouvelle tentative si le JSON est invalide
@@ -348,7 +333,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
   // ── POST /api/entraineur/correct : corrige une tentative (ne consomme pas de question) ──
   app.post('/api/entraineur/correct', async (req, res) => {
     try {
-      const { ident, servie } = await loadOwnedServie(req, res);
+      const { leadId, servie } = await loadOwnedServie(req, res);
       if (!servie) return fail(res, 404, 'Question introuvable.');
       if (servie.revealed_at) return fail(res, 409, 'La réponse a déjà été révélée pour cette question.');
       const reponse = String(req.body?.reponse || '').trim();
@@ -362,9 +347,9 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
 
       // Limite de fréquence : corrections de la dernière heure pour cette personne
       const since = new Date(Date.now() - 3600 * 1000).toISOString();
-      let rl = supabaseAdmin.from('entraineur_tentatives').select('id, entraineur_questions_servies!inner(lead_id, anon_id_hash)', { count: 'exact', head: true }).gte('created_at', since);
-      rl = ident.leadId ? rl.eq('entraineur_questions_servies.lead_id', ident.leadId) : rl.eq('entraineur_questions_servies.anon_id_hash', ident.anonHash);
-      const { count } = await rl;
+      const { count } = await supabaseAdmin.from('entraineur_tentatives')
+        .select('id, entraineur_questions_servies!inner(lead_id)', { count: 'exact', head: true })
+        .gte('created_at', since).eq('entraineur_questions_servies.lead_id', leadId);
       if ((count || 0) >= CORRECTIONS_PER_HOUR) return fail(res, 429, 'Tu as atteint la limite de corrections pour cette heure. Réessaie un peu plus tard.');
 
       const q = await fetchQuestion(servie.matiere, servie.question_id, true);
