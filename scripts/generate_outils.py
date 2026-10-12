@@ -14,7 +14,8 @@ TEMPLATE = os.path.join(ROOT, 'landing', 'crpe-bac3-structure-premiere-epreuve-a
 SITE = 'https://www.passcrpe.fr'
 
 # Réglages affichés dans les textes (les vraies limites sont dans entraineur/routes.js)
-WEEKLY_QUESTION_LIMIT = 5
+QUESTIONS_PER_SET = 5
+WEEKLY_REPORT_LIMIT = 1
 
 # ── Gabarit commun ───────────────────────────────────────────────────────────
 tpl = open(TEMPLATE, encoding='utf-8').read()
@@ -141,6 +142,36 @@ CSS = """
     .faq summary { cursor: pointer; font-weight: 700; color: var(--gray-900); }
     .faq details p { margin: 8px 0 0; }
     .placeholder { background: #fef3c7; padding: 0 4px; border-radius: 4px; }
+
+    /* Parcours en 5 questions */
+    .progress { height: 6px; border-radius: 6px; background: var(--gray-100); overflow: hidden; }
+    .progress-bar { height: 100%; background: var(--indigo-600); border-radius: 6px; transition: width .3s; }
+    .step-label { font-size: 13px; font-weight: 700; color: var(--gray-500); margin: 0; }
+    .sent { text-align: center; padding: 16px 4px; }
+    .sent-icon { width: 56px; height: 56px; margin: 0 auto 12px; border-radius: 50%; background: #d1fae5; color: #065f46; font-size: 28px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+    .sent h3 { margin-top: 0; }
+
+    /* Page du rapport */
+    .report-kicker { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--indigo-600); margin-bottom: 6px; }
+    .report-score { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; padding: 16px 18px; border: 1px solid var(--gray-200); border-radius: 14px; margin: 16px 0; }
+    .score-big { display: block; font-size: 34px; font-weight: 900; color: var(--gray-900); line-height: 1; }
+    .score-sub { font-size: 13px; color: var(--gray-500); }
+    .report-q { border-top: 1px solid var(--gray-200); padding-top: 18px; margin-top: 24px; }
+    .report-q > * + * { margin-top: 12px; }
+    .report-q-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+    .report-q-head h3 { margin: 0; }
+    .report-block h4, .corrige h4 { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--gray-500); margin: 12px 0 6px; }
+    .report-block ul { margin: 0 0 8px 18px; }
+    .report-block blockquote { margin: 0 0 4px; padding: 2px 10px; border-left: 3px solid var(--gray-200); color: var(--gray-500); font-style: italic; }
+    .your-answer { padding: 12px 14px; background: #fff; border: 1px dashed var(--gray-300, #d1d5db); border-radius: 10px; }
+    .corrige h4:first-child { margin-top: 0; color: #065f46; }
+    .report-cta { margin-top: 32px; padding: 22px; border-radius: 16px; background: var(--indigo-50); text-align: center; }
+    .report-cta h2 { margin-top: 0; }
+    @media print {
+      .site-nav, footer, .no-print, .breadcrumb, .auth-overlay, #authOverlay { display: none !important; }
+      .page-wrap { padding: 0; max-width: none; }
+      .report-q { break-inside: avoid-page; }
+    }
 """
 
 
@@ -179,7 +210,7 @@ def page_outils():
       <div class="tool-card-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div>
       <span class="tool-badge">Gratuit</span>
       <h2>Entraîneur CRPE</h2>
-      <p>Une question de maths ou de français tirée au hasard, ta réponse rédigée et un mini-rapport de correction par l'IA, avec 3 tentatives pour progresser.</p>
+      <p>Réponds à 5 questions de maths ou de français tirées au hasard et reçois par e-mail un rapport détaillé : correction de chaque réponse et analyse de ta manière de répondre.</p>
       <a class="btn btn-primary" href="/outils/entraineur-crpe">Essayer gratuitement</a>
     </article>
   </div>
@@ -192,15 +223,15 @@ def page_outils():
 # ── /outils/entraineur-crpe ──────────────────────────────────────────────────
 FAQ = [
     ("L'Entraîneur CRPE est-il vraiment gratuit ?",
-     f"Oui. Il suffit de laisser ton prénom, ton nom et ton adresse e-mail pour obtenir {WEEKLY_QUESTION_LIMIT} questions par semaine. Aucun paiement n'est demandé."),
+     f"Oui. Tu réponds à {QUESTIONS_PER_SET} questions, tu laisses ton prénom, ton nom et ton adresse e-mail, et tu reçois ton rapport détaillé gratuitement. Tu peux recevoir {WEEKLY_REPORT_LIMIT} rapport par semaine."),
+    ("Que contient le rapport ?",
+     "Pour chaque question : ta réponse, la réponse attendue, une note indicative, ce qui est juste, ce qui manque et tes erreurs de langue. Puis une analyse détaillée de ta manière de répondre (structure, justification, vocabulaire, rigueur, langue), tes habitudes récurrentes, tes 3 priorités de travail et un plan type de réponse."),
     ("La note donnée par l'IA est-elle fiable ?",
      "Elle est indicative. La correction est générée par une intelligence artificielle à partir d'un corrigé de référence : elle aide à progresser mais ne remplace pas un correcteur du concours et peut contenir des erreurs."),
     ("Quel est le niveau des questions ?",
      "Les questions sont de niveau cycle 4 (5e, 4e, 3e), le niveau attendu pour les connaissances disciplinaires en mathématiques et en français au CRPE."),
-    ("Que deviennent mes réponses ?",
-     "Elles sont enregistrées avec leur rapport de correction pour faire fonctionner l'outil et l'améliorer, et conservées 12 mois au maximum. Elles ne sont ni publiées ni revendues."),
-    ("Pourquoi 3 tentatives par question ?",
-     "Pour t'entraîner comme un candidat : tu rédiges, tu lis les conseils, tu améliores ta réponse. Les tentatives ne consomment pas de question supplémentaire."),
+    ("Je n'ai pas reçu l'e-mail, que faire ?",
+     "Vérifie tes courriers indésirables (spams) et l'onglet Promotions. L'e-mail arrive en général en quelques minutes. S'il n'arrive pas, écris-nous à contact@passcrpe.fr."),
 ]
 
 
@@ -214,11 +245,11 @@ def page_entraineur():
     faq_html = ''.join(f'<details><summary>{escape(q)}</summary><p>{escape(a)}</p></details>' for q, a in FAQ)
     body = f'''<main class="page-wrap">
   {crumb}
-  <h1>Entraîneur CRPE : rédige ta réponse, l'IA te corrige</h1>
-  <p class="lead">Choisis une matière, réponds à une question de maths ou de français tirée au hasard et reçois un mini-rapport de correction conforme aux attentes du CRPE : note indicative, points forts, points à améliorer et conseils.</p>
+  <h1>Entraîneur CRPE : réponds à {QUESTIONS_PER_SET} questions, reçois ton rapport détaillé</h1>
+  <p class="lead">Choisis une matière, rédige tes réponses à {QUESTIONS_PER_SET} questions de maths ou de français tirées au hasard, et reçois gratuitement par e-mail un rapport détaillé : la correction de chaque réponse et une analyse de ta manière de répondre, conforme aux attentes du CRPE.</p>
 
   <section class="tool" id="outil" aria-label="Entraîneur CRPE">
-    <div class="tool-counter" id="counter" aria-live="polite">Chargement…</div>
+    <div class="tool-counter" id="counter" aria-live="polite">Gratuit · {QUESTIONS_PER_SET} questions · rapport détaillé par e-mail</div>
     <div class="tool-body" id="toolBody" aria-live="polite">
       <div class="loading"><span class="spinner" aria-hidden="true"></span>Chargement de l'outil…</div>
     </div>
@@ -226,111 +257,35 @@ def page_entraineur():
 
   <h2 id="comment-ca-marche">Comment ça marche ?</h2>
   <ol class="steps-list">
-    <li><strong>Choisis ta matière</strong>, mathématiques ou français : l'outil tire une question au hasard dans notre banque de questions, en évitant celles que tu as déjà vues. Sa catégorie est indiquée au-dessus de l'énoncé.</li>
-    <li><strong>Accès gratuit avec ton prénom, ton nom et ton e-mail</strong> : tu obtiens <strong>{WEEKLY_QUESTION_LIMIT} questions par semaine</strong>. Le compteur se recharge chaque lundi à 0 h (heure de Paris).</li>
-    <li><strong>3 tentatives par question</strong> : chaque réponse reçoit un mini-rapport. Après la 3e tentative, ou si tu cliques sur « Voir la réponse », la réponse attendue s'affiche avec une explication.</li>
-    <li><strong>Les tentatives ne consomment pas de question</strong> : seul le tirage d'une nouvelle question compte dans ton quota.</li>
+    <li><strong>Choisis ta matière</strong>, mathématiques ou français : l'outil tire {QUESTIONS_PER_SET} questions au hasard dans notre banque de questions. La catégorie de chaque question est indiquée au-dessus de l'énoncé.</li>
+    <li><strong>Rédige tes réponses</strong> comme le jour du concours. Tes brouillons sont enregistrés sur ton appareil : tu peux revenir sur une question avant de terminer.</li>
+    <li><strong>Laisse ton prénom, ton nom et ton adresse e-mail</strong> à la fin : ton rapport détaillé t'est envoyé par e-mail. Tu peux recevoir {WEEKLY_REPORT_LIMIT} rapport par semaine (recharge chaque lundi à 0 h, heure de Paris).</li>
+    <li><strong>Ton rapport</strong> reprend chaque réponse avec la réponse attendue, une note indicative et des conseils, puis analyse ta manière de répondre : structure, justification, vocabulaire, rigueur et langue, avec tes 3 priorités de travail.</li>
     <li><strong>La correction est générée par une intelligence artificielle</strong> : la note est indicative, elle ne remplace pas un correcteur et peut contenir des erreurs.</li>
-    <li><strong>Tes réponses</strong> sont enregistrées avec leur rapport pour faire fonctionner l'outil et l'améliorer, puis supprimées au bout de 12 mois au maximum. Elles ne sont ni publiées ni revendues. Détails dans notre <a href="/politique-de-confidentialite">politique de confidentialité</a>.</li>
+    <li><strong>Tes réponses</strong> sont enregistrées avec ton rapport pour te l'envoyer et améliorer l'outil, puis supprimées au bout de 12 mois au maximum. Elles ne sont ni publiées ni revendues. Détails dans notre <a href="/politique-de-confidentialite">politique de confidentialité</a>.</li>
     <li><strong>Niveau cycle 4</strong> (5e, 4e, 3e) : c'est le niveau attendu pour les connaissances disciplinaires du CRPE en mathématiques et en français.</li>
   </ol>
 
   <h2>Questions fréquentes</h2>
   <div class="faq">{faq_html}</div>
 </main>
-''' + ENTRAINEUR_JS
-    return page("Entraîneur CRPE gratuit : questions de maths et de français corrigées par l'IA | PassCRPE",
-                "Entraîne-toi gratuitement au CRPE : une question de maths ou de français de niveau cycle 4, ta réponse rédigée et un mini-rapport de correction par l'IA, avec 3 tentatives.",
-                '/outils/entraineur-crpe', body, "Entraîneur CRPE : rédige ta réponse, l'IA te corrige", [ld, faq_ld, app_ld])
+''' + COMMON_JS + ENTRAINEUR_JS
+    return page(f"Entraîneur CRPE gratuit : {QUESTIONS_PER_SET} questions de maths ou de français et un rapport détaillé | PassCRPE",
+                f"Entraîne-toi gratuitement au CRPE : réponds à {QUESTIONS_PER_SET} questions de maths ou de français de niveau cycle 4 et reçois par e-mail un rapport détaillé sur tes réponses et ta manière de répondre.",
+                '/outils/entraineur-crpe', body, f"Entraîneur CRPE : réponds à {QUESTIONS_PER_SET} questions, reçois ton rapport détaillé", [ld, faq_ld, app_ld])
 
 
-ENTRAINEUR_JS = r'''<script>
-(function () {
-  var API = '/api/entraineur';
-  var MAX_LEN = 3000, MAX_ATTEMPTS = 3;
-  var LEVELS = { a_retravailler: 'À retravailler', en_bonne_voie: 'En bonne voie', attendu_atteint: 'Attendu du CRPE atteint' };
-  var SUBJECTS = { maths: 'Mathématiques', francais: 'Français' };
-  var state = { lead: null, quota: null, current: null, busy: false, error: '', formError: '' };
-  var body = document.getElementById('toolBody');
-  var counter = document.getElementById('counter');
-
-  // ── Utilitaires ──
+# Fonctions partagées par l'outil et la page du rapport
+COMMON_JS = r'''<script>
+window.EC = (function () {
   function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   // Texte de la base : échappé, sauts de ligne conservés, puissances (2^3, x^(n+1)) en exposant
   function rich(v) {
     return esc(v).replace(/([\w)\]²³])\^(\(([^)]{1,12})\)|-?[\w.]{1,6})/g, function (_, b, e, inner) { return b + '<sup>' + (inner || e) + '</sup>'; }).replace(/\n/g, '<br>');
   }
-  function plural(n, w) { return n + ' ' + w + (n > 1 ? 's' : ''); }
-  function store(key, val) { try { if (val == null) localStorage.removeItem(key); else localStorage.setItem(key, val); } catch (e) {} }
-  function load(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
-  function track(event, params) { try { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event: event }, params || {})); } catch (e) {} }
-
-  function api(path, payload) {
-    var opts = payload ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) } : {};
-    opts.credentials = 'same-origin';
-    return fetch(API + path, opts).then(function (r) {
-      return r.json().catch(function () { return {}; }).then(function (d) { d._status = r.status; return d; });
-    }).catch(function () { return { _status: 0, error: 'Connexion impossible. Vérifie ta connexion internet.' }; });
-  }
-
-  function resetLabel(iso) {
-    if (!iso) return '';
-    var d = new Date(iso);
-    return d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Paris' });
-  }
-
-  // ── Compteur ──
-  function renderCounter() {
-    var q = state.quota;
-    if (!state.lead || !q) { counter.innerHTML = '<span>Accès gratuit · 5 questions par semaine</span>'; return; }
-    counter.innerHTML = '<span>Bonjour ' + esc(state.lead.prenom) + ' · Il te reste ' + q.remaining + ' question' + (q.remaining > 1 ? 's' : '') + ' sur ' + q.limit + ' cette semaine — prochaine recharge ' + resetLabel(q.resetAt) + '</span>';
-  }
-
-  // ── Rapport ──
-  function list(items) { return items && items.length ? '<ul>' + items.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>' : '<p>Rien à signaler.</p>'; }
-  function reportHtml(a, open) {
-    var r = a.rapport;
-    var html = '<details class="report"' + (open ? ' open' : '') + '><summary><span>Tentative ' + a.tentative + ' · <span class="level level-' + esc(r.niveau) + '">' + esc(LEVELS[r.niveau] || r.niveau) + '</span></span><span class="note20">' + String(r.note).replace('.', ',') + '/20</span></summary><div class="report-body">';
-    if (r.progression) html += '<div class="progress-note"><strong>Ta progression :</strong> ' + esc(r.progression) + '</div>';
-    html += '<h4>Appréciation</h4><p>' + esc(r.appreciation) + '</p>';
-    html += '<h4>Points forts</h4>' + list(r.points_forts);
-    html += '<h4>Points à améliorer</h4>' + (r.points_a_ameliorer.length ? '<ul>' + r.points_a_ameliorer.map(function (p) {
-      return '<li>' + (p.citation ? '<blockquote>« ' + esc(p.citation) + ' »</blockquote>' : '') + esc(p.commentaire) + '</li>'; }).join('') + '</ul>' : '<p>Rien à signaler.</p>');
-    html += '<h4>Éléments attendus manquants</h4>' + list(r.elements_manquants);
-    html += '<h4>Plan conseillé</h4>' + (r.plan_conseille.length ? '<ol>' + r.plan_conseille.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ol>' : '<p>—</p>');
-    html += '<h4>Langue</h4>' + (r.langue.length ? '<ul>' + r.langue.map(function (l) {
-      return '<li>« ' + esc(l.citation) + ' » → <strong>' + esc(l.correction) + '</strong> <span class="badge">' + esc(l.type) + '</span></li>'; }).join('') + '</ul>' : '<p>Aucune erreur relevée.</p>');
-    html += '<h4>Conseil pour la prochaine tentative</h4><div class="tip">' + esc(r.conseil) + '</div>';
-    return html + '</div></details>';
-  }
-
-  // ── Formulaire d'accès ──
-  function formHtml() {
-    var reason = '<p>Laisse ton prénom, ton nom et ton adresse e-mail pour accéder gratuitement à <strong>5 questions par semaine</strong>.</p>';
-    return '<form class="lead-form" id="leadForm" novalidate><h3>Accès gratuit à l\'Entraîneur CRPE</h3>' + reason +
-      '<div class="field-row"><div class="field"><label for="lf-prenom">Prénom</label><input id="lf-prenom" name="prenom" autocomplete="given-name" required maxlength="80"><span class="field-hint">Pour personnaliser tes conseils et nos e-mails.</span></div>' +
-      '<div class="field"><label for="lf-nom">Nom</label><input id="lf-nom" name="nom" autocomplete="family-name" required maxlength="80"><span class="field-hint">Pour identifier ton accès.</span></div></div>' +
-      '<div class="field"><label for="lf-email">Adresse e-mail</label><input id="lf-email" name="email" type="email" autocomplete="email" required maxlength="254"><span class="field-hint">Pour te donner accès à tes 5 questions par semaine, retrouver ton compteur sur un autre appareil et, seulement si tu l\'acceptes, recevoir nos conseils de préparation.</span></div>' +
-      '<div class="field"><label for="lf-tel">Numéro de téléphone (facultatif)</label><input id="lf-tel" name="telephone" type="tel" autocomplete="tel" maxlength="30" placeholder="06 12 34 56 78"><span class="field-hint">Pour être contacté(e) par WhatsApp, SMS ou téléphone : te proposer une offre, partager un contenu ou avoir ton retour sur ton parcours de préparation.</span></div>' +
-      '<label class="check"><input type="checkbox" name="consent_conseils"> <span>J\'accepte de recevoir par e-mail les conseils de préparation et les actualités de PassCRPE (facultatif).</span></label>' +
-      '<label class="check"><input type="checkbox" name="consent_partenaires"> <span>J\'accepte de recevoir des offres de partenaires de PassCRPE (facultatif).</span></label>' +
-      '<label class="check"><input type="checkbox" name="consent_contact_sms"> <span>J\'accepte d\'être contacté(e) par WhatsApp ou SMS pour recevoir des offres, des contenus ou donner mon avis sur ma préparation (facultatif, numéro requis).</span></label>' +
-      (state.formError ? '<div class="notice notice-error" role="alert">' + esc(state.formError) + '</div>' : '') +
-      '<div class="actions" style="margin-top:12px"><button class="btn btn-primary" type="submit"' + (state.busy ? ' disabled' : '') + '>' + (state.busy ? 'Envoi…' : 'Accéder à mes 5 questions') + '</button>' +
-      '</div>' +
-      '<p class="legal">Les cases facultatives n\'ont aucun effet sur ton accès à l\'outil. Tes données sont traitées par PassCRPE pour te donner accès à l\'Entraîneur CRPE et, si tu l\'acceptes, t\'envoyer nos e-mails (outil d\'envoi : Klaviyo). Si tu le donnes, ton numéro peut servir à t\'appeler (offre, contenu, retour sur ta préparation), et à t\'écrire par WhatsApp ou SMS seulement si tu as coché la case correspondante. Tu peux te désinscrire à tout moment grâce au lien présent dans chaque e-mail, et exercer tes droits d\'accès, de rectification et de suppression en écrivant à contact@passcrpe.fr. En savoir plus : <a href="/politique-de-confidentialite" target="_blank" rel="noopener">politique de confidentialité</a>.</p></form>';
-  }
-
-  // ── Écrans ──
-  function chooserHtml(title) {
-    return '<div><h3 style="margin-top:0">' + (title || 'Choisis ta matière') + '</h3><div class="subject-choice">' +
-      '<button type="button" class="subject-btn" data-act="new" data-matiere="maths"><strong>Mathématiques</strong><span>Nombres et calculs, géométrie, proportionnalité, données et probabilités, pensée informatique</span></button>' +
-      '<button type="button" class="subject-btn" data-act="new" data-matiere="francais"><strong>Français</strong><span>Lecture, écriture, vocabulaire et orthographe lexicale, grammaire et orthographe grammaticale</span></button>' +
-      '</div></div>';
-  }
-
-  function questionHtml(c) {
-    var html = '<div class="badges"><span class="badge badge-subject">' + esc(SUBJECTS[c.matiere]) + '</span><span class="badge">' + esc(c.categorie) + '</span><span class="badge">Cycle 4' + (c.classe ? ' · ' + esc(c.classe) : '') + '</span></div>';
+  var SUBJECTS = { maths: 'Mathématiques', francais: 'Français' };
+  function questionHtml(c, matiere) {
+    var html = '<div class="badges"><span class="badge badge-subject">' + esc(SUBJECTS[matiere]) + '</span><span class="badge">' + esc(c.categorie) + '</span><span class="badge">Cycle 4' + (c.classe ? ' · ' + esc(c.classe) : '') + '</span></div>';
     html += '<div class="question-box">';
     if (c.enonce) html += '<span class="label">Énoncé</span><p>' + rich(c.enonce) + '</p>';
     if (c.figure) {
@@ -341,48 +296,81 @@ ENTRAINEUR_JS = r'''<script>
     html += '<span class="label">Question</span><p class="q">' + rich(c.question) + '</p></div>';
     return html;
   }
+  return { esc: esc, rich: rich, questionHtml: questionHtml, SUBJECTS: SUBJECTS };
+})();
+</script>
+'''
 
-  function nextQuestionHtml() {
-    var q = state.quota, html = '';
-    if (q && q.remaining <= 0) {
-      return '<div class="notice notice-info">Tu as utilisé tes ' + q.limit + ' questions de la semaine. Prochaine recharge ' + resetLabel(q.resetAt) + ' à 0 h.</div>';
-    }
-    return html + chooserHtml('Une autre question ?') + '<p style="font-size:13px;color:var(--gray-500);margin-top:8px">Une nouvelle question consomme 1 question de ton quota.</p>';
+ENTRAINEUR_JS = r'''<script>
+(function () {
+  var API = '/api/entraineur', MAX_LEN = 3000, N = __N__, KEY = 'entraineur-serie';
+  var esc = EC.esc, SUBJECTS = EC.SUBJECTS;
+  var body = document.getElementById('toolBody');
+  // step : 'choose' | 'answer' | 'form' | 'sending' | 'sent'
+  var state = { step: 'choose', serie: null, index: 0, busy: false, error: '', formError: '', email: '', limitReset: null };
+
+  function save() { try { if (state.serie) localStorage.setItem(KEY, JSON.stringify({ serie: state.serie, index: state.index })); else localStorage.removeItem(KEY); } catch (e) {} }
+  function restore() { try { var s = JSON.parse(localStorage.getItem(KEY) || 'null'); if (s && s.serie && s.serie.questions && s.serie.questions.length === N) { state.serie = s.serie; state.index = Math.min(s.index || 0, N); state.step = state.index >= N ? 'form' : 'answer'; } } catch (e) {} }
+  function track(event, params) { try { (window.dataLayer = window.dataLayer || []).push(Object.assign({ event: event }, params || {})); } catch (e) {} }
+  function post(path, payload) {
+    return fetch(API + path, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { d._status = r.status; return d; }); })
+      .catch(function () { return { _status: 0, error: 'Connexion impossible. Vérifie ta connexion internet.' }; });
+  }
+  function resetLabel(iso) { return new Date(iso).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'Europe/Paris' }); }
+  function answered() { return state.serie ? state.serie.reponses.filter(function (r) { return r && r.trim(); }).length : 0; }
+
+  function chooserHtml() {
+    return '<div><h3 style="margin-top:0">Choisis ta matière</h3><div class="subject-choice">' +
+      '<button type="button" class="subject-btn" data-act="start" data-matiere="maths"><strong>Mathématiques</strong><span>Nombres et calculs, géométrie, proportionnalité, données et probabilités, pensée informatique</span></button>' +
+      '<button type="button" class="subject-btn" data-act="start" data-matiere="francais"><strong>Français</strong><span>Lecture, écriture, vocabulaire et orthographe lexicale, grammaire et orthographe grammaticale</span></button>' +
+      '</div><p style="font-size:13px;color:var(--gray-500);margin-top:10px">' + N + ' questions tirées au hasard · réponses rédigées · rapport détaillé envoyé par e-mail</p></div>';
+  }
+
+  function progressHtml() {
+    var pct = Math.round(state.index / N * 100);
+    return '<div class="progress" aria-hidden="true"><div class="progress-bar" style="width:' + pct + '%"></div></div>';
+  }
+
+  function answerHtml() {
+    var s = state.serie, i = state.index, q = s.questions[i];
+    return progressHtml() + '<p class="step-label">Question ' + (i + 1) + ' sur ' + N + '</p>' + EC.questionHtml(q, s.matiere) +
+      '<form class="answer" id="answerForm"><label for="answer">Ta réponse</label>' +
+      '<textarea id="answer" maxlength="' + MAX_LEN + '" placeholder="Rédige ta réponse comme le jour du concours : démarche, justification, vocabulaire précis." aria-describedby="answerCount">' + esc(s.reponses[i] || '') + '</textarea>' +
+      '<div class="answer-meta"><span>Brouillon enregistré sur cet appareil</span><span id="answerCount"></span></div>' +
+      '<div class="actions" style="margin-top:12px">' +
+      (i > 0 ? '<button class="btn btn-ghost" type="button" data-act="prev">← Précédente</button>' : '') +
+      '<button class="btn btn-primary" type="submit">' + (i === N - 1 ? 'Terminer' : 'Question suivante →') + '</button></div>' +
+      '<p style="font-size:13px;color:var(--gray-500);margin-top:8px">Tu sèches ? Passe à la suite : la réponse attendue sera dans ton rapport.</p></form>';
+  }
+
+  function formHtml() {
+    var n = answered();
+    return progressHtml() + '<form class="lead-form" id="leadForm" novalidate><h3>Reçois ton rapport détaillé par e-mail</h3>' +
+      '<p>Tu as répondu à <strong>' + n + ' question' + (n > 1 ? 's' : '') + ' sur ' + N + '</strong>. Laisse ton prénom, ton nom et ton adresse e-mail : ton rapport (correction de chaque réponse et analyse de ta manière de répondre) t\'est envoyé gratuitement.</p>' +
+      '<div class="field-row"><div class="field"><label for="lf-prenom">Prénom</label><input id="lf-prenom" name="prenom" autocomplete="given-name" required maxlength="80"><span class="field-hint">Pour personnaliser ton rapport et nos e-mails.</span></div>' +
+      '<div class="field"><label for="lf-nom">Nom</label><input id="lf-nom" name="nom" autocomplete="family-name" required maxlength="80"><span class="field-hint">Pour identifier ton rapport.</span></div></div>' +
+      '<div class="field"><label for="lf-email">Adresse e-mail</label><input id="lf-email" name="email" type="email" autocomplete="email" required maxlength="254"><span class="field-hint">Pour t\'envoyer ton rapport et, seulement si tu l\'acceptes, nos conseils de préparation.</span></div>' +
+      '<div class="field"><label for="lf-tel">Numéro de téléphone (facultatif)</label><input id="lf-tel" name="telephone" type="tel" autocomplete="tel" maxlength="30" placeholder="06 12 34 56 78"><span class="field-hint">Pour être contacté(e) par WhatsApp, SMS ou téléphone : te proposer une offre, partager un contenu ou avoir ton retour sur ton parcours de préparation.</span></div>' +
+      '<label class="check"><input type="checkbox" name="consent_conseils"> <span>J\'accepte de recevoir par e-mail les conseils de préparation et les actualités de PassCRPE (facultatif).</span></label>' +
+      '<label class="check"><input type="checkbox" name="consent_partenaires"> <span>J\'accepte de recevoir des offres de partenaires de PassCRPE (facultatif).</span></label>' +
+      '<label class="check"><input type="checkbox" name="consent_contact_sms"> <span>J\'accepte d\'être contacté(e) par WhatsApp ou SMS pour recevoir des offres, des contenus ou donner mon avis sur ma préparation (facultatif, numéro requis).</span></label>' +
+      (state.formError ? '<div class="notice notice-error" role="alert">' + esc(state.formError) + '</div>' : '') +
+      '<div class="actions" style="margin-top:12px"><button class="btn btn-ghost" type="button" data-act="prev">← Revoir mes réponses</button><button class="btn btn-primary" type="submit">Recevoir mon rapport</button></div>' +
+      '<p class="legal">Les cases facultatives n\'ont aucun effet sur l\'envoi de ton rapport. Tes données sont traitées par PassCRPE pour générer et t\'envoyer ton rapport (outil d\'envoi : Klaviyo ; correction par intelligence artificielle : Anthropic, sans tes coordonnées) et, si tu l\'acceptes, t\'envoyer nos e-mails. Si tu le donnes, ton numéro peut servir à t\'appeler (offre, contenu, retour sur ta préparation), et à t\'écrire par WhatsApp ou SMS seulement si tu as coché la case correspondante. Tu peux te désinscrire à tout moment et exercer tes droits d\'accès, de rectification et de suppression en écrivant à contact@passcrpe.fr. En savoir plus : <a href="/politique-de-confidentialite" target="_blank" rel="noopener">politique de confidentialité</a>.</p></form>';
   }
 
   function render() {
-    renderCounter();
-    var c = state.current, html = '';
-    if (state.error) html += '<div class="notice notice-error" role="alert">' + esc(state.error) + '</div>';
-
-    if (!c) {
-      var q = state.quota;
-      if (!state.lead) html += formHtml();
-      else if (q && q.remaining <= 0) html += nextQuestionHtml();
-      else html += chooserHtml();
-      body.innerHTML = html; return;
-    }
-
-    html += questionHtml(c);
-    var attempts = c.attempts || [];
-    attempts.forEach(function (a, i) { html += reportHtml(a, i === attempts.length - 1); });
-
-    if (c.revealed && c.corrige) {
-      html += '<div class="corrige"><h3>Réponse attendue</h3><p>' + rich(c.corrige.reponse_ideale) + '</p>' +
-        (c.corrige.explication ? '<h3>Explication</h3><p>' + esc(c.corrige.explication).replace(/\n/g, '<br>') + '</p>' : '') +
-        (c.corrige.synthese ? '<h3>À retenir</h3><p>' + rich(c.corrige.synthese) + '</p>' : '') + '</div>';
-      html += nextQuestionHtml();
-    } else if (state.busy) {
-      html += '<div class="loading" role="status"><span class="spinner" aria-hidden="true"></span>Correction en cours… (quelques secondes)</div>';
-    } else {
-      var n = attempts.length + 1;
-      var draft = load('entraineur-draft-' + c.servieId) || '';
-      html += '<form class="answer" id="answerForm"><label for="answer">Ta réponse — tentative ' + n + ' sur ' + MAX_ATTEMPTS + '</label>' +
-        '<textarea id="answer" maxlength="' + MAX_LEN + '" placeholder="Rédige ta réponse comme le jour du concours : démarche, justification, vocabulaire précis." aria-describedby="answerCount">' + esc(draft) + '</textarea>' +
-        '<div class="answer-meta"><span>Brouillon enregistré sur cet appareil</span><span id="answerCount"></span></div>' +
-        '<div class="actions" style="margin-top:12px"><button class="btn btn-primary" type="submit">Envoyer ma réponse</button>' +
-        '<button class="btn btn-ghost" type="button" data-act="reveal"' + (attempts.length ? '' : ' disabled title="Disponible après une première tentative"') + '>Voir la réponse</button></div></form>';
-    }
+    var html = state.error ? '<div class="notice notice-error" role="alert">' + esc(state.error) + '</div>' : '';
+    if (state.step === 'choose') html += state.busy ? '<div class="loading" role="status"><span class="spinner" aria-hidden="true"></span>Tirage des questions…</div>' : chooserHtml();
+    else if (state.step === 'answer') html += answerHtml();
+    else if (state.step === 'form') html += formHtml();
+    else if (state.step === 'sending') html += '<div class="loading" role="status" style="flex-direction:column;align-items:flex-start;gap:6px"><span style="display:flex;gap:10px;align-items:center"><span class="spinner" aria-hidden="true"></span>Analyse de tes réponses en cours…</span><span style="font-weight:400;font-size:14px">Ton rapport détaillé est en préparation, cela prend environ 30 secondes. Ne ferme pas la page.</span></div>';
+    else if (state.step === 'sent') html += state.reportUrl
+      ? '<div class="sent"><div class="sent-icon" aria-hidden="true">✓</div><h3>Ton rapport est prêt</h3><p>L\'e-mail n\'a pas pu partir pour le moment : garde ce lien pour retrouver ton rapport.</p><a class="btn btn-primary" href="' + esc(state.reportUrl) + '">Voir mon rapport</a></div>'
+      : '<div class="sent"><div class="sent-icon" aria-hidden="true">✓</div><h3>Ton rapport t\'a été envoyé par e-mail</h3><p>Tu vas le recevoir à <strong>' + esc(state.email) + '</strong> d\'ici quelques minutes. Pense à vérifier tes courriers indésirables et l\'onglet Promotions.</p></div>';
+    else if (state.step === 'limit') html += '<div class="notice notice-info">Tu as déjà reçu un rapport cette semaine avec cette adresse e-mail. Tu pourras en demander un nouveau à partir du ' + resetLabel(state.limitReset) + ' à 0 h. Tes réponses restent enregistrées sur cet appareil d\'ici là.</div>' +
+      '<div class="actions" style="margin-top:12px"><button class="btn btn-ghost" type="button" data-act="back-form">Revenir au formulaire</button></div>';
     body.innerHTML = html;
     updateCount();
   }
@@ -391,94 +379,126 @@ ENTRAINEUR_JS = r'''<script>
     var t = document.getElementById('answer'), out = document.getElementById('answerCount');
     if (!t || !out) return;
     out.textContent = t.value.length + ' / ' + MAX_LEN + ' caractères';
-    out.className = t.value.length > MAX_LEN ? 'over' : '';
   }
-
-  // ── Actions ──
-  function newQuestion(matiere) {
-    state.busy = true; state.error = ''; render();
-    api('/question', { matiere: matiere }).then(function (d) {
-      state.busy = false;
-      if (d.quota) state.quota = d.quota;
-      if (d._status === 200) { state.current = d.question; track('entraineur_question', { matiere: matiere }); }
-      else if (d.error === 'lead_required') { state.lead = null; state.current = null; }
-      else if (d.error === 'weekly_limit') { state.current = null; }
-      else state.error = d.error || 'Une erreur est survenue.';
-      render();
-      document.getElementById('outil').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+  function keepAnswer() {
+    var t = document.getElementById('answer');
+    if (t && state.serie) { state.serie.reponses[state.index] = t.value; save(); }
   }
+  function scrollTop() { document.getElementById('outil').scrollIntoView({ behavior: 'smooth', block: 'start' }); }
 
-  function submitAnswer() {
-    var t = document.getElementById('answer'); if (!t) return;
-    var reponse = t.value.trim();
-    if (reponse.length < 5) { state.error = 'Rédige ta réponse avant de l\'envoyer.'; render(); return; }
-    if (reponse.length > MAX_LEN) { state.error = 'Ta réponse dépasse ' + MAX_LEN + ' caractères.'; render(); return; }
-    var c = state.current;
+  function start(matiere) {
     state.busy = true; state.error = ''; render();
-    api('/correct', { servieId: c.servieId, reponse: reponse }).then(function (d) {
+    post('/questions', { matiere: matiere }).then(function (d) {
       state.busy = false;
       if (d._status === 200) {
-        c.attempts = (c.attempts || []).concat([d.attempt]);
-        if (d.revealed) { c.revealed = true; c.corrige = d.corrige; }
-        store('entraineur-draft-' + c.servieId, null);
-        track('entraineur_correction', { tentative: d.attempt.tentative, matiere: c.matiere });
-      } else state.error = d.error || 'La correction a échoué. Réessaie.';
-      render();
-    });
-  }
-
-  function reveal() {
-    var c = state.current;
-    state.busy = true; state.error = ''; render();
-    api('/reveal', { servieId: c.servieId }).then(function (d) {
-      state.busy = false;
-      if (d._status === 200) { c.revealed = true; c.corrige = d.corrige; }
-      else state.error = d.error || 'Impossible d\'afficher la réponse.';
-      render();
+        state.serie = { matiere: d.matiere, token: d.token, questions: d.questions, reponses: d.questions.map(function () { return ''; }) };
+        state.index = 0; state.step = 'answer'; save();
+        track('entraineur_start', { matiere: matiere });
+      } else state.error = d.error || 'Une erreur est survenue.';
+      render(); scrollTop();
     });
   }
 
   function submitLead(form) {
     var f = form.elements;
     var payload = {
+      token: state.serie.token, reponses: state.serie.reponses,
       prenom: f.prenom.value.trim(), nom: f.nom.value.trim(), email: f.email.value.trim(), telephone: f.telephone.value.trim(),
       consent_conseils: f.consent_conseils.checked, consent_partenaires: f.consent_partenaires.checked, consent_contact_sms: f.consent_contact_sms.checked,
     };
     if (!payload.prenom || !payload.nom || !payload.email) { state.formError = 'Merci d\'indiquer ton prénom, ton nom et ton adresse e-mail.'; render(); return; }
     if (payload.consent_contact_sms && !payload.telephone) { state.formError = 'Indique ton numéro de téléphone pour être contacté(e) par WhatsApp ou SMS.'; render(); return; }
-    state.busy = true; state.formError = ''; render();
-    api('/lead', payload).then(function (d) {
-      state.busy = false;
+    if (!answered()) { state.formError = 'Réponds au moins à une question avant de demander ton rapport.'; render(); return; }
+    state.formError = ''; state.error = ''; state.step = 'sending'; render(); scrollTop();
+    post('/rapport', payload).then(function (d) {
       if (d._status === 200) {
-        state.lead = d.lead; state.quota = d.quota;
-        track('entraineur_lead', { existing: !!d.existing });
-      } else state.formError = d.error || 'Inscription impossible pour le moment.';
-      render();
+        state.email = d.email; state.reportUrl = d.emailed ? '' : (d.report_url || ''); state.step = 'sent'; state.serie = null; save();
+        track('entraineur_rapport', { emailed: !!d.emailed });
+      } else if (d.error === 'weekly_limit') { state.step = 'limit'; state.limitReset = d.resetAt; }
+      else if (d._status === 400 && /expiré|plus disponible/.test(d.error || '')) { state.serie = null; save(); state.step = 'choose'; state.error = d.error; }
+      else { state.step = 'form'; state.formError = d.error || 'Le rapport n\'a pas pu être généré. Réessaie dans quelques instants.'; }
+      render(); scrollTop();
     });
   }
 
   body.addEventListener('click', function (e) {
     var el = e.target.closest('[data-act]'); if (!el || state.busy) return;
     var act = el.getAttribute('data-act');
-    if (act === 'new') newQuestion(el.getAttribute('data-matiere'));
-    else if (act === 'reveal') reveal();
+    if (act === 'start') start(el.getAttribute('data-matiere'));
+    else if (act === 'prev') { keepAnswer(); state.index = Math.max(0, (state.step === 'form' ? N : state.index) - 1); state.step = 'answer'; save(); render(); scrollTop(); }
+    else if (act === 'back-form') { state.step = 'form'; render(); }
   });
   body.addEventListener('submit', function (e) {
     e.preventDefault();
-    if (state.busy) return;
-    if (e.target.id === 'answerForm') submitAnswer();
-    else if (e.target.id === 'leadForm') submitLead(e.target);
+    if (e.target.id === 'answerForm') {
+      keepAnswer();
+      state.index += 1;
+      state.step = state.index >= N ? 'form' : 'answer';
+      save(); render(); scrollTop();
+    } else if (e.target.id === 'leadForm') submitLead(e.target);
   });
-  body.addEventListener('input', function (e) {
-    if (e.target.id === 'answer' && state.current) { store('entraineur-draft-' + state.current.servieId, e.target.value); updateCount(); }
-  });
+  body.addEventListener('input', function (e) { if (e.target.id === 'answer') { keepAnswer(); updateCount(); } });
 
-  api('/status').then(function (d) {
-    if (d._status !== 200) { state.error = d.error || 'Le service est momentanément indisponible.'; render(); return; }
-    state.lead = d.lead; state.quota = d.quota; state.current = d.current;
-    render();
-  });
+  restore();
+  render();
+})();
+</script>'''.replace('__N__', str(QUESTIONS_PER_SET))
+
+
+# ── /outils/entraineur-crpe/rapport/:token ───────────────────────────────────
+def page_rapport():
+    body = '''<main class="page-wrap report-page">
+  <div id="report"><div class="loading" role="status"><span class="spinner" aria-hidden="true"></span>Chargement de ton rapport…</div></div>
+</main>
+''' + COMMON_JS + RAPPORT_JS
+    return page('Ton rapport Entraîneur CRPE | PassCRPE',
+                "Ton rapport détaillé de l'Entraîneur CRPE : correction de chaque réponse et analyse de ta manière de répondre.",
+                '/outils/entraineur-crpe', body, 'Ton rapport Entraîneur CRPE', [], robots='noindex, nofollow')
+
+
+RAPPORT_JS = r'''<script>
+(function () {
+  var esc = EC.esc, rich = EC.rich;
+  var LEVELS = { a_retravailler: 'À retravailler', en_bonne_voie: 'En bonne voie', attendu_atteint: 'Attendu du CRPE atteint' };
+  var DIMS = [['structure', 'Structure de tes réponses'], ['justification', 'Démarche et justification'], ['vocabulaire', 'Vocabulaire disciplinaire'], ['rigueur', 'Rigueur et exactitude'], ['langue', 'Maîtrise de la langue']];
+  var el = document.getElementById('report');
+  var parts = location.pathname.split('/').filter(Boolean);
+  var token = new URLSearchParams(location.search).get('t') || parts[parts.length - 1];
+  function note(n) { return String(n).replace('.', ',') + '/20'; }
+  function list(items, tag) { tag = tag || 'ul'; return items && items.length ? '<' + tag + '>' + items.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</' + tag + '>' : '<p>Rien à signaler.</p>'; }
+  function level(n) { return '<span class="level level-' + esc(n) + '">' + esc(LEVELS[n] || n) + '</span>'; }
+
+  fetch('/api/entraineur/rapport/' + encodeURIComponent(token)).then(function (r) { return r.json().then(function (d) { d._status = r.status; return d; }); }).then(function (d) {
+    if (d._status !== 200) { el.innerHTML = '<h1>Rapport introuvable</h1><p>Ce lien n\'est pas valide ou a expiré. <a href="/outils/entraineur-crpe">Refaire une série de questions</a>.</p>'; return; }
+    var s = d.synthese, date = new Date(d.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+    var html = '<p class="report-kicker">Entraîneur CRPE · ' + esc(EC.SUBJECTS[d.matiere]) + ' · ' + esc(date) + '</p>' +
+      '<h1>Ton rapport détaillé' + (d.prenom ? ', ' + esc(d.prenom) : '') + '</h1>' +
+      '<div class="report-score"><div><span class="score-big">' + note(d.note) + '</span><span class="score-sub">note indicative moyenne</span></div>' + level(s.niveau) + '</div>' +
+      '<p class="lead">' + esc(s.appreciation_globale) + '</p>' +
+      '<div class="actions no-print" style="margin:8px 0 8px"><button class="btn btn-ghost" type="button" onclick="window.print()">Télécharger en PDF</button><a class="btn btn-primary" href="/outils/entraineur-crpe">Refaire une série</a></div>' +
+      '<h2>Ta manière de répondre</h2>' + DIMS.map(function (k) { return '<h3>' + k[1] + '</h3><p>' + esc(s.analyse[k[0]]) + '</p>'; }).join('') +
+      '<h3>Tes habitudes récurrentes</h3>' + list(s.habitudes) +
+      '<h3>Tes points forts</h3>' + list(s.points_forts) +
+      '<h2>Tes 3 priorités de travail</h2>' + list(s.priorites, 'ol') +
+      '<h2>Plan type pour rédiger ta réponse au CRPE</h2>' + list(s.plan_type, 'ol') +
+      '<h2>Correction question par question</h2>';
+    d.questions.forEach(function (q, i) {
+      var e = q.evaluation;
+      html += '<section class="report-q"><div class="report-q-head"><h3>Question ' + (i + 1) + '</h3><span>' + level(e.niveau) + ' <span class="note20">' + note(e.note) + '</span></span></div>' +
+        EC.questionHtml(q, d.matiere) +
+        '<div class="report-block"><h4>Ta réponse</h4><p class="your-answer">' + (q.reponse ? esc(q.reponse).replace(/\n/g, '<br>') : '<em>Pas de réponse</em>') + '</p></div>' +
+        '<div class="report-block"><h4>Appréciation</h4><p>' + esc(e.appreciation) + '</p>' +
+        (e.points_forts.length ? '<h4>Ce qui est juste</h4>' + list(e.points_forts) : '') +
+        (e.points_a_ameliorer.length ? '<h4>À améliorer</h4><ul>' + e.points_a_ameliorer.map(function (p) { return '<li>' + (p.citation ? '<blockquote>« ' + esc(p.citation) + ' »</blockquote>' : '') + esc(p.commentaire) + '</li>'; }).join('') + '</ul>' : '') +
+        (e.elements_manquants.length ? '<h4>Éléments attendus manquants</h4>' + list(e.elements_manquants) : '') +
+        (e.langue.length ? '<h4>Langue</h4><ul>' + e.langue.map(function (l) { return '<li>« ' + esc(l.citation) + ' » → <strong>' + esc(l.correction) + '</strong> <span class="badge">' + esc(l.type) + '</span></li>'; }).join('') + '</ul>' : '') +
+        '</div><div class="corrige"><h4>Réponse attendue</h4><p>' + rich(q.reponse_attendue) + '</p><h4>Explication</h4><p>' + esc(e.explication) + '</p></div></section>';
+    });
+    html += '<p class="legal" style="margin-top:24px">Correction générée par une intelligence artificielle à partir d\'un corrigé de référence : les notes sont indicatives et peuvent contenir des erreurs. Elles ne remplacent pas un correcteur du concours.</p>' +
+      '<div class="report-cta no-print"><h2>Envie d\'aller plus loin ?</h2><p>Avec PassCRPE, entraîne-toi sur des milliers d\'exercices corrigés en français et en maths, adaptés à ton niveau.</p><a class="btn btn-primary" href="/">Découvrir PassCRPE</a></div>';
+    el.innerHTML = html;
+    document.title = 'Ton rapport Entraîneur CRPE' + (d.prenom ? ' · ' + d.prenom : '') + ' | PassCRPE';
+  }).catch(function () { el.innerHTML = '<p class="notice notice-error">Impossible de charger ton rapport. Vérifie ta connexion et recharge la page.</p>'; });
 })();
 </script>'''
 
@@ -502,7 +522,7 @@ def page_confidentialite():
   <h2>2. Données collectées</h2>
   <ul>
     <li><strong>Inscription à l'application PassCRPE</strong> : prénom, nom, adresse e-mail, mot de passe (chiffré), numéro de téléphone (facultatif), concours et académie visés.</li>
-    <li><strong>Entraîneur CRPE</strong> : prénom, nom, adresse e-mail, numéro de téléphone (facultatif), choix de consentement, réponses rédigées et rapports de correction, questions consultées. Nous n'enregistrons pas ton adresse IP.</li>
+    <li><strong>Entraîneur CRPE</strong> : prénom, nom, adresse e-mail, numéro de téléphone (facultatif), choix de consentement, réponses rédigées et rapport détaillé généré (consultable via un lien personnel envoyé par e-mail). Nous n'enregistrons pas ton adresse IP.</li>
     <li><strong>Utilisation de l'application</strong> : réponses aux exercices, progression, échanges avec le support.</li>
     <li><strong>Paiement</strong> : le paiement est traité par PayPal ; PassCRPE ne reçoit pas tes coordonnées bancaires.</li>
     <li><strong>Mesure d'audience et publicité</strong> : cookies Google Analytics (via Google Tag Manager) et Meta Pixel.</li>
@@ -557,6 +577,6 @@ def page_confidentialite():
 
 # ── Écriture ─────────────────────────────────────────────────────────────────
 for name, html in [('outils.html', page_outils()), ('entraineur-crpe.html', page_entraineur()),
-                   ('politique-de-confidentialite.html', page_confidentialite())]:
+                   ('entraineur-rapport.html', page_rapport()), ('politique-de-confidentialite.html', page_confidentialite())]:
     open(os.path.join(ROOT, 'landing', name), 'w', encoding='utf-8').write(html)
 print('Pages outils, entraîneur et politique de confidentialité générées.')

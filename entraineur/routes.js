@@ -1,16 +1,20 @@
-// Entraîneur CRPE : API du lead magnet (tirage de questions, quotas, correction IA, révélation du corrigé).
-// L'outil n'est accessible qu'après le formulaire (prénom, nom, e-mail) : pas de mode anonyme.
+// Entraîneur CRPE : API du lead magnet.
+// Parcours : le candidat répond à 5 questions (sans correction à l'écran), remplit le formulaire, puis reçoit par e-mail
+// (flow Klaviyo déclenché par l'événement « Rapport Entraîneur CRPE ») le lien vers son rapport détaillé.
 // Toutes les tables entraineur_* sont fermées au navigateur (RLS sans règle) : seul ce serveur y accède.
 import crypto from 'crypto';
-import { SYSTEM_PROMPT, REPORT_TOOL, buildUserMessage, validateReport } from './prompt.js';
+import { QUESTION_PROMPT, SYNTHESE_PROMPT, QUESTION_TOOL, SYNTHESE_TOOL, questionMessage, syntheseMessage, validateQuestion, validateSynthese } from './prompt.js';
 
 // ── Réglages faciles à modifier ──
-export const WEEKLY_QUESTION_LIMIT = 5;   // questions par semaine (recharge le lundi 0 h, heure de Paris)
-export const MAX_ATTEMPTS          = 3;   // tentatives par question
+export const QUESTIONS_PER_SET     = 5;   // questions par série
+export const WEEKLY_REPORT_LIMIT   = 1;   // rapports par adresse e-mail et par semaine (recharge le lundi 0 h, heure de Paris)
 export const MAX_ANSWER_LENGTH     = 3000;
-export const CORRECTIONS_PER_HOUR  = 10;  // limite de fréquence des corrections par personne
+const SET_MAX_AGE_MS               = 48 * 3600 * 1000; // une série de questions reste valable 48 h
 const KLAVIYO_LIST_LEAD_MAGNET     = 'TVBdQK'; // Lead_magnet_ecrire_crpe
+const KLAVIYO_REPORT_METRIC        = 'Rapport Entraîneur CRPE';
 const CONSENT_VERSION              = '2026-10-12';
+const SITE                         = 'https://www.passcrpe.fr';
+export const REPORT_PATH           = '/outils/entraineur-crpe/rapport/';
 
 // Catégories proposées (niveau cycle 4) ; une catégorie sans question n'est simplement jamais tirée
 export const CATEGORIES = {
@@ -33,33 +37,27 @@ const SOURCE = {
   maths:    { table: 'exercices_maths',      cols: 'id, thematique, classe, enonce, question, figure_path, figure_svg' },
   francais: { table: 'exercices_francais_v', cols: 'id, thematique, niveau, texte_support, question' },
 };
-
-const LEAD_COOKIE = 'pc_lead';
-const YEAR_MS = 365 * 24 * 3600 * 1000;
+const MATIERE_LABEL = { maths: 'Mathématiques', francais: 'Français' };
+const NIVEAU_LABEL = { a_retravailler: 'À retravailler', en_bonne_voie: 'En bonne voie', attendu_atteint: 'Attendu du CRPE atteint' };
 
 export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model, klaviyoHeaders, klaviyoApiBase }) {
   const SECRET = process.env.ENTRAINEUR_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || '';
-  const hmac = v => crypto.createHmac('sha256', SECRET).update(v).digest('hex');
+  const hmac = v => crypto.createHmac('sha256', SECRET).update(v).digest('base64url');
+  const fail = (res, status, error, extra = {}) => res.status(status).json({ error, ...extra });
 
-  // ── Cookie d'accès signé, posé après le formulaire ──
-  function readCookies(req) {
-    const out = {};
-    for (const part of (req.headers.cookie || '').split(';')) {
-      const i = part.indexOf('=');
-      if (i > 0) out[part.slice(0, i).trim()] = decodeURIComponent(part.slice(i + 1).trim());
-    }
-    return out;
-  }
-  function setCookie(req, res, name, value) {
-    const secure = process.env.NODE_ENV === 'production' || req.headers['x-forwarded-proto'] === 'https';
-    res.setHeader('Set-Cookie', `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${YEAR_MS / 1000}; HttpOnly; SameSite=Lax${secure ? '; Secure' : ''}`);
-  }
-  function leadIdFrom(req) {
-    const [id, sig] = (readCookies(req)[LEAD_COOKIE] || '').split('.');
-    if (!id || !sig || !/^[0-9a-f-]{36}$/.test(id)) return null;
-    const expected = Buffer.from(hmac(`lead:${id}`));
-    const given = Buffer.from(sig.padEnd(64, '0').slice(0, 64));
-    return crypto.timingSafeEqual(expected, given) ? id : null;
+  // ── Série de questions signée : le navigateur la garde et la renvoie avec les réponses (pas de cookie) ──
+  const signSet = set => { const p = Buffer.from(JSON.stringify(set)).toString('base64url'); return `${p}.${hmac(`set:${p}`)}`; };
+  function readSet(token) {
+    const [p, sig] = String(token || '').split('.');
+    if (!p || !sig) return null;
+    const expected = Buffer.from(hmac(`set:${p}`));
+    const given = Buffer.from(sig);
+    if (expected.length !== given.length || !crypto.timingSafeEqual(expected, given)) return null;
+    try {
+      const set = JSON.parse(Buffer.from(p, 'base64url').toString());
+      if (!SOURCE[set.m] || !Array.isArray(set.ids) || set.ids.length !== QUESTIONS_PER_SET || Date.now() - set.t > SET_MAX_AGE_MS) return null;
+      return set;
+    } catch { return null; }
   }
 
   // ── Semaine : lundi 0 h, heure de Paris ──
@@ -77,20 +75,6 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
   }
   const nextReset = start => parisWeekStart(new Date(start.getTime() + 7.5 * 24 * 3600 * 1000));
 
-  async function loadLead(leadId) {
-    if (!leadId) return null;
-    const { data } = await supabaseAdmin.from('entraineur_leads').select('id, prenom').eq('id', leadId).maybeSingle();
-    return data || null;
-  }
-
-  async function quotaFor(lead) {
-    const start = parisWeekStart();
-    const { count } = await supabaseAdmin.from('entraineur_questions_servies')
-      .select('id', { count: 'exact', head: true }).eq('lead_id', lead.id).gte('served_at', start.toISOString());
-    const used = count || 0;
-    return { limit: WEEKLY_QUESTION_LIMIT, used, remaining: Math.max(0, WEEKLY_QUESTION_LIMIT - used), resetAt: nextReset(start).toISOString() };
-  }
-
   // Liste des questions disponibles (id + catégorie), gardée 10 minutes en mémoire
   const pool = {};
   async function questionPool(matiere) {
@@ -107,7 +91,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       ? (q.figure_path ? { type: 'path', src: q.figure_path } : q.figure_svg ? { type: 'svg', svg: q.figure_svg } : null)
       : null;
     return {
-      matiere,
+      id: q.id,
       categorie: q.thematique,
       classe: q.classe || q.niveau || null,
       enonce: q.enonce || null,
@@ -116,140 +100,70 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       figure,
     };
   }
-  async function fetchQuestion(matiere, id, withCorrige = false) {
-    const cols = SOURCE[matiere].cols + (withCorrige ? ', reponse_ideale, synthese_cours' : '');
-    const { data, error } = await supabaseAdmin.from(SOURCE[matiere].table).select(cols).eq('id', id).single();
+  async function fetchQuestions(matiere, ids, withCorrige = false) {
+    const cols = SOURCE[matiere].cols + (withCorrige ? ', reponse_ideale' : '');
+    const { data, error } = await supabaseAdmin.from(SOURCE[matiere].table).select(cols).in('id', ids);
     if (error) throw error;
-    return data;
+    const byId = new Map((data || []).map(q => [q.id, q]));
+    return ids.map(id => byId.get(id)).filter(Boolean);
   }
 
-  const publicAttempt = t => ({ tentative: t.tentative, reponse: t.reponse, rapport: t.rapport, created_at: t.created_at });
-
-  async function corrigeFor(servie, attempts) {
-    const q = await fetchQuestion(servie.matiere, servie.question_id, true);
-    const last = attempts.find(a => a.tentative === MAX_ATTEMPTS);
-    return { reponse_ideale: q.reponse_ideale, synthese: q.synthese_cours || null, explication: last?.rapport?.explication || null };
-  }
-
-  // État d'une question servie (pour reprendre après un rechargement de page)
-  async function servieState(servie) {
-    const { data: attempts } = await supabaseAdmin.from('entraineur_tentatives')
-      .select('tentative, reponse, rapport, created_at').eq('servie_id', servie.id).order('tentative');
-    const q = await fetchQuestion(servie.matiere, servie.question_id);
-    return {
-      servieId: servie.id,
-      ...publicQuestion(servie.matiere, q),
-      attempts: (attempts || []).map(publicAttempt),
-      revealed: !!servie.revealed_at,
-      corrige: servie.revealed_at ? await corrigeFor(servie, attempts || []) : null,
-    };
-  }
-
-  const fail = (res, status, error, extra = {}) => res.status(status).json({ error, ...extra });
-
-  // ── GET /api/entraineur/status : contact, compteur et question en cours ──
-  app.get('/api/entraineur/status', async (req, res) => {
-    try {
-      const lead = await loadLead(leadIdFrom(req));
-      if (!lead) return res.json({ lead: null, quota: null, current: null });
-      const { data: last } = await supabaseAdmin.from('entraineur_questions_servies').select('*').eq('lead_id', lead.id)
-        .gte('served_at', new Date(Date.now() - 7 * 24 * 3600 * 1000).toISOString())
-        .order('served_at', { ascending: false }).limit(1);
-      res.json({
-        lead: { prenom: lead.prenom },
-        quota: await quotaFor(lead),
-        current: last?.[0] ? await servieState(last[0]) : null,
-      });
-    } catch (e) {
-      console.error('[entraineur/status]', e.message);
-      fail(res, 500, 'Le service est momentanément indisponible.');
-    }
-  });
-
-  // ── POST /api/entraineur/question : tire une nouvelle question (consomme le quota) ──
-  app.post('/api/entraineur/question', async (req, res) => {
+  // ── POST /api/entraineur/questions : tire une série de 5 questions au hasard dans la matière ──
+  app.post('/api/entraineur/questions', async (req, res) => {
     try {
       const matiere = req.body?.matiere;
       if (!SOURCE[matiere]) return fail(res, 400, 'Matière invalide.');
-      const lead = await loadLead(leadIdFrom(req));
-      if (!lead) return fail(res, 401, 'lead_required');
-      const quota = await quotaFor(lead);
-      if (quota.remaining <= 0) return fail(res, 403, 'weekly_limit', { quota });
-
-      // Évite les questions déjà vues par cette personne
-      const { data: seenRows } = await supabaseAdmin.from('entraineur_questions_servies').select('question_id').eq('matiere', matiere).eq('lead_id', lead.id);
-      const seen = new Set((seenRows || []).map(r => r.question_id));
       const all = await questionPool(matiere);
-      if (!all.length) return fail(res, 503, 'Aucune question disponible pour le moment.');
-      const fresh = all.filter(r => !seen.has(r.id));
-      const pick = (fresh.length ? fresh : all)[crypto.randomInt((fresh.length ? fresh : all).length)];
-
-      const { data: servie, error } = await supabaseAdmin.from('entraineur_questions_servies').insert({
-        lead_id: lead.id,
+      if (all.length < QUESTIONS_PER_SET) return fail(res, 503, 'Pas assez de questions disponibles pour le moment.');
+      const picked = new Set();
+      while (picked.size < QUESTIONS_PER_SET) picked.add(all[crypto.randomInt(all.length)].id);
+      const ids = [...picked];
+      const questions = await fetchQuestions(matiere, ids);
+      res.json({
         matiere,
-        question_id: pick.id,
-        categorie: pick.thematique,
-      }).select('*').single();
-      if (error) throw error;
-
-      res.json({ question: await servieState(servie), quota: await quotaFor(lead) });
+        token: signSet({ m: matiere, ids, t: Date.now() }),
+        questions: questions.map(q => publicQuestion(matiere, q)),
+      });
     } catch (e) {
-      console.error('[entraineur/question]', e.message);
-      fail(res, 500, 'Impossible de tirer une question pour le moment.');
+      console.error('[entraineur/questions]', e.message);
+      fail(res, 500, 'Impossible de tirer les questions pour le moment.');
     }
   });
 
-  // ── POST /api/entraineur/lead : formulaire d'accès (prénom, nom, e-mail, téléphone, consentements) ──
-  app.post('/api/entraineur/lead', async (req, res) => {
-    try {
-      const b = req.body || {};
-      const prenom = String(b.prenom || '').trim().slice(0, 80);
-      const nom = String(b.nom || '').trim().slice(0, 80);
-      const email = String(b.email || '').trim().toLowerCase();
-      const telephone = String(b.telephone || '').trim();
-      const consent_conseils = b.consent_conseils === true;
-      const consent_partenaires = b.consent_partenaires === true;
-      const consent_contact_sms = b.consent_contact_sms === true;
-      if (!prenom || !nom) return fail(res, 400, 'Merci d\'indiquer ton prénom et ton nom.');
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || email.length > 254) return fail(res, 400, 'Adresse e-mail invalide.');
-      // Téléphone facultatif, mais nécessaire pour accepter d'être contacté par WhatsApp ou SMS
-      if (consent_contact_sms && !telephone) return fail(res, 400, 'Indique ton numéro de téléphone pour être contacté(e) par WhatsApp ou SMS.');
-      if (telephone) {
-        const digits = telephone.replace(/\D/g, '');
-        if (!/^\+?[\d\s.\-()]{6,30}$/.test(telephone) || digits.length < 9 || digits.length > 15) return fail(res, 400, 'Numéro de téléphone invalide.');
-      }
-
-      const { data: existing } = await supabaseAdmin.from('entraineur_leads').select('id, telephone, consent_conseils, consent_partenaires, consent_contact_sms').eq('email', email).maybeSingle();
-      // Un consentement déjà donné n'est jamais retiré en silence (le retrait passe par le lien de désinscription)
-      const row = {
-        prenom, nom, email,
-        telephone: telephone || existing?.telephone || null,
-        consent_conseils: consent_conseils || !!existing?.consent_conseils,
-        consent_partenaires: consent_partenaires || !!existing?.consent_partenaires,
-        consent_contact_sms: consent_contact_sms || !!existing?.consent_contact_sms,
-        consent_version: CONSENT_VERSION, updated_at: new Date().toISOString(),
-      };
-      const { data: lead, error } = existing
-        ? await supabaseAdmin.from('entraineur_leads').update(row).eq('id', existing.id).select('id, prenom').single()
-        : await supabaseAdmin.from('entraineur_leads').insert(row).select('id, prenom').single();
-      if (error) throw error;
-
-      setCookie(req, res, LEAD_COOKIE, `${lead.id}.${hmac(`lead:${lead.id}`)}`);
-
-      // Klaviyo : liste Lead_magnet_ecrire_crpe ; abonnement marketing seulement si la case « conseils » est cochée
-      try {
-        await klaviyoAddLead({ prenom, nom, email, telephone: row.telephone, consent_conseils: row.consent_conseils, consent_partenaires: row.consent_partenaires, consent_contact_sms: row.consent_contact_sms });
-        await supabaseAdmin.from('entraineur_leads').update({ klaviyo_synced_at: new Date().toISOString() }).eq('id', lead.id);
-      } catch (e) {
-        console.error('[entraineur/klaviyo]', e.message);
-      }
-
-      res.json({ lead: { prenom: lead.prenom }, existing: !!existing, quota: await quotaFor(lead) });
-    } catch (e) {
-      console.error('[entraineur/lead]', e.message);
-      fail(res, 500, 'Inscription impossible pour le moment. Réessaie dans quelques instants.');
+  // ── Contact : enregistré dans Supabase et ajouté à la liste Klaviyo ──
+  async function saveLead(b) {
+    const prenom = String(b.prenom || '').trim().slice(0, 80);
+    const nom = String(b.nom || '').trim().slice(0, 80);
+    const email = String(b.email || '').trim().toLowerCase();
+    const telephone = String(b.telephone || '').trim();
+    const consent_conseils = b.consent_conseils === true;
+    const consent_partenaires = b.consent_partenaires === true;
+    const consent_contact_sms = b.consent_contact_sms === true;
+    if (!prenom || !nom) return { error: 'Merci d\'indiquer ton prénom et ton nom.' };
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || email.length > 254) return { error: 'Adresse e-mail invalide.' };
+    // Téléphone facultatif, mais nécessaire pour accepter d'être contacté par WhatsApp ou SMS
+    if (consent_contact_sms && !telephone) return { error: 'Indique ton numéro de téléphone pour être contacté(e) par WhatsApp ou SMS.' };
+    if (telephone) {
+      const digits = telephone.replace(/\D/g, '');
+      if (!/^\+?[\d\s.\-()]{6,30}$/.test(telephone) || digits.length < 9 || digits.length > 15) return { error: 'Numéro de téléphone invalide.' };
     }
-  });
+    const { data: existing } = await supabaseAdmin.from('entraineur_leads')
+      .select('id, telephone, consent_conseils, consent_partenaires, consent_contact_sms').eq('email', email).maybeSingle();
+    // Un consentement déjà donné n'est jamais retiré en silence (le retrait passe par le lien de désinscription)
+    const row = {
+      prenom, nom, email,
+      telephone: telephone || existing?.telephone || null,
+      consent_conseils: consent_conseils || !!existing?.consent_conseils,
+      consent_partenaires: consent_partenaires || !!existing?.consent_partenaires,
+      consent_contact_sms: consent_contact_sms || !!existing?.consent_contact_sms,
+      consent_version: CONSENT_VERSION, updated_at: new Date().toISOString(),
+    };
+    const { data: lead, error } = existing
+      ? await supabaseAdmin.from('entraineur_leads').update(row).eq('id', existing.id).select('id, prenom, email').single()
+      : await supabaseAdmin.from('entraineur_leads').insert(row).select('id, prenom, email').single();
+    if (error) throw error;
+    return { lead, row };
+  }
 
   function toE164(tel) {
     const t = tel.replace(/[\s.\-()]/g, '');
@@ -302,106 +216,134 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
     }
   }
 
-  async function loadOwnedServie(req, res) {
-    const leadId = leadIdFrom(req);
-    const servieId = String(req.body?.servieId || '');
-    if (!leadId || !/^[0-9a-f-]{36}$/.test(servieId)) return { leadId, servie: null };
-    const { data: servie } = await supabaseAdmin.from('entraineur_questions_servies').select('*').eq('id', servieId).eq('lead_id', leadId).maybeSingle();
-    return { leadId, servie: servie || null };
+  // Événement qui déclenche le flow Klaviyo d'envoi du rapport (e-mail transactionnel, envoyé même sans abonnement marketing)
+  async function klaviyoReportEvent({ email, prenom, rapportId, matiere, note, synthese, url }) {
+    if (!process.env.KLAVIYO_PRIVATE_API_KEY) throw new Error('KLAVIYO_PRIVATE_API_KEY manquante');
+    const r = await fetch(`${klaviyoApiBase}/events`, {
+      method: 'POST', headers: klaviyoHeaders(),
+      body: JSON.stringify({ data: { type: 'event', attributes: {
+        properties: {
+          report_url: url,
+          prenom,
+          matiere: MATIERE_LABEL[matiere],
+          note_globale: String(note).replace('.', ','),
+          niveau: NIVEAU_LABEL[synthese.niveau],
+          appreciation: synthese.appreciation_globale,
+          point_cle_1: synthese.points_cles[0] || '',
+          point_cle_2: synthese.points_cles[1] || '',
+          point_cle_3: synthese.points_cles[2] || '',
+        },
+        metric: { data: { type: 'metric', attributes: { name: KLAVIYO_REPORT_METRIC } } },
+        profile: { data: { type: 'profile', attributes: { email, first_name: prenom } } },
+        unique_id: rapportId,
+      } } }),
+    });
+    if (!r.ok) throw new Error(`événement Klaviyo : ${r.status} ${await r.text().catch(() => '')}`);
   }
 
-  // Appel au modèle avec sortie forcée dans l'outil rapport_correction ; une nouvelle tentative si le JSON est invalide
-  async function correct(payload) {
-    let usage = { input_tokens: 0, output_tokens: 0 };
+  // Appel au modèle avec sortie forcée dans un outil ; une nouvelle tentative si le JSON est invalide
+  async function callTool(system, tool, content, validate, maxTokens) {
+    const usage = { input_tokens: 0, output_tokens: 0 };
     for (let essai = 0; essai < 2; essai++) {
       const msg = await anthropic.messages.create({
         model,
-        max_tokens: 2500,
-        system: [{ type: 'text', text: SYSTEM_PROMPT, cache_control: { type: 'ephemeral' } }],
-        tools: [REPORT_TOOL],
-        tool_choice: { type: 'tool', name: REPORT_TOOL.name },
-        messages: [{ role: 'user', content: buildUserMessage(payload) }],
+        max_tokens: maxTokens,
+        system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }],
+        tools: [tool],
+        tool_choice: { type: 'tool', name: tool.name },
+        messages: [{ role: 'user', content }],
       });
-      usage = { input_tokens: usage.input_tokens + (msg.usage?.input_tokens || 0), output_tokens: usage.output_tokens + (msg.usage?.output_tokens || 0) };
-      const block = msg.content.find(c => c.type === 'tool_use' && c.name === REPORT_TOOL.name);
-      const report = validateReport(block?.input, payload.tentative);
-      if (report) return { report, usage, model: msg.model };
+      usage.input_tokens += msg.usage?.input_tokens || 0;
+      usage.output_tokens += msg.usage?.output_tokens || 0;
+      const out = validate(msg.content.find(c => c.type === 'tool_use' && c.name === tool.name)?.input);
+      if (out) return { out, usage };
     }
-    return { report: null, usage };
+    return { out: null, usage };
   }
 
-  // ── POST /api/entraineur/correct : corrige une tentative (ne consomme pas de question) ──
-  app.post('/api/entraineur/correct', async (req, res) => {
+  // ── POST /api/entraineur/rapport : formulaire + réponses → rapport détaillé, puis e-mail via Klaviyo ──
+  app.post('/api/entraineur/rapport', async (req, res) => {
     try {
-      const { leadId, servie } = await loadOwnedServie(req, res);
-      if (!servie) return fail(res, 404, 'Question introuvable.');
-      if (servie.revealed_at) return fail(res, 409, 'La réponse a déjà été révélée pour cette question.');
-      const reponse = String(req.body?.reponse || '').trim();
-      if (reponse.length < 5) return fail(res, 400, 'Ta réponse est trop courte.');
-      if (reponse.length > MAX_ANSWER_LENGTH) return fail(res, 400, `Ta réponse dépasse ${MAX_ANSWER_LENGTH} caractères.`);
+      const set = readSet(req.body?.token);
+      if (!set) return fail(res, 400, 'Ta série de questions a expiré. Recommence une nouvelle série.');
+      const reponses = Array.isArray(req.body?.reponses) ? req.body.reponses.map(r => String(r || '').trim()) : [];
+      if (reponses.length !== QUESTIONS_PER_SET) return fail(res, 400, 'Réponses incomplètes.');
+      if (reponses.some(r => r.length > MAX_ANSWER_LENGTH)) return fail(res, 400, `Chaque réponse est limitée à ${MAX_ANSWER_LENGTH} caractères.`);
+      if (reponses.every(r => r.length === 0)) return fail(res, 400, 'Réponds au moins à une question avant de demander ton rapport.');
 
-      const { data: attempts } = await supabaseAdmin.from('entraineur_tentatives')
-        .select('tentative, reponse, rapport, created_at').eq('servie_id', servie.id).order('tentative');
-      const tentative = (attempts?.length || 0) + 1;
-      if (tentative > MAX_ATTEMPTS) return fail(res, 409, 'Tu as utilisé tes 3 tentatives pour cette question.');
+      const saved = await saveLead(req.body || {});
+      if (saved.error) return fail(res, 400, saved.error);
+      const { lead, row } = saved;
 
-      // Limite de fréquence : corrections de la dernière heure pour cette personne
-      const since = new Date(Date.now() - 3600 * 1000).toISOString();
-      const { count } = await supabaseAdmin.from('entraineur_tentatives')
-        .select('id, entraineur_questions_servies!inner(lead_id)', { count: 'exact', head: true })
-        .gte('created_at', since).eq('entraineur_questions_servies.lead_id', leadId);
-      if ((count || 0) >= CORRECTIONS_PER_HOUR) return fail(res, 429, 'Tu as atteint la limite de corrections pour cette heure. Réessaie un peu plus tard.');
+      // Klaviyo : liste Lead_magnet_ecrire_crpe (avant le contrôle de limite : le contact est enregistré dans tous les cas)
+      try { await klaviyoAddLead(row); await supabaseAdmin.from('entraineur_leads').update({ klaviyo_synced_at: new Date().toISOString() }).eq('id', lead.id); }
+      catch (e) { console.error('[entraineur/klaviyo lead]', e.message); }
 
-      const q = await fetchQuestion(servie.matiere, servie.question_id, true);
-      const pub = publicQuestion(servie.matiere, q);
-      const { report, usage, model: usedModel } = await correct({
-        matiere: servie.matiere,
-        categorie: servie.categorie,
-        question: pub,
-        corrige: q.reponse_ideale,
-        tentative,
-        reponse,
-        rapportPrecedent: attempts?.length ? attempts[attempts.length - 1].rapport : null,
-      });
-      if (!report) return fail(res, 502, 'La correction n\'a pas pu être générée. Ta tentative n\'est pas comptée : réessaie.');
+      // Limite : 1 rapport par adresse e-mail et par semaine
+      const start = parisWeekStart();
+      const { count } = await supabaseAdmin.from('entraineur_rapports')
+        .select('id', { count: 'exact', head: true }).eq('lead_id', lead.id).gte('created_at', start.toISOString());
+      if ((count || 0) >= WEEKLY_REPORT_LIMIT) return fail(res, 429, 'weekly_limit', { resetAt: nextReset(start).toISOString() });
 
-      const { data: saved, error } = await supabaseAdmin.from('entraineur_tentatives').insert({
-        servie_id: servie.id, tentative, reponse, rapport: report, note: report.note,
-        model: usedModel, input_tokens: usage.input_tokens, output_tokens: usage.output_tokens,
-      }).select('tentative, reponse, rapport, created_at').single();
-      if (error) {
-        if (error.code === '23505') return fail(res, 409, 'Cette tentative a déjà été corrigée.');
-        throw error;
+      // Correction : chaque réponse en parallèle, puis la synthèse sur la manière de répondre
+      const rows = await fetchQuestions(set.m, set.ids, true);
+      if (rows.length !== QUESTIONS_PER_SET) return fail(res, 409, 'Une question n\'est plus disponible. Recommence une nouvelle série.');
+      const items = rows.map((q, i) => ({ ...publicQuestion(set.m, q), reponse: reponses[i], reponse_attendue: q.reponse_ideale }));
+      const evals = await Promise.all(items.map(it => it.reponse
+        ? callTool(QUESTION_PROMPT, QUESTION_TOOL, questionMessage({ matiere: set.m, q: it, reponse: it.reponse }), validateQuestion, 1800)
+        : Promise.resolve({ out: { note: 0, niveau: 'a_retravailler', appreciation: 'Pas de réponse.', points_forts: [], points_a_ameliorer: [],
+            elements_manquants: ['Une réponse rédigée'], langue: [], explication: 'Consulte la réponse attendue ci-dessous.' }, usage: { input_tokens: 0, output_tokens: 0 } })));
+      if (evals.some(e => !e.out)) return fail(res, 502, 'Le rapport n\'a pas pu être généré. Réessaie dans quelques instants.');
+      items.forEach((it, i) => { it.evaluation = evals[i].out; });
+      const synth = await callTool(SYNTHESE_PROMPT, SYNTHESE_TOOL, syntheseMessage({ matiere: set.m, items }), validateSynthese, 3000);
+      if (!synth.out) return fail(res, 502, 'Le rapport n\'a pas pu être généré. Réessaie dans quelques instants.');
+
+      const note = Math.round(items.reduce((n, it) => n + it.evaluation.note, 0) / items.length * 2) / 2;
+      const usage = [...evals, synth].reduce((u, e) => ({ input_tokens: u.input_tokens + e.usage.input_tokens, output_tokens: u.output_tokens + e.usage.output_tokens }), { input_tokens: 0, output_tokens: 0 });
+      const token = crypto.randomBytes(24).toString('base64url');
+      const { data: rapport, error } = await supabaseAdmin.from('entraineur_rapports').insert({
+        token, lead_id: lead.id, matiere: set.m, questions: items, synthese: synth.out, note, model, ...usage,
+      }).select('id').single();
+      if (error) throw error;
+
+      const url = `${SITE}${REPORT_PATH}${token}`;
+      let emailed = false;
+      try {
+        await klaviyoReportEvent({ email: lead.email, prenom: lead.prenom, rapportId: rapport.id, matiere: set.m, note, synthese: synth.out, url });
+        await supabaseAdmin.from('entraineur_rapports').update({ klaviyo_event_at: new Date().toISOString() }).eq('id', rapport.id);
+        emailed = true;
+      } catch (e) {
+        console.error('[entraineur/klaviyo event]', e.message);
       }
-
-      // 3e tentative : la réponse attendue est révélée automatiquement
-      let corrige = null;
-      if (tentative === MAX_ATTEMPTS) {
-        await supabaseAdmin.from('entraineur_questions_servies').update({ revealed_at: new Date().toISOString() }).eq('id', servie.id);
-        corrige = { reponse_ideale: q.reponse_ideale, synthese: q.synthese_cours || null, explication: report.explication };
-      }
-      res.json({ attempt: publicAttempt(saved), revealed: !!corrige, corrige });
+      // Si l'e-mail n'a pas pu partir, le candidat reçoit directement son lien pour ne pas perdre son rapport
+      res.json({ ok: true, emailed, email: lead.email, ...(emailed ? {} : { report_url: `${REPORT_PATH}${token}` }) });
     } catch (e) {
-      console.error('[entraineur/correct]', e.message);
-      fail(res, 500, 'La correction a échoué. Ta tentative n\'est pas comptée : réessaie.');
+      console.error('[entraineur/rapport]', e.message);
+      fail(res, 500, 'Le rapport n\'a pas pu être généré. Réessaie dans quelques instants.');
     }
   });
 
-  // ── POST /api/entraineur/reveal : affiche la réponse attendue (après au moins une tentative) ──
-  app.post('/api/entraineur/reveal', async (req, res) => {
+  // ── GET /api/entraineur/rapport/:token : contenu du rapport (lien personnel reçu par e-mail) ──
+  app.get('/api/entraineur/rapport/:token', async (req, res) => {
     try {
-      const { servie } = await loadOwnedServie(req, res);
-      if (!servie) return fail(res, 404, 'Question introuvable.');
-      const { data: attempts } = await supabaseAdmin.from('entraineur_tentatives')
-        .select('tentative, rapport').eq('servie_id', servie.id).order('tentative');
-      if (!attempts?.length) return fail(res, 409, 'Propose au moins une réponse avant de voir la réponse attendue.');
-      if (!servie.revealed_at) {
-        await supabaseAdmin.from('entraineur_questions_servies').update({ revealed_at: new Date().toISOString() }).eq('id', servie.id);
-      }
-      res.json({ revealed: true, corrige: await corrigeFor(servie, attempts) });
+      const token = String(req.params.token || '');
+      if (!/^[A-Za-z0-9_-]{32,64}$/.test(token)) return fail(res, 404, 'Rapport introuvable.');
+      const { data: r } = await supabaseAdmin.from('entraineur_rapports')
+        .select('matiere, questions, synthese, note, created_at, entraineur_leads(prenom)').eq('token', token).maybeSingle();
+      if (!r) return fail(res, 404, 'Rapport introuvable.');
+      res.setHeader('Cache-Control', 'private, no-store');
+      res.setHeader('X-Robots-Tag', 'noindex');
+      res.json({
+        prenom: r.entraineur_leads?.prenom || '',
+        matiere: r.matiere,
+        note: r.note,
+        created_at: r.created_at,
+        synthese: r.synthese,
+        questions: r.questions.map(({ id, ...q }) => q),
+      });
     } catch (e) {
-      console.error('[entraineur/reveal]', e.message);
-      fail(res, 500, 'Impossible d\'afficher la réponse pour le moment.');
+      console.error('[entraineur/rapport get]', e.message);
+      fail(res, 500, 'Impossible d\'afficher le rapport pour le moment.');
     }
   });
 }

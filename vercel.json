@@ -13,6 +13,7 @@
     { "source": "/crpe-par-academie/:slug", "destination": "/academies/:slug.html" },
     { "source": "/outils", "destination": "/outils.html" },
     { "source": "/outils/entraineur-crpe", "destination": "/entraineur-crpe.html" },
+    { "source": "/outils/entraineur-crpe/rapport/:token", "destination": "/entraineur-rapport.html" },
     { "source": "/politique-de-confidentialite", "destination": "/politique-de-confidentialite.html" },
     { "source": "/admin-support", "destination": "/admin-support.html" },
     { "source": "/admin", "destination": "/app/index.html" }
