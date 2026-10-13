@@ -231,6 +231,8 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
           date_expiration: new Date(Date.now() + (REPORT_RETENTION_DAYS - 1) * 24 * 3600 * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/Paris' }),
           matiere: MATIERE_LABEL[matiere],
           note_globale: String(note).replace('.', ','),
+          // Même note en nombre, pour filtrer dans Klaviyo (ex. note_globale_nombre < 5)
+          note_globale_nombre: Number(note),
           niveau: NIVEAU_LABEL[synthese.niveau],
           appreciation: synthese.appreciation_globale,
           point_cle_1: synthese.points_cles[0] || '',
