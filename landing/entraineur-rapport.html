@@ -517,7 +517,7 @@ window.EC = (function () {
       '<h1>Ton rapport détaillé' + (d.prenom ? ', ' + esc(d.prenom) : '') + '</h1>' +
       '<div class="report-score"><div><span class="score-big">' + note(d.note) + '</span><span class="score-sub">note indicative moyenne</span></div>' + level(s.niveau) + '</div>' +
       '<p class="lead">' + esc(s.appreciation_globale) + '</p>' +
-      '<div class="notice notice-info no-print" style="margin:8px 0">Ton rapport reste disponible <strong>30 jours</strong> avec ce lien, puis il est supprimé. <strong>Pense à le télécharger</strong> pour le garder.</div>' +
+      '<div class="notice notice-info no-print" style="margin:8px 0">Ton rapport reste disponible <strong>7 jours</strong> avec ce lien, puis il est supprimé. <strong>Pense à le télécharger</strong> pour le garder.</div>' +
       '<div class="actions no-print" style="margin:8px 0 8px"><button class="btn btn-primary" type="button" onclick="window.print()">Télécharger mon rapport en PDF</button></div>' +
       '<h2>Ta manière de répondre</h2>' + DIMS.map(function (k) { return '<h3>' + k[1] + '</h3><p>' + esc(s.analyse[k[0]]) + '</p>'; }).join('') +
       '<h3>Tes habitudes récurrentes</h3>' + list(s.habitudes) +

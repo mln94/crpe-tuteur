@@ -9,7 +9,7 @@ import { QUESTION_PROMPT, SYNTHESE_PROMPT, QUESTION_TOOL, SYNTHESE_TOOL, questio
 export const QUESTIONS_PER_SET     = 5;   // questions par série
 export const WEEKLY_REPORT_LIMIT   = 1;   // rapports par adresse e-mail et par semaine (recharge le lundi 0 h, heure de Paris)
 export const MAX_ANSWER_LENGTH     = 3000;
-export const REPORT_RETENTION_DAYS = 30;  // rapports et réponses supprimés après 30 jours
+export const REPORT_RETENTION_DAYS = 7;   // rapports personnels supprimés après 7 jours (une copie anonyme est gardée dans entraineur_corpus)
 const SET_MAX_AGE_MS               = 48 * 3600 * 1000; // une série de questions reste valable 48 h
 const KLAVIYO_LIST_LEAD_MAGNET     = 'RazEb5'; // liste Lead_magnet_entraineur_crpe (simple opt-in)
 const KLAVIYO_REPORT_METRIC        = 'Rapport Entraîneur CRPE';
@@ -265,7 +265,40 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
     return { out: null, usage };
   }
 
-  // Suppression définitive des rapports (et réponses) de plus de 30 jours, y compris les données de l'ancien parcours
+  // ── Copie anonyme pour les contenus pédagogiques : aucune identité, seulement le mois ──
+  const escapeRe = t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  function anonymise(text, prenom, nom) {
+    let t = String(text || '')
+      .replace(/[\w.%+-]+@[\w.-]+\.[a-z]{2,}/gi, '[e-mail]')
+      .replace(/(\+33 ?|0033 ?|\b0)[1-9]([ .-]?\d{2}){4}\b/g, '[téléphone]');
+    for (const [mot, remplace] of [[prenom, '[prénom]'], [nom, '[nom]']]) {
+      if (mot && mot.trim().length >= 2) t = t.replace(new RegExp(`(?<![\\p{L}])${escapeRe(mot.trim())}(?![\\p{L}])`, 'giu'), remplace);
+    }
+    return t;
+  }
+  async function saveAnonymousCopy({ items, synthese, matiere, prenom, nom }) {
+    const serie_id = crypto.randomUUID();
+    const now = new Date();
+    const mois = `${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, '0')}-01`;
+    const syntheseAnonyme = JSON.parse(anonymise(JSON.stringify(synthese), prenom, nom));
+    const rows = items.map((it, i) => ({
+      serie_id, position: i + 1, mois, matiere,
+      categorie: it.categorie, classe: it.classe, enonce: it.enonce, texte_support: it.texte_support,
+      question: it.question, reponse_attendue: it.reponse_attendue,
+      reponse_candidat: anonymise(it.reponse, prenom, nom),
+      note: it.evaluation.note, niveau: it.evaluation.niveau,
+      evaluation: JSON.parse(anonymise(JSON.stringify(it.evaluation), prenom, nom)),
+      synthese_serie: syntheseAnonyme, model, created_at: `${mois}T00:00:00Z`,
+    }));
+    try {
+      const { error } = await supabaseAdmin.from('entraineur_corpus').insert(rows);
+      if (error) throw error;
+    } catch (e) {
+      console.error('[entraineur/corpus]', e.message);
+    }
+  }
+
+  // Suppression définitive des rapports personnels (et réponses) après le délai, y compris les données de l'ancien parcours
   async function purgeOldReports() {
     const cutoff = new Date(Date.now() - REPORT_RETENTION_DAYS * 24 * 3600 * 1000).toISOString();
     try {
@@ -323,6 +356,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       }).select('id').single();
       if (error) throw error;
 
+      await saveAnonymousCopy({ items, synthese: synth.out, matiere: set.m, prenom: row.prenom, nom: row.nom });
       await purgeOldReports();
       const url = `${SITE}${REPORT_PATH}${token}`;
       let emailed = false;

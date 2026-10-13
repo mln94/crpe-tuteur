@@ -273,7 +273,7 @@ def page_entraineur():
     <li><strong>Laisse ton prénom, ton nom, ton adresse e-mail et ton numéro de téléphone</strong> à la fin : ton rapport détaillé t'est envoyé par e-mail. Tu peux recevoir {WEEKLY_REPORT_LIMIT} rapport par semaine (recharge chaque lundi à 0 h, heure de Paris).</li>
     <li><strong>Ton rapport</strong> reprend chaque réponse avec la réponse attendue, une note indicative et des conseils, puis analyse ta manière de répondre : structure, justification, vocabulaire, rigueur et langue, avec tes 3 priorités de travail.</li>
     <li><strong>La correction est générée par une intelligence artificielle</strong> : la note est indicative, elle ne remplace pas un correcteur et peut contenir des erreurs.</li>
-    <li><strong>Pense à télécharger ton rapport</strong> : il reste consultable <strong>30 jours</strong> grâce au lien reçu par e-mail, et tu peux l'enregistrer en PDF en un clic. Passé ce délai, tes réponses et ton rapport sont définitivement supprimés. Ils ne sont ni publiés ni revendus. Détails dans notre <a href="/politique-de-confidentialite">politique de confidentialité</a>.</li>
+    <li><strong>Pense à télécharger ton rapport</strong> : il reste consultable <strong>7 jours</strong> grâce au lien reçu par e-mail, et tu peux l'enregistrer en PDF en un clic. Passé ce délai, ton rapport est définitivement supprimé. Nous gardons seulement, de façon <strong>anonyme</strong> (sans ton nom, ton e-mail ni aucun lien avec toi), le contenu des questions, des réponses et des corrections, pour améliorer l'outil et créer des contenus pédagogiques. Rien n'est publié ni revendu. Détails dans notre <a href="/politique-de-confidentialite">politique de confidentialité</a>.</li>
     <li><strong>Niveau cycle 4</strong> (5e, 4e, 3e) : c'est le niveau attendu pour les connaissances disciplinaires du CRPE en mathématiques et en français.</li>
   </ol>
 
@@ -500,7 +500,7 @@ RAPPORT_JS = r'''<script>
       '<h1>Ton rapport détaillé' + (d.prenom ? ', ' + esc(d.prenom) : '') + '</h1>' +
       '<div class="report-score"><div><span class="score-big">' + note(d.note) + '</span><span class="score-sub">note indicative moyenne</span></div>' + level(s.niveau) + '</div>' +
       '<p class="lead">' + esc(s.appreciation_globale) + '</p>' +
-      '<div class="notice notice-info no-print" style="margin:8px 0">Ton rapport reste disponible <strong>30 jours</strong> avec ce lien, puis il est supprimé. <strong>Pense à le télécharger</strong> pour le garder.</div>' +
+      '<div class="notice notice-info no-print" style="margin:8px 0">Ton rapport reste disponible <strong>7 jours</strong> avec ce lien, puis il est supprimé. <strong>Pense à le télécharger</strong> pour le garder.</div>' +
       '<div class="actions no-print" style="margin:8px 0 8px"><button class="btn btn-primary" type="button" onclick="window.print()">Télécharger mon rapport en PDF</button></div>' +
       '<h2>Ta manière de répondre</h2>' + DIMS.map(function (k) { return '<h3>' + k[1] + '</h3><p>' + esc(s.analyse[k[0]]) + '</p>'; }).join('') +
       '<h3>Tes habitudes récurrentes</h3>' + list(s.habitudes) +
@@ -583,7 +583,7 @@ def page_confidentialite():
   <ul>
     <li>Compte de l'application : pendant la durée de ton accès, puis 3 ans après ta dernière activité.</li>
     <li>Contacts de l'Entraîneur CRPE et prospects : 3 ans à compter du dernier contact de ta part.</li>
-    <li>Réponses et rapports de l'Entraîneur CRPE : 30 jours, puis suppression définitive.</li>
+    <li>Rapports de l'Entraîneur CRPE (avec ton prénom et ton lien personnel) : 7 jours, puis suppression définitive. Une copie <strong>anonyme</strong> du contenu (questions, réponses et corrections, sans nom, e-mail, téléphone ni lien avec ton identité, datée seulement du mois) est conservée pour améliorer l'outil et créer des contenus pédagogiques : n'étant plus rattachée à toi, elle n'est plus une donnée personnelle.</li>
     <li>Données de facturation : 10 ans (obligation légale).</li>
     <li>Cookies : 13 mois au maximum.</li>
   </ul>
