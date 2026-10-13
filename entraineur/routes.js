@@ -11,7 +11,7 @@ export const WEEKLY_REPORT_LIMIT   = 1;   // rapports par adresse e-mail et par 
 export const MAX_ANSWER_LENGTH     = 3000;
 export const REPORT_RETENTION_DAYS = 30;  // rapports et réponses supprimés après 30 jours
 const SET_MAX_AGE_MS               = 48 * 3600 * 1000; // une série de questions reste valable 48 h
-// Pas de liste Klaviyo : le segment « Lead magnet Entraîneur CRPE » se remplit avec la propriété lead_magnet = entraineur_crpe
+const KLAVIYO_LIST_LEAD_MAGNET     = 'RazEb5'; // liste Lead_magnet_entraineur_crpe (simple opt-in)
 const KLAVIYO_REPORT_METRIC        = 'Rapport Entraîneur CRPE';
 const CONSENT_VERSION              = '2026-10-12';
 const SITE                         = 'https://www.passcrpe.fr';
@@ -131,7 +131,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
     }
   });
 
-  // ── Contact : enregistré dans Supabase et dans Klaviyo (profil avec la propriété lead_magnet) ──
+  // ── Contact : enregistré dans Supabase et dans Klaviyo (profil avec la propriété lead_magnet, ajouté à la liste) ──
   async function saveLead(b) {
     const prenom = String(b.prenom || '').trim().slice(0, 80);
     const nom = String(b.nom || '').trim().slice(0, 80);
@@ -196,6 +196,11 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       throw new Error(`profil Klaviyo : ${r.status}`);
     }
     if (!profileId) throw new Error('profil Klaviyo introuvable');
+    // Ajout à la liste Lead_magnet_entraineur_crpe (chaque personne qui remplit le formulaire)
+    const l = await fetch(`${klaviyoApiBase}/lists/${KLAVIYO_LIST_LEAD_MAGNET}/relationships/profiles`, {
+      method: 'POST', headers: klaviyoHeaders(), body: JSON.stringify({ data: [{ type: 'profile', id: profileId }] }),
+    });
+    if (!l.ok && l.status !== 409) throw new Error(`liste Klaviyo : ${l.status}`);
     if (consent_conseils) {
       const c = await fetch(`${klaviyoApiBase}/profile-subscription-bulk-create-jobs`, {
         method: 'POST', headers: klaviyoHeaders(),
@@ -285,7 +290,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       if (saved.error) return fail(res, 400, saved.error);
       const { lead, row } = saved;
 
-      // Klaviyo : profil marqué lead_magnet = entraineur_crpe (avant le contrôle de limite : le contact est enregistré dans tous les cas)
+      // Klaviyo : profil marqué lead_magnet = entraineur_crpe et ajouté à la liste (avant le contrôle de limite : le contact est enregistré dans tous les cas)
       try { await klaviyoAddLead(row); await supabaseAdmin.from('entraineur_leads').update({ klaviyo_synced_at: new Date().toISOString() }).eq('id', lead.id); }
       catch (e) { console.error('[entraineur/klaviyo lead]', e.message); }
 
