@@ -132,7 +132,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
     }
   });
 
-  // ── Contact : enregistré dans Supabase et dans Klaviyo (profil avec la propriété lead_magnet, ajouté à la liste) ──
+  // ── Contact : enregistré dans Supabase et dans Klaviyo (profil ajouté à la liste Lead_magnet_entraineur_crpe) ──
   async function saveLead(b) {
     const prenom = String(b.prenom || '').trim().slice(0, 80);
     const nom = String(b.nom || '').trim().slice(0, 80);
@@ -177,7 +177,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
     const attributes = {
       email, first_name: prenom, last_name: nom,
       ...(phone ? { phone_number: phone } : {}),
-      properties: { lead_magnet: 'entraineur_crpe', telephone_saisi: telephone || null, consent_conseils, consent_partenaires, consent_contact_sms, consent_version: CONSENT_VERSION },
+      properties: { telephone_saisi: telephone || null, consent_conseils, consent_partenaires, consent_contact_sms, consent_version: CONSENT_VERSION },
     };
     let r = await fetch(`${klaviyoApiBase}/profiles`, { method: 'POST', headers: klaviyoHeaders(), body: JSON.stringify({ data: { type: 'profile', attributes } }) });
     if (r.status === 400 && phone) { // numéro refusé par Klaviyo : on garde le profil sans phone_number
@@ -326,7 +326,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       if (saved.error) return fail(res, 400, saved.error);
       const { lead, row } = saved;
 
-      // Klaviyo : profil marqué lead_magnet = entraineur_crpe et ajouté à la liste (avant le contrôle de limite : le contact est enregistré dans tous les cas)
+      // Klaviyo : profil ajouté à la liste (avant le contrôle de limite : le contact est enregistré dans tous les cas)
       try { await klaviyoAddLead(row); await supabaseAdmin.from('entraineur_leads').update({ klaviyo_synced_at: new Date().toISOString() }).eq('id', lead.id); }
       catch (e) { console.error('[entraineur/klaviyo lead]', e.message); }
 
