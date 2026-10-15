@@ -35,7 +35,7 @@ export const CATEGORIES = {
   ],
 };
 const SOURCE = {
-  maths:    { table: 'exercices_maths',      cols: 'id, thematique, classe, enonce, question, figure_path, figure_svg' },
+  maths:    { table: 'exercices_maths',      cols: 'id, thematique, classe, enonce, question, figure_path, figure_svg, figure_masquee' },
   francais: { table: 'exercices_francais_v', cols: 'id, thematique, niveau, texte_support, question' },
 };
 const MATIERE_LABEL = { maths: 'Mathématiques', francais: 'Français' };
@@ -88,7 +88,8 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
 
   // Question telle qu'envoyée au navigateur : jamais le corrigé
   function publicQuestion(matiere, q) {
-    const figure = matiere === 'maths'
+    // Figure masquée en base (elle donnait la réponse ou n'apportait rien) : jamais envoyée
+    const figure = matiere === 'maths' && !q.figure_masquee
       ? (q.figure_path ? { type: 'path', src: q.figure_path } : q.figure_svg ? { type: 'svg', svg: q.figure_svg } : null)
       : null;
     return {

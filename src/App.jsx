@@ -723,7 +723,7 @@ async function fetchExercicesMaths(thematique, classe) {
     const params = new URLSearchParams({
       thematique: `eq.${thematique}`,
       classe:     `eq.${classe}`,
-      select:     'id,objectif_id,objectif_apprentissage,thematique,sous_categorie,classe,enonce,question,reponse_ideale,figure_path,figure_svg,synthese_cours,definition_mots_cles',
+      select:     'id,objectif_id,objectif_apprentissage,thematique,sous_categorie,classe,enonce,question,reponse_ideale,figure_path,figure_svg,figure_masquee,synthese_cours,definition_mots_cles',
       order:      'id.asc',
     });
     const res = await fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?${params}`, {
@@ -3643,6 +3643,8 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
       ));
     };
 
+    // Figure masquée en base (elle donnait la réponse ou n'apportait rien) : on ne l'affiche pas
+    if (exercise.figure_masquee) return;
     if (exercise.figure_path) {
       setTimeout(() => applyFigure(exercise.figure_path), 0);
       return;
@@ -6641,7 +6643,7 @@ function AdminQuestionBrowser({ onLogout }) {
   const previewMessages = (() => {
     if (!selected) return [];
     if (matiere === 'maths') {
-      const figure = selected.figure_path || (selected.figure_svg ? normalizeSvg(selected.figure_svg) : undefined);
+      const figure = selected.figure_masquee ? undefined : (selected.figure_path || (selected.figure_svg ? normalizeSvg(selected.figure_svg) : undefined));
       const msgs = [{ role: 'assistant', content: buildMathQuestionMessage(selected, 1), figure }];
       if (showIdeale && selected.reponse_ideale) {
         msgs.push({ role: 'assistant', content: buildMathReponseMessage(selected, 1) });
@@ -6703,7 +6705,9 @@ function AdminQuestionBrowser({ onLogout }) {
                 <span className="font-semibold text-indigo-500">#{ex.id}</span>
                 <span>·</span>
                 <span>{matiere === 'maths' ? ex.classe : ex.niveau}</span>
-                {(ex.figure_path || ex.figure_svg) && <span title="Illustration">🖼️</span>}
+                {(ex.figure_path || ex.figure_svg) && (ex.figure_masquee
+                  ? <span title="Illustration masquée aux candidats" className="opacity-40 line-through">🖼️</span>
+                  : <span title="Illustration">🖼️</span>)}
               </div>
               <p className="text-xs text-gray-500 mb-1">{ex.sous_categorie}</p>
               <p className="text-sm text-gray-800 line-clamp-2">{ex.question}</p>
