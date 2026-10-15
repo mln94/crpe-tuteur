@@ -3,7 +3,7 @@
 // (flow Klaviyo déclenché par l'événement « Rapport Entraîneur CRPE ») le lien vers son rapport détaillé.
 // Toutes les tables entraineur_* sont fermées au navigateur (RLS sans règle) : seul ce serveur y accède.
 import crypto from 'crypto';
-import { QUESTION_PROMPT, SYNTHESE_PROMPT, QUESTION_TOOL, SYNTHESE_TOOL, questionMessage, syntheseMessage, validateQuestion, validateSynthese } from './prompt.js';
+import { questionPrompt, synthesePrompt, QUESTION_TOOL, SYNTHESE_TOOL, questionMessage, syntheseMessage, validateQuestion, validateSynthese } from './prompt.js';
 
 // ── Réglages faciles à modifier ──
 export const QUESTIONS_PER_SET     = 5;   // questions par série
@@ -343,9 +343,9 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       const vide = { out: { note: 0, niveau: 'a_retravailler', appreciation: 'Pas de réponse.', points_forts: [], points_a_ameliorer: [],
         elements_manquants: ['Une réponse rédigée'], langue: [], explication: 'Consulte la réponse attendue ci-dessous.' }, usage: { input_tokens: 0, output_tokens: 0 } };
       const [synth, ...evals] = await Promise.all([
-        callTool(SYNTHESE_PROMPT, SYNTHESE_TOOL, syntheseMessage({ matiere: set.m, items }), validateSynthese, 3000),
+        callTool(synthesePrompt(set.m), SYNTHESE_TOOL, syntheseMessage({ matiere: set.m, items }), validateSynthese, 3000),
         ...items.map(it => it.reponse
-          ? callTool(QUESTION_PROMPT, QUESTION_TOOL, questionMessage({ matiere: set.m, q: it, reponse: it.reponse }), validateQuestion, 1800)
+          ? callTool(questionPrompt(set.m), QUESTION_TOOL, questionMessage({ matiere: set.m, q: it, reponse: it.reponse }), validateQuestion, 1800)
           : Promise.resolve(vide)),
       ]);
       if (!synth.out || evals.some(e => !e.out)) return fail(res, 502, 'Le rapport n\'a pas pu être généré. Réessaie dans quelques instants.');
