@@ -382,7 +382,8 @@
     .auth-overlay { display:none; position:fixed; inset:0; background:rgba(15,23,42,.6); backdrop-filter:blur(6px); z-index:2000; align-items:center; justify-content:center; padding:20px; }
     .auth-overlay.open { display:flex; }
     @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
-    .auth-card { background:#fff; border-radius:20px; box-shadow:0 24px 64px rgba(0,0,0,.22); width:100%; max-width:440px; padding:40px 40px 36px; position:relative; animation:fadeUp .28s ease forwards; max-height:90vh; overflow-y:auto; }
+    .auth-card { background:#fff; border-radius:20px; box-shadow:0 24px 64px rgba(0,0,0,.22); width:100%; max-width:440px; padding:40px 40px 36px; position:relative; animation:fadeUp .28s ease forwards; max-height:calc(100vh - 40px); max-height:calc(100dvh - 40px); overflow-y:auto; -webkit-overflow-scrolling:touch; }
+    /* Formulaire plus haut que l'écran (mobile) : la carte défile, limitée à la hauteur réellement visible (barre d'adresse comprise) */
     .auth-close { position:absolute; top:18px; right:18px; background:none; border:none; cursor:pointer; color:#94a3b8; font-size:22px; line-height:1; padding:4px 8px; border-radius:8px; transition:background .15s,color .15s; }
     .auth-close:hover { background:#f1f5f9; color:#334155; }
     .auth-logo { display:flex; align-items:center; gap:10px; justify-content:center; margin-bottom:24px; }
