@@ -275,7 +275,7 @@ BANNER = '''<section class="cta-section" id="inscription">
         Commencer gratuitement
       </button>
     </div>
-    <p class="cta-note">Essai gratuit · 359 € TTC à l'issue de l'essai pour 2 ans d'accès</p>
+    <p class="cta-note">Essai gratuit · 359 € TTC à l'issue de l'essai pour 1 an d'accès</p>
   </div>
 </section>
 
