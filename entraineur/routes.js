@@ -373,7 +373,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       // Si l'e-mail n'a pas pu partir, le candidat reçoit directement son lien pour ne pas perdre son rapport
       res.json({ ok: true, emailed, email: lead.email, ...(emailed ? {} : { report_url: `${REPORT_PATH}${token}` }) });
     } catch (e) {
-      console.error('[entraineur/rapport]', e.message);
+      console.error('[entraineur/rapport]', e.status || '', e.error?.error?.type || '', e.error?.error?.message || e.message);
       fail(res, 500, 'Le rapport n\'a pas pu être généré. Réessaie dans quelques instants.');
     }
   });

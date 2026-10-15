@@ -21,6 +21,9 @@ const cleanKey = v => (v || '').trim().replace(/^["']+|["']+$/g, '').trim();
 // Clé de l'application : ANTHROPIC_API_KEY_CRPE_APP (nom actuel dans Vercel), ANTHROPIC_API_KEY en secours
 const APP_ANTHROPIC_KEY = cleanKey(process.env.ANTHROPIC_API_KEY_CRPE_APP) || cleanKey(process.env.ANTHROPIC_API_KEY);
 if (!APP_ANTHROPIC_KEY) console.error('[config] ANTHROPIC_API_KEY_CRPE_APP manquante');
+// Empreinte d'une clé pour les logs (début, fin, longueur) : jamais la clé entière
+const keyFingerprint = k => (k ? `${k.slice(0, 14)}…${k.slice(-4)} (${k.length} caractères)` : 'absente');
+console.log('[config] clé application :', keyFingerprint(APP_ANTHROPIC_KEY));
 const client = new Anthropic({ apiKey: APP_ANTHROPIC_KEY });
 
 /* ── Supabase (service role — bypasses RLS, server-side only) ── */
@@ -579,14 +582,15 @@ app.post('/api/chat', async (req, res) => {
 
 /* ── Entraîneur CRPE (outil gratuit) ── */
 // Même modèle que les corrections de l'application (CHAT_MODEL)
-// Clé dédiée à l'Entraîneur (consommation suivie à part dans la console Anthropic), sinon la clé de l'application
-const entraineurClient = cleanKey(process.env.ANTHROPIC_API_KEY_ENTRAINEUR)
-  ? new Anthropic({
-      apiKey: cleanKey(process.env.ANTHROPIC_API_KEY_ENTRAINEUR),
-      // Une clé utilisateur (sk-ant-usr-…) doit préciser l'espace de travail à facturer
-      ...(cleanKey(process.env.ANTHROPIC_WORKSPACE_ID_ENTRAINEUR) ? { defaultHeaders: { 'anthropic-workspace-id': cleanKey(process.env.ANTHROPIC_WORKSPACE_ID_ENTRAINEUR) } } : {}),
-    })
-  : client;
+// L'Entraîneur utilise uniquement sa propre clé ANTHROPIC_API_KEY_ENTRAINEUR (consommation suivie à part), jamais celle de l'application
+const ENTRAINEUR_ANTHROPIC_KEY = cleanKey(process.env.ANTHROPIC_API_KEY_ENTRAINEUR);
+if (!ENTRAINEUR_ANTHROPIC_KEY) console.error('[config] ANTHROPIC_API_KEY_ENTRAINEUR manquante : les rapports de l\'Entraîneur échoueront');
+console.log('[config] clé Entraîneur :', keyFingerprint(ENTRAINEUR_ANTHROPIC_KEY));
+const entraineurClient = new Anthropic({
+  apiKey: ENTRAINEUR_ANTHROPIC_KEY,
+  // Une clé utilisateur (sk-ant-usr-…) non rattachée à un espace de travail doit préciser lequel facturer
+  ...(cleanKey(process.env.ANTHROPIC_WORKSPACE_ID_ENTRAINEUR) ? { defaultHeaders: { 'anthropic-workspace-id': cleanKey(process.env.ANTHROPIC_WORKSPACE_ID_ENTRAINEUR) } } : {}),
+});
 registerEntraineurRoutes(app, { supabaseAdmin, anthropic: entraineurClient, model: CHAT_MODEL, klaviyoHeaders, klaviyoApiBase: KLAVIYO_API_BASE });
 
 /* ── Static (dev local uniquement — sur Vercel ces fichiers sont servis directement depuis dist/) ── */
