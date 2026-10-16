@@ -213,6 +213,7 @@
     /* RAPPORTS DE JURY */
     .page-wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 72px; font-size: 16px; line-height: 1.7; color: var(--gray-700); }
     .page-wrap h1 { font-size: clamp(28px, 4.5vw, 40px); font-weight: 900; color: var(--gray-900); line-height: 1.15; letter-spacing: -.5px; margin-bottom: 14px; }
+    .page-wrap h2[id] { scroll-margin-top: 84px; }
     .page-wrap h2 { font-size: 23px; font-weight: 800; color: var(--gray-900); margin: 44px 0 12px; letter-spacing: -.2px; }
     .page-wrap p { margin-bottom: 14px; }
     .page-wrap strong { color: var(--gray-900); }
@@ -325,7 +326,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <a href="/crpe-par-academie">Session 2026</a>
             <a href="/crpe-par-academie">Session 2027</a>
           </div>
-          <a class="nav-dropdown-link" href="/rapports-jury-crpe">Rapports de jury</a>
+          <button type="button" class="nav-sub-toggle" aria-expanded="false" onclick="toggleNavSub(this)">Rapports de jury <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+          <div class="nav-sub-menu">
+            <a href="/rapports-jury-crpe#session-2026">Session 2026</a>
+            <a href="/rapports-jury-crpe#session-2025">Session 2025</a>
+          </div>
           <a class="nav-dropdown-link" href="/outils">Outils</a>
         </div>
       </li>
@@ -352,7 +357,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <p><strong>Envie d'aller à l'essentiel ?</strong> Nous avons lu ces rapports et résumé les conseils des jurys, épreuve par épreuve : <a href="/blog/rapport-jury-crpe-2026-conseils" style="font-weight:600;" target="_blank" rel="noopener">conseils des rapports de jury 2026</a> (concours bac+3 et bac+5) et <a href="/blog/rapport-jury-crpe-2025-conseils" style="font-weight:600;" target="_blank" rel="noopener">conseils des rapports de jury 2025</a>.</p>
   </div>
 
-  <h2>Rapports de jury CRPE 2026</h2>
+  <h2 id="session-2026">Rapports de jury CRPE 2026</h2>
   <p class="session-count">15 rapports, 9 académies</p>
     <table class="reports">
       <thead><tr><th>Académie</th><th class="col-concours">Concours</th><th></th></tr></thead>
@@ -374,7 +379,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <tr><td class="ac">Versailles<small>Bac+3</small></td><td class="col-concours">Bac+3</td><td class="dl"><a class="dl-link" href="https://siec.education.fr/candidats/docutheque/concours/50/crpe-licence3-rapport-du-jury-academie-de-versailles-session-2026" target="_blank" rel="noopener" title="Rapport de jury CRPE 2026, académie de Versailles, bac+3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>Consulter</a></td></tr>
       </tbody>
     </table>
-  <h2>Rapports de jury CRPE 2025</h2>
+  <h2 id="session-2025">Rapports de jury CRPE 2025</h2>
   <p class="session-count">23 rapports, 22 académies</p>
     <table class="reports">
       <thead><tr><th>Académie</th><th class="col-concours">Concours</th><th></th></tr></thead>

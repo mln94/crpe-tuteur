@@ -79,6 +79,7 @@ CSS = """
     /* RAPPORTS DE JURY */
     .page-wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 72px; font-size: 16px; line-height: 1.7; color: var(--gray-700); }
     .page-wrap h1 { font-size: clamp(28px, 4.5vw, 40px); font-weight: 900; color: var(--gray-900); line-height: 1.15; letter-spacing: -.5px; margin-bottom: 14px; }
+    .page-wrap h2[id] { scroll-margin-top: 84px; }
     .page-wrap h2 { font-size: 23px; font-weight: 800; color: var(--gray-900); margin: 44px 0 12px; letter-spacing: -.2px; }
     .page-wrap p { margin-bottom: 14px; }
     .page-wrap strong { color: var(--gray-900); }
@@ -140,7 +141,7 @@ def page():
     for annee, rows in SESSIONS:
         nb = len({r[0] for r in rows})
         sections.append(
-            f'  <h2>Rapports de jury CRPE {annee}</h2>\n'
+            f'  <h2 id="session-{annee}">Rapports de jury CRPE {annee}</h2>\n'
             f'  <p class="session-count">{len(rows)} rapports, {nb} académies</p>\n' + table(rows, annee))
     lien = 'style="font-weight:600;" target="_blank" rel="noopener"'
     body = f'''<main class="page-wrap">
