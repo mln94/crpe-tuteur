@@ -456,44 +456,39 @@
     .step h3 { font-size: 16px; font-weight: 700; color: var(--gray-800); margin-bottom: 8px; }
     .step p { font-size: 13px; color: var(--gray-500); line-height: 1.55; }
 
-    /* ── MATIÈRES ── */
-    .matieres-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 24px;
-      margin-top: 48px;
-    }
-    .matiere-card {
-      border-radius: 20px;
-      padding: 32px;
-      display: flex; gap: 20px; align-items: flex-start;
-    }
-    .mc-maths {
-      background: linear-gradient(135deg, #eef2ff, #e0e7ff);
-      border: 1.5px solid var(--indigo-200);
-    }
-    .mc-francais {
-      background: linear-gradient(135deg, #fdf2f8, #fce7f3);
-      border: 1.5px solid #fbcfe8;
-    }
-    .mc-icon {
-      width: 52px; height: 52px; border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 24px; flex-shrink: 0;
-    }
-    .mc-maths .mc-icon { background: var(--indigo-600); }
-    .mc-francais .mc-icon { background: #ec4899; }
-    .matiere-card h3 { font-size: 19px; font-weight: 800; margin-bottom: 8px; }
-    .mc-maths h3 { color: var(--indigo-800); }
-    .mc-francais h3 { color: #831843; }
-    .matiere-card p { font-size: 14px; line-height: 1.6; color: var(--gray-600); margin-bottom: 14px; }
-    .matiere-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .matiere-tag {
-      font-size: 11px; font-weight: 600;
-      padding: 4px 10px; border-radius: 100px;
-    }
-    .mc-maths .matiere-tag { background: var(--indigo-100); color: var(--indigo-700); }
-    .mc-francais .matiere-tag { background: #fce7f3; color: #9d174d; }
+    /* ── OFFRES ── */
+    .offres-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 48px; align-items: stretch; }
+    .offre-card { position: relative; border-radius: 22px; padding: 32px; display: flex; flex-direction: column; background: #fff; border: 1.5px solid var(--gray-200); }
+    .offre-ia { background: linear-gradient(160deg, #eef2ff, #fff 55%); border-color: var(--indigo-200); box-shadow: 0 12px 40px rgba(79,70,229,.10); }
+    .offre-quiz { background: linear-gradient(160deg, #fff7ed, #fff 55%); border-color: #fed7aa; }
+    .offre-badge { align-self: flex-start; font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; padding: 5px 12px; border-radius: 100px; margin-bottom: 16px; }
+    .offre-ia .offre-badge { background: var(--indigo-600); color: #fff; }
+    .offre-quiz .offre-badge { background: #ffedd5; color: #9a3412; }
+    .offre-head { display: flex; gap: 14px; align-items: center; margin-bottom: 12px; }
+    .offre-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .offre-ia .offre-icon { background: var(--indigo-600); }
+    .offre-quiz .offre-icon { background: #f97316; }
+    .offre-card h3 { font-size: 21px; font-weight: 900; color: var(--gray-900); line-height: 1.2; }
+    .offre-tagline { font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+    .offre-desc { font-size: 14.5px; line-height: 1.6; color: var(--gray-600); margin-bottom: 18px; }
+    .offre-price { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+    .offre-price strong { font-size: 34px; font-weight: 900; color: var(--gray-900); letter-spacing: -1px; }
+    .offre-price span { font-size: 13px; color: var(--gray-500); }
+    .offre-list { list-style: none; margin: 0 0 20px; padding: 0; display: grid; gap: 10px; }
+    .offre-list li { position: relative; padding-left: 28px; font-size: 14px; line-height: 1.5; color: var(--gray-700); }
+    .offre-list li::before { content: "✓"; position: absolute; left: 0; top: 1px; width: 19px; height: 19px; border-radius: 50%; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center; }
+    .offre-ia .offre-list li::before { background: var(--indigo-100); color: var(--indigo-700); }
+    .offre-quiz .offre-list li::before { background: #ffedd5; color: #c2410c; }
+    .offre-label { font-size: 11px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--gray-500); margin-bottom: 8px; }
+    .offre-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .offre-tag { font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: 100px; }
+    .offre-ia .offre-tag { background: var(--indigo-100); color: var(--indigo-700); }
+    .offre-quiz .offre-tag { background: #ffedd5; color: #9a3412; }
+    .offre-tag.soon { background: #fff; color: #6b7280; border: 1px dashed #d1d5db; }
+    .offre-cta { margin-top: auto; padding-top: 8px; }
+    .offre-cta .btn-primary, .offre-cta .btn-secondary { width: 100%; justify-content: center; text-align: center; }
+    .offre-note { font-size: 12px; color: var(--gray-500); text-align: center; margin-top: 10px; }
+    .offres-compare { margin-top: 28px; text-align: center; font-size: 15px; color: var(--gray-600); }
 
     /* ── TESTIMONIALS ── */
     .testimonials { background: var(--gray-50); }
@@ -640,7 +635,7 @@
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      .about-grid, .matieres-grid { grid-template-columns: 1fr; }
+      .about-grid, .offres-grid { grid-template-columns: 1fr; }
       .challenge-grid, .testi-grid { grid-template-columns: 1fr; }
       .features-grid { grid-template-columns: 1fr; }
       .steps { grid-template-columns: repeat(2, 1fr); }
@@ -1005,7 +1000,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <ul class="nav-links">
       <li><a href="#crpe">Le concours</a></li>
       <li><a href="#fonctionnalites">Fonctionnalités</a></li>
-      <li><a href="#matieres">Matières</a></li>
+      <li><a href="#offres">Offres</a></li>
       <li class="nav-dropdown">
         <button type="button" class="nav-dropdown-toggle" aria-expanded="false" onclick="toggleNavDropdown(this)">Ressources <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
         <div class="nav-dropdown-menu">
@@ -1217,41 +1212,80 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </section>
 
 
-<!-- ═══════════════════════════════ MATIÈRES ═══════════════════════════════ -->
-<section id="matieres">
+<!-- ═══════════════════════════════ OFFRES ═══════════════════════════════ -->
+<section id="offres">
   <div class="container">
-    <div class="section-eyebrow">Les matières</div>
-    <h2 class="section-title">Les deux épreuves écrites du concours, d'autres contenus à venir</h2>
-    <p class="section-sub">PassCRPE couvre intégralement les deux épreuves écrites du concours, avec un programme structuré thème par thème. Pour le moment, l'application propose de s'exercer sur le <strong>programme du cycle 4</strong> en français et en mathématiques — d'autres contenus arriveront progressivement.</p>
-    <div class="matieres-grid">
-      <div class="matiere-card mc-maths fade-up">
-        <div class="mc-icon">🔢</div>
-        <div>
-          <h3>Mathématiques</h3>
-          <p>Nombres et calcul, proportionnalité, fonctions, équations, géométrie plane et dans l'espace, statistiques et probabilités, tout le programme cycle 4.</p>
-          <div class="matiere-tags">
-            <span class="matiere-tag">Nombres & calcul</span>
-            <span class="matiere-tag">Géométrie</span>
-            <span class="matiere-tag">Fonctions</span>
-            <span class="matiere-tag">Probabilités</span>
-            <span class="matiere-tag">Statistiques</span>
+    <div class="section-eyebrow">Nos offres</div>
+    <h2 class="section-title">Deux façons de préparer le CRPE avec PassCRPE</h2>
+    <p class="section-sub">Le tuteur IA pour apprendre à rédiger et progresser exercice après exercice, le quiz pour réviser vite et vérifier vos connaissances dans chaque discipline.</p>
+    <div class="offres-grid">
+
+      <div class="offre-card offre-ia fade-up">
+        <span class="offre-badge">Essai gratuit</span>
+        <div class="offre-head">
+          <div class="offre-icon">🤖</div>
+          <div>
+            <h3>Tuteur IA PassCRPE</h3>
+            <p class="offre-tagline">S'entraîner à répondre comme le jury l'attend</p>
           </div>
         </div>
-      </div>
-      <div class="matiere-card mc-francais fade-up" style="animation-delay:.1s">
-        <div class="mc-icon">✍️</div>
-        <div>
-          <h3>Français</h3>
-          <p>Grammaire, orthographe, conjugaison, lecture analytique, culture littéraire, vocabulaire et production d'écrit.</p>
-          <div class="matiere-tags">
-            <span class="matiere-tag">Grammaire</span>
-            <span class="matiere-tag">Orthographe</span>
-            <span class="matiere-tag">Lecture</span>
-            <span class="matiere-tag">Écriture</span>
-            <span class="matiere-tag">Culture litt.</span>
-          </div>
+        <p class="offre-desc">Un tuteur intelligent qui génère des exercices adaptés à votre niveau et corrige chacune de vos réponses rédigées selon les exigences du CRPE.</p>
+        <div class="offre-price"><strong>359 €</strong><span>TTC pour 1 an d'accès, après l'essai gratuit</span></div>
+        <ul class="offre-list">
+          <li>Des exercices en continu, adaptés à votre niveau, du très facile au difficile</li>
+          <li>Une correction détaillée de chaque réponse : écriture, orthographe et niveau CRPE, avec une réponse type</li>
+          <li>Un suivi de votre progression par niveau et par notion</li>
+          <li>Des synthèses de cours accessibles en un clic pendant l'exercice</li>
+        </ul>
+        <p class="offre-label">Disponible aujourd'hui</p>
+        <div class="offre-tags">
+          <span class="offre-tag">Mathématiques</span>
+          <span class="offre-tag">Français</span>
+        </div>
+        <p class="offre-label">Bientôt dans le tuteur</p>
+        <div class="offre-tags">
+          <span class="offre-tag soon">Histoire-géographie / EMC</span>
+          <span class="offre-tag soon">Sciences et technologie</span>
+          <span class="offre-tag soon">Arts</span>
+          <span class="offre-tag soon">Langue vivante</span>
+        </div>
+        <div class="offre-cta">
+          <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">Commencer gratuitement</a>
+          <p class="offre-note">Pour l'instant en mathématiques et en français : les autres disciplines arrivent progressivement.</p>
         </div>
       </div>
+
+      <div class="offre-card offre-quiz fade-up" style="animation-delay:.1s">
+        <span class="offre-badge">Bientôt disponible</span>
+        <div class="offre-head">
+          <div class="offre-icon">🎯</div>
+          <div>
+            <h3>Quiz CRPE</h3>
+            <p class="offre-tagline">Réviser vite, dans toutes les disciplines</p>
+          </div>
+        </div>
+        <p class="offre-desc">Un quiz pour tester vos connaissances en quelques minutes et repérer, discipline par discipline, les notions à retravailler avant le concours.</p>
+        <div class="offre-price"><strong>39,99 €</strong></div>
+        <ul class="offre-list">
+          <li>Près de 300 questions par discipline</li>
+          <li>Cinq disciplines du concours réunies dans un seul outil</li>
+          <li>Des questions courtes, idéales pour réviser au quotidien, même avec peu de temps</li>
+          <li>Un moyen rapide de repérer vos lacunes avant de les travailler en profondeur</li>
+        </ul>
+        <p class="offre-label">Disciplines du quiz</p>
+        <div class="offre-tags">
+          <span class="offre-tag">Mathématiques</span>
+          <span class="offre-tag">Français</span>
+          <span class="offre-tag">Sciences et technologie</span>
+          <span class="offre-tag">Arts</span>
+          <span class="offre-tag">Langue vivante</span>
+        </div>
+        <div class="offre-cta">
+          <a href="#newsletter" class="btn-secondary">Être prévenu de la sortie du quiz</a>
+          <p class="offre-note">Inscrivez-vous à la newsletter pour être informé dès sa disponibilité.</p>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1354,8 +1388,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h4>L'outil</h4>
         <ul>
           <li><a href="#fonctionnalites">Fonctionnalités</a></li>
-          <li><a href="#matieres">Mathématiques</a></li>
-          <li><a href="#matieres">Français</a></li>
+          <li><a href="#offres">Tuteur IA</a></li>
+          <li><a href="#offres">Quiz CRPE</a></li>
           <li><a href="#" onclick="openAuth(event,'register')">S'inscrire</a></li>
         </ul>
       </div>
