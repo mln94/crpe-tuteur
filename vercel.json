@@ -9,6 +9,7 @@
     { "source": "/blog/crpe-2026-reforme-concours-externes", "destination": "/crpe-2026-reforme-concours-externes.html" },
     { "source": "/blog/crpe-bac3-structure-premiere-epreuve-admissibilite", "destination": "/crpe-bac3-structure-premiere-epreuve-admissibilite.html" },
     { "source": "/blog/salaire-professeur-des-ecoles-remuneration", "destination": "/salaire-professeur-des-ecoles-remuneration.html" },
+    { "source": "/blog/rapport-jury-crpe-2025-conseils", "destination": "/rapport-jury-crpe-2025-conseils.html" },
     { "source": "/crpe-par-academie", "destination": "/crpe-par-academie.html" },
     { "source": "/crpe-par-academie/:slug", "destination": "/academies/:slug.html" },
     { "source": "/outils", "destination": "/outils.html" },

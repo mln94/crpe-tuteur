@@ -6,3 +6,6 @@ dist
 *.log
 .vercel
 assets-source
+
+# Rapports de jury CRPE (PDF sources, volumineux)
+Rapport jury CRPE/
