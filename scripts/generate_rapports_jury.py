@@ -54,6 +54,7 @@ SESSIONS = [
         ('Orléans-Tours', 'Rapport de la session', 'https://www.ac-orleans-tours.fr/media/32504/download'),
         ('Paris', 'Rapport de la session', 'https://siec.education.fr/candidats/docutheque/concours/50/rapport-du-jury-crpe-academie-de-paris-session-2025'),
         ('Polynésie française', 'Rapport de la session', 'https://www.ac-polynesie.pf/media/23255/download'),
+        ('Reims', 'Rapport de la session', 'https://www.ac-reims.fr/media/43031/download'),
         ('Rennes', 'Rapport de la session', 'https://www.toutatice.fr/portail/share/va1L0l?l=wNsQIf'),
         ('Toulouse', 'Rapport de la session', 'https://www.ac-toulouse.fr/media/82774/download'),
         ('Versailles', 'Premier concours interne', 'https://siec.education.fr/candidats/docutheque/concours/50/rapport-de-jury-1er-interne-academie-de-versailles-session-2025'),
