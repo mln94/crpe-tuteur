@@ -5,6 +5,7 @@ Gabarit : landing/crpe-bac3-structure-premiere-epreuve-admissibilite.html (menu,
 Sorties : landing/rapports-jury-crpe-<année>.html
 Usage   : python3 scripts/generate_rapports_jury.py
 """
+import json
 import os
 from html import escape
 
@@ -84,9 +85,10 @@ CSS = """
     .page-wrap strong { color: var(--gray-900); }
     .page-wrap a { color: var(--indigo-600); }
     .lead { font-size: 17px; }
-    .breadcrumb { font-size: 13px; color: var(--gray-500); margin-bottom: 18px; }
-    .breadcrumb a { color: var(--gray-500); text-decoration: none; }
+    .breadcrumb { position: static; z-index: auto; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0; display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--gray-400); margin-bottom: 20px; }
+    .breadcrumb a { color: var(--gray-500); text-decoration: none; font-weight: 600; }
     .breadcrumb a:hover { color: var(--indigo-600); }
+    .breadcrumb [aria-current] { color: var(--gray-700); font-weight: 600; }
     .session-count { font-size: 14px; color: var(--gray-500); margin: -4px 0 14px; }
     .reports { width: 100%; border-collapse: collapse; font-size: 15px; border: 1px solid var(--gray-200); border-radius: 12px; overflow: hidden; }
     .reports th { text-align: left; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--gray-500); background: var(--gray-50); padding: 10px 14px; border-bottom: 1px solid var(--gray-200); }
@@ -146,10 +148,15 @@ def page(annee, rows):
     desc = (f"Téléchargez les rapports de jury officiels du CRPE {annee}, académie par académie"
             + (" (concours bac+3 et bac+5)" if annee == '2026' else '') + ". Liens directs vers les sites des académies.")
     url = f'{SITE}/{SLUG}/{annee}'
+    ld = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
+        {'@type': 'ListItem', 'position': 1, 'name': 'Accueil', 'item': SITE + '/'},
+        {'@type': 'ListItem', 'position': 2, 'name': f'Rapports de jury CRPE {annee}', 'item': url}]}
     nb = len({r[0] for r in rows})
     lien = 'style="font-weight:600;" target="_blank" rel="noopener"'
     body = f'''<main class="page-wrap">
-  <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="/">Accueil</a> <span aria-hidden="true">›</span> <span>Rapports de jury</span> <span aria-hidden="true">›</span> <span aria-current="page">Session {annee}</span></nav>
+  <nav class="breadcrumb" aria-label="Fil d'Ariane">
+    <a href="/">Accueil</a><span>›</span><span aria-current="page">Rapports de jury CRPE {annee}</span>
+  </nav>
   <h1>Rapports de jury du CRPE {annee} par académie</h1>
   <p class="lead">Chaque année, les jurys du CRPE publient un <strong>rapport de jury</strong> par académie : les correcteurs y expliquent ce qu'ils ont valorisé, ce qu'ils ont pénalisé et les erreurs qui reviennent d'une copie à l'autre. {INTRO[annee]}</p>
 
@@ -178,6 +185,7 @@ def page(annee, rows):
             + f'  <meta property="og:description" content="{escape(desc)}" />\n'
             + '  <meta property="og:type" content="website" />\n'
             + f'  <meta property="og:url" content="{url}" />\n'
+            + f'  <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
             + CSS_BASE + CSS)
     return head + BODY_NAV + body + TAIL
 

@@ -26,6 +26,7 @@
   <meta property="og:description" content="Téléchargez les rapports de jury officiels du CRPE 2025, académie par académie. Liens directs vers les sites des académies." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://www.passcrpe.fr/rapports-jury-crpe/2025" />
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Accueil", "item": "https://www.passcrpe.fr/"}, {"@type": "ListItem", "position": 2, "name": "Rapports de jury CRPE 2025", "item": "https://www.passcrpe.fr/rapports-jury-crpe/2025"}]}</script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
@@ -218,9 +219,10 @@
     .page-wrap strong { color: var(--gray-900); }
     .page-wrap a { color: var(--indigo-600); }
     .lead { font-size: 17px; }
-    .breadcrumb { font-size: 13px; color: var(--gray-500); margin-bottom: 18px; }
-    .breadcrumb a { color: var(--gray-500); text-decoration: none; }
+    .breadcrumb { position: static; z-index: auto; background: none; backdrop-filter: none; -webkit-backdrop-filter: none; border: 0; display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: var(--gray-400); margin-bottom: 20px; }
+    .breadcrumb a { color: var(--gray-500); text-decoration: none; font-weight: 600; }
     .breadcrumb a:hover { color: var(--indigo-600); }
+    .breadcrumb [aria-current] { color: var(--gray-700); font-weight: 600; }
     .session-count { font-size: 14px; color: var(--gray-500); margin: -4px 0 14px; }
     .reports { width: 100%; border-collapse: collapse; font-size: 15px; border: 1px solid var(--gray-200); border-radius: 12px; overflow: hidden; }
     .reports th { text-align: left; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--gray-500); background: var(--gray-50); padding: 10px 14px; border-bottom: 1px solid var(--gray-200); }
@@ -348,7 +350,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </nav>
 
 <main class="page-wrap">
-  <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="/">Accueil</a> <span aria-hidden="true">›</span> <span>Rapports de jury</span> <span aria-hidden="true">›</span> <span aria-current="page">Session 2025</span></nav>
+  <nav class="breadcrumb" aria-label="Fil d'Ariane">
+    <a href="/">Accueil</a><span>›</span><span aria-current="page">Rapports de jury CRPE 2025</span>
+  </nav>
   <h1>Rapports de jury du CRPE 2025 par académie</h1>
   <p class="lead">Chaque année, les jurys du CRPE publient un <strong>rapport de jury</strong> par académie : les correcteurs y expliquent ce qu'ils ont valorisé, ce qu'ils ont pénalisé et les erreurs qui reviennent d'une copie à l'autre. En 2025, le concours externe était ouvert au niveau <strong>bac+5</strong> (master). Les rapports couvrent aussi, le plus souvent, le second concours interne et le troisième concours.</p>
 
