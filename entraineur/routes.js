@@ -35,7 +35,7 @@ export const CATEGORIES = {
   ],
 };
 const SOURCE = {
-  maths:    { table: 'exercices_maths',      cols: 'id, thematique, classe, enonce, question, figure_path, figure_svg, figure_masquee' },
+  maths:    { table: 'exercices_maths',      cols: 'id, thematique, classe, enonce, question, figure_path, figure_svg, figure_masquee, outil_reponse' },
   francais: { table: 'exercices_francais_v', cols: 'id, thematique, niveau, texte_support, question' },
 };
 const MATIERE_LABEL = { maths: 'Mathématiques', francais: 'Français' };
@@ -100,6 +100,8 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       texte_support: q.texte_support || null,
       question: q.question,
       figure,
+      // Outils de réponse (droite graduée, repère, tableau) : réglages sans la solution
+      outil: Array.isArray(q.outil_reponse) && q.outil_reponse.length ? q.outil_reponse : null,
     };
   }
   async function fetchQuestions(matiere, ids, withCorrige = false) {

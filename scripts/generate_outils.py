@@ -278,7 +278,7 @@ def page_entraineur():
   </ol>
 
 </main>
-''' + COMMON_JS + ENTRAINEUR_JS
+''' + '<script src="/outils-reponse.js"></script>\n' + COMMON_JS + ENTRAINEUR_JS
     return page(f"Entraîneur CRPE gratuit : {QUESTIONS_PER_SET} questions de maths ou de français et un rapport détaillé | PassCRPE",
                 f"Entraîne-toi gratuitement au CRPE : réponds à {QUESTIONS_PER_SET} questions de maths ou de français de niveau cycle 4 et reçois par e-mail un rapport détaillé sur tes réponses et ta manière de répondre.",
                 '/outils/entraineur-crpe', body, f"Entraîneur CRPE : réponds à {QUESTIONS_PER_SET} questions, reçois ton rapport détaillé", [ld, app_ld])
@@ -344,7 +344,7 @@ ENTRAINEUR_JS = r'''<script>
   function answerHtml() {
     var s = state.serie, i = state.index, q = s.questions[i];
     return progressHtml() + '<p class="step-label">Question ' + (i + 1) + ' sur ' + N + '</p>' +
-      '<div class="answer-layout"><div class="answer-q">' + EC.questionHtml(q, s.matiere) + '</div>' +
+      '<div class="answer-layout"><div class="answer-q">' + EC.questionHtml(q, s.matiere) + (q.outil ? '<div id="outilsReponse" style="margin-top:12px"></div>' : '') + '</div>' +
       '<form class="answer" id="answerForm"><label for="answer">Ta réponse</label>' +
       '<textarea id="answer" maxlength="' + MAX_LEN + '" placeholder="Rédige ta réponse comme le jour du concours : démarche, justification, vocabulaire précis." aria-describedby="answerCount">' + esc(s.reponses[i] || '') + '</textarea>' +
       '<div class="answer-meta"><span>Ne ferme pas la page avant la fin</span><span id="answerCount"></span></div>' +
@@ -399,6 +399,21 @@ ENTRAINEUR_JS = r'''<script>
       '<div class="actions" style="margin-top:12px"><button class="btn btn-ghost" type="button" data-act="back-form">Revenir au formulaire</button></div>';
     body.innerHTML = html;
     updateCount();
+    mountOutils();
+  }
+
+  // Outils de réponse (droite graduée, repère, tableau) : le résultat est ajouté à la réponse écrite
+  function mountOutils() {
+    var box = document.getElementById('outilsReponse');
+    var q = state.serie && state.serie.questions[state.index];
+    if (!box || !q || !q.outil || !window.OutilsReponse) return;
+    window.OutilsReponse.mount(box, q.outil, function (texte) {
+      var t = document.getElementById('answer');
+      if (!t) return;
+      t.value = t.value ? t.value.replace(/\s+$/, '') + '\n\n' + texte : texte;
+      keepAnswer(); updateCount();
+      t.focus();
+    });
   }
 
   function updateCount() {

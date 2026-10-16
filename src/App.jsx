@@ -5,6 +5,8 @@ import {
   ChevronUp, Trash2, X, AlertCircle, ChevronLeft, PenLine, AlignLeft, ListChecks,
   BarChart2, LogOut, User, Lightbulb, ClipboardList, HelpCircle, CheckCircle2, Lock,
 } from 'lucide-react';
+// Outils de réponse (droite graduée, repère, tableau) partagés avec l'Entraîneur : définit window.OutilsReponse
+import '../landing/outils-reponse.js';
 
 // ---------------------------------------------------------------------------
 // System prompts
@@ -723,7 +725,7 @@ async function fetchExercicesMaths(thematique, classe) {
     const params = new URLSearchParams({
       thematique: `eq.${thematique}`,
       classe:     `eq.${classe}`,
-      select:     'id,objectif_id,objectif_apprentissage,thematique,sous_categorie,classe,enonce,question,reponse_ideale,figure_path,figure_svg,figure_masquee,synthese_cours,definition_mots_cles',
+      select:     'id,objectif_id,objectif_apprentissage,thematique,sous_categorie,classe,enonce,question,reponse_ideale,figure_path,figure_svg,figure_masquee,outil_reponse,synthese_cours,definition_mots_cles',
       order:      'id.asc',
     });
     const res = await fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?${params}`, {
@@ -3595,6 +3597,22 @@ function AnswerTable({ rows, onInsert, title = 'Complétez le tableau' }) {
 const EXERCISE_ANSWER_TABLES = {};
 
 // ---------------------------------------------------------------------------
+// OutilsReponse — outils de réponse configurés en base (exercices_maths.outil_reponse) :
+// droite graduée, repère, tableau. « Insérer dans ma réponse » ajoute le résultat au champ texte.
+// ---------------------------------------------------------------------------
+function OutilsReponse({ outils, onInsert }) {
+  const ref = useRef(null);
+  const insertRef = useRef(onInsert);
+  insertRef.current = onInsert;
+  useEffect(() => {
+    if (!ref.current || !window.OutilsReponse) return undefined;
+    const instance = window.OutilsReponse.mount(ref.current, outils, (text) => insertRef.current(text));
+    return () => instance.destroy();
+  }, [outils]);
+  return <div ref={ref} className="max-h-[55vh] overflow-y-auto" />;
+}
+
+// ---------------------------------------------------------------------------
 // MathBanqueView — math exercise bank with 5-thematic menu
 // ---------------------------------------------------------------------------
 function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
@@ -4090,6 +4108,13 @@ ${tentative === 1
       <div className="px-3 pt-2 border-t border-gray-100 bg-white flex-shrink-0" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 96px)' }}>
         {!inputDisabled && ex?.id === 11 && (
           <NumberLineAnswer onInsert={(text) => setInput(prev => (prev ? `${prev}\n\n${text}` : text))} />
+        )}
+        {!inputDisabled && Array.isArray(ex?.outil_reponse) && ex.outil_reponse.length > 0 && (
+          <OutilsReponse
+            key={ex.id}
+            outils={ex.outil_reponse}
+            onInsert={(text) => setInput(prev => (prev ? `${prev}\n\n${text}` : text))}
+          />
         )}
         {!inputDisabled && EXERCISE_ANSWER_TABLES[ex?.id] && (
           <AnswerTable
