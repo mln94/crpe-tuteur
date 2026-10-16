@@ -553,6 +553,30 @@ async function logConsommation({ meta, model, usage, dureeMs, success }) {
 
 const CHAT_MODEL = 'claude-sonnet-4-6';
 
+/* ── Quiz CRPE : questions servies sans la réponse, correction question par question ── */
+const QUIZ_MATIERES = ['francais', 'mathematiques', 'histoire_geographie', 'emc', 'sciences_technologie', 'arts', 'anglais'];
+const melanger = a => { const t = [...a]; for (let i = t.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [t[i], t[j]] = [t[j], t[i]]; } return t; };
+
+app.get('/api/quiz/questions', async (req, res) => {
+  const matiere = String(req.query.matiere || '');
+  if (!QUIZ_MATIERES.includes(matiere)) return res.status(400).json({ error: 'Matière inconnue.' });
+  const { data, error } = await supabaseAdmin.from('quiz_questions')
+    .select('id, question, choix').eq('matiere', matiere).eq('actif', true);
+  if (error) { console.error('[quiz/questions]', error.message); return res.status(500).json({ error: 'Le quiz n\'a pas pu être chargé.' }); }
+  // Questions et choix dans un ordre aléatoire à chaque série
+  res.json({ questions: melanger(data).map(q => ({ id: q.id, question: q.question, choix: melanger(q.choix) })) });
+});
+
+app.post('/api/quiz/reponse', async (req, res) => {
+  const id = Number(req.body?.id);
+  const choix = String(req.body?.choix ?? '');
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Question inconnue.' });
+  const { data, error } = await supabaseAdmin.from('quiz_questions')
+    .select('reponse, explication').eq('id', id).eq('actif', true).maybeSingle();
+  if (error || !data) return res.status(404).json({ error: 'Question inconnue.' });
+  res.json({ correct: choix === data.reponse, reponse: data.reponse, explication: data.explication });
+});
+
 app.post('/api/chat', async (req, res) => {
   // Réservé aux candidats connectés : sans ça, n'importe qui pourrait utiliser la clé Anthropic
   const user = await getAuthenticatedUser(req);
