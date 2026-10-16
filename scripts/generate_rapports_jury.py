@@ -7,6 +7,7 @@ Usage   : python3 scripts/generate_rapports_jury.py
 """
 import json
 import os
+import unicodedata
 from html import escape
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -14,7 +15,7 @@ TEMPLATE = os.path.join(ROOT, 'landing', 'crpe-bac3-structure-premiere-epreuve-a
 SITE = 'https://www.passcrpe.fr'
 SLUG = 'rapports-jury-crpe'
 
-# (académie, concours, lien officiel). Les liens « /download » ou « .pdf » mènent au PDF, les autres à une page.
+# (académie, concours, lien officiel ; None = pas de rapport en ligne). Les liens « /download » ou « .pdf » mènent au PDF, les autres à une page.
 SESSIONS = [
     ('2026', [
         ('Bordeaux', 'Bac+5', 'https://www.ac-bordeaux.fr/media/81835/download'),
@@ -32,6 +33,12 @@ SESSIONS = [
         ('Nantes', 'Bac+5', 'https://www.ac-nantes.fr/media/44054/download'),
         ('Nantes', 'Bac+3', 'https://www.ac-nantes.fr/media/44055/download'),
         ('Versailles', 'Bac+3', 'https://siec.education.fr/candidats/docutheque/concours/50/crpe-licence3-rapport-du-jury-academie-de-versailles-session-2026'),
+        ('Guadeloupe', 'Pas de rapport en ligne', None),
+        ('La Réunion', 'Pas de rapport en ligne', None),
+        ('Mayotte', 'Pas de rapport en ligne', None),
+        ('Nancy-Metz', 'Pas de rapport en ligne', None),
+        ('Poitiers', 'Pas de rapport en ligne', None),
+        ('Strasbourg', 'Pas de rapport en ligne', None),
     ]),
     ('2025', [
         ('Aix-Marseille', 'Rapport de la session', 'https://www.ac-aix-marseille.fr/media/39070/download'),
@@ -59,6 +66,12 @@ SESSIONS = [
         ('Toulouse', 'Rapport de la session', 'https://www.ac-toulouse.fr/media/82774/download'),
         ('Versailles', 'Premier concours interne', 'https://siec.education.fr/candidats/docutheque/concours/50/rapport-de-jury-1er-interne-academie-de-versailles-session-2025'),
         ('Versailles', 'Concours interne exceptionnel', 'https://siec.education.fr/candidats/docutheque/concours/50/rapport-de-jury-crpe-interne-exceptionnelle-academie-de-versailles-session-2025'),
+        ('Guadeloupe', 'Pas de rapport en ligne', None),
+        ('La Réunion', 'Pas de rapport en ligne', None),
+        ('Mayotte', 'Pas de rapport en ligne', None),
+        ('Nancy-Metz', 'Pas de rapport en ligne', None),
+        ('Poitiers', 'Pas de rapport en ligne', None),
+        ('Strasbourg', 'Pas de rapport en ligne', None),
     ]),
 ]
 
@@ -101,6 +114,9 @@ CSS = """
     .dl-link { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; padding: 6px 12px; border-radius: 8px; background: var(--indigo-50); color: var(--indigo-700) !important; text-decoration: none; }
     .dl-link:hover { background: var(--indigo-100); }
     .dl-link svg { width: 14px; height: 14px; }
+    .reports tr.na td { color: var(--gray-500); }
+    .reports tr.na td.ac { color: var(--gray-700); }
+    .na-label { display: inline-block; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 8px; background: var(--gray-100); color: var(--gray-500); }
     .callout { background: var(--indigo-50); border: 1px solid var(--indigo-100); border-radius: 14px; padding: 18px 20px; margin: 22px 0; font-size: 15px; }
     .callout p:last-child { margin-bottom: 0; }
     .page-cta { margin-top: 48px; background: linear-gradient(135deg, var(--indigo-600) 0%, #818cf8 100%); border-radius: 20px; padding: 32px; text-align: center; color: #fff; }
@@ -120,9 +136,19 @@ ICON_DL = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-wid
 ICON_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>'
 
 
+def cle(ac):
+    return unicodedata.normalize('NFD', ac).encode('ascii', 'ignore').decode().lower()
+
+
 def table(rows, annee):
     out = []
-    for ac, concours, url in rows:
+    for ac, concours, url in sorted(rows, key=lambda r: cle(r[0])):
+        if url is None:
+            out.append(
+                f'      <tr class="na"><td class="ac">{escape(ac)}<small>{escape(concours)}</small></td>'
+                f'<td class="col-concours">{escape(concours)}</td>'
+                f'<td class="dl"><span class="na-label">Non disponible</span></td></tr>')
+            continue
         pdf = '/download' in url or url.lower().endswith('.pdf')
         label = 'Télécharger' if pdf else 'Consulter'
         titre = f'Rapport de jury CRPE {annee}, académie de {ac}, {concours.lower()}'
@@ -153,7 +179,9 @@ def page(annee, rows):
     ld = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
         {'@type': 'ListItem', 'position': 1, 'name': 'Accueil', 'item': SITE + '/'},
         {'@type': 'ListItem', 'position': 2, 'name': f'Rapports de jury CRPE {annee}', 'item': url}]}
-    nb = len({r[0] for r in rows})
+    dispo = [r for r in rows if r[2]]
+    nb = len({r[0] for r in dispo})
+    manquants = len({r[0] for r in rows if not r[2]})
     lien = 'style="font-weight:600;" target="_blank" rel="noopener"'
     body = f'''<main class="page-wrap">
   <nav class="breadcrumb" aria-label="Fil d'Ariane">
@@ -167,10 +195,10 @@ def page(annee, rows):
   </div>
 
   <h2>Rapports de jury CRPE {annee}</h2>
-  <p class="session-count">{len(rows)} rapports, {nb} académies</p>
+  <p class="session-count">{len(dispo)} rapports, {nb} académies · {manquants} académies sans rapport en ligne pour l'instant</p>
 {table(rows, annee)}
 
-  <p style="margin-top:28px;font-size:14px;color:var(--gray-500);">Les liens mènent aux sites officiels des académies et du ministère : « Télécharger » ouvre directement le PDF, « Consulter » ouvre la page de l'académie où se trouve le rapport. D'autres rapports sont aussi rassemblés sur <a href="https://www.devenirenseignant.gouv.fr/les-sujets-des-epreuves-ecrites-et-rapports-des-jurys-des-concours-de-recrutement-de-professeurs-des-1163" target="_blank" rel="noopener">devenirenseignant.gouv.fr</a>.</p>
+  <p style="margin-top:28px;font-size:14px;color:var(--gray-500);">Les liens mènent aux sites officiels des académies et du ministère : « Télécharger » ouvre directement le PDF, « Consulter » ouvre la page de l'académie où se trouve le rapport. « Non disponible » signifie qu'aucun rapport n'est publié en ligne pour l'instant : la liste sera complétée dès sa parution. D'autres rapports sont aussi rassemblés sur <a href="https://www.devenirenseignant.gouv.fr/les-sujets-des-epreuves-ecrites-et-rapports-des-jurys-des-concours-de-recrutement-de-professeurs-des-1163" target="_blank" rel="noopener">devenirenseignant.gouv.fr</a>.</p>
 
   <div class="page-cta">
     <h2>Entraînez-vous comme le jury l'attend</h2>
