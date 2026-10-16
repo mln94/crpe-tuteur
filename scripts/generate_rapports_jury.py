@@ -15,7 +15,8 @@ TEMPLATE = os.path.join(ROOT, 'landing', 'crpe-bac3-structure-premiere-epreuve-a
 SITE = 'https://www.passcrpe.fr'
 SLUG = 'rapports-jury-crpe'
 
-# (académie, concours, lien officiel ; None = pas de rapport en ligne). Les liens « /download » ou « .pdf » mènent au PDF, les autres à une page.
+# (académie, concours, lien officiel). Les académies absentes d'une session (liste : scripts/academies-data.json)
+# y sont ajoutées en « Non disponible ». Les liens « /download » ou « .pdf » mènent au PDF, les autres à une page.
 SESSIONS = [
     ('2026', [
         ('Bordeaux', 'Bac+5', 'https://www.ac-bordeaux.fr/media/81835/download'),
@@ -33,12 +34,6 @@ SESSIONS = [
         ('Nantes', 'Bac+5', 'https://www.ac-nantes.fr/media/44054/download'),
         ('Nantes', 'Bac+3', 'https://www.ac-nantes.fr/media/44055/download'),
         ('Versailles', 'Bac+3', 'https://siec.education.fr/candidats/docutheque/concours/50/crpe-licence3-rapport-du-jury-academie-de-versailles-session-2026'),
-        ('Guadeloupe', 'Pas de rapport en ligne', None),
-        ('La Réunion', 'Pas de rapport en ligne', None),
-        ('Mayotte', 'Pas de rapport en ligne', None),
-        ('Nancy-Metz', 'Pas de rapport en ligne', None),
-        ('Poitiers', 'Pas de rapport en ligne', None),
-        ('Strasbourg', 'Pas de rapport en ligne', None),
     ]),
     ('2025', [
         ('Aix-Marseille', 'Rapport de la session', 'https://www.ac-aix-marseille.fr/media/39070/download'),
@@ -66,12 +61,6 @@ SESSIONS = [
         ('Toulouse', 'Rapport de la session', 'https://www.ac-toulouse.fr/media/82774/download'),
         ('Versailles', 'Premier concours interne', 'https://siec.education.fr/candidats/docutheque/concours/50/rapport-de-jury-1er-interne-academie-de-versailles-session-2025'),
         ('Versailles', 'Concours interne exceptionnel', 'https://siec.education.fr/candidats/docutheque/concours/50/rapport-de-jury-crpe-interne-exceptionnelle-academie-de-versailles-session-2025'),
-        ('Guadeloupe', 'Pas de rapport en ligne', None),
-        ('La Réunion', 'Pas de rapport en ligne', None),
-        ('Mayotte', 'Pas de rapport en ligne', None),
-        ('Nancy-Metz', 'Pas de rapport en ligne', None),
-        ('Poitiers', 'Pas de rapport en ligne', None),
-        ('Strasbourg', 'Pas de rapport en ligne', None),
     ]),
 ]
 
@@ -220,7 +209,11 @@ def page(annee, rows):
     return head + BODY_NAV + body + TAIL
 
 
+ACADEMIES = [a['nom'] for a in json.load(open(os.path.join(ROOT, 'scripts', 'academies-data.json'), encoding='utf-8'))['academies']]
+
 for annee, rows in SESSIONS:
+    presentes = {r[0] for r in rows}
+    rows = rows + [(nom, 'Pas de rapport en ligne', None) for nom in ACADEMIES if nom not in presentes]
     out = f'landing/{SLUG}-{annee}.html'
     open(os.path.join(ROOT, out), 'w', encoding='utf-8').write(page(annee, rows))
     print(out)
