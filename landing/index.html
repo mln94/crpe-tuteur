@@ -489,6 +489,20 @@
     .offre-cta .btn-primary, .offre-cta .btn-secondary { width: 100%; justify-content: center; text-align: center; }
     .offre-note { font-size: 12px; color: var(--gray-500); text-align: center; margin-top: 10px; }
     .offres-compare { margin-top: 28px; text-align: center; font-size: 15px; color: var(--gray-600); }
+    .offre-pack { margin-top: 24px; border-radius: 22px; padding: 30px 32px; background: linear-gradient(135deg, #312e81, #4f46e5 55%, #7c3aed); color: #fff; display: grid; grid-template-columns: 1.4fr 1fr; gap: 28px; align-items: center; box-shadow: 0 16px 48px rgba(79,70,229,.25); }
+    .offre-pack .offre-badge { display: inline-block; background: #fbbf24; color: #451a03; }
+    .offre-pack h3 { font-size: 24px; font-weight: 900; color: #fff; margin-bottom: 8px; }
+    .offre-pack p { font-size: 14.5px; line-height: 1.6; color: rgba(255,255,255,.85); margin-bottom: 14px; }
+    .offre-pack .offre-list li { color: #fff; }
+    .offre-pack .offre-list li::before { background: rgba(255,255,255,.18); color: #fff; }
+    .pack-price { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 18px; padding: 22px; text-align: center; }
+    .pack-price .old { font-size: 15px; color: rgba(255,255,255,.7); text-decoration: line-through; }
+    .pack-price strong { display: block; font-size: 44px; font-weight: 900; letter-spacing: -1px; line-height: 1.1; margin: 4px 0; }
+    .pack-price .ttc { font-size: 13px; color: rgba(255,255,255,.8); }
+    .pack-save { display: inline-block; margin: 10px 0 16px; font-size: 12px; font-weight: 800; padding: 5px 12px; border-radius: 100px; background: #fbbf24; color: #451a03; }
+    .pack-price .btn-white { width: 100%; justify-content: center; }
+    .pack-price .offre-note { color: rgba(255,255,255,.75); }
+    @media (max-width: 900px) { .offre-pack { grid-template-columns: 1fr; padding: 26px 22px; } }
 
     /* ── TESTIMONIALS ── */
     .testimonials { background: var(--gray-50); }
@@ -1265,7 +1279,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
         <p class="offre-desc">Un quiz pour tester vos connaissances en quelques minutes et repérer, discipline par discipline, les notions à retravailler avant le concours.</p>
-        <div class="offre-price"><strong>39,99 €</strong></div>
+        <div class="offre-price"><strong>49,99 €</strong><span>TTC</span></div>
         <ul class="offre-list">
           <li>Près de 300 questions par discipline</li>
           <li>Cinq disciplines du concours réunies dans un seul outil</li>
@@ -1286,6 +1300,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </div>
 
+    </div>
+
+    <div class="offre-pack fade-up">
+      <div>
+        <span class="offre-badge">Le plus complet</span>
+        <h3>Pack Tuteur IA + Quiz CRPE</h3>
+        <p>Les deux outils réunis : le tuteur IA pour apprendre à rédiger et progresser, le quiz pour réviser vite toutes les disciplines.</p>
+        <ul class="offre-list">
+          <li>1 an d'accès au tuteur IA, avec ses exercices corrigés en mathématiques et en français</li>
+          <li>Le quiz complet : près de 300 questions dans chacune des cinq disciplines</li>
+          <li>Une préparation complète, de l'entraînement à la rédaction aux révisions rapides</li>
+        </ul>
+      </div>
+      <div class="pack-price">
+        <div class="old">408,99 € TTC</div>
+        <strong>399 €</strong>
+        <div class="ttc">TTC, les deux offres réunies</div>
+        <span class="pack-save">9,99 € d'économie</span>
+        <a href="#newsletter" class="btn-white">Être prévenu du lancement du pack</a>
+        <p class="offre-note">Disponible à la sortie du quiz.</p>
+      </div>
     </div>
   </div>
 </section>
