@@ -48,9 +48,24 @@ MASTER_NAT = data['master_national']
 TAUX_MASTER_NATIONAL = MASTER_NAT['admis'] / MASTER_NAT['presents']
 MASTERS = [a for a in ACADS if a.get('master')]
 for a in MASTERS:
-    a['master']['taux'] = a['master']['admis'] / a['master']['presents']
-_vals_master = sorted((a['master']['taux'] for a in MASTERS), reverse=True)
-RANK_MASTER = {a['slug']: _vals_master.index(a['master']['taux']) + 1 for a in MASTERS}
+    m = a['master']
+    m['taux'] = m['admis'] / m['presents']
+    m['tauxAdmissibilite'] = m['admissibles'] / m['presents']
+    m['presentsParPoste'] = m['presents'] / m['postes']
+TAUX_ADMISSIBILITE_MASTER_NATIONAL = MASTER_NAT['admissibles'] / MASTER_NAT['presents']
+
+def ranks_master(key):
+    """Rang parmi les académies du concours bac+5 (1 = valeur la plus haute), ex aequo autorisés."""
+    vals = sorted((a['master'][key] for a in MASTERS), reverse=True)
+    return {a['slug']: vals.index(a['master'][key]) + 1 for a in MASTERS}
+
+RANK_MASTER = ranks_master('taux')
+RANK_MASTER_POSTES = ranks_master('postes')
+RANK_MASTER_ADMISSIBILITE = ranks_master('tauxAdmissibilite')
+SELECTIVITE_MASTER = {}
+for i, a in enumerate(sorted(MASTERS, key=lambda x: x['master']['taux'])):
+    p = i / (len(MASTERS) - 1)
+    SELECTIVITE_MASTER[a['slug']] = 'tres' if p <= 0.25 else ('peu' if p >= 0.75 else 'moyen')
 
 TOT = {k: sum(a[k] for a in ACADS) for k in ('postes', 'inscrits', 'presents', 'admissibles', 'admis', 'inscritsLC')}
 TAUX_NATIONAL = TOT['admis'] / TOT['presents']
@@ -118,6 +133,8 @@ CSS = """
     .kpi-cap { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--indigo-600); margin: 24px 0 -14px; }
     .kpi-cap + .kpis { margin-top: 18px; }
     .kpi-master { background: #f0fdf4; border-color: #bbf7d0; }
+    .funnel-bar.funnel-bar-master { background: #10b981; }
+    .funnel-row.light .funnel-bar.funnel-bar-master { background: #6ee7b7; }
     .kpi-master .kpi-value { color: #047857; }
     .kpi-accent .kpi-value { color: var(--indigo-700); }
 
@@ -359,6 +376,7 @@ def page_academie(a):
   <div class="callout">Avec un taux de réussite de <strong>{fpct(a['taux'])}</strong>, l'académie {escape(de(nom))} fait partie des académies <strong>{SEL_LABEL[sel].lower()}s</strong> du CRPE.</div>
   {METHODE}
 
+{master_details(a)}
   <h2>Situer l'académie {escape(de(nom))} sur la carte</h2>
   {carte(a)}
 
@@ -401,6 +419,45 @@ def master_html(a):
     <div class="kpi"><span class="kpi-value">{fint(m['inscritsLC'])}</span><span class="kpi-label">inscrits sur liste complémentaire</span></div>
   </section>
   <p>Au concours bac+5, ouvert aux titulaires d'un master 2, l'académie {escape(de(nom))} a admis <strong>{fint(m['admis'])} candidats</strong> sur {fint(m['presents'])} présents, soit un taux de réussite de <strong>{fpct(m['taux'])}</strong>, {compare} à la moyenne nationale du concours bac+5 ({fpct(TAUX_MASTER_NATIONAL)}). Elle se classe <strong>{rang(RANK_MASTER[a['slug']])} sur {len(MASTERS)}</strong> académies pour ce taux.{vacants}</p>
+'''
+
+def master_details(a):
+    """Sections détaillées du concours bac+5 (master 2) : entonnoir, classements et sélectivité."""
+    m = a.get('master')
+    if not m:
+        return ''
+    nom, s, nm = a['nom'], a['slug'], len(MASTERS)
+    sel = SELECTIVITE_MASTER[s]
+    remarques = []
+    if m['admis'] < m['postes']:
+        remarques.append(f"<li><strong>Tous les postes n'ont pas été pourvus :</strong> {fint(m['admis'])} admis pour {fint(m['postes'])} postes offerts, soit {fint(m['postes'] - m['admis'])} postes restés vacants.</li>")
+    if m['inscritsLC'] > 0:
+        remarques.append(f"<li><strong>Liste complémentaire :</strong> {fint(m['inscritsLC'])} candidat{'s' if m['inscritsLC'] > 1 else ''} {'ont été inscrits' if m['inscritsLC'] > 1 else 'a été inscrit'} sur la liste complémentaire. Ces candidats peuvent être appelés si des admis renoncent à leur poste.</li>")
+    else:
+        remarques.append("<li><strong>Liste complémentaire :</strong> aucun candidat n'a été inscrit sur la liste complémentaire.</li>")
+    funnel = ''.join(
+        f'<div class="funnel-row{" light" if i < 2 else ""}"><span class="funnel-label">{lab}</span><div class="funnel-track"><div class="funnel-bar funnel-bar-master" style="width:{max(v / m["inscrits"] * 100, 1):.1f}%"></div><span class="funnel-val">{fint(v)}</span></div></div>'
+        for i, (lab, v) in enumerate([('Inscrits', m['inscrits']), ('Présents', m['presents']), ('Admissibles', m['admissibles']), ('Admis', m['admis'])]))
+    return f'''
+  <h2>Inscrits, résultats d'admissibilité et admis au CRPE (bac+5, master 2)</h2>
+  <p>Au concours bac+5 de l'académie {escape(de(nom))}, <strong>{fpct(m['presents'] / m['inscrits'])}</strong> des inscrits étaient présents aux épreuves écrites. Parmi les présents, <strong>{fpct(m['tauxAdmissibilite'])}</strong> ont été admissibles (moyenne nationale : {fpct(TAUX_ADMISSIBILITE_MASTER_NATIONAL)}), et {fpct(m['taux'])} ont finalement été admis.</p>
+  <div class="funnel">{funnel}</div>
+  <ul>
+    <li><strong>Candidats présents par poste :</strong> {fdec(m['presentsParPoste'])} présents pour 1 poste.</li>
+    {''.join(remarques)}
+  </ul>
+
+  <h2>Taux de réussite CRPE (bac+5) : les classements de l'académie {escape(de(nom))}</h2>
+  <p>Comment l'académie {escape(de(nom))} se situe-t-elle par rapport aux {nm - 1} autres académies au concours bac+5 ?</p>
+  <div class="rank-grid">
+    <div class="card"><h3>Nombre de postes</h3><div class="rank-big">{rang(RANK_MASTER_POSTES[s])} <small>sur {nm}</small></div><p>{fint(m['postes'])} postes offerts.</p></div>
+    <div class="card"><h3>Taux d'admissibilité</h3><div class="rank-big">{rang(RANK_MASTER_ADMISSIBILITE[s])} <small>sur {nm}</small></div><p>{fpct(m['tauxAdmissibilite'])} des présents admissibles.</p></div>
+    <div class="card"><h3>Taux de réussite</h3><div class="rank-big">{rang(RANK_MASTER[s])} <small>sur {nm}</small></div><p>{fpct(m['taux'])} des présents admis.</p></div>
+  </div>
+  <p style="font-size:14px;color:var(--gray-500);margin-top:10px;">1re = le plus de postes, ou le taux le plus élevé. Classement sur les {nm} académies qui publient leurs résultats bac+5.</p>
+
+  <h2>Sélectivité au concours bac+5 : {SEL_LABEL[sel].lower()}</h2>
+  <div class="callout">Avec un taux de réussite de <strong>{fpct(m['taux'])}</strong> au concours bac+5, l'académie {escape(de(nom))} fait partie des académies <strong>{SEL_LABEL[sel].lower()}s</strong> pour ce concours. La méthode est la même que pour le concours bac+3, appliquée aux {nm} académies du concours bac+5.</div>
 '''
 
 # ── Page hub ─────────────────────────────────────────────────────────────────
@@ -548,7 +605,7 @@ def page_hub():
       </a>
       <a href="/blog/salaire-professeur-des-ecoles-remuneration" target="_blank" rel="noopener" class="related-card">
         <span class="related-tag">Rémunération</span>
-        <h4>Combien peut réellement toucher un professeur des écoles en début de carrière ?</h4>
+        <h4>Salaire d'un professeur des écoles en début de carrière : combien peut-on réellement toucher ?</h4>
         <p>Grades, primes REP et REP+, pacte enseignant : le salaire net d'un débutant, tableau à l'appui.</p>
         <span class="related-cta">Lire l'article →</span>
       </a>
