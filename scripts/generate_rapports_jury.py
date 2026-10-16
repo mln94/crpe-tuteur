@@ -14,7 +14,7 @@ TEMPLATE = os.path.join(ROOT, 'landing', 'crpe-bac3-structure-premiere-epreuve-a
 SITE = 'https://www.passcrpe.fr'
 SLUG = 'rapports-jury-crpe'
 
-# (académie, concours, lien officiel). Les liens « docutheque » mènent à une page, les autres au PDF.
+# (académie, concours, lien officiel). Les liens « /download » ou « .pdf » mènent au PDF, les autres à une page.
 SESSIONS = [
     ('2026', [
         ('Bordeaux', 'Bac+5', 'https://www.ac-bordeaux.fr/media/81835/download'),
@@ -36,6 +36,7 @@ SESSIONS = [
     ('2025', [
         ('Aix-Marseille', 'Rapport de la session', 'https://www.ac-aix-marseille.fr/media/39070/download'),
         ('Amiens', 'Rapport de la session', 'https://www.ac-amiens.fr/media/21609/download'),
+        ('Besançon', 'Rapport de la session', 'https://cloud-aca.ac-besancon.fr/public.php/dav/files/5RrMspZcfNmpocY/RAPPORTS%20DE%20JURY/Rapport%20du%20jury%20-%20Session%202025.pdf'),
         ('Bordeaux', 'Rapport de la session', 'https://www.ac-bordeaux.fr/media/74034/download'),
         ('Clermont-Ferrand', 'Rapport de la session', 'https://www.ac-clermont.fr/media/54624/download'),
         ('Corse', 'Rapport de la session', 'https://www.ac-corse.fr/media/27828/download'),
@@ -121,7 +122,7 @@ ICON_OPEN = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-w
 def table(rows, annee):
     out = []
     for ac, concours, url in rows:
-        pdf = '/download' in url
+        pdf = '/download' in url or url.lower().endswith('.pdf')
         label = 'Télécharger' if pdf else 'Consulter'
         titre = f'Rapport de jury CRPE {annee}, académie de {ac}, {concours.lower()}'
         out.append(
