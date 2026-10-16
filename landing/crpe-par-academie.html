@@ -233,6 +233,10 @@
     .kpi-value { font-size: 22px; font-weight: 900; color: var(--gray-900); font-variant-numeric: tabular-nums; letter-spacing: -.4px; }
     .kpi-label { font-size: 12px; color: var(--gray-500); line-height: 1.35; }
     .kpi-accent { background: var(--indigo-50); border-color: var(--indigo-100); }
+    .kpi-cap { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--indigo-600); margin: 24px 0 -14px; }
+    .kpi-cap + .kpis { margin-top: 18px; }
+    .kpi-master { background: #f0fdf4; border-color: #bbf7d0; }
+    .kpi-master .kpi-value { color: #047857; }
     .kpi-accent .kpi-value { color: var(--indigo-700); }
 
     .sel { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
@@ -422,9 +426,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </nav>
 
   <h1>Résultats du CRPE 2026 par académie : inscrits, admis et taux de réussite</h1>
-  <p class="lead">On ne passe pas le concours du CRPE « en France », mais dans <strong>une académie</strong>. C'est elle qui organise le concours et, si vous êtes reçu, vous affecte dans l'une de ses écoles. Choisir son académie, c'est donc choisir à la fois ses chances de réussite et l'endroit où l'on va enseigner. Voici les résultats du CRPE 2026 académie par académie : inscrits, résultats d'admissibilité, admis et taux de réussite. <strong>Cliquez sur une académie de la carte</strong> pour découvrir ses résultats détaillés.</p>
+  <p class="lead">On ne passe pas le concours du CRPE « en France », mais dans <strong>une académie</strong>. C'est elle qui organise le concours et, si vous êtes reçu, vous affecte dans l'une de ses écoles. Choisir son académie, c'est donc choisir à la fois ses chances de réussite et l'endroit où l'on va enseigner. Voici les résultats du CRPE 2026 académie par académie, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2). Inscrits, résultats d'admissibilité, admis et taux de réussite. <strong>Cliquez sur une académie de la carte</strong> pour découvrir ses résultats détaillés.</p>
 
-  <section class="kpis" aria-label="Chiffres nationaux">
+  <p class="kpi-cap">Concours externe bac+3</p>
+  <section class="kpis" aria-label="Chiffres nationaux du concours bac+3">
     <div class="kpi"><span class="kpi-value">4 873</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">49 059</span><span class="kpi-label">inscrits</span></div>
     <div class="kpi"><span class="kpi-value">27 109</span><span class="kpi-label">présents</span></div>
@@ -434,8 +439,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="kpi kpi-accent"><span class="kpi-value">17,57 %</span><span class="kpi-label">taux de réussite national (admis / présents)</span></div>
   </section>
 
+  <p class="kpi-cap">Concours externe bac+5 (master 2)</p>
+  <section class="kpis" aria-label="Chiffres nationaux du concours bac+5">
+    <div class="kpi"><span class="kpi-value">6 466</span><span class="kpi-label">postes offerts</span></div>
+    <div class="kpi"><span class="kpi-value">37 883</span><span class="kpi-label">inscrits</span></div>
+    <div class="kpi"><span class="kpi-value">18 436</span><span class="kpi-label">présents aux épreuves écrites</span></div>
+    <div class="kpi"><span class="kpi-value">10 938</span><span class="kpi-label">candidats admissibles</span></div>
+    <div class="kpi"><span class="kpi-value">6 491</span><span class="kpi-label">admis</span></div>
+    <div class="kpi"><span class="kpi-value">288</span><span class="kpi-label">candidats inscrits sur liste complémentaire</span></div>
+    <div class="kpi kpi-master"><span class="kpi-value">35,21 %</span><span class="kpi-label">taux de réussite national (admis / présents)</span></div>
+  </section>
+
   <h2>La carte des académies CRPE</h2>
-  <p>Chaque repère représente une académie, coloré selon sa sélectivité. Cliquez dessus pour ouvrir la page de l'académie.</p>
+  <p>Chaque repère représente une académie, coloré selon sa sélectivité au concours bac+3. Cliquez dessus pour ouvrir la page de l'académie.</p>
   <div class="map-card">
     <svg class="fr-map" viewBox="0 0 615 605" role="img" aria-label="Carte de France des académies du CRPE">
       <path class="land" d="M308.1,35.2 L315.0,33.0 L340.1,52.0 L376.7,77.2 L401.8,85.6 L403.7,105.2 L424.9,116.4 L444.2,122.0 L462.3,123.7 L486.6,141.6 L509.7,147.2 L532.8,151.7 L517.4,178.0 L507.8,228.4 L484.6,236.8 L465.4,264.8 L451.9,295.6 L478.9,295.6 L486.6,323.6 L478.9,334.8 L490.4,362.8 L473.1,374.0 L484.6,407.6 L505.8,424.4 L507.0,442.3 L497.0,446.8 L471.2,474.8 L444.2,480.4 L423.0,469.2 L401.8,463.6 L382.5,458.0 L355.5,469.2 L336.2,486.0 L338.9,517.4 L317.0,522.4 L282.3,514.0 L243.7,497.2 L205.2,497.2 L162.8,472.0 L148.1,465.3 L160.8,452.4 L168.6,402.0 L172.4,346.0 L170.5,329.2 L155.1,295.6 L135.8,273.2 L120.4,245.2 L101.1,234.0 L54.8,217.2 L35.6,206.0 L33.6,183.6 L51.0,169.6 L81.8,161.2 L108.8,175.2 L139.6,169.6 L158.9,170.2 L155.1,138.8 L145.4,110.8 L168.6,110.8 L172.4,130.4 L209.0,133.2 L224.4,124.8 L220.6,122.0 L239.9,102.4 L270.7,88.4 L278.4,71.6 L278.4,43.6 Z"/><path class="land" d="M579.1,486.0 L584.9,508.4 L582.9,542.0 L579.1,564.4 L571.4,577.3 L556.0,567.2 L548.3,547.6 L548.3,525.2 L552.1,508.4 L575.2,502.8 Z"/>
@@ -445,10 +461,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="legend"><span><span class="dot dot-tres"></span>Très sélective</span><span><span class="dot dot-moyen"></span>Moyennement sélective</span><span><span class="dot dot-peu"></span>Peu sélective</span></div>
   </div>
 
-  <h2>Résultats CRPE 2026 : le tableau comparatif des 30 académies</h2>
+  <h2>Résultats CRPE 2026 bac+3 : le tableau comparatif des 30 académies</h2>
   <p>Cliquez sur un en-tête de colonne pour trier le tableau, et sur le nom d'une académie pour voir sa page.</p>
   <div class="table-wrap">
-    <table id="acadTable">
+    <table id="acadTable" class="sortable">
       <thead>
         <tr>
           <th><button type="button" data-col="0" data-type="text">Académie</button></th>
@@ -766,6 +782,317 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </table>
   </div>
 
+  <h2>Résultats CRPE 2026 bac+5 (master 2) : le tableau comparatif des académies</h2>
+  <p>Le concours bac+5 est ouvert aux titulaires d'un master 2. Au niveau national, <strong>6 491 candidats</strong> ont été admis sur 18 436 présents aux épreuves écrites, soit <strong>35,21 %</strong>. Les résultats ne sont pas publiés pour Mayotte.</p>
+  <div class="table-wrap">
+    <table id="acadTableMaster" class="sortable">
+      <thead>
+        <tr>
+          <th><button type="button" data-col="0" data-type="text">Académie</button></th>
+          <th class="num"><button type="button" data-col="1">Postes</button></th>
+          <th class="num"><button type="button" data-col="2">Inscrits</button></th>
+          <th class="num"><button type="button" data-col="3">Présents</button></th>
+          <th class="num"><button type="button" data-col="4">Admissibles</button></th>
+          <th class="num"><button type="button" data-col="5">Admis</button></th>
+          <th class="num"><button type="button" data-col="6">Taux de réussite</button></th>
+          <th class="num"><button type="button" data-col="7">Liste compl.</button></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-v="Aix-Marseille"><a href="/crpe-par-academie/aix-marseille">Aix-Marseille</a></td>
+          <td class="num" data-v="363">363</td>
+          <td class="num" data-v="2215">2 215</td>
+          <td class="num" data-v="1049">1 049</td>
+          <td class="num" data-v="629">629</td>
+          <td class="num" data-v="363">363</td>
+          <td class="num" data-v="0.346044">34,60 %</td>
+          <td class="num" data-v="2">2</td>
+        </tr>
+        <tr>
+          <td data-v="Amiens"><a href="/crpe-par-academie/amiens">Amiens</a></td>
+          <td class="num" data-v="240">240</td>
+          <td class="num" data-v="906">906</td>
+          <td class="num" data-v="460">460</td>
+          <td class="num" data-v="327">327</td>
+          <td class="num" data-v="240">240</td>
+          <td class="num" data-v="0.521739">52,17 %</td>
+          <td class="num" data-v="14">14</td>
+        </tr>
+        <tr>
+          <td data-v="Besançon"><a href="/crpe-par-academie/besancon">Besançon</a></td>
+          <td class="num" data-v="139">139</td>
+          <td class="num" data-v="584">584</td>
+          <td class="num" data-v="319">319</td>
+          <td class="num" data-v="260">260</td>
+          <td class="num" data-v="141">141</td>
+          <td class="num" data-v="0.442006">44,20 %</td>
+          <td class="num" data-v="19">19</td>
+        </tr>
+        <tr>
+          <td data-v="Bordeaux"><a href="/crpe-par-academie/bordeaux">Bordeaux</a></td>
+          <td class="num" data-v="288">288</td>
+          <td class="num" data-v="2360">2 360</td>
+          <td class="num" data-v="1176">1 176</td>
+          <td class="num" data-v="520">520</td>
+          <td class="num" data-v="304">304</td>
+          <td class="num" data-v="0.258503">25,85 %</td>
+          <td class="num" data-v="28">28</td>
+        </tr>
+        <tr>
+          <td data-v="Clermont-Ferrand"><a href="/crpe-par-academie/clermont-ferrand">Clermont-Ferrand</a></td>
+          <td class="num" data-v="95">95</td>
+          <td class="num" data-v="742">742</td>
+          <td class="num" data-v="329">329</td>
+          <td class="num" data-v="204">204</td>
+          <td class="num" data-v="95">95</td>
+          <td class="num" data-v="0.288754">28,88 %</td>
+          <td class="num" data-v="4">4</td>
+        </tr>
+        <tr>
+          <td data-v="Corse"><a href="/crpe-par-academie/corse">Corse</a></td>
+          <td class="num" data-v="10">10</td>
+          <td class="num" data-v="229">229</td>
+          <td class="num" data-v="86">86</td>
+          <td class="num" data-v="34">34</td>
+          <td class="num" data-v="14">14</td>
+          <td class="num" data-v="0.162791">16,28 %</td>
+          <td class="num" data-v="4">4</td>
+        </tr>
+        <tr>
+          <td data-v="Créteil"><a href="/crpe-par-academie/creteil">Créteil</a></td>
+          <td class="num" data-v="570">570</td>
+          <td class="num" data-v="2019">2 019</td>
+          <td class="num" data-v="870">870</td>
+          <td class="num" data-v="774">774</td>
+          <td class="num" data-v="571">571</td>
+          <td class="num" data-v="0.656322">65,63 %</td>
+          <td class="num" data-v="10">10</td>
+        </tr>
+        <tr>
+          <td data-v="Dijon"><a href="/crpe-par-academie/dijon">Dijon</a></td>
+          <td class="num" data-v="162">162</td>
+          <td class="num" data-v="681">681</td>
+          <td class="num" data-v="327">327</td>
+          <td class="num" data-v="262">262</td>
+          <td class="num" data-v="162">162</td>
+          <td class="num" data-v="0.495413">49,54 %</td>
+          <td class="num" data-v="19">19</td>
+        </tr>
+        <tr>
+          <td data-v="Grenoble"><a href="/crpe-par-academie/grenoble">Grenoble</a></td>
+          <td class="num" data-v="403">403</td>
+          <td class="num" data-v="1694">1 694</td>
+          <td class="num" data-v="810">810</td>
+          <td class="num" data-v="605">605</td>
+          <td class="num" data-v="403">403</td>
+          <td class="num" data-v="0.497531">49,75 %</td>
+          <td class="num" data-v="59">59</td>
+        </tr>
+        <tr>
+          <td data-v="Guadeloupe"><a href="/crpe-par-academie/guadeloupe">Guadeloupe</a></td>
+          <td class="num" data-v="21">21</td>
+          <td class="num" data-v="330">330</td>
+          <td class="num" data-v="151">151</td>
+          <td class="num" data-v="65">65</td>
+          <td class="num" data-v="24">24</td>
+          <td class="num" data-v="0.158940">15,89 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Guyane"><a href="/crpe-par-academie/guyane">Guyane</a></td>
+          <td class="num" data-v="73">73</td>
+          <td class="num" data-v="291">291</td>
+          <td class="num" data-v="134">134</td>
+          <td class="num" data-v="47">47</td>
+          <td class="num" data-v="38">38</td>
+          <td class="num" data-v="0.283582">28,36 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="La Réunion"><a href="/crpe-par-academie/la-reunion">La Réunion</a></td>
+          <td class="num" data-v="81">81</td>
+          <td class="num" data-v="1498">1 498</td>
+          <td class="num" data-v="861">861</td>
+          <td class="num" data-v="273">273</td>
+          <td class="num" data-v="81">81</td>
+          <td class="num" data-v="0.094077">9,41 %</td>
+          <td class="num" data-v="4">4</td>
+        </tr>
+        <tr>
+          <td data-v="Lille"><a href="/crpe-par-academie/lille">Lille</a></td>
+          <td class="num" data-v="294">294</td>
+          <td class="num" data-v="2662">2 662</td>
+          <td class="num" data-v="1651">1 651</td>
+          <td class="num" data-v="587">587</td>
+          <td class="num" data-v="294">294</td>
+          <td class="num" data-v="0.178074">17,81 %</td>
+          <td class="num" data-v="21">21</td>
+        </tr>
+        <tr>
+          <td data-v="Limoges"><a href="/crpe-par-academie/limoges">Limoges</a></td>
+          <td class="num" data-v="59">59</td>
+          <td class="num" data-v="451">451</td>
+          <td class="num" data-v="215">215</td>
+          <td class="num" data-v="112">112</td>
+          <td class="num" data-v="60">60</td>
+          <td class="num" data-v="0.279070">27,91 %</td>
+          <td class="num" data-v="1">1</td>
+        </tr>
+        <tr>
+          <td data-v="Lyon"><a href="/crpe-par-academie/lyon">Lyon</a></td>
+          <td class="num" data-v="305">305</td>
+          <td class="num" data-v="1939">1 939</td>
+          <td class="num" data-v="938">938</td>
+          <td class="num" data-v="610">610</td>
+          <td class="num" data-v="306">306</td>
+          <td class="num" data-v="0.326226">32,62 %</td>
+          <td class="num" data-v="8">8</td>
+        </tr>
+        <tr>
+          <td data-v="Martinique"><a href="/crpe-par-academie/martinique">Martinique</a></td>
+          <td class="num" data-v="13">13</td>
+          <td class="num" data-v="348">348</td>
+          <td class="num" data-v="166">166</td>
+          <td class="num" data-v="51">51</td>
+          <td class="num" data-v="13">13</td>
+          <td class="num" data-v="0.078313">7,83 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Montpellier"><a href="/crpe-par-academie/montpellier">Montpellier</a></td>
+          <td class="num" data-v="218">218</td>
+          <td class="num" data-v="2042">2 042</td>
+          <td class="num" data-v="935">935</td>
+          <td class="num" data-v="357">357</td>
+          <td class="num" data-v="218">218</td>
+          <td class="num" data-v="0.233155">23,32 %</td>
+          <td class="num" data-v="8">8</td>
+        </tr>
+        <tr>
+          <td data-v="Nancy-Metz"><a href="/crpe-par-academie/nancy-metz">Nancy-Metz</a></td>
+          <td class="num" data-v="276">276</td>
+          <td class="num" data-v="939">939</td>
+          <td class="num" data-v="551">551</td>
+          <td class="num" data-v="381">381</td>
+          <td class="num" data-v="277">277</td>
+          <td class="num" data-v="0.502722">50,27 %</td>
+          <td class="num" data-v="6">6</td>
+        </tr>
+        <tr>
+          <td data-v="Nantes"><a href="/crpe-par-academie/nantes">Nantes</a></td>
+          <td class="num" data-v="230">230</td>
+          <td class="num" data-v="1716">1 716</td>
+          <td class="num" data-v="769">769</td>
+          <td class="num" data-v="397">397</td>
+          <td class="num" data-v="231">231</td>
+          <td class="num" data-v="0.300390">30,04 %</td>
+          <td class="num" data-v="10">10</td>
+        </tr>
+        <tr>
+          <td data-v="Nice"><a href="/crpe-par-academie/nice">Nice</a></td>
+          <td class="num" data-v="277">277</td>
+          <td class="num" data-v="1441">1 441</td>
+          <td class="num" data-v="645">645</td>
+          <td class="num" data-v="418">418</td>
+          <td class="num" data-v="288">288</td>
+          <td class="num" data-v="0.446512">44,65 %</td>
+          <td class="num" data-v="16">16</td>
+        </tr>
+        <tr>
+          <td data-v="Normandie"><a href="/crpe-par-academie/normandie">Normandie</a></td>
+          <td class="num" data-v="395">395</td>
+          <td class="num" data-v="1833">1 833</td>
+          <td class="num" data-v="982">982</td>
+          <td class="num" data-v="687">687</td>
+          <td class="num" data-v="399">399</td>
+          <td class="num" data-v="0.406314">40,63 %</td>
+          <td class="num" data-v="12">12</td>
+        </tr>
+        <tr>
+          <td data-v="Orléans-Tours"><a href="/crpe-par-academie/orleans-tours">Orléans-Tours</a></td>
+          <td class="num" data-v="316">316</td>
+          <td class="num" data-v="1142">1 142</td>
+          <td class="num" data-v="601">601</td>
+          <td class="num" data-v="484">484</td>
+          <td class="num" data-v="325">325</td>
+          <td class="num" data-v="0.540765">54,08 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Paris"><a href="/crpe-par-academie/paris">Paris</a></td>
+          <td class="num" data-v="213">213</td>
+          <td class="num" data-v="1292">1 292</td>
+          <td class="num" data-v="455">455</td>
+          <td class="num" data-v="366">366</td>
+          <td class="num" data-v="219">219</td>
+          <td class="num" data-v="0.481319">48,13 %</td>
+          <td class="num" data-v="15">15</td>
+        </tr>
+        <tr>
+          <td data-v="Poitiers"><a href="/crpe-par-academie/poitiers">Poitiers</a></td>
+          <td class="num" data-v="111">111</td>
+          <td class="num" data-v="1050">1 050</td>
+          <td class="num" data-v="495">495</td>
+          <td class="num" data-v="283">283</td>
+          <td class="num" data-v="111">111</td>
+          <td class="num" data-v="0.224242">22,42 %</td>
+          <td class="num" data-v="6">6</td>
+        </tr>
+        <tr>
+          <td data-v="Reims"><a href="/crpe-par-academie/reims">Reims</a></td>
+          <td class="num" data-v="115">115</td>
+          <td class="num" data-v="607">607</td>
+          <td class="num" data-v="357">357</td>
+          <td class="num" data-v="266">266</td>
+          <td class="num" data-v="115">115</td>
+          <td class="num" data-v="0.322129">32,21 %</td>
+          <td class="num" data-v="3">3</td>
+        </tr>
+        <tr>
+          <td data-v="Rennes"><a href="/crpe-par-academie/rennes">Rennes</a></td>
+          <td class="num" data-v="106">106</td>
+          <td class="num" data-v="1721">1 721</td>
+          <td class="num" data-v="773">773</td>
+          <td class="num" data-v="222">222</td>
+          <td class="num" data-v="115">115</td>
+          <td class="num" data-v="0.148771">14,88 %</td>
+          <td class="num" data-v="14">14</td>
+        </tr>
+        <tr>
+          <td data-v="Strasbourg"><a href="/crpe-par-academie/strasbourg">Strasbourg</a></td>
+          <td class="num" data-v="160">160</td>
+          <td class="num" data-v="877">877</td>
+          <td class="num" data-v="455">455</td>
+          <td class="num" data-v="321">321</td>
+          <td class="num" data-v="201">201</td>
+          <td class="num" data-v="0.441758">44,18 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Toulouse"><a href="/crpe-par-academie/toulouse">Toulouse</a></td>
+          <td class="num" data-v="270">270</td>
+          <td class="num" data-v="2145">2 145</td>
+          <td class="num" data-v="1049">1 049</td>
+          <td class="num" data-v="690">690</td>
+          <td class="num" data-v="270">270</td>
+          <td class="num" data-v="0.257388">25,74 %</td>
+          <td class="num" data-v="5">5</td>
+        </tr>
+        <tr>
+          <td data-v="Versailles"><a href="/crpe-par-academie/versailles">Versailles</a></td>
+          <td class="num" data-v="663">663</td>
+          <td class="num" data-v="2129">2 129</td>
+          <td class="num" data-v="827">827</td>
+          <td class="num" data-v="706">706</td>
+          <td class="num" data-v="613">613</td>
+          <td class="num" data-v="0.741233">74,12 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <h2>Taux de réussite CRPE : comment est calculée la sélectivité ?</h2>
   <p>Pour classer les académies, nous avons calculé pour chacune le <strong>taux de réussite</strong> : le nombre d'admis divisé par le nombre de candidats présents aux épreuves. Les académies sont ensuite réparties en trois groupes :</p>
   <ul>
@@ -818,9 +1145,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <script>
-  // Tri du tableau comparatif
-  (function () {
-    const table = document.getElementById('acadTable');
+  // Tri des tableaux comparatifs (bac+3 et bac+5)
+  document.querySelectorAll('table.sortable').forEach(function (table) {
     const tbody = table.tBodies[0];
     let col = 0, dir = 1;
     table.querySelectorAll('th button').forEach(btn => btn.addEventListener('click', () => {
@@ -837,7 +1163,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         b.parentElement.setAttribute('aria-sort', on ? (dir === 1 ? 'ascending' : 'descending') : 'none');
       });
     }));
-  })();
+  });
 </script>
 <section class="cta-section" id="inscription">
   <div class="container">

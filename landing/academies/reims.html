@@ -233,6 +233,10 @@
     .kpi-value { font-size: 22px; font-weight: 900; color: var(--gray-900); font-variant-numeric: tabular-nums; letter-spacing: -.4px; }
     .kpi-label { font-size: 12px; color: var(--gray-500); line-height: 1.35; }
     .kpi-accent { background: var(--indigo-50); border-color: var(--indigo-100); }
+    .kpi-cap { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--indigo-600); margin: 24px 0 -14px; }
+    .kpi-cap + .kpis { margin-top: 18px; }
+    .kpi-master { background: #f0fdf4; border-color: #bbf7d0; }
+    .kpi-master .kpi-value { color: #047857; }
     .kpi-accent .kpi-value { color: var(--indigo-700); }
 
     .sel { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
@@ -423,9 +427,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <span class="sel sel-moyen">Moyennement sélective</span>
   <h1>CRPE Reims : résultats 2026 de l'académie de Reims</h1>
-  <p class="lead">Voici les résultats du concours CRPE 2026 dans l'académie de Reims. Lors de cette session, l'académie de Reims offrait <strong>77 postes</strong>. Sur 956 inscrits, 620 candidats se sont présentés aux épreuves, 216 ont été admissibles et <strong>77 ont été admis</strong>, soit un taux de réussite de <strong>12,42 %</strong>, inférieur à la moyenne nationale (17,57 %).</p>
+  <p class="lead">Voici les résultats du concours CRPE 2026 dans l'académie de Reims, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2). Au concours bac+3, l'académie de Reims offrait <strong>77 postes</strong>. Sur 956 inscrits, 620 candidats se sont présentés aux épreuves, 216 ont été admissibles et <strong>77 ont été admis</strong>, soit un taux de réussite de <strong>12,42 %</strong>, inférieur à la moyenne nationale (17,57 %).</p>
 
-  <section class="kpis" aria-label="Chiffres clés">
+  <p class="kpi-cap">Concours externe bac+3</p>
+  <section class="kpis" aria-label="Chiffres clés du concours bac+3">
     <div class="kpi"><span class="kpi-value">77</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">956</span><span class="kpi-label">inscrits</span></div>
     <div class="kpi"><span class="kpi-value">620</span><span class="kpi-label">présents</span></div>
@@ -435,7 +440,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="kpi"><span class="kpi-value">1</span><span class="kpi-label">inscrits sur liste complémentaire</span></div>
   </section>
 
-  <h2>Inscrits, résultats d'admissibilité et admis au CRPE</h2>
+  <p class="kpi-cap">Concours externe bac+5 (master 2)</p>
+  <section class="kpis" aria-label="Chiffres clés du concours bac+5">
+    <div class="kpi"><span class="kpi-value">115</span><span class="kpi-label">postes offerts</span></div>
+    <div class="kpi"><span class="kpi-value">607</span><span class="kpi-label">inscrits</span></div>
+    <div class="kpi"><span class="kpi-value">357</span><span class="kpi-label">présents</span></div>
+    <div class="kpi"><span class="kpi-value">266</span><span class="kpi-label">admissibles</span></div>
+    <div class="kpi"><span class="kpi-value">115</span><span class="kpi-label">admis</span></div>
+    <div class="kpi kpi-master"><span class="kpi-value">32,21 %</span><span class="kpi-label">taux de réussite (admis / présents)</span></div>
+    <div class="kpi"><span class="kpi-value">3</span><span class="kpi-label">inscrits sur liste complémentaire</span></div>
+  </section>
+  <p>Au concours bac+5, ouvert aux titulaires d'un master 2, l'académie de Reims a admis <strong>115 candidats</strong> sur 357 présents, soit un taux de réussite de <strong>32,21 %</strong>, inférieur à la moyenne nationale du concours bac+5 (35,21 %). Elle se classe <strong>15e sur 29</strong> académies pour ce taux.</p>
+
+  <h2>Inscrits, résultats d'admissibilité et admis au CRPE (bac+3)</h2>
   <p>Toutes les personnes inscrites ne se présentent pas le jour des épreuves. Dans l'académie de Reims, <strong>64,85 %</strong> des inscrits étaient présents. Parmi les présents, <strong>34,84 %</strong> ont été admissibles (moyenne nationale : 38,21 %), et 12,42 % ont finalement été admis.</p>
   <div class="funnel"><div class="funnel-row light"><span class="funnel-label">Inscrits</span><div class="funnel-track"><div class="funnel-bar" style="width:100.0%"></div><span class="funnel-val">956</span></div></div><div class="funnel-row light"><span class="funnel-label">Présents</span><div class="funnel-track"><div class="funnel-bar" style="width:64.9%"></div><span class="funnel-val">620</span></div></div><div class="funnel-row"><span class="funnel-label">Admissibles</span><div class="funnel-track"><div class="funnel-bar" style="width:22.6%"></div><span class="funnel-val">216</span></div></div><div class="funnel-row"><span class="funnel-label">Admis</span><div class="funnel-track"><div class="funnel-bar" style="width:8.1%"></div><span class="funnel-val">77</span></div></div></div>
   <ul>
@@ -443,7 +460,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <li><strong>Liste complémentaire :</strong> 1 candidat a été inscrit sur la liste complémentaire. Ces candidats peuvent être appelés si des admis renoncent à leur poste.</li>
   </ul>
 
-  <h2>Taux de réussite CRPE : les classements de l'académie de Reims</h2>
+  <h2>Taux de réussite CRPE (bac+3) : les classements de l'académie de Reims</h2>
   <p>Comment l'académie de Reims se situe-t-elle par rapport aux 29 autres académies ?</p>
   <div class="rank-grid">
     <div class="card"><h3>Nombre de postes</h3><div class="rank-big">22e <small>sur 30</small></div><p>77 postes offerts.</p></div>
@@ -452,7 +469,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <p style="font-size:14px;color:var(--gray-500);margin-top:10px;">1re = le plus de postes, ou le taux le plus élevé.</p>
 
-  <h2>Sélectivité : moyennement sélective</h2>
+  <h2>Sélectivité au concours bac+3 : moyennement sélective</h2>
   <div class="callout">Avec un taux de réussite de <strong>12,42 %</strong>, l'académie de Reims fait partie des académies <strong>moyennement sélectives</strong> du CRPE.</div>
   <p>Pour classer les académies, nous avons calculé pour chacune le <strong>taux de réussite</strong> : le nombre d'admis divisé par le nombre de candidats présents aux épreuves. Les académies sont ensuite réparties en trois groupes :</p>
   <ul>

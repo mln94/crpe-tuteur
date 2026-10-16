@@ -43,6 +43,15 @@ for i, a in enumerate(sorted(ACADS, key=lambda x: x['taux'])):
     SELECTIVITE[a['slug']] = 'tres' if p <= 0.25 else ('peu' if p >= 0.75 else 'moyen')
 SEL_LABEL = {'tres': 'Très sélective', 'moyen': 'Moyennement sélective', 'peu': 'Peu sélective'}
 
+# Concours externe bac+5 (master 2) : chiffres nationaux et par académie (Mayotte : pas de données)
+MASTER_NAT = data['master_national']
+TAUX_MASTER_NATIONAL = MASTER_NAT['admis'] / MASTER_NAT['presents']
+MASTERS = [a for a in ACADS if a.get('master')]
+for a in MASTERS:
+    a['master']['taux'] = a['master']['admis'] / a['master']['presents']
+_vals_master = sorted((a['master']['taux'] for a in MASTERS), reverse=True)
+RANK_MASTER = {a['slug']: _vals_master.index(a['master']['taux']) + 1 for a in MASTERS}
+
 TOT = {k: sum(a[k] for a in ACADS) for k in ('postes', 'inscrits', 'presents', 'admissibles', 'admis', 'inscritsLC')}
 TAUX_NATIONAL = TOT['admis'] / TOT['presents']
 TAUX_ADMISSIBILITE_NATIONAL = TOT['admissibles'] / TOT['presents']
@@ -106,6 +115,10 @@ CSS = """
     .kpi-value { font-size: 22px; font-weight: 900; color: var(--gray-900); font-variant-numeric: tabular-nums; letter-spacing: -.4px; }
     .kpi-label { font-size: 12px; color: var(--gray-500); line-height: 1.35; }
     .kpi-accent { background: var(--indigo-50); border-color: var(--indigo-100); }
+    .kpi-cap { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--indigo-600); margin: 24px 0 -14px; }
+    .kpi-cap + .kpis { margin-top: 18px; }
+    .kpi-master { background: #f0fdf4; border-color: #bbf7d0; }
+    .kpi-master .kpi-value { color: #047857; }
     .kpi-accent .kpi-value { color: var(--indigo-700); }
 
     .sel { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 4px 12px; border-radius: 20px; white-space: nowrap; }
@@ -312,9 +325,10 @@ def page_academie(a):
 
   {sel_badge(a)}
   <h1>CRPE {escape(nom)} : résultats {SESSION} de l'académie {escape(de(nom))}</h1>
-  <p class="lead">Voici les résultats du concours CRPE {SESSION} dans l'académie {escape(de(nom))}. Lors de cette session, l'académie {escape(de(nom))} offrait <strong>{fint(a['postes'])} postes</strong>. Sur {fint(a['inscrits'])} inscrits, {fint(a['presents'])} candidats se sont présentés aux épreuves, {fint(a['admissibles'])} ont été admissibles et <strong>{fint(a['admis'])} ont été admis</strong>, soit un taux de réussite de <strong>{fpct(a['taux'])}</strong>, {compare} à la moyenne nationale ({fpct(TAUX_NATIONAL)}).</p>
+  <p class="lead">Voici les résultats du concours CRPE {SESSION} dans l'académie {escape(de(nom))}, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2). Au concours bac+3, l'académie {escape(de(nom))} offrait <strong>{fint(a['postes'])} postes</strong>. Sur {fint(a['inscrits'])} inscrits, {fint(a['presents'])} candidats se sont présentés aux épreuves, {fint(a['admissibles'])} ont été admissibles et <strong>{fint(a['admis'])} ont été admis</strong>, soit un taux de réussite de <strong>{fpct(a['taux'])}</strong>, {compare} à la moyenne nationale ({fpct(TAUX_NATIONAL)}).</p>
 
-  <section class="kpis" aria-label="Chiffres clés">
+  <p class="kpi-cap">Concours externe bac+3</p>
+  <section class="kpis" aria-label="Chiffres clés du concours bac+3">
     <div class="kpi"><span class="kpi-value">{fint(a['postes'])}</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">{fint(a['inscrits'])}</span><span class="kpi-label">inscrits</span></div>
     <div class="kpi"><span class="kpi-value">{fint(a['presents'])}</span><span class="kpi-label">présents</span></div>
@@ -323,8 +337,8 @@ def page_academie(a):
     <div class="kpi kpi-accent"><span class="kpi-value">{fpct(a['taux'])}</span><span class="kpi-label">taux de réussite (admis / présents)</span></div>
     <div class="kpi"><span class="kpi-value">{fint(a['inscritsLC'])}</span><span class="kpi-label">inscrits sur liste complémentaire</span></div>
   </section>
-
-  <h2>Inscrits, résultats d'admissibilité et admis au CRPE</h2>
+{master_html(a)}
+  <h2>Inscrits, résultats d'admissibilité et admis au CRPE (bac+3)</h2>
   <p>Toutes les personnes inscrites ne se présentent pas le jour des épreuves. Dans l'académie {escape(de(nom))}, <strong>{fpct(a['presents'] / a['inscrits'])}</strong> des inscrits étaient présents. Parmi les présents, <strong>{fpct(a['tauxAdmissibilite'])}</strong> ont été admissibles (moyenne nationale : {fpct(TAUX_ADMISSIBILITE_NATIONAL)}), et {fpct(a['taux'])} ont finalement été admis.</p>
   <div class="funnel">{funnel}</div>
   <ul>
@@ -332,7 +346,7 @@ def page_academie(a):
     {''.join(remarques)}
   </ul>
 
-  <h2>Taux de réussite CRPE : les classements de l'académie {escape(de(nom))}</h2>
+  <h2>Taux de réussite CRPE (bac+3) : les classements de l'académie {escape(de(nom))}</h2>
   <p>Comment l'académie {escape(de(nom))} se situe-t-elle par rapport aux {N - 1} autres académies ?</p>
   <div class="rank-grid">
     <div class="card"><h3>Nombre de postes</h3><div class="rank-big">{rang(RANK_POSTES[s])} <small>sur {N}</small></div><p>{fint(a['postes'])} postes offerts.</p></div>
@@ -341,7 +355,7 @@ def page_academie(a):
   </div>
   <p style="font-size:14px;color:var(--gray-500);margin-top:10px;">1re = le plus de postes, ou le taux le plus élevé.</p>
 
-  <h2>Sélectivité : {SEL_LABEL[sel].lower()}</h2>
+  <h2>Sélectivité au concours bac+3 : {SEL_LABEL[sel].lower()}</h2>
   <div class="callout">Avec un taux de réussite de <strong>{fpct(a['taux'])}</strong>, l'académie {escape(de(nom))} fait partie des académies <strong>{SEL_LABEL[sel].lower()}s</strong> du CRPE.</div>
   {METHODE}
 
@@ -363,6 +377,31 @@ def page_academie(a):
     return page(title, desc, url(a),
                 breadcrumb_ld([('Accueil', '/'), ('CRPE par académie', HUB_URL), (f'Académie {de(nom)}', url(a))]),
                 body, f"CRPE {nom} : résultats {SESSION} de l'académie {de(nom)}")
+
+def master_html(a):
+    """Bloc « concours bac+5 (master 2) » d'une page académie."""
+    m = a.get('master')
+    nom = a['nom']
+    if not m:
+        return f'''
+  <p class="kpi-cap">Concours externe bac+5 (master 2)</p>
+  <p>Les résultats du concours bac+5 ne sont pas publiés pour l'académie {escape(de(nom))}.</p>
+'''
+    compare = 'supérieur' if m['taux'] > TAUX_MASTER_NATIONAL else 'inférieur'
+    vacants = f" Tous les postes n'ont pas été pourvus : {fint(m['postes'] - m['admis'])} restent vacants." if m['admis'] < m['postes'] else ''
+    return f'''
+  <p class="kpi-cap">Concours externe bac+5 (master 2)</p>
+  <section class="kpis" aria-label="Chiffres clés du concours bac+5">
+    <div class="kpi"><span class="kpi-value">{fint(m['postes'])}</span><span class="kpi-label">postes offerts</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(m['inscrits'])}</span><span class="kpi-label">inscrits</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(m['presents'])}</span><span class="kpi-label">présents</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(m['admissibles'])}</span><span class="kpi-label">admissibles</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(m['admis'])}</span><span class="kpi-label">admis</span></div>
+    <div class="kpi kpi-master"><span class="kpi-value">{fpct(m['taux'])}</span><span class="kpi-label">taux de réussite (admis / présents)</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(m['inscritsLC'])}</span><span class="kpi-label">inscrits sur liste complémentaire</span></div>
+  </section>
+  <p>Au concours bac+5, ouvert aux titulaires d'un master 2, l'académie {escape(de(nom))} a admis <strong>{fint(m['admis'])} candidats</strong> sur {fint(m['presents'])} présents, soit un taux de réussite de <strong>{fpct(m['taux'])}</strong>, {compare} à la moyenne nationale du concours bac+5 ({fpct(TAUX_MASTER_NATIONAL)}). Elle se classe <strong>{rang(RANK_MASTER[a['slug']])} sur {len(MASTERS)}</strong> académies pour ce taux.{vacants}</p>
+'''
 
 # ── Page hub ─────────────────────────────────────────────────────────────────
 def page_hub():
@@ -386,6 +425,18 @@ def page_hub():
           <td data-v="{['tres', 'moyen', 'peu'].index(SELECTIVITE[a['slug']])}">{sel_badge(a)}</td>
         </tr>''' for a in sorted(ACADS, key=lambda a: a['nom']))
 
+    rows_master = ''.join(f'''
+        <tr>
+          <td data-v="{escape(a['nom'])}"><a href="{url(a)}">{escape(a['nom'])}</a></td>
+          <td class="num" data-v="{a['master']['postes']}">{fint(a['master']['postes'])}</td>
+          <td class="num" data-v="{a['master']['inscrits']}">{fint(a['master']['inscrits'])}</td>
+          <td class="num" data-v="{a['master']['presents']}">{fint(a['master']['presents'])}</td>
+          <td class="num" data-v="{a['master']['admissibles']}">{fint(a['master']['admissibles'])}</td>
+          <td class="num" data-v="{a['master']['admis']}">{fint(a['master']['admis'])}</td>
+          <td class="num" data-v="{a['master']['taux']:.6f}">{fpct(a['master']['taux'])}</td>
+          <td class="num" data-v="{a['master']['inscritsLC']}">{fint(a['master']['inscritsLC'])}</td>
+        </tr>''' for a in sorted(MASTERS, key=lambda a: a['nom']))
+
     body = f'''<div class="acad-wrap">
 
   <nav class="breadcrumb" aria-label="Fil d'Ariane">
@@ -393,9 +444,10 @@ def page_hub():
   </nav>
 
   <h1>Résultats du CRPE {SESSION} par académie : inscrits, admis et taux de réussite</h1>
-  <p class="lead">On ne passe pas le concours du CRPE « en France », mais dans <strong>une académie</strong>. C'est elle qui organise le concours et, si vous êtes reçu, vous affecte dans l'une de ses écoles. Choisir son académie, c'est donc choisir à la fois ses chances de réussite et l'endroit où l'on va enseigner. Voici les résultats du CRPE {SESSION} académie par académie : inscrits, résultats d'admissibilité, admis et taux de réussite. <strong>Cliquez sur une académie de la carte</strong> pour découvrir ses résultats détaillés.</p>
+  <p class="lead">On ne passe pas le concours du CRPE « en France », mais dans <strong>une académie</strong>. C'est elle qui organise le concours et, si vous êtes reçu, vous affecte dans l'une de ses écoles. Choisir son académie, c'est donc choisir à la fois ses chances de réussite et l'endroit où l'on va enseigner. Voici les résultats du CRPE {SESSION} académie par académie, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2). Inscrits, résultats d'admissibilité, admis et taux de réussite. <strong>Cliquez sur une académie de la carte</strong> pour découvrir ses résultats détaillés.</p>
 
-  <section class="kpis" aria-label="Chiffres nationaux">
+  <p class="kpi-cap">Concours externe bac+3</p>
+  <section class="kpis" aria-label="Chiffres nationaux du concours bac+3">
     <div class="kpi"><span class="kpi-value">{fint(TOT['postes'])}</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">{fint(TOT['inscrits'])}</span><span class="kpi-label">inscrits</span></div>
     <div class="kpi"><span class="kpi-value">{fint(TOT['presents'])}</span><span class="kpi-label">présents</span></div>
@@ -405,14 +457,25 @@ def page_hub():
     <div class="kpi kpi-accent"><span class="kpi-value">{fpct(TAUX_NATIONAL)}</span><span class="kpi-label">taux de réussite national (admis / présents)</span></div>
   </section>
 
+  <p class="kpi-cap">Concours externe bac+5 (master 2)</p>
+  <section class="kpis" aria-label="Chiffres nationaux du concours bac+5">
+    <div class="kpi"><span class="kpi-value">{fint(MASTER_NAT['postes'])}</span><span class="kpi-label">postes offerts</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(MASTER_NAT['inscrits'])}</span><span class="kpi-label">inscrits</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(MASTER_NAT['presents'])}</span><span class="kpi-label">présents aux épreuves écrites</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(MASTER_NAT['admissibles'])}</span><span class="kpi-label">candidats admissibles</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(MASTER_NAT['admis'])}</span><span class="kpi-label">admis</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(MASTER_NAT['inscritsLC'])}</span><span class="kpi-label">candidats inscrits sur liste complémentaire</span></div>
+    <div class="kpi kpi-master"><span class="kpi-value">{fpct(TAUX_MASTER_NATIONAL)}</span><span class="kpi-label">taux de réussite national (admis / présents)</span></div>
+  </section>
+
   <h2>La carte des académies CRPE</h2>
-  <p>Chaque repère représente une académie, coloré selon sa sélectivité. Cliquez dessus pour ouvrir la page de l'académie.</p>
+  <p>Chaque repère représente une académie, coloré selon sa sélectivité au concours bac+3. Cliquez dessus pour ouvrir la page de l'académie.</p>
   {carte()}
 
-  <h2>Résultats CRPE {SESSION} : le tableau comparatif des {N} académies</h2>
+  <h2>Résultats CRPE {SESSION} bac+3 : le tableau comparatif des {N} académies</h2>
   <p>Cliquez sur un en-tête de colonne pour trier le tableau, et sur le nom d'une académie pour voir sa page.</p>
   <div class="table-wrap">
-    <table id="acadTable">
+    <table id="acadTable" class="sortable">
       <thead>
         <tr>
           <th><button type="button" data-col="0" data-type="text">Académie</button></th>
@@ -426,6 +489,27 @@ def page_hub():
         </tr>
       </thead>
       <tbody>{rows}
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Résultats CRPE {SESSION} bac+5 (master 2) : le tableau comparatif des académies</h2>
+  <p>Le concours bac+5 est ouvert aux titulaires d'un master 2. Au niveau national, <strong>{fint(MASTER_NAT['admis'])} candidats</strong> ont été admis sur {fint(MASTER_NAT['presents'])} présents aux épreuves écrites, soit <strong>{fpct(TAUX_MASTER_NATIONAL)}</strong>. Les résultats ne sont pas publiés pour Mayotte.</p>
+  <div class="table-wrap">
+    <table id="acadTableMaster" class="sortable">
+      <thead>
+        <tr>
+          <th><button type="button" data-col="0" data-type="text">Académie</button></th>
+          <th class="num"><button type="button" data-col="1">Postes</button></th>
+          <th class="num"><button type="button" data-col="2">Inscrits</button></th>
+          <th class="num"><button type="button" data-col="3">Présents</button></th>
+          <th class="num"><button type="button" data-col="4">Admissibles</button></th>
+          <th class="num"><button type="button" data-col="5">Admis</button></th>
+          <th class="num"><button type="button" data-col="6">Taux de réussite</button></th>
+          <th class="num"><button type="button" data-col="7">Liste compl.</button></th>
+        </tr>
+      </thead>
+      <tbody>{rows_master}
       </tbody>
     </table>
   </div>
@@ -477,9 +561,8 @@ def page_hub():
 </div>
 
 <script>
-  // Tri du tableau comparatif
-  (function () {{
-    const table = document.getElementById('acadTable');
+  // Tri des tableaux comparatifs (bac+3 et bac+5)
+  document.querySelectorAll('table.sortable').forEach(function (table) {{
     const tbody = table.tBodies[0];
     let col = 0, dir = 1;
     table.querySelectorAll('th button').forEach(btn => btn.addEventListener('click', () => {{
@@ -496,7 +579,7 @@ def page_hub():
         b.parentElement.setAttribute('aria-sort', on ? (dir === 1 ? 'ascending' : 'descending') : 'none');
       }});
     }}));
-  }})();
+  }});
 </script>'''
     return page(f'Résultats CRPE {SESSION} par académie : admis, inscrits et taux de réussite | PassCRPE',
                 f"Résultats du concours CRPE {SESSION} par académie : carte de France et comparatif des {N} académies CRPE, avec postes, inscrits, admis, résultats d'admissibilité et taux de réussite.",
