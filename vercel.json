@@ -13,6 +13,7 @@
     { "source": "/blog/rapport-jury-crpe-2026-conseils", "destination": "/rapport-jury-crpe-2026-conseils.html" },
     { "source": "/crpe-par-academie", "destination": "/crpe-par-academie.html" },
     { "source": "/crpe-par-academie/:slug", "destination": "/academies/:slug.html" },
+    { "source": "/rapports-jury-crpe", "destination": "/rapports-jury-crpe.html" },
     { "source": "/outils", "destination": "/outils.html" },
     { "source": "/outils/entraineur-crpe", "destination": "/entraineur-crpe.html" },
     { "source": "/outils/entraineur-crpe/rapport/:token", "destination": "/entraineur-rapport.html" },
