@@ -258,7 +258,13 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.passcrpe.fr/rapports-jury-crpe</loc>
+    <loc>https://www.passcrpe.fr/rapports-jury-crpe/2026</loc>
+    <lastmod>2026-10-16</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.passcrpe.fr/rapports-jury-crpe/2025</loc>
     <lastmod>2026-10-16</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

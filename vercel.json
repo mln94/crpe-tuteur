@@ -1,6 +1,9 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "redirects": [
+    { "source": "/rapports-jury-crpe", "destination": "/rapports-jury-crpe/2026", "permanent": false }
+  ],
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/index" },
     { "source": "/enonces-svg/:path*", "destination": "/app/enonces-svg/:path*" },
@@ -13,7 +16,8 @@
     { "source": "/blog/rapport-jury-crpe-2026-conseils", "destination": "/rapport-jury-crpe-2026-conseils.html" },
     { "source": "/crpe-par-academie", "destination": "/crpe-par-academie.html" },
     { "source": "/crpe-par-academie/:slug", "destination": "/academies/:slug.html" },
-    { "source": "/rapports-jury-crpe", "destination": "/rapports-jury-crpe.html" },
+    { "source": "/rapports-jury-crpe/2026", "destination": "/rapports-jury-crpe-2026.html" },
+    { "source": "/rapports-jury-crpe/2025", "destination": "/rapports-jury-crpe-2025.html" },
     { "source": "/outils", "destination": "/outils.html" },
     { "source": "/outils/entraineur-crpe", "destination": "/entraineur-crpe.html" },
     { "source": "/outils/entraineur-crpe/rapport/:token", "destination": "/entraineur-rapport.html" },

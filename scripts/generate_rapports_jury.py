@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Génère la page « Rapports de jury du CRPE par académie » : /rapports-jury-crpe.
+"""Génère les pages « Rapports de jury du CRPE par académie », une par session : /rapports-jury-crpe/<année>.
 
 Gabarit : landing/crpe-bac3-structure-premiere-epreuve-admissibilite.html (menu, pied de page, suivi)
-Sortie  : landing/rapports-jury-crpe.html
+Sorties : landing/rapports-jury-crpe-<année>.html
 Usage   : python3 scripts/generate_rapports_jury.py
 """
 import os
@@ -79,7 +79,6 @@ CSS = """
     /* RAPPORTS DE JURY */
     .page-wrap { max-width: 860px; margin: 0 auto; padding: 32px 20px 72px; font-size: 16px; line-height: 1.7; color: var(--gray-700); }
     .page-wrap h1 { font-size: clamp(28px, 4.5vw, 40px); font-weight: 900; color: var(--gray-900); line-height: 1.15; letter-spacing: -.5px; margin-bottom: 14px; }
-    .page-wrap h2[id] { scroll-margin-top: 84px; }
     .page-wrap h2 { font-size: 23px; font-weight: 800; color: var(--gray-900); margin: 44px 0 12px; letter-spacing: -.2px; }
     .page-wrap p { margin-bottom: 14px; }
     .page-wrap strong { color: var(--gray-900); }
@@ -133,27 +132,34 @@ def table(rows, annee):
             '      <tbody>\n' + '\n'.join(out) + '\n      </tbody>\n    </table>')
 
 
-def page():
-    title = 'Rapports de jury du CRPE par académie : téléchargement 2026 et 2025'
-    desc = ("Téléchargez les rapports de jury officiels du CRPE, académie par académie : session 2026 "
-            "(concours bac+3 et bac+5) et session 2025. Liens directs vers les sites des académies.")
-    sections = []
-    for annee, rows in SESSIONS:
-        nb = len({r[0] for r in rows})
-        sections.append(
-            f'  <h2 id="session-{annee}">Rapports de jury CRPE {annee}</h2>\n'
-            f'  <p class="session-count">{len(rows)} rapports, {nb} académies</p>\n' + table(rows, annee))
+INTRO = {
+    '2026': ("La session 2026 est la première à réunir deux concours externes : le nouveau concours de niveau "
+             "<strong>bac+3</strong> et le concours de niveau <strong>bac+5</strong>. Certaines académies publient "
+             "un rapport par concours, d'autres un rapport commun."),
+    '2025': ("En 2025, le concours externe était ouvert au niveau <strong>bac+5</strong> (master). Les rapports "
+             "couvrent aussi, le plus souvent, le second concours interne et le troisième concours."),
+}
+
+
+def page(annee, rows):
+    title = f'Rapports de jury du CRPE {annee} par académie : téléchargement'
+    desc = (f"Téléchargez les rapports de jury officiels du CRPE {annee}, académie par académie"
+            + (" (concours bac+3 et bac+5)" if annee == '2026' else '') + ". Liens directs vers les sites des académies.")
+    url = f'{SITE}/{SLUG}/{annee}'
+    nb = len({r[0] for r in rows})
     lien = 'style="font-weight:600;" target="_blank" rel="noopener"'
     body = f'''<main class="page-wrap">
-  <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="/">Accueil</a> <span aria-hidden="true">›</span> <span aria-current="page">Rapports de jury</span></nav>
-  <h1>Rapports de jury du CRPE par académie</h1>
-  <p class="lead">Chaque année, les jurys du CRPE publient un <strong>rapport de jury</strong> par académie : les correcteurs y expliquent ce qu'ils ont valorisé, ce qu'ils ont pénalisé et les erreurs qui reviennent d'une copie à l'autre. Retrouvez ici les liens vers les rapports officiels, classés par session et par académie.</p>
+  <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="/">Accueil</a> <span aria-hidden="true">›</span> <span>Rapports de jury</span> <span aria-hidden="true">›</span> <span aria-current="page">Session {annee}</span></nav>
+  <h1>Rapports de jury du CRPE {annee} par académie</h1>
+  <p class="lead">Chaque année, les jurys du CRPE publient un <strong>rapport de jury</strong> par académie : les correcteurs y expliquent ce qu'ils ont valorisé, ce qu'ils ont pénalisé et les erreurs qui reviennent d'une copie à l'autre. {INTRO[annee]}</p>
 
   <div class="callout">
-    <p><strong>Envie d'aller à l'essentiel ?</strong> Nous avons lu ces rapports et résumé les conseils des jurys, épreuve par épreuve : <a href="/blog/rapport-jury-crpe-2026-conseils" {lien}>conseils des rapports de jury 2026</a> (concours bac+3 et bac+5) et <a href="/blog/rapport-jury-crpe-2025-conseils" {lien}>conseils des rapports de jury 2025</a>.</p>
+    <p><strong>Envie d'aller à l'essentiel ?</strong> Nous avons lu ces rapports et résumé les conseils des jurys, épreuve par épreuve, dans notre article <a href="/blog/rapport-jury-crpe-{annee}-conseils" {lien}>Rapport de jury CRPE {annee} : les conseils des jurys</a>.</p>
   </div>
 
-{chr(10).join(sections)}
+  <h2>Rapports de jury CRPE {annee}</h2>
+  <p class="session-count">{len(rows)} rapports, {nb} académies</p>
+{table(rows, annee)}
 
   <p style="margin-top:28px;font-size:14px;color:var(--gray-500);">Les liens mènent aux sites officiels des académies et du ministère : « Télécharger » ouvre directement le PDF, « Consulter » ouvre la page de l'académie où se trouve le rapport. D'autres rapports sont aussi rassemblés sur <a href="https://www.devenirenseignant.gouv.fr/les-sujets-des-epreuves-ecrites-et-rapports-des-jurys-des-concours-de-recrutement-de-professeurs-des-1163" target="_blank" rel="noopener">devenirenseignant.gouv.fr</a>.</p>
 
@@ -167,14 +173,16 @@ def page():
     head = (HEAD_START
             + f'  <title>{escape(title)} | PassCRPE</title>\n'
             + f'  <meta name="description" content="{escape(desc)}" />\n'
-            + f'  <link rel="canonical" href="{SITE}/{SLUG}" />\n'
+            + f'  <link rel="canonical" href="{url}" />\n'
             + f'  <meta property="og:title" content="{escape(title)}" />\n'
             + f'  <meta property="og:description" content="{escape(desc)}" />\n'
             + '  <meta property="og:type" content="website" />\n'
-            + f'  <meta property="og:url" content="{SITE}/{SLUG}" />\n'
+            + f'  <meta property="og:url" content="{url}" />\n'
             + CSS_BASE + CSS)
     return head + BODY_NAV + body + TAIL
 
 
-open(os.path.join(ROOT, 'landing', SLUG + '.html'), 'w', encoding='utf-8').write(page())
-print('landing/' + SLUG + '.html')
+for annee, rows in SESSIONS:
+    out = f'landing/{SLUG}-{annee}.html'
+    open(os.path.join(ROOT, out), 'w', encoding='utf-8').write(page(annee, rows))
+    print(out)
