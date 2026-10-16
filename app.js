@@ -183,6 +183,10 @@ function klaviyoHeaders() {
   };
 }
 
+// Propriété Klaviyo « parcours » : d'où vient le contact (site PassCRPE ou page du quiz)
+const PARCOURS = new Set(['passcrpe', 'quizcrpe']);
+const parcoursOf = v => (PARCOURS.has(v) ? v : 'passcrpe');
+
 async function klaviyoSubscribePipeline(email, prenom, nom, listId, properties = {}, extraAttrs = {}, subscribeMarketing = true) {
   // 1. Créer le profil (ou récupérer l'ID existant en cas de 409)
   const profileRes = await fetch(`${KLAVIYO_API_BASE}/profiles`, {
@@ -204,6 +208,14 @@ async function klaviyoSubscribePipeline(email, prenom, nom, listId, properties =
     const dup = await profileRes.json();
     profileId = dup.errors?.[0]?.meta?.duplicate_profile_id;
     if (!profileId) throw new Error('Profil en double sans ID récupérable.');
+    // Profil existant : seule la propriété « parcours » est mise à jour (les autres propriétés ne sont pas écrasées)
+    if (properties.parcours) {
+      await fetch(`${KLAVIYO_API_BASE}/profiles/${profileId}`, {
+        method: 'PATCH',
+        headers: klaviyoHeaders(),
+        body: JSON.stringify({ data: { type: 'profile', id: profileId, attributes: { properties: { parcours: properties.parcours } } } }),
+      });
+    }
   } else if (profileRes.ok) {
     profileId = (await profileRes.json()).data?.id;
   } else {
@@ -267,7 +279,7 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
   if (!prenom || !nom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ error: 'Données invalides.' });
   try {
-    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER);
+    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours: parcoursOf(req.body?.parcours) });
     res.json({ ok: true });
   } catch (err) {
     console.error('[Klaviyo newsletter]', err.message);
@@ -286,7 +298,7 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   try {
     const phoneAttrs = telephone ? { phone_number: telephone } : {};
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP,
-      { email_verified: false, trial: true, paid_user: false, form_trial: false, consent_conseils, consent_partenaires },
+      { email_verified: false, trial: true, paid_user: false, form_trial: false, consent_conseils, consent_partenaires, parcours: parcoursOf(req.body?.parcours) },
       phoneAttrs, consent_conseils);
 
     // Créer la ligne profil Supabase avec trial = true

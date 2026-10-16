@@ -179,7 +179,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
     const attributes = {
       email, first_name: prenom, last_name: nom,
       ...(phone ? { phone_number: phone } : {}),
-      properties: { telephone_saisi: telephone || null, consent_conseils, consent_partenaires, consent_contact_sms, consent_version: CONSENT_VERSION },
+      properties: { telephone_saisi: telephone || null, consent_conseils, consent_partenaires, consent_contact_sms, consent_version: CONSENT_VERSION, parcours: 'passcrpe' },
     };
     let r = await fetch(`${klaviyoApiBase}/profiles`, { method: 'POST', headers: klaviyoHeaders(), body: JSON.stringify({ data: { type: 'profile', attributes } }) });
     if (r.status === 400 && phone) { // numéro refusé par Klaviyo : on garde le profil sans phone_number

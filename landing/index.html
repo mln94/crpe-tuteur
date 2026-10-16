@@ -1295,7 +1295,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <span class="offre-tag">Langue vivante</span>
         </div>
         <div class="offre-cta">
-          <a href="#newsletter" class="btn-secondary">Être prévenu de sa sortie</a>
+          <a href="#newsletter" class="btn-secondary" onclick="window.nlParcours='quizcrpe'">Être prévenu de sa sortie</a>
           <p class="offre-note">Inscrivez-vous à la newsletter pour être informé dès sa disponibilité.</p>
         </div>
       </div>
@@ -1310,15 +1310,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
         <p class="offre-desc">Le tuteur IA pour apprendre à rédiger et progresser, le quiz pour réviser vite toutes les disciplines.</p>
-        <div class="offre-price"><strong>399 €</strong><span>TTC</span><span class="old">408,99 €</span></div>
-        <span class="pack-save">9,99 € d'économie</span>
+        <div class="offre-price"><strong>389 €</strong><span>TTC</span><span class="old">408,99 €</span></div>
+        <span class="pack-save">19,99 € d'économie</span>
         <ul class="offre-list">
           <li>1 an d'accès au tuteur IA, avec ses exercices corrigés en mathématiques et en français</li>
           <li>Le quiz complet : près de 300 questions dans chacune des cinq disciplines</li>
           <li>Une préparation complète, de l'entraînement à la rédaction aux révisions rapides</li>
         </ul>
         <div class="offre-cta">
-          <a href="#newsletter" class="btn-white">Être prévenu du lancement</a>
+          <a href="#newsletter" class="btn-white" onclick="window.nlParcours='quizcrpe'">Être prévenu du lancement</a>
           <p class="offre-note">Disponible à la sortie du quiz.</p>
         </div>
       </div>
@@ -2059,7 +2059,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const res = await fetch('/api/newsletter/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prenom, nom, email }),
+        // Parcours : « quizcrpe » si la personne vient du quiz (boutons du quiz ou du pack, ou lien ?parcours=quizcrpe), sinon « passcrpe »
+        body: JSON.stringify({ prenom, nom, email, parcours: (window.nlParcours || new URLSearchParams(location.search).get('parcours')) === 'quizcrpe' ? 'quizcrpe' : 'passcrpe' }),
       });
       const json = await res.json();
       if (res.ok && json.ok) {
