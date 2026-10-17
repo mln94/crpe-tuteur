@@ -283,7 +283,7 @@ JS = """<script>
     return '<div class="quiz-compte"><span>' + esc(compte && compte.email || '') + '</span><span class="liens">' +
       '<a class="quiz-link" href="/espace">Mes outils</a>' +
       (compte && compte.positionnement ? '<button type="button" class="quiz-link" data-act="voir-resultat">Mon test de positionnement</button>' : '') +
-      '<button type="button" class="quiz-link" data-act="logout">Se déconnecter</button></span></div>';
+      '</span></div>';
   }
   function erreur(msg) {
     root.innerHTML = '<div class="quiz-msg">' + esc(msg) + '</div><div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-act="boot">Réessayer</button></div>';
@@ -565,7 +565,6 @@ JS = """<script>
     else if (act === 't-suivant') testRepondre(false);
     else if (act === 't-passer') testRepondre(true);
     else if (act === 'voir-resultat') { resultat(compte.positionnement); top(); }
-    else if (act === 'logout') SB.auth.signOut().then(function () { compte = null; connexion(); });
     else if (act === 'start') demarrer(choix.mat, choix.niveau);
     else if (act === 'prog-choix') { st = null; progression(choix.mat); }
     else if (act === 'again') demarrer(st.mat, st.niveau);
@@ -609,7 +608,7 @@ def page():
     body = f'''<main class="quiz-wrap">
   <h1>Quiz CRPE</h1>
   <p class="quiz-confirm" id="quiz-confirm" hidden>✓ Votre adresse e-mail est confirmée : bienvenue sur le Quiz CRPE !</p>
-  <p class="quiz-lead">Séries de {TAILLE_SERIE} questions rattachées au programme du concours, par matière et par niveau. Chaque notion est posée sous plusieurs formes : avec {BONNES_POUR_MAITRISER} bonnes réponses, elle est maîtrisée. En cas d'erreur, vous voyez l'explication et une question similaire revient plus tard.</p>
+  <p class="quiz-lead">Lancez des séries de {TAILLE_SERIE} questions rattachées au programme du concours, par matière et par niveau. Chaque notion est posée sous plusieurs formes : avec {BONNES_POUR_MAITRISER} bonnes réponses, elle est maîtrisée. En cas d'erreur, vous voyez l'explication et une question similaire revient plus tard.</p>
   <div id="quiz-app"></div>
 </main>
 '''

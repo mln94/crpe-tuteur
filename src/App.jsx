@@ -3,10 +3,11 @@ import {
   GraduationCap, Calculator, BookMarked, Home, MessageCircle,
   BookOpen, Send, Loader2, RotateCcw, ChevronRight, ChevronDown,
   ChevronUp, Trash2, X, AlertCircle, ChevronLeft, PenLine, AlignLeft, ListChecks,
-  BarChart2, LogOut, User, Lightbulb, ClipboardList, HelpCircle, CheckCircle2, Lock,
+  BarChart2, User, Lightbulb, ClipboardList, HelpCircle, CheckCircle2, Lock,
 } from 'lucide-react';
 // Outils de réponse (droite graduée, repère, tableau) partagés avec l'Entraîneur : définit window.OutilsReponse
 import '../landing/outils-reponse.js';
+import { SITE_NAV_HTML, SITE_FOOTER_HTML, SITE_CHROME_CSS } from './siteChrome.js';
 
 // ---------------------------------------------------------------------------
 // System prompts
@@ -5470,16 +5471,9 @@ function ProfileView({ profile, authUser, onUpdateProfile }) {
   const [prenom, setPrenom]     = useState(profile?.prenom   || '');
   const [concours, setConcours] = useState(profile?.concours || '');
   const [academie, setAcademie] = useState(profile?.academie || '');
-  const [loggingOut, setLoggingOut] = useState(false);
-
   const handleSave = () => {
     onUpdateProfile({ ...profile, prenom: prenom.trim(), concours, academie });
     setEditing(false);
-  };
-
-  const handleLogout = async () => {
-    setLoggingOut(true);
-    await sbClient.auth.signOut();
   };
 
   const initial = profile?.prenom?.[0]?.toUpperCase() || '?';
@@ -5586,23 +5580,7 @@ function ProfileView({ profile, authUser, onUpdateProfile }) {
         )}
       </div>
 
-      {/* Mes outils : même compte pour le tuteur IA et le Quiz CRPE */}
-      <a
-        href="/espace"
-        className="w-full flex items-center justify-center gap-2 py-3.5 mb-3 rounded-2xl border border-indigo-200 text-indigo-600 font-semibold text-sm hover:bg-indigo-50 transition-all"
-      >
-        Mes outils : Tuteur IA et Quiz CRPE →
-      </a>
-
-      {/* Déconnexion */}
-      <button
-        onClick={handleLogout}
-        disabled={loggingOut}
-        className="w-full flex items-center justify-center gap-2 py-3.5 rounded-2xl border border-red-200 text-red-500 font-semibold text-sm hover:bg-red-50 active:bg-red-100 transition-all disabled:opacity-60"
-      >
-        <LogOut className="w-4 h-4" />
-        {loggingOut ? 'Déconnexion…' : 'Se déconnecter'}
-      </button>
+      {/* Mes outils et déconnexion : dans le menu du compte de l'en-tête */}
     </div>
   );
 }
@@ -5915,6 +5893,77 @@ function SupportTicketCard({ ticket: t, statusLabel, statusColor, onReply, onClo
       {error && <p className="text-xs text-red-500 mt-2">{error}</p>}
     </div>
   );
+}
+
+// ---------------------------------------------------------------------------
+// En-tête et pied de page du site (même structure que /quizzapp et /espace)
+// ---------------------------------------------------------------------------
+// Fonctions des menus du site, appelées par les attributs onclick du HTML repris du gabarit
+if (typeof window !== 'undefined' && !window.toggleMobileMenu) {
+  window.toggleMobileMenu = (btn) => {
+    const nav = btn.closest('.site-nav');
+    const open = nav.classList.toggle('menu-open');
+    btn.setAttribute('aria-expanded', open);
+    btn.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+  };
+  window.toggleNavDropdown = (btn) => {
+    const dd = btn.parentElement;
+    btn.setAttribute('aria-expanded', dd.classList.toggle('open'));
+  };
+  window.toggleNavSub = (btn) => {
+    btn.setAttribute('aria-expanded', btn.getAttribute('aria-expanded') !== 'true');
+  };
+  document.addEventListener('click', (e) => {
+    document.querySelectorAll('.nav-dropdown.open').forEach((dd) => {
+      if (!dd.contains(e.target)) { dd.classList.remove('open'); dd.querySelector('.nav-dropdown-toggle')?.setAttribute('aria-expanded', 'false'); }
+    });
+    document.querySelectorAll('.nav-compte.open').forEach((c) => {
+      if (!c.contains(e.target)) { c.classList.remove('open'); c.querySelector('.nav-compte-btn')?.setAttribute('aria-expanded', 'false'); }
+    });
+  });
+}
+
+function useSiteChromeStyles() {
+  useEffect(() => {
+    if (document.getElementById('site-chrome-css')) return;
+    const style = document.createElement('style');
+    style.id = 'site-chrome-css';
+    style.textContent = SITE_CHROME_CSS;
+    document.head.appendChild(style);
+  }, []);
+}
+
+const escHtml = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
+function SiteHeader({ authUser, profile }) {
+  useSiteChromeStyles();
+  const ref = useRef(null);
+  useEffect(() => {
+    const nav = ref.current?.querySelector('.site-nav');
+    const actions = nav?.querySelector('.nav-actions');
+    if (!actions) return;
+    actions.querySelector('.nav-compte')?.remove();
+    if (!authUser) { nav.classList.remove('connecte'); return; }
+    const m = authUser.user_metadata || {};
+    const nom = `${profile?.prenom || m.prenom || ''} ${profile?.nom || m.nom || ''}`.trim() || authUser.email;
+    const el = document.createElement('div');
+    el.className = 'nav-compte';
+    el.innerHTML = `<button type="button" class="nav-compte-btn" aria-haspopup="true" aria-expanded="false"><span class="av">${escHtml((nom[0] || '?').toUpperCase())}</span><span class="nom">${escHtml(nom)}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`
+      + `<div class="nav-compte-menu" role="menu"><div class="mail">${escHtml(authUser.email)}</div>`
+      + '<a href="/espace" role="menuitem">🏠 Mes outils</a><a href="/app" role="menuitem">🤖 Tuteur IA</a><a href="/quizzapp" role="menuitem">🎯 Quiz CRPE</a><hr>'
+      + '<button type="button" class="out" role="menuitem">Se déconnecter</button></div>';
+    actions.insertBefore(el, actions.querySelector('.nav-burger'));
+    nav.classList.add('connecte');
+    const btn = el.querySelector('.nav-compte-btn');
+    btn.addEventListener('click', (e) => { e.stopPropagation(); btn.setAttribute('aria-expanded', el.classList.toggle('open')); });
+    el.querySelector('.out').addEventListener('click', async () => { await sbClient.auth.signOut(); window.location.href = '/'; });
+  }, [authUser, profile?.prenom, profile?.nom]);
+  return <div ref={ref} className="flex-shrink-0" dangerouslySetInnerHTML={{ __html: SITE_NAV_HTML }} />;
+}
+
+function SiteFooter() {
+  useSiteChromeStyles();
+  return <div className="site-footer-wrap" dangerouslySetInnerHTML={{ __html: SITE_FOOTER_HTML }} />;
 }
 
 // BottomNav
@@ -6483,6 +6532,7 @@ function AppContent({ authUser }) {
 
   return (
     <div className="bg-gray-50 flex flex-col overflow-hidden" style={{ height: '100dvh' }}>
+      <SiteHeader authUser={authUser} profile={profile} />
       <div
         className="flex flex-col flex-1 min-h-0 max-w-3xl mx-auto w-full"
       >
@@ -6529,6 +6579,10 @@ function AppContent({ authUser }) {
           />
         ) : (
           <>
+            {['home', 'history', 'stats', 'profile'].includes(activeTab) && (
+              // Zone de défilement pleine largeur : contenu centré, pied de page du site sur toute la largeur
+              <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden" style={{ width: '100vw', marginLeft: 'calc(50% - 50vw)' }}>
+              <div className="max-w-3xl mx-auto w-full">
             {activeTab === 'home' && (
               <HomeView
                 profile={profile}
@@ -6559,7 +6613,6 @@ function AppContent({ authUser }) {
             )}
             {activeTab === 'history' && <HistoryView />}
             {activeTab === 'stats'   && <StatsView />}
-            {activeTab === 'support' && <SupportView authUser={authUser} onUnreadChange={setUnreadSupport} />}
             {activeTab === 'profile' && (
               <ProfileView
                 profile={profile}
@@ -6567,6 +6620,11 @@ function AppContent({ authUser }) {
                 onUpdateProfile={handleOnboarding}
               />
             )}
+              </div>
+                <SiteFooter />
+              </div>
+            )}
+            {activeTab === 'support' && <SupportView authUser={authUser} onUnreadChange={setUnreadSupport} />}
           </>
         )}
       </div>

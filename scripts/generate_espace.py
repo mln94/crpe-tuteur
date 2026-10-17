@@ -74,8 +74,7 @@ JS = """<script>
       '<div class="esp-card quiz"><div class="esp-head"><div class="esp-icon">🎯</div><h2>Quiz CRPE</h2></div>' + etatQ +
       '<p>2 700 questions dans les 9 matières du concours, en séries de 20, avec révisions espacées.</p>' +
       '<a class="esp-btn" href="/quizzapp">' + (q.paid ? 'Ouvrir le quiz →' : q.positionnement ? 'Voir mon résultat →' : 'Passer mon test gratuit →') + '</a></div>' +
-      '</div><div class="esp-compte"><span>' + esc(d.email) + '</span><button type="button" class="esp-link" id="esp-logout">Se déconnecter</button></div>';
-    document.getElementById('esp-logout').addEventListener('click', function () { SB.auth.signOut().then(connexion); });
+      '</div>';
     var p = document.getElementById('esp-prenom'); if (p && d.prenom) p.textContent = 'Bonjour ' + d.prenom + ' !';
   }
   SB.auth.getSession().then(function (r) {
