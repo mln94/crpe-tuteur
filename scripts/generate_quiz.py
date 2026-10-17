@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Génère la page de l'application « Quiz CRPE » : /quizzapp (/quiz y redirige).
+"""Génère la page de l'application « Quiz CRPE » : /quizzapp.
 
 Gabarit : landing/crpe-bac3-structure-premiere-epreuve-admissibilite.html (menu, pied de page, suivi)
-Sortie  : landing/quiz.html
+Sortie  : landing/quizzapp.html
 Données : table Supabase quiz_questions, servie par /api/quiz/catalogue et /api/quiz/reponse (app.js)
 Usage   : python3 scripts/generate_quiz.py
 
@@ -406,5 +406,5 @@ def page():
     return head + BODY_NAV + body + js + TAIL
 
 
-open(os.path.join(ROOT, 'landing', 'quiz.html'), 'w', encoding='utf-8').write(page())
-print('landing/quiz.html')
+open(os.path.join(ROOT, 'landing', 'quizzapp.html'), 'w', encoding='utf-8').write(page())
+print('landing/quizzapp.html')
