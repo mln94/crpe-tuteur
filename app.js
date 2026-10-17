@@ -39,6 +39,9 @@ const supabaseAdmin = createClient(
 const QUIZ_SUPABASE_URL = process.env.QUIZ_SUPABASE_URL || 'https://uwsdfbmootumhsrufkmo.supabase.co';
 const QUIZ_SUPABASE_ANON_KEY = process.env.QUIZ_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c2RmYm1vb3R1bWhzcnVma21vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNDU1OTEsImV4cCI6MjEwNzgyMTU5MX0.W1uAsiBPR4mEoxjNBp308uNNhHt21dlXpGzPBHPXVuk';
 const quizDb = createClient(QUIZ_SUPABASE_URL, QUIZ_SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false } });
+// Clé service_role du projet quizzcrpe (serveur uniquement) : comptes du quiz (test de positionnement, paiement)
+if (!process.env.QUIZ_SUPABASE_SERVICE_ROLE_KEY) console.error('[config] QUIZ_SUPABASE_SERVICE_ROLE_KEY manquante : comptes du quiz indisponibles');
+const quizAdmin = createClient(QUIZ_SUPABASE_URL, process.env.QUIZ_SUPABASE_SERVICE_ROLE_KEY || 'absente', { auth: { autoRefreshToken: false, persistSession: false } });
 
 async function getAuthenticatedUser(req) {
   const authHeader = req.headers.authorization || '';
@@ -70,13 +73,16 @@ async function markUserPaid(userId, email) {
 
 // Déblocage du Quiz CRPE (projet quizzcrpe) + Klaviyo quiz_paid ; appelée par la capture et par le webhook
 async function markQuizPaid(userId, ref, email) {
-  const { data: nouveau, error } = await quizDb.rpc('quiz_marquer_paye', { p_cle: process.env.QUIZ_SERVER_SECRET, p_user: userId, p_ref: ref || null });
+  const { data: avant } = await quizAdmin.from('quiz_comptes').select('paid, email').eq('user_id', userId).maybeSingle();
+  if (avant?.paid) return; // déjà débloqué (capture puis webhook pour le même paiement)
+  const { error } = await quizAdmin.from('quiz_comptes')
+    .upsert({ user_id: userId, paid: true, paid_at: new Date().toISOString(), paypal_ref: ref || null, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
   if (error) throw new Error(`Déblocage du quiz : ${error.message}`);
   quizOublier(userId);
-  if (!nouveau) return;
   try {
     let e = email;
-    if (!e) { const { data } = await quizDb.rpc('quiz_compte', { p_cle: process.env.QUIZ_SERVER_SECRET, p_user: userId }); e = data?.[0]?.email; }
+    if (!e) e = avant?.email;
+    if (!e) { const { data } = await quizAdmin.auth.admin.getUserById(userId); e = data?.user?.email; }
     if (e) await klaviyoSetProperties(e, { quiz_paid: true, quiz_date_paid: new Date().toISOString() });
   } catch (err) {
     console.error('[markQuizPaid] Klaviyo sync échouée (accès débloqué quand même) :', err.message);
@@ -594,13 +600,11 @@ const CHAT_MODEL = 'claude-sonnet-4-6';
 /* ── Quiz CRPE ──
    Projet Supabase « quizzcrpe ». Parcours : compte → test de positionnement gratuit (obligatoire) → paiement PayPal
    (59 € TTC) → accès au quiz. Le blocage est vérifié ici : catalogue et correction réservés aux comptes payés.
-   Questions : fonctions quiz_catalogue / quiz_correction ; comptes : quiz_compte, quiz_enregistrer_positionnement et
-   quiz_marquer_paye, protégées par QUIZ_SERVER_SECRET. */
+   Questions : fonctions quiz_catalogue / quiz_correction ; comptes : table quiz_comptes, via la clé service_role du projet
+   (QUIZ_SUPABASE_SERVICE_ROLE_KEY), comme profils_utilisateurs pour PassCRPE. */
 const QUIZ_MATIERES = ['francais', 'mathematiques', 'histoire_geographie', 'emc', 'svt', 'physique_chimie', 'technologie', 'arts', 'anglais'];
 const QUIZ_LABELS = { francais: 'Français', mathematiques: 'Mathématiques', histoire_geographie: 'Histoire-géographie', emc: 'EMC', svt: 'SVT', physique_chimie: 'Physique-chimie', technologie: 'Technologie', arts: 'Arts', anglais: 'Anglais' };
 const QUIZ_PRICE = { currency_code: 'EUR', value: '59.00' }; // 59 € TTC, aligné avec la page /quizz
-const QUIZ_SECRET = process.env.QUIZ_SERVER_SECRET;
-if (!QUIZ_SECRET) console.error('[config] QUIZ_SERVER_SECRET manquante : comptes du quiz indisponibles');
 const POSITIONNEMENT_PAR_MATIERE = { facile: 2, intermediaire: 2, difficile: 1 }; // 5 questions × 9 matières = 45 questions
 const melanger = a => { const t = [...a]; for (let i = t.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [t[i], t[j]] = [t[j], t[i]]; } return t; };
 
@@ -626,9 +630,9 @@ async function quizCompte(req, { frais = false } = {}) {
   if (!frais && c && c.until > Date.now()) return c.compte;
   const { data, error } = await quizDb.auth.getUser(token);
   if (error || !data?.user) return null;
-  const { data: lignes, error: e2 } = await quizDb.rpc('quiz_compte', { p_cle: QUIZ_SECRET, p_user: data.user.id });
+  const { data: ligne, error: e2 } = await quizAdmin.from('quiz_comptes').select('positionnement, paid').eq('user_id', data.user.id).maybeSingle();
   if (e2) throw new Error(e2.message);
-  const l = lignes?.[0] || {};
+  const l = ligne || {};
   const compte = { id: data.user.id, email: data.user.email, positionnement: l.positionnement || null, paid: l.paid === true };
   quizSessions.set(token, { compte, until: Date.now() + 120000 });
   return compte;
@@ -731,8 +735,15 @@ app.post('/api/quiz/positionnement', async (req, res) => {
     });
     const ok = matieres.reduce((s, m) => s + m.ok, 0), n = matieres.reduce((s, m) => s + m.n, 0);
     const resultat = { date: new Date().toISOString(), ok, n, pct: n ? Math.round(ok / n * 100) : 0, matieres };
-    const { data: enregistre, error } = await quizDb.rpc('quiz_enregistrer_positionnement', { p_cle: QUIZ_SECRET, p_user: compte.id, p_email: compte.email, p_resultat: resultat });
-    if (error) throw new Error(error.message);
+    // Enregistré une seule fois : un second envoi ne remplace pas le premier résultat
+    const { data: existant } = await quizAdmin.from('quiz_comptes').select('positionnement').eq('user_id', compte.id).maybeSingle();
+    let enregistre = existant?.positionnement;
+    if (!enregistre) {
+      const { error } = await quizAdmin.from('quiz_comptes').upsert({ user_id: compte.id, email: compte.email, positionnement: resultat,
+        positionnement_at: resultat.date, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
+      if (error) throw new Error(error.message);
+      enregistre = resultat;
+    }
     quizOublier(compte.id);
     // Klaviyo : test passé et score global (sert aux relances vers le paiement)
     if (compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) klaviyoSetProperties(compte.email, { quiz_positionnement: true, quiz_positionnement_score: resultat.pct, quiz_positionnement_at: resultat.date }).catch(e => console.error('[Klaviyo positionnement]', e.message));
