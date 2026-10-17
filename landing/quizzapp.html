@@ -290,6 +290,28 @@
     .quiz-msg { padding: 14px 16px; border-radius: 12px; background: #fef2f2; color: #7f1d1d; font-size: 15px; }
     .quiz-link { background: none; border: 0; font: inherit; font-size: 13px; color: var(--gray-500); text-decoration: underline; cursor: pointer; padding: 0; }
     @media (max-width: 600px) { .quiz-card { padding: 20px 16px; } .quiz-q { font-size: 17px; } .quiz-phrase { font-size: 17px; } .stat b { font-size: 19px; } }
+    .quiz-compte { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 16px; font-size: 13px; color: var(--gray-500); margin: 0 0 14px; }
+    .quiz-compte .liens { display: flex; gap: 14px; flex-wrap: wrap; }
+    .quiz-card h2 { font-size: 22px; font-weight: 900; color: var(--gray-900); line-height: 1.25; margin-bottom: 10px; }
+    .quiz-card > p { font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
+    .quiz-points { margin: 6px 0 4px 18px; font-size: 15px; line-height: 1.7; }
+    .quiz-choice.sel { border-color: #f97316; background: #fff7ed; font-weight: 700; }
+    .carte-global { text-align: center; margin: 8px 0 18px; }
+    .carte-global .big { font-size: 52px; font-weight: 900; color: var(--gray-900); line-height: 1; }
+    .carte-ligne { display: grid; grid-template-columns: 150px 1fr 48px; gap: 10px; align-items: center; margin: 9px 0; font-size: 14px; font-weight: 700; color: var(--gray-800); }
+    .carte-ligne .barre { height: 12px; border-radius: 10px; background: var(--gray-100); overflow: hidden; }
+    .carte-ligne .barre span { display: block; height: 100%; border-radius: 10px; }
+    .carte-ligne .pct { text-align: right; font-weight: 900; }
+    .fort { background: #16a34a; } .moyen { background: #f59e0b; } .faible { background: #dc2626; }
+    .carte-listes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+    .carte-listes div { background: var(--gray-50); border-radius: 14px; padding: 14px; }
+    .carte-listes h3 { font-size: 14px; font-weight: 900; color: var(--gray-900); margin-bottom: 6px; }
+    .carte-listes li { font-size: 13.5px; line-height: 1.5; margin: 3px 0 3px 16px; }
+    .paywall { margin-top: 18px; border: 2px solid #fdba74; background: linear-gradient(160deg, #fff7ed, #fff 60%); }
+    .paywall .prix { font-size: 40px; font-weight: 900; color: var(--gray-900); letter-spacing: -1px; }
+    .paywall .prix span { font-size: 14px; font-weight: 600; color: var(--gray-500); letter-spacing: 0; }
+    .paypal-zone { display: grid; gap: 10px; margin-top: 16px; max-width: 420px; }
+    @media (max-width: 600px) { .carte-ligne { grid-template-columns: 105px 1fr 42px; font-size: 13px; } .carte-listes { grid-template-columns: 1fr; } }
   .quiz-confirm { background: #dcfce7; color: #166534; font-weight: 600; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -397,11 +419,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <main class="quiz-wrap">
   <h1>Quiz CRPE</h1>
   <p class="quiz-confirm" id="quiz-confirm" hidden>✓ Votre adresse e-mail est confirmée : bienvenue sur le Quiz CRPE !</p>
-  <p class="quiz-lead">Choisissez une matière et un niveau, puis répondez à des séries de 20 questions rattachées au programme du concours. Chaque notion est posée sous plusieurs formes : avec 3 bonnes réponses, elle est maîtrisée. En cas d'erreur, vous voyez l'explication et une question similaire revient plus tard. Votre progression est gardée sur cet appareil.</p>
+  <p class="quiz-lead">Séries de 20 questions rattachées au programme du concours, par matière et par niveau. Chaque notion est posée sous plusieurs formes : avec 3 bonnes réponses, elle est maîtrisée. En cas d'erreur, vous voyez l'explication et une question similaire revient plus tard.</p>
   <div id="quiz-app"></div>
 </main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 (function () {
+  var SB = window.supabase.createClient('https://uwsdfbmootumhsrufkmo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c2RmYm1vb3R1bWhzcnVma21vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNDU1OTEsImV4cCI6MjEwNzgyMTU5MX0.W1uAsiBPR4mEoxjNBp308uNNhHt21dlXpGzPBHPXVuk'), PRIX = '59 €';
+  var compte = null, tst = null, CLE_TEST = 'passcrpe-quiz-test';
+  function jeton() { return SB.auth.getSession().then(function (r) { return r.data.session ? r.data.session.access_token : null; }); }
+  // Appels à l'API du quiz avec le jeton du compte ; les erreurs gardent leur code (connexion, paiement)
+  function api(url, opts) {
+    return jeton().then(function (t) {
+      var h = { 'Content-Type': 'application/json' }; if (t) h.Authorization = 'Bearer ' + t;
+      return fetch(url, Object.assign({}, opts || {}, { headers: h }));
+    }).then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) {
+      if (!r.ok) { var e = new Error(d.error || 'Erreur'); e.code = d.code; e.status = r.status; throw e; } return d; }); });
+  }
   var MATIERES = [["francais", "Français", "✍️"], ["mathematiques", "Mathématiques", "🔢"], ["histoire_geographie", "Histoire-géographie", "🌍"], ["emc", "Enseignement moral et civique", "⚖️"], ["svt", "Sciences de la vie et de la Terre", "🌱"], ["physique_chimie", "Physique-chimie", "⚗️"], ["technologie", "Technologie", "⚙️"], ["arts", "Arts", "🎨"], ["anglais", "Anglais", "🇬🇧"]], SERIE = 20, MAITRISE = 3, INTERVALLES = [1, 3], APRES_ERREUR = 1;
   var JOUR = 86400000, CLE = 'passcrpe-quiz-v1';
   var NIVEAUX = { facile: 'Facile', intermediaire: 'Intermédiaire', difficile: 'Avancé' };
@@ -433,7 +467,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
   function charger(mat) {
     if (catalogues[mat]) return Promise.resolve(catalogues[mat]);
-    return fetch('/api/quiz/catalogue?matiere=' + encodeURIComponent(mat)).then(function (r) { return r.json(); }).then(function (d) {
+    return api('/api/quiz/catalogue?matiere=' + encodeURIComponent(mat)).then(function (d) {
       if (!d.questions || !d.questions.length) throw new Error(d.error || 'vide');
       catalogues[mat] = grouper(d.questions); return catalogues[mat];
     });
@@ -478,7 +512,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // ── Écrans ──
   function accueil() {
     st = null;
-    root.innerHTML = '<div class="quiz-card quiz-filtres">' +
+    root.innerHTML = barreCompte() + '<div class="quiz-card quiz-filtres">' +
       '<div class="quiz-filtre"><label for="quiz-mat">Matière</label><select id="quiz-mat" class="quiz-select">' +
       MATIERES.map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === choix.mat ? ' selected' : '') + '>' + esc(m[1]) + '</option>'; }).join('') + '</select></div>' +
       '<div class="quiz-filtre"><span class="lbl" id="quiz-niv-lbl">Niveau</span><div class="quiz-niveaux" role="group" aria-labelledby="quiz-niv-lbl">' +
@@ -502,6 +536,137 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }).catch(function () { el.textContent = 'Le quiz n\'a pas pu être chargé. Réessaie dans quelques instants.'; });
   }
 
+  // ── Compte : connexion, test de positionnement, paiement ──
+  function barreCompte() {
+    return '<div class="quiz-compte"><span>' + esc(compte && compte.email || '') + '</span><span class="liens">' +
+      (compte && compte.positionnement ? '<button type="button" class="quiz-link" data-act="voir-resultat">Mon test de positionnement</button>' : '') +
+      '<button type="button" class="quiz-link" data-act="logout">Se déconnecter</button></span></div>';
+  }
+  function erreur(msg) {
+    root.innerHTML = '<div class="quiz-msg">' + esc(msg) + '</div><div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-act="boot">Réessayer</button></div>';
+  }
+  // Choix de l'écran selon le compte : connexion → test → résultat et paiement → quiz
+  function boot() {
+    st = null; tst = null;
+    root.innerHTML = '<div class="quiz-card"><p>Chargement…</p></div>';
+    jeton().then(function (t) {
+      if (!t) return connexion();
+      return api('/api/quiz/compte').then(function (c) {
+        compte = c;
+        if (!c.positionnement) return introTest();
+        if (!c.paid) return resultat(c.positionnement);
+        accueil();
+      });
+    }).catch(function (e) { if (e.status === 401) return connexion(); erreur('Votre compte n\'a pas pu être chargé. Réessayez dans quelques instants.'); });
+  }
+  function connexion() {
+    root.innerHTML = '<div class="quiz-card"><h2>Connectez-vous pour accéder au Quiz CRPE</h2>' +
+      '<p>Créez votre compte gratuitement : vous commencez par un <strong>test de positionnement de 15 minutes</strong> qui vous donne la carte de vos forces et faiblesses dans les 9 matières.</p>' +
+      '<div class="quiz-actions"><a class="quiz-btn" href="/quizz?auth=register">Créer mon compte gratuitement</a><a class="quiz-btn ghost" href="/quizz?auth=login">J\'ai déjà un compte</a></div></div>';
+  }
+  function introTest() {
+    var t = lireTest();
+    root.innerHTML = barreCompte() + '<div class="quiz-card"><h2>Votre test de positionnement</h2>' +
+      '<p>Avant d\'accéder au quiz, faites le point sur votre niveau. Le test est <strong>gratuit</strong> et dure environ <strong>15 minutes</strong> :</p>' +
+      '<ul class="quiz-points"><li>45 questions, 5 dans chacune des 9 matières ;</li><li>des questions faciles, intermédiaires et avancées ;</li><li>pas de correction pendant le test : à la fin, vous obtenez votre carte des forces et faiblesses, matière par matière.</li></ul>' +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="test-start">' + (t ? 'Reprendre mon test (question ' + (t.i + 1) + ' / ' + t.qs.length + ')' : 'Commencer mon test') + '</button></div></div>';
+  }
+  function lireTest() { try { var t = JSON.parse(localStorage.getItem(CLE_TEST)); return t && t.qs && t.qs.length && t.user === (compte && compte.email) ? t : null; } catch (e) { return null; } }
+  function garderTest() { try { localStorage.setItem(CLE_TEST, JSON.stringify(tst)); } catch (e) {} }
+  function testStart() {
+    tst = lireTest();
+    if (tst) return testQuestion();
+    root.innerHTML = '<div class="quiz-card"><p>Préparation de votre test…</p></div>';
+    api('/api/quiz/positionnement').then(function (d) {
+      if (d.deja) { compte.positionnement = d.deja; return resultat(d.deja); }
+      tst = { user: compte.email, qs: d.questions, i: 0, rep: [] }; garderTest(); testQuestion(); top();
+    }).catch(function () { erreur('Le test n\'a pas pu être chargé. Réessayez dans quelques instants.'); });
+  }
+  function testQuestion() {
+    var q = tst.qs[tst.i], n = tst.qs.length, corps;
+    tst.val = null;
+    if (q.type === 'numerique') corps = '<div class="quiz-num"><input type="text" inputmode="decimal" autocomplete="off" placeholder="Votre réponse (nombre)" aria-label="Votre réponse" id="t-num"></div>';
+    else if (q.type === 'cliquer_mot') { tst.val = []; corps = '<p class="quiz-hint">Cliquez sur le ou les mots.</p><div class="quiz-phrase">' + q.choix.map(function (t, k) {
+        return /[\wÀ-ÿ]/.test(t) ? '<button type="button" class="tok" data-ttok="' + k + '">' + esc(t) + '</button>' : '<span class="punct">' + esc(t) + '</span>'; }).join(' ') + '</div>'; }
+    else corps = '<div class="quiz-choices">' + q.choix.map(function (c, k) { return '<button type="button" class="quiz-choice" data-tk="' + k + '">' + esc(c) + '</button>'; }).join('') + '</div>';
+    root.innerHTML = '<div class="quiz-card"><div class="quiz-top"><span class="mat">Test de positionnement · ' + esc(label(q.matiere)) + '</span><span>Question ' + (tst.i + 1) + ' / ' + n + '</span></div>' +
+      '<div class="quiz-bar"><span style="width:' + Math.round(tst.i / n * 100) + '%"></span></div>' +
+      '<p class="quiz-q">' + esc(q.question) + '</p>' + corps +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="t-suivant">' + (tst.i === n - 1 ? 'Terminer le test' : 'Question suivante →') + '</button><button type="button" class="quiz-btn ghost" data-act="t-passer">Je ne sais pas</button></div></div>';
+    var inp = document.getElementById('t-num'); if (inp) inp.focus();
+  }
+  function testRepondre(passer) {
+    var q = tst.qs[tst.i], v = '';
+    if (!passer) {
+      if (q.type === 'numerique') v = (document.getElementById('t-num').value || '').trim();
+      else if (q.type === 'cliquer_mot') v = tst.val.slice().sort(function (a, b) { return a - b; }).join(',');
+      else v = tst.val == null ? '' : q.choix[tst.val];
+      if (v === '') { alert('Choisissez une réponse, ou cliquez sur « Je ne sais pas ».'); return; }
+    }
+    tst.rep[tst.i] = { id: q.id, reponse: v }; tst.i++; garderTest();
+    if (tst.i < tst.qs.length) { testQuestion(); return; }
+    root.innerHTML = '<div class="quiz-card"><p>Correction de votre test…</p></div>';
+    api('/api/quiz/positionnement', { method: 'POST', body: JSON.stringify({ reponses: tst.rep }) }).then(function (d) {
+      try { localStorage.removeItem(CLE_TEST); } catch (e) {}
+      compte.positionnement = d.resultat; tst = null; resultat(d.resultat); top();
+    }).catch(function () { tst.i--; garderTest(); erreur('Votre test n\'a pas pu être corrigé. Vos réponses sont gardées : réessayez.'); });
+  }
+  // Carte des forces et faiblesses ; tant que le compte n'est pas payé, elle se termine par le paiement
+  function resultat(r) {
+    var classe = function (p) { return p >= 75 ? 'fort' : p >= 50 ? 'moyen' : 'faible'; };
+    var forts = [], faibles = [];
+    // points forts pris dans les matières les mieux réussies, priorités dans les moins bien réussies
+    var tri = r.matieres.slice().sort(function (a, b) { return b.pct - a.pct; });
+    tri.forEach(function (m) { m.themes.forEach(function (t) { if (t.ok === t.n) forts.push(m.label + ' : ' + t.theme); }); });
+    tri.slice().reverse().forEach(function (m) { m.themes.forEach(function (t) { if (t.ok / t.n < .5) faibles.push(m.label + ' : ' + t.theme); }); });
+    var html = barreCompte() + '<div class="quiz-card"><h2>Votre carte de positionnement</h2>' +
+      '<div class="carte-global"><div class="big">' + r.pct + ' %</div><p>' + r.ok + ' bonnes réponses sur ' + r.n + '</p></div>' +
+      r.matieres.slice().sort(function (a, b) { return b.pct - a.pct; }).map(function (m) {
+        return '<div class="carte-ligne"><span>' + esc(m.label) + '</span><div class="barre"><span class="' + classe(m.pct) + '" style="width:' + Math.max(m.pct, 3) + '%"></span></div><span class="pct">' + m.pct + ' %</span></div>'; }).join('') +
+      '<div class="carte-listes"><div><h3>💪 Vos points forts</h3><ul>' + (forts.slice(0, 6).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') || '<li>À construire : le quiz est fait pour ça.</li>') + '</ul></div>' +
+      '<div><h3>🎯 À travailler en priorité</h3><ul>' + (faibles.slice(0, 6).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') || '<li>Aucune lacune nette : visez la maîtrise complète.</li>') + '</ul></div></div>';
+    if (compte && compte.paid) html += '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Aller au quiz</button></div></div>';
+    else html += '</div><div class="quiz-card paywall"><h2>Débloquez le Quiz CRPE pour combler ces lacunes</h2>' +
+      '<ul class="quiz-points"><li>2 700 questions dans les 9 matières, en facile, intermédiaire et avancé ;</li><li>des séries de 20 notées sur 20, avec l\'explication de chaque erreur ;</li><li>des révisions espacées : chaque notion revient jusqu\'à être maîtrisée ;</li><li>votre progression par matière, par niveau et par thème.</li></ul>' +
+      '<div class="prix">' + PRIX + ' <span>TTC · paiement unique</span></div>' +
+      '<div class="paypal-zone"><div id="pp-paypal"></div><div id="pp-carte"></div></div>' +
+      '<p class="quiz-hint" id="pp-msg" style="margin-top:10px">Paiement sécurisé par PayPal, par compte PayPal ou carte bancaire.</p>' +
+      '<p style="margin-top:8px"><button type="button" class="quiz-link" data-act="boot">J\'ai déjà payé : actualiser mon accès</button></p></div>';
+    root.innerHTML = html;
+    if (!(compte && compte.paid)) paypal();
+  }
+  function chargerPaypal() {
+    if (window.paypal && window.paypal.Buttons) return Promise.resolve();
+    if (!compte.paypal_client_id) return Promise.reject(new Error('id'));
+    return new Promise(function (ok, ko) {
+      var s = document.createElement('script');
+      s.src = 'https://www.paypal.com/sdk/js?client-id=' + encodeURIComponent(compte.paypal_client_id) + '&components=buttons&intent=capture&currency=EUR&disable-funding=venmo';
+      s.onload = ok; s.onerror = ko; document.head.appendChild(s);
+    });
+  }
+  // Même fonctionnement que PassCRPE : commande créée par le serveur (custom_id = compte), capture puis déblocage
+  function paypal() {
+    var msg = function (t, err) { var el = document.getElementById('pp-msg'); if (el) { el.textContent = t; el.style.color = err ? '#b91c1c' : ''; } };
+    chargerPaypal().then(function () {
+      var opts = {
+        createOrder: function () { msg('Ouverture du paiement…'); return api('/api/quiz/paypal/create-order', { method: 'POST' }).then(function (d) { return d.id; }); },
+        onApprove: function (data) {
+          msg('Confirmation du paiement…');
+          return api('/api/quiz/paypal/capture-order', { method: 'POST', body: JSON.stringify({ orderID: data.orderID }) }).then(function (d) {
+            if (d.status !== 'COMPLETED') throw new Error('non confirmé');
+            window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'purchase', parcours: 'quizcrpe', value: 59, currency: 'EUR' });
+            boot();
+          }).catch(function () { msg('Le paiement n\'a pas pu être confirmé. S\'il a été débité, cliquez sur « J\'ai déjà payé » dans quelques instants.', true); });
+        },
+        onError: function () { msg('Une erreur est survenue avec PayPal. Réessayez.', true); }
+      };
+      var b1 = window.paypal.Buttons(Object.assign({ fundingSource: window.paypal.FUNDING.PAYPAL, style: { layout: 'horizontal', color: 'blue', shape: 'pill', label: 'pay', height: 45 } }, opts));
+      var b2 = window.paypal.Buttons(Object.assign({ fundingSource: window.paypal.FUNDING.CARD, style: { layout: 'horizontal', color: 'black', shape: 'pill', label: 'pay', height: 45 } }, opts));
+      if (b1.isEligible()) b1.render('#pp-paypal');
+      if (b2.isEligible()) b2.render('#pp-carte');
+    }).catch(function () { msg('Le module de paiement PayPal n\'a pas pu se charger. Rechargez la page.', true); });
+  }
+
   function demarrer(mat, niveau) {
     root.innerHTML = '<div class="quiz-card"><p>Chargement des questions…</p></div>';
     charger(mat).then(function (cat) {
@@ -509,7 +674,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (!serie.length) return progression(mat, 'Toutes les notions de niveau ' + NIVEAUX[niveau].toLowerCase() + ' sont maîtrisées dans cette matière. Bravo ! Essayez un autre niveau.');
       st = { mat: mat, niveau: niveau, cat: cat, serie: serie, i: 0, score: 0, recap: [], sel: [], repondu: false };
       question(); top();
-    }).catch(function () {
+    }).catch(function (e) {
+      if (e.status === 401 || e.status === 402) return boot();
       root.innerHTML = '<div class="quiz-msg">Le quiz n\'a pas pu être chargé. Réessaie dans quelques instants.</div><div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>';
     });
   }
@@ -543,9 +709,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function envoyer(reponse, afficher) {
     if (st.repondu) return; st.repondu = true;
     var q = st.serie[st.i];
-    fetch('/api/quiz/reponse', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ id: q.id, reponse: reponse }) })
-      .then(function (r) { return r.json(); }).then(function (d) {
-        if (d.error) throw new Error(d.error);
+    api('/api/quiz/reponse', { method: 'POST', body: JSON.stringify({ id: q.id, reponse: reponse }) })
+      .then(function (d) {
         afficher(d);
         var suite = enregistrer(q, d.correct);
         if (d.correct) st.score++;
@@ -555,7 +720,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           '<div class="quiz-feedback ' + (d.correct ? 'ok' : 'ko') + '"><strong>' + (d.correct ? 'Bonne réponse !' : 'Ce n\'est pas la bonne réponse. Réponse attendue : ' + esc(d.attendu)) + '</strong>' + esc(d.explication) +
           '<span class="suite">' + suite + '</span></div>' +
           '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="next">' + (last ? 'Voir ma note' : 'Question suivante →') + '</button></div>';
-      }).catch(function () {
+      }).catch(function (e) {
+        if (e.status === 401 || e.status === 402) return boot();
         st.repondu = false;
         document.getElementById('quiz-fb').innerHTML = '<div class="quiz-msg" style="margin-top:16px">La correction n\'a pas pu être chargée. Réessaie.</div>';
       });
@@ -626,6 +792,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // ── Interactions ──
   root.addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b || b.type === 'submit') return;
+    if (tst && b.dataset.tk !== undefined) { tst.val = +b.dataset.tk; root.querySelectorAll('.quiz-choice').forEach(function (x) { x.classList.toggle('sel', x === b); }); return; }
+    if (tst && b.dataset.ttok !== undefined) { var tk = +b.dataset.ttok, ti = tst.val.indexOf(tk); if (ti < 0) tst.val.push(tk); else tst.val.splice(ti, 1); b.classList.toggle('sel'); return; }
     if (b.dataset.niv) { choix.niveau = b.dataset.niv; garderChoix(); root.querySelectorAll('.quiz-niveau').forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); resume(); return; }
     if (b.dataset.k !== undefined && st && !st.repondu) {
       var q = st.serie[st.i], k = +b.dataset.k, btns = root.querySelectorAll('.quiz-choice');
@@ -649,6 +817,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       });
     }
     else if (act === 'next') { if (st.i < st.serie.length - 1) { st.i++; question(); top(); } else fin(); }
+    else if (act === 'boot') boot();
+    else if (act === 'test-start') testStart();
+    else if (act === 't-suivant') testRepondre(false);
+    else if (act === 't-passer') testRepondre(true);
+    else if (act === 'voir-resultat') { resultat(compte.positionnement); top(); }
+    else if (act === 'logout') SB.auth.signOut().then(function () { compte = null; connexion(); });
     else if (act === 'start') demarrer(choix.mat, choix.niveau);
     else if (act === 'prog-choix') { st = null; progression(choix.mat); }
     else if (act === 'again') demarrer(st.mat, st.niveau);
@@ -659,6 +833,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   root.addEventListener('change', function (e) {
     if (e.target.id === 'quiz-mat') { choix.mat = e.target.value; garderChoix(); resume(); }
   });
+  root.addEventListener('keydown', function (e) { if (tst && e.key === 'Enter' && e.target.id === 't-num') { e.preventDefault(); testRepondre(false); } });
   root.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!st || st.repondu) return;
@@ -666,7 +841,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     inp.disabled = true; root.querySelector('.quiz-num button').disabled = true;
     envoyer(v, function (d) { inp.classList.add(d.correct ? 'good' : 'bad'); });
   });
-  accueil();
+  boot();
 })();
 </script>
 <script>

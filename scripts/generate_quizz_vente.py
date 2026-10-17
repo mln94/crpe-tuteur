@@ -7,9 +7,11 @@ Usage   : python3 scripts/generate_quizz_vente.py
 
 L'inscription est le même formulaire que sur la page d'accueil (compte Supabase + /api/klaviyo/signup).
 Différences : window.SIGNUP_PARCOURS = 'quizcrpe', envoyé à Klaviyo dans la propriété « parcours », et
-window.AFTER_SIGNUP_URL = '/quizzapp' : après l'inscription ou la connexion, la personne arrive sur le quiz.
+window.SIGNUP_SUCCESS_MESSAGE : après l'inscription, message « confirmez votre e-mail » ; window.AFTER_LOGIN_URL = '/quizzapp' :
+après la connexion, la personne arrive sur le quiz.
 Les comptes sont créés dans le projet Supabase « quizzcrpe » (window.SB_URL / SB_KEY), séparé du tuteur IA,
-et le lien de l'e-mail de confirmation ramène sur /quizz pour se connecter (window.EMAIL_REDIRECT_URL).
+et le lien de l'e-mail de confirmation ramène sur /quizz (window.EMAIL_REDIRECT_URL) : la session est ouverte
+automatiquement et la personne part sur /quizzapp pour son test de positionnement gratuit, puis le paiement.
 À relancer après une modification du formulaire d'inscription, du menu ou du pied de page de l'accueil.
 """
 import os
@@ -23,10 +25,10 @@ SITE = 'https://www.passcrpe.fr'
 QUIZ_SB_URL = 'https://uwsdfbmootumhsrufkmo.supabase.co'
 QUIZ_SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c2RmYm1vb3R1bWhzcnVma21vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNDU1OTEsImV4cCI6MjEwNzgyMTU5MX0.W1uAsiBPR4mEoxjNBp308uNNhHt21dlXpGzPBHPXVuk'
 
-PRIX_QUIZ = '49,99 €'
+PRIX_QUIZ = '59 €'
 PRIX_PACK = '389 €'
-PRIX_PACK_BARRE = '408,99 €'   # 359 € (tuteur IA) + 49,99 € (quiz)
-ECONOMIE_PACK = '19,99 €'
+PRIX_PACK_BARRE = '418 €'   # 359 € (tuteur IA) + 59 € (quiz)
+ECONOMIE_PACK = '29 €'
 QUESTIONS_PAR_MATIERE = 300
 
 # (libellé, icône, exemples de thèmes)
@@ -56,9 +58,12 @@ FAQ = [
     ("Combien coûte le quiz ?",
      f"Le Quiz CRPE coûte {PRIX_QUIZ} TTC. Il existe aussi un pack avec le tuteur IA PassCRPE à {PRIX_PACK} TTC "
      f"au lieu de {PRIX_PACK_BARRE}."),
-    ("Pourquoi créer un compte maintenant ?",
-     "Votre compte PassCRPE vous permet d'être parmi les premiers à accéder au quiz et de profiter dès aujourd'hui de "
-     "l'essai gratuit du tuteur IA en mathématiques et en français."),
+    ("Le test de positionnement est-il vraiment gratuit ?",
+     "Oui. Après votre inscription, vous passez un test de 45 questions (environ 15 minutes) et obtenez gratuitement votre "
+     "carte des forces et faiblesses dans les 9 matières. Vous décidez ensuite de débloquer le quiz complet, sans engagement."),
+    ("Comment débloquer le quiz ?",
+     f"Par un paiement unique de {PRIX_QUIZ} TTC via PayPal, par compte PayPal ou carte bancaire. L'accès est débloqué "
+     "aussitôt le paiement confirmé."),
 ]
 
 CSS = """
@@ -101,13 +106,19 @@ CSS = """
     .qz-feature h3 { font-size: 17px; font-weight: 800; color: var(--gray-900); margin-bottom: 8px; }
     .qz-feature p { font-size: 14px; color: var(--gray-600); line-height: 1.6; }
 
+    .qz-test { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+    .qz-carte { display: grid; grid-template-columns: 130px 1fr 44px; gap: 10px; align-items: center; margin: 9px 0; font-size: 13.5px; font-weight: 700; color: var(--gray-800); }
+    .qz-carte div { height: 10px; border-radius: 10px; background: var(--gray-100); overflow: hidden; }
+    .qz-carte i { display: block; height: 100%; border-radius: 10px; }
+    .qz-carte b { text-align: right; }
+    .qz-carte .fort { background: #16a34a; } .qz-carte .moyen { background: #f59e0b; } .qz-carte .faible { background: #dc2626; }
     .qz-prix { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 44px; max-width: 860px; margin-left: auto; margin-right: auto; }
     .qz-center { text-align: center; }
     .qz-center .section-sub { max-width: 680px; margin: 0 auto; }
     .faq-answer p { padding-right: 38px; }
 
     @media (max-width: 960px) {
-      .qz-hero-inner { grid-template-columns: 1fr; gap: 36px; }
+      .qz-hero-inner, .qz-test { grid-template-columns: 1fr; gap: 36px; }
       .qz-matieres, .qz-features { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 640px) {
@@ -157,7 +168,7 @@ def contenu():
         <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
         <a href="#fonctionnement" class="btn-secondary">Voir comment ça marche</a>
       </div>
-      <p class="qz-hero-price"><strong>{PRIX_QUIZ} TTC</strong> · ou <strong>{PRIX_PACK} TTC</strong> avec le tuteur IA PassCRPE</p>
+      <p class="qz-hero-price"><strong>Test de positionnement gratuit</strong> (15 min) · puis <strong>{PRIX_QUIZ} TTC</strong> pour débloquer le quiz</p>
       <div class="qz-stats">
         <div class="qz-stat"><strong>{total_txt}</strong><span>questions</span></div>
         <div class="qz-stat"><strong>{len(MATIERES)}</strong><span>matières</span></div>
@@ -179,6 +190,27 @@ def contenu():
     </div>
   </div>
 </header>
+
+<!-- ═══════════════════════════════ TEST DE POSITIONNEMENT ═══════════════════════════════ -->
+<section id="positionnement">
+  <div class="container">
+    <div class="qz-test">
+      <div>
+        <div class="section-eyebrow">Gratuit · 15 minutes</div>
+        <h2 class="section-title">Votre carte des forces et faiblesses dès le premier jour</h2>
+        <p class="section-sub">Juste après votre inscription, un test de positionnement de 45 questions (5 par matière, sur les trois niveaux) vous montre où vous en êtes. Vous savez immédiatement par où commencer.</p>
+        <div class="hero-actions" style="justify-content:flex-start;margin-top:24px">
+          <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
+        </div>
+      </div>
+      <div class="qz-demo" aria-label="Exemple de carte de positionnement">
+        <div class="qz-demo-top"><span>Exemple de carte de positionnement</span><span>62 %</span></div>
+        {''.join(f'<div class="qz-carte"><span>{m}</span><div><i class="{c}" style="width:{p}%"></i></div><b>{p} %</b></div>' for m, p, c in [('Français', 80, 'fort'), ('Histoire-géographie', 80, 'fort'), ('Mathématiques', 60, 'moyen'), ('SVT', 60, 'moyen'), ('Physique-chimie', 40, 'faible'), ('Arts', 40, 'faible')])}
+        <p class="qz-demo-expl"><strong>À travailler en priorité :</strong> Physique-chimie : l'énergie et ses conversions · Mathématiques : proportionnalité · Arts : éducation musicale</p>
+      </div>
+    </div>
+  </div>
+</section>
 
 <!-- ═══════════════════════════════ FONCTIONNEMENT ═══════════════════════════════ -->
 <section id="fonctionnement" style="background:var(--gray-50)">
@@ -230,21 +262,22 @@ def contenu():
     <h2 class="section-title">Un prix simple, sans abonnement caché</h2>
     <div class="qz-prix" style="text-align:left">
       <div class="offre-card offre-quiz fade-up">
-        <span class="offre-badge">Bientôt disponible</span>
+        <span class="offre-badge">Test de positionnement gratuit</span>
         <div class="offre-head">
           <div class="offre-icon">🎯</div>
           <div><h3>Quiz CRPE</h3><p class="offre-tagline">Réviser vite, dans toutes les matières</p></div>
         </div>
         <div class="offre-price"><strong>{PRIX_QUIZ}</strong><span>TTC</span></div>
         <ul class="offre-list">
+          <li>Test de positionnement gratuit : votre carte des forces et faiblesses</li>
           <li>{total_txt} questions dans {len(MATIERES)} matières</li>
           <li>Séries de 20 questions notées sur 20</li>
           <li>Explication de chaque erreur et révision espacée</li>
           <li>Progression par thème du programme</li>
         </ul>
         <div class="offre-cta">
-          <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">Créer mon compte</a>
-          <p class="offre-note">Créez votre compte pour accéder au quiz parmi les premiers.</p>
+          <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">Vérifiez votre niveau gratuitement</a>
+          <p class="offre-note">Paiement unique via PayPal après votre test gratuit.</p>
         </div>
       </div>
       <div class="offre-card offre-pack fade-up" style="animation-delay:.1s">
@@ -262,7 +295,7 @@ def contenu():
         </ul>
         <div class="offre-cta">
           <a href="#" class="btn-white cta-commencer" onclick="openAuth(event,'register')" style="width:100%;justify-content:center">Créer mon compte</a>
-          <p class="offre-note" style="color:rgba(255,255,255,.75)">Essai gratuit du tuteur IA dès l'inscription.</p>
+          <p class="offre-note" style="color:rgba(255,255,255,.75)">Pack bientôt disponible à l'achat.</p>
         </div>
       </div>
     </div>
@@ -294,6 +327,19 @@ def contenu():
 '''
 
 
+# Retour depuis l'e-mail de confirmation : le client Supabase lit la session dans l'URL, puis direction le test
+RETOUR_CONFIRMATION = """<script>
+  function allerAuTest() { getSB().auth.getSession().then(function () { window.location.href = '/quizzapp'; }); }
+  (function () {
+    var h = new URLSearchParams(window.location.hash.slice(1));
+    if (h.get('type') !== 'signup' || !h.get('access_token')) return;
+    getSB();
+    setTimeout(allerAuTest, 3500);
+  })();
+</script>
+"""
+
+
 def main():
     src = open(SRC, encoding='utf-8').read()
 
@@ -302,7 +348,7 @@ def main():
     head = re.sub(r'<title>.*?</title>', '<title>Quiz CRPE : arrivez au CRPE en maîtrisant toutes les matières</title>', head, flags=re.S)
     head = re.sub(r'<meta name="description"[^>]*/>',
                   '<meta name="description" content="Le Quiz CRPE : 300 questions par matière sur le programme du cycle 4, '
-                  'des séries de 20 notées sur 20, l\'explication de chaque erreur et des révisions espacées. 49,99 € TTC." />\n'
+                  'des séries de 20 notées sur 20, l\'explication de chaque erreur et des révisions espacées. Test de positionnement gratuit." />\n'
                   f'  <link rel="canonical" href="{SITE}/quizz" />', head)
     head = head.replace('href="favicon.svg"', 'href="/favicon.svg"')
     head = head.replace('  </style>', CSS + '  </style>', 1)
@@ -328,6 +374,12 @@ def main():
 
     # Fenêtres de confirmation et de connexion/inscription, identiques à l'accueil
     modales = cut(src, '<!-- ═══════════════════════ CONFIRMATION POPUP', '<script>\n  /* ── FAQ accordion')
+    for a, b in [('<p>Votre adresse e-mail a bien été confirmée.<br>Vous pouvez maintenant vous connecter et commencer votre préparation.</p>',
+                  '<p>Votre adresse e-mail est confirmée.<br>Place à votre test de positionnement gratuit (15 minutes).</p>'),
+                 ('<button class="confirm-btn" onclick="closeConfirmPopup(); openAuth(event,\'login\')">Se connecter</button>',
+                  '<button class="confirm-btn" onclick="allerAuTest()">Commencer mon test</button>')]:
+        assert a in modales, a
+        modales = modales.replace(a, b)
 
     # Scripts de l'accueil (FAQ, animations, inscription, menus), sans le formulaire de newsletter absent de cette page
     scripts = src[src.index('<script>\n  /* ── FAQ accordion'):src.index('</body>')]
@@ -336,12 +388,13 @@ def main():
     assert 'nl-form' not in scripts and "window.SIGNUP_PARCOURS || 'passcrpe'" in scripts
 
     page = (head + '</head>\n' + body_pre + nav + '\n' + contenu() + '\n' + footer + '\n\n' + modales
-            + "<script>\n  // Parcours Klaviyo des inscriptions faites sur cette page\n  window.SIGNUP_PARCOURS = 'quizcrpe';\n  // Après l'inscription ou la connexion, direction l'application du quiz\n  window.AFTER_SIGNUP_URL = '/quizzapp';\n"
+            + "<script>\n  // Parcours Klaviyo des inscriptions faites sur cette page\n  window.SIGNUP_PARCOURS = 'quizcrpe';\n  // Après la connexion, direction l'application du quiz\n  window.AFTER_LOGIN_URL = '/quizzapp';\n"
+            + "  window.SIGNUP_SUCCESS_MESSAGE = '✓ Compte créé ! Confirmez votre adresse en cliquant sur le lien envoyé à {email} (pensez aux spams) : il vous ramènera ici, connecté, pour votre test de positionnement gratuit.';\n"
             + "  // Comptes du quiz : projet Supabase « quizzcrpe », séparé du tuteur IA\n"
             + f"  window.SB_PROJET = 'quizzcrpe';\n  window.SB_URL = '{QUIZ_SB_URL}';\n  window.SB_KEY = '{QUIZ_SB_KEY}';\n"
-            + f"  // Lien de l'e-mail de confirmation : retour sur cette page, qui affiche « Votre compte est activé » et le bouton Se connecter\n"
+            + f"  // Lien de l'e-mail de confirmation : retour sur cette page, session ouverte automatiquement, puis départ vers le test\n"
             + f"  window.EMAIL_REDIRECT_URL = '{SITE}/quizz';\n</script>\n"
-            + scripts + '</body>\n</html>\n')
+            + scripts + RETOUR_CONFIRMATION + '</body>\n</html>\n')
     open(OUT, 'w', encoding='utf-8').write(page)
     print('Écrit :', os.path.relpath(OUT, ROOT), f'({len(page) // 1024} ko)')
 

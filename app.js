@@ -68,6 +68,21 @@ async function markUserPaid(userId, email) {
   }
 }
 
+// Déblocage du Quiz CRPE (projet quizzcrpe) + Klaviyo quiz_paid ; appelée par la capture et par le webhook
+async function markQuizPaid(userId, ref, email) {
+  const { data: nouveau, error } = await quizDb.rpc('quiz_marquer_paye', { p_cle: process.env.QUIZ_SERVER_SECRET, p_user: userId, p_ref: ref || null });
+  if (error) throw new Error(`Déblocage du quiz : ${error.message}`);
+  quizOublier(userId);
+  if (!nouveau) return;
+  try {
+    let e = email;
+    if (!e) { const { data } = await quizDb.rpc('quiz_compte', { p_cle: process.env.QUIZ_SERVER_SECRET, p_user: userId }); e = data?.[0]?.email; }
+    if (e) await klaviyoSetProperties(e, { quiz_paid: true, quiz_date_paid: new Date().toISOString() });
+  } catch (err) {
+    console.error('[markQuizPaid] Klaviyo sync échouée (accès débloqué quand même) :', err.message);
+  }
+}
+
 /* ── PayPal ── */
 // Forcé en live (le toggle via PAYPAL_ENV posait problème sur Vercel).
 // Pour retester en sandbox : remplacer temporairement par 'https://api-m.sandbox.paypal.com'
@@ -166,7 +181,9 @@ app.post('/api/webhook/paypal', async (req, res) => {
     const event = req.body;
     if (event.event_type === 'PAYMENT.CAPTURE.COMPLETED') {
       const customId = event.resource?.custom_id;
-      if (customId) await markUserPaid(customId);
+      // Paiements du quiz : custom_id « quiz:<id du compte quizzcrpe> » ; sinon compte du tuteur IA
+      if (customId?.startsWith('quiz:')) await markQuizPaid(customId.slice(5), event.resource?.id);
+      else if (customId) await markUserPaid(customId);
     }
     res.status(200).json({ received: true });
   } catch (err) {
@@ -346,6 +363,18 @@ async function klaviyoSetEmailVerified(email) {
     throw new Error(err.errors?.[0]?.detail || `Erreur PATCH profil: ${patchRes.status}`);
   }
   console.log(`[Klaviyo] email_verified=true pour ${email}`);
+}
+
+/* ── Klaviyo : mettre à jour des propriétés d'un profil (recherché par e-mail) ── */
+async function klaviyoSetProperties(email, properties) {
+  const searchRes = await fetch(`${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`, { headers: klaviyoHeaders() });
+  const profileId = (await searchRes.json()).data?.[0]?.id;
+  if (!profileId) { console.warn(`[Klaviyo] Profil introuvable pour ${email}`); return; }
+  const patchRes = await fetch(`${KLAVIYO_API_BASE}/profiles/${profileId}`, {
+    method: 'PATCH', headers: klaviyoHeaders(),
+    body: JSON.stringify({ data: { type: 'profile', id: profileId, attributes: { properties } } }),
+  });
+  if (!patchRes.ok) { const err = await patchRes.json(); throw new Error(err.errors?.[0]?.detail || `Erreur PATCH profil: ${patchRes.status}`); }
 }
 
 /* ── Klaviyo : passer paid_user à true pour un email donné ── */
@@ -562,40 +591,69 @@ async function logConsommation({ meta, model, usage, dureeMs, success }) {
 
 const CHAT_MODEL = 'claude-sonnet-4-6';
 
-/* ── Quiz CRPE : questions servies sans la réponse, correction question par question ── */
+/* ── Quiz CRPE ──
+   Projet Supabase « quizzcrpe ». Parcours : compte → test de positionnement gratuit (obligatoire) → paiement PayPal
+   (59 € TTC) → accès au quiz. Le blocage est vérifié ici : catalogue et correction réservés aux comptes payés.
+   Questions : fonctions quiz_catalogue / quiz_correction ; comptes : quiz_compte, quiz_enregistrer_positionnement et
+   quiz_marquer_paye, protégées par QUIZ_SERVER_SECRET. */
 const QUIZ_MATIERES = ['francais', 'mathematiques', 'histoire_geographie', 'emc', 'svt', 'physique_chimie', 'technologie', 'arts', 'anglais'];
+const QUIZ_LABELS = { francais: 'Français', mathematiques: 'Mathématiques', histoire_geographie: 'Histoire-géographie', emc: 'EMC', svt: 'SVT', physique_chimie: 'Physique-chimie', technologie: 'Technologie', arts: 'Arts', anglais: 'Anglais' };
+const QUIZ_PRICE = { currency_code: 'EUR', value: '59.00' }; // 59 € TTC, aligné avec la page /quizz
+const QUIZ_SECRET = process.env.QUIZ_SERVER_SECRET;
+if (!QUIZ_SECRET) console.error('[config] QUIZ_SERVER_SECRET manquante : comptes du quiz indisponibles');
+const POSITIONNEMENT_PAR_MATIERE = { facile: 2, intermediaire: 2, difficile: 1 }; // 5 questions × 9 matières = 45 questions
 const melanger = a => { const t = [...a]; for (let i = t.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [t[i], t[j]] = [t[j], t[i]]; } return t; };
 
-// Catalogue d'une matière sans les réponses : la sélection des séries de 20 et la révision espacée se font côté navigateur
-app.get('/api/quiz/catalogue', async (req, res) => {
-  const matiere = String(req.query.matiere || '');
-  if (!QUIZ_MATIERES.includes(matiere)) return res.status(400).json({ error: 'Matière inconnue.' });
+// Catalogue d'une matière (sans réponses), gardé 10 minutes en mémoire
+const quizCatalogues = new Map();
+async function quizCatalogue(matiere) {
+  const c = quizCatalogues.get(matiere);
+  if (c && c.until > Date.now()) return c.data;
   const { data, error } = await quizDb.rpc('quiz_catalogue', { p_matiere: matiere });
-  if (error) { console.error('[quiz/catalogue]', error.message); return res.status(500).json({ error: 'Le quiz n\'a pas pu être chargé.' }); }
-  res.json({ questions: data.map(q => ({ ...q, notion: q.notion || `q${q.id}`, niveau: q.niveau || 'facile',
-    choix: q.type === 'qcm' ? melanger(q.choix) : q.choix })) });
-});
+  if (error) throw new Error(error.message);
+  const questions = data.map(q => ({ ...q, notion: q.notion || `q${q.id}`, niveau: q.niveau || 'facile' }));
+  quizCatalogues.set(matiere, { data: questions, until: Date.now() + 600000 });
+  return questions;
+}
 
-// Ancienne route (séries de 10), gardée pour compatibilité
-app.get('/api/quiz/questions', async (req, res) => {
-  const matiere = String(req.query.matiere || '');
-  if (!QUIZ_MATIERES.includes(matiere)) return res.status(400).json({ error: 'Matière inconnue.' });
-  const { data: toutes, error } = await quizDb.rpc('quiz_catalogue', { p_matiere: matiere });
-  if (error) { console.error('[quiz/questions]', error.message); return res.status(500).json({ error: 'Le quiz n\'a pas pu être chargé.' }); }
-  const data = toutes.filter(q => q.type === 'qcm');
-  res.json({ questions: melanger(data).slice(0, 10).map(q => ({ id: q.id, question: q.question, choix: melanger(q.choix) })) });
-});
+// Compte du quiz à partir du jeton (projet quizzcrpe), avec son état (positionnement, paiement), gardé 2 minutes
+const quizSessions = new Map();
+async function quizCompte(req, { frais = false } = {}) {
+  const auth = req.headers.authorization || '';
+  const token = auth.startsWith('Bearer ') ? auth.slice(7) : null;
+  if (!token) return null;
+  const c = quizSessions.get(token);
+  if (!frais && c && c.until > Date.now()) return c.compte;
+  const { data, error } = await quizDb.auth.getUser(token);
+  if (error || !data?.user) return null;
+  const { data: lignes, error: e2 } = await quizDb.rpc('quiz_compte', { p_cle: QUIZ_SECRET, p_user: data.user.id });
+  if (e2) throw new Error(e2.message);
+  const l = lignes?.[0] || {};
+  const compte = { id: data.user.id, email: data.user.email, positionnement: l.positionnement || null, paid: l.paid === true };
+  quizSessions.set(token, { compte, until: Date.now() + 120000 });
+  return compte;
+}
+const quizOublier = userId => { for (const [t, c] of quizSessions) if (c.compte.id === userId) quizSessions.delete(t); };
+
+// Accès au quiz : compte connecté et payé
+async function quizAcces(req, res) {
+  try {
+    const compte = await quizCompte(req);
+    if (!compte) { res.status(401).json({ error: 'Connexion requise.', code: 'connexion' }); return null; }
+    if (!compte.paid) { res.status(402).json({ error: 'Accès réservé aux comptes débloqués.', code: 'paiement' }); return null; }
+    return compte;
+  } catch (err) {
+    console.error('[quiz/acces]', err.message);
+    res.status(500).json({ error: 'Le quiz n\'a pas pu être chargé.' }); return null;
+  }
+}
 
 const nombre = v => Number(String(v ?? '').replace(/\s/g, '').replace(',', '.').replace('−', '-'));
 const indices = v => String(v ?? '').split(',').map(x => x.trim()).filter(Boolean).map(Number).sort((a, b) => a - b).join(',');
-
-app.post('/api/quiz/reponse', async (req, res) => {
-  const id = Number(req.body?.id);
-  const reponse = req.body?.reponse ?? req.body?.choix ?? '';
-  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Question inconnue.' });
+async function quizCorriger(id, reponse) {
   const { data: lignes, error } = await quizDb.rpc('quiz_correction', { p_id: id });
   const data = lignes?.[0];
-  if (error || !data) return res.status(404).json({ error: 'Question inconnue.' });
+  if (error || !data) return null;
   let correct;
   if (data.type === 'numerique') {
     const n = nombre(reponse);
@@ -609,8 +667,146 @@ app.post('/api/quiz/reponse', async (req, res) => {
   const attendu = data.type === 'cliquer_mot' ? data.reponse.split(',').map(i => data.choix[Number(i)]).join(' ')
     : data.type === 'numerique' ? nombre(data.reponse).toLocaleString('fr-FR', { maximumFractionDigits: 6 }).replace('-', '−')
     : data.reponse;
-  res.json({ correct, reponse: data.reponse, attendu, explication: data.explication });
+  return { correct, reponse: data.reponse, attendu, explication: data.explication };
+}
+
+// État du compte : sert à l'application pour choisir l'écran (test, résultat + paiement, quiz)
+app.get('/api/quiz/compte', async (req, res) => {
+  try {
+    const compte = await quizCompte(req, { frais: true });
+    if (!compte) return res.status(401).json({ error: 'Connexion requise.' });
+    res.json({ email: compte.email, positionnement: compte.positionnement, paid: compte.paid,
+      paypal_client_id: process.env.VITE_PAYPAL_CLIENT_ID || process.env.PAYPAL_CLIENT_ID || null, prix: QUIZ_PRICE.value });
+  } catch (err) {
+    console.error('[quiz/compte]', err.message);
+    res.status(500).json({ error: 'Votre compte n\'a pas pu être chargé.' });
+  }
 });
+
+// Test de positionnement : 5 questions par matière (2 faciles, 2 intermédiaires, 1 avancée), sur des thèmes variés
+app.get('/api/quiz/positionnement', async (req, res) => {
+  try {
+    const compte = await quizCompte(req);
+    if (!compte) return res.status(401).json({ error: 'Connexion requise.' });
+    const questions = [];
+    for (const matiere of QUIZ_MATIERES) {
+      const cat = await quizCatalogue(matiere);
+      const themesVus = new Set();
+      for (const [niveau, n] of Object.entries(POSITIONNEMENT_PAR_MATIERE)) {
+        // une question par notion, en privilégiant les thèmes pas encore posés
+        const notions = {};
+        cat.filter(q => q.niveau === niveau).forEach(q => { (notions[q.notion] ||= []).push(q); });
+        const choix = melanger(Object.values(notions)).sort((a, b) => themesVus.has(a[0].theme) - themesVus.has(b[0].theme)).slice(0, n);
+        choix.forEach(qs => { const q = qs[Math.floor(Math.random() * qs.length)]; themesVus.add(q.theme); questions.push({ ...q, matiere, choix: q.type === 'qcm' ? melanger(q.choix) : q.choix }); });
+      }
+    }
+    res.json({ questions, deja: compte.positionnement || null });
+  } catch (err) {
+    console.error('[quiz/positionnement]', err.message);
+    res.status(500).json({ error: 'Le test n\'a pas pu être chargé.' });
+  }
+});
+
+// Correction du test et carte des forces et faiblesses (par matière et par thème)
+app.post('/api/quiz/positionnement', async (req, res) => {
+  try {
+    const compte = await quizCompte(req, { frais: true });
+    if (!compte) return res.status(401).json({ error: 'Connexion requise.' });
+    if (compte.positionnement) return res.json({ resultat: compte.positionnement });
+    const reponses = Array.isArray(req.body?.reponses) ? req.body.reponses.slice(0, 60) : [];
+    if (reponses.length < 9) return res.status(400).json({ error: 'Test incomplet.' });
+    const index = {};
+    for (const m of QUIZ_MATIERES) (await quizCatalogue(m)).forEach(q => { index[q.id] = { ...q, matiere: m }; });
+    const corrections = await Promise.all(reponses.map(r => index[Number(r.id)] ? quizCorriger(Number(r.id), r.reponse ?? '') : null));
+    const parMatiere = {};
+    reponses.forEach((r, i) => {
+      const q = index[Number(r.id)], c = corrections[i]; if (!q || !c) return;
+      const m = parMatiere[q.matiere] ||= { matiere: q.matiere, label: QUIZ_LABELS[q.matiere], ok: 0, n: 0, themes: {} };
+      const t = m.themes[q.theme || 'Notions'] ||= { theme: q.theme || 'Notions', ok: 0, n: 0 };
+      m.n++; t.n++; if (c.correct) { m.ok++; t.ok++; }
+    });
+    const matieres = QUIZ_MATIERES.filter(m => parMatiere[m]).map(m => {
+      const x = parMatiere[m];
+      return { matiere: m, label: x.label, ok: x.ok, n: x.n, pct: Math.round(x.ok / x.n * 100), themes: Object.values(x.themes) };
+    });
+    const ok = matieres.reduce((s, m) => s + m.ok, 0), n = matieres.reduce((s, m) => s + m.n, 0);
+    const resultat = { date: new Date().toISOString(), ok, n, pct: n ? Math.round(ok / n * 100) : 0, matieres };
+    const { data: enregistre, error } = await quizDb.rpc('quiz_enregistrer_positionnement', { p_cle: QUIZ_SECRET, p_user: compte.id, p_email: compte.email, p_resultat: resultat });
+    if (error) throw new Error(error.message);
+    quizOublier(compte.id);
+    // Klaviyo : test passé et score global (sert aux relances vers le paiement)
+    if (compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) klaviyoSetProperties(compte.email, { quiz_positionnement: true, quiz_positionnement_score: resultat.pct, quiz_positionnement_at: resultat.date }).catch(e => console.error('[Klaviyo positionnement]', e.message));
+    res.json({ resultat: enregistre || resultat });
+  } catch (err) {
+    console.error('[quiz/positionnement correction]', err.message);
+    res.status(500).json({ error: 'Le test n\'a pas pu être corrigé. Réessayez.' });
+  }
+});
+
+// Catalogue d'une matière sans les réponses : la sélection des séries de 20 et la révision espacée se font côté navigateur
+app.get('/api/quiz/catalogue', async (req, res) => {
+  const matiere = String(req.query.matiere || '');
+  if (!QUIZ_MATIERES.includes(matiere)) return res.status(400).json({ error: 'Matière inconnue.' });
+  if (!(await quizAcces(req, res))) return;
+  try {
+    const data = await quizCatalogue(matiere);
+    res.json({ questions: data.map(q => ({ ...q, choix: q.type === 'qcm' ? melanger(q.choix) : q.choix })) });
+  } catch (err) { console.error('[quiz/catalogue]', err.message); res.status(500).json({ error: 'Le quiz n\'a pas pu être chargé.' }); }
+});
+
+app.post('/api/quiz/reponse', async (req, res) => {
+  const id = Number(req.body?.id);
+  const reponse = req.body?.reponse ?? req.body?.choix ?? '';
+  if (!Number.isInteger(id)) return res.status(400).json({ error: 'Question inconnue.' });
+  if (!(await quizAcces(req, res))) return;
+  const c = await quizCorriger(id, reponse);
+  if (!c) return res.status(404).json({ error: 'Question inconnue.' });
+  res.json(c);
+});
+
+// Paiement PayPal du quiz : même fonctionnement que PassCRPE (commande serveur, custom_id = « quiz:<id du compte> »)
+app.post('/api/quiz/paypal/create-order', async (req, res) => {
+  try {
+    const compte = await quizCompte(req, { frais: true });
+    if (!compte) return res.status(401).json({ error: 'Non authentifié' });
+    if (compte.paid) return res.status(409).json({ error: 'Votre accès est déjà débloqué.' });
+    const accessToken = await getPaypalAccessToken();
+    const orderRes = await fetch(`${PAYPAL_API_BASE}/v2/checkout/orders`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ intent: 'CAPTURE', purchase_units: [{ custom_id: `quiz:${compte.id}`, description: 'Accès Quiz CRPE', amount: QUIZ_PRICE }] }),
+    });
+    const order = await orderRes.json();
+    if (!orderRes.ok) throw new Error(order.message || 'Erreur PayPal');
+    res.json({ id: order.id });
+  } catch (err) {
+    console.error('[Quiz PayPal create-order]', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/quiz/paypal/capture-order', async (req, res) => {
+  try {
+    const compte = await quizCompte(req, { frais: true });
+    if (!compte) return res.status(401).json({ error: 'Non authentifié' });
+    const { orderID } = req.body || {};
+    if (!orderID) return res.status(400).json({ error: 'orderID manquant' });
+    const accessToken = await getPaypalAccessToken();
+    const captureRes = await fetch(`${PAYPAL_API_BASE}/v2/checkout/orders/${encodeURIComponent(orderID)}/capture`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+    });
+    const capture = await captureRes.json();
+    if (!captureRes.ok) throw new Error(capture.message || 'Erreur de capture PayPal');
+    const cap = capture.purchase_units?.[0]?.payments?.captures?.[0];
+    if (capture.status === 'COMPLETED' && cap?.custom_id === `quiz:${compte.id}`) await markQuizPaid(compte.id, cap.id, compte.email);
+    res.json({ status: capture.status });
+  } catch (err) {
+    console.error('[Quiz PayPal capture-order]', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 
 app.post('/api/chat', async (req, res) => {
   // Réservé aux candidats connectés : sans ça, n'importe qui pourrait utiliser la clé Anthropic

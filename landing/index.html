@@ -1270,7 +1270,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
 
       <div class="offre-card offre-quiz fade-up" style="animation-delay:.1s">
-        <span class="offre-badge">Bientôt disponible</span>
+        <span class="offre-badge">Test de positionnement gratuit</span>
         <div class="offre-head">
           <div class="offre-icon">🎯</div>
           <div>
@@ -1279,9 +1279,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
         <p class="offre-desc">Un quiz pour tester vos connaissances en quelques minutes et repérer, discipline par discipline, les notions à retravailler avant le concours.</p>
-        <div class="offre-price"><strong>49,99 €</strong><span>TTC</span></div>
+        <div class="offre-price"><strong>59 €</strong><span>TTC</span></div>
         <ul class="offre-list">
-          <li>Près de 300 questions par discipline</li>
+          <li>Un test de positionnement gratuit de 15 minutes : la carte de vos forces et faiblesses</li>
+          <li>2 700 questions, 300 par matière, en trois niveaux</li>
           <li>Les disciplines du concours réunies dans un seul outil, dont les sciences en trois matières : SVT, physique-chimie et technologie</li>
           <li>Des questions courtes, idéales pour réviser au quotidien, même avec peu de temps</li>
           <li>Un moyen rapide de repérer vos lacunes avant de les travailler en profondeur</li>
@@ -1297,8 +1298,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <span class="offre-tag">Langue vivante</span>
         </div>
         <div class="offre-cta">
-          <a href="#newsletter" class="btn-secondary" onclick="window.nlParcours='quizcrpe'">Être prévenu de sa sortie</a>
-          <p class="offre-note">Inscrivez-vous à la newsletter pour être informé dès sa disponibilité.</p>
+          <a href="/quizz" class="btn-secondary">Vérifier mon niveau gratuitement</a>
+          <p class="offre-note">Test de positionnement gratuit de 15 minutes, puis accès complet pour 59 € TTC.</p>
         </div>
       </div>
 
@@ -1312,8 +1313,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
         </div>
         <p class="offre-desc">Le tuteur IA pour apprendre à rédiger et progresser, le quiz pour réviser vite toutes les disciplines.</p>
-        <div class="offre-price"><strong>389 €</strong><span>TTC</span><span class="old">408,99 €</span></div>
-        <span class="pack-save">19,99 € d'économie</span>
+        <div class="offre-price"><strong>389 €</strong><span>TTC</span><span class="old">418 €</span></div>
+        <span class="pack-save">29 € d'économie</span>
         <ul class="offre-list">
           <li>1 an d'accès au tuteur IA, avec ses exercices corrigés en mathématiques et en français</li>
           <li>Le quiz complet : près de 300 questions par discipline</li>
@@ -1984,12 +1985,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           'success'
         );
         document.getElementById('resendBlock').style.display = 'block';
-        // Page de vente du quiz : après l'inscription, on emmène la personne directement sur le quiz
-        if (window.AFTER_SIGNUP_URL) {
-          showAuthMessage('✓ Compte créé ! Un e-mail de confirmation a été envoyé à ' + email + '. Redirection vers le quiz…', 'success');
-          document.getElementById('resendBlock').style.display = 'none';
-          setTimeout(() => { window.location.href = window.AFTER_SIGNUP_URL; }, 2500);
-        }
+        // Page de vente du quiz : message propre au quiz (le lien de l'e-mail y ramène, connecté, pour le test)
+        if (window.SIGNUP_SUCCESS_MESSAGE) showAuthMessage(window.SIGNUP_SUCCESS_MESSAGE.replace('{email}', email), 'success');
       }
     } else {
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
@@ -2025,7 +2022,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   function redirectToApp(session) {
     // Page de vente du quiz : la connexion mène au quiz plutôt qu'au tuteur IA
-    if (window.AFTER_SIGNUP_URL) { window.location.href = window.AFTER_SIGNUP_URL; return; }
+    if (window.AFTER_LOGIN_URL) { window.location.href = window.AFTER_LOGIN_URL; return; }
     const isDev   = window.location.port === '3001';
     const appBase = isDev ? 'http://localhost:5173' : '/app';
 
