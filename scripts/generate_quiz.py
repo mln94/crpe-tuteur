@@ -6,7 +6,7 @@ Sortie  : landing/quizzapp.html
 Données : table Supabase quiz_questions, servie par /api/quiz/catalogue et /api/quiz/reponse (app.js)
 Usage   : python3 scripts/generate_quiz.py
 
-Accès : compte du projet Supabase « quizzcrpe » (créé sur /quizz). Test de positionnement gratuit et obligatoire
+Accès : compte PassCRPE (projet Supabase « crpe », le même que le tuteur IA), créé sur /quizz ou sur l'accueil. Test de positionnement gratuit et obligatoire
 (45 questions, carte des forces et faiblesses), puis paiement PayPal (59 € TTC) pour débloquer le quiz. Le serveur
 (app.js) vérifie le paiement avant de servir les questions.
 
@@ -36,9 +36,9 @@ MATIERES = [
     ('arts', 'Arts', '🎨'),
     ('anglais', 'Anglais', '🇬🇧'),
 ]
-# Projet Supabase « quizzcrpe » (clé publique anon) : la session ouverte sur /quizz est retrouvée ici
-QUIZ_SB_URL = 'https://uwsdfbmootumhsrufkmo.supabase.co'
-QUIZ_SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c2RmYm1vb3R1bWhzcnVma21vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNDU1OTEsImV4cCI6MjEwNzgyMTU5MX0.W1uAsiBPR4mEoxjNBp308uNNhHt21dlXpGzPBHPXVuk'
+# Projet Supabase « crpe » (clé publique anon) : même compte et même session que le tuteur IA et /quizz
+SB_URL = 'https://zqwcermgfvcusuwjfviz.supabase.co'
+SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8'
 PRIX = '59 €'
 TAILLE_SERIE = 20
 BONNES_POUR_MAITRISER = 3
@@ -283,6 +283,7 @@ JS = """<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/u
   // ── Compte : connexion, test de positionnement, paiement ──
   function barreCompte() {
     return '<div class="quiz-compte"><span>' + esc(compte && compte.email || '') + '</span><span class="liens">' +
+      '<a class="quiz-link" href="/espace">Mes outils</a>' +
       (compte && compte.positionnement ? '<button type="button" class="quiz-link" data-act="voir-resultat">Mon test de positionnement</button>' : '') +
       '<button type="button" class="quiz-link" data-act="logout">Se déconnecter</button></span></div>';
   }
@@ -306,7 +307,7 @@ JS = """<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/u
   function connexion() {
     root.innerHTML = '<div class="quiz-card"><h2>Connectez-vous pour accéder au Quiz CRPE</h2>' +
       '<p>Créez votre compte gratuitement : vous commencez par un <strong>test de positionnement de 15 minutes</strong> qui vous donne la carte de vos forces et faiblesses dans les 9 matières.</p>' +
-      '<div class="quiz-actions"><a class="quiz-btn" href="/quizz?auth=register">Créer mon compte gratuitement</a><a class="quiz-btn ghost" href="/quizz?auth=login">J\\'ai déjà un compte</a></div></div>';
+      '<div class="quiz-actions"><a class="quiz-btn" href="/quizz?auth=register">Créer mon compte gratuitement</a><a class="quiz-btn ghost" href="/quizz?auth=login">J\\'ai déjà un compte PassCRPE</a></div></div>';
   }
   function introTest() {
     var t = lireTest();
@@ -589,7 +590,7 @@ JS = """<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/u
 })();
 </script>
 <script>
-  // Arrivée depuis l'e-mail de confirmation d'un compte du quiz (projet « quizzcrpe ») :
+  // Arrivée depuis l'e-mail de confirmation :
   // message de bienvenue et mise à jour de email_verified dans Klaviyo
   (function () {
     var h = new URLSearchParams(location.hash.slice(1));
@@ -597,7 +598,7 @@ JS = """<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/u
     document.getElementById('quiz-confirm').hidden = false;
     window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'inscription_confirmee', parcours: 'quizcrpe' });
     fetch('/api/klaviyo/email-verified', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ access_token: h.get('access_token'), projet: 'quizzcrpe' }) }).catch(function () {});
+      body: JSON.stringify({ access_token: h.get('access_token') }) }).catch(function () {});
     history.replaceState(null, '', location.pathname + location.search);
   })();
 </script>
@@ -621,7 +622,7 @@ def page():
             + f'  <link rel="canonical" href="{SITE}/quizzapp" />\n'
             + CSS_BASE + CSS)
     js = (JS.replace('__MATIERES__', json.dumps(MATIERES, ensure_ascii=False))
-            .replace('__SB_URL__', QUIZ_SB_URL).replace('__SB_KEY__', QUIZ_SB_KEY).replace('__PRIX__', PRIX)
+            .replace('__SB_URL__', SB_URL).replace('__SB_KEY__', SB_KEY).replace('__PRIX__', PRIX)
             .replace('__SERIE__', str(TAILLE_SERIE)).replace('__MAITRISE__', str(BONNES_POUR_MAITRISER))
             .replace('__INTERVALLES__', json.dumps(INTERVALLES_JOURS)).replace('__APRES_ERREUR__', str(APRES_ERREUR_JOURS)))
     return head + BODY_NAV + body + js + TAIL

@@ -20,6 +20,7 @@
     { "source": "/rapports-jury-crpe/2025", "destination": "/rapports-jury-crpe-2025.html" },
     { "source": "/quizzapp", "destination": "/quizzapp.html" },
     { "source": "/quizz", "destination": "/quizz.html" },
+    { "source": "/espace", "destination": "/espace.html" },
     { "source": "/outils", "destination": "/outils.html" },
     { "source": "/outils/entraineur-crpe", "destination": "/entraineur-crpe.html" },
     { "source": "/outils/entraineur-crpe/rapport/:token", "destination": "/entraineur-rapport.html" },

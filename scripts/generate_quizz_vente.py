@@ -7,10 +7,9 @@ Usage   : python3 scripts/generate_quizz_vente.py
 
 L'inscription est le même formulaire que sur la page d'accueil (compte Supabase + /api/klaviyo/signup).
 Différences : window.SIGNUP_PARCOURS = 'quizcrpe', envoyé à Klaviyo dans la propriété « parcours », et
-window.SIGNUP_SUCCESS_MESSAGE : après l'inscription, message « confirmez votre e-mail » ; window.AFTER_LOGIN_URL = '/quizzapp' :
-après la connexion, la personne arrive sur le quiz.
-Les comptes sont créés dans le projet Supabase « quizzcrpe » (window.SB_URL / SB_KEY), séparé du tuteur IA,
-et le lien de l'e-mail de confirmation ramène sur /quizz (window.EMAIL_REDIRECT_URL) : la session est ouverte
+window.SIGNUP_SUCCESS_MESSAGE : après l'inscription, message « confirmez votre e-mail » ; window.AFTER_LOGIN_URL = '/espace' :
+après la connexion, la personne choisit son outil (tuteur IA ou quiz).
+Un seul compte pour le tuteur IA et le quiz (projet Supabase « crpe »), et le lien de l'e-mail de confirmation ramène sur /quizz (window.EMAIL_REDIRECT_URL) : la session est ouverte
 automatiquement et la personne part sur /quizzapp pour son test de positionnement gratuit, puis le paiement.
 À relancer après une modification du formulaire d'inscription, du menu ou du pied de page de l'accueil.
 """
@@ -21,9 +20,6 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'landing', 'index.html')
 OUT = os.path.join(ROOT, 'landing', 'quizz.html')
 SITE = 'https://www.passcrpe.fr'
-# Projet Supabase « quizzcrpe » : comptes des inscrits du quiz (clé publique anon)
-QUIZ_SB_URL = 'https://uwsdfbmootumhsrufkmo.supabase.co'
-QUIZ_SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c2RmYm1vb3R1bWhzcnVma21vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNDU1OTEsImV4cCI6MjEwNzgyMTU5MX0.W1uAsiBPR4mEoxjNBp308uNNhHt21dlXpGzPBHPXVuk'
 
 PRIX_QUIZ = '59 €'
 PRIX_PACK = '389 €'
@@ -388,10 +384,8 @@ def main():
     assert 'nl-form' not in scripts and "window.SIGNUP_PARCOURS || 'passcrpe'" in scripts
 
     page = (head + '</head>\n' + body_pre + nav + '\n' + contenu() + '\n' + footer + '\n\n' + modales
-            + "<script>\n  // Parcours Klaviyo des inscriptions faites sur cette page\n  window.SIGNUP_PARCOURS = 'quizcrpe';\n  // Après la connexion, direction l'application du quiz\n  window.AFTER_LOGIN_URL = '/quizzapp';\n"
+            + "<script>\n  // Parcours Klaviyo des inscriptions faites sur cette page\n  window.SIGNUP_PARCOURS = 'quizcrpe';\n  // Après la connexion : page « Mes outils » (tuteur IA ou quiz)\n  window.AFTER_LOGIN_URL = '/espace';\n"
             + "  window.SIGNUP_SUCCESS_MESSAGE = '✓ Compte créé ! Confirmez votre adresse en cliquant sur le lien envoyé à {email} (pensez aux spams) : il vous ramènera ici, connecté, pour votre test de positionnement gratuit.';\n"
-            + "  // Comptes du quiz : projet Supabase « quizzcrpe », séparé du tuteur IA\n"
-            + f"  window.SB_PROJET = 'quizzcrpe';\n  window.SB_URL = '{QUIZ_SB_URL}';\n  window.SB_KEY = '{QUIZ_SB_KEY}';\n"
             + f"  // Lien de l'e-mail de confirmation : retour sur cette page, session ouverte automatiquement, puis départ vers le test\n"
             + f"  window.EMAIL_REDIRECT_URL = '{SITE}/quizz';\n</script>\n"
             + scripts + RETOUR_CONFIRMATION + '</body>\n</html>\n')

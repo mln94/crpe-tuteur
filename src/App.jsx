@@ -5586,6 +5586,14 @@ function ProfileView({ profile, authUser, onUpdateProfile }) {
         )}
       </div>
 
+      {/* Mes outils : même compte pour le tuteur IA et le Quiz CRPE */}
+      <a
+        href="/espace"
+        className="w-full flex items-center justify-center gap-2 py-3.5 mb-3 rounded-2xl border border-indigo-200 text-indigo-600 font-semibold text-sm hover:bg-indigo-50 transition-all"
+      >
+        Mes outils : Tuteur IA et Quiz CRPE →
+      </a>
+
       {/* Déconnexion */}
       <button
         onClick={handleLogout}

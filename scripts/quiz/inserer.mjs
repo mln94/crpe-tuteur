@@ -1,5 +1,4 @@
-// Insère les questions d'un fichier JSON (sortie de construire.py) dans quiz_questions du projet Supabase « quizzcrpe ».
-// Demande dans .env la clé service du projet quiz : QUIZ_SUPABASE_SERVICE_ROLE_KEY (et QUIZ_SUPABASE_URL si besoin).
+// Insère les questions d'un fichier JSON (sortie de construire.py) dans quiz_questions (projet Supabase « crpe »).
 // Une matière qui a déjà des questions rattachées à des notions est ignorée ; les anciennes questions
 // sans notion de la matière sont désactivées (jamais supprimées).
 // Usage (depuis la racine du projet) : node scripts/quiz/inserer.mjs lignes.json
@@ -7,8 +6,7 @@ import { createClient } from '@supabase/supabase-js';
 import fs from 'fs';
 const env = Object.fromEntries(fs.readFileSync('.env', 'utf8').split('\n').filter(l => /^\s*[A-Z_]+\s*=/.test(l))
   .map(l => { const i = l.indexOf('='); return [l.slice(0, i).trim(), l.slice(i + 1).trim().replace(/^["']|["']$/g, '')]; }));
-if (!env.QUIZ_SUPABASE_SERVICE_ROLE_KEY) { console.error('QUIZ_SUPABASE_SERVICE_ROLE_KEY manquante dans .env (clé service du projet quizzcrpe)'); process.exit(1); }
-const sb = createClient(env.QUIZ_SUPABASE_URL || 'https://uwsdfbmootumhsrufkmo.supabase.co', env.QUIZ_SUPABASE_SERVICE_ROLE_KEY);
+const sb = createClient(env.VITE_SUPABASE_URL, env.SUPABASE_SERVICE_ROLE_KEY);
 const rows = JSON.parse(fs.readFileSync(process.argv[2], 'utf8'));
 for (const matiere of [...new Set(rows.map(r => r.matiere))]) {
   const { count } = await sb.from('quiz_questions').select('id', { count: 'exact', head: true }).eq('matiere', matiere).not('notion', 'is', null);

@@ -1768,13 +1768,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
   // Parcours Klaviyo des inscriptions faites sur cette page
   window.SIGNUP_PARCOURS = 'quizcrpe';
-  // Après la connexion, direction l'application du quiz
-  window.AFTER_LOGIN_URL = '/quizzapp';
+  // Après la connexion : page « Mes outils » (tuteur IA ou quiz)
+  window.AFTER_LOGIN_URL = '/espace';
   window.SIGNUP_SUCCESS_MESSAGE = '✓ Compte créé ! Confirmez votre adresse en cliquant sur le lien envoyé à {email} (pensez aux spams) : il vous ramènera ici, connecté, pour votre test de positionnement gratuit.';
-  // Comptes du quiz : projet Supabase « quizzcrpe », séparé du tuteur IA
-  window.SB_PROJET = 'quizzcrpe';
-  window.SB_URL = 'https://uwsdfbmootumhsrufkmo.supabase.co';
-  window.SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c2RmYm1vb3R1bWhzcnVma21vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNDU1OTEsImV4cCI6MjEwNzgyMTU5MX0.W1uAsiBPR4mEoxjNBp308uNNhHt21dlXpGzPBHPXVuk';
   // Lien de l'e-mail de confirmation : retour sur cette page, session ouverte automatiquement, puis départ vers le test
   window.EMAIL_REDIRECT_URL = 'https://www.passcrpe.fr/quizz';
 </script>
@@ -1807,10 +1803,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function getSB() {
     if (!_sb) {
       if (!window.supabase) { throw new Error('supabase_not_loaded'); }
-      // Projet Supabase : « crpe » par défaut, « quizzcrpe » sur la page de vente du quiz (window.SB_URL / window.SB_KEY)
+      // Un seul projet Supabase (« crpe ») et un seul compte pour le tuteur IA et le quiz
       _sb = window.supabase.createClient(
-        window.SB_URL || 'https://zqwcermgfvcusuwjfviz.supabase.co',
-        window.SB_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8'
+        'https://zqwcermgfvcusuwjfviz.supabase.co',
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8'
       );
     }
     return _sb;
@@ -1999,7 +1995,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     // Page de vente du quiz : la connexion mène au quiz plutôt qu'au tuteur IA
     if (window.AFTER_LOGIN_URL) { window.location.href = window.AFTER_LOGIN_URL; return; }
     const isDev   = window.location.port === '3001';
-    const appBase = isDev ? 'http://localhost:5173' : '/app';
+    // En ligne : page « Mes outils » pour choisir le tuteur IA ou le quiz (un seul compte)
+    const appBase = isDev ? 'http://localhost:5173' : '/espace';
 
     if (isDev && session) {
       /* Dev : landing page sur port 3001, app Vite sur port 5173.
@@ -2051,7 +2048,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     fetch('/api/klaviyo/email-verified', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ access_token: params.access_token, projet: window.SB_PROJET || 'crpe' }),
+      body: JSON.stringify({ access_token: params.access_token }),
     }).catch(() => {});
   })();
 

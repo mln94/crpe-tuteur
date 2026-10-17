@@ -33,16 +33,6 @@ const supabaseAdmin = createClient(
   { auth: { autoRefreshToken: false, persistSession: false } }
 );
 
-/* ── Supabase du Quiz CRPE : projet séparé « quizzcrpe » (questions + comptes des inscrits du quiz) ──
-   Clé publique (anon) : les tables sont fermées par RLS, le serveur passe par les fonctions quiz_catalogue
-   et quiz_correction, et vérifie les jetons des comptes du quiz. */
-const QUIZ_SUPABASE_URL = process.env.QUIZ_SUPABASE_URL || 'https://uwsdfbmootumhsrufkmo.supabase.co';
-const QUIZ_SUPABASE_ANON_KEY = process.env.QUIZ_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c2RmYm1vb3R1bWhzcnVma21vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNDU1OTEsImV4cCI6MjEwNzgyMTU5MX0.W1uAsiBPR4mEoxjNBp308uNNhHt21dlXpGzPBHPXVuk';
-const quizDb = createClient(QUIZ_SUPABASE_URL, QUIZ_SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false } });
-// Clé service_role du projet quizzcrpe (serveur uniquement) : comptes du quiz (test de positionnement, paiement)
-if (!process.env.QUIZ_SUPABASE_SERVICE_ROLE_KEY) console.error('[config] QUIZ_SUPABASE_SERVICE_ROLE_KEY manquante : comptes du quiz indisponibles');
-const quizAdmin = createClient(QUIZ_SUPABASE_URL, process.env.QUIZ_SUPABASE_SERVICE_ROLE_KEY || 'absente', { auth: { autoRefreshToken: false, persistSession: false } });
-
 async function getAuthenticatedUser(req) {
   const authHeader = req.headers.authorization || '';
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
@@ -73,16 +63,16 @@ async function markUserPaid(userId, email) {
 
 // Déblocage du Quiz CRPE (projet quizzcrpe) + Klaviyo quiz_paid ; appelée par la capture et par le webhook
 async function markQuizPaid(userId, ref, email) {
-  const { data: avant } = await quizAdmin.from('quiz_comptes').select('paid, email').eq('user_id', userId).maybeSingle();
+  const { data: avant } = await supabaseAdmin.from('quiz_comptes').select('paid, email').eq('user_id', userId).maybeSingle();
   if (avant?.paid) return; // déjà débloqué (capture puis webhook pour le même paiement)
-  const { error } = await quizAdmin.from('quiz_comptes')
+  const { error } = await supabaseAdmin.from('quiz_comptes')
     .upsert({ user_id: userId, paid: true, paid_at: new Date().toISOString(), paypal_ref: ref || null, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
   if (error) throw new Error(`Déblocage du quiz : ${error.message}`);
   quizOublier(userId);
   try {
     let e = email;
     if (!e) e = avant?.email;
-    if (!e) { const { data } = await quizAdmin.auth.admin.getUserById(userId); e = data?.user?.email; }
+    if (!e) { const { data } = await supabaseAdmin.auth.admin.getUserById(userId); e = data?.user?.email; }
     if (e) await klaviyoSetProperties(e, { quiz_paid: true, quiz_date_paid: new Date().toISOString() });
   } catch (err) {
     console.error('[markQuizPaid] Klaviyo sync échouée (accès débloqué quand même) :', err.message);
@@ -331,8 +321,8 @@ app.post('/api/klaviyo/signup', async (req, res) => {
       { email_verified: false, trial: true, paid_user: false, form_trial: false, consent_conseils, consent_partenaires, parcours: parcoursOf(req.body?.parcours) },
       phoneAttrs, consent_conseils);
 
-    // Créer la ligne profil Supabase avec trial = true (comptes du tuteur seulement : ceux du quiz sont dans le projet « quizzcrpe »)
-    if (user_id && parcoursOf(req.body?.parcours) !== 'quizcrpe') {
+    // Créer la ligne profil Supabase avec trial = true (un seul compte pour le tuteur IA et le quiz)
+    if (user_id) {
       await supabaseAdmin
         .from('profils_utilisateurs')
         .upsert({ user_id, trial: true }, { onConflict: 'user_id', ignoreDuplicates: true });
@@ -417,9 +407,7 @@ app.post('/api/klaviyo/email-verified', async (req, res) => {
   const { access_token } = req.body || {};
   if (!access_token) return res.status(400).json({ error: 'Token manquant.' });
   try {
-    // Les inscrits du quiz ont leur compte dans le projet « quizzcrpe »
-    const auth = req.body?.projet === 'quizzcrpe' ? quizDb.auth : supabaseAdmin.auth;
-    const { data, error } = await auth.getUser(access_token);
+    const { data, error } = await supabaseAdmin.auth.getUser(access_token);
     if (error || !data?.user) return res.status(401).json({ error: 'Token invalide.' });
     const email = data.user.email;
     if (!email) return res.status(400).json({ error: 'Email introuvable dans le token.' });
@@ -598,10 +586,9 @@ async function logConsommation({ meta, model, usage, dureeMs, success }) {
 const CHAT_MODEL = 'claude-sonnet-4-6';
 
 /* ── Quiz CRPE ──
-   Projet Supabase « quizzcrpe ». Parcours : compte → test de positionnement gratuit (obligatoire) → paiement PayPal
+   Même projet Supabase et même compte que le tuteur IA (un seul compte, une seule authentification). Parcours : compte → test de positionnement gratuit (obligatoire) → paiement PayPal
    (59 € TTC) → accès au quiz. Le blocage est vérifié ici : catalogue et correction réservés aux comptes payés.
-   Questions : fonctions quiz_catalogue / quiz_correction ; comptes : table quiz_comptes, via la clé service_role du projet
-   (QUIZ_SUPABASE_SERVICE_ROLE_KEY), comme profils_utilisateurs pour PassCRPE. */
+   Tables quiz_questions et quiz_comptes, lues et écrites par le serveur (clé service_role). */
 const QUIZ_MATIERES = ['francais', 'mathematiques', 'histoire_geographie', 'emc', 'svt', 'physique_chimie', 'technologie', 'arts', 'anglais'];
 const QUIZ_LABELS = { francais: 'Français', mathematiques: 'Mathématiques', histoire_geographie: 'Histoire-géographie', emc: 'EMC', svt: 'SVT', physique_chimie: 'Physique-chimie', technologie: 'Technologie', arts: 'Arts', anglais: 'Anglais' };
 const QUIZ_PRICE = { currency_code: 'EUR', value: '59.00' }; // 59 € TTC, aligné avec la page /quizz
@@ -613,7 +600,9 @@ const quizCatalogues = new Map();
 async function quizCatalogue(matiere) {
   const c = quizCatalogues.get(matiere);
   if (c && c.until > Date.now()) return c.data;
-  const { data, error } = await quizDb.rpc('quiz_catalogue', { p_matiere: matiere });
+  const { data, error } = await supabaseAdmin.from('quiz_questions')
+    .select('id, notion, niveau, type, question, choix, programme_ref, classe, theme, sous_theme, objectif')
+    .eq('matiere', matiere).eq('actif', true).order('ordre').order('id');
   if (error) throw new Error(error.message);
   const questions = data.map(q => ({ ...q, notion: q.notion || `q${q.id}`, niveau: q.niveau || 'facile' }));
   quizCatalogues.set(matiere, { data: questions, until: Date.now() + 600000 });
@@ -628,9 +617,9 @@ async function quizCompte(req, { frais = false } = {}) {
   if (!token) return null;
   const c = quizSessions.get(token);
   if (!frais && c && c.until > Date.now()) return c.compte;
-  const { data, error } = await quizDb.auth.getUser(token);
+  const { data, error } = await supabaseAdmin.auth.getUser(token);
   if (error || !data?.user) return null;
-  const { data: ligne, error: e2 } = await quizAdmin.from('quiz_comptes').select('positionnement, paid').eq('user_id', data.user.id).maybeSingle();
+  const { data: ligne, error: e2 } = await supabaseAdmin.from('quiz_comptes').select('positionnement, paid').eq('user_id', data.user.id).maybeSingle();
   if (e2) throw new Error(e2.message);
   const l = ligne || {};
   const compte = { id: data.user.id, email: data.user.email, positionnement: l.positionnement || null, paid: l.paid === true };
@@ -655,8 +644,8 @@ async function quizAcces(req, res) {
 const nombre = v => Number(String(v ?? '').replace(/\s/g, '').replace(',', '.').replace('−', '-'));
 const indices = v => String(v ?? '').split(',').map(x => x.trim()).filter(Boolean).map(Number).sort((a, b) => a - b).join(',');
 async function quizCorriger(id, reponse) {
-  const { data: lignes, error } = await quizDb.rpc('quiz_correction', { p_id: id });
-  const data = lignes?.[0];
+  const { data, error } = await supabaseAdmin.from('quiz_questions')
+    .select('type, choix, reponse, explication, tolerance').eq('id', id).eq('actif', true).maybeSingle();
   if (error || !data) return null;
   let correct;
   if (data.type === 'numerique') {
@@ -673,6 +662,26 @@ async function quizCorriger(id, reponse) {
     : data.reponse;
   return { correct, reponse: data.reponse, attendu, explication: data.explication };
 }
+
+// « Mes outils » : état du tuteur IA et du quiz pour le compte connecté
+app.get('/api/espace', async (req, res) => {
+  try {
+    const user = await getAuthenticatedUser(req);
+    if (!user) return res.status(401).json({ error: 'Connexion requise.' });
+    const [{ data: profil }, { data: quiz }] = await Promise.all([
+      supabaseAdmin.from('profils_utilisateurs').select('crpe_paid, trial').eq('user_id', user.id).maybeSingle(),
+      supabaseAdmin.from('quiz_comptes').select('positionnement, paid').eq('user_id', user.id).maybeSingle(),
+    ]);
+    res.json({
+      email: user.email, prenom: user.user_metadata?.prenom || '',
+      tuteur: { paid: profil?.crpe_paid === true, trial: profil?.trial !== false },
+      quiz: { positionnement: !!quiz?.positionnement, score: quiz?.positionnement?.pct ?? null, paid: quiz?.paid === true },
+    });
+  } catch (err) {
+    console.error('[espace]', err.message);
+    res.status(500).json({ error: 'Votre espace n\'a pas pu être chargé.' });
+  }
+});
 
 // État du compte : sert à l'application pour choisir l'écran (test, résultat + paiement, quiz)
 app.get('/api/quiz/compte', async (req, res) => {
@@ -736,10 +745,10 @@ app.post('/api/quiz/positionnement', async (req, res) => {
     const ok = matieres.reduce((s, m) => s + m.ok, 0), n = matieres.reduce((s, m) => s + m.n, 0);
     const resultat = { date: new Date().toISOString(), ok, n, pct: n ? Math.round(ok / n * 100) : 0, matieres };
     // Enregistré une seule fois : un second envoi ne remplace pas le premier résultat
-    const { data: existant } = await quizAdmin.from('quiz_comptes').select('positionnement').eq('user_id', compte.id).maybeSingle();
+    const { data: existant } = await supabaseAdmin.from('quiz_comptes').select('positionnement').eq('user_id', compte.id).maybeSingle();
     let enregistre = existant?.positionnement;
     if (!enregistre) {
-      const { error } = await quizAdmin.from('quiz_comptes').upsert({ user_id: compte.id, email: compte.email, positionnement: resultat,
+      const { error } = await supabaseAdmin.from('quiz_comptes').upsert({ user_id: compte.id, email: compte.email, positionnement: resultat,
         positionnement_at: resultat.date, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
       if (error) throw new Error(error.message);
       enregistre = resultat;
