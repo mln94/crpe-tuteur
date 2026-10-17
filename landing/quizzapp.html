@@ -583,11 +583,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   // ── Compte : connexion, test de positionnement, paiement ──
+  // Lien vers le résultat du test ; l'e-mail, « Mes outils » et la déconnexion sont dans le menu de l'en-tête
   function barreCompte() {
-    return '<div class="quiz-compte"><span>' + esc(compte && compte.email || '') + '</span><span class="liens">' +
-      '<a class="quiz-link" href="/espace">Mes outils</a>' +
-      (compte && compte.positionnement ? '<button type="button" class="quiz-link" data-act="voir-resultat">Mon test de positionnement</button>' : '') +
-      '</span></div>';
+    return compte && compte.positionnement ? '<div class="quiz-compte"><span></span><span class="liens"><button type="button" class="quiz-link" data-act="voir-resultat">Mon test de positionnement</button></span></div>' : '';
   }
   function erreur(msg) {
     root.innerHTML = '<div class="quiz-msg">' + esc(msg) + '</div><div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-act="boot">Réessayer</button></div>';

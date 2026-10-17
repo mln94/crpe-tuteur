@@ -1,6 +1,7 @@
 {
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
+  "regions": ["dub1"],
   "redirects": [
     { "source": "/rapports-jury-crpe", "destination": "/rapports-jury-crpe/2026", "permanent": false }
   ],

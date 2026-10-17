@@ -41,7 +41,7 @@ CSS = """
     .tuteur .esp-icon { background: #4f46e5; } .quiz .esp-icon { background: #f97316; }
     .esp-card h2 { font-size: 21px; font-weight: 900; color: var(--gray-900); }
     .esp-card p { font-size: 14.5px; line-height: 1.6; margin-bottom: 14px; }
-    .esp-etat { align-self: flex-start; font-size: 12px; font-weight: 800; padding: 5px 12px; border-radius: 100px; margin-bottom: 16px; }
+    .esp-etat { align-self: flex-start; min-height: 26px; background: var(--gray-100); color: var(--gray-500); font-size: 12px; font-weight: 800; padding: 5px 12px; border-radius: 100px; margin-bottom: 16px; }
     .esp-etat.ok { background: #dcfce7; color: #166534; } .esp-etat.essai { background: #e0e7ff; color: #3730a3; } .esp-etat.todo { background: #ffedd5; color: #9a3412; }
     .esp-btn { margin-top: auto; display: inline-flex; justify-content: center; padding: 13px 20px; border-radius: 12px; font-size: 15px; font-weight: 800; text-decoration: none; color: #fff; }
     .tuteur .esp-btn { background: #4f46e5; } .tuteur .esp-btn:hover { background: #4338ca; }
@@ -61,10 +61,12 @@ JS = """<script>
   function connexion() {
     root.innerHTML = '<div class="esp-msg">Connectez-vous à votre compte PassCRPE pour accéder à vos outils.<br><a href="/?auth=login">Se connecter</a> · <a href="/?auth=register">Créer un compte</a></div>';
   }
+  var CLE = 'passcrpe-espace';
+  // Les deux cartes s'affichent tout de suite ; l'état de chaque outil arrive ensuite (dernier état connu d'abord)
   function afficher(d) {
-    var t = d.tuteur, q = d.quiz;
-    var etatT = t.paid ? '<span class="esp-etat ok">Accès complet</span>' : '<span class="esp-etat essai">Essai gratuit</span>';
-    var etatQ = q.paid ? '<span class="esp-etat ok">Accès débloqué</span>'
+    var t = d && d.tuteur, q = d && d.quiz, attente = '<span class="esp-etat">…</span>';
+    var etatT = !t ? attente : t.paid ? '<span class="esp-etat ok">Accès complet</span>' : '<span class="esp-etat essai">Essai gratuit</span>';
+    var etatQ = !q ? attente : q.paid ? '<span class="esp-etat ok">Accès débloqué</span>'
       : q.positionnement ? '<span class="esp-etat todo">Test fait' + (q.score != null ? ' : ' + q.score + ' %' : '') + ' · à débloquer</span>'
       : '<span class="esp-etat todo">Test de positionnement gratuit à passer</span>';
     root.innerHTML = '<div class="esp-grid">' +
@@ -73,17 +75,23 @@ JS = """<script>
       '<a class="esp-btn" href="/app">Ouvrir le tuteur IA →</a></div>' +
       '<div class="esp-card quiz"><div class="esp-head"><div class="esp-icon">🎯</div><h2>Quiz CRPE</h2></div>' + etatQ +
       '<p>2 700 questions dans les 9 matières du concours, en séries de 20, avec révisions espacées.</p>' +
-      '<a class="esp-btn" href="/quizzapp">' + (q.paid ? 'Ouvrir le quiz →' : q.positionnement ? 'Voir mon résultat →' : 'Passer mon test gratuit →') + '</a></div>' +
+      '<a class="esp-btn" href="/quizzapp">' + (!q || q.paid ? 'Ouvrir le quiz →' : q.positionnement ? 'Voir mon résultat →' : 'Passer mon test gratuit →') + '</a></div>' +
       '</div>';
-    var p = document.getElementById('esp-prenom'); if (p && d.prenom) p.textContent = 'Bonjour ' + d.prenom + ' !';
+    var p = document.getElementById('esp-prenom'); if (p && d && d.prenom) p.textContent = 'Bonjour ' + d.prenom + ' !';
   }
+  function lireCache(email) { try { var c = JSON.parse(localStorage.getItem(CLE)); return c && c.email === email ? c : null; } catch (e) { return null; } }
   SB.auth.getSession().then(function (r) {
     var s = r.data.session; if (!s) return connexion();
+    var m = s.user.user_metadata || {};
+    afficher(lireCache(s.user.email) || { prenom: m.prenom });
     return fetch('/api/espace', { headers: { Authorization: 'Bearer ' + s.access_token } }).then(function (res) {
       if (res.status === 401) return connexion();
-      return res.json().then(function (d) { if (!res.ok) throw new Error(d.error); afficher(d); });
+      return res.json().then(function (d) {
+        if (!res.ok) throw new Error(d.error);
+        afficher(d); try { localStorage.setItem(CLE, JSON.stringify(d)); } catch (e) {}
+      });
     });
-  }).catch(function () { root.innerHTML = '<div class="esp-msg">Votre espace n\\'a pas pu être chargé. Rechargez la page.</div>'; });
+  }).catch(function () { if (!document.querySelector('.esp-grid')) root.innerHTML = '<div class="esp-msg">Votre espace n\\'a pas pu être chargé. Rechargez la page.</div>'; });
 })();
 </script>
 """
