@@ -20,6 +20,8 @@ Fonctionnement du quiz :
 import json
 import os
 
+import nav_compte
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE = os.path.join(ROOT, 'landing', 'crpe-bac3-structure-premiere-epreuve-admissibilite.html')
 SITE = 'https://www.passcrpe.fr'
@@ -36,9 +38,6 @@ MATIERES = [
     ('arts', 'Arts', '🎨'),
     ('anglais', 'Anglais', '🇬🇧'),
 ]
-# Projet Supabase « crpe » (clé publique anon) : même compte et même session que le tuteur IA et /quizz
-SB_URL = 'https://zqwcermgfvcusuwjfviz.supabase.co'
-SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8'
 PRIX = '59 €'
 TAILLE_SERIE = 20
 BONNES_POUR_MAITRISER = 3
@@ -166,10 +165,9 @@ CSS = """
   .quiz-confirm { background: #dcfce7; color: #166534; font-weight: 600; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
 """
 
-JS = """<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script>
+JS = """<script>
 (function () {
-  var SB = window.supabase.createClient('__SB_URL__', '__SB_KEY__'), PRIX = '__PRIX__';
+  var SB = window.passcrpeSB, PRIX = '__PRIX__';
   var compte = null, tst = null, CLE_TEST = 'passcrpe-quiz-test';
   function jeton() { return SB.auth.getSession().then(function (r) { return r.data.session ? r.data.session.access_token : null; }); }
   // Appels à l'API du quiz avec le jeton du compte ; les erreurs gardent leur code (connexion, paiement)
@@ -620,12 +618,12 @@ def page():
             + f'  <meta name="description" content="{desc}" />\n'
             + '  <meta name="robots" content="noindex, nofollow" />\n'
             + f'  <link rel="canonical" href="{SITE}/quizzapp" />\n'
-            + CSS_BASE + CSS)
+            + CSS_BASE + CSS + nav_compte.CSS)
     js = (JS.replace('__MATIERES__', json.dumps(MATIERES, ensure_ascii=False))
-            .replace('__SB_URL__', SB_URL).replace('__SB_KEY__', SB_KEY).replace('__PRIX__', PRIX)
+            .replace('__PRIX__', PRIX)
             .replace('__SERIE__', str(TAILLE_SERIE)).replace('__MAITRISE__', str(BONNES_POUR_MAITRISER))
             .replace('__INTERVALLES__', json.dumps(INTERVALLES_JOURS)).replace('__APRES_ERREUR__', str(APRES_ERREUR_JOURS)))
-    return head + BODY_NAV + body + js + TAIL
+    return head + BODY_NAV + body + nav_compte.JS + js + TAIL
 
 
 open(os.path.join(ROOT, 'landing', 'quizzapp.html'), 'w', encoding='utf-8').write(page())

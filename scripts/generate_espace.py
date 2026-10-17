@@ -10,11 +10,11 @@ Usage   : python3 scripts/generate_espace.py
 """
 import os
 
+import nav_compte
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE = os.path.join(ROOT, 'landing', 'crpe-bac3-structure-premiere-epreuve-admissibilite.html')
 SITE = 'https://www.passcrpe.fr'
-SB_URL = 'https://zqwcermgfvcusuwjfviz.supabase.co'
-SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8'
 
 tpl = open(TEMPLATE, encoding='utf-8').read()
 HEAD_START = tpl[:tpl.index('  <title>')]
@@ -53,10 +53,9 @@ CSS = """
     @media (max-width: 720px) { .esp-grid { grid-template-columns: 1fr; } }
 """
 
-JS = """<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script>
+JS = """<script>
 (function () {
-  var SB = window.supabase.createClient('__SB_URL__', '__SB_KEY__');
+  var SB = window.passcrpeSB;
   var root = document.getElementById('espace');
   function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function connexion() {
@@ -97,14 +96,14 @@ def page():
             + '  <meta name="description" content="Votre espace PassCRPE : le tuteur IA et le Quiz CRPE avec un seul compte." />\n'
             + '  <meta name="robots" content="noindex, nofollow" />\n'
             + f'  <link rel="canonical" href="{SITE}/espace" />\n'
-            + CSS_BASE + CSS)
+            + CSS_BASE + CSS + nav_compte.CSS)
     body = '''<main class="esp-wrap">
   <h1 id="esp-prenom">Mes outils</h1>
   <p class="esp-lead">Un seul compte PassCRPE pour vos deux outils de préparation : choisissez celui que vous voulez utiliser.</p>
   <div id="espace"><div class="esp-msg">Chargement…</div></div>
 </main>
 '''
-    js = JS.replace('__SB_URL__', SB_URL).replace('__SB_KEY__', SB_KEY)
+    js = nav_compte.JS + JS
     return head + BODY_NAV + body + js + TAIL
 
 
