@@ -18,7 +18,9 @@ MATIERES = [
     ('mathematiques', 'Mathématiques', '🔢'),
     ('histoire_geographie', 'Histoire-géographie', '🌍'),
     ('emc', 'Enseignement moral et civique', '⚖️'),
-    ('sciences_technologie', 'Sciences et technologie', '🔬'),
+    ('svt', 'Sciences de la vie et de la Terre', '🌱'),
+    ('physique_chimie', 'Physique-chimie', '⚗️'),
+    ('technologie', 'Technologie', '⚙️'),
     ('arts', 'Arts', '🎨'),
     ('anglais', 'Anglais', '🇬🇧'),
 ]

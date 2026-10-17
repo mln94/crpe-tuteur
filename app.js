@@ -554,7 +554,7 @@ async function logConsommation({ meta, model, usage, dureeMs, success }) {
 const CHAT_MODEL = 'claude-sonnet-4-6';
 
 /* ── Quiz CRPE : questions servies sans la réponse, correction question par question ── */
-const QUIZ_MATIERES = ['francais', 'mathematiques', 'histoire_geographie', 'emc', 'sciences_technologie', 'arts', 'anglais'];
+const QUIZ_MATIERES = ['francais', 'mathematiques', 'histoire_geographie', 'emc', 'svt', 'physique_chimie', 'technologie', 'arts', 'anglais'];
 const melanger = a => { const t = [...a]; for (let i = t.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [t[i], t[j]] = [t[j], t[i]]; } return t; };
 
 app.get('/api/quiz/questions', async (req, res) => {
