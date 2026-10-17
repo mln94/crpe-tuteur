@@ -472,7 +472,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
 (function () {
   var SB = window.passcrpeSB, PRIX = '59 €';
-  var compte = null, tst = null, CLE_TEST = 'passcrpe-quiz-test';
+  var compte = null, tst = null, CLE_TEST = 'passcrpe-quiz-test', testPret = null;
   function jeton() { return SB.auth.getSession().then(function (r) { return r.data.session ? r.data.session.access_token : null; }); }
   // Appels à l'API du quiz avec le jeton du compte ; les erreurs gardent leur code (connexion, paiement)
   function api(url, opts) {
@@ -611,6 +611,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
   function introTest() {
     var t = lireTest();
+    // Le test est préparé en arrière-plan pendant la lecture de l'introduction : « Commencer » est immédiat
+    if (!t && !testPret) testPret = api('/api/quiz/positionnement').catch(function (e) { testPret = null; throw e; });
     root.innerHTML = barreCompte() + '<div class="quiz-card"><h2>Votre test de positionnement</h2>' +
       '<p>Avant d\'accéder au quiz, faites le point sur votre niveau. Le test est <strong>gratuit</strong> et dure environ <strong>15 minutes</strong> :</p>' +
       '<ul class="quiz-points"><li>45 questions, 5 dans chacune des 9 matières ;</li><li>des questions faciles, intermédiaires et avancées ;</li><li>pas de correction pendant le test : à la fin, vous obtenez votre carte des forces et faiblesses, matière par matière.</li></ul>' +
@@ -622,10 +624,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     tst = lireTest();
     if (tst) return testQuestion();
     root.innerHTML = '<div class="quiz-card"><p>Préparation de votre test…</p></div>';
-    api('/api/quiz/positionnement').then(function (d) {
+    (testPret || api('/api/quiz/positionnement')).then(function (d) {
+      testPret = null;
       if (d.deja) { compte.positionnement = d.deja; return resultat(d.deja); }
       tst = { user: compte.email, qs: d.questions, i: 0, rep: [] }; garderTest(); testQuestion(); top();
-    }).catch(function () { erreur('Le test n\'a pas pu être chargé. Réessayez dans quelques instants.'); });
+    }).catch(function () { testPret = null; erreur('Le test n\'a pas pu être chargé. Réessayez dans quelques instants.'); });
   }
   function testQuestion() {
     var q = tst.qs[tst.i], n = tst.qs.length, corps;
@@ -637,6 +640,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     root.innerHTML = '<div class="quiz-card"><div class="quiz-top"><span class="mat">Test de positionnement · ' + esc(label(q.matiere)) + '</span><span>Question ' + (tst.i + 1) + ' / ' + n + '</span></div>' +
       '<div class="quiz-bar"><span style="width:' + Math.round(tst.i / n * 100) + '%"></span></div>' +
       '<p class="quiz-q">' + esc(q.question) + '</p>' + corps +
+      '<p class="quiz-hint" id="t-aide">' + (q.type === 'qcm' ? 'Cliquez sur une réponse pour passer à la question suivante.' : 'Appuyez sur Entrée pour passer à la question suivante.') + '</p>' +
       '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="t-suivant">' + (tst.i === n - 1 ? 'Terminer le test' : 'Question suivante →') + '</button><button type="button" class="quiz-btn ghost" data-act="t-passer">Je ne sais pas</button></div></div>';
     var inp = document.getElementById('t-num'); if (inp) inp.focus();
   }
@@ -646,7 +650,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (q.type === 'numerique') v = (document.getElementById('t-num').value || '').trim();
       else if (q.type === 'cliquer_mot') v = tst.val.slice().sort(function (a, b) { return a - b; }).join(',');
       else v = tst.val == null ? '' : q.choix[tst.val];
-      if (v === '') { alert('Choisissez une réponse, ou cliquez sur « Je ne sais pas ».'); return; }
+      if (v === '') { var aide = document.getElementById('t-aide'); if (aide) { aide.textContent = 'Choisissez une réponse, ou cliquez sur « Je ne sais pas ».'; aide.style.color = '#b91c1c'; } return; }
     }
     tst.rep[tst.i] = { id: q.id, reponse: v }; tst.i++; garderTest();
     if (tst.i < tst.qs.length) { testQuestion(); return; }
@@ -837,7 +841,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // ── Interactions ──
   root.addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b || b.type === 'submit') return;
-    if (tst && b.dataset.tk !== undefined) { tst.val = +b.dataset.tk; root.querySelectorAll('.quiz-choice').forEach(function (x) { x.classList.toggle('sel', x === b); }); return; }
+    if (tst && b.dataset.tk !== undefined) {
+      if (tst.avance) return;
+      tst.val = +b.dataset.tk; root.querySelectorAll('.quiz-choice').forEach(function (x) { x.classList.toggle('sel', x === b); });
+      tst.avance = true; setTimeout(function () { tst.avance = false; testRepondre(false); }, 150);
+      return;
+    }
     if (tst && b.dataset.ttok !== undefined) { var tk = +b.dataset.ttok, ti = tst.val.indexOf(tk); if (ti < 0) tst.val.push(tk); else tst.val.splice(ti, 1); b.classList.toggle('sel'); return; }
     if (b.dataset.niv) { choix.niveau = b.dataset.niv; garderChoix(); root.querySelectorAll('.quiz-niveau').forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); resume(); return; }
     if (b.dataset.k !== undefined && st && !st.repondu) {
@@ -877,7 +886,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   root.addEventListener('change', function (e) {
     if (e.target.id === 'quiz-mat') { choix.mat = e.target.value; garderChoix(); resume(); }
   });
-  root.addEventListener('keydown', function (e) { if (tst && e.key === 'Enter' && e.target.id === 't-num') { e.preventDefault(); testRepondre(false); } });
+  document.addEventListener('keydown', function (e) {
+    if (!tst || e.key !== 'Enter' || !document.querySelector('[data-act="t-suivant"]')) return;
+    if (e.target.closest && e.target.closest('button, a') && e.target.id !== 't-num') return; // laisse Entrée activer le bouton qui a le focus
+    e.preventDefault(); testRepondre(false);
+  });
   root.addEventListener('submit', function (e) {
     e.preventDefault();
     if (!st || st.repondu) return;

@@ -702,8 +702,10 @@ app.get('/api/quiz/positionnement', async (req, res) => {
     const compte = await quizCompte(req);
     if (!compte) return res.status(401).json({ error: 'Connexion requise.' });
     const questions = [];
-    for (const matiere of QUIZ_MATIERES) {
-      const cat = await quizCatalogue(matiere);
+    // Les 9 matières sont chargées en parallèle (puis gardées 10 minutes en mémoire)
+    const catalogues = await Promise.all(QUIZ_MATIERES.map(quizCatalogue));
+    for (const [im, matiere] of QUIZ_MATIERES.entries()) {
+      const cat = catalogues[im];
       const themesVus = new Set();
       for (const [niveau, n] of Object.entries(POSITIONNEMENT_PAR_MATIERE)) {
         // une question par notion, en privilégiant les thèmes pas encore posés
@@ -729,7 +731,7 @@ app.post('/api/quiz/positionnement', async (req, res) => {
     const reponses = Array.isArray(req.body?.reponses) ? req.body.reponses.slice(0, 60) : [];
     if (reponses.length < 9) return res.status(400).json({ error: 'Test incomplet.' });
     const index = {};
-    for (const m of QUIZ_MATIERES) (await quizCatalogue(m)).forEach(q => { index[q.id] = { ...q, matiere: m }; });
+    (await Promise.all(QUIZ_MATIERES.map(quizCatalogue))).forEach((cat, im) => cat.forEach(q => { index[q.id] = { ...q, matiere: QUIZ_MATIERES[im] }; }));
     const corrections = await Promise.all(reponses.map(r => index[Number(r.id)] ? quizCorriger(Number(r.id), r.reponse ?? '') : null));
     const parMatiere = {};
     reponses.forEach((r, i) => {
