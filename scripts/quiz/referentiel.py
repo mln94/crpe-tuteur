@@ -1,0 +1,108 @@
+# Référentiel des programmes officiels du cycle 4 (hors français et mathématiques, déjà en base),
+# importé dans la table programme_cycle4_disciplines. Clé = (matière, code) ; les questions y renvoient par
+# « code.index_objectif ».
+#
+# Sources :
+#  - Programme du cycle 4, arrêté du 17-7-2020, BO n°31 du 30-7-2020 (histoire-géographie, SVT, physique-chimie,
+#    arts plastiques, éducation musicale, langues vivantes) ;
+#  - Programme de technologie du cycle 4, BO n°9 du 29-2-2024 ;
+#  - Programme d'enseignement moral et civique, BO n°24 du 13-6-2024 (en vigueur à tous les niveaux en 2026-2027).
+BO2020 = 'BO n°31 du 30 juillet 2020'
+BO_TECHNO = 'BO n°9 du 29 février 2024'
+BO_EMC = 'BO n°24 du 13 juin 2024'
+
+R = [
+# ── Histoire-géographie ──
+('histoire_geographie', 'H5-1', '5e', 'Histoire', 'Thème 1 : Chrétientés et islam (VIe-XIIIe siècles), des mondes en contact', BO2020,
+ ["Byzance et l'Europe carolingienne.", "De la naissance de l'islam à la prise de Bagdad par les Mongols : pouvoirs, sociétés, cultures."]),
+('histoire_geographie', 'H5-2', '5e', 'Histoire', "Thème 2 : Société, Église et pouvoir politique dans l'Occident féodal (XIe-XVe siècles)", BO2020,
+ ["L'ordre seigneurial : la formation et la domination des campagnes.", "L'émergence d'une nouvelle société urbaine.", "L'affirmation de l'État monarchique dans le Royaume des Capétiens et des Valois."]),
+('histoire_geographie', 'H5-3', '5e', 'Histoire', "Thème 3 : Transformations de l'Europe et ouverture sur le monde aux XVIe et XVIIe siècles", BO2020,
+ ["Le monde au temps de Charles Quint et Soliman le Magnifique.", "Humanisme, réformes et conflits religieux.", "Du Prince de la Renaissance au roi absolu (François Ier, Henri IV, Louis XIV)."]),
+('histoire_geographie', 'H4-1', '4e', 'Histoire', 'Thème 1 : Le XVIIIe siècle. Expansions, Lumières et révolutions', BO2020,
+ ["Bourgeoisies marchandes, négoces internationaux, traites négrières et esclavage au XVIIIe siècle.", "L'Europe des Lumières : circulation des idées, despotisme éclairé et contestation de l'absolutisme.", "La Révolution française et l'Empire : nouvel ordre politique et société révolutionnée en France et en Europe."]),
+('histoire_geographie', 'H4-2', '4e', 'Histoire', "Thème 2 : L'Europe et le monde au XIXe siècle", BO2020,
+ ["L'Europe de la « révolution industrielle ».", "Conquêtes et sociétés coloniales."]),
+('histoire_geographie', 'H4-3', '4e', 'Histoire', 'Thème 3 : Société, culture et politique dans la France du XIXe siècle', BO2020,
+ ["Une difficile conquête : voter de 1815 à 1870.", "La Troisième République.", "Conditions féminines dans une société en mutation."]),
+('histoire_geographie', 'H3-1', '3e', 'Histoire', "Thème 1 : L'Europe, un théâtre majeur des guerres totales (1914-1945)", BO2020,
+ ["Civils et militaires dans la Première Guerre mondiale.", "Démocraties fragilisées et expériences totalitaires dans l'Europe de l'entre-deux-guerres.", "La Deuxième Guerre mondiale, une guerre d'anéantissement.", "La France défaite et occupée. Régime de Vichy, collaboration, Résistance."]),
+('histoire_geographie', 'H3-2', '3e', 'Histoire', 'Thème 2 : Le monde depuis 1945', BO2020,
+ ["Indépendances et construction de nouveaux États.", "Un monde bipolaire au temps de la guerre froide.", "Affirmation et mise en œuvre du projet européen.", "Enjeux et conflits dans le monde après 1989."]),
+('histoire_geographie', 'H3-3', '3e', 'Histoire', 'Thème 3 : Françaises et Français dans une République repensée', BO2020,
+ ["1944-1947 : refonder la République, redéfinir la démocratie.", "La Ve République, de la République gaullienne à l'alternance et à la cohabitation.", "Femmes et hommes dans la société des années 1950 aux années 1980 : nouveaux enjeux sociaux et culturels, réponses politiques."]),
+('histoire_geographie', 'G5-1', '5e', 'Géographie', "Thème 1 : La question démographique et l'inégal développement", BO2020,
+ ["La croissance démographique et ses effets.", "Répartition de la richesse et de la pauvreté dans le monde."]),
+('histoire_geographie', 'G5-2', '5e', 'Géographie', 'Thème 2 : Des ressources limitées, à gérer et à renouveler', BO2020,
+ ["L'énergie, l'eau : des ressources à ménager et à mieux utiliser.", "L'alimentation : comment nourrir une humanité en croissance démographique et aux besoins alimentaires accrus ?"]),
+('histoire_geographie', 'G5-3', '5e', 'Géographie', "Thème 3 : L'environnement, du local au planétaire", BO2020,
+ ["Le changement climatique et ses principaux effets géographiques régionaux.", "Prévenir et s'adapter aux risques (industriels, technologiques et sanitaires ou liés au changement climatique)."]),
+('histoire_geographie', 'G4-1', '4e', 'Géographie', "Thème 1 : L'urbanisation du monde", BO2020,
+ ["Espaces et paysages de l'urbanisation : géographie des centres et des périphéries.", "Des villes inégalement connectées aux réseaux de la mondialisation."]),
+('histoire_geographie', 'G4-2', '4e', 'Géographie', 'Thème 2 : Les mobilités humaines transnationales', BO2020,
+ ["Un monde de migrants.", "Le tourisme et ses espaces."]),
+('histoire_geographie', 'G4-3', '4e', 'Géographie', 'Thème 3 : Des espaces transformés par la mondialisation', BO2020,
+ ["Mers et océans : un monde maritimisé.", "L'adaptation du territoire des États-Unis aux nouvelles conditions de la mondialisation.", "Les dynamiques d'un grand ensemble géographique africain."]),
+('histoire_geographie', 'G3-1', '3e', 'Géographie', 'Thème 1 : Dynamiques territoriales de la France contemporaine', BO2020,
+ ["Les aires urbaines, une nouvelle géographie d'une France mondialisée.", "Les espaces productifs et leurs évolutions.", "Les espaces de faible densité et leurs atouts."]),
+('histoire_geographie', 'G3-2', '3e', 'Géographie', 'Thème 2 : Pourquoi et comment aménager le territoire ?', BO2020,
+ ["Aménager pour répondre aux inégalités croissantes entre territoires français, à toutes les échelles.", "Les territoires ultra-marins français : une problématique spécifique."]),
+('histoire_geographie', 'G3-3', '3e', 'Géographie', "Thème 3 : La France et l'Union européenne", BO2020,
+ ["L'Union européenne, un nouveau territoire de référence et d'appartenance.", "La France et l'Europe dans le monde."]),
+# ── Enseignement moral et civique (programme 2024) ──
+('emc', 'E5-1', '5e', 'Égalité, fraternité et solidarité', "Agir pour l'égalité femmes-hommes et lutter contre les discriminations", BO_EMC,
+ ["Comprendre que l'égalité entre les femmes et les hommes est un principe fondamental de la République, garanti par la Constitution, et le résultat de combats.", "Identifier les discriminations, connaître leur interdiction par la loi et les moyens de lutter contre elles."]),
+('emc', 'E5-2', '5e', 'Égalité, fraternité et solidarité', 'La solidarité et ses échelles', BO_EMC,
+ ["Comprendre la fraternité et la solidarité comme fondements du projet social de la République.", "Connaître l'action des acteurs publics et associatifs de la solidarité, du local au national (protection sociale, sécurité civile)."]),
+('emc', 'E4-1', '4e', 'Défendre les droits et les libertés', "L'État de droit et les libertés", BO_EMC,
+ ["Comprendre l'État de droit : hiérarchie des normes, séparation des pouvoirs, rôle de la justice.", "Connaître les libertés fondamentales (expression, conscience, presse, association…), leurs garanties et leurs limites, dont la laïcité."]),
+('emc', 'E4-2', '4e', 'Défendre les droits et les libertés', 'Défendre le cadre démocratique : sécurité et défense nationale', BO_EMC,
+ ["Comprendre les missions de la défense nationale et des forces de sécurité au service de la protection des citoyens.", "Connaître les menaces qui pèsent sur la démocratie et les moyens de la défendre (terrorisme, cybermenaces, désinformation)."]),
+('emc', 'E3-1', '3e', 'Faire vivre la démocratie', 'Les règles du jeu démocratique', BO_EMC,
+ ["Connaître les principes et les institutions de la Ve République et le fonctionnement des élections.", "Comprendre la place des valeurs et principes de la République (laïcité, indivisibilité, souveraineté nationale) dans la vie démocratique."]),
+('emc', 'E3-2', '3e', 'Faire vivre la démocratie', "Les acteurs du jeu démocratique et leur engagement (1) : l'opinion", BO_EMC,
+ ["Comprendre la formation de l'opinion publique et le rôle des médias et des réseaux sociaux.", "Exercer son esprit critique face à l'information (sources, désinformation)."]),
+('emc', 'E3-3', '3e', 'Faire vivre la démocratie', "Les acteurs du jeu démocratique et leur engagement (2) : l'engagement collectif", BO_EMC,
+ ["Connaître les formes de l'engagement collectif : partis politiques, syndicats, associations.", "Comprendre l'engagement citoyen et ses formes (vote, bénévolat, service civique, défense)."]),
+# ── Sciences de la vie et de la Terre ──
+('svt', 'S-1', None, 'Sciences de la vie et de la Terre', "La planète Terre, l'environnement et l'action humaine", BO2020,
+ ["Explorer et expliquer certains phénomènes géologiques liés au fonctionnement de la Terre.", "Explorer et expliquer certains éléments de météorologie et de climatologie.", "Identifier les principaux impacts de l'action humaine, bénéfices et risques, à la surface de la planète Terre.", "Envisager ou justifier des comportements responsables face à l'environnement et à la préservation des ressources limitées de la planète."]),
+('svt', 'S-2', None, 'Sciences de la vie et de la Terre', 'Le vivant et son évolution', BO2020,
+ ["Expliquer l'organisation et le fonctionnement du monde vivant, sa dynamique à différentes échelles d'espace et de temps.", "Expliquer la nutrition des organismes.", "Expliquer la dynamique des populations et la classification du vivant.", "Expliquer la biodiversité et la diversité génétique des individus.", "Expliquer l'évolution des êtres vivants."]),
+('svt', 'S-3', None, 'Sciences de la vie et de la Terre', 'Le corps humain et la santé', BO2020,
+ ["Expliquer quelques processus biologiques impliqués dans le fonctionnement de l'organisme humain : activités musculaire, nerveuse, cardiovasculaire et respiratoire, activité cérébrale.", "Expliquer l'alimentation, la digestion et les relations avec le monde microbien.", "Expliquer la reproduction et la sexualité.", "Relier la connaissance de ces processus biologiques aux enjeux liés aux comportements responsables individuels et collectifs en matière de santé."]),
+# ── Physique-chimie ──
+('physique_chimie', 'P-1', None, 'Physique-chimie', 'Organisation et transformations de la matière', BO2020,
+ ["Décrire la constitution et les états de la matière.", "Décrire et expliquer des transformations chimiques.", "Décrire l'organisation de la matière dans l'Univers."]),
+('physique_chimie', 'P-2', None, 'Physique-chimie', 'Mouvement et interactions', BO2020,
+ ["Caractériser un mouvement.", "Modéliser une action exercée sur un objet par une force caractérisée par une direction, un sens et une valeur."]),
+('physique_chimie', 'P-3', None, 'Physique-chimie', "L'énergie et ses conversions", BO2020,
+ ["Identifier les sources, les transferts, les conversions et les formes d'énergie.", "Utiliser la conservation de l'énergie.", "Réaliser des circuits électriques simples et exploiter les lois de l'électricité."]),
+('physique_chimie', 'P-4', None, 'Physique-chimie', 'Des signaux pour observer et communiquer', BO2020,
+ ["Caractériser différents types de signaux (lumineux, sonores, radio…).", "Utiliser les propriétés de ces signaux."]),
+# ── Technologie (programme 2024) ──
+('technologie', 'T-1', None, 'Technologie', 'Les objets et les systèmes techniques : leurs usages et leurs interactions à découvrir et à analyser', BO_TECHNO,
+ ["Décrire les liens entre usages et évolutions technologiques des objets et des systèmes techniques.", "Décrire les interactions entre un objet ou un système technique, son environnement et les utilisateurs.", "Caractériser et choisir un objet ou un système technique selon différents critères."]),
+('technologie', 'T-2', None, 'Technologie', 'Structure, fonctionnement, comportement : des objets et des systèmes techniques à comprendre', BO_TECHNO,
+ ["Décrire et caractériser l'organisation interne d'un objet ou d'un système technique et ses échanges avec son environnement (énergies, données).", "Identifier un dysfonctionnement d'un objet technique et y remédier.", "Comprendre et modifier un programme associé à une fonctionnalité d'un objet ou d'un système technique."]),
+('technologie', 'T-3', None, 'Technologie', 'Création, conception, réalisation, innovations : des objets à concevoir et à réaliser', BO_TECHNO,
+ ["Imaginer, concevoir et réaliser une ou des solutions en réponse à un besoin, à des exigences (de développement durable, par exemple) ou à la nécessité d'améliorations dans une démarche de créativité.", "Valider les solutions techniques par des simulations ou par des protocoles de tests.", "Concevoir, écrire, tester et mettre au point un programme."]),
+# ── Arts plastiques et éducation musicale ──
+('arts', 'A-1', None, 'Arts plastiques', 'La représentation ; images, réalité et fiction', BO2020,
+ ["La ressemblance : le rapport au réel et la valeur expressive de l'écart en art ; la différence entre ressemblance et vraisemblance.", "Le dispositif de représentation : l'espace en deux dimensions et en trois dimensions, la composition, les points de vue.", "La narration visuelle et la création, la reproduction et la diffusion des images (photographie, cinéma, numérique)."]),
+('arts', 'A-2', None, 'Arts plastiques', "La matérialité de l'œuvre ; l'objet et l'œuvre", BO2020,
+ ["La transformation de la matière : relations entre matières, outils et gestes.", "Les qualités physiques des matériaux et leur potentiel de signification.", "La matérialité et la qualité de la couleur.", "L'objet comme matériau en art : collage, assemblage, ready-made."]),
+('arts', 'A-3', None, 'Arts plastiques', "L'œuvre, l'espace, l'auteur, le spectateur", BO2020,
+ ["La relation du corps à la production artistique : le geste, la trace, la performance.", "La présence matérielle de l'œuvre dans l'espace : installation, in situ, architecture.", "L'expérience sensible de l'espace de l'œuvre et la relation au spectateur, les lieux d'exposition."]),
+('arts', 'A-4', None, 'Éducation musicale', 'Écouter, comparer, construire une culture musicale commune', BO2020,
+ ["Analyser des œuvres musicales en utilisant un vocabulaire précis (timbre, tempo, nuances, forme, texture).", "Situer et comparer des musiques de styles et d'époques différents, identifier des repères de l'histoire de la musique.", "Reconnaître les familles d'instruments et les formations instrumentales et vocales."]),
+('arts', 'A-5', None, 'Éducation musicale', "Réaliser des projets musicaux d'interprétation ou de création", BO2020,
+ ["Définir les caractéristiques musicales d'un projet et mobiliser les éléments du langage musical (rythme, mélodie, harmonie).", "Interpréter un projet devant un public en tenant compte des indications de la partition et du chef."]),
+# ── Langues vivantes (anglais) ──
+('anglais', 'L-1', None, 'Activités langagières', 'Écouter et lire pour comprendre', BO2020,
+ ["Comprendre des messages oraux et des documents sonores et écrits de nature et de complexité variables (niveaux A2 à B1).", "Mobiliser des connaissances lexicales et grammaticales pour comprendre."]),
+('anglais', 'L-2', None, 'Activités langagières', "Parler, écrire, réagir et dialoguer", BO2020,
+ ["Mobiliser à bon escient ses connaissances lexicales, culturelles et grammaticales pour produire un texte oral ou écrit.", "Utiliser correctement les temps, les déterminants, les pronoms, les prépositions et les structures de la phrase."]),
+('anglais', 'L-3', None, 'Culture et lexique', 'Langages ; école et société ; voyages et migrations ; rencontres avec d\'autres cultures', BO2020,
+ ["Connaître des repères géographiques, historiques et culturels des pays anglophones.", "Connaître les codes socio-culturels, le système scolaire et les modes de vie des pays anglophones."]),
+]
