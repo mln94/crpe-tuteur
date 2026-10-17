@@ -33,6 +33,13 @@ const supabaseAdmin = createClient(
   { auth: { autoRefreshToken: false, persistSession: false } }
 );
 
+/* ── Supabase du Quiz CRPE : projet séparé « quizzcrpe » (questions + comptes des inscrits du quiz) ──
+   Clé publique (anon) : les tables sont fermées par RLS, le serveur passe par les fonctions quiz_catalogue
+   et quiz_correction, et vérifie les jetons des comptes du quiz. */
+const QUIZ_SUPABASE_URL = process.env.QUIZ_SUPABASE_URL || 'https://uwsdfbmootumhsrufkmo.supabase.co';
+const QUIZ_SUPABASE_ANON_KEY = process.env.QUIZ_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c2RmYm1vb3R1bWhzcnVma21vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNDU1OTEsImV4cCI6MjEwNzgyMTU5MX0.W1uAsiBPR4mEoxjNBp308uNNhHt21dlXpGzPBHPXVuk';
+const quizDb = createClient(QUIZ_SUPABASE_URL, QUIZ_SUPABASE_ANON_KEY, { auth: { autoRefreshToken: false, persistSession: false } });
+
 async function getAuthenticatedUser(req) {
   const authHeader = req.headers.authorization || '';
   const token = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
@@ -301,8 +308,8 @@ app.post('/api/klaviyo/signup', async (req, res) => {
       { email_verified: false, trial: true, paid_user: false, form_trial: false, consent_conseils, consent_partenaires, parcours: parcoursOf(req.body?.parcours) },
       phoneAttrs, consent_conseils);
 
-    // Créer la ligne profil Supabase avec trial = true
-    if (user_id) {
+    // Créer la ligne profil Supabase avec trial = true (comptes du tuteur seulement : ceux du quiz sont dans le projet « quizzcrpe »)
+    if (user_id && parcoursOf(req.body?.parcours) !== 'quizcrpe') {
       await supabaseAdmin
         .from('profils_utilisateurs')
         .upsert({ user_id, trial: true }, { onConflict: 'user_id', ignoreDuplicates: true });
@@ -375,7 +382,9 @@ app.post('/api/klaviyo/email-verified', async (req, res) => {
   const { access_token } = req.body || {};
   if (!access_token) return res.status(400).json({ error: 'Token manquant.' });
   try {
-    const { data, error } = await supabaseAdmin.auth.getUser(access_token);
+    // Les inscrits du quiz ont leur compte dans le projet « quizzcrpe »
+    const auth = req.body?.projet === 'quizzcrpe' ? quizDb.auth : supabaseAdmin.auth;
+    const { data, error } = await auth.getUser(access_token);
     if (error || !data?.user) return res.status(401).json({ error: 'Token invalide.' });
     const email = data.user.email;
     if (!email) return res.status(400).json({ error: 'Email introuvable dans le token.' });
@@ -561,9 +570,7 @@ const melanger = a => { const t = [...a]; for (let i = t.length - 1; i > 0; i--)
 app.get('/api/quiz/catalogue', async (req, res) => {
   const matiere = String(req.query.matiere || '');
   if (!QUIZ_MATIERES.includes(matiere)) return res.status(400).json({ error: 'Matière inconnue.' });
-  const { data, error } = await supabaseAdmin.from('quiz_questions')
-    .select('id, notion, niveau, type, question, choix, programme_ref, classe, theme, sous_theme, objectif')
-    .eq('matiere', matiere).eq('actif', true).order('ordre');
+  const { data, error } = await quizDb.rpc('quiz_catalogue', { p_matiere: matiere });
   if (error) { console.error('[quiz/catalogue]', error.message); return res.status(500).json({ error: 'Le quiz n\'a pas pu être chargé.' }); }
   res.json({ questions: data.map(q => ({ ...q, notion: q.notion || `q${q.id}`, niveau: q.niveau || 'facile',
     choix: q.type === 'qcm' ? melanger(q.choix) : q.choix })) });
@@ -573,9 +580,9 @@ app.get('/api/quiz/catalogue', async (req, res) => {
 app.get('/api/quiz/questions', async (req, res) => {
   const matiere = String(req.query.matiere || '');
   if (!QUIZ_MATIERES.includes(matiere)) return res.status(400).json({ error: 'Matière inconnue.' });
-  const { data, error } = await supabaseAdmin.from('quiz_questions')
-    .select('id, question, choix').eq('matiere', matiere).eq('actif', true).eq('type', 'qcm');
+  const { data: toutes, error } = await quizDb.rpc('quiz_catalogue', { p_matiere: matiere });
   if (error) { console.error('[quiz/questions]', error.message); return res.status(500).json({ error: 'Le quiz n\'a pas pu être chargé.' }); }
+  const data = toutes.filter(q => q.type === 'qcm');
   res.json({ questions: melanger(data).slice(0, 10).map(q => ({ id: q.id, question: q.question, choix: melanger(q.choix) })) });
 });
 
@@ -586,8 +593,8 @@ app.post('/api/quiz/reponse', async (req, res) => {
   const id = Number(req.body?.id);
   const reponse = req.body?.reponse ?? req.body?.choix ?? '';
   if (!Number.isInteger(id)) return res.status(400).json({ error: 'Question inconnue.' });
-  const { data, error } = await supabaseAdmin.from('quiz_questions')
-    .select('type, choix, reponse, explication, tolerance').eq('id', id).eq('actif', true).maybeSingle();
+  const { data: lignes, error } = await quizDb.rpc('quiz_correction', { p_id: id });
+  const data = lignes?.[0];
   if (error || !data) return res.status(404).json({ error: 'Question inconnue.' });
   let correct;
   if (data.type === 'numerique') {

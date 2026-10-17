@@ -6,7 +6,10 @@ Sortie  : landing/quizz.html
 Usage   : python3 scripts/generate_quizz_vente.py
 
 L'inscription est le même formulaire que sur la page d'accueil (compte Supabase + /api/klaviyo/signup).
-Seule différence : window.SIGNUP_PARCOURS = 'quizcrpe', envoyé à Klaviyo dans la propriété « parcours ».
+Différences : window.SIGNUP_PARCOURS = 'quizcrpe', envoyé à Klaviyo dans la propriété « parcours », et
+window.AFTER_SIGNUP_URL = '/quizzapp' : après l'inscription ou la connexion, la personne arrive sur le quiz.
+Les comptes sont créés dans le projet Supabase « quizzcrpe » (window.SB_URL / SB_KEY), séparé du tuteur IA,
+et le lien de l'e-mail de confirmation mène à /quizzapp (window.EMAIL_REDIRECT_URL).
 À relancer après une modification du formulaire d'inscription, du menu ou du pied de page de l'accueil.
 """
 import os
@@ -16,6 +19,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'landing', 'index.html')
 OUT = os.path.join(ROOT, 'landing', 'quizz.html')
 SITE = 'https://www.passcrpe.fr'
+# Projet Supabase « quizzcrpe » : comptes des inscrits du quiz (clé publique anon)
+QUIZ_SB_URL = 'https://uwsdfbmootumhsrufkmo.supabase.co'
+QUIZ_SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c2RmYm1vb3R1bWhzcnVma21vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNDU1OTEsImV4cCI6MjEwNzgyMTU5MX0.W1uAsiBPR4mEoxjNBp308uNNhHt21dlXpGzPBHPXVuk'
 
 PRIX_QUIZ = '49,99 €'
 PRIX_PACK = '389 €'
@@ -145,10 +151,10 @@ def contenu():
   <div class="qz-hero-inner">
     <div>
       <div class="hero-badge"><span></span>Nouveau · Quiz CRPE</div>
-      <h1>Révisez <em>toutes les disciplines</em> du CRPE, 20 questions à la fois</h1>
-      <p class="hero-sub">Le Quiz CRPE vous fait réviser les connaissances du programme du cycle 4 attendues au concours. Séries courtes, note sur 20, explication à chaque erreur et révisions espacées : vous savez exactement ce qui est acquis et ce qu'il reste à travailler.</p>
+      <h1>Arrivez au CRPE en <em>maîtrisant toutes les disciplines</em></h1>
+      <p class="hero-sub">2 700 questions sur les 9 disciplines du concours, en séries de 20. À chaque série, une note sur 20, une explication pour chaque erreur, et des révisions qui reviennent au bon moment pour que vous n'oubliiez rien. Vous arrêtez de réviser au hasard.</p>
       <div class="hero-actions">
-        <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Créer mon compte</a>
+        <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
         <a href="#fonctionnement" class="btn-secondary">Voir comment ça marche</a>
       </div>
       <p class="qz-hero-price"><strong>{PRIX_QUIZ} TTC</strong> · ou <strong>{PRIX_PACK} TTC</strong> avec le tuteur IA PassCRPE</p>
@@ -280,7 +286,7 @@ def contenu():
     <h2>Prêt à réviser toutes les disciplines du CRPE ?</h2>
     <p>Créez votre compte PassCRPE en moins de 2 minutes.</p>
     <div class="cta-form">
-      <button type="button" class="btn-white cta-commencer" onclick="openAuth(event,'register')">{ARROW}Créer mon compte</button>
+      <button type="button" class="btn-white cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</button>
     </div>
     <p class="cta-note">Quiz CRPE · {PRIX_QUIZ} TTC</p>
   </div>
@@ -293,7 +299,7 @@ def main():
 
     # En-tête : styles et suivi de l'accueil, titre et description propres à la page
     head = src[:src.index('</head>')]
-    head = re.sub(r'<title>.*?</title>', '<title>Quiz CRPE : 2 700 questions pour réviser toutes les disciplines</title>', head, flags=re.S)
+    head = re.sub(r'<title>.*?</title>', '<title>Quiz CRPE : arrivez au CRPE en maîtrisant toutes les disciplines</title>', head, flags=re.S)
     head = re.sub(r'<meta name="description"[^>]*/>',
                   '<meta name="description" content="Le Quiz CRPE : 300 questions par discipline sur le programme du cycle 4, '
                   'des séries de 20 notées sur 20, l\'explication de chaque erreur et des révisions espacées. 49,99 € TTC." />\n'
@@ -330,7 +336,10 @@ def main():
     assert 'nl-form' not in scripts and "window.SIGNUP_PARCOURS || 'passcrpe'" in scripts
 
     page = (head + '</head>\n' + body_pre + nav + '\n' + contenu() + '\n' + footer + '\n\n' + modales
-            + "<script>\n  // Parcours Klaviyo des inscriptions faites sur cette page\n  window.SIGNUP_PARCOURS = 'quizcrpe';\n</script>\n"
+            + "<script>\n  // Parcours Klaviyo des inscriptions faites sur cette page\n  window.SIGNUP_PARCOURS = 'quizcrpe';\n  // Après l'inscription ou la connexion, direction l'application du quiz\n  window.AFTER_SIGNUP_URL = '/quizzapp';\n"
+            + "  // Comptes du quiz : projet Supabase « quizzcrpe », séparé du tuteur IA\n"
+            + f"  window.SB_PROJET = 'quizzcrpe';\n  window.SB_URL = '{QUIZ_SB_URL}';\n  window.SB_KEY = '{QUIZ_SB_KEY}';\n"
+            + f"  window.EMAIL_REDIRECT_URL = '{SITE}/quizzapp';\n</script>\n"
             + scripts + '</body>\n</html>\n')
     open(OUT, 'w', encoding='utf-8').write(page)
     print('Écrit :', os.path.relpath(OUT, ROOT), f'({len(page) // 1024} ko)')

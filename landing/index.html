@@ -1831,9 +1831,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function getSB() {
     if (!_sb) {
       if (!window.supabase) { throw new Error('supabase_not_loaded'); }
+      // Projet Supabase : « crpe » par défaut, « quizzcrpe » sur la page de vente du quiz (window.SB_URL / window.SB_KEY)
       _sb = window.supabase.createClient(
-        'https://zqwcermgfvcusuwjfviz.supabase.co',
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8'
+        window.SB_URL || 'https://zqwcermgfvcusuwjfviz.supabase.co',
+        window.SB_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8'
       );
     }
     return _sb;
@@ -1956,7 +1957,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const { data: signUpData, error } = await sb.auth.signUp({
         email,
         password,
-        options: { data: { prenom, nom, concours, academie, telephone, consent_conseils, consent_partenaires, consent_version: '2026-10-12', consent_at: new Date().toISOString(), parcours: window.SIGNUP_PARCOURS || 'passcrpe' } }
+        options: {
+          data: { prenom, nom, concours, academie, telephone, consent_conseils, consent_partenaires, consent_version: '2026-10-12', consent_at: new Date().toISOString(), parcours: window.SIGNUP_PARCOURS || 'passcrpe' },
+          // Lien de l'e-mail de confirmation : l'application du quiz pour les inscrits du quiz, sinon l'URL du site du projet
+          ...(window.EMAIL_REDIRECT_URL ? { emailRedirectTo: window.EMAIL_REDIRECT_URL } : {})
+        }
       });
       if (error) {
         window.dataLayer.push({ event: 'sign_up_error', error_reason: error.message });
@@ -1979,6 +1984,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           'success'
         );
         document.getElementById('resendBlock').style.display = 'block';
+        // Page de vente du quiz : après l'inscription, on emmène la personne directement sur le quiz
+        if (window.AFTER_SIGNUP_URL) {
+          showAuthMessage('✓ Compte créé ! Un e-mail de confirmation a été envoyé à ' + email + '. Redirection vers le quiz…', 'success');
+          document.getElementById('resendBlock').style.display = 'none';
+          setTimeout(() => { window.location.href = window.AFTER_SIGNUP_URL; }, 2500);
+        }
       }
     } else {
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
@@ -2011,6 +2022,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   function redirectToApp(session) {
+    // Page de vente du quiz : la connexion mène au quiz plutôt qu'au tuteur IA
+    if (window.AFTER_SIGNUP_URL) { window.location.href = window.AFTER_SIGNUP_URL; return; }
     const isDev   = window.location.port === '3001';
     const appBase = isDev ? 'http://localhost:5173' : '/app';
 
@@ -2119,7 +2132,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     fetch('/api/klaviyo/email-verified', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ access_token: params.access_token }),
+      body: JSON.stringify({ access_token: params.access_token, projet: window.SB_PROJET || 'crpe' }),
     }).catch(() => {});
   })();
 

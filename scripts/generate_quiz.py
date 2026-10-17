@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Génère la page de l'application « Quiz CRPE » : /quiz.
+"""Génère la page de l'application « Quiz CRPE » : /quizzapp (/quiz y redirige).
 
 Gabarit : landing/crpe-bac3-structure-premiere-epreuve-admissibilite.html (menu, pied de page, suivi)
 Sortie  : landing/quiz.html
@@ -128,6 +128,7 @@ CSS = """
     .quiz-msg { padding: 14px 16px; border-radius: 12px; background: #fef2f2; color: #7f1d1d; font-size: 15px; }
     .quiz-link { background: none; border: 0; font: inherit; font-size: 13px; color: var(--gray-500); text-decoration: underline; cursor: pointer; padding: 0; }
     @media (max-width: 600px) { .quiz-card { padding: 20px 16px; } .quiz-q { font-size: 17px; } .quiz-phrase { font-size: 17px; } .stat b { font-size: 19px; } }
+  .quiz-confirm { background: #dcfce7; color: #166534; font-weight: 600; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
 """
 
 JS = """<script>
@@ -367,6 +368,19 @@ JS = """<script>
   accueil();
 })();
 </script>
+<script>
+  // Arrivée depuis l'e-mail de confirmation d'un compte du quiz (projet « quizzcrpe ») :
+  // message de bienvenue et mise à jour de email_verified dans Klaviyo
+  (function () {
+    var h = new URLSearchParams(location.hash.slice(1));
+    if (h.get('type') !== 'signup' || !h.get('access_token')) return;
+    document.getElementById('quiz-confirm').hidden = false;
+    window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'inscription_confirmee', parcours: 'quizcrpe' });
+    fetch('/api/klaviyo/email-verified', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ access_token: h.get('access_token'), projet: 'quizzcrpe' }) }).catch(function () {});
+    history.replaceState(null, '', location.pathname + location.search);
+  })();
+</script>
 """
 
 
@@ -375,6 +389,7 @@ def page():
     desc = "Quiz CRPE : séries de 20 questions en français, mathématiques, histoire-géographie, EMC, sciences, arts et anglais, corrigées, expliquées et rattachées au programme."
     body = f'''<main class="quiz-wrap">
   <h1>Quiz CRPE</h1>
+  <p class="quiz-confirm" id="quiz-confirm" hidden>✓ Votre adresse e-mail est confirmée : bienvenue sur le Quiz CRPE !</p>
   <p class="quiz-lead">Choisissez une matière et répondez à des séries de {TAILLE_SERIE} questions rattachées au programme du concours. Chaque notion est posée sous plusieurs formes : avec {BONNES_POUR_MAITRISER} bonnes réponses, elle est maîtrisée. En cas d'erreur, vous voyez l'explication et une question similaire revient plus tard. Votre progression est gardée sur cet appareil.</p>
   <div id="quiz-app"></div>
 </main>
@@ -383,7 +398,7 @@ def page():
             + f'  <title>{title} | PassCRPE</title>\n'
             + f'  <meta name="description" content="{desc}" />\n'
             + '  <meta name="robots" content="noindex, nofollow" />\n'
-            + f'  <link rel="canonical" href="{SITE}/quiz" />\n'
+            + f'  <link rel="canonical" href="{SITE}/quizzapp" />\n'
             + CSS_BASE + CSS)
     js = (JS.replace('__MATIERES__', json.dumps(MATIERES, ensure_ascii=False))
             .replace('__SERIE__', str(TAILLE_SERIE)).replace('__MAITRISE__', str(BONNES_POUR_MAITRISER))
