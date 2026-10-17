@@ -211,11 +211,16 @@
     .quiz-wrap { max-width: 780px; margin: 0 auto; padding: 32px 20px 72px; color: var(--gray-700); }
     .quiz-wrap h1 { font-size: clamp(28px, 4.5vw, 38px); font-weight: 900; color: var(--gray-900); line-height: 1.15; letter-spacing: -.5px; margin-bottom: 10px; }
     .quiz-lead { font-size: 16px; line-height: 1.6; margin-bottom: 26px; }
-    .quiz-subjects { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
-    .quiz-subject { display: flex; align-items: center; gap: 12px; text-align: left; padding: 16px; border-radius: 14px; border: 1.5px solid var(--gray-200); background: #fff; font: inherit; font-size: 15px; font-weight: 700; color: var(--gray-900); cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .15s; }
-    .quiz-subject:hover { border-color: #fb923c; box-shadow: 0 6px 20px rgba(249,115,22,.12); transform: translateY(-1px); }
-    .quiz-subject .ico { width: 40px; height: 40px; border-radius: 12px; background: #ffedd5; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
-    .quiz-subject small { display: block; font-size: 12px; font-weight: 500; color: var(--gray-500); }
+    .quiz-filtres { display: grid; gap: 18px; }
+    .quiz-filtre label, .quiz-filtre .lbl { display: block; font-size: 13px; font-weight: 800; color: var(--gray-700); margin-bottom: 8px; }
+    .quiz-select { width: 100%; padding: 13px 14px; font: inherit; font-size: 16px; font-weight: 600; color: var(--gray-900); border: 1.5px solid var(--gray-200); border-radius: 12px; background: #fff; cursor: pointer; }
+    .quiz-select:focus { outline: none; border-color: #fb923c; }
+    .quiz-niveaux { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .quiz-niveau { padding: 12px 8px; border-radius: 12px; border: 1.5px solid var(--gray-200); background: #fff; font: inherit; font-size: 15px; font-weight: 700; color: var(--gray-700); cursor: pointer; transition: border-color .15s, background .15s; }
+    .quiz-niveau:hover { border-color: #fb923c; }
+    .quiz-niveau[aria-pressed="true"] { border-color: #f97316; background: #fff7ed; color: #c2410c; }
+    .quiz-resume { font-size: 14px; color: var(--gray-600); background: var(--gray-50); border-radius: 12px; padding: 12px 14px; min-height: 46px; }
+    .quiz-resume b { color: var(--gray-900); }
     .quiz-card { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 20px; padding: 28px; box-shadow: 0 8px 30px rgba(0,0,0,.04); }
     .quiz-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 13px; font-weight: 700; color: var(--gray-500); }
     .quiz-top .mat { color: #c2410c; }
@@ -392,20 +397,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <main class="quiz-wrap">
   <h1>Quiz CRPE</h1>
   <p class="quiz-confirm" id="quiz-confirm" hidden>✓ Votre adresse e-mail est confirmée : bienvenue sur le Quiz CRPE !</p>
-  <p class="quiz-lead">Choisissez une matière et répondez à des séries de 20 questions rattachées au programme du concours. Chaque notion est posée sous plusieurs formes : avec 3 bonnes réponses, elle est maîtrisée. En cas d'erreur, vous voyez l'explication et une question similaire revient plus tard. Votre progression est gardée sur cet appareil.</p>
+  <p class="quiz-lead">Choisissez une matière et un niveau, puis répondez à des séries de 20 questions rattachées au programme du concours. Chaque notion est posée sous plusieurs formes : avec 3 bonnes réponses, elle est maîtrisée. En cas d'erreur, vous voyez l'explication et une question similaire revient plus tard. Votre progression est gardée sur cet appareil.</p>
   <div id="quiz-app"></div>
 </main>
 <script>
 (function () {
   var MATIERES = [["francais", "Français", "✍️"], ["mathematiques", "Mathématiques", "🔢"], ["histoire_geographie", "Histoire-géographie", "🌍"], ["emc", "Enseignement moral et civique", "⚖️"], ["svt", "Sciences de la vie et de la Terre", "🌱"], ["physique_chimie", "Physique-chimie", "⚗️"], ["technologie", "Technologie", "⚙️"], ["arts", "Arts", "🎨"], ["anglais", "Anglais", "🇬🇧"]], SERIE = 20, MAITRISE = 3, INTERVALLES = [1, 3], APRES_ERREUR = 1;
   var JOUR = 86400000, CLE = 'passcrpe-quiz-v1';
-  var NIVEAUX = { facile: 'Facile', intermediaire: 'Intermédiaire', difficile: 'Difficile' };
+  var NIVEAUX = { facile: 'Facile', intermediaire: 'Intermédiaire', difficile: 'Avancé' };
+  var CLE_CHOIX = 'passcrpe-quiz-choix';
   var root = document.getElementById('quiz-app');
-  var catalogues = {}, st = null;
+  var catalogues = {}, st = null, choix = lireChoix();
 
   // ── Progression (navigateur uniquement) ──
   function lire() { try { return JSON.parse(localStorage.getItem(CLE)) || {}; } catch (e) { return {}; } }
   function ecrire(p) { try { localStorage.setItem(CLE, JSON.stringify(p)); } catch (e) {} }
+  // Dernier choix de matière et de niveau, retrouvé à la prochaine visite
+  function lireChoix() { var c = {}; try { c = JSON.parse(localStorage.getItem(CLE_CHOIX)) || {}; } catch (e) {}
+    return { mat: MATIERES.some(function (m) { return m[0] === c.mat; }) ? c.mat : MATIERES[0][0], niveau: NIVEAUX[c.niveau] ? c.niveau : 'facile' }; }
+  function garderChoix() { try { localStorage.setItem(CLE_CHOIX, JSON.stringify(choix)); } catch (e) {} }
   function prog(mat) { var p = lire(); return (p[mat] && p[mat].notions) ? p[mat] : { notions: {}, series: 0 }; }
   function sauver(mat, pm) { var p = lire(); p[mat] = pm; ecrire(p); }
 
@@ -429,10 +439,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   }
 
-  // ── Composition d'une série : révisions dues, puis nouvelles notions (facile → difficile), puis révisions anticipées ──
-  function composer(cat, pm) {
+  // ── Composition d'une série du niveau choisi : révisions dues, puis nouvelles notions, puis révisions anticipées ──
+  function composer(cat, pm, niveau) {
     var now = Date.now(), dues = [], neuves = [], attente = [], rang = { facile: 0, intermediaire: 1, difficile: 2 };
     cat.ordre.forEach(function (k) {
+      if (niveau && cat.notions[k].niveau !== niveau) return;
       var s = pm.notions[k];
       if (!s) neuves.push(k);
       else if (s.maitrise) return;
@@ -453,41 +464,59 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }));
   }
 
-  function bilan(mat, cat) {
-    var pm = prog(mat), m = 0, c = 0, now = Date.now(), prochaine = null, dues = 0;
+  function bilan(mat, cat, niveau) {
+    var pm = prog(mat), m = 0, c = 0, n = 0, now = Date.now(), prochaine = null, dues = 0;
     cat.ordre.forEach(function (k) {
+      if (niveau && cat.notions[k].niveau !== niveau) return;
+      n++;
       var s = pm.notions[k]; if (!s) return;
       if (s.maitrise) m++; else { c++; if ((s.due || 0) <= now) dues++; else if (!prochaine || s.due < prochaine) prochaine = s.due; }
     });
-    return { maitrisees: m, encours: c, total: cat.ordre.length, dues: dues, prochaine: prochaine };
+    return { maitrisees: m, encours: c, total: n, dues: dues, prochaine: prochaine };
   }
 
   // ── Écrans ──
   function accueil() {
     st = null;
-    var p = lire();
-    root.innerHTML = '<div class="quiz-subjects">' + MATIERES.map(function (m) {
-      var n = p[m[0]] && p[m[0]].notions ? Object.keys(p[m[0]].notions).filter(function (k) { return p[m[0]].notions[k].maitrise; }).length : 0;
-      return '<button type="button" class="quiz-subject" data-mat="' + m[0] + '"><span class="ico">' + m[2] + '</span><span>' + esc(m[1]) +
-        '<small>' + (n ? n + ' notion' + (n > 1 ? 's' : '') + ' maîtrisée' + (n > 1 ? 's' : '') : 'Séries de ' + SERIE + ' questions') + '</small></span></button>';
-    }).join('') + '</div>';
+    root.innerHTML = '<div class="quiz-card quiz-filtres">' +
+      '<div class="quiz-filtre"><label for="quiz-mat">Matière</label><select id="quiz-mat" class="quiz-select">' +
+      MATIERES.map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === choix.mat ? ' selected' : '') + '>' + esc(m[1]) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="quiz-filtre"><span class="lbl" id="quiz-niv-lbl">Niveau</span><div class="quiz-niveaux" role="group" aria-labelledby="quiz-niv-lbl">' +
+      Object.keys(NIVEAUX).map(function (n) { return '<button type="button" class="quiz-niveau" data-niv="' + n + '" aria-pressed="' + (n === choix.niveau) + '">' + NIVEAUX[n] + '</button>'; }).join('') + '</div></div>' +
+      '<div class="quiz-resume" id="quiz-resume">…</div>' +
+      '<div class="quiz-actions" style="margin-top:0"><button type="button" class="quiz-btn" data-act="start">Lancer une série</button><button type="button" class="quiz-btn ghost" data-act="prog-choix">Ma progression</button></div>' +
+      '</div>';
+    resume();
   }
 
-  function demarrer(mat) {
+  // Résumé du choix en cours : notions du niveau, maîtrisées, à réviser
+  function resume() {
+    var el = document.getElementById('quiz-resume'); if (!el) return;
+    var mat = choix.mat, niveau = choix.niveau;
+    el.textContent = 'Chargement…';
+    charger(mat).then(function (cat) {
+      if (!document.getElementById('quiz-resume') || choix.mat !== mat || choix.niveau !== niveau) return;
+      var b = bilan(mat, cat, niveau);
+      el.innerHTML = '<b>' + esc(label(mat)) + ' · ' + NIVEAUX[niveau] + '</b> : ' + b.total + ' notions, ' + b.maitrisees + ' maîtrisée' + (b.maitrisees > 1 ? 's' : '') +
+        (b.dues ? ', <b>' + b.dues + ' à réviser aujourd\'hui</b>' : '') + '.';
+    }).catch(function () { el.textContent = 'Le quiz n\'a pas pu être chargé. Réessaie dans quelques instants.'; });
+  }
+
+  function demarrer(mat, niveau) {
     root.innerHTML = '<div class="quiz-card"><p>Chargement des questions…</p></div>';
     charger(mat).then(function (cat) {
-      var serie = composer(cat, prog(mat));
-      if (!serie.length) return progression(mat, 'Toutes les notions de cette matière sont maîtrisées. Bravo !');
-      st = { mat: mat, cat: cat, serie: serie, i: 0, score: 0, recap: [], sel: [], repondu: false };
+      var serie = composer(cat, prog(mat), niveau);
+      if (!serie.length) return progression(mat, 'Toutes les notions de niveau ' + NIVEAUX[niveau].toLowerCase() + ' sont maîtrisées dans cette matière. Bravo ! Essayez un autre niveau.');
+      st = { mat: mat, niveau: niveau, cat: cat, serie: serie, i: 0, score: 0, recap: [], sel: [], repondu: false };
       question(); top();
     }).catch(function () {
-      root.innerHTML = '<div class="quiz-msg">Le quiz n\'a pas pu être chargé. Réessaie dans quelques instants.</div><div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-act="home">Choisir une matière</button></div>';
+      root.innerHTML = '<div class="quiz-msg">Le quiz n\'a pas pu être chargé. Réessaie dans quelques instants.</div><div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>';
     });
   }
 
   function entete(q) {
     var n = st.serie.length;
-    return '<div class="quiz-top"><span class="mat">' + esc(label(st.mat)) + '</span><span>Question ' + (st.i + 1) + ' / ' + n + '</span></div>' +
+    return '<div class="quiz-top"><span class="mat">' + esc(label(st.mat)) + ' · ' + NIVEAUX[st.niveau] + '</span><span>Question ' + (st.i + 1) + ' / ' + n + '</span></div>' +
       '<div class="quiz-bar"><span style="width:' + Math.round(st.i / n * 100) + '%"></span></div>' +
       '<div class="quiz-meta"><span class="chip ' + q.niveau + '">' + (NIVEAUX[q.niveau] || '') + '</span>' +
       (q.theme ? '<span class="chip theme">' + esc(q.theme) + (q.sous_theme ? ' › ' + esc(q.sous_theme) : '') + '</span>' : '') +
@@ -551,15 +580,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   function fin() {
     var pm = prog(st.mat); pm.series = (pm.series || 0) + 1; sauver(st.mat, pm);
-    var n = st.serie.length, s = st.score, b = bilan(st.mat, st.cat);
+    var n = st.serie.length, s = st.score, b = bilan(st.mat, st.cat, st.niveau);
     var note = Math.round(s / n * 20 * 2) / 2;
     var msg = note >= 16 ? 'Excellent travail !' : note >= 12 ? 'Bon travail, continuez comme ça.' : note >= 8 ? 'C\'est un début : les notions ratées reviendront pour être retravaillées.' : 'Ces notions sont à retravailler : elles reviendront dans vos prochaines séries.';
     root.innerHTML = '<div class="quiz-card quiz-score">' +
-      '<div class="quiz-top" style="justify-content:center"><span class="mat">' + esc(label(st.mat)) + ' · série ' + pm.series + '</span></div>' +
+      '<div class="quiz-top" style="justify-content:center"><span class="mat">' + esc(label(st.mat)) + ' · ' + NIVEAUX[st.niveau] + ' · série ' + pm.series + '</span></div>' +
       '<div class="big">' + String(note).replace('.', ',') + ' / 20</div><p>' + s + ' bonne' + (s > 1 ? 's' : '') + ' réponse' + (s > 1 ? 's' : '') + ' sur ' + n + '. ' + msg + '</p>' +
       '<div class="stats"><div class="stat"><b>' + b.maitrisees + '</b><span>notions maîtrisées</span></div><div class="stat"><b>' + b.encours + '</b><span>en cours</span></div><div class="stat"><b>' + (b.total - b.maitrisees - b.encours) + '</b><span>à découvrir</span></div></div>' +
       (b.prochaine && !b.dues ? '<p style="font-size:13px;color:var(--gray-500)">Prochaines révisions à partir du ' + dateFr(b.prochaine) + '.</p>' : '') +
-      '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="again">Nouvelle série de ' + SERIE + '</button><button type="button" class="quiz-btn ghost" data-act="prog">Ma progression</button><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière</button></div>' +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="again">Nouvelle série de ' + SERIE + '</button><button type="button" class="quiz-btn ghost" data-act="prog">Ma progression</button><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>' +
       '<div class="quiz-recap">' + st.recap.map(function (r) {
         return '<div class="' + (r.ok ? 'r-ok' : 'r-ko') + '">' + esc(r.q) + (r.ok ? '' : ' <em>Réponse : ' + esc(r.attendu) + '</em>') + '</div>';
       }).join('') + '</div></div>';
@@ -575,17 +604,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         var s = pm.notions[k]; themes[t].n++;
         if (s && s.maitrise) themes[t].m++; else if (s) themes[t].c++;
       });
-      st = { mat: mat, cat: cat };
+      var niveau = (st && st.niveau) || choix.niveau;
+      st = { mat: mat, niveau: niveau, cat: cat };
+      var parNiveau = Object.keys(NIVEAUX).map(function (n) { var x = bilan(mat, cat, n); return '<div class="stat"><b>' + x.maitrisees + ' / ' + x.total + '</b><span>' + NIVEAUX[n] + '</span></div>'; }).join('');
       root.innerHTML = '<div class="quiz-card">' +
         '<div class="quiz-top"><span class="mat">' + esc(label(mat)) + ' · ma progression</span><span>' + (pm.series || 0) + ' série' + ((pm.series || 0) > 1 ? 's' : '') + '</span></div>' +
         (message ? '<p style="font-weight:700;color:#166534">' + esc(message) + '</p>' : '') +
         '<div class="stats"><div class="stat"><b>' + b.maitrisees + ' / ' + b.total + '</b><span>notions maîtrisées</span></div><div class="stat"><b>' + b.encours + '</b><span>en cours</span></div><div class="stat"><b>' + b.dues + '</b><span>à réviser aujourd\'hui</span></div></div>' +
+        '<p style="font-size:13px;font-weight:800;color:var(--gray-700);margin-top:14px">Notions maîtrisées par niveau</p><div class="stats" style="margin-top:6px">' + parNiveau + '</div>' +
         ordre.map(function (t) {
           var x = themes[t];
           return '<div class="prog-theme"><h3>' + esc(t) + '<span>' + x.m + ' / ' + x.n + ' maîtrisées</span></h3><div class="prog-bar"><span class="m" style="width:' + (x.m / x.n * 100) + '%"></span><span class="c" style="width:' + (x.c / x.n * 100) + '%"></span></div></div>';
         }).join('') +
         '<div class="prog-legend"><span><i style="background:#16a34a"></i>Maîtrisées (' + MAITRISE + ' bonnes réponses)</span><span><i style="background:#fbbf24"></i>En cours</span><span><i style="background:var(--gray-100)"></i>À découvrir</span></div>' +
-        '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="again">Lancer une série de ' + SERIE + '</button><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière</button></div>' +
+        '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="again">Lancer une série · ' + NIVEAUX[niveau] + '</button><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>' +
         '<p style="margin-top:18px"><button type="button" class="quiz-link" data-act="reset">Réinitialiser ma progression dans cette matière</button></p></div>';
       top();
     }).catch(function () { root.innerHTML = '<div class="quiz-msg">La progression n\'a pas pu être chargée.</div>'; });
@@ -594,7 +626,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // ── Interactions ──
   root.addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b || b.type === 'submit') return;
-    if (b.dataset.mat) { var pm = prog(b.dataset.mat); Object.keys(pm.notions).length ? progression(b.dataset.mat) : demarrer(b.dataset.mat); return; }
+    if (b.dataset.niv) { choix.niveau = b.dataset.niv; garderChoix(); root.querySelectorAll('.quiz-niveau').forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); resume(); return; }
     if (b.dataset.k !== undefined && st && !st.repondu) {
       var q = st.serie[st.i], k = +b.dataset.k, btns = root.querySelectorAll('.quiz-choice');
       btns.forEach(function (x) { x.disabled = true; });
@@ -617,10 +649,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       });
     }
     else if (act === 'next') { if (st.i < st.serie.length - 1) { st.i++; question(); top(); } else fin(); }
-    else if (act === 'again') demarrer(st.mat);
+    else if (act === 'start') demarrer(choix.mat, choix.niveau);
+    else if (act === 'prog-choix') { st = null; progression(choix.mat); }
+    else if (act === 'again') demarrer(st.mat, st.niveau);
     else if (act === 'prog') progression(st.mat);
     else if (act === 'home') { accueil(); top(); }
     else if (act === 'reset' && confirm('Effacer votre progression dans cette matière ?')) { var p = lire(); delete p[st.mat]; ecrire(p); progression(st.mat); }
+  });
+  root.addEventListener('change', function (e) {
+    if (e.target.id === 'quiz-mat') { choix.mat = e.target.value; garderChoix(); resume(); }
   });
   root.addEventListener('submit', function (e) {
     e.preventDefault();

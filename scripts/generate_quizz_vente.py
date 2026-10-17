@@ -151,8 +151,8 @@ def contenu():
   <div class="qz-hero-inner">
     <div>
       <div class="hero-badge"><span></span>Nouveau · Quiz CRPE</div>
-      <h1>Arrivez au CRPE en <em>maîtrisant toutes les disciplines</em></h1>
-      <p class="hero-sub">2 700 questions sur les 9 disciplines du concours, en séries de 20. À chaque série, une note sur 20, une explication pour chaque erreur, et des révisions qui reviennent au bon moment pour que vous n'oubliiez rien. Vous arrêtez de réviser au hasard.</p>
+      <h1>Arrivez au CRPE en <em>maîtrisant toutes les matières</em></h1>
+      <p class="hero-sub">2 700 questions sur les 9 matières du concours, en séries de 20. À chaque série, une note sur 20, une explication pour chaque erreur, et des révisions qui reviennent au bon moment pour que vous n'oubliiez rien. Vous arrêtez de réviser au hasard.</p>
       <div class="hero-actions">
         <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
         <a href="#fonctionnement" class="btn-secondary">Voir comment ça marche</a>
@@ -160,7 +160,7 @@ def contenu():
       <p class="qz-hero-price"><strong>{PRIX_QUIZ} TTC</strong> · ou <strong>{PRIX_PACK} TTC</strong> avec le tuteur IA PassCRPE</p>
       <div class="qz-stats">
         <div class="qz-stat"><strong>{total_txt}</strong><span>questions</span></div>
-        <div class="qz-stat"><strong>{len(MATIERES)}</strong><span>disciplines</span></div>
+        <div class="qz-stat"><strong>{len(MATIERES)}</strong><span>matières</span></div>
         <div class="qz-stat"><strong>3</strong><span>types de questions</span></div>
       </div>
     </div>
@@ -187,7 +187,7 @@ def contenu():
     <h2 class="section-title">Une méthode pensée pour retenir durablement</h2>
     <p class="section-sub">Pas de longues séances : quelques minutes par jour suffisent, et le quiz s'occupe de vous reposer les bonnes questions au bon moment.</p>
     <div class="steps">
-      <div class="step"><div class="step-num">1</div><h3>Choisissez une discipline</h3><p>Français, maths, histoire-géographie, sciences, arts, anglais…</p></div>
+      <div class="step"><div class="step-num">1</div><h3>Choisissez matière et niveau</h3><p>Français, maths, histoire-géographie, sciences, arts, anglais… en facile, intermédiaire ou avancé.</p></div>
       <div class="step"><div class="step-num">2</div><h3>Répondez à 20 questions</h3><p>QCM, calcul à saisir ou mot à cliquer, du plus facile au plus difficile.</p></div>
       <div class="step"><div class="step-num">3</div><h3>Obtenez votre note sur 20</h3><p>Avec l'explication de chaque erreur et le récapitulatif de la série.</p></div>
       <div class="step"><div class="step-num">4</div><h3>Révisez au bon moment</h3><p>Les notions à revoir reviennent plus tard, reformulées, jusqu'à être maîtrisées.</p></div>
@@ -214,9 +214,9 @@ def contenu():
 <!-- ═══════════════════════════════ MATIÈRES ═══════════════════════════════ -->
 <section id="matieres" style="background:var(--gray-50)">
   <div class="container qz-center">
-    <div class="section-eyebrow">Les disciplines</div>
-    <h2 class="section-title">{len(MATIERES)} disciplines, {QUESTIONS_PAR_MATIERE} questions chacune</h2>
-    <p class="section-sub">Dans chaque discipline : 150 questions faciles, 100 intermédiaires et 50 difficiles.</p>
+    <div class="section-eyebrow">Les matières</div>
+    <h2 class="section-title">{len(MATIERES)} matières, {QUESTIONS_PAR_MATIERE} questions chacune</h2>
+    <p class="section-sub">Dans chaque matière, trois niveaux : 150 questions faciles, 100 intermédiaires et 50 avancées.</p>
     <div class="qz-matieres" style="text-align:left">
 {matieres}
     </div>
@@ -233,11 +233,11 @@ def contenu():
         <span class="offre-badge">Bientôt disponible</span>
         <div class="offre-head">
           <div class="offre-icon">🎯</div>
-          <div><h3>Quiz CRPE</h3><p class="offre-tagline">Réviser vite, dans toutes les disciplines</p></div>
+          <div><h3>Quiz CRPE</h3><p class="offre-tagline">Réviser vite, dans toutes les matières</p></div>
         </div>
         <div class="offre-price"><strong>{PRIX_QUIZ}</strong><span>TTC</span></div>
         <ul class="offre-list">
-          <li>{total_txt} questions dans {len(MATIERES)} disciplines</li>
+          <li>{total_txt} questions dans {len(MATIERES)} matières</li>
           <li>Séries de 20 questions notées sur 20</li>
           <li>Explication de chaque erreur et révision espacée</li>
           <li>Progression par thème du programme</li>
@@ -283,7 +283,7 @@ def contenu():
 <!-- ═══════════════════════════════ CTA ═══════════════════════════════ -->
 <section class="cta-section" id="inscription">
   <div class="container">
-    <h2>Prêt à réviser toutes les disciplines du CRPE ?</h2>
+    <h2>Prêt à réviser toutes les matières du CRPE ?</h2>
     <p>Créez votre compte PassCRPE en moins de 2 minutes.</p>
     <div class="cta-form">
       <button type="button" class="btn-white cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</button>
@@ -299,9 +299,9 @@ def main():
 
     # En-tête : styles et suivi de l'accueil, titre et description propres à la page
     head = src[:src.index('</head>')]
-    head = re.sub(r'<title>.*?</title>', '<title>Quiz CRPE : arrivez au CRPE en maîtrisant toutes les disciplines</title>', head, flags=re.S)
+    head = re.sub(r'<title>.*?</title>', '<title>Quiz CRPE : arrivez au CRPE en maîtrisant toutes les matières</title>', head, flags=re.S)
     head = re.sub(r'<meta name="description"[^>]*/>',
-                  '<meta name="description" content="Le Quiz CRPE : 300 questions par discipline sur le programme du cycle 4, '
+                  '<meta name="description" content="Le Quiz CRPE : 300 questions par matière sur le programme du cycle 4, '
                   'des séries de 20 notées sur 20, l\'explication de chaque erreur et des révisions espacées. 49,99 € TTC." />\n'
                   f'  <link rel="canonical" href="{SITE}/quizz" />', head)
     head = head.replace('href="favicon.svg"', 'href="/favicon.svg"')
@@ -316,7 +316,7 @@ def main():
     nav = nav.replace(liens.group(0),
                       '      <li><a href="/">Tuteur IA</a></li>\n'
                       '      <li><a href="#fonctionnement">Le quiz</a></li>\n'
-                      '      <li><a href="#matieres">Disciplines</a></li>\n'
+                      '      <li><a href="#matieres">Matières</a></li>\n'
                       '      <li><a href="#tarif">Tarif</a></li>\n')
     nav = nav.replace('<a href="#" class="nav-logo">', '<a href="/" class="nav-logo">')
     nav = nav.replace('Commencer<span class="nav-cta-long"> gratuitement</span> →', "S'inscrire →")
