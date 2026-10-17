@@ -1956,7 +1956,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       const { data: signUpData, error } = await sb.auth.signUp({
         email,
         password,
-        options: { data: { prenom, nom, concours, academie, telephone, consent_conseils, consent_partenaires, consent_version: '2026-10-12', consent_at: new Date().toISOString() } }
+        options: { data: { prenom, nom, concours, academie, telephone, consent_conseils, consent_partenaires, consent_version: '2026-10-12', consent_at: new Date().toISOString(), parcours: window.SIGNUP_PARCOURS || 'passcrpe' } }
       });
       if (error) {
         window.dataLayer.push({ event: 'sign_up_error', error_reason: error.message });
@@ -1967,7 +1967,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         fetch('/api/klaviyo/signup', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ prenom, nom, email, user_id: signUpData?.user?.id, telephone: telephone || undefined, consent_conseils, consent_partenaires }),
+          // Parcours Klaviyo : « quizcrpe » sur la page de vente du quiz (window.SIGNUP_PARCOURS), sinon « passcrpe »
+          body: JSON.stringify({ prenom, nom, email, user_id: signUpData?.user?.id, telephone: telephone || undefined, consent_conseils, consent_partenaires, parcours: window.SIGNUP_PARCOURS || 'passcrpe' }),
         }).catch(() => {});
         _lastRegisteredEmail = email;
         document.getElementById('authForm').style.display = 'none';
