@@ -2011,7 +2011,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     btn.textContent = 'Envoi…';
     let sb;
     try { sb = getSB(); } catch { return; }
-    const { error } = await sb.auth.resend({ type: 'signup', email: _lastRegisteredEmail });
+    // Même lien de confirmation que l'e-mail d'origine (page du quiz pour les inscrits du quiz)
+    const { error } = await sb.auth.resend({ type: 'signup', email: _lastRegisteredEmail,
+      ...(window.EMAIL_REDIRECT_URL ? { options: { emailRedirectTo: window.EMAIL_REDIRECT_URL } } : {}) });
     if (error) {
       btn.textContent = 'Erreur, réessayez';
       btn.disabled = false;

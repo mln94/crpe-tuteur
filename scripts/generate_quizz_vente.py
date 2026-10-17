@@ -9,7 +9,7 @@ L'inscription est le même formulaire que sur la page d'accueil (compte Supabase
 Différences : window.SIGNUP_PARCOURS = 'quizcrpe', envoyé à Klaviyo dans la propriété « parcours », et
 window.AFTER_SIGNUP_URL = '/quizzapp' : après l'inscription ou la connexion, la personne arrive sur le quiz.
 Les comptes sont créés dans le projet Supabase « quizzcrpe » (window.SB_URL / SB_KEY), séparé du tuteur IA,
-et le lien de l'e-mail de confirmation mène à /quizzapp (window.EMAIL_REDIRECT_URL).
+et le lien de l'e-mail de confirmation ramène sur /quizz pour se connecter (window.EMAIL_REDIRECT_URL).
 À relancer après une modification du formulaire d'inscription, du menu ou du pied de page de l'accueil.
 """
 import os
@@ -339,7 +339,8 @@ def main():
             + "<script>\n  // Parcours Klaviyo des inscriptions faites sur cette page\n  window.SIGNUP_PARCOURS = 'quizcrpe';\n  // Après l'inscription ou la connexion, direction l'application du quiz\n  window.AFTER_SIGNUP_URL = '/quizzapp';\n"
             + "  // Comptes du quiz : projet Supabase « quizzcrpe », séparé du tuteur IA\n"
             + f"  window.SB_PROJET = 'quizzcrpe';\n  window.SB_URL = '{QUIZ_SB_URL}';\n  window.SB_KEY = '{QUIZ_SB_KEY}';\n"
-            + f"  window.EMAIL_REDIRECT_URL = '{SITE}/quizzapp';\n</script>\n"
+            + f"  // Lien de l'e-mail de confirmation : retour sur cette page, qui affiche « Votre compte est activé » et le bouton Se connecter\n"
+            + f"  window.EMAIL_REDIRECT_URL = '{SITE}/quizz';\n</script>\n"
             + scripts + '</body>\n</html>\n')
     open(OUT, 'w', encoding='utf-8').write(page)
     print('Écrit :', os.path.relpath(OUT, ROOT), f'({len(page) // 1024} ko)')

@@ -1742,7 +1742,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   window.SB_PROJET = 'quizzcrpe';
   window.SB_URL = 'https://uwsdfbmootumhsrufkmo.supabase.co';
   window.SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3c2RmYm1vb3R1bWhzcnVma21vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIyNDU1OTEsImV4cCI6MjEwNzgyMTU5MX0.W1uAsiBPR4mEoxjNBp308uNNhHt21dlXpGzPBHPXVuk';
-  window.EMAIL_REDIRECT_URL = 'https://www.passcrpe.fr/quizzapp';
+  // Lien de l'e-mail de confirmation : retour sur cette page, qui affiche « Votre compte est activé » et le bouton Se connecter
+  window.EMAIL_REDIRECT_URL = 'https://www.passcrpe.fr/quizz';
 </script>
 <script>
   /* ── FAQ accordion ── */
@@ -1953,7 +1954,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     btn.textContent = 'Envoi…';
     let sb;
     try { sb = getSB(); } catch { return; }
-    const { error } = await sb.auth.resend({ type: 'signup', email: _lastRegisteredEmail });
+    // Même lien de confirmation que l'e-mail d'origine (page du quiz pour les inscrits du quiz)
+    const { error } = await sb.auth.resend({ type: 'signup', email: _lastRegisteredEmail,
+      ...(window.EMAIL_REDIRECT_URL ? { options: { emailRedirectTo: window.EMAIL_REDIRECT_URL } } : {}) });
     if (error) {
       btn.textContent = 'Erreur, réessayez';
       btn.disabled = false;
