@@ -11,8 +11,8 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from referentiel import R
 
 FICHIERS = {
-    'mathematiques': ['m_facile', 'm_inter', 'm_difficile'],
-    'francais': ['f_facile', 'f_inter', 'f_difficile'],
+    'mathematiques': ['m_facile', 'm_inter', 'm_difficile', 'm_complements'],
+    'francais': ['f_facile', 'f_inter', 'f_difficile', 'f_lecture'],
     'histoire_geographie': ['hg_facile', 'hg_inter', 'hg_difficile'],
     'emc': ['emc_facile', 'emc_inter', 'emc_difficile'],
     'svt': ['svt_facile', 'svt_inter', 'svt_difficile'],

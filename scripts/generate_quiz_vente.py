@@ -22,7 +22,8 @@ OUT = os.path.join(ROOT, 'landing', 'quiz.html')
 SITE = 'https://www.passcrpe.fr'
 
 PRIX_QUIZ = '59 €'
-QUESTIONS_PAR_MATIERE = 300
+# Nombre de questions actives par matière (table quiz_questions du projet Supabase « crpe »)
+QUESTIONS = [330, 342, 300, 300, 300, 300, 300, 300, 300]
 
 # (libellé, icône, exemples de thèmes)
 MATIERES = [
@@ -156,15 +157,15 @@ def contenu():
         <div>
           <h3>{nom}</h3>
           <p>{desc}</p>
-          <p class="qz-count">{QUESTIONS_PAR_MATIERE} questions</p>
+          <p class="qz-count">{n} questions</p>
         </div>
-      </div>''' for nom, ic, desc in MATIERES)
+      </div>''' for (nom, ic, desc), n in zip(MATIERES, QUESTIONS))
     faq = '\n'.join(
         f'''      <div class="faq-item">
         <button type="button" class="faq-question">{q}<span class="faq-icon">+</span></button>
         <div class="faq-answer"><p>{r}</p></div>
       </div>''' for q, r in FAQ)
-    total = QUESTIONS_PAR_MATIERE * len(MATIERES)
+    total = sum(QUESTIONS)
     total_txt = f'{total:,}'.replace(',', ' ')
     return f'''
 <!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
@@ -173,7 +174,7 @@ def contenu():
     <div>
       <div class="hero-badge"><span></span>Nouveau · Quiz CRPE</div>
       <h1>Arrivez au CRPE <em>sans aucune notion incomprise</em></h1>
-      <p class="hero-sub">Évaluez votre niveau, puis progressez par séries de 20 questions, du facile au difficile. Chaque erreur est expliquée, chaque notion revient jusqu’à être comprise. 2 700 questions conformes aux programmes officiels : rien ne vous échappe.</p>
+      <p class="hero-sub">Évaluez votre niveau, puis progressez par séries de 20 questions, du facile au difficile. Chaque erreur est expliquée, chaque notion revient jusqu’à être comprise. {total_txt} questions conformes aux programmes officiels : rien ne vous échappe.</p>
       <p class="qz-accroche">📚 Plus vous répondez, plus votre culture du programme s’élargit.</p>
       <div class="hero-actions">
         <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
@@ -259,7 +260,7 @@ def contenu():
 <section id="matieres" style="background:var(--gray-50)">
   <div class="container qz-center">
     <div class="section-eyebrow">Les matières</div>
-    <h2 class="section-title">{len(MATIERES)} matières, {QUESTIONS_PAR_MATIERE} questions chacune</h2>
+    <h2 class="section-title">{len(MATIERES)} matières, au moins 300 questions chacune</h2>
     <p class="section-sub">Dans chaque matière, trois niveaux : 150 questions faciles, 100 intermédiaires et 50 avancées.</p>
     <div class="qz-matieres" style="text-align:left">
 {matieres}
@@ -355,7 +356,7 @@ def main():
     head = src[:src.index('</head>')]
     head = re.sub(r'<title>.*?</title>', '<title>Quiz CRPE : arrivez au CRPE sans aucune notion incomprise</title>', head, flags=re.S)
     head = re.sub(r'<meta name="description"[^>]*/>',
-                  '<meta name="description" content="Le Quiz CRPE : 300 questions par matière sur le programme du cycle 4, '
+                  '<meta name="description" content="Le Quiz CRPE : au moins 300 questions par matière sur le programme du cycle 4, '
                   'des séries de 20 notées sur 20, l\'explication de chaque erreur et des révisions espacées. Test de positionnement gratuit." />\n'
                   f'  <link rel="canonical" href="{SITE}/quiz" />', head)
     head = head.replace('href="favicon.svg"', 'href="/favicon.svg"')
