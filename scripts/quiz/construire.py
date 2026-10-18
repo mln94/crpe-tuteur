@@ -13,7 +13,7 @@ from referentiel import R
 FICHIERS = {
     'mathematiques': ['m_facile', 'm_inter', 'm_difficile', 'm_complements'],
     'francais': ['f_facile', 'f_inter', 'f_difficile', 'f_lecture', 'f_culture'],
-    'histoire_geographie': ['hg_facile', 'hg_inter', 'hg_difficile', 'hg_complements'],
+    'histoire_geographie': ['hg_facile', 'hg_inter', 'hg_difficile', 'hg_complements', 'geo_complements'],
     'emc': ['emc_facile', 'emc_inter', 'emc_difficile'],
     'svt': ['svt_facile', 'svt_inter', 'svt_difficile'],
     'physique_chimie': ['pc_facile', 'pc_inter', 'pc_difficile'],

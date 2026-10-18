@@ -868,9 +868,9 @@ JS = """<script>
       m.id = 'pay-modal'; m.className = 'pay-overlay'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'pay-titre');
       m.innerHTML = '<div class="pay-card"><button type="button" class="pay-fermer" aria-label="Fermer">×</button>' +
         '<div class="pay-badge">🎉 Essai terminé</div><h2 id="pay-titre">Continuez votre préparation sur les 9 matières</h2>' +
-        '<p class="pay-texte">Vous avez fait vos séries d’essai. Débloquez les 2 962 questions, en facile, intermédiaire et avancé, avec vos révisions espacées jusqu’au concours.</p>' +
+        '<p class="pay-texte">Vous avez fait vos séries d’essai. Débloquez les 3 142 questions, en facile, intermédiaire et avancé, avec vos révisions espacées jusqu’au concours.</p>' +
         '<div class="pay-prix">' + PRIX + ' <span>TTC · paiement unique, sans abonnement</span></div>' +
-        '<div class="pay-decoupe"><div><b>2 centimes</b><span>par question</span></div><div><b>&lt; 2,30 €</b><span>par semaine sur 6 mois</span></div><div><b>2 962</b><span>questions corrigées</span></div></div>' +
+        '<div class="pay-decoupe"><div><b>2 centimes</b><span>par question</span></div><div><b>&lt; 2,30 €</b><span>par semaine sur 6 mois</span></div><div><b>3 142</b><span>questions corrigées</span></div></div>' +
         '<div class="garantie pay-garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Pas convaincu ? Écrivez-nous dans les 14 jours suivant votre achat : nous vous remboursons intégralement, sans avoir à vous justifier.</div></div>' +
         '<div class="paypal-zone"><div id="pp-paypal"></div><div id="pp-carte"></div></div>' +
         '<p class="quiz-hint" id="pp-msg">Paiement sécurisé par PayPal, par compte PayPal ou carte bancaire.</p>' +
