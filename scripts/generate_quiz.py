@@ -55,6 +55,23 @@ TAIL = tpl[tpl.index('<footer>'):]
 NAV_BLOG = '<li><a href="/blog" class="active">Blog</a></li>'
 assert BODY_START.count(NAV_BLOG) == 1
 BODY_NAV = BODY_START.replace(NAV_BLOG, '<li><a href="/blog">Blog</a></li>')
+# Application : en-tête sans le menu du site (logo, Support, menu du compte) et pas de pied de page
+_nav = BODY_NAV[BODY_NAV.index('<nav class="site-nav">'):BODY_NAV.index('</nav>') + len('</nav>')]
+BODY_NAV = BODY_NAV.replace(_nav, nav_compte.nav_application(_nav, '/app?onglet=support&produit=quiz'))
+TAIL = TAIL[:TAIL.index('<footer>')] + TAIL[TAIL.index('</footer>') + len('</footer>'):]
+ICONES = {
+    'accueil': '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
+    'support': '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+    'profil': '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+}
+# Barre d'onglets en bas, comme dans le tuteur IA : Accueil (quiz), Support et Profil (onglets du compte PassCRPE)
+TABBAR = '<nav class="quiz-tabbar" aria-label="Navigation du quiz">' + ''.join(
+    f'<a href="{href}"{cls}><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONES[k]}</svg>{extra}</span>{lib}</a>'
+    for k, lib, href, cls, extra in [
+        ('accueil', 'Accueil', '/quizzapp', ' class="actif" aria-current="page"', ''),
+        ('support', 'Support', '/app?onglet=support&produit=quiz', ' id="tab-support"', '<span class="pastille" hidden></span>'),
+        ('profil', 'Profil', '/app?onglet=profile', '', ''),
+    ]) + '</nav>\n'
 
 CSS = """
     /* QUIZ */
@@ -191,6 +208,14 @@ CSS = """
     .garantie .sceau { font-size: 30px; line-height: 1; flex-shrink: 0; }
     .garantie strong { display: block; font-size: 16px; font-weight: 900; color: #14532d; margin-bottom: 2px; }
     .paypal-zone { display: grid; gap: 10px; margin-top: 16px; max-width: 420px; }
+    .quiz-wrap { padding-bottom: 110px; }
+    .quiz-tabbar { position: fixed; left: 0; right: 0; bottom: 0; top: auto; height: auto; padding: 0; z-index: 90; display: flex; justify-content: center; background: #fff; border-top: 1px solid var(--gray-100); }
+    .quiz-tabbar a { flex: 1; max-width: 160px; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 10px 0 12px; font-size: 12px; font-weight: 600; color: var(--gray-400); text-decoration: none; }
+    .quiz-tabbar a:hover { color: var(--gray-600); }
+    .quiz-tabbar a.actif { color: var(--indigo-600); }
+    .quiz-tabbar .ico { position: relative; }
+    .quiz-tabbar svg { width: 20px; height: 20px; display: block; }
+    .quiz-tabbar .pastille { position: absolute; top: -2px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; border: 1.5px solid #fff; }
   .quiz-confirm { background: #dcfce7; color: #166534; font-weight: 600; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
 """
 
@@ -471,7 +496,7 @@ JS = """<script>
         '<div class="paypal-zone"><div id="pp-paypal"></div><div id="pp-carte"></div></div>' +
         '<p class="quiz-hint" id="pp-msg">Paiement sécurisé par PayPal, par compte PayPal ou carte bancaire.</p>' +
         '<div class="garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Si le quiz ne vous convient pas, écrivez-nous dans les 14 jours suivant votre achat : remboursement intégral, sans avoir à vous justifier.</div></div>' +
-        '<p class="pw-liens"><a class="quiz-link" href="/contact?raison=paiement" target="_blank" rel="noopener">Un problème avec le paiement ? Contactez-nous</a><button type="button" class="quiz-link" data-act="boot">J’ai déjà payé : actualiser mon accès</button></p>' +
+        '<p class="pw-liens"><a class="quiz-link" href="/app?onglet=support&produit=quiz&categorie=paiement">Un problème avec le paiement ? Contactez le support</a><button type="button" class="quiz-link" data-act="boot">J’ai déjà payé : actualiser mon accès</button></p>' +
         '</div></div></div>';
       html = html.replace('<!--PAIEMENT-->', pay) + '<div class="quiz-actions" style="justify-content:center"><a class="quiz-btn pw-cta" href="#paiement">Débloquer le quiz pour ' + PRIX + '</a></div>';
     }
@@ -694,6 +719,12 @@ JS = """<script>
     envoyer(v, function (d) { inp.classList.add(d.correct ? 'good' : 'bad'); });
   });
   boot();
+  // Pastille sur l'onglet Support : réponses du support pas encore lues
+  SB.auth.getSession().then(function (r) {
+    if (!r.data.session) return;
+    SB.from('support_tickets').select('id', { count: 'exact', head: true }).eq('user_seen_reply', false).not('admin_reply', 'is', null)
+      .then(function (x) { var p = document.querySelector('#tab-support .pastille'); if (p && x.count) p.hidden = false; });
+  });
 })();
 </script>
 <script>
@@ -732,7 +763,7 @@ def page():
             .replace('__PRIX__', PRIX)
             .replace('__SERIE__', str(TAILLE_SERIE)).replace('__MAITRISE__', str(BONNES_POUR_MAITRISER))
             .replace('__INTERVALLES__', json.dumps(INTERVALLES_JOURS)).replace('__APRES_ERREUR__', str(APRES_ERREUR_JOURS)))
-    return head + BODY_NAV + body + nav_compte.JS + js + TAIL
+    return head + BODY_NAV + body + TABBAR + nav_compte.JS + js + TAIL
 
 
 open(os.path.join(ROOT, 'landing', 'quizzapp.html'), 'w', encoding='utf-8').write(page())

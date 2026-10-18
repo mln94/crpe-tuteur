@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 // Outils de réponse (droite graduée, repère, tableau) partagés avec l'Entraîneur : définit window.OutilsReponse
 import '../landing/outils-reponse.js';
-import { SITE_NAV_HTML, SITE_FOOTER_HTML, SITE_CHROME_CSS } from './siteChrome.js';
+import { APP_NAV_HTML, SITE_CHROME_CSS } from './siteChrome.js';
 
 // ---------------------------------------------------------------------------
 // System prompts
@@ -5593,13 +5593,17 @@ const SUPPORT_CATEGORIES = [
   'Problème technique',
   'Question sur les exercices',
   'Question sur mon compte',
+  'Problème de paiement',
   'Facturation',
   'Suggestion d\'amélioration',
   'Autre',
 ];
 
-function SupportView({ authUser, onUnreadChange }) {
-  const [category, setCategory] = useState('');
+const SUPPORT_PRODUITS = [{ value: 'tuteur', label: 'Tuteur IA' }, { value: 'quiz', label: 'Quiz CRPE' }];
+
+function SupportView({ authUser, onUnreadChange, preset }) {
+  const [produit, setProduit]   = useState(preset?.produit || 'tuteur');
+  const [category, setCategory] = useState(preset?.categorie || '');
   const [message, setMessage]   = useState('');
   const [sending, setSending]   = useState(false);
   const [sent, setSent]         = useState(false);
@@ -5658,6 +5662,7 @@ function SupportView({ authUser, onUnreadChange }) {
       user_email: email,
       user_prenom: prenom,
       category,
+      produit,
       message: message.trim(),
     });
     if (err) { setError('Une erreur est survenue. Réessayez.'); setSending(false); return; }
@@ -5682,6 +5687,10 @@ function SupportView({ authUser, onUnreadChange }) {
           </div>
         </div>
 
+        {preset?.produit === 'quiz' && (
+          <a href="/quizzapp" className="inline-block mb-4 text-sm font-semibold text-indigo-600 hover:underline">← Retour au Quiz CRPE</a>
+        )}
+
         {/* Form */}
         <div className="bg-white border border-gray-100 rounded-2xl p-5 mb-6 shadow-sm">
           <h2 className="text-sm font-700 text-gray-700 mb-4 font-semibold">Envoyer un message</h2>
@@ -5696,6 +5705,21 @@ function SupportView({ authUser, onUnreadChange }) {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5">Votre demande concerne</label>
+                <div className="grid grid-cols-2 gap-2">
+                  {SUPPORT_PRODUITS.map(p => (
+                    <button
+                      key={p.value}
+                      type="button"
+                      onClick={() => setProduit(p.value)}
+                      className={`py-2.5 rounded-xl border text-sm font-semibold transition-colors ${produit === p.value ? 'border-indigo-500 bg-indigo-50 text-indigo-700' : 'border-gray-200 text-gray-600 hover:bg-gray-50'}`}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
               <div>
                 <label className="block text-xs font-semibold text-gray-600 mb-1.5">Catégorie</label>
                 <select
@@ -5796,7 +5820,7 @@ function SupportTicketCard({ ticket: t, statusLabel, statusColor, onReply, onClo
   return (
     <div className="bg-white border border-gray-100 rounded-2xl p-4 shadow-sm">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-xs font-semibold text-gray-500">{t.category}</span>
+        <span className="text-xs font-semibold text-gray-500">{t.produit === 'quiz' ? 'Quiz CRPE · ' : t.produit === 'tuteur' ? 'Tuteur IA · ' : ''}{t.category}</span>
         <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${statusColor[t.status]}`}>
           {statusLabel[t.status]}
         </span>
@@ -5935,7 +5959,7 @@ function useSiteChromeStyles() {
 
 const escHtml = (v) => String(v ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
-function SiteHeader({ authUser, profile }) {
+function SiteHeader({ authUser, profile, onSupport }) {
   useSiteChromeStyles();
   const ref = useRef(null);
   useEffect(() => {
@@ -5958,12 +5982,15 @@ function SiteHeader({ authUser, profile }) {
     btn.addEventListener('click', (e) => { e.stopPropagation(); btn.setAttribute('aria-expanded', el.classList.toggle('open')); });
     el.querySelector('.out').addEventListener('click', async () => { await sbClient.auth.signOut(); window.location.href = '/'; });
   }, [authUser, profile?.prenom, profile?.nom]);
-  return <div ref={ref} className="flex-shrink-0" dangerouslySetInnerHTML={{ __html: SITE_NAV_HTML }} />;
-}
-
-function SiteFooter() {
-  useSiteChromeStyles();
-  return <div className="site-footer-wrap" dangerouslySetInnerHTML={{ __html: SITE_FOOTER_HTML }} />;
+  // Bouton Support de l'en-tête : ouvre l'onglet Support sans recharger la page
+  useEffect(() => {
+    const a = ref.current?.querySelector('.nav-support');
+    if (!a) return;
+    const go = (e) => { e.preventDefault(); onSupport?.(); };
+    a.addEventListener('click', go);
+    return () => a.removeEventListener('click', go);
+  }, [onSupport]);
+  return <div ref={ref} className="flex-shrink-0" dangerouslySetInnerHTML={{ __html: APP_NAV_HTML }} />;
 }
 
 // BottomNav
@@ -6297,7 +6324,15 @@ function AppContent({ authUser }) {
 
   const [profile, setProfile] = useState(null);
   const [ready, setReady] = useState(false);
-  const [activeTab, setActiveTab] = useState('home');
+  // Onglet d'ouverture et préréglage du support depuis l'adresse, ex. /app?onglet=support&produit=quiz&categorie=paiement
+  const [supportPreset] = useState(() => {
+    const q = new URLSearchParams(window.location.search);
+    return { produit: q.get('produit') === 'quiz' ? 'quiz' : null, categorie: q.get('categorie') === 'paiement' ? 'Problème de paiement' : null };
+  });
+  const [activeTab, setActiveTab] = useState(() => {
+    const o = new URLSearchParams(window.location.search).get('onglet');
+    return ['home', 'history', 'stats', 'support', 'profile'].includes(o) ? o : 'home';
+  });
   const [chatMatiere, setChatMatiere] = useState(null);
   const [sessionKey, setSessionKey] = useState(0);
   const [showTopicPicker, setShowTopicPicker] = useState(false);
@@ -6532,7 +6567,7 @@ function AppContent({ authUser }) {
 
   return (
     <div className="bg-gray-50 flex flex-col overflow-hidden" style={{ height: '100dvh' }}>
-      <SiteHeader authUser={authUser} profile={profile} />
+      <SiteHeader authUser={authUser} profile={profile} onSupport={() => handleTabChange('support')} />
       <div
         className="flex flex-col flex-1 min-h-0 max-w-3xl mx-auto w-full"
       >
@@ -6579,10 +6614,6 @@ function AppContent({ authUser }) {
           />
         ) : (
           <>
-            {['home', 'history', 'stats', 'profile'].includes(activeTab) && (
-              // Zone de défilement pleine largeur : contenu centré, pied de page du site sur toute la largeur
-              <div className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden" style={{ width: '100vw', marginLeft: 'calc(50% - 50vw)' }}>
-              <div className="max-w-3xl mx-auto w-full">
             {activeTab === 'home' && (
               <HomeView
                 profile={profile}
@@ -6620,11 +6651,7 @@ function AppContent({ authUser }) {
                 onUpdateProfile={handleOnboarding}
               />
             )}
-              </div>
-                <SiteFooter />
-              </div>
-            )}
-            {activeTab === 'support' && <SupportView authUser={authUser} onUnreadChange={setUnreadSupport} />}
+            {activeTab === 'support' && <SupportView authUser={authUser} onUnreadChange={setUnreadSupport} preset={supportPreset} />}
           </>
         )}
       </div>

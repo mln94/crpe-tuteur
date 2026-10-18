@@ -5,6 +5,24 @@ Connecté : « Se connecter » et « Commencer » sont remplacés par le nom du 
 Le client Supabase (projet « crpe ») est partagé avec la page : window.passcrpeSB.
 """
 
+import re
+
+
+SUPPORT_ICONE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>'
+
+
+def nav_application(nav, support_href):
+    """En-tête des applications (tuteur IA, quiz) : logo, bouton Support et menu du compte, sans le menu du site."""
+    nav = re.sub(r'\s*<ul class="nav-links">.*?</ul>', '', nav, flags=re.S)
+    nav = re.sub(r'\s*<button[^>]*class="nav-login"[^>]*>.*?</button>', '', nav, flags=re.S)
+    nav = re.sub(r'\s*<button[^>]*class="nav-cta[^"]*"[^>]*>.*?</button>', '', nav, flags=re.S)
+    nav = re.sub(r'\s*<a[^>]*class="nav-(login|cta)[^"]*"[^>]*>.*?</a>', '', nav, flags=re.S)
+    nav = re.sub(r'\s*<button type="button" class="nav-burger".*?</button>', '', nav, flags=re.S)
+    nav = nav.replace('<nav class="site-nav">', '<nav class="site-nav nav-app">')
+    nav = nav.replace('<div class="nav-actions">', f'<div class="nav-actions">\n      <a class="nav-support" href="{support_href}">{SUPPORT_ICONE}<span class="lib">Support</span></a>', 1)
+    return nav
+
+
 SB_URL = 'https://zqwcermgfvcusuwjfviz.supabase.co'
 SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8'
 
@@ -26,6 +44,12 @@ CSS = """
     .site-nav.connecte .nav-actions > .nav-login, .site-nav.connecte .nav-actions > .nav-cta { display: none !important; }
     .site-nav.connecte .nav-links li.nav-menu-account { display: none !important; }
     @media (max-width: 600px) { .nav-compte-btn .nom { max-width: 110px; } }
+    /* En-tête des applications : bouton Support à côté du nom */
+    .nav-app .nav-actions { gap: 10px; }
+    .nav-support { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 100px; border: 1.5px solid var(--gray-200); background: #fff; font: inherit; font-size: 13.5px; font-weight: 700; color: var(--gray-700); text-decoration: none; cursor: pointer; }
+    .nav-support:hover { border-color: var(--indigo-600); color: var(--indigo-600); }
+    .nav-support svg { width: 16px; height: 16px; }
+    @media (max-width: 480px) { .nav-support .lib { display: none; } }
 """
 
 JS = """<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>

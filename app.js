@@ -694,6 +694,7 @@ app.post('/api/contact', async (req, res) => {
       user_id: user?.id || null, user_email: user?.email || mail,
       user_prenom: String(prenom).trim().slice(0, 80) || user?.user_metadata?.prenom || null,
       category: raison, message: texte,
+      produit: raison === 'Question sur le Quiz CRPE' ? 'quiz' : raison === 'Question sur le Tuteur IA' ? 'tuteur' : null,
     });
     if (error) throw new Error(error.message);
     contactEnvois.set(ip, [...recents, now]);

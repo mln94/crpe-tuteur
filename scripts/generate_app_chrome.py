@@ -5,6 +5,7 @@ Même structure que /quizzapp et /espace : menu du site, menu du compte (nom du 
 Quiz CRPE, Se déconnecter) et pied de page. Le HTML et les styles sont repris du gabarit des pages du site ;
 seules les règles CSS du menu et du pied de page sont gardées, pour ne pas toucher aux styles de l'application.
 Gabarit : landing/crpe-bac3-structure-premiere-epreuve-admissibilite.html ; menu du compte : scripts/nav_compte.py
+Le tuteur IA utilise APP_NAV_HTML (en-tête d'application, sans menu du site ni pied de page).
 Usage   : python3 scripts/generate_app_chrome.py
 """
 import json
@@ -68,6 +69,8 @@ CSS = filtrer(css_all) + nav_compte.CSS + """
 MODULE = f"""// Généré par scripts/generate_app_chrome.py — ne pas modifier à la main.
 // En-tête et pied de page du site pour le tuteur IA, identiques à /quizzapp et /espace.
 export const SITE_NAV_HTML = {json.dumps(NAV, ensure_ascii=False)};
+// En-tête de l'application : logo, bouton Support et menu du compte, sans le menu du site
+export const APP_NAV_HTML = {json.dumps(nav_compte.nav_application(NAV, '/app?onglet=support'), ensure_ascii=False)};
 export const SITE_FOOTER_HTML = {json.dumps(FOOTER, ensure_ascii=False)};
 export const SITE_CHROME_CSS = {json.dumps(CSS, ensure_ascii=False)};
 """
