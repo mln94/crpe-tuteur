@@ -211,7 +211,6 @@
     .quiz-wrap { max-width: 780px; margin: 0 auto; padding: 32px 20px 72px; color: var(--gray-700); }
     .quiz-wrap h1 { font-size: clamp(28px, 4.5vw, 38px); font-weight: 900; color: var(--gray-900); line-height: 1.15; letter-spacing: -.5px; margin-bottom: 10px; }
     .quiz-lead { font-size: 16px; line-height: 1.6; margin-bottom: 26px; }
-    .quiz-filtres { display: grid; gap: 18px; }
     .quiz-filtre label, .quiz-filtre .lbl { display: block; font-size: 13px; font-weight: 800; color: var(--gray-700); margin-bottom: 8px; }
     .quiz-select { width: 100%; padding: 13px 14px; font: inherit; font-size: 16px; font-weight: 600; color: var(--gray-900); border: 1.5px solid var(--gray-200); border-radius: 12px; background: #fff; cursor: pointer; }
     .quiz-select:focus { outline: none; border-color: #fb923c; }
@@ -219,8 +218,6 @@
     .quiz-niveau { padding: 12px 8px; border-radius: 12px; border: 1.5px solid var(--gray-200); background: #fff; font: inherit; font-size: 15px; font-weight: 700; color: var(--gray-700); cursor: pointer; transition: border-color .15s, background .15s; }
     .quiz-niveau:hover { border-color: #fb923c; }
     .quiz-niveau[aria-pressed="true"] { border-color: #f97316; background: #fff7ed; color: #c2410c; }
-    .quiz-resume { font-size: 14px; color: var(--gray-600); background: var(--gray-50); border-radius: 12px; padding: 12px 14px; min-height: 46px; }
-    .quiz-resume b { color: var(--gray-900); }
     .quiz-card { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 20px; padding: 28px; box-shadow: 0 8px 30px rgba(0,0,0,.04); }
     .quiz-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 10px; font-size: 13px; font-weight: 700; color: var(--gray-500); }
     .quiz-top .mat { color: #c2410c; }
@@ -370,6 +367,22 @@
     .pay-decoupe b { display: block; font-size: 17px; font-weight: 900; color: #3730a3; }
     .pay-decoupe span { font-size: 11.5px; color: var(--gray-600); }
     .pay-garantie { max-width: none; }
+    /* Barre des filtres toujours visible */
+    .qz-barre { position: sticky; top: 64px; z-index: 40; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px 18px; margin: 0 0 16px; padding: 14px 16px; background: #fff; border: 1.5px solid var(--gray-200); border-radius: 18px; box-shadow: 0 8px 24px rgba(0,0,0,.05); }
+    .qz-barre-champ { flex: 1 1 220px; }
+    .qz-barre-champ label, .qz-barre-champ .lbl { display: block; font-size: 12px; font-weight: 800; color: var(--gray-500); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+    .qz-barre .quiz-select { padding: 10px 12px; font-size: 15px; }
+    .qz-barre .quiz-niveau { padding: 10px 6px; font-size: 14px; }
+    .qz-barre.en-serie { opacity: .85; }
+    .qz-barre .quiz-select:disabled { background: var(--gray-50); color: var(--gray-500); cursor: not-allowed; }
+    .qz-quitter { align-self: center; }
+    .qz-tete { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
+    .qz-tete h2 { margin-bottom: 2px; }
+    .qz-tete p { font-size: 14px; color: var(--gray-500); }
+    .qz-sous-titre { font-size: 15px; font-weight: 900; color: var(--gray-900); margin: 18px 0 2px; }
+    .qz-note { font-size: 12.5px; color: var(--gray-500); margin-top: 14px; }
+    .ok-msg { background: #dcfce7 !important; color: #166534 !important; margin-bottom: 14px; }
+    @media (max-width: 600px) { .qz-barre { top: 64px; padding: 12px; gap: 10px; } .qz-barre-champ { flex-basis: 100%; } .qz-tete .quiz-btn { width: 100%; } }
   .quiz-confirm { background: #dcfce7; color: #166534; font-weight: 600; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
 
     /* MENU DU COMPTE */
@@ -597,54 +610,77 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // Essai gratuit en cours (compte non payé) : 2 matières offertes, chacune à son niveau conseillé
   function essaiActif() { return compte && !compte.paid && compte.essai ? compte.essai : null; }
   function essaiDe(k) { var e = essaiActif(); return e ? e.matieres.filter(function (m) { return m.matiere === k; })[0] : null; }
-  function accueil() {
-    st = null; intro(true);
-    var e = essaiActif();
-    if (e && e.termine) {
-      root.innerHTML = barreCompte() + '<div class="quiz-card essai-carte"><div class="essai-cadeau">🔓</div><div><h2>Votre essai est terminé</h2>' +
-        '<p>Vous avez fait vos 2 séries offertes. Débloquez les 9 matières et les 3 niveaux pour continuer.</p>' +
-        '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz pour ' + PRIX + '</button></div></div></div>';
-      return;
-    }
-    if (e) {
+
+  // Barre des filtres (matière, niveau), visible sur tous les écrans du quiz ; figée pendant une série
+  function barreFiltres(enSerie) {
+    var e = essaiActif(), fige = enSerie || (e && e.termine);
+    if (e && !e.termine) {
       var dispo = e.matieres.filter(function (m) { return !m.termine; }), cur = essaiDe(choix.mat);
       if (!cur || cur.termine) cur = dispo[0];
-      choix.mat = cur.matiere; choix.niveau = cur.niveau;
+      if (cur && !enSerie) { choix.mat = cur.matiere; choix.niveau = cur.niveau; }
     }
-    var faites = e ? e.matieres.filter(function (m) { return m.termine; }).length : 0;
-    root.innerHTML = barreCompte() +
-      (e ? '<div class="essai-bandeau">🎁 <strong>Essai gratuit : ' + faites + ' / ' + e.matieres.length + ' séries faites.</strong> Les autres matières et niveaux se débloquent avec l’accès complet.</div>' : '') +
-      '<div class="quiz-card quiz-filtres">' +
-      '<div class="quiz-filtre"><label for="quiz-mat">Matière</label><select id="quiz-mat" class="quiz-select">' +
+    return '<div class="qz-barre' + (enSerie ? ' en-serie' : '') + '">' +
+      '<div class="qz-barre-champ"><label for="quiz-mat">Matière</label><select id="quiz-mat" class="quiz-select"' + (fige ? ' disabled' : '') + '>' +
       MATIERES.map(function (m) {
         var x = essaiDe(m[0]), ok = !e || (x && !x.termine);
         return '<option value="' + m[0] + '"' + (m[0] === choix.mat ? ' selected' : '') + (ok ? '' : ' disabled') + '>' + esc(m[1]) +
           (e ? (x ? (x.termine ? ' · essai terminé' : ' · essai offert') : ' 🔒') : '') + '</option>'; }).join('') + '</select></div>' +
-      '<div class="quiz-filtre"><span class="lbl" id="quiz-niv-lbl">Niveau</span><div class="quiz-niveaux" role="group" aria-labelledby="quiz-niv-lbl">' +
-      Object.keys(NIVEAUX).map(function (n) { var off = e && n !== choix.niveau; return '<button type="button" class="quiz-niveau" data-niv="' + n + '" aria-pressed="' + (n === choix.niveau) + '"' + (off ? ' disabled title="Disponible avec l’accès complet"' : '') + '>' + NIVEAUX[n] + (off ? ' 🔒' : '') + '</button>'; }).join('') + '</div></div>' +
-      '<div class="quiz-resume" id="quiz-resume">…</div>' +
-      '<div class="quiz-actions" style="margin-top:0"><button type="button" class="quiz-btn" data-act="start">Lancer une série</button><button type="button" class="quiz-btn ghost" data-act="prog-choix">Ma progression</button></div>' +
+      '<div class="qz-barre-champ"><span class="lbl" id="quiz-niv-lbl">Niveau</span><div class="quiz-niveaux" role="group" aria-labelledby="quiz-niv-lbl">' +
+      Object.keys(NIVEAUX).map(function (n) {
+        var off = fige || (e && n !== choix.niveau);
+        return '<button type="button" class="quiz-niveau" data-niv="' + n + '" aria-pressed="' + (n === choix.niveau) + '"' + (off ? ' disabled' : '') +
+          (e && n !== choix.niveau ? ' title="Disponible avec l’accès complet"' : '') + '>' + NIVEAUX[n] + (e && n !== choix.niveau ? ' 🔒' : '') + '</button>'; }).join('') + '</div></div>' +
+      (enSerie ? '<button type="button" class="quiz-link qz-quitter" data-act="quitter">Quitter la série</button>' : '') +
       '</div>';
-    resume();
   }
 
-  // Résumé du choix en cours : notions du niveau, maîtrisées, à réviser
-  function resume() {
-    var el = document.getElementById('quiz-resume'); if (!el) return;
+  // Accueil : filtres, puis progression par thème (en questions, pour la matière et le niveau choisis) et lancement d'une série
+  function accueil(message) {
+    st = null; intro(true);
+    var e = essaiActif();
+    if (e && e.termine) {
+      root.innerHTML = barreCompte() + barreFiltres(false) + '<div class="quiz-card essai-carte"><div class="essai-cadeau">🔓</div><div><h2>Votre essai est terminé</h2>' +
+        '<p>Vous avez fait vos 2 séries offertes. Débloquez les 9 matières et les 3 niveaux pour continuer.</p>' +
+        '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz pour ' + PRIX + '</button></div></div></div>';
+      return;
+    }
+    var faites = e ? e.matieres.filter(function (m) { return m.termine; }).length : 0;
+    root.innerHTML = barreCompte() + barreFiltres(false) +
+      (e ? '<div class="essai-bandeau">🎁 <strong>Essai gratuit : ' + faites + ' / ' + e.matieres.length + ' séries faites.</strong> Les autres matières et niveaux se débloquent avec l’accès complet.</div>' : '') +
+      (message ? '<div class="quiz-msg ok-msg">' + esc(message) + '</div>' : '') +
+      '<div class="quiz-card" id="qz-tableau"><p>Chargement de votre progression…</p></div>';
+    tableau();
+  }
+
+  // Progression : chaque question compte dans un thème, la somme des thèmes = toutes les questions du niveau
+  function tableau() {
+    var el = document.getElementById('qz-tableau'); if (!el) return;
     var mat = choix.mat, niveau = choix.niveau;
-    el.textContent = 'Chargement…';
     charger(mat).then(function (cat) {
-      if (!document.getElementById('quiz-resume') || choix.mat !== mat || choix.niveau !== niveau) return;
-      var b = bilan(mat, cat, niveau), nq = 0;
-      cat.ordre.forEach(function (k) { if (cat.notions[k].niveau === niveau) nq += cat.notions[k].questions.length; });
-      // Une série pose une question par notion non maîtrisée, dans la limite de 20
-      var serie = Math.min(SERIE, b.total - b.maitrisees), ex = essaiDe(mat);
-      if (ex) { el.innerHTML = '<b>Série d’essai offerte</b> : ' + ex.max + ' questions en ' + esc(label(mat)) + ', niveau ' + NIVEAUX[niveau] + '.'; return; }
-      el.innerHTML = '<b>' + esc(label(mat)) + ' · ' + NIVEAUX[niveau] + '</b> : ' + nq + ' questions sur ' + b.total + ' notions' +
-        (serie ? ', en séries de ' + serie + ' questions' : '') + '. ' +
-        b.maitrisees + ' notion' + (b.maitrisees > 1 ? 's' : '') + ' maîtrisée' + (b.maitrisees > 1 ? 's' : '') +
-        (b.dues ? ', <b>' + b.dues + ' à réviser aujourd\'hui</b>' : '') + '.';
-    }).catch(function () { el.textContent = 'Le quiz n\'a pas pu être chargé. Réessaie dans quelques instants.'; });
+      if (!document.getElementById('qz-tableau') || choix.mat !== mat || choix.niveau !== niveau) return;
+      var pm = prog(mat), b = bilan(mat, cat, niveau), themes = {}, ordre = [], total = 0, reussies = 0;
+      cat.ordre.forEach(function (k) {
+        var no = cat.notions[k]; if (no.niveau !== niveau) return;
+        var t = no.theme || 'Notions', s = pm.notions[k], n = no.questions.length, ok = s ? Math.min(s.ok.length, n) : 0;
+        if (!themes[t]) { themes[t] = { n: 0, ok: 0 }; ordre.push(t); }
+        themes[t].n += n; themes[t].ok += ok; total += n; reussies += ok;
+      });
+      var ex = essaiDe(mat), serie = ex ? ex.max : Math.min(SERIE, b.total - b.maitrisees);
+      el.innerHTML = '<div class="qz-tete"><div><h2>' + esc(label(mat)) + ' · ' + NIVEAUX[niveau] + '</h2>' +
+        '<p>' + total + ' questions dans ' + ordre.length + ' thème' + (ordre.length > 1 ? 's' : '') + ' du programme' + (ex ? ' · série d’essai offerte' : '') + '</p></div>' +
+        '<button type="button" class="quiz-btn" data-act="start"' + (serie ? '' : ' disabled') + '>Lancer une série de ' + serie + ' questions</button></div>' +
+        '<div class="stats"><div class="stat"><b>' + reussies + ' / ' + total + '</b><span>questions réussies</span></div><div class="stat"><b>' + b.maitrisees + ' / ' + b.total + '</b><span>notions maîtrisées</span></div><div class="stat"><b>' + b.dues + '</b><span>à réviser aujourd’hui</span></div></div>' +
+        '<h3 class="qz-sous-titre">Progression par thème</h3>' +
+        ordre.map(function (t) {
+          var x = themes[t], pc = x.n ? Math.round(x.ok / x.n * 100) : 0;
+          return '<div class="prog-theme"><h3>' + esc(t) + '<span>' + x.ok + ' / ' + x.n + ' questions réussies</span></h3><div class="prog-bar"><span class="m" style="width:' + pc + '%"></span></div></div>';
+        }).join('') +
+        '<p class="qz-note">Une notion est maîtrisée après ' + MAITRISE + ' bonnes réponses à des questions différentes. ' + (pm.series || 0) + ' série' + ((pm.series || 0) > 1 ? 's' : '') + ' faite' + ((pm.series || 0) > 1 ? 's' : '') + ' dans cette matière.</p>' +
+        (essaiActif() ? '' : '<p style="margin-top:10px"><button type="button" class="quiz-link" data-act="reset">Réinitialiser ma progression dans cette matière</button></p>');
+    }).catch(function (err) {
+      if (err && (err.status === 401 || err.status === 402)) return boot();
+      el.innerHTML = '<div class="quiz-msg">La progression n’a pas pu être chargée. Réessayez dans quelques instants.</div>';
+    });
   }
 
   // ── Compte : connexion, test de positionnement, paiement ──
@@ -909,7 +945,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     } else {
       corps = '<div class="quiz-choices">' + q.choix.map(function (c, k) { return '<button type="button" class="quiz-choice" data-k="' + k + '">' + esc(c) + '</button>'; }).join('') + '</div>';
     }
-    root.innerHTML = '<div class="quiz-card">' + entete(q) + '<p class="quiz-q">' + esc(q.question) + '</p>' + corps + '<div id="quiz-fb"></div></div>';
+    root.innerHTML = barreFiltres(true) + '<div class="quiz-card">' + entete(q) + '<p class="quiz-q">' + esc(q.question) + '</p>' + corps + '<div id="quiz-fb"></div></div>';
     var inp = root.querySelector('.quiz-num input'); if (inp) inp.focus();
   }
 
@@ -956,7 +992,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var n = st.serie.length, s = st.score, b = bilan(st.mat, st.cat, st.niveau);
     var note = Math.round(s / n * 20 * 2) / 2;
     var msg = note >= 16 ? 'Excellent travail !' : note >= 12 ? 'Bon travail, continuez comme ça.' : note >= 8 ? 'C\'est un début : les notions ratées reviendront pour être retravaillées.' : 'Ces notions sont à retravailler : elles reviendront dans vos prochaines séries.';
-    root.innerHTML = '<div class="quiz-card quiz-score">' +
+    root.innerHTML = barreFiltres(false) + '<div class="quiz-card quiz-score">' +
       '<div class="quiz-top" style="justify-content:center"><span class="mat">' + esc(label(st.mat)) + ' · ' + NIVEAUX[st.niveau] + ' · série ' + pm.series + '</span></div>' +
       '<div class="big">' + String(note).replace('.', ',') + ' / 20</div><p>' + s + ' bonne' + (s > 1 ? 's' : '') + ' réponse' + (s > 1 ? 's' : '') + ' sur ' + n + '. ' + msg + '</p>' +
       '<div class="stats"><div class="stat"><b>' + b.maitrisees + '</b><span>notions maîtrisées</span></div><div class="stat"><b>' + b.encours + '</b><span>en cours</span></div><div class="stat"><b>' + (b.total - b.maitrisees - b.encours) + '</b><span>à découvrir</span></div></div>' +
@@ -971,33 +1007,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (essaiActif()) api('/api/quiz/compte').then(function (c) { compte = c; if (essaiActif() && compte.essai.termine) setTimeout(ouvrirPaiement, 900); }).catch(function () {});
   }
 
-  function progression(mat, message) {
-    charger(mat).then(function (cat) {
-      var pm = prog(mat), b = bilan(mat, cat), themes = {}, ordre = [];
-      cat.ordre.forEach(function (k) {
-        var t = cat.notions[k].theme || 'Notions';
-        if (!themes[t]) { themes[t] = { m: 0, c: 0, n: 0 }; ordre.push(t); }
-        var s = pm.notions[k]; themes[t].n++;
-        if (s && s.maitrise) themes[t].m++; else if (s) themes[t].c++;
-      });
-      var niveau = (st && st.niveau) || choix.niveau;
-      st = { mat: mat, niveau: niveau, cat: cat };
-      var parNiveau = Object.keys(NIVEAUX).map(function (n) { var x = bilan(mat, cat, n); return '<div class="stat"><b>' + x.maitrisees + ' / ' + x.total + '</b><span>' + NIVEAUX[n] + '</span></div>'; }).join('');
-      root.innerHTML = '<div class="quiz-card">' +
-        '<div class="quiz-top"><span class="mat">' + esc(label(mat)) + ' · ma progression</span><span>' + (pm.series || 0) + ' série' + ((pm.series || 0) > 1 ? 's' : '') + '</span></div>' +
-        (message ? '<p style="font-weight:700;color:#166534">' + esc(message) + '</p>' : '') +
-        '<div class="stats"><div class="stat"><b>' + b.maitrisees + ' / ' + b.total + '</b><span>notions maîtrisées</span></div><div class="stat"><b>' + b.encours + '</b><span>en cours</span></div><div class="stat"><b>' + b.dues + '</b><span>à réviser aujourd\'hui</span></div></div>' +
-        '<p style="font-size:13px;font-weight:800;color:var(--gray-700);margin-top:14px">Notions maîtrisées par niveau</p><div class="stats" style="margin-top:6px">' + parNiveau + '</div>' +
-        ordre.map(function (t) {
-          var x = themes[t];
-          return '<div class="prog-theme"><h3>' + esc(t) + '<span>' + x.m + ' / ' + x.n + ' maîtrisées</span></h3><div class="prog-bar"><span class="m" style="width:' + (x.m / x.n * 100) + '%"></span><span class="c" style="width:' + (x.c / x.n * 100) + '%"></span></div></div>';
-        }).join('') +
-        '<div class="prog-legend"><span><i style="background:#16a34a"></i>Maîtrisées (' + MAITRISE + ' bonnes réponses)</span><span><i style="background:#fbbf24"></i>En cours</span><span><i style="background:var(--gray-100)"></i>À découvrir</span></div>' +
-        '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="again">Lancer une série · ' + NIVEAUX[niveau] + '</button><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>' +
-        '<p style="margin-top:18px"><button type="button" class="quiz-link" data-act="reset">Réinitialiser ma progression dans cette matière</button></p></div>';
-      top();
-    }).catch(function () { root.innerHTML = '<div class="quiz-msg">La progression n\'a pas pu être chargée.</div>'; });
-  }
+  // « Ma progression » : la progression est sur l'accueil, pour la matière et le niveau choisis
+  function progression(mat, message) { choix.mat = mat; garderChoix(); accueil(message); top(); }
 
   // ── Interactions ──
   root.addEventListener('click', function (e) {
@@ -1009,7 +1020,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return;
     }
     if (tst && b.dataset.ttok !== undefined) { var tk = +b.dataset.ttok, ti = tst.val.indexOf(tk); if (ti < 0) tst.val.push(tk); else tst.val.splice(ti, 1); b.classList.toggle('sel'); return; }
-    if (b.dataset.niv) { choix.niveau = b.dataset.niv; garderChoix(); root.querySelectorAll('.quiz-niveau').forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); resume(); return; }
+    if (b.dataset.niv) { choix.niveau = b.dataset.niv; garderChoix(); accueil(); return; }
     if (b.dataset.k !== undefined && st && !st.repondu) {
       var q = st.serie[st.i], k = +b.dataset.k, btns = root.querySelectorAll('.quiz-choice');
       btns.forEach(function (x) { x.disabled = true; });
@@ -1044,10 +1055,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     else if (act === 'again') demarrer(st.mat, st.niveau);
     else if (act === 'prog') progression(st.mat);
     else if (act === 'home') { accueil(); top(); }
-    else if (act === 'reset' && confirm('Effacer votre progression dans cette matière ?')) { var p = lire(); delete p[st.mat]; ecrire(p); progression(st.mat); }
+    else if (act === 'quitter' && confirm('Quitter la série en cours ? Vos réponses déjà données sont enregistrées.')) { accueil(); top(); }
+    else if (act === 'reset' && confirm('Effacer votre progression dans cette matière ?')) { var p = lire(); delete p[choix.mat]; ecrire(p); accueil(); }
   });
   root.addEventListener('change', function (e) {
-    if (e.target.id === 'quiz-mat') { choix.mat = e.target.value; garderChoix(); resume(); }
+    if (e.target.id === 'quiz-mat') { choix.mat = e.target.value; garderChoix(); accueil(); }
   });
   document.addEventListener('keydown', function (e) {
     if (!tst || e.key !== 'Enter' || !document.querySelector('[data-act="t-suivant"]')) return;
