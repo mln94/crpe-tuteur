@@ -641,10 +641,15 @@ JS = """<script>
     });
   }
   // Thèmes regroupés en blocs dépliables : histoire-géographie (« Histoire 5e · … », « Géographie 4e · … »)
-  // et EMC (un bloc par domaine : « Respecter autrui · Respect d'autrui »…)
+  // EMC et SVT (un bloc par domaine ou grand thème : « Respecter autrui · Respect d'autrui », « Le vivant et son évolution · … »)
   var groupesOuverts = {};
-  var DOMAINES_EMC = /^(Respecter autrui|Acquérir et partager les valeurs de la République|Construire une culture civique) · (.+)$/;
-  function groupe(t) { var m = /^(Histoire|Géographie) (.+)$/.exec(t) || DOMAINES_EMC.exec(t); return m ? { nom: m[1], court: m[2] } : null; }
+  var DOMAINES = ['Respecter autrui', 'Acquérir et partager les valeurs de la République', 'Construire une culture civique',
+    "La planète Terre, l'environnement et l'action humaine", 'Le vivant et son évolution', 'Le corps humain et la santé'];
+  function groupe(t) {
+    var m = /^(Histoire|Géographie) (.+)$/.exec(t); if (m) return { nom: m[1], court: m[2] };
+    var i = t.indexOf(' · '), d = i > 0 ? t.slice(0, i) : '';
+    return DOMAINES.indexOf(d) >= 0 ? { nom: d, court: t.slice(i + 3) } : null;
+  }
   function blocs(ordre) {
     var res = [], par = {};
     ordre.forEach(function (t) {
@@ -1027,9 +1032,9 @@ JS = """<script>
       m.id = 'pay-modal'; m.className = 'pay-overlay'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'pay-titre');
       m.innerHTML = '<div class="pay-card"><button type="button" class="pay-fermer" aria-label="Fermer">×</button>' +
         '<div class="pay-badge">🎉 Essai terminé</div><h2 id="pay-titre">Continuez votre préparation sur les 9 matières</h2>' +
-        '<p class="pay-texte">Vous avez fait vos séries d’essai. Débloquez les 3 208 questions, en facile, intermédiaire et avancé, avec vos révisions espacées jusqu’au concours.</p>' +
+        '<p class="pay-texte">Vous avez fait vos séries d’essai. Débloquez les 3 232 questions, en facile, intermédiaire et avancé, avec vos révisions espacées jusqu’au concours.</p>' +
         '<div class="pay-prix">' + PRIX + ' <span>TTC · paiement unique, sans abonnement</span></div>' +
-        '<div class="pay-decoupe"><div><b>2 centimes</b><span>par question</span></div><div><b>&lt; 2,30 €</b><span>par semaine sur 6 mois</span></div><div><b>3 208</b><span>questions corrigées</span></div></div>' +
+        '<div class="pay-decoupe"><div><b>2 centimes</b><span>par question</span></div><div><b>&lt; 2,30 €</b><span>par semaine sur 6 mois</span></div><div><b>3 232</b><span>questions corrigées</span></div></div>' +
         '<div class="garantie pay-garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Pas convaincu ? Écrivez-nous dans les 14 jours suivant votre achat : nous vous remboursons intégralement, sans avoir à vous justifier.</div></div>' +
         '<div class="paypal-zone"><div id="pp-paypal"></div><div id="pp-carte"></div></div>' +
         '<p class="quiz-hint" id="pp-msg">Paiement sécurisé par PayPal, par compte PayPal ou carte bancaire.</p>' +

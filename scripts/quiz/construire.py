@@ -8,14 +8,14 @@ Usage : python3 scripts/quiz/construire.py <matiere> [<matiere>...] > lignes.jso
 """
 import collections, json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from referentiel import R, EMC_NOTIONS
+from referentiel import R, EMC_NOTIONS, SVT_NOTIONS
 
 FICHIERS = {
     'mathematiques': ['m_facile', 'm_inter', 'm_difficile', 'm_complements'],
     'francais': ['f_facile', 'f_inter', 'f_difficile', 'f_lecture', 'f_culture'],
     'histoire_geographie': ['hg_facile', 'hg_inter', 'hg_difficile', 'hg_complements', 'geo_complements'],
     'emc': ['emc_facile', 'emc_inter', 'emc_difficile', 'emc_complements'],
-    'svt': ['svt_facile', 'svt_inter', 'svt_difficile'],
+    'svt': ['svt_facile', 'svt_inter', 'svt_difficile', 'svt_complements'],
     'physique_chimie': ['pc_facile', 'pc_inter', 'pc_difficile'],
     'technologie': ['techno_facile', 'techno_inter', 'techno_difficile'],
     'arts': ['arts_facile', 'arts_inter', 'arts_difficile'],
@@ -43,14 +43,15 @@ def lignes(matiere, prog=None):
         for n in __import__(mod).NOTIONS:
             assert n['notion'] not in vues, n['notion']; vues.add(n['notion'])
             ref, obj = n['ref'], n['obj']
-            if matiere == 'emc' and n['notion'] in EMC_NOTIONS:
-                ref, obj = EMC_NOTIONS[n['notion']]  # notions rédigées sur le programme de 2024, rattachées au programme en trois domaines
+            plan = {'emc': EMC_NOTIONS, 'svt': SVT_NOTIONS}.get(matiere, {})
+            if n['notion'] in plan:
+                ref, obj = plan[n['notion']]  # notions rattachées après coup à une section du programme (EMC, SVT)
             if matiere in ('mathematiques', 'francais'):
                 meta = ref_fm(ref, obj, prog)
             else:
                 r = REF[(matiere, ref)]
                 meta = dict(classe=r['classe'], theme=r['theme'], sous_theme=r['sous_theme'], objectif=r['objectifs'][obj])
-                if matiere == 'emc':
+                if matiere in ('emc', 'svt'):
                     # Thème suivi : domaine et section (« Respecter autrui · Respect d'autrui ») ; sous-thème : l'objet d'enseignement
                     meta.update(theme=f"{r['theme']} · {r['sous_theme']}", sous_theme=meta['objectif'])
                 if matiere == 'histoire_geographie':
