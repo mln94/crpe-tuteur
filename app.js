@@ -644,6 +644,9 @@ async function quizAcces(req, res) {
   }
 }
 
+// Propriétés Klaviyo du test de positionnement
+const proprietesTest = r => ({ test_positionnement_realise: true, test_positionnement_date: r.date, test_positionnement_score: r.pct });
+
 // Libellé précis d'un thème pour le rapport : le sous-thème du programme, raccourci (« Thème 1 : », détails après « : » ou « ; »)
 function libelleTheme(q) {
   let t = (q.sous_theme || q.theme || 'Notions').replace(/^Thème \d+\s*:\s*/, '');
@@ -703,15 +706,17 @@ app.post('/api/contact', async (req, res) => {
     });
     if (error) throw new Error(error.message);
     contactEnvois.set(ip, [...recents, now]);
-    res.json({ ok: true });
-    // Klaviyo : liste « contact » avec prénom, nom et raison (sans consentement marketing) ; un échec n'empêche pas l'envoi
+    // Klaviyo : liste « contact » avec prénom, nom et raison (sans consentement marketing). Attendu avant de répondre
+    // (sur Vercel, un envoi lancé après la réponse peut être perdu) ; un échec n'empêche pas l'envoi du message
     if (process.env.KLAVIYO_PRIVATE_API_KEY) {
       const proprietes = { contact_raison: raison, contact_date: new Date().toISOString() };
-      klaviyoSubscribePipeline(user?.email || mail, p, n, KLAVIYO_LIST_CONTACT, proprietes, {}, false)
+      try {
+        await klaviyoSubscribePipeline(user?.email || mail, p, n, KLAVIYO_LIST_CONTACT, proprietes, {}, false);
         // profil déjà existant : le pipeline ne met à jour que « parcours », on ajoute donc la raison explicitement
-        .then(() => klaviyoSetProperties(user?.email || mail, proprietes))
-        .catch(e => console.error('[contact Klaviyo]', e.message));
+        await klaviyoSetProperties(user?.email || mail, proprietes);
+      } catch (e) { console.error('[contact Klaviyo]', e.message); }
     }
+    res.json({ ok: true });
   } catch (err) {
     console.error('[contact]', err.message);
     res.status(500).json({ error: "Votre message n'a pas pu être envoyé. Réessayez dans quelques instants." });
@@ -813,8 +818,12 @@ app.post('/api/quiz/positionnement', async (req, res) => {
       enregistre = resultat;
     }
     quizOublier(compte.id);
-    // Klaviyo : test passé et score global (sert aux relances vers le paiement)
-    if (compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) klaviyoSetProperties(compte.email, { quiz_positionnement: true, quiz_positionnement_score: resultat.pct, quiz_positionnement_at: resultat.date }).catch(e => console.error('[Klaviyo positionnement]', e.message));
+    // Klaviyo : test réalisé, date et score global (relances vers le paiement). Attendu avant de répondre :
+    // sur Vercel, le serveur peut s'arrêter dès la réponse envoyée et un envoi lancé après serait perdu
+    if (compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) {
+      try { await klaviyoSetProperties(compte.email, proprietesTest(enregistre || resultat)); }
+      catch (e) { console.error('[Klaviyo positionnement]', e.message); }
+    }
     res.json({ resultat: enregistre || resultat });
   } catch (err) {
     console.error('[quiz/positionnement correction]', err.message);
