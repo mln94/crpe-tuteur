@@ -376,12 +376,6 @@
     .qz-barre.en-serie { opacity: .85; }
     .qz-barre .quiz-select:disabled { background: var(--gray-50); color: var(--gray-500); cursor: not-allowed; }
     .qz-quitter { align-self: center; }
-    .qz-themes { flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
-    .qz-themes-aide { flex: 1 1 100%; font-size: 13px; color: var(--gray-500); }
-    .qz-theme-chip { padding: 8px 12px; border-radius: 100px; border: 1.5px solid var(--gray-200); background: #fff; font: inherit; font-size: 13.5px; font-weight: 700; color: var(--gray-700); cursor: pointer; }
-    .qz-theme-chip:hover { border-color: #fb923c; }
-    .qz-theme-chip[aria-pressed="true"] { border-color: #f97316; background: #fff7ed; color: #c2410c; }
-    .qz-theme-chip small { font-size: 11.5px; font-weight: 600; color: var(--gray-400); }
     .qz-themes-serie { flex: 1 1 100%; margin: 0; }
     .qz-themes-choisis { margin: 6px 0 0; }
     .prog-theme.hors { opacity: .4; }
@@ -397,20 +391,41 @@
     .prog-groupe .g-themes { padding: 0 16px 14px; border-top: 1px solid var(--gray-100); }
     .prog-groupe .g-tete b { white-space: nowrap; }
     @media (max-width: 600px) { .prog-groupe .g-tete { flex-direction: column; align-items: flex-start; gap: 2px; } .prog-groupe .g-tete span { text-align: left; } }
-    .qz-themes-groupe { flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 0 2px; border-top: 1px solid var(--gray-100); }
-    .qz-groupe-tout { padding: 8px 12px; border-radius: 100px; border: 1.5px dashed #fb923c; background: #fff; font: inherit; font-size: 13.5px; font-weight: 800; color: #c2410c; cursor: pointer; }
-    .qz-groupe-tout[aria-pressed="true"] { border-style: solid; background: #fff7ed; }
-    .qz-groupe-tout small { font-size: 11.5px; font-weight: 600; color: var(--gray-400); }
+    .prog-groupe .g-tete b { white-space: nowrap; }
+    @media (max-width: 600px) { .prog-groupe .g-tete { flex-direction: column; align-items: flex-start; gap: 2px; } .prog-groupe .g-tete span { text-align: left; } }
     .qz-modes { grid-template-columns: repeat(2, 1fr); }
-    /* Avec la liste des thèmes, la barre devient haute : elle ne reste plus fixée en haut de l'écran */
-    .qz-barre:has(.qz-themes) { position: static; }
-    .qz-tete { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
+    .qz-tete { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 14px; margin-bottom: 4px; }
     .qz-tete h2 { margin-bottom: 2px; }
     .qz-tete p { font-size: 14px; color: var(--gray-500); }
     .qz-sous-titre { font-size: 15px; font-weight: 900; color: var(--gray-900); margin: 18px 0 2px; }
     .qz-note { font-size: 12.5px; color: var(--gray-500); margin-top: 14px; }
     .ok-msg { background: #dcfce7 !important; color: #166534 !important; margin-bottom: 14px; }
-    @media (max-width: 600px) { .qz-barre { top: 64px; padding: 12px; gap: 10px; } .qz-barre-champ { flex-basis: 100%; } .qz-tete .quiz-btn { width: 100%; } }
+    @media (max-width: 600px) { .qz-barre { top: 64px; padding: 12px; gap: 10px; } .qz-barre-champ { flex-basis: 100%; } .qz-tete { grid-template-columns: 1fr; } .qz-tete .quiz-btn { width: 100%; } }
+    /* Listes déroulantes de la barre (matière, thèmes) */
+    .qz-dd { position: relative; }
+    .qz-dd-btn { width: 100%; min-height: 46px; display: flex; align-items: center; gap: 10px; padding: 8px 12px 8px 8px; border: 1.5px solid var(--gray-200); border-radius: 12px; background: #fff; font: inherit; font-size: 15px; font-weight: 700; color: var(--gray-900); text-align: left; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+    .qz-dd-btn:hover:not(:disabled) { border-color: #fb923c; }
+    .qz-dd.ouvert .qz-dd-btn { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249,115,22,.15); }
+    .qz-dd-btn:disabled { background: var(--gray-50); color: var(--gray-500); cursor: not-allowed; }
+    .qz-dd-ico { width: 30px; height: 30px; border-radius: 9px; background: #fff7ed; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .qz-dd-txt { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .qz-dd-chev { width: 18px; height: 18px; color: var(--gray-400); flex-shrink: 0; transition: transform .15s; }
+    .qz-dd.ouvert .qz-dd-chev { transform: rotate(180deg); color: #ea580c; }
+    .qz-dd-menu { position: absolute; left: 0; right: 0; top: calc(100% + 6px); z-index: 60; max-height: 360px; overflow-y: auto; padding: 6px; background: #fff; border: 1px solid var(--gray-200); border-radius: 14px; box-shadow: 0 16px 40px rgba(0,0,0,.12); }
+    .qz-dd-opt { width: 100%; display: flex; align-items: center; gap: 10px; padding: 8px 10px 8px 8px; border: 0; border-radius: 10px; background: none; font: inherit; font-size: 14.5px; font-weight: 600; color: var(--gray-800); text-align: left; cursor: pointer; }
+    .qz-dd-opt:hover:not(:disabled) { background: #fff7ed; }
+    .qz-dd-opt[aria-selected="true"] { background: #fff7ed; color: #c2410c; }
+    .qz-dd-opt:disabled { opacity: .45; cursor: not-allowed; }
+    .qz-dd-opt small { font-size: 11.5px; font-weight: 600; color: var(--gray-400); white-space: nowrap; }
+    .qz-dd-check { color: #ea580c; font-weight: 900; }
+    .qz-dd-groupe { padding: 10px 10px 4px; font-size: 11.5px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; letter-spacing: .04em; }
+    .qz-dd-themes .qz-dd-txt { white-space: normal; line-height: 1.35; }
+    .qz-case { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--gray-300); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; color: #fff; flex-shrink: 0; }
+    .qz-dd-case[aria-checked="true"] .qz-case { background: #f97316; border-color: #f97316; }
+    .qz-champ-themes { flex: 1 1 100%; }
+    /* Liste déroulante native (Mes séries) au même style */
+    .quiz-select { appearance: none; -webkit-appearance: none; padding-right: 40px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 18px; }
+    .quiz-select:hover { border-color: #fb923c; }
     /* Logo QuizCRPE by PassCRPE (comme sur /quiz) */
     .logo-quiz .nav-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
     .logo-quiz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
@@ -742,6 +757,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function essaiDe(k) { var e = essaiActif(); return e ? e.matieres.filter(function (m) { return m.matiere === k; })[0] : null; }
 
   // Barre des filtres (matière, niveau), visible sur tous les écrans du quiz ; figée pendant une série
+  // Listes déroulantes de la barre (matière, thèmes) : une seule ouverte à la fois, gardée ouverte pendant le choix des thèmes
+  var ddOuvert = null;
+  var CHEVRON = '<svg class="qz-dd-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  function fermerListes() {
+    ddOuvert = null;
+    root.querySelectorAll('.qz-dd').forEach(function (d) { d.classList.remove('ouvert'); d.querySelector('.qz-dd-menu').hidden = true; d.querySelector('.qz-dd-btn').setAttribute('aria-expanded', 'false'); });
+  }
+  function libelleThemes(n) { return n ? n + ' thème' + (n > 1 ? 's' : '') + ' choisi' + (n > 1 ? 's' : '') : 'Choisir mes thèmes'; }
   function barreFiltres(enSerie) {
     var e = essaiActif(), fige = enSerie || (e && e.termine);
     if (e && !e.termine) {
@@ -750,11 +773,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (cur && !enSerie) { choix.mat = cur.matiere; choix.niveau = cur.niveau; }
     }
     return '<div class="qz-barre' + (enSerie ? ' en-serie' : '') + '">' +
-      '<div class="qz-barre-champ"><label for="quiz-mat">Matière</label><select id="quiz-mat" class="quiz-select"' + (fige ? ' disabled' : '') + '>' +
-      MATIERES.map(function (m) {
-        var x = essaiDe(m[0]), ok = !e || (x && !x.termine);
-        return '<option value="' + m[0] + '"' + (m[0] === choix.mat ? ' selected' : '') + (ok ? '' : ' disabled') + '>' + esc(m[1]) +
-          (e ? (x ? (x.termine ? ' · essai terminé' : ' · essai offert') : ' 🔒') : '') + '</option>'; }).join('') + '</select></div>' +
+      (function () {
+        var mc = MATIERES.filter(function (m) { return m[0] === choix.mat; })[0] || MATIERES[0], ouvert = ddOuvert === 'mat' && !fige;
+        return '<div class="qz-barre-champ"><span class="lbl" id="quiz-mat-lbl">Matière</span><div class="qz-dd' + (ouvert ? ' ouvert' : '') + '">' +
+          '<button type="button" class="qz-dd-btn" data-dd-toggle="mat" aria-haspopup="listbox" aria-expanded="' + ouvert + '" aria-labelledby="quiz-mat-lbl"' + (fige ? ' disabled' : '') + '>' +
+          '<span class="qz-dd-ico">' + mc[2] + '</span><span class="qz-dd-txt">' + esc(mc[1]) + '</span>' + CHEVRON + '</button>' +
+          '<div class="qz-dd-menu" role="listbox" aria-labelledby="quiz-mat-lbl"' + (ouvert ? '' : ' hidden') + '>' + MATIERES.map(function (m) {
+            var x = essaiDe(m[0]), ok = !e || (x && !x.termine), info = e ? (x ? (x.termine ? 'essai terminé' : 'essai offert') : '🔒') : '', sel = m[0] === choix.mat;
+            return '<button type="button" class="qz-dd-opt" role="option" data-mat-opt="' + m[0] + '" aria-selected="' + sel + '"' + (ok ? '' : ' disabled') + '>' +
+              '<span class="qz-dd-ico">' + m[2] + '</span><span class="qz-dd-txt">' + esc(m[1]) + '</span>' + (info ? '<small>' + info + '</small>' : '') + (sel ? '<span class="qz-dd-check">✓</span>' : '') + '</button>';
+          }).join('') + '</div></div></div>';
+      })() +
       '<div class="qz-barre-champ"><span class="lbl" id="quiz-niv-lbl">Niveau</span><div class="quiz-niveaux" role="group" aria-labelledby="quiz-niv-lbl">' +
       Object.keys(NIVEAUX).map(function (n) {
         var off = fige || (e && n !== choix.niveau);
@@ -764,7 +793,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       [['hasard', '🎲 Au hasard'], ['choix', '🎯 Mes thèmes']].map(function (m) {
         var on = (m[0] === 'choix') === !!themesChoisis(choix.mat);
         return '<button type="button" class="quiz-niveau" data-mode="' + m[0] + '" aria-pressed="' + on + '"' + (enSerie ? ' disabled' : '') + '>' + m[1] + '</button>'; }).join('') + '</div></div>' +
-      (themesChoisis(choix.mat) && !enSerie ? '<div class="qz-themes" id="qz-themes"><span class="qz-note">Chargement des thèmes…</span></div>' : '') +
+      (themesChoisis(choix.mat) && !enSerie ? (function () {
+        var ouvert = ddOuvert === 'themes';
+        return '<div class="qz-barre-champ qz-champ-themes"><div class="qz-dd' + (ouvert ? ' ouvert' : '') + '">' +
+          '<button type="button" class="qz-dd-btn" data-dd-toggle="themes" aria-haspopup="true" aria-expanded="' + ouvert + '"><span class="qz-dd-ico">🎯</span>' +
+          '<span class="qz-dd-txt" id="qz-themes-lib">' + libelleThemes(themesChoisis(choix.mat).length) + '</span>' + CHEVRON + '</button>' +
+          '<div class="qz-dd-menu qz-dd-themes" id="qz-themes"' + (ouvert ? '' : ' hidden') + '><p class="qz-dd-groupe">Chargement des thèmes…</p></div></div></div>';
+      })() : '') +
       (enSerie && st && st.themes ? '<p class="qz-note qz-themes-serie">Série sur vos thèmes : ' + esc(st.themes.join(' · ')) + '</p>' : '') +
       (enSerie ? '<button type="button" class="quiz-link qz-quitter" data-act="quitter">Quitter la série</button>' : '') +
       '</div>';
@@ -807,13 +842,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (ths) ths = ths.filter(function (t) { return themes[t]; });
       cat.ordre.forEach(function (k) { var no = cat.notions[k], s2 = pm.notions[k]; if (no.niveau === niveau && !(s2 && s2.maitrise) && (!ths || ths.indexOf(no.theme || 'Notions') >= 0)) dispo++; });
       var zone = document.getElementById('qz-themes');
-      var puce = function (t) { var i = ordre.indexOf(t), on = ths.indexOf(t) >= 0, gr = groupe(t);
-        return '<button type="button" class="qz-theme-chip" data-theme="' + i + '" aria-pressed="' + on + '">' + (on ? '✓ ' : '') + esc(gr ? gr.court : t) + ' <small>' + themes[t].n + '</small></button>'; };
-      if (zone) zone.innerHTML = '<span class="qz-themes-aide">Touchez les thèmes à travailler :</span>' + blocs(ordre).map(function (bl) {
-        if (!bl.nom) return bl.themes.map(puce).join('');
-        var tous = bl.themes.every(function (t) { return ths.indexOf(t) >= 0; });
-        return '<div class="qz-themes-groupe"><button type="button" class="qz-groupe-tout" data-groupe-tout="' + esc(bl.nom) + '" aria-pressed="' + tous + '">' + (tous ? '✓ ' : '') + 'Tout ' + esc(bl.nom) + ' <small>' + bl.themes.length + ' thèmes</small></button>' +
-          bl.themes.map(puce).join('') + '</div>'; }).join('');
+      var option = function (t) { var i = ordre.indexOf(t), on = ths.indexOf(t) >= 0, gr = groupe(t);
+        return '<button type="button" class="qz-dd-opt qz-dd-case" role="menuitemcheckbox" data-theme="' + i + '" aria-checked="' + on + '"><span class="qz-case">' + (on ? '✓' : '') + '</span>' +
+          '<span class="qz-dd-txt">' + esc(gr ? gr.court : t) + '</span><small>' + themes[t].n + ' questions</small></button>'; };
+      if (zone) zone.innerHTML = blocs(ordre).map(function (bl) { return (bl.nom ? '<p class="qz-dd-groupe">' + esc(bl.nom) + '</p>' : '') + bl.themes.map(option).join(''); }).join('');
+      var lib = document.getElementById('qz-themes-lib'); if (lib && ths) lib.textContent = libelleThemes(ths.length);
       tableau.ordre = ordre;
       var ex = essaiDe(mat), serie = Math.min(ex ? ex.max : SERIE, dispo);
       el.innerHTML = '<div class="qz-tete"><div><h2>' + esc(label(mat)) + ' · ' + NIVEAUX[niveau] + '</h2>' +
@@ -1401,20 +1434,22 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return;
     }
     if (b.dataset.niv) { choix.niveau = b.dataset.niv; garderChoix(); accueil(); return; }
-    if (b.dataset.mode) {
-      if (b.dataset.mode === 'hasard') delete choix.themes[choix.mat]; else if (!themesChoisis(choix.mat)) choix.themes[choix.mat] = [];
-      garderChoix(); accueil(); return;
+    if (b.dataset.ddToggle) {
+      var dd = b.closest('.qz-dd'), menu = dd.querySelector('.qz-dd-menu'), ouvrir = menu.hidden;
+      fermerListes();
+      if (ouvrir) { menu.hidden = false; dd.classList.add('ouvert'); b.setAttribute('aria-expanded', 'true'); ddOuvert = b.dataset.ddToggle; }
+      return;
     }
-    if (b.dataset.groupeTout && tableau.ordre) {
-      var dugroupe = tableau.ordre.filter(function (t) { var g = groupe(t); return g && g.nom === b.dataset.groupeTout; });
-      var lg = themesChoisis(choix.mat) || [], tout = dugroupe.every(function (t) { return lg.indexOf(t) >= 0; });
-      lg = lg.filter(function (t) { return dugroupe.indexOf(t) < 0; }); if (!tout) lg = lg.concat(dugroupe);
-      choix.themes[choix.mat] = lg; garderChoix(); accueil(); return;
+    if (b.dataset.matOpt) { choix.mat = b.dataset.matOpt; ddOuvert = null; garderChoix(); accueil(); return; }
+    if (b.dataset.mode) {
+      if (b.dataset.mode === 'hasard') { delete choix.themes[choix.mat]; ddOuvert = null; }
+      else { if (!themesChoisis(choix.mat)) choix.themes[choix.mat] = []; ddOuvert = 'themes'; }
+      garderChoix(); accueil(); return;
     }
     if (b.dataset.theme !== undefined && tableau.ordre) {
       var nom = tableau.ordre[+b.dataset.theme], lt = themesChoisis(choix.mat) || [], pos = lt.indexOf(nom);
       if (pos < 0) lt.push(nom); else lt.splice(pos, 1);
-      choix.themes[choix.mat] = lt; garderChoix(); accueil(); return;
+      choix.themes[choix.mat] = lt; garderChoix(); tableau(); return;  // la liste reste ouverte
     }
     if (b.dataset.k !== undefined && st && !st.repondu) {
       var q = st.serie[st.i], k = +b.dataset.k, btns = root.querySelectorAll('.quiz-choice');
@@ -1457,9 +1492,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     else if (act === 'quitter' && confirm('Quitter la série en cours ? Vos réponses déjà données sont enregistrées.')) { accueil(); top(); }
     else if (act === 'reset' && confirm('Effacer votre progression dans cette matière ?')) { var p = lire(); delete p[choix.mat]; ecrire(p); accueil(); }
   });
-  root.addEventListener('change', function (e) {
-    if (e.target.id === 'quiz-mat') { choix.mat = e.target.value; garderChoix(); accueil(); }
-  });
+  // Clic en dehors d'une liste ouverte, ou Échap : la liste se ferme
+  document.addEventListener('click', function (e) { if (ddOuvert && document.contains(e.target) && !e.target.closest('.qz-dd')) fermerListes(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && ddOuvert) fermerListes(); });
   document.addEventListener('keydown', function (e) {
     if (!tst || e.key !== 'Enter' || !document.querySelector('[data-act="t-suivant"]')) return;
     if (e.target.closest && e.target.closest('button, a') && e.target.id !== 't-num') return; // laisse Entrée activer le bouton qui a le focus
