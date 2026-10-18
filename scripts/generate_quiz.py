@@ -267,10 +267,14 @@ CSS = """
     .qz-barre-champ label, .qz-barre-champ .lbl { display: block; font-size: 12px; font-weight: 800; color: var(--gray-500); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
     .qz-barre .quiz-select { padding: 10px 12px; font-size: 15px; }
     .qz-barre .quiz-niveau { padding: 10px 6px; font-size: 14px; }
-    .qz-barre.en-serie { opacity: .85; }
+    .qz-barre.en-serie { position: static; align-items: center; justify-content: space-between; flex-wrap: nowrap; padding: 10px 14px; margin-bottom: 12px; }
+    .qz-bandeau { display: flex; align-items: center; gap: 8px; min-width: 0; font-size: 14px; color: var(--gray-600); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .qz-bandeau b { color: var(--gray-900); overflow: hidden; text-overflow: ellipsis; }
+    .qz-barre.en-serie .qz-quitter { flex-shrink: 0; }
+    /* Sur mobile, le bouton « Question suivante » reste visible au-dessus de la barre d'onglets */
+    @media (max-width: 600px) { #quiz-fb .quiz-actions { position: sticky; bottom: 70px; z-index: 5; margin: 14px -16px -20px; padding: 12px 16px; background: rgba(255,255,255,.96); border-top: 1px solid var(--gray-100); } #quiz-fb .quiz-actions .quiz-btn { width: 100%; } }
     .qz-barre .quiz-select:disabled { background: var(--gray-50); color: var(--gray-500); cursor: not-allowed; }
     .qz-quitter { align-self: center; }
-    .qz-themes-serie { flex: 1 1 100%; margin: 0; }
     .qz-themes-choisis { margin: 6px 0 0; }
     .prog-theme.hors { opacity: .4; }
     .prog-groupe { margin-top: 14px; border: 1.5px solid var(--gray-200); border-radius: 14px; background: #fff; }
@@ -532,6 +536,12 @@ JS = """<script>
   }
   function libelleThemes(n) { return n ? n + ' thème' + (n > 1 ? 's' : '') + ' choisi' + (n > 1 ? 's' : '') : 'Choisir mes thèmes'; }
   function barreFiltres(enSerie) {
+    if (enSerie && st) {
+      var ms = MATIERES.filter(function (m) { return m[0] === st.mat; })[0] || MATIERES[0];
+      return '<div class="qz-barre en-serie"><span class="qz-bandeau"><span class="qz-dd-ico">' + ms[2] + '</span><b>' + esc(ms[1]) + '</b> · ' + NIVEAUX[st.niveau] +
+        (st.themes ? ' · ' + st.themes.length + ' thème' + (st.themes.length > 1 ? 's' : '') + ' choisi' + (st.themes.length > 1 ? 's' : '') : '') + '</span>' +
+        '<button type="button" class="quiz-link qz-quitter" data-act="quitter">Quitter la série</button></div>';
+    }
     var e = essaiActif(), fige = enSerie || (e && e.termine);
     if (e && !e.termine) {
       var dispo = e.matieres.filter(function (m) { return !m.termine; }), cur = essaiDe(choix.mat);
@@ -566,7 +576,6 @@ JS = """<script>
           '<span class="qz-dd-txt" id="qz-themes-lib">' + libelleThemes(themesChoisis(choix.mat).length) + '</span>' + CHEVRON + '</button>' +
           '<div class="qz-dd-menu qz-dd-themes" id="qz-themes"' + (ouvert ? '' : ' hidden') + '><p class="qz-dd-groupe">Chargement des thèmes…</p></div></div></div>';
       })() : '') +
-      (enSerie && st && st.themes ? '<p class="qz-note qz-themes-serie">Série sur vos thèmes : ' + esc(st.themes.join(' · ')) + '</p>' : '') +
       (enSerie ? '<button type="button" class="quiz-link qz-quitter" data-act="quitter">Quitter la série</button>' : '') +
       '</div>';
   }
@@ -862,10 +871,8 @@ JS = """<script>
   }
 
   // ── Compte : connexion, test de positionnement, paiement ──
-  // Lien vers le résultat du test ; l'e-mail, « Mes outils » et la déconnexion sont dans le menu de l'en-tête
-  function barreCompte() {
-    return compte && compte.positionnement ? '<div class="quiz-compte"><span></span><span class="liens"><button type="button" class="quiz-link" data-act="voir-resultat">Mon test de positionnement</button></span></div>' : '';
-  }
+  // Le rapport de positionnement est dans l'onglet « Mon test » : plus de lien au-dessus des filtres
+  function barreCompte() { return ''; }
   function erreur(msg) {
     root.innerHTML = '<div class="quiz-msg">' + esc(msg) + '</div><div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-act="boot">Réessayer</button></div>';
   }
@@ -1097,7 +1104,7 @@ JS = """<script>
       if (!serie.length) return progression(mat, ths ? 'Toutes les notions de vos thèmes choisis sont maîtrisées à ce niveau. Bravo ! Ajoutez d’autres thèmes ou changez de niveau.'
         : 'Toutes les notions de niveau ' + NIVEAUX[niveau].toLowerCase() + ' sont maîtrisées dans cette matière. Bravo ! Essayez un autre niveau.');
       st = { mat: mat, niveau: niveau, themes: ths, cat: cat, serie: serie, i: 0, score: 0, recap: [], sel: [], repondu: false };
-      question(); top();
+      question();
     }).catch(function (e) {
       if (e.status === 401 || e.status === 402) return boot();
       root.innerHTML = '<div class="quiz-msg">Le quiz n\\'a pas pu être chargé. Réessaie dans quelques instants.</div><div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>';
@@ -1109,7 +1116,7 @@ JS = """<script>
     return '<div class="quiz-top"><span class="mat">' + esc(label(st.mat)) + ' · ' + NIVEAUX[st.niveau] + '</span><span>Question ' + (st.i + 1) + ' / ' + n + '</span></div>' +
       '<div class="quiz-bar"><span style="width:' + Math.round(st.i / n * 100) + '%"></span></div>' +
       '<div class="quiz-meta"><span class="chip ' + q.niveau + '">' + (NIVEAUX[q.niveau] || '') + '</span>' +
-      (q.theme ? '<span class="chip theme">' + esc(q.theme) + (q.sous_theme ? ' › ' + esc(q.sous_theme) : '') + '</span>' : '') +
+      (q.theme ? '<span class="chip theme" title="' + esc(q.theme + (q.sous_theme ? ' › ' + q.sous_theme : '')) + '">' + esc(groupe(q.theme) ? groupe(q.theme).court : q.theme) + '</span>' : '') +
       (q.classe ? '<span class="chip">Programme de ' + esc(q.classe) + '</span>' : '') + '</div>' +
       (q.objectif && q.objectif !== q.sous_theme ? '<p class="quiz-objectif"><strong>Objectif du programme :</strong> ' + esc(q.objectif) + '</p>' : '');
   }
@@ -1126,8 +1133,15 @@ JS = """<script>
     } else {
       corps = '<div class="quiz-choices">' + q.choix.map(function (c, k) { return '<button type="button" class="quiz-choice" data-k="' + k + '">' + esc(c) + '</button>'; }).join('') + '</div>';
     }
-    root.innerHTML = barreFiltres(true) + '<div class="quiz-card">' + entete(q) + '<p class="quiz-q">' + esc(q.question) + '</p>' + corps + '<div id="quiz-fb"></div></div>';
-    var inp = root.querySelector('.quiz-num input'); if (inp) inp.focus();
+    intro(false);
+    root.innerHTML = barreFiltres(true) + '<div class="quiz-card qz-question">' + entete(q) + '<p class="quiz-q">' + esc(q.question) + '</p>' + corps + '<div id="quiz-fb"></div></div>';
+    versQuestion();
+    var inp = root.querySelector('.quiz-num input'); if (inp) inp.focus({ preventScroll: true });
+  }
+  // Fait défiler la page pour que la question commence juste sous l'en-tête
+  function versQuestion() {
+    var b = root.querySelector('.qz-barre') || root, haut = b.getBoundingClientRect().top + window.scrollY - 76;
+    window.scrollTo({ top: Math.max(0, haut), behavior: 'auto' });
   }
 
   function envoyer(reponse, afficher) {
@@ -1144,6 +1158,8 @@ JS = """<script>
           '<div class="quiz-feedback ' + (d.correct ? 'ok' : 'ko') + '"><strong>' + (d.correct ? 'Bonne réponse !' : 'Ce n\\'est pas la bonne réponse. Réponse attendue : ' + esc(d.attendu)) + '</strong>' + esc(d.explication) +
           '<span class="suite">' + suite + '</span></div>' +
           '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="next">' + (last ? 'Voir ma note' : 'Question suivante →') + '</button></div>';
+        var fb = document.getElementById('quiz-fb'), r = fb.getBoundingClientRect();
+        if (r.bottom > window.innerHeight - 70) window.scrollBy({ top: r.top - 130, behavior: 'smooth' });
       }).catch(function (e) {
         if (e.status === 401 || e.status === 402) return boot();
         st.repondu = false;
@@ -1248,7 +1264,7 @@ JS = """<script>
         toks.forEach(function (x) { var k = +x.dataset.tok; x.classList.remove('sel'); if (att.indexOf(k) >= 0) x.classList.add('good'); else if (st.sel.indexOf(k) >= 0) x.classList.add('bad'); });
       });
     }
-    else if (act === 'next') { if (st.i < st.serie.length - 1) { st.i++; question(); top(); } else fin(); }
+    else if (act === 'next') { if (st.i < st.serie.length - 1) { st.i++; question(); } else fin(); }
     else if (act === 'boot') boot();
     else if (act === 'essai') { accueil(); top(); }
     else if (act === 'payer') ouvrirPaiement();
