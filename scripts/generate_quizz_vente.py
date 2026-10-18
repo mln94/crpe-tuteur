@@ -171,8 +171,8 @@ def contenu():
   <div class="qz-hero-inner">
     <div>
       <div class="hero-badge"><span></span>Nouveau · Quiz CRPE</div>
-      <h1>Arrivez au CRPE en <em>maîtrisant toutes les matières</em></h1>
-      <p class="hero-sub">2 700 questions sur les 9 matières du concours, en séries de 20. À chaque série, une note sur 20, une explication pour chaque erreur, et des révisions qui reviennent au bon moment pour que vous n'oubliiez rien. Vous arrêtez de réviser au hasard.</p>
+      <h1>Arrivez au CRPE <em>sans aucune notion incomprise</em></h1>
+      <p class="hero-sub">Évaluez votre niveau, puis progressez par séries de 20 questions, du facile au difficile. Chaque erreur est expliquée, chaque notion revient jusqu’à être comprise. 2 700 questions conformes aux programmes officiels : rien ne vous échappe.</p>
       <div class="hero-actions">
         <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
         <a href="#fonctionnement" class="btn-secondary">Voir comment ça marche</a>
@@ -369,7 +369,7 @@ def main():
 
     # En-tête : styles et suivi de l'accueil, titre et description propres à la page
     head = src[:src.index('</head>')]
-    head = re.sub(r'<title>.*?</title>', '<title>Quiz CRPE : arrivez au CRPE en maîtrisant toutes les matières</title>', head, flags=re.S)
+    head = re.sub(r'<title>.*?</title>', '<title>Quiz CRPE : arrivez au CRPE sans aucune notion incomprise</title>', head, flags=re.S)
     head = re.sub(r'<meta name="description"[^>]*/>',
                   '<meta name="description" content="Le Quiz CRPE : 300 questions par matière sur le programme du cycle 4, '
                   'des séries de 20 notées sur 20, l\'explication de chaque erreur et des révisions espacées. Test de positionnement gratuit." />\n'
