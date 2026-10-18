@@ -385,6 +385,22 @@
     .qz-themes-serie { flex: 1 1 100%; margin: 0; }
     .qz-themes-choisis { margin: 6px 0 0; }
     .prog-theme.hors { opacity: .4; }
+    .prog-groupe { margin-top: 14px; border: 1.5px solid var(--gray-200); border-radius: 14px; background: #fff; }
+    .prog-groupe summary { list-style: none; cursor: pointer; padding: 14px 16px; display: grid; gap: 8px; }
+    .prog-groupe summary::-webkit-details-marker { display: none; }
+    .prog-groupe summary:hover { background: var(--gray-50); border-radius: 14px; }
+    .prog-groupe .g-tete { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+    .prog-groupe .g-tete b { font-size: 16px; font-weight: 900; color: var(--gray-900); }
+    .prog-groupe .g-tete b::before { content: "▸ "; color: #ea580c; }
+    .prog-groupe[open] .g-tete b::before { content: "▾ "; }
+    .prog-groupe .g-tete span { font-size: 13px; font-weight: 600; color: var(--gray-500); text-align: right; }
+    .prog-groupe .g-themes { padding: 0 16px 14px; border-top: 1px solid var(--gray-100); }
+    .prog-groupe .g-tete b { white-space: nowrap; }
+    @media (max-width: 600px) { .prog-groupe .g-tete { flex-direction: column; align-items: flex-start; gap: 2px; } .prog-groupe .g-tete span { text-align: left; } }
+    .qz-themes-groupe { flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 10px 0 2px; border-top: 1px solid var(--gray-100); }
+    .qz-groupe-tout { padding: 8px 12px; border-radius: 100px; border: 1.5px dashed #fb923c; background: #fff; font: inherit; font-size: 13.5px; font-weight: 800; color: #c2410c; cursor: pointer; }
+    .qz-groupe-tout[aria-pressed="true"] { border-style: solid; background: #fff7ed; }
+    .qz-groupe-tout small { font-size: 11.5px; font-weight: 600; color: var(--gray-400); }
     .qz-modes { grid-template-columns: repeat(2, 1fr); }
     /* Avec la liste des thèmes, la barre devient haute : elle ne reste plus fixée en haut de l'écran */
     .qz-barre:has(.qz-themes) { position: static; }
@@ -766,9 +782,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (ths) ths = ths.filter(function (t) { return themes[t]; });
       cat.ordre.forEach(function (k) { var no = cat.notions[k], s2 = pm.notions[k]; if (no.niveau === niveau && !(s2 && s2.maitrise) && (!ths || ths.indexOf(no.theme || 'Notions') >= 0)) dispo++; });
       var zone = document.getElementById('qz-themes');
-      if (zone) zone.innerHTML = '<span class="qz-themes-aide">Touchez les thèmes à travailler :</span>' + ordre.map(function (t, i) {
-        var on = ths.indexOf(t) >= 0;
-        return '<button type="button" class="qz-theme-chip" data-theme="' + i + '" aria-pressed="' + on + '">' + (on ? '✓ ' : '') + esc(t) + ' <small>' + themes[t].n + '</small></button>'; }).join('');
+      var puce = function (t) { var i = ordre.indexOf(t), on = ths.indexOf(t) >= 0, gr = groupe(t);
+        return '<button type="button" class="qz-theme-chip" data-theme="' + i + '" aria-pressed="' + on + '">' + (on ? '✓ ' : '') + esc(gr ? gr.court : t) + ' <small>' + themes[t].n + '</small></button>'; };
+      if (zone) zone.innerHTML = '<span class="qz-themes-aide">Touchez les thèmes à travailler :</span>' + blocs(ordre).map(function (bl) {
+        if (!bl.nom) return bl.themes.map(puce).join('');
+        var tous = bl.themes.every(function (t) { return ths.indexOf(t) >= 0; });
+        return '<div class="qz-themes-groupe"><button type="button" class="qz-groupe-tout" data-groupe-tout="' + esc(bl.nom) + '" aria-pressed="' + tous + '">' + (tous ? '✓ ' : '') + 'Tout ' + esc(bl.nom) + ' <small>' + bl.themes.length + ' thèmes</small></button>' +
+          bl.themes.map(puce).join('') + '</div>'; }).join('');
       tableau.ordre = ordre;
       var ex = essaiDe(mat), serie = Math.min(ex ? ex.max : SERIE, dispo);
       el.innerHTML = '<div class="qz-tete"><div><h2>' + esc(label(mat)) + ' · ' + NIVEAUX[niveau] + '</h2>' +
@@ -778,16 +798,36 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         (ths && ths.length ? '<p class="qz-note qz-themes-choisis">Série sur ' + ths.length + ' thème' + (ths.length > 1 ? 's' : '') + ' choisi' + (ths.length > 1 ? 's' : '') + ' : ' + esc(ths.join(' · ')) + '</p>' : '') +
         '<div class="stats"><div class="stat"><b>' + reussies + ' / ' + total + '</b><span>questions réussies</span></div><div class="stat"><b>' + b.maitrisees + ' / ' + b.total + '</b><span>notions maîtrisées</span></div><div class="stat"><b>' + b.dues + '</b><span>à réviser aujourd’hui</span></div></div>' +
         '<h3 class="qz-sous-titre">Progression par thème</h3>' +
-        ordre.map(function (t) {
-          var x = themes[t], pc = x.n ? Math.round(x.ok / x.n * 100) : 0;
-          return '<div class="prog-theme' + (ths && ths.indexOf(t) < 0 ? ' hors' : '') + '"><h3>' + esc(t) + '<span>' + x.ok + ' / ' + x.n + ' questions réussies</span></h3><div class="prog-bar"><span class="m" style="width:' + pc + '%"></span></div></div>';
+        blocs(ordre).map(function (bl) {
+          var ligne = function (t) {
+            var x = themes[t], pc = x.n ? Math.round(x.ok / x.n * 100) : 0, gr = groupe(t);
+            return '<div class="prog-theme' + (ths && ths.indexOf(t) < 0 ? ' hors' : '') + '"><h3>' + esc(gr ? gr.court : t) + '<span>' + x.ok + ' / ' + x.n + ' questions réussies</span></h3><div class="prog-bar"><span class="m" style="width:' + pc + '%"></span></div></div>';
+          };
+          if (!bl.nom) return bl.themes.map(ligne).join('');
+          var n = 0, ok = 0; bl.themes.forEach(function (t) { n += themes[t].n; ok += themes[t].ok; });
+          return '<details class="prog-groupe" data-groupe="' + esc(bl.nom) + '"' + (groupesOuverts[bl.nom] ? ' open' : '') + '><summary><span class="g-tete"><b>' + esc(bl.nom) + '</b><span>' + bl.themes.length + ' thèmes · ' + ok + ' / ' + n + ' questions réussies</span></span>' +
+            '<span class="prog-bar"><span class="m" style="width:' + (n ? Math.round(ok / n * 100) : 0) + '%"></span></span></summary><div class="g-themes">' + bl.themes.map(ligne).join('') + '</div></details>';
         }).join('') +
         '<p class="qz-note">Une notion est maîtrisée après ' + MAITRISE + ' bonnes réponses à des questions différentes. ' + (pm.series || 0) + ' série' + ((pm.series || 0) > 1 ? 's' : '') + ' faite' + ((pm.series || 0) > 1 ? 's' : '') + ' dans cette matière.</p>' +
         (essaiActif() ? '' : '<p style="margin-top:10px"><button type="button" class="quiz-link" data-act="reset">Réinitialiser ma progression dans cette matière</button></p>');
+      el.querySelectorAll('details.prog-groupe').forEach(function (d) { d.addEventListener('toggle', function () { groupesOuverts[d.dataset.groupe] = d.open; }); });
     }).catch(function (err) {
       if (err && (err.status === 401 || err.status === 402)) return boot();
       el.innerHTML = '<div class="quiz-msg">La progression n’a pas pu être chargée. Réessayez dans quelques instants.</div>';
     });
+  }
+  // Thèmes regroupés par discipline (histoire-géographie : « Histoire 5e · … », « Géographie 4e · … ») ; blocs dépliables
+  var groupesOuverts = {};
+  function groupe(t) { var m = /^(Histoire|Géographie) (.+)$/.exec(t); return m ? { nom: m[1], court: m[2] } : null; }
+  function blocs(ordre) {
+    var res = [], par = {};
+    ordre.forEach(function (t) {
+      var gr = groupe(t), cle = gr ? gr.nom : '';
+      if (!gr) { res.push({ nom: '', themes: [t] }); return; }
+      if (!par[cle]) { par[cle] = { nom: cle, themes: [] }; res.push(par[cle]); }
+      par[cle].themes.push(t);
+    });
+    return res;
   }
 
   // ── Navigation interne : Accueil, Mes séries, Support (adresses /quizapp, /quizapp?vue=series, /quizapp?vue=support) ──
@@ -1297,6 +1337,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (b.dataset.mode) {
       if (b.dataset.mode === 'hasard') delete choix.themes[choix.mat]; else if (!themesChoisis(choix.mat)) choix.themes[choix.mat] = [];
       garderChoix(); accueil(); return;
+    }
+    if (b.dataset.groupeTout && tableau.ordre) {
+      var dugroupe = tableau.ordre.filter(function (t) { var g = groupe(t); return g && g.nom === b.dataset.groupeTout; });
+      var lg = themesChoisis(choix.mat) || [], tout = dugroupe.every(function (t) { return lg.indexOf(t) >= 0; });
+      lg = lg.filter(function (t) { return dugroupe.indexOf(t) < 0; }); if (!tout) lg = lg.concat(dugroupe);
+      choix.themes[choix.mat] = lg; garderChoix(); accueil(); return;
     }
     if (b.dataset.theme !== undefined && tableau.ordre) {
       var nom = tableau.ordre[+b.dataset.theme], lt = themesChoisis(choix.mat) || [], pos = lt.indexOf(nom);
