@@ -160,6 +160,9 @@ CSS = """
     .paywall { margin-top: 18px; border: 2px solid #fdba74; background: linear-gradient(160deg, #fff7ed, #fff 60%); }
     .paywall .prix { font-size: 40px; font-weight: 900; color: var(--gray-900); letter-spacing: -1px; }
     .paywall .prix span { font-size: 14px; font-weight: 600; color: var(--gray-500); letter-spacing: 0; }
+    .garantie { display: flex; gap: 14px; align-items: flex-start; margin: 16px 0 4px; padding: 14px 16px; border-radius: 14px; background: #f0fdf4; border: 2px solid #86efac; max-width: 560px; font-size: 14px; line-height: 1.55; color: #14532d; }
+    .garantie .sceau { font-size: 30px; line-height: 1; flex-shrink: 0; }
+    .garantie strong { display: block; font-size: 16px; font-weight: 900; color: #14532d; margin-bottom: 2px; }
     .paypal-zone { display: grid; gap: 10px; margin-top: 16px; max-width: 420px; }
     @media (max-width: 600px) { .carte-ligne { grid-template-columns: 105px 1fr 42px; font-size: 13px; } .carte-listes { grid-template-columns: 1fr; } }
   .quiz-confirm { background: #dcfce7; color: #166534; font-weight: 600; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
@@ -374,6 +377,7 @@ JS = """<script>
     else html += '</div><div class="quiz-card paywall"><h2>Débloquez le Quiz CRPE pour combler ces lacunes</h2>' +
       '<ul class="quiz-points"><li>2 700 questions dans les 9 matières, en facile, intermédiaire et avancé ;</li><li>des séries de 20 notées sur 20, avec l\\'explication de chaque erreur ;</li><li>des révisions espacées : chaque notion revient jusqu\\'à être maîtrisée ;</li><li>votre progression par matière, par niveau et par thème.</li></ul>' +
       '<div class="prix">' + PRIX + ' <span>TTC · paiement unique</span></div>' +
+      '<div class="garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Si le quiz ne vous convient pas, écrivez-nous à contact@passcrpe.fr dans les 14 jours suivant votre achat : nous vous remboursons intégralement, sans avoir à vous justifier.</div></div>' +
       '<div class="paypal-zone"><div id="pp-paypal"></div><div id="pp-carte"></div></div>' +
       '<p class="quiz-hint" id="pp-msg" style="margin-top:10px">Paiement sécurisé par PayPal, par compte PayPal ou carte bancaire.</p>' +
       '<p style="margin-top:8px"><button type="button" class="quiz-link" data-act="boot">J\\'ai déjà payé : actualiser mon accès</button></p></div>';

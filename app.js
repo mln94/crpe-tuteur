@@ -320,6 +320,9 @@ app.post('/api/klaviyo/signup', async (req, res) => {
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP,
       { email_verified: false, trial: true, paid_user: false, form_trial: false, consent_conseils, consent_partenaires, parcours: parcoursOf(req.body?.parcours) },
       phoneAttrs, consent_conseils);
+    // Newsletter : chaque inscrit rejoint aussi la liste newsletter ; il n'est abonné (et ne reçoit la newsletter)
+    // que s'il a coché la case de consentement (consentement explicite exigé pour la prospection par e-mail)
+    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours: parcoursOf(req.body?.parcours) }, phoneAttrs, consent_conseils);
 
     // Créer la ligne profil Supabase avec trial = true (un seul compte pour le tuteur IA et le quiz)
     if (user_id) {

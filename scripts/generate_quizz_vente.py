@@ -57,6 +57,9 @@ FAQ = [
     ("Le test de positionnement est-il vraiment gratuit ?",
      "Oui. Après votre inscription, vous passez un test de 45 questions (environ 15 minutes) et obtenez gratuitement votre "
      "carte des forces et faiblesses dans les 9 matières. Vous décidez ensuite de débloquer le quiz complet, sans engagement."),
+    ("Et si le quiz ne me convient pas ?",
+     "Vous êtes remboursé. Le Quiz CRPE est satisfait ou remboursé pendant 14 jours : écrivez-nous à contact@passcrpe.fr "
+     "dans les 14 jours suivant votre achat et nous vous remboursons intégralement, sans avoir à vous justifier."),
     ("Comment débloquer le quiz ?",
      f"Par un paiement unique de {PRIX_QUIZ} TTC via PayPal, par compte PayPal ou carte bancaire. L'accès est débloqué "
      "aussitôt le paiement confirmé."),
@@ -73,6 +76,10 @@ CSS = """
     .qz-hero .hero-actions { justify-content: flex-start; }
     .qz-hero-price { margin-top: 16px; font-size: 14px; color: var(--gray-500); }
     .qz-hero-price strong { color: var(--gray-800); }
+    .qz-garantie-ligne { display: inline-block; margin-top: 10px; font-size: 14px; color: #166534; background: #dcfce7; border-radius: 100px; padding: 6px 14px; }
+    .qz-garantie { display: flex; gap: 12px; align-items: flex-start; margin: 12px 0 4px; padding: 12px 14px; border-radius: 14px; background: #f0fdf4; border: 2px solid #86efac; font-size: 13px; line-height: 1.5; color: #14532d; }
+    .qz-garantie span { font-size: 26px; line-height: 1; }
+    .qz-garantie strong { display: block; font-size: 15px; font-weight: 900; margin-bottom: 2px; }
     .qz-stats { display: flex; gap: 28px; margin-top: 32px; flex-wrap: wrap; }
     .qz-stat strong { display: block; font-size: 28px; font-weight: 900; color: var(--gray-900); letter-spacing: -.5px; }
     .qz-stat span { font-size: 13px; color: var(--gray-500); }
@@ -165,6 +172,7 @@ def contenu():
         <a href="#fonctionnement" class="btn-secondary">Voir comment ça marche</a>
       </div>
       <p class="qz-hero-price"><strong>Test de positionnement gratuit</strong> (15 min) · puis <strong>{PRIX_QUIZ} TTC</strong> pour débloquer le quiz</p>
+      <p class="qz-garantie-ligne">🛡️ <strong>Satisfait ou remboursé pendant 14 jours</strong></p>
       <div class="qz-stats">
         <div class="qz-stat"><strong>{total_txt}</strong><span>questions</span></div>
         <div class="qz-stat"><strong>{len(MATIERES)}</strong><span>matières</span></div>
@@ -273,6 +281,7 @@ def contenu():
         </ul>
         <div class="offre-cta">
           <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">Vérifiez votre niveau gratuitement</a>
+          <div class="qz-garantie"><span>🛡️</span><div><strong>Satisfait ou remboursé 14 jours</strong>Pas convaincu ? Un e-mail suffit : remboursement intégral, sans justification.</div></div>
           <p class="offre-note">Paiement unique via PayPal après votre test gratuit.</p>
         </div>
       </div>
@@ -317,7 +326,7 @@ def contenu():
     <div class="cta-form">
       <button type="button" class="btn-white cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</button>
     </div>
-    <p class="cta-note">Quiz CRPE · {PRIX_QUIZ} TTC</p>
+    <p class="cta-note">Test de positionnement gratuit · Quiz CRPE {PRIX_QUIZ} TTC · 🛡️ Satisfait ou remboursé 14 jours</p>
   </div>
 </section>
 '''
