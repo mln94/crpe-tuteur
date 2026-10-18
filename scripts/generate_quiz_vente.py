@@ -23,11 +23,11 @@ SITE = 'https://www.passcrpe.fr'
 
 PRIX_QUIZ = '59 €'
 # Nombre de questions actives par matière (table quiz_questions du projet Supabase « crpe »)
-QUESTIONS = [411, 342, 300, 300, 300, 300, 300, 300, 300]
+QUESTIONS = [451, 342, 300, 300, 300, 300, 300, 300, 300]
 
 # (libellé, icône, exemples de thèmes)
 MATIERES = [
-    ('Français', '✍️', 'Grammaire, orthographe, lexique, littérature'),
+    ('Français', '✍️', 'Grammaire, orthographe, lexique, lecture, culture littéraire et artistique'),
     ('Mathématiques', '🔢', 'Nombres, calcul, géométrie, grandeurs, données'),
     ('Histoire-géographie', '🌍', 'Du Moyen Âge au monde actuel, territoires'),
     ('EMC', '⚖️', 'Valeurs de la République, droits, citoyenneté'),

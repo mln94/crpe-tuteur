@@ -12,7 +12,7 @@ from referentiel import R
 
 FICHIERS = {
     'mathematiques': ['m_facile', 'm_inter', 'm_difficile', 'm_complements'],
-    'francais': ['f_facile', 'f_inter', 'f_difficile', 'f_lecture'],
+    'francais': ['f_facile', 'f_inter', 'f_difficile', 'f_lecture', 'f_culture'],
     'histoire_geographie': ['hg_facile', 'hg_inter', 'hg_difficile'],
     'emc': ['emc_facile', 'emc_inter', 'emc_difficile'],
     'svt': ['svt_facile', 'svt_inter', 'svt_difficile'],
@@ -31,8 +31,11 @@ def ref_fm(ref, obj, prog):
     else:
         r = next(x for x in prog['programme_francais_cycle4_objectifs_grouped'] if x['id'] == i)
         objs = r['objectifs_apprentissage']
-    return dict(classe=r['classe'], theme=r['thematique'], sous_theme=r['sous_categorie'],
-                objectif=objs[obj] if obj is not None else r['sous_categorie'])
+    objectif = objs[obj] if obj is not None else r['sous_categorie']
+    # Culture littéraire et artistique : chaque objectif est un long paragraphe ; on garde son intitulé
+    if r['thematique'] == 'Culture littéraire et artistique':
+        objectif = objectif.split(' - ')[0]
+    return dict(classe=r['classe'], theme=r['thematique'], sous_theme=r['sous_categorie'], objectif=objectif)
 
 def lignes(matiere, prog=None):
     rows, vues, niveaux = [], set(), collections.Counter()
