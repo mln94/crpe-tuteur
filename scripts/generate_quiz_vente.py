@@ -23,7 +23,8 @@ SITE = 'https://www.passcrpe.fr'
 
 PRIX_QUIZ = '59 €'
 # Nombre de questions actives par matière (table quiz_questions du projet Supabase « crpe »)
-QUESTIONS = [451, 342, 549, 366, 324, 321, 321, 357, 465]
+QUESTIONS = [451, 342, 1653, 738, 324, 321, 321, 357, 465]
+milliers = lambda n: f"{n:,}".replace(",", "\u202f")  # « 1 653 », espace fine insécable comme les autres totaux
 
 # (libellé, icône, exemples de thèmes)
 MATIERES = [
@@ -157,7 +158,7 @@ def contenu():
         <div>
           <h3>{nom}</h3>
           <p>{desc}</p>
-          <p class="qz-count">{n} questions</p>
+          <p class="qz-count">{milliers(n)} questions</p>
         </div>
       </div>''' for (nom, ic, desc), n in zip(MATIERES, QUESTIONS))
     faq = '\n'.join(

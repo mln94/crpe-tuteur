@@ -13,8 +13,8 @@ from referentiel import R, EMC_NOTIONS, SVT_NOTIONS, PC_NOTIONS, TECH_NOTIONS, A
 FICHIERS = {
     'mathematiques': ['m_facile', 'm_inter', 'm_difficile', 'm_complements'],
     'francais': ['f_facile', 'f_inter', 'f_difficile', 'f_lecture', 'f_culture'],
-    'histoire_geographie': ['hg_facile', 'hg_inter', 'hg_difficile', 'hg_complements', 'geo_complements'],
-    'emc': ['emc_facile', 'emc_inter', 'emc_difficile', 'emc_complements'],
+    'histoire_geographie': ['hg_facile', 'hg_inter', 'hg_difficile', 'hg_complements', 'geo_complements', 'hg_h51', 'hg_h52', 'hg_h53', 'hg_h41', 'hg_h42', 'hg_h43', 'hg_h31', 'hg_h32', 'hg_h33'],
+    'emc': ['emc_facile', 'emc_inter', 'emc_difficile', 'emc_complements', 'emc_ravr', 'emc_cc'],
     'svt': ['svt_facile', 'svt_inter', 'svt_difficile', 'svt_complements'],
     'physique_chimie': ['pc_facile', 'pc_inter', 'pc_difficile', 'pc_complements'],
     'technologie': ['techno_facile', 'techno_inter', 'techno_difficile', 'techno_complements'],
