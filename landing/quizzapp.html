@@ -326,7 +326,15 @@
     .rp-plan .niv { font-size: 12px; font-weight: 800; color: #4f46e5; background: #eef2ff; border-radius: 100px; padding: 2px 8px; }
     .rp-note { font-size: 13px !important; color: var(--gray-500) !important; margin-top: 14px; }
     @media (max-width: 600px) { .rp-ligne { grid-template-columns: 105px 1fr 42px; font-size: 13.5px; } .rp-listes { grid-template-columns: 1fr; } .rp-score { font-size: 52px; } }
-    .paywall { margin-top: 18px; border: 2px solid #c7d2fe; background: linear-gradient(160deg, #eef2ff, #fff 60%); }
+    .paywall { margin: 0 0 16px; border: 2px solid #c7d2fe; background: linear-gradient(160deg, #eef2ff, #fff 60%); }
+    .pw-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .paywall .paypal-zone { margin-top: 4px; max-width: none; }
+    .paywall .garantie { max-width: none; margin-top: 12px; }
+    .pw-liens { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 12px; }
+    .pw-cta { background: #4f46e5 !important; }
+    .pw-cta:hover { background: #4338ca !important; }
+    @media (max-width: 720px) { .pw-grille { grid-template-columns: 1fr; gap: 8px; } .paywall .quiz-points { display: none; } .paywall h2 { font-size: 19px; }
+      .rp-tete { padding: 18px 16px; } .rp-score { font-size: 46px; margin: 6px 0 4px; } .rp-titre { font-size: 19px; } }
     .paywall .prix { font-size: 40px; font-weight: 900; color: var(--gray-900); letter-spacing: -1px; }
     .paywall .prix span { font-size: 14px; font-weight: 600; color: var(--gray-500); letter-spacing: 0; }
     .garantie { display: flex; gap: 14px; align-items: flex-start; margin: 16px 0 4px; padding: 14px 16px; border-radius: 14px; background: #f0fdf4; border: 2px solid #86efac; max-width: 560px; font-size: 14px; line-height: 1.55; color: #14532d; }
@@ -442,6 +450,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </div>
       </li>
       <li><a href="/blog">Blog</a></li>
+      <li><a href="/contact">Contact</a></li>
       <li class="nav-mobile-only nav-menu-account"><button onclick="openAuth('login')" class="nav-login">Se connecter</button><button onclick="openAuth('register')" class="nav-cta cta-commencer">Créer mon compte</button></li>
     </ul>
     <div class="nav-actions">
@@ -577,8 +586,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   // ── Écrans ──
+  function intro(v) { var l = document.querySelector('.quiz-lead'), h = document.querySelector('.quiz-wrap > h1'); if (l) l.hidden = !v; if (h) h.hidden = !v; }
   function accueil() {
-    st = null;
+    st = null; intro(true);
     root.innerHTML = barreCompte() + '<div class="quiz-card quiz-filtres">' +
       '<div class="quiz-filtre"><label for="quiz-mat">Matière</label><select id="quiz-mat" class="quiz-select">' +
       MATIERES.map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === choix.mat ? ' selected' : '') + '>' + esc(m[1]) + '</option>'; }).join('') + '</select></div>' +
@@ -743,6 +753,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<div class="rp-tete"><div class="rp-sur">Rapport de positionnement' + (date ? ' · ' + date : '') + '</div>' +
       '<div class="rp-score">' + r.pct + ' %</div><div class="rp-titre">' + pf.titre + '</div>' +
       '<div class="rp-sous">' + r.ok + ' bonnes réponses sur ' + r.n + ' · 9 matières · 3 niveaux</div></div>' +
+      '<!--PAIEMENT-->' +
       '<div class="quiz-card rp-bloc"><h2>Votre profil</h2><p>' + pf.texte + '</p></div>' +
       '<div class="quiz-card rp-bloc"><h2>Matière par matière</h2>' +
       tri.map(function (m) {
@@ -754,15 +765,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<div class="quiz-card"><h3>🎯 À travailler en priorité</h3><ul>' + (faibles.slice(0, 6).map(item).join('') || '<li>Aucune lacune nette : visez la maîtrise complète.</li>') + '</ul></div></div>' +
       '<div class="quiz-card rp-bloc"><h2>Votre plan de révision</h2><ol class="rp-plan">' + plan(r) + '</ol>' +
       '<p class="rp-note">Ce diagnostic repose sur 45 questions (5 par matière) : c’est une première photographie de votre niveau. Vos séries d’entraînement l’affinent jour après jour.</p></div>';
-    if (compte && compte.paid) html += '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Aller au quiz</button></div>';
-    else html += '<div class="quiz-card paywall"><h2>Débloquez le Quiz CRPE pour combler ces lacunes</h2>' +
-      '<ul class="quiz-points"><li>2 700 questions dans les 9 matières, en facile, intermédiaire et avancé ;</li><li>des séries de 20 notées sur 20, avec l\'explication de chaque erreur ;</li><li>des révisions espacées : chaque notion revient jusqu\'à être maîtrisée ;</li><li>votre progression par matière, par niveau et par thème.</li></ul>' +
-      '<div class="prix">' + PRIX + ' <span>TTC · paiement unique</span></div>' +
-      '<div class="garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Si le quiz ne vous convient pas, écrivez-nous à contact@passcrpe.fr dans les 14 jours suivant votre achat : nous vous remboursons intégralement, sans avoir à vous justifier.</div></div>' +
-      '<div class="paypal-zone"><div id="pp-paypal"></div><div id="pp-carte"></div></div>' +
-      '<p class="quiz-hint" id="pp-msg" style="margin-top:10px">Paiement sécurisé par PayPal, par compte PayPal ou carte bancaire.</p>' +
-      '<p style="margin-top:8px"><button type="button" class="quiz-link" data-act="boot">J\'ai déjà payé : actualiser mon accès</button></p></div>';
+    if (compte && compte.paid) html = html.replace('<!--PAIEMENT-->', '') + '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Aller au quiz</button></div>';
+    else {
+      // Paiement visible dès l'arrivée sur le rapport, juste sous le score
+      var pay = '<div class="quiz-card paywall" id="paiement"><div class="pw-grille"><div>' +
+        '<h2>Débloquez le Quiz CRPE pour combler ces lacunes</h2>' +
+        '<div class="prix">' + PRIX + ' <span>TTC · paiement unique</span></div>' +
+        '<ul class="quiz-points"><li>2 700 questions, 9 matières, 3 niveaux ;</li><li>des séries de 20 notées sur 20, avec l’explication de chaque erreur ;</li><li>des révisions espacées et votre progression par thème.</li></ul>' +
+        '</div><div>' +
+        '<div class="paypal-zone"><div id="pp-paypal"></div><div id="pp-carte"></div></div>' +
+        '<p class="quiz-hint" id="pp-msg">Paiement sécurisé par PayPal, par compte PayPal ou carte bancaire.</p>' +
+        '<div class="garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Si le quiz ne vous convient pas, écrivez-nous dans les 14 jours suivant votre achat : remboursement intégral, sans avoir à vous justifier.</div></div>' +
+        '<p class="pw-liens"><a class="quiz-link" href="/contact?raison=paiement" target="_blank" rel="noopener">Un problème avec le paiement ? Contactez-nous</a><button type="button" class="quiz-link" data-act="boot">J’ai déjà payé : actualiser mon accès</button></p>' +
+        '</div></div></div>';
+      html = html.replace('<!--PAIEMENT-->', pay) + '<div class="quiz-actions" style="justify-content:center"><a class="quiz-btn pw-cta" href="#paiement">Débloquer le quiz pour ' + PRIX + '</a></div>';
+    }
     root.innerHTML = html;
+    intro(false); // l'introduction du quiz est masquée sur le rapport : le paiement reste visible sans faire défiler
     if (!(compte && compte.paid)) paypal();
   }
   function chargerPaypal() {
@@ -1034,7 +1053,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <li><a href="/outils">Outils</a></li>
           <li><a href="/#faq">FAQ</a></li>
           <li><a href="/#temoignages">Témoignages</a></li>
-          <li><a href="mailto:contact@passcrpe.fr">Contact</a></li>
+          <li><a href="/contact">Contact</a></li>
         </ul>
       </div>
     </div>

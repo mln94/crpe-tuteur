@@ -99,7 +99,10 @@
       .layout.show-detail .ticket-list { display: none; }
       .layout.show-detail .ticket-detail { display: block; }
     }
-  </style>
+    .ticket-sans-compte { color: #b45309; font-weight: 700; }
+  .sans-compte { margin-top: 8px; font-size: 13px; line-height: 1.5; padding: 10px 12px; border-radius: 10px; background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+  .sans-compte a { color: #4f46e5; font-weight: 700; }
+</style>
 </head>
 <body>
 <!-- Google Tag Manager (noscript) -->
@@ -237,7 +240,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <span class="ticket-prenom">${esc(t.user_prenom || t.user_email)}</span>
           <span class="ticket-date">${new Date(t.created_at).toLocaleDateString('fr-FR')}</span>
         </div>
-        <div class="ticket-category">${esc(t.category)}</div>
+        <div class="ticket-category">${esc(t.category)}${t.user_id ? '' : ' · <span class="ticket-sans-compte">sans compte</span>'}</div>
         <div class="ticket-preview">${esc((t.support_messages.at(-1) || t).body || t.message)}</div>
         <span class="status-pill status-${t.status}">${STATUS[t.status]}</span>${t.satisfaction ? `<span class="ticket-rating">${SATISFACTION[t.satisfaction].split(' ')[0]} ${t.satisfaction}/5</span>` : ''}
       </div>
@@ -262,8 +265,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
 
       <div class="detail-section">
-        <div class="detail-section-label">Catégorie</div>
+        <div class="detail-section-label">Raison du contact</div>
         <div class="detail-message">${esc(t.category)}</div>
+        ${t.user_id ? '' : `<div class="sans-compte">Envoyé depuis le formulaire de contact, sans compte PassCRPE : la personne ne verra pas votre réponse dans l'application. Répondez-lui par e-mail : <a href="mailto:${esc(t.user_email)}?subject=${encodeURIComponent('PassCRPE : ' + t.category)}">${esc(t.user_email)}</a></div>`}
       </div>
 
       <div class="detail-section">

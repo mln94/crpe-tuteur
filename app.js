@@ -674,6 +674,36 @@ async function quizCorriger(id, reponse) {
   return { correct, reponse: data.reponse, attendu, explication: data.explication };
 }
 
+/* ── Formulaire de contact (/contact) : crée un ticket dans le support (support_tickets), visible dans /admin-support ── */
+const CONTACT_RAISONS = ['Problème de paiement', 'Question sur le Quiz CRPE', 'Question sur le Tuteur IA', 'Problème technique',
+  'Question sur mon compte', 'Demande de remboursement', "Suggestion d'amélioration", 'Partenariat ou presse', 'Autre'];
+const contactEnvois = new Map(); // limite simple : 5 messages par heure et par adresse IP
+app.post('/api/contact', async (req, res) => {
+  const { prenom = '', email = '', raison = '', message = '', site = '' } = req.body || {};
+  if (site) return res.json({ ok: true }); // champ piège rempli par les robots : on ignore
+  const ip = String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
+  const now = Date.now(), recents = (contactEnvois.get(ip) || []).filter(t => now - t < 3600000);
+  if (recents.length >= 5) return res.status(429).json({ error: 'Trop de messages envoyés. Réessayez dans une heure.' });
+  const mail = String(email).trim().toLowerCase(), texte = String(message).trim();
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)) return res.status(400).json({ error: 'Adresse e-mail invalide.' });
+  if (!CONTACT_RAISONS.includes(raison)) return res.status(400).json({ error: 'Choisissez une raison de contact.' });
+  if (texte.length < 10 || texte.length > 5000) return res.status(400).json({ error: 'Votre message doit faire entre 10 et 5 000 caractères.' });
+  try {
+    const user = await getAuthenticatedUser(req); // compte connecté : la réponse apparaîtra aussi dans l'onglet Support de l'app
+    const { error } = await supabaseAdmin.from('support_tickets').insert({
+      user_id: user?.id || null, user_email: user?.email || mail,
+      user_prenom: String(prenom).trim().slice(0, 80) || user?.user_metadata?.prenom || null,
+      category: raison, message: texte,
+    });
+    if (error) throw new Error(error.message);
+    contactEnvois.set(ip, [...recents, now]);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[contact]', err.message);
+    res.status(500).json({ error: "Votre message n'a pas pu être envoyé. Réessayez dans quelques instants." });
+  }
+});
+
 // « Mes outils » : état du tuteur IA et du quiz pour le compte connecté
 app.get('/api/espace', async (req, res) => {
   try {
