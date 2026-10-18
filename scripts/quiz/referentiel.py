@@ -9,6 +9,7 @@
 #  - EMC : programme du cycle 4 en trois domaines (Respecter autrui ; Acquérir et partager les valeurs de la République ;
 #    Construire une culture civique), BO n°31 du 30-7-2020.
 BO2020 = 'BO n°31 du 30 juillet 2020'
+BO_ANGLAIS = 'Programme d\'anglais pour les classes de collège (annexe 3)'
 BO_TECHNO = 'BO n°9 du 29 février 2024'
 BO_EMC = 'BO n°24 du 13 juin 2024'
 
@@ -186,12 +187,36 @@ R = [
 ('arts', 'A-5', None, 'Éducation musicale', "Réaliser des projets musicaux d'interprétation ou de création", BO2020,
  ["Définir les caractéristiques musicales d'un projet et mobiliser les éléments du langage musical (rythme, mélodie, harmonie).", "Interpréter un projet devant un public en tenant compte des indications de la partition et du chef."]),
 # ── Langues vivantes (anglais) ──
-('anglais', 'L-1', None, 'Activités langagières', 'Écouter et lire pour comprendre', BO2020,
- ["Comprendre des messages oraux et des documents sonores et écrits de nature et de complexité variables (niveaux A2 à B1).", "Mobiliser des connaissances lexicales et grammaticales pour comprendre."]),
-('anglais', 'L-2', None, 'Activités langagières', "Parler, écrire, réagir et dialoguer", BO2020,
- ["Mobiliser à bon escient ses connaissances lexicales, culturelles et grammaticales pour produire un texte oral ou écrit.", "Utiliser correctement les temps, les déterminants, les pronoms, les prépositions et les structures de la phrase."]),
-('anglais', 'L-3', None, 'Culture et lexique', 'Langages ; école et société ; voyages et migrations ; rencontres avec d\'autres cultures', BO2020,
- ["Connaître des repères géographiques, historiques et culturels des pays anglophones.", "Connaître les codes socio-culturels, le système scolaire et les modes de vie des pays anglophones."]),
+# Anglais : programme pour les classes de collège (annexe 3), repères linguistiques et repères culturels
+('anglais', 'AL-1', None, 'Activités langagières', "Comprendre (écouter et lire)", BO_ANGLAIS,
+ ["Écouter et comprendre, lire et comprendre : repérer le thème, les informations essentielles, l'implicite, à partir de supports variés."]),
+('anglais', 'AL-2', None, 'Activités langagières', "S'exprimer et interagir", BO_ANGLAIS,
+ ["Parler en continu, écrire, réagir et dialoguer : se présenter, exprimer ses goûts et son opinion, utiliser les formules de politesse, rédiger un message."]),
+('anglais', 'OL-1', None, 'Outils linguistiques', "Le verbe : présent, impératif et modalité", BO_ANGLAIS,
+ ["Le présent simple et be + ing, l'impératif, have got, les auxiliaires de modalité (can, must, should, might…), les verbes suivis de -ing ou to."]),
+('anglais', 'OL-2', None, 'Outils linguistiques', "Le verbe : passé, futur et hypothèse", BO_ANGLAIS,
+ ["Le prétérit (verbes réguliers et irréguliers), le present perfect, le past perfect, le futur (will, be going to), le passif, l'hypothèse (if)."]),
+('anglais', 'OL-3', None, 'Outils linguistiques', "Le nom et le groupe nominal", BO_ANGLAIS,
+ ["Articles et déterminants, accords et pluriels, dénombrables et indénombrables, place de l'adjectif, génitif, dérivation et noms composés."]),
+('anglais', 'OL-4', None, 'Outils linguistiques', "Les pronoms et l'interrogation", BO_ANGLAIS,
+ ["Pronoms personnels sujets et compléments, pronoms possessifs et relatifs, mots interrogatifs, question tags."]),
+('anglais', 'OL-5', None, 'Outils linguistiques', "Situer dans le temps et dans l'espace", BO_ANGLAIS,
+ ["Marqueurs temporels, dates, heure, nombres, adverbes de fréquence, prépositions de lieu et de temps."]),
+('anglais', 'OL-6', None, 'Outils linguistiques', "La phrase et son organisation", BO_ANGLAIS,
+ ["Phrases affirmatives, négatives et interrogatives, ordre des mots, comparatifs et superlatifs, connecteurs, discours rapporté."]),
+('anglais', 'OL-7', None, 'Outils linguistiques', "Lexique en lien avec les axes culturels", BO_ANGLAIS,
+ ["La famille, l'apparence, les vêtements, le corps, l'école, le quotidien, la ville, la météo, l'alimentation ; faux amis, anglais britannique et américain, expressions idiomatiques."]),
+('anglais', 'OL-8', None, 'Outils linguistiques', "Phonologie et prosodie", BO_ANGLAIS,
+ ["Prononciation du -s et du -ed, lettres muettes, voyelles courtes et longues, diphtongues, accent de mot, intonation."]),
+('anglais', 'RC-1', None, 'Repères culturels', "Le Royaume-Uni", BO_ANGLAIS,
+ ["Classe de 5e, axe 6 : repères géographiques, historiques, sociétaux et culturels sur le Royaume-Uni et ses nations."]),
+('anglais', 'RC-2', None, 'Repères culturels', "L'Irlande", BO_ANGLAIS,
+ ["Classe de 4e, axe 6 : repères géographiques, historiques, sociétaux et culturels sur l'Irlande."]),
+('anglais', 'RC-3', None, 'Repères culturels', "Les États-Unis", BO_ANGLAIS,
+ ["Classe de 3e, axe 6 : repères géographiques, historiques, sociétaux et culturels sur les États-Unis."]),
+('anglais', 'RC-4', None, 'Repères culturels', "Le monde anglophone", BO_ANGLAIS,
+ ["Les autres axes culturels du collège : pays et paysages, personnes et personnages, voyages et migrations, langues et histoires du monde anglophone."]),
+
 ]
 
 # EMC : section du programme (code, index de l'objet d'enseignement) de chaque notion des fichiers emc_facile/inter/difficile,
@@ -354,4 +379,26 @@ ARTS_NOTIONS = {n: (c, 0) for c, ns in {
     'AE-2': ['art-installation', 'art-land-art', 'art-emballages-christo', 'art-oeuvre-espace-public', 'art-street-art', 'art-architecture', 'art-photographie-art'],
     'AE-3': ['art-spectateur', 'art-exposition', 'art-musees', 'art-patrimoine'],
     'AE-4': ['art-art-numerique'],
+}.items() for n in ns}
+
+# Anglais : sous-thème de chaque notion des fichiers anglais_facile/inter/difficile (codes L-1 à L-3 à l'origine)
+ANGLAIS_NOTIONS = {n: (c, 0) for c, ns in {
+    'AL-1': ['ang-comprehension-consignes', 'ang-comprehension-inference', 'ang-comprehension-nuance', 'ang-comprehension-orale', 'ang-comprehension-texte'],
+    'AL-2': ['ang-ecrire-lettre', 'ang-exprimer-opinion', 'ang-gouts', 'ang-politesse', 'ang-salutations', 'ang-age'],
+    'OL-1': ['ang-be-present', 'ang-can', 'ang-have-got', 'ang-imperatif', 'ang-present-continu', 'ang-present-simple-negatif', 'ang-present-simple-s',
+             'ang-modaux', 'ang-modaux-deduction', 'ang-ing-to', 'ang-causatif', 'ang-simple-vs-continu', 'ang-phrasal-verbs'],
+    'OL-2': ['ang-preterit-be', 'ang-preterit-continu', 'ang-preterit-questions', 'ang-preterit-reguliers', 'ang-preterit-irreguliers', 'ang-irreguliers-2',
+             'ang-futur-going-to', 'ang-will', 'ang-present-perfect', 'ang-perfect-vs-preterit', 'ang-past-perfect', 'ang-passif',
+             'ang-conditionnel-1', 'ang-conditionnel-2', 'ang-for-since'],
+    'OL-3': ['ang-articles', 'ang-cas-possessif', 'ang-pluriels', 'ang-countable', 'ang-some-any', 'ang-there-is', 'ang-adjectifs', 'ang-possessifs', 'ang-derivation'],
+    'OL-4': ['ang-pronoms-sujets', 'ang-pronoms-complements', 'ang-question-words', 'ang-relatifs', 'ang-question-tags'],
+    'OL-5': ['ang-prepositions-lieu', 'ang-prepositions-temps', 'ang-heure', 'ang-jours-mois', 'ang-adverbes-frequence', 'ang-nombres'],
+    'OL-6': ['ang-ordre-mots', 'ang-comparatif-court', 'ang-comparatif-long', 'ang-superlatif', 'ang-connecteurs', 'ang-discours-indirect', 'ang-erreurs-francophones'],
+    'OL-7': ['ang-corps', 'ang-couleurs', 'ang-ecole', 'ang-famille', 'ang-meteo', 'ang-nourriture', 'ang-sports-loisirs', 'ang-vetements', 'ang-ville',
+             'ang-expressions-idiomatiques', 'ang-faux-amis', 'ang-faux-amis-2', 'ang-gb-us', 'ang-mots-proches'],
+    'OL-8': ['ang-prononciation', 'ang-prononciation-avancee'],
+    'RC-1': ['ang-londres', 'ang-symboles', 'ang-histoire-uk', 'ang-brexit-actualite', 'ang-uk-pays', 'ang-institutions-uk', 'ang-monnaie', 'ang-fetes',
+             'ang-ecole-uk', 'ang-systeme-scolaire-comparer', 'ang-codes-culturels'],
+    'RC-3': ['ang-usa', 'ang-histoire-usa', 'ang-ecole-usa'],
+    'RC-4': ['ang-pays-anglophones', 'ang-commonwealth', 'ang-litterature'],
 }.items() for n in ns}
