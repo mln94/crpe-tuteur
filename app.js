@@ -603,10 +603,16 @@ const quizCatalogues = new Map();
 async function quizCatalogue(matiere) {
   const c = quizCatalogues.get(matiere);
   if (c && c.until > Date.now()) return c.data;
-  const { data, error } = await supabaseAdmin.from('quiz_questions')
-    .select('id, notion, niveau, type, question, choix, programme_ref, classe, theme, sous_theme, objectif')
-    .eq('matiere', matiere).eq('actif', true).order('ordre').order('id');
-  if (error) throw new Error(error.message);
+  // Supabase renvoie au plus 1 000 lignes par requête : on lit le catalogue par pages
+  const data = [];
+  for (let from = 0; ; from += 1000) {
+    const { data: page, error } = await supabaseAdmin.from('quiz_questions')
+      .select('id, notion, niveau, type, question, choix, programme_ref, classe, theme, sous_theme, objectif')
+      .eq('matiere', matiere).eq('actif', true).order('ordre').order('id').range(from, from + 999);
+    if (error) throw new Error(error.message);
+    data.push(...page);
+    if (page.length < 1000) break;
+  }
   const questions = data.map(q => ({ ...q, notion: q.notion || `q${q.id}`, niveau: q.niveau || 'facile' }));
   quizCatalogues.set(matiere, { data: questions, until: Date.now() + 600000 });
   return questions;
