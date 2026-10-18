@@ -20,7 +20,8 @@ def nav_application(nav, support_href):
     nav = re.sub(r'\s*<a[^>]*class="nav-(login|cta)[^"]*"[^>]*>.*?</a>', '', nav, flags=re.S)
     nav = re.sub(r'\s*<button type="button" class="nav-burger".*?</button>', '', nav, flags=re.S)
     nav = nav.replace('<nav class="site-nav">', '<nav class="site-nav nav-app">')
-    nav = nav.replace('<div class="nav-actions">', f'<div class="nav-actions">\n      <a class="nav-support" href="{support_href}">{SUPPORT_ICONE}<span class="lib">Support</span></a>', 1)
+    if support_href:  # sans lien : pas de bouton Support dans l'en-tête (le quiz a son onglet Support)
+        nav = nav.replace('<div class="nav-actions">', f'<div class="nav-actions">\n      <a class="nav-support" href="{support_href}">{SUPPORT_ICONE}<span class="lib">Support</span></a>', 1)
     return nav
 
 

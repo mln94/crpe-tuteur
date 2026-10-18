@@ -424,27 +424,50 @@
     .qz-serie .quiz-recap { margin: 0; padding: 12px 16px 16px; }
     .qz-serie .quiz-recap > div { display: grid; grid-template-columns: 20px 1fr; align-items: start; }
     .qz-recap-theme { display: block; font-size: 11px; font-weight: 800; color: #7c3aed; text-transform: uppercase; letter-spacing: .03em; }
-    /* Support QuizCRPE */
-    .qz-champ { margin-bottom: 14px; }
-    .qz-champ label { display: block; font-size: 13px; font-weight: 800; color: var(--gray-700); margin-bottom: 6px; }
-    .qz-textarea { width: 100%; padding: 12px 14px; font: inherit; font-size: 15px; color: var(--gray-900); border: 1.5px solid var(--gray-200); border-radius: 12px; resize: vertical; line-height: 1.5; }
-    .qz-textarea:focus { outline: none; border-color: #fb923c; }
-    .qz-demandes { margin: 24px 0 10px; }
-    .qz-ticket { margin-bottom: 12px; padding: 20px; }
-    .qz-ticket-tete { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; color: var(--gray-600); margin-bottom: 8px; }
-    .qz-statut { font-size: 12px; padding: 2px 10px; border-radius: 100px; white-space: nowrap; }
-    .qz-statut.attente { background: #fef3c7; color: #92400e; } .qz-statut.repondu { background: #dcfce7; color: #166534; } .qz-statut.cloture { background: var(--gray-100); color: var(--gray-500); }
-    .qz-ticket-msg { font-size: 14.5px; line-height: 1.6; white-space: pre-line; color: var(--gray-800); }
-    .qz-ticket-date { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
-    .qz-ticket-rep { margin-top: 12px; padding: 12px 14px; border-radius: 12px; font-size: 14px; line-height: 1.55; }
-    .qz-ticket-rep.admin { background: #fff7ed; border: 1px solid #fed7aa; } .qz-ticket-rep.moi { background: var(--gray-50); }
-    .qz-ticket-rep b { display: block; font-size: 12.5px; color: #c2410c; margin-bottom: 2px; } .qz-ticket-rep.moi b { color: var(--gray-500); }
-    .qz-ticket-rep p { white-space: pre-line; color: var(--gray-800); } .qz-ticket-rep span { font-size: 11.5px; color: var(--gray-400); }
-    .qz-ticket-form { margin-top: 12px; }
-    .qz-ticket-actions { margin-top: 8px; }
-    .qz-satisf { margin-top: 12px; font-size: 14px; font-weight: 700; color: var(--gray-800); }
+    /* Support QuizCRPE : même format que le support du tuteur IA (colonne de 512 px), couleurs orange */
+    .sp { max-width: 512px; margin: 0 auto; }
+    .sp-tete { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+    .sp-ico { width: 40px; height: 40px; border-radius: 12px; background: #fff7ed; color: #ea580c; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .sp-ico svg { width: 20px; height: 20px; }
+    .sp-tete h1 { font-size: 18px; font-weight: 700; color: var(--gray-900); line-height: 1.3; margin: 0; letter-spacing: 0; }
+    .sp-tete p { font-size: 12px; color: var(--gray-400); }
+    .sp-carte { background: #fff; border: 1px solid var(--gray-100); border-radius: 16px; padding: 20px; margin-bottom: 24px; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+    .sp-carte h2 { font-size: 14px; font-weight: 600; color: var(--gray-700); margin-bottom: 16px; }
+    .sp-champ { margin-bottom: 16px; }
+    .sp-champ label { display: block; font-size: 12px; font-weight: 600; color: var(--gray-600); margin-bottom: 6px; }
+    .sp select, .sp textarea { width: 100%; border: 1px solid var(--gray-200); border-radius: 12px; padding: 10px 12px; font: inherit; font-size: 14px; color: var(--gray-800); background: var(--gray-50); }
+    .sp textarea { resize: none; line-height: 1.5; }
+    .sp select:focus, .sp textarea:focus { outline: none; border-color: #fb923c; }
+    .sp-erreur { font-size: 12px; color: #ef4444; margin: -6px 0 10px; }
+    .sp-erreur:empty { display: none; }
+    .sp-envoyer { width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border: 0; border-radius: 12px; background: #f97316; color: #fff; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; }
+    .sp-envoyer:hover { background: #ea580c; } .sp-envoyer:disabled { opacity: .5; cursor: not-allowed; }
+    .sp-envoyer svg, .sp-petit svg { width: 16px; height: 16px; }
+    .sp-envoye { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 0; text-align: center; font-size: 14px; color: var(--gray-500); }
+    .sp-envoye-ico svg { width: 40px; height: 40px; color: #10b981; }
+    .sp-envoye .t { font-weight: 600; color: var(--gray-800); }
+    .sp-lien { margin-top: 8px; background: none; border: 0; font: inherit; font-size: 14px; font-weight: 600; color: #ea580c; cursor: pointer; }
+    .sp-titre-liste { font-size: 14px; font-weight: 600; color: var(--gray-500); margin-bottom: 12px; }
+    .sp-liste { display: grid; gap: 12px; }
+    .qz-ticket { background: #fff; border: 1px solid var(--gray-100); border-radius: 16px; padding: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+    .qz-ticket-tete { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; font-weight: 600; color: var(--gray-500); }
+    .qz-statut { font-size: 12px; font-weight: 600; padding: 2px 8px; border-radius: 100px; white-space: nowrap; }
+    .qz-statut.attente { background: #fffbeb; color: #b45309; } .qz-statut.repondu { background: #ecfdf5; color: #047857; } .qz-statut.cloture { background: var(--gray-100); color: var(--gray-500); }
+    .qz-ticket-msg { font-size: 14px; line-height: 1.6; white-space: pre-line; color: var(--gray-700); }
+    .qz-ticket-date { font-size: 12px; color: var(--gray-300); margin-top: 8px; }
+    .qz-ticket-rep { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--gray-100); font-size: 14px; line-height: 1.6; }
+    .qz-ticket-rep.moi { padding-left: 12px; border-left: 2px solid var(--gray-200); }
+    .qz-ticket-rep b { display: block; font-size: 12px; font-weight: 600; color: #ea580c; margin-bottom: 4px; } .qz-ticket-rep.moi b { color: var(--gray-500); }
+    .qz-ticket-rep p { white-space: pre-line; color: var(--gray-700); } .qz-ticket-rep span { font-size: 12px; color: var(--gray-300); }
+    .qz-ticket-form { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--gray-100); display: grid; gap: 8px; }
+    .qz-ticket-form textarea { padding: 8px 12px; }
+    .qz-ticket-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .sp-petit { display: inline-flex; align-items: center; gap: 6px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--gray-200); background: #fff; font: inherit; font-size: 12px; font-weight: 600; color: var(--gray-600); cursor: pointer; }
+    .sp-petit:hover { border-color: #34d399; color: #047857; }
+    .sp-petit.plein { background: #f97316; border-color: #f97316; color: #fff; } .sp-petit.plein:hover { background: #ea580c; color: #fff; } .sp-petit:disabled { opacity: .5; }
+    .qz-satisf { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--gray-100); font-size: 14px; font-weight: 600; color: var(--gray-800); }
     .qz-emojis { display: flex; gap: 6px; margin-top: 8px; }
-    .qz-emojis button { flex: 1; font-size: 24px; padding: 6px 0; border-radius: 12px; border: 1.5px solid var(--gray-200); background: #fff; cursor: pointer; }
+    .qz-emojis button { flex: 1; font-size: 24px; padding: 6px 0; border-radius: 12px; border: 1px solid var(--gray-200); background: #fff; cursor: pointer; }
     .qz-emojis button:hover:not(:disabled) { border-color: #fb923c; background: #fff7ed; }
   .quiz-confirm { background: #dcfce7; color: #166534; font-weight: 600; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
 
@@ -539,7 +562,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <span class="nav-logo-text">QuizCRPE<small>by <b>PassCRPE</b></small></span>
     </a>
     <div class="nav-actions">
-      <a class="nav-support" href="/quizapp?vue=support"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg><span class="lib">Support</span></a>
     </div>
   </div>
 </nav>
@@ -551,7 +573,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div id="quiz-app"></div>
 </main>
 <nav class="quiz-tabbar" aria-label="Navigation du quiz"><a href="/quizapp" class="actif" aria-current="page" data-vue=""><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></span>Accueil</a><a href="/quizapp?vue=series" data-vue="series"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span>Mes séries</a><a href="/quizapp?vue=support" id="tab-support" data-vue="support"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg><span class="pastille" hidden></span></span>Support</a><a href="/app?onglet=profile"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Profil</a></nav>
-<script>window.passcrpeMenuExtra = '<a href="/quizapp?vue=series" role="menuitem">📊 Mes séries</a><a href="/quizapp?vue=support" role="menuitem">💬 Support QuizCRPE</a>';</script>
+<script>window.passcrpeMenuExtra = '<a href="/quizapp?vue=series" role="menuitem">📊 Mes séries</a><a href="/quizapp?vue=test" role="menuitem">📋 Mon test de positionnement</a><a href="/quizapp?vue=support" role="menuitem">💬 Support QuizCRPE</a>';</script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
   // Menu du compte dans l'en-tête : nom du profil et accès aux deux outils
@@ -780,6 +802,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var v = vue();
     if (v === 'series') return mesSeries();
     if (v === 'support') return supportVue();
+    if (v === 'test') return monTest();
     marquerOnglet(''); boot();
   }
   window.addEventListener('popstate', route);
@@ -792,6 +815,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     fermerPaiement();
     history.pushState(null, '', a.getAttribute('href')); route(); window.scrollTo(0, 0);
   });
+
+  // Mon test de positionnement (menu du compte) : le rapport, ou le test s'il n'est pas encore fait
+  function monTest() {
+    st = null; marquerOnglet('');
+    root.innerHTML = '<div class="quiz-card"><p>Chargement de votre test…</p></div>';
+    (compte ? Promise.resolve(compte) : api('/api/quiz/compte')).then(function (c) {
+      compte = c;
+      if (!c.positionnement) return introTest();
+      resultat(c.positionnement); top();
+    }).catch(function (e) { if (e.status === 401) return connexion(); erreur('Votre test n’a pas pu être chargé. Réessayez dans quelques instants.'); });
+  }
 
   // ── Mes séries : historique des séries terminées (table quiz_series) ──
   var filtreSeries = '';
@@ -851,31 +885,39 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     ['compte', 'Question sur mon compte'], ['remboursement', 'Demande de remboursement'], ['suggestion', 'Suggestion d’amélioration'], ['autre', 'Autre']];
   var STATUTS = { open: ['En attente', 'attente'], answered: ['Répondu', 'repondu'], closed: ['Clôturé', 'cloture'] };
   var EMOJIS = ['😞', '🙁', '😐', '🙂', '😍'];
+  // Même présentation que le support du tuteur IA (colonne étroite, carte « Envoyer un message », « Vos messages »), aux couleurs de QuizCRPE
+  var ICO = {
+    aide: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg>',
+    ok: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>',
+    envoi: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>'
+  };
   function supportVue(envoye) {
     st = null; tst = null; intro(false); marquerOnglet('support');
     var pre = new URLSearchParams(location.search).get('categorie');
     SB.auth.getSession().then(function (r) {
       var s = r.data.session; if (!s) return connexion();
-      root.innerHTML = '<div class="qz-page-tete"><h1>Support QuizCRPE</h1><p>Une question sur le quiz, une erreur dans une question, un souci de paiement ? Écrivez-nous : nous vous répondons ici, sous 24 à 48 h.</p></div>' +
-        '<div class="quiz-card">' + (envoye ? '<div class="quiz-msg ok-msg">✓ Message envoyé. Notre réponse apparaîtra ci-dessous, dans « Vos demandes ».</div>' : '') +
-        '<form id="sp-form"><div class="qz-champ"><label for="sp-cat">Catégorie</label><select id="sp-cat" class="quiz-select"><option value="">Choisir une catégorie…</option>' +
-        CATS_SUPPORT.map(function (c) { return '<option value="' + esc(c[1]) + '"' + (c[0] === pre && !envoye ? ' selected' : '') + '>' + esc(c[1]) + '</option>'; }).join('') + '</select></div>' +
-        '<div class="qz-champ"><label for="sp-msg">Message</label><textarea id="sp-msg" class="qz-textarea" rows="5" maxlength="5000" placeholder="Décrivez votre demande. Pour une erreur dans une question, recopiez la question concernée."></textarea></div>' +
-        '<p class="quiz-hint" id="sp-retour"></p><button type="submit" class="quiz-btn">Envoyer</button></form></div>' +
-        '<div id="sp-liste"></div>';
+      root.innerHTML = '<div class="sp"><div class="sp-tete"><div class="sp-ico">' + ICO.aide + '</div><div><h1>Support</h1><p>Une question sur QuizCRPE ? On vous répond.</p></div></div>' +
+        '<div class="sp-carte"><h2>Envoyer un message</h2>' + (envoye
+          ? '<div class="sp-envoye"><span class="sp-envoye-ico">' + ICO.ok + '</span><p class="t">Message envoyé !</p><p>Nous vous répondrons ici, dans « Vos messages », sous 24–48h.</p>' +
+            '<button type="button" class="sp-lien" data-act="sp-autre">Envoyer un autre message</button></div>'
+          : '<form id="sp-form"><div class="sp-champ"><label for="sp-cat">Catégorie</label><select id="sp-cat"><option value="">Choisir une catégorie…</option>' +
+            CATS_SUPPORT.map(function (c) { return '<option value="' + esc(c[1]) + '"' + (c[0] === pre ? ' selected' : '') + '>' + esc(c[1]) + '</option>'; }).join('') + '</select></div>' +
+            '<div class="sp-champ"><label for="sp-msg">Message</label><textarea id="sp-msg" rows="5" maxlength="5000" placeholder="Décrivez votre question ou problème…"></textarea></div>' +
+            '<p class="sp-erreur" id="sp-retour"></p><button type="submit" class="sp-envoyer">' + ICO.envoi + '<span>Envoyer</span></button></form>') +
+        '</div><div id="sp-liste"></div></div>';
       var f = document.getElementById('sp-form');
-      f.addEventListener('submit', function (ev) {
+      if (f) f.addEventListener('submit', function (ev) {
         ev.preventDefault();
         var cat = document.getElementById('sp-cat').value, msg = document.getElementById('sp-msg').value.trim(), ret = document.getElementById('sp-retour'), btn = f.querySelector('button');
-        if (!cat || msg.length < 5) { ret.textContent = 'Choisissez une catégorie et écrivez votre message.'; ret.style.color = '#b91c1c'; return; }
-        btn.disabled = true; btn.textContent = 'Envoi…';
+        if (!cat || !msg) { ret.textContent = 'Veuillez remplir tous les champs.'; return; }
+        btn.disabled = true; btn.querySelector('span').textContent = 'Envoi…'; ret.textContent = '';
         var m = s.user.user_metadata || {};
         SB.from('support_tickets').insert({ user_id: s.user.id, user_email: s.user.email, user_prenom: ((m.prenom || '') + ' ' + (m.nom || '')).trim() || null,
           category: cat, produit: 'quiz', message: msg }).then(function (x) {
           if (x.error) throw x.error;
           if (pre) history.replaceState(null, '', '/quizapp?vue=support');
           supportVue(true);
-        }).catch(function () { btn.disabled = false; btn.textContent = 'Envoyer'; ret.textContent = 'Le message n’a pas pu être envoyé. Réessayez.'; ret.style.color = '#b91c1c'; });
+        }).catch(function () { btn.disabled = false; btn.querySelector('span').textContent = 'Envoyer'; ret.textContent = 'Une erreur est survenue. Réessayez.'; });
       });
       chargerTickets();
     });
@@ -883,7 +925,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function chargerTickets() {
     SB.from('support_tickets').select('*, support_messages(id, author, body, created_at)').eq('produit', 'quiz').order('created_at', { ascending: false }).then(function (x) {
       var el = document.getElementById('sp-liste'), ts = x.data || []; if (!el) return;
-      el.innerHTML = ts.length ? '<h2 class="qz-sous-titre qz-demandes">Vos demandes</h2>' + ts.map(ticketHtml).join('') : '';
+      el.innerHTML = ts.length ? '<h2 class="sp-titre-liste">Vos messages</h2><div class="sp-liste">' + ts.map(ticketHtml).join('') + '</div>' : '';
       if (ts.some(function (t) { return t.admin_reply && !t.user_seen_reply; }))
         SB.rpc('support_mark_seen').then(function () { var p = document.querySelector('#tab-support .pastille'); if (p) p.hidden = true; });
     });
@@ -891,16 +933,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function ticketHtml(t) {
     var msgs = (t.support_messages || []).slice().sort(function (a, b) { return a.created_at < b.created_at ? -1 : 1; });
     var aReponse = msgs.some(function (m) { return m.author === 'admin'; }), ferme = t.status === 'closed', s = STATUTS[t.status] || STATUTS.open;
-    var h = '<div class="quiz-card qz-ticket"><div class="qz-ticket-tete"><span>' + esc(t.category) + '</span><span class="qz-statut ' + s[1] + '">' + s[0] + '</span></div>' +
+    var h = '<div class="qz-ticket"><div class="qz-ticket-tete"><span>' + esc(t.category) + '</span><span class="qz-statut ' + s[1] + '">' + s[0] + '</span></div>' +
       '<p class="qz-ticket-msg">' + esc(t.message) + '</p><p class="qz-ticket-date">' + new Date(t.created_at).toLocaleDateString('fr-FR') + '</p>' +
       msgs.map(function (m) {
-        return '<div class="qz-ticket-rep ' + (m.author === 'admin' ? 'admin' : 'moi') + '"><b>' + (m.author === 'admin' ? 'Réponse de l’équipe QuizCRPE' : 'Vous') + '</b><p>' + esc(m.body) + '</p><span>' + new Date(m.created_at).toLocaleDateString('fr-FR') + '</span></div>';
+        return '<div class="qz-ticket-rep ' + (m.author === 'admin' ? 'admin' : 'moi') + '"><b>' + (m.author === 'admin' ? 'Réponse QuizCRPE' : 'Vous') + '</b><p>' + esc(m.body) + '</p><span>' + new Date(m.created_at).toLocaleDateString('fr-FR') + '</span></div>';
       }).join('');
-    if (!ferme) h += '<form class="qz-ticket-form" data-repondre="' + t.id + '"><textarea class="qz-textarea" rows="2" placeholder="' + (aReponse ? 'Répondre à l’équipe QuizCRPE…' : 'Ajouter une précision…') + '"></textarea>' +
-      '<div class="quiz-actions qz-ticket-actions"><button type="submit" class="quiz-btn">Répondre</button>' + (aReponse ? '<button type="button" class="quiz-btn ghost" data-resolu="' + t.id + '">Ma question est résolue</button>' : '') + '</div></form>';
+    if (!ferme) h += '<form class="qz-ticket-form" data-repondre="' + t.id + '"><textarea rows="2" placeholder="' + (aReponse ? 'Répondre à QuizCRPE…' : 'Ajouter une précision…') + '"></textarea>' +
+      '<div class="qz-ticket-actions"><button type="submit" class="sp-petit plein">' + ICO.envoi + 'Répondre</button>' + (aReponse ? '<button type="button" class="sp-petit" data-resolu="' + t.id + '">' + ICO.ok + 'Ma question est résolue</button>' : '') + '</div></form>';
     if (aReponse && !t.satisfaction) h += '<div class="qz-satisf" data-noter="' + t.id + '"' + (ferme ? '' : ' hidden') + '><p>' + (ferme ? 'Cette demande est clôturée. Êtes-vous satisfait de la réponse ?' : 'Avant de clôturer, êtes-vous satisfait de la réponse ?') + '</p>' +
       '<div class="qz-emojis">' + EMOJIS.map(function (e, k) { return '<button type="button" data-note="' + (k + 1) + '" aria-label="Note ' + (k + 1) + ' sur 5">' + e + '</button>'; }).join('') + '</div></div>';
-    else if (t.satisfaction) h += '<p class="qz-note">Votre note : ' + EMOJIS[t.satisfaction - 1] + ' ' + t.satisfaction + ' / 5</p>';
+    else if (t.satisfaction) h += '<p class="qz-ticket-date">Votre note : ' + EMOJIS[t.satisfaction - 1] + ' ' + t.satisfaction + ' / 5</p>';
     return h + '</div>';
   }
 
@@ -1295,6 +1337,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     else if (act === 'again') { choix.mat = st.mat; choix.niveau = st.niveau; demarrer(st.mat, st.niveau); }
     else if (act === 'prog') progression(st.mat);
     else if (act === 'home') { accueil(); top(); }
+    else if (act === 'sp-autre') supportVue();
     else if (act === 'quitter' && confirm('Quitter la série en cours ? Vos réponses déjà données sont enregistrées.')) { accueil(); top(); }
     else if (act === 'reset' && confirm('Effacer votre progression dans cette matière ?')) { var p = lire(); delete p[choix.mat]; ecrire(p); accueil(); }
   });
