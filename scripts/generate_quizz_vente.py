@@ -22,9 +22,6 @@ OUT = os.path.join(ROOT, 'landing', 'quizz.html')
 SITE = 'https://www.passcrpe.fr'
 
 PRIX_QUIZ = '59 €'
-PRIX_PACK = '389 €'
-PRIX_PACK_BARRE = '418 €'   # 359 € (tuteur IA) + 59 € (quiz)
-ECONOMIE_PACK = '29 €'
 QUESTIONS_PAR_MATIERE = 300
 
 # (libellé, icône, exemples de thèmes)
@@ -52,8 +49,8 @@ FAQ = [
      "Des QCM, des réponses numériques à saisir (calculs en mathématiques ou en physique-chimie) et des questions où l'on "
      "clique sur le bon mot d'une phrase, par exemple le complément d'objet ou le verbe conjugué."),
     ("Combien coûte le quiz ?",
-     f"Le Quiz CRPE coûte {PRIX_QUIZ} TTC. Il existe aussi un pack avec le tuteur IA PassCRPE à {PRIX_PACK} TTC "
-     f"au lieu de {PRIX_PACK_BARRE}."),
+     f"Le Quiz CRPE coûte {PRIX_QUIZ} TTC, en paiement unique, après un test de positionnement gratuit. "
+     "Il est satisfait ou remboursé pendant 14 jours."),
     ("Le test de positionnement est-il vraiment gratuit ?",
      "Oui. Après votre inscription, vous passez un test de 45 questions (environ 15 minutes) et obtenez gratuitement votre "
      "carte des forces et faiblesses dans les 9 matières. Vous décidez ensuite de débloquer le quiz complet, sans engagement."),
@@ -121,7 +118,7 @@ CSS = """
     .qz-carte i { display: block; height: 100%; border-radius: 10px; }
     .qz-carte b { text-align: right; }
     .qz-carte .fort { background: #16a34a; } .qz-carte .moyen { background: #f59e0b; } .qz-carte .faible { background: #dc2626; }
-    .qz-prix { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 44px; max-width: 860px; margin-left: auto; margin-right: auto; }
+    .qz-prix { display: grid; grid-template-columns: 1fr; gap: 20px; margin-top: 44px; max-width: 460px; margin-left: auto; margin-right: auto; }
     .qz-center { text-align: center; }
     .qz-center .section-sub { max-width: 680px; margin: 0 auto; }
     .faq-answer p { padding-right: 38px; }
@@ -289,24 +286,6 @@ def contenu():
           <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">Vérifiez votre niveau gratuitement</a>
           <div class="qz-garantie"><span>🛡️</span><div><strong>Satisfait ou remboursé 14 jours</strong>Pas convaincu ? Un e-mail suffit : remboursement intégral, sans justification.</div></div>
           <p class="offre-note">Paiement unique via PayPal après votre test gratuit.</p>
-        </div>
-      </div>
-      <div class="offre-card offre-pack fade-up" style="animation-delay:.1s">
-        <span class="offre-badge">Le plus complet</span>
-        <div class="offre-head">
-          <div class="offre-icon">🎁</div>
-          <div><h3>Pack Tuteur IA + Quiz CRPE</h3><p class="offre-tagline">Les deux outils réunis</p></div>
-        </div>
-        <div class="offre-price"><strong>{PRIX_PACK}</strong><span>TTC</span><span class="old">{PRIX_PACK_BARRE}</span></div>
-        <span class="pack-save">{ECONOMIE_PACK} d'économie</span>
-        <ul class="offre-list">
-          <li>Le Quiz CRPE complet</li>
-          <li>1 an d'accès au tuteur IA : exercices corrigés en mathématiques et en français</li>
-          <li>Des révisions rapides et un entraînement à la rédaction</li>
-        </ul>
-        <div class="offre-cta">
-          <a href="#" class="btn-white cta-commencer" onclick="openAuth(event,'register')" style="width:100%;justify-content:center">Créer mon compte</a>
-          <p class="offre-note" style="color:rgba(255,255,255,.75)">Pack bientôt disponible à l'achat.</p>
         </div>
       </div>
     </div>
