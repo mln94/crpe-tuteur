@@ -679,9 +679,10 @@ async function quizCorriger(id, reponse) {
 const CONTACT_RAISONS = ['Problème de paiement', 'Question sur le Quiz CRPE', 'Question sur le Tuteur IA', 'Problème technique',
   'Question sur mon compte', 'Demande de remboursement', "Suggestion d'amélioration", 'Partenariat ou presse', 'Autre',
   "Problème d'inscription ou de connexion", "Je n'ai pas reçu l'e-mail de confirmation", 'Question sur le concours CRPE'];
+const KLAVIYO_LIST_CONTACT = 'S2W3Pr'; // personnes ayant écrit via /contact (ajout à la liste, sans abonnement marketing)
 const contactEnvois = new Map(); // limite simple : 5 messages par heure et par adresse IP
 app.post('/api/contact', async (req, res) => {
-  const { prenom = '', email = '', raison = '', message = '', site = '' } = req.body || {};
+  const { prenom = '', nom = '', email = '', raison = '', message = '', site = '' } = req.body || {};
   if (site) return res.json({ ok: true }); // champ piège rempli par les robots : on ignore
   const ip = String(req.headers['x-forwarded-for'] || req.socket?.remoteAddress || '').split(',')[0].trim();
   const now = Date.now(), recents = (contactEnvois.get(ip) || []).filter(t => now - t < 3600000);
@@ -692,15 +693,25 @@ app.post('/api/contact', async (req, res) => {
   if (texte.length < 10 || texte.length > 5000) return res.status(400).json({ error: 'Votre message doit faire entre 10 et 5 000 caractères.' });
   try {
     const user = await getAuthenticatedUser(req); // compte connecté : la réponse apparaîtra aussi dans l'onglet Support de l'app
+    const p = String(prenom).trim().slice(0, 80) || user?.user_metadata?.prenom || '';
+    const n = String(nom).trim().slice(0, 80) || user?.user_metadata?.nom || '';
     const { error } = await supabaseAdmin.from('support_tickets').insert({
       user_id: user?.id || null, user_email: user?.email || mail,
-      user_prenom: String(prenom).trim().slice(0, 80) || user?.user_metadata?.prenom || null,
+      user_prenom: `${p} ${n}`.trim() || null, // prénom et nom, affichés dans /admin-support
       category: raison, message: texte,
       produit: raison === 'Question sur le Quiz CRPE' ? 'quiz' : raison === 'Question sur le Tuteur IA' ? 'tuteur' : null,
     });
     if (error) throw new Error(error.message);
     contactEnvois.set(ip, [...recents, now]);
     res.json({ ok: true });
+    // Klaviyo : liste « contact » avec prénom, nom et raison (sans consentement marketing) ; un échec n'empêche pas l'envoi
+    if (process.env.KLAVIYO_PRIVATE_API_KEY) {
+      const proprietes = { contact_raison: raison, contact_date: new Date().toISOString() };
+      klaviyoSubscribePipeline(user?.email || mail, p, n, KLAVIYO_LIST_CONTACT, proprietes, {}, false)
+        // profil déjà existant : le pipeline ne met à jour que « parcours », on ajoute donc la raison explicitement
+        .then(() => klaviyoSetProperties(user?.email || mail, proprietes))
+        .catch(e => console.error('[contact Klaviyo]', e.message));
+    }
   } catch (err) {
     console.error('[contact]', err.message);
     res.status(500).json({ error: "Votre message n'a pas pu être envoyé. Réessayez dans quelques instants." });

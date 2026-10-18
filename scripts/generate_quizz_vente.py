@@ -109,6 +109,12 @@ CSS = """
     .qz-feature h3 { font-size: 17px; font-weight: 800; color: var(--gray-900); margin-bottom: 8px; }
     .qz-feature p { font-size: 14px; color: var(--gray-600); line-height: 1.6; }
 
+    /* Logo QuizzCRPE by PassCRPE */
+    .logo-quizz .nav-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
+    .logo-quizz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
+    .logo-quizz .nav-logo-text small { font-size: 10.5px; font-weight: 700; color: var(--gray-500); letter-spacing: .02em; }
+    .footer-brand .logo-quizz .nav-logo-text { color: #fb923c; }
+    .footer-brand .logo-quizz .nav-logo-text small { font-size: 12px; color: #9ca3af; }
     .qz-test { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
     .qz-carte { display: grid; grid-template-columns: 130px 1fr 44px; gap: 10px; align-items: center; margin: 9px 0; font-size: 13.5px; font-weight: 700; color: var(--gray-800); }
     .qz-carte div { height: 10px; border-radius: 10px; background: var(--gray-100); overflow: hidden; }
@@ -345,6 +351,19 @@ RETOUR_CONFIRMATION = """<script>
 """
 
 
+ICONE_QUIZZ = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"{style}>'
+               '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>')
+
+
+def logo_quizz(html):
+    """Remplace le premier logo PassCRPE (icône + nom) par celui de QuizzCRPE : cible orange et « by PassCRPE »."""
+    i = html.index('<div class="nav-logo-icon">')
+    j = html.index('</svg>', i) + len('</svg>')
+    style = ' style="width:20px;height:20px;color:#fff"' if 'style="width:20px' in html[i:j] else ''
+    html = html[:i] + '<div class="nav-logo-icon">\n            ' + ICONE_QUIZZ.format(style=style) + html[j:]
+    return html.replace('<span class="nav-logo-text">PassCRPE</span>', '<span class="nav-logo-text">QuizzCRPE<small>by PassCRPE</small></span>', 1)
+
+
 def main():
     src = open(SRC, encoding='utf-8').read()
 
@@ -369,7 +388,9 @@ def main():
                       '      <li><a href="#fonctionnement">Le quiz</a></li>\n'
                       '      <li><a href="#matieres">Matières</a></li>\n'
                       '      <li><a href="#tarif">Tarif</a></li>\n')
-    nav = nav.replace('<a href="#" class="nav-logo">', '<a href="/" class="nav-logo">')
+    # Logo de la page : « QuizzCRPE by PassCRPE », en orange (marque du quiz)
+    nav = nav.replace('<a href="#" class="nav-logo">', '<a href="/quizz" class="nav-logo logo-quizz" aria-label="QuizzCRPE by PassCRPE">')
+    nav = logo_quizz(nav)
     # Bouton de l'en-tête : le test de positionnement gratuit plutôt qu'une simple inscription
     nav = nav.replace('Commencer<span class="nav-cta-long"> gratuitement</span> →', 'Vérifier mon niveau<span class="nav-cta-long"> gratuitement</span> →')
     nav = nav.replace('onclick="openAuth(event,\'register\')">Créer mon compte</a>', 'onclick="openAuth(event,\'register\')">Vérifier mon niveau gratuitement</a>')
@@ -377,6 +398,7 @@ def main():
     # Pied de page : liens vers l'accueil, sauf la FAQ de cette page
     footer = cut(src, '<!-- ═══════════════════════════════ FOOTER', '</footer>', include_end=True)
     footer = footer.replace('<li><a href="#offres">Quiz CRPE</a></li>', '<li><a href="/quizz">Quiz CRPE</a></li>')
+    footer = logo_quizz(footer.replace('<div class="nav-logo" style="margin-bottom:12px">', '<div class="nav-logo logo-quizz" style="margin-bottom:12px">', 1))
     footer = re.sub(r'href="#(?!faq")([a-z]+)"', r'href="/#\1"', footer)
 
     # Fenêtres de confirmation et de connexion/inscription, identiques à l'accueil

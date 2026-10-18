@@ -90,9 +90,10 @@ BODY = f'''<main class="ct-wrap">
   <div class="ct-card">
     <form class="ct-form" id="ct-form" novalidate>
       <div class="ct-row">
-        <div class="ct-field"><label for="ct-prenom">Prénom</label><input id="ct-prenom" type="text" autocomplete="given-name" maxlength="80" placeholder="Marie"></div>
-        <div class="ct-field"><label for="ct-email">Adresse e-mail</label><input id="ct-email" type="email" autocomplete="email" required placeholder="vous@exemple.fr"></div>
+        <div class="ct-field"><label for="ct-prenom">Prénom</label><input id="ct-prenom" type="text" autocomplete="given-name" maxlength="80" required placeholder="Marie"></div>
+        <div class="ct-field"><label for="ct-nom">Nom</label><input id="ct-nom" type="text" autocomplete="family-name" maxlength="80" required placeholder="Dupont"></div>
       </div>
+      <div class="ct-field"><label for="ct-email">Adresse e-mail</label><input id="ct-email" type="email" autocomplete="email" required placeholder="vous@exemple.fr"></div>
       <div class="ct-field"><label for="ct-raison">Raison du contact</label>
         <select id="ct-raison" required><option value="">Choisir une raison…</option>{OPTIONS}</select></div>
       <div class="ct-field"><label for="ct-message">Votre message</label>
@@ -127,14 +128,15 @@ JS = """<script>
     jeton = s.access_token;
     remplir(LISTES.connecte);
     var info = document.getElementById('ct-connexion'); if (info) info.hidden = true;
-    var m = s.user.user_metadata || {}, em = document.getElementById('ct-email'), pr = document.getElementById('ct-prenom');
-    if (!em.value) em.value = s.user.email || ''; if (!pr.value) pr.value = m.prenom || '';
+    var m = s.user.user_metadata || {}, em = document.getElementById('ct-email'), pr = document.getElementById('ct-prenom'), no = document.getElementById('ct-nom');
+    if (!em.value) em.value = s.user.email || ''; if (!pr.value) pr.value = m.prenom || ''; if (!no.value) no.value = m.nom || '';
   });
   function montrer(t, ok) { retour.hidden = false; retour.className = 'ct-msg ' + (ok ? 'ok' : 'ko'); retour.textContent = t; }
   f.addEventListener('submit', function (e) {
     e.preventDefault();
-    var d = { prenom: document.getElementById('ct-prenom').value.trim(), email: document.getElementById('ct-email').value.trim(),
+    var d = { prenom: document.getElementById('ct-prenom').value.trim(), nom: document.getElementById('ct-nom').value.trim(), email: document.getElementById('ct-email').value.trim(),
       raison: sel.value, message: document.getElementById('ct-message').value.trim(), site: document.getElementById('ct-site').value };
+    if (!d.prenom || !d.nom) return montrer('Indiquez votre prénom et votre nom.');
     if (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(d.email)) return montrer('Indiquez une adresse e-mail valide.');
     if (!d.raison) return montrer('Choisissez la raison de votre contact.');
     if (d.message.length < 10) return montrer('Votre message est un peu court : précisez votre demande.');
