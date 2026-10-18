@@ -253,6 +253,18 @@ CSS = """
     .qz-barre.en-serie { opacity: .85; }
     .qz-barre .quiz-select:disabled { background: var(--gray-50); color: var(--gray-500); cursor: not-allowed; }
     .qz-quitter { align-self: center; }
+    .qz-themes { flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .qz-themes-aide { flex: 1 1 100%; font-size: 13px; color: var(--gray-500); }
+    .qz-theme-chip { padding: 8px 12px; border-radius: 100px; border: 1.5px solid var(--gray-200); background: #fff; font: inherit; font-size: 13.5px; font-weight: 700; color: var(--gray-700); cursor: pointer; }
+    .qz-theme-chip:hover { border-color: #fb923c; }
+    .qz-theme-chip[aria-pressed="true"] { border-color: #f97316; background: #fff7ed; color: #c2410c; }
+    .qz-theme-chip small { font-size: 11.5px; font-weight: 600; color: var(--gray-400); }
+    .qz-themes-serie { flex: 1 1 100%; margin: 0; }
+    .qz-themes-choisis { margin: 6px 0 0; }
+    .prog-theme.hors { opacity: .4; }
+    .qz-modes { grid-template-columns: repeat(2, 1fr); }
+    /* Avec la liste des thèmes, la barre devient haute : elle ne reste plus fixée en haut de l'écran */
+    .qz-barre:has(.qz-themes) { position: static; }
     .qz-tete { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 4px; }
     .qz-tete h2 { margin-bottom: 2px; }
     .qz-tete p { font-size: 14px; color: var(--gray-500); }
@@ -339,7 +351,10 @@ JS = """<script>
   function ecrire(p) { try { localStorage.setItem(CLE, JSON.stringify(p)); } catch (e) {} }
   // Dernier choix de matière et de niveau, retrouvé à la prochaine visite
   function lireChoix() { var c = {}; try { c = JSON.parse(localStorage.getItem(CLE_CHOIX)) || {}; } catch (e) {}
-    return { mat: MATIERES.some(function (m) { return m[0] === c.mat; }) ? c.mat : MATIERES[0][0], niveau: NIVEAUX[c.niveau] ? c.niveau : 'facile' }; }
+    return { mat: MATIERES.some(function (m) { return m[0] === c.mat; }) ? c.mat : MATIERES[0][0], niveau: NIVEAUX[c.niveau] ? c.niveau : 'facile',
+      themes: c.themes && typeof c.themes === 'object' ? c.themes : {} }; }
+  // Thèmes choisis pour une matière : null = thèmes au hasard (tous les thèmes du niveau)
+  function themesChoisis(mat) { var t = choix.themes[mat]; return Array.isArray(t) ? t : null; }
   function garderChoix() { try { localStorage.setItem(CLE_CHOIX, JSON.stringify(choix)); } catch (e) {} }
   function prog(mat) { var p = lire(); return (p[mat] && p[mat].notions) ? p[mat] : { notions: {}, series: 0 }; }
   function sauver(mat, pm) { var p = lire(); p[mat] = pm; ecrire(p); }
@@ -365,10 +380,11 @@ JS = """<script>
   }
 
   // ── Composition d'une série du niveau choisi : révisions dues, puis nouvelles notions, puis révisions anticipées ──
-  function composer(cat, pm, niveau) {
+  function composer(cat, pm, niveau, themes) {
     var now = Date.now(), dues = [], neuves = [], attente = [], rang = { facile: 0, intermediaire: 1, difficile: 2 };
     cat.ordre.forEach(function (k) {
       if (niveau && cat.notions[k].niveau !== niveau) return;
+      if (themes && themes.indexOf(cat.notions[k].theme || 'Notions') < 0) return;
       var s = pm.notions[k];
       if (!s) neuves.push(k);
       else if (s.maitrise) return;
@@ -425,6 +441,12 @@ JS = """<script>
         var off = fige || (e && n !== choix.niveau);
         return '<button type="button" class="quiz-niveau" data-niv="' + n + '" aria-pressed="' + (n === choix.niveau) + '"' + (off ? ' disabled' : '') +
           (e && n !== choix.niveau ? ' title="Disponible avec l’accès complet"' : '') + '>' + NIVEAUX[n] + (e && n !== choix.niveau ? ' 🔒' : '') + '</button>'; }).join('') + '</div></div>' +
+      '<div class="qz-barre-champ"><span class="lbl" id="quiz-th-lbl">Thèmes</span><div class="quiz-niveaux qz-modes" role="group" aria-labelledby="quiz-th-lbl">' +
+      [['hasard', '🎲 Au hasard'], ['choix', '🎯 Mes thèmes']].map(function (m) {
+        var on = (m[0] === 'choix') === !!themesChoisis(choix.mat);
+        return '<button type="button" class="quiz-niveau" data-mode="' + m[0] + '" aria-pressed="' + on + '"' + (enSerie ? ' disabled' : '') + '>' + m[1] + '</button>'; }).join('') + '</div></div>' +
+      (themesChoisis(choix.mat) && !enSerie ? '<div class="qz-themes" id="qz-themes"><span class="qz-note">Chargement des thèmes…</span></div>' : '') +
+      (enSerie && st && st.themes ? '<p class="qz-note qz-themes-serie">Série sur vos thèmes : ' + esc(st.themes.join(' · ')) + '</p>' : '') +
       (enSerie ? '<button type="button" class="quiz-link qz-quitter" data-act="quitter">Quitter la série</button>' : '') +
       '</div>';
   }
@@ -462,15 +484,25 @@ JS = """<script>
         if (!themes[t]) { themes[t] = { n: 0, ok: 0 }; ordre.push(t); }
         themes[t].n += n; themes[t].ok += ok; total += n; reussies += ok;
       });
-      var ex = essaiDe(mat), serie = ex ? ex.max : Math.min(SERIE, b.total - b.maitrisees);
+      var ths = themesChoisis(mat), dispo = 0;
+      if (ths) ths = ths.filter(function (t) { return themes[t]; });
+      cat.ordre.forEach(function (k) { var no = cat.notions[k], s2 = pm.notions[k]; if (no.niveau === niveau && !(s2 && s2.maitrise) && (!ths || ths.indexOf(no.theme || 'Notions') >= 0)) dispo++; });
+      var zone = document.getElementById('qz-themes');
+      if (zone) zone.innerHTML = '<span class="qz-themes-aide">Touchez les thèmes à travailler :</span>' + ordre.map(function (t, i) {
+        var on = ths.indexOf(t) >= 0;
+        return '<button type="button" class="qz-theme-chip" data-theme="' + i + '" aria-pressed="' + on + '">' + (on ? '✓ ' : '') + esc(t) + ' <small>' + themes[t].n + '</small></button>'; }).join('');
+      tableau.ordre = ordre;
+      var ex = essaiDe(mat), serie = Math.min(ex ? ex.max : SERIE, dispo);
       el.innerHTML = '<div class="qz-tete"><div><h2>' + esc(label(mat)) + ' · ' + NIVEAUX[niveau] + '</h2>' +
         '<p>' + total + ' questions dans ' + ordre.length + ' thème' + (ordre.length > 1 ? 's' : '') + ' du programme' + (ex ? ' · série d’essai offerte' : '') + '</p></div>' +
-        '<button type="button" class="quiz-btn" data-act="start"' + (serie ? '' : ' disabled') + '>Lancer une série de ' + serie + ' questions</button></div>' +
+        (ths && !ths.length ? '<button type="button" class="quiz-btn" disabled>Choisissez au moins un thème</button></div>'
+          : '<button type="button" class="quiz-btn" data-act="start"' + (serie ? '' : ' disabled') + '>Lancer une série de ' + serie + ' questions</button></div>') +
+        (ths && ths.length ? '<p class="qz-note qz-themes-choisis">Série sur ' + ths.length + ' thème' + (ths.length > 1 ? 's' : '') + ' choisi' + (ths.length > 1 ? 's' : '') + ' : ' + esc(ths.join(' · ')) + '</p>' : '') +
         '<div class="stats"><div class="stat"><b>' + reussies + ' / ' + total + '</b><span>questions réussies</span></div><div class="stat"><b>' + b.maitrisees + ' / ' + b.total + '</b><span>notions maîtrisées</span></div><div class="stat"><b>' + b.dues + '</b><span>à réviser aujourd’hui</span></div></div>' +
         '<h3 class="qz-sous-titre">Progression par thème</h3>' +
         ordre.map(function (t) {
           var x = themes[t], pc = x.n ? Math.round(x.ok / x.n * 100) : 0;
-          return '<div class="prog-theme"><h3>' + esc(t) + '<span>' + x.ok + ' / ' + x.n + ' questions réussies</span></h3><div class="prog-bar"><span class="m" style="width:' + pc + '%"></span></div></div>';
+          return '<div class="prog-theme' + (ths && ths.indexOf(t) < 0 ? ' hors' : '') + '"><h3>' + esc(t) + '<span>' + x.ok + ' / ' + x.n + ' questions réussies</span></h3><div class="prog-bar"><span class="m" style="width:' + pc + '%"></span></div></div>';
         }).join('') +
         '<p class="qz-note">Une notion est maîtrisée après ' + MAITRISE + ' bonnes réponses à des questions différentes. ' + (pm.series || 0) + ' série' + ((pm.series || 0) > 1 ? 's' : '') + ' faite' + ((pm.series || 0) > 1 ? 's' : '') + ' dans cette matière.</p>' +
         (essaiActif() ? '' : '<p style="margin-top:10px"><button type="button" class="quiz-link" data-act="reset">Réinitialiser ma progression dans cette matière</button></p>');
@@ -792,9 +824,9 @@ JS = """<script>
       m.id = 'pay-modal'; m.className = 'pay-overlay'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'pay-titre');
       m.innerHTML = '<div class="pay-card"><button type="button" class="pay-fermer" aria-label="Fermer">×</button>' +
         '<div class="pay-badge">🎉 Essai terminé</div><h2 id="pay-titre">Continuez votre préparation sur les 9 matières</h2>' +
-        '<p class="pay-texte">Vous avez fait vos séries d’essai. Débloquez les 2 772 questions, en facile, intermédiaire et avancé, avec vos révisions espacées jusqu’au concours.</p>' +
+        '<p class="pay-texte">Vous avez fait vos séries d’essai. Débloquez les 2 853 questions, en facile, intermédiaire et avancé, avec vos révisions espacées jusqu’au concours.</p>' +
         '<div class="pay-prix">' + PRIX + ' <span>TTC · paiement unique, sans abonnement</span></div>' +
-        '<div class="pay-decoupe"><div><b>2 centimes</b><span>par question</span></div><div><b>&lt; 2,30 €</b><span>par semaine sur 6 mois</span></div><div><b>2 772</b><span>questions corrigées</span></div></div>' +
+        '<div class="pay-decoupe"><div><b>2 centimes</b><span>par question</span></div><div><b>&lt; 2,30 €</b><span>par semaine sur 6 mois</span></div><div><b>2 853</b><span>questions corrigées</span></div></div>' +
         '<div class="garantie pay-garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Pas convaincu ? Écrivez-nous dans les 14 jours suivant votre achat : nous vous remboursons intégralement, sans avoir à vous justifier.</div></div>' +
         '<div class="paypal-zone"><div id="pp-paypal"></div><div id="pp-carte"></div></div>' +
         '<p class="quiz-hint" id="pp-msg">Paiement sécurisé par PayPal, par compte PayPal ou carte bancaire.</p>' +
@@ -846,9 +878,12 @@ JS = """<script>
   function demarrer(mat, niveau) {
     root.innerHTML = '<div class="quiz-card"><p>Chargement des questions…</p></div>';
     charger(mat).then(function (cat) {
-      var serie = composer(cat, prog(mat), niveau);
-      if (!serie.length) return progression(mat, 'Toutes les notions de niveau ' + NIVEAUX[niveau].toLowerCase() + ' sont maîtrisées dans cette matière. Bravo ! Essayez un autre niveau.');
-      st = { mat: mat, niveau: niveau, cat: cat, serie: serie, i: 0, score: 0, recap: [], sel: [], repondu: false };
+      var ths = themesChoisis(mat);
+      if (ths) ths = ths.filter(function (t) { return cat.ordre.some(function (k) { return cat.notions[k].niveau === niveau && (cat.notions[k].theme || 'Notions') === t; }); });
+      var serie = composer(cat, prog(mat), niveau, ths);
+      if (!serie.length) return progression(mat, ths ? 'Toutes les notions de vos thèmes choisis sont maîtrisées à ce niveau. Bravo ! Ajoutez d’autres thèmes ou changez de niveau.'
+        : 'Toutes les notions de niveau ' + NIVEAUX[niveau].toLowerCase() + ' sont maîtrisées dans cette matière. Bravo ! Essayez un autre niveau.');
+      st = { mat: mat, niveau: niveau, themes: ths, cat: cat, serie: serie, i: 0, score: 0, recap: [], sel: [], repondu: false };
       question(); top();
     }).catch(function (e) {
       if (e.status === 401 || e.status === 402) return boot();
@@ -961,6 +996,15 @@ JS = """<script>
       return;
     }
     if (b.dataset.niv) { choix.niveau = b.dataset.niv; garderChoix(); accueil(); return; }
+    if (b.dataset.mode) {
+      if (b.dataset.mode === 'hasard') delete choix.themes[choix.mat]; else if (!themesChoisis(choix.mat)) choix.themes[choix.mat] = [];
+      garderChoix(); accueil(); return;
+    }
+    if (b.dataset.theme !== undefined && tableau.ordre) {
+      var nom = tableau.ordre[+b.dataset.theme], lt = themesChoisis(choix.mat) || [], pos = lt.indexOf(nom);
+      if (pos < 0) lt.push(nom); else lt.splice(pos, 1);
+      choix.themes[choix.mat] = lt; garderChoix(); accueil(); return;
+    }
     if (b.dataset.k !== undefined && st && !st.repondu) {
       var q = st.serie[st.i], k = +b.dataset.k, btns = root.querySelectorAll('.quiz-choice');
       btns.forEach(function (x) { x.disabled = true; });
@@ -992,7 +1036,7 @@ JS = """<script>
     else if (act === 'voir-resultat') { resultat(compte.positionnement); top(); }
     else if (act === 'start') demarrer(choix.mat, choix.niveau);
     else if (act === 'prog-choix') { st = null; progression(choix.mat); }
-    else if (act === 'again') demarrer(st.mat, st.niveau);
+    else if (act === 'again') { choix.mat = st.mat; choix.niveau = st.niveau; demarrer(st.mat, st.niveau); }
     else if (act === 'prog') progression(st.mat);
     else if (act === 'home') { accueil(); top(); }
     else if (act === 'quitter' && confirm('Quitter la série en cours ? Vos réponses déjà données sont enregistrées.')) { accueil(); top(); }
