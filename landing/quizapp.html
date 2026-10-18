@@ -349,6 +349,27 @@
     .quiz-tabbar .ico { position: relative; }
     .quiz-tabbar svg { width: 20px; height: 20px; display: block; }
     .quiz-tabbar .pastille { position: absolute; top: -2px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; border: 1.5px solid #fff; }
+    /* Essai gratuit et fenêtre de paiement */
+    .quiz-niveau:disabled { opacity: .45; cursor: not-allowed; }
+    .essai-annonce { display: block; margin: 0 0 16px; padding: 12px 16px; border-radius: 14px; background: #eef2ff; color: #3730a3; font-weight: 700; text-decoration: none; text-align: center; }
+    .essai-carte { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; border: 2px solid #c7d2fe; background: linear-gradient(160deg, #eef2ff, #fff 60%); }
+    .essai-cadeau { font-size: 36px; line-height: 1; }
+    .essai-liste { margin: 8px 0 4px 18px; font-size: 15px; line-height: 1.8; color: var(--gray-700); }
+    .essai-bandeau { margin: 0 0 14px; padding: 12px 16px; border-radius: 14px; background: #eef2ff; color: #3730a3; font-size: 14px; line-height: 1.5; }
+    .pay-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(15,23,42,.6); display: flex; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
+    .pay-overlay[hidden] { display: none; }
+    .pay-card { position: relative; width: 100%; max-width: 520px; max-height: calc(100dvh - 32px); overflow-y: auto; background: #fff; border-radius: 22px; padding: 28px 24px; box-shadow: 0 24px 60px rgba(0,0,0,.25); }
+    .pay-fermer { position: absolute; top: 12px; right: 14px; width: 34px; height: 34px; border-radius: 50%; border: 0; background: var(--gray-100); font-size: 20px; cursor: pointer; color: var(--gray-600); }
+    .pay-badge { display: inline-block; font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 100px; background: #eef2ff; color: #3730a3; margin-bottom: 10px; }
+    .pay-card h2 { font-size: 22px; font-weight: 900; color: var(--gray-900); line-height: 1.25; margin-bottom: 8px; padding-right: 30px; }
+    .pay-texte { font-size: 14.5px; line-height: 1.6; color: var(--gray-600); margin-bottom: 12px; }
+    .pay-prix { font-size: 40px; font-weight: 900; color: var(--gray-900); letter-spacing: -1px; }
+    .pay-prix span { font-size: 13px; font-weight: 600; color: var(--gray-500); letter-spacing: 0; }
+    .pay-decoupe { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0; }
+    .pay-decoupe div { background: #eef2ff; border-radius: 12px; padding: 10px 6px; text-align: center; }
+    .pay-decoupe b { display: block; font-size: 17px; font-weight: 900; color: #3730a3; }
+    .pay-decoupe span { font-size: 11.5px; color: var(--gray-600); }
+    .pay-garantie { max-width: none; }
   .quiz-confirm { background: #dcfce7; color: #166534; font-weight: 600; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
 
     /* MENU DU COMPTE */
@@ -573,13 +594,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   // ── Écrans ──
   function intro(v) { var l = document.querySelector('.quiz-lead'), h = document.querySelector('.quiz-wrap > h1'); if (l) l.hidden = !v; if (h) h.hidden = !v; }
+  // Essai gratuit en cours (compte non payé) : 2 matières offertes, chacune à son niveau conseillé
+  function essaiActif() { return compte && !compte.paid && compte.essai ? compte.essai : null; }
+  function essaiDe(k) { var e = essaiActif(); return e ? e.matieres.filter(function (m) { return m.matiere === k; })[0] : null; }
   function accueil() {
     st = null; intro(true);
-    root.innerHTML = barreCompte() + '<div class="quiz-card quiz-filtres">' +
+    var e = essaiActif();
+    if (e && e.termine) {
+      root.innerHTML = barreCompte() + '<div class="quiz-card essai-carte"><div class="essai-cadeau">🔓</div><div><h2>Votre essai est terminé</h2>' +
+        '<p>Vous avez fait vos 2 séries offertes. Débloquez les 9 matières et les 3 niveaux pour continuer.</p>' +
+        '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz pour ' + PRIX + '</button></div></div></div>';
+      return;
+    }
+    if (e) {
+      var dispo = e.matieres.filter(function (m) { return !m.termine; }), cur = essaiDe(choix.mat);
+      if (!cur || cur.termine) cur = dispo[0];
+      choix.mat = cur.matiere; choix.niveau = cur.niveau;
+    }
+    var faites = e ? e.matieres.filter(function (m) { return m.termine; }).length : 0;
+    root.innerHTML = barreCompte() +
+      (e ? '<div class="essai-bandeau">🎁 <strong>Essai gratuit : ' + faites + ' / ' + e.matieres.length + ' séries faites.</strong> Les autres matières et niveaux se débloquent avec l’accès complet.</div>' : '') +
+      '<div class="quiz-card quiz-filtres">' +
       '<div class="quiz-filtre"><label for="quiz-mat">Matière</label><select id="quiz-mat" class="quiz-select">' +
-      MATIERES.map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === choix.mat ? ' selected' : '') + '>' + esc(m[1]) + '</option>'; }).join('') + '</select></div>' +
+      MATIERES.map(function (m) {
+        var x = essaiDe(m[0]), ok = !e || (x && !x.termine);
+        return '<option value="' + m[0] + '"' + (m[0] === choix.mat ? ' selected' : '') + (ok ? '' : ' disabled') + '>' + esc(m[1]) +
+          (e ? (x ? (x.termine ? ' · essai terminé' : ' · essai offert') : ' 🔒') : '') + '</option>'; }).join('') + '</select></div>' +
       '<div class="quiz-filtre"><span class="lbl" id="quiz-niv-lbl">Niveau</span><div class="quiz-niveaux" role="group" aria-labelledby="quiz-niv-lbl">' +
-      Object.keys(NIVEAUX).map(function (n) { return '<button type="button" class="quiz-niveau" data-niv="' + n + '" aria-pressed="' + (n === choix.niveau) + '">' + NIVEAUX[n] + '</button>'; }).join('') + '</div></div>' +
+      Object.keys(NIVEAUX).map(function (n) { var off = e && n !== choix.niveau; return '<button type="button" class="quiz-niveau" data-niv="' + n + '" aria-pressed="' + (n === choix.niveau) + '"' + (off ? ' disabled title="Disponible avec l’accès complet"' : '') + '>' + NIVEAUX[n] + (off ? ' 🔒' : '') + '</button>'; }).join('') + '</div></div>' +
       '<div class="quiz-resume" id="quiz-resume">…</div>' +
       '<div class="quiz-actions" style="margin-top:0"><button type="button" class="quiz-btn" data-act="start">Lancer une série</button><button type="button" class="quiz-btn ghost" data-act="prog-choix">Ma progression</button></div>' +
       '</div>';
@@ -596,7 +638,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var b = bilan(mat, cat, niveau), nq = 0;
       cat.ordre.forEach(function (k) { if (cat.notions[k].niveau === niveau) nq += cat.notions[k].questions.length; });
       // Une série pose une question par notion non maîtrisée, dans la limite de 20
-      var serie = Math.min(SERIE, b.total - b.maitrisees);
+      var serie = Math.min(SERIE, b.total - b.maitrisees), ex = essaiDe(mat);
+      if (ex) { el.innerHTML = '<b>Série d’essai offerte</b> : ' + ex.max + ' questions en ' + esc(label(mat)) + ', niveau ' + NIVEAUX[niveau] + '.'; return; }
       el.innerHTML = '<b>' + esc(label(mat)) + ' · ' + NIVEAUX[niveau] + '</b> : ' + nq + ' questions sur ' + b.total + ' notions' +
         (serie ? ', en séries de ' + serie + ' questions' : '') + '. ' +
         b.maitrisees + ' notion' + (b.maitrisees > 1 ? 's' : '') + ' maîtrisée' + (b.maitrisees > 1 ? 's' : '') +
@@ -621,8 +664,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return api('/api/quiz/compte').then(function (c) {
         compte = c;
         if (!c.positionnement) return introTest();
-        if (!c.paid) return resultat(c.positionnement);
-        accueil();
+        if (c.paid) { fermerPaiement(); return accueil(); }
+        // Pas encore payé : rapport d'abord, puis les 2 séries d'essai offertes, puis le paiement
+        var e = c.essai;
+        if (e && e.termine) { accueil(); return ouvrirPaiement(); }
+        if (e && e.matieres.some(function (m) { return m.faites > 0; })) return accueil();
+        resultat(c.positionnement);
       });
     }).catch(function (e) { if (e.status === 401) return connexion(); erreur('Votre compte n\'a pas pu être chargé. Réessayez dans quelques instants.'); });
   }
@@ -753,23 +800,48 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<p class="rp-note">Ce diagnostic repose sur 45 questions (5 par matière) : c’est une première photographie de votre niveau. Vos séries d’entraînement l’affinent jour après jour.</p></div>';
     if (compte && compte.paid) html = html.replace('<!--PAIEMENT-->', '') + '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Aller au quiz</button></div>';
     else {
-      // Paiement visible dès l'arrivée sur le rapport, juste sous le score
-      var pay = '<div class="quiz-card paywall" id="paiement"><div class="pw-grille"><div>' +
-        '<h2>Débloquez le Quiz CRPE pour combler ces lacunes</h2>' +
-        '<div class="prix">' + PRIX + ' <span>TTC · paiement unique</span></div>' +
-        '<ul class="quiz-points"><li>2 700 questions, 9 matières, 3 niveaux ;</li><li>des séries de 20 notées sur 20, avec l’explication de chaque erreur ;</li><li>des révisions espacées et votre progression par thème.</li></ul>' +
-        '</div><div>' +
-        '<div class="paypal-zone"><div id="pp-paypal"></div><div id="pp-carte"></div></div>' +
-        '<p class="quiz-hint" id="pp-msg">Paiement sécurisé par PayPal, par compte PayPal ou carte bancaire.</p>' +
-        '<div class="garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Si le quiz ne vous convient pas, écrivez-nous dans les 14 jours suivant votre achat : remboursement intégral, sans avoir à vous justifier.</div></div>' +
-        '<p class="pw-liens"><a class="quiz-link" href="/app?onglet=support&produit=quiz&categorie=paiement">Un problème avec le paiement ? Contactez le support</a><button type="button" class="quiz-link" data-act="boot">J’ai déjà payé : actualiser mon accès</button></p>' +
-        '</div></div></div>';
-      html = html.replace('<!--PAIEMENT-->', pay) + '<div class="quiz-actions" style="justify-content:center"><a class="quiz-btn pw-cta" href="#paiement">Débloquer le quiz pour ' + PRIX + '</a></div>';
+      // Pas de paiement sur le rapport : les 2 séries d'essai offertes, dans les matières les plus fragiles
+      var e = compte && compte.essai;
+      var offre = e && !e.termine
+        ? '<div class="quiz-card essai-carte" id="essai"><div class="essai-cadeau">🎁</div><div><h2>Vos 2 séries d’essai offertes</h2>' +
+          '<p>Commencez gratuitement par vos deux matières les plus fragiles, au niveau conseillé par votre test :</p><ul class="essai-liste">' +
+          e.matieres.map(function (m) { return '<li><strong>' + esc(m.label) + '</strong> · niveau ' + NIVEAUX[m.niveau] + ' · ' + m.max + ' questions' + (m.termine ? ' ✓' : '') + '</li>'; }).join('') +
+          '</ul><div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="essai">Commencer mon essai gratuit →</button></div></div></div>'
+        : '<div class="quiz-card essai-carte"><div class="essai-cadeau">🔓</div><div><h2>Votre essai est terminé</h2><p>Débloquez les 9 matières pour continuer votre préparation.</p>' +
+          '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz</button></div></div></div>';
+      var annonce = e && !e.termine ? '<a class="essai-annonce" href="#essai">🎁 2 séries d’essai offertes vous attendent à la fin de votre rapport</a>' : '';
+      html = html.replace('<!--PAIEMENT-->', annonce) + offre;
     }
     root.innerHTML = html;
-    intro(false); // l'introduction du quiz est masquée sur le rapport : le paiement reste visible sans faire défiler
-    if (!(compte && compte.paid)) paypal();
+    intro(false); // l'introduction du quiz est masquée sur le rapport
   }
+  // Fenêtre de paiement, à la fin de l'essai : prix, prix par question, garantie, boutons PayPal
+  function ouvrirPaiement() {
+    var m = document.getElementById('pay-modal');
+    if (!m) {
+      m = document.createElement('div');
+      m.id = 'pay-modal'; m.className = 'pay-overlay'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'pay-titre');
+      m.innerHTML = '<div class="pay-card"><button type="button" class="pay-fermer" aria-label="Fermer">×</button>' +
+        '<div class="pay-badge">🎉 Essai terminé</div><h2 id="pay-titre">Continuez votre préparation sur les 9 matières</h2>' +
+        '<p class="pay-texte">Vous avez fait vos séries d’essai. Débloquez les 2 700 questions, en facile, intermédiaire et avancé, avec vos révisions espacées jusqu’au concours.</p>' +
+        '<div class="pay-prix">' + PRIX + ' <span>TTC · paiement unique, sans abonnement</span></div>' +
+        '<div class="pay-decoupe"><div><b>2 centimes</b><span>par question</span></div><div><b>&lt; 2,30 €</b><span>par semaine sur 6 mois</span></div><div><b>2 700</b><span>questions corrigées</span></div></div>' +
+        '<div class="garantie pay-garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Pas convaincu ? Écrivez-nous dans les 14 jours suivant votre achat : nous vous remboursons intégralement, sans avoir à vous justifier.</div></div>' +
+        '<div class="paypal-zone"><div id="pp-paypal"></div><div id="pp-carte"></div></div>' +
+        '<p class="quiz-hint" id="pp-msg">Paiement sécurisé par PayPal, par compte PayPal ou carte bancaire.</p>' +
+        '<p class="pw-liens"><a class="quiz-link" href="/app?onglet=support&produit=quiz&categorie=paiement">Un problème avec le paiement ? Contactez le support</a><button type="button" class="quiz-link" data-pay="deja">J’ai déjà payé : actualiser mon accès</button></p></div>';
+      document.body.appendChild(m);
+      m.addEventListener('click', function (ev) {
+        if (ev.target === m || ev.target.closest('.pay-fermer')) fermerPaiement();
+        else if (ev.target.closest('[data-pay="deja"]')) { fermerPaiement(); boot(); }
+      });
+      document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') fermerPaiement(); });
+    }
+    m.hidden = false; document.body.style.overflow = 'hidden';
+    document.getElementById('pp-paypal').innerHTML = ''; document.getElementById('pp-carte').innerHTML = '';
+    paypal();
+  }
+  function fermerPaiement() { var m = document.getElementById('pay-modal'); if (m) m.hidden = true; document.body.style.overflow = ''; }
   function chargerPaypal() {
     if (window.paypal && window.paypal.Buttons) return Promise.resolve();
     if (!compte.paypal_client_id) return Promise.reject(new Error('id'));
@@ -889,11 +961,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<div class="big">' + String(note).replace('.', ',') + ' / 20</div><p>' + s + ' bonne' + (s > 1 ? 's' : '') + ' réponse' + (s > 1 ? 's' : '') + ' sur ' + n + '. ' + msg + '</p>' +
       '<div class="stats"><div class="stat"><b>' + b.maitrisees + '</b><span>notions maîtrisées</span></div><div class="stat"><b>' + b.encours + '</b><span>en cours</span></div><div class="stat"><b>' + (b.total - b.maitrisees - b.encours) + '</b><span>à découvrir</span></div></div>' +
       (b.prochaine && !b.dues ? '<p style="font-size:13px;color:var(--gray-500)">Prochaines révisions à partir du ' + dateFr(b.prochaine) + '.</p>' : '') +
-      '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="again">Nouvelle série de ' + SERIE + '</button><button type="button" class="quiz-btn ghost" data-act="prog">Ma progression</button><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>' +
+      (essaiActif() ? '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Continuer mon essai</button></div>'
+        : '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="again">Nouvelle série de ' + SERIE + '</button><button type="button" class="quiz-btn ghost" data-act="prog">Ma progression</button><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>') +
       '<div class="quiz-recap">' + st.recap.map(function (r) {
         return '<div class="' + (r.ok ? 'r-ok' : 'r-ko') + '">' + esc(r.q) + (r.ok ? '' : ' <em>Réponse : ' + esc(r.attendu) + '</em>') + '</div>';
       }).join('') + '</div></div>';
     top();
+    // Essai : on recharge le compte ; les 2 séries faites, le paiement s'ouvre
+    if (essaiActif()) api('/api/quiz/compte').then(function (c) { compte = c; if (essaiActif() && compte.essai.termine) setTimeout(ouvrirPaiement, 900); }).catch(function () {});
   }
 
   function progression(mat, message) {
@@ -958,6 +1033,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
     else if (act === 'next') { if (st.i < st.serie.length - 1) { st.i++; question(); top(); } else fin(); }
     else if (act === 'boot') boot();
+    else if (act === 'essai') { accueil(); top(); }
+    else if (act === 'payer') ouvrirPaiement();
     else if (act === 'test-start') testStart();
     else if (act === 't-suivant') testRepondre(false);
     else if (act === 't-passer') testRepondre(true);

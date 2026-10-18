@@ -622,26 +622,61 @@ async function quizCompte(req, { frais = false } = {}) {
   if (!frais && c && c.until > Date.now()) return c.compte;
   const { data, error } = await supabaseAdmin.auth.getUser(token);
   if (error || !data?.user) return null;
-  const { data: ligne, error: e2 } = await supabaseAdmin.from('quiz_comptes').select('positionnement, paid').eq('user_id', data.user.id).maybeSingle();
+  const { data: ligne, error: e2 } = await supabaseAdmin.from('quiz_comptes').select('positionnement, paid, essai_reponses').eq('user_id', data.user.id).maybeSingle();
   if (e2) throw new Error(e2.message);
   const l = ligne || {};
-  const compte = { id: data.user.id, email: data.user.email, positionnement: l.positionnement || null, paid: l.paid === true };
+  const compte = { id: data.user.id, email: data.user.email, positionnement: l.positionnement || null, paid: l.paid === true, essaiReponses: l.essai_reponses || {} };
   quizSessions.set(token, { compte, until: Date.now() + 120000 });
   return compte;
 }
 const quizOublier = userId => { for (const [t, c] of quizSessions) if (c.compte.id === userId) quizSessions.delete(t); };
 
-// Accès au quiz : compte connecté et payé
-async function quizAcces(req, res) {
+/* ── Essai gratuit après le test : une série dans chacune des 2 matières les moins réussies, au niveau conseillé ── */
+const ESSAI_NB_MATIERES = 2;
+const niveauConseille = m => {
+  const t = x => (x && x.n ? x.ok / x.n : null);
+  if (!m.niveaux) return m.pct >= 80 ? 'difficile' : m.pct >= 40 ? 'intermediaire' : 'facile';
+  const f = t(m.niveaux.facile), i = t(m.niveaux.intermediaire);
+  if (f !== null && f < 1) return 'facile';
+  if (i !== null && i < 1) return 'intermediaire';
+  return 'difficile';
+};
+// Matières offertes (déduites du test, donc stables) et nombre de questions de chaque série d'essai
+async function quizEssai(compte) {
+  const r = compte.positionnement;
+  if (!r || !Array.isArray(r.matieres)) return null;
+  const ordre = m => QUIZ_MATIERES.indexOf(m.matiere);
+  const choisies = r.matieres.slice().sort((a, b) => a.pct - b.pct || ordre(a) - ordre(b)).slice(0, ESSAI_NB_MATIERES);
+  const matieres = await Promise.all(choisies.map(async m => {
+    const niveau = niveauConseille(m);
+    const notions = new Set((await quizCatalogue(m.matiere)).filter(q => q.niveau === niveau).map(q => q.notion));
+    const max = Math.min(20, notions.size), faites = (compte.essaiReponses[m.matiere] || []).length;
+    return { matiere: m.matiere, label: QUIZ_LABELS[m.matiere], niveau, max, faites: Math.min(faites, max), termine: faites >= max };
+  }));
+  return { matieres, termine: matieres.every(m => m.termine) };
+}
+
+// Accès au quiz : compte payé, ou essai gratuit dans une matière offerte (matiere = matière demandée)
+async function quizAcces(req, res, matiere) {
   try {
     const compte = await quizCompte(req);
     if (!compte) { res.status(401).json({ error: 'Connexion requise.', code: 'connexion' }); return null; }
-    if (!compte.paid) { res.status(402).json({ error: 'Accès réservé aux comptes débloqués.', code: 'paiement' }); return null; }
-    return compte;
+    if (compte.paid) return compte;
+    const essai = compte.positionnement && matiere ? await quizEssai(compte) : null;
+    const m = essai?.matieres.find(x => x.matiere === matiere);
+    if (m && !m.termine) { compte.essaiMatiere = m; return compte; } // matière offerte dont la série d'essai n'est pas finie
+    res.status(402).json({ error: 'Accès réservé aux comptes débloqués.', code: 'paiement' }); return null;
   } catch (err) {
     console.error('[quiz/acces]', err.message);
     res.status(500).json({ error: 'Le quiz n\'a pas pu être chargé.' }); return null;
   }
+}
+
+// Matière d'une question, à partir des catalogues gardés en mémoire
+async function quizMatiereDe(id) {
+  const cats = await Promise.all(QUIZ_MATIERES.map(quizCatalogue));
+  for (const [i, cat] of cats.entries()) if (cat.some(q => q.id === id)) return QUIZ_MATIERES[i];
+  return null;
 }
 
 // Propriétés Klaviyo du test de positionnement
@@ -749,6 +784,7 @@ app.get('/api/quiz/compte', async (req, res) => {
     const compte = await quizCompte(req, { frais: true });
     if (!compte) return res.status(401).json({ error: 'Connexion requise.' });
     res.json({ email: compte.email, positionnement: compte.positionnement, paid: compte.paid,
+      essai: compte.paid ? null : await quizEssai(compte),
       paypal_client_id: process.env.VITE_PAYPAL_CLIENT_ID || process.env.PAYPAL_CLIENT_ID || null, prix: QUIZ_PRICE.value });
   } catch (err) {
     console.error('[quiz/compte]', err.message);
@@ -835,7 +871,7 @@ app.post('/api/quiz/positionnement', async (req, res) => {
 app.get('/api/quiz/catalogue', async (req, res) => {
   const matiere = String(req.query.matiere || '');
   if (!QUIZ_MATIERES.includes(matiere)) return res.status(400).json({ error: 'Matière inconnue.' });
-  if (!(await quizAcces(req, res))) return;
+  if (!(await quizAcces(req, res, matiere))) return;
   try {
     const data = await quizCatalogue(matiere);
     res.json({ questions: data.map(q => ({ ...q, choix: q.type === 'qcm' ? melanger(q.choix) : q.choix })) });
@@ -846,7 +882,21 @@ app.post('/api/quiz/reponse', async (req, res) => {
   const id = Number(req.body?.id);
   const reponse = req.body?.reponse ?? req.body?.choix ?? '';
   if (!Number.isInteger(id)) return res.status(400).json({ error: 'Question inconnue.' });
-  if (!(await quizAcces(req, res))) return;
+  const matiere = await quizMatiereDe(id);
+  if (!matiere) return res.status(404).json({ error: 'Question inconnue.' });
+  const compte = await quizAcces(req, res, matiere);
+  if (!compte) return;
+  if (!compte.paid) {
+    // Essai : la question compte dans la série offerte de cette matière, jusqu'à « max » questions différentes
+    const deja = compte.essaiReponses[matiere] || [];
+    if (!deja.includes(id)) {
+      if (deja.length >= compte.essaiMatiere.max) return res.status(402).json({ error: "Votre série d'essai dans cette matière est terminée.", code: 'paiement' });
+      const essai = { ...compte.essaiReponses, [matiere]: [...deja, id] };
+      const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_reponses: essai, updated_at: new Date().toISOString() }).eq('user_id', compte.id);
+      if (error) { console.error('[quiz/essai]', error.message); return res.status(500).json({ error: 'La correction n\'a pas pu être chargée.' }); }
+      compte.essaiReponses = essai;
+    }
+  }
   const c = await quizCorriger(id, reponse);
   if (!c) return res.status(404).json({ error: 'Question inconnue.' });
   res.json(c);
