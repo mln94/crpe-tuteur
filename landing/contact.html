@@ -243,6 +243,12 @@
     .site-nav.connecte .nav-actions > .nav-login, .site-nav.connecte .nav-actions > .nav-cta { display: none !important; }
     .site-nav.connecte .nav-links li.nav-menu-account { display: none !important; }
     @media (max-width: 600px) { .nav-compte-btn .nom { max-width: 110px; } }
+    /* En-tête des applications : bouton Support à côté du nom */
+    .nav-app .nav-actions { gap: 10px; }
+    .nav-support { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: 100px; border: 1.5px solid var(--gray-200); background: #fff; font: inherit; font-size: 13.5px; font-weight: 700; color: var(--gray-700); text-decoration: none; cursor: pointer; }
+    .nav-support:hover { border-color: var(--indigo-600); color: var(--indigo-600); }
+    .nav-support svg { width: 16px; height: 16px; }
+    @media (max-width: 480px) { .nav-support .lib { display: none; } }
   </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
   <style>
@@ -350,6 +356,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <main class="ct-wrap">
   <h1>Contactez-nous</h1>
   <p class="ct-lead">Une question, un problème de paiement ou une suggestion ? Écrivez-nous : nous vous répondons par e-mail dans les meilleurs délais.</p>
+  <p class="ct-lead" id="ct-connexion" style="font-size:14px;margin-top:-12px">Déjà inscrit ? <a href="/?auth=login">Connectez-vous</a> pour retrouver la réponse dans votre espace.</p>
   <div class="ct-card">
     <form class="ct-form" id="ct-form" novalidate>
       <div class="ct-row">
@@ -357,7 +364,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <div class="ct-field"><label for="ct-email">Adresse e-mail</label><input id="ct-email" type="email" autocomplete="email" required placeholder="vous@exemple.fr"></div>
       </div>
       <div class="ct-field"><label for="ct-raison">Raison du contact</label>
-        <select id="ct-raison" required><option value="">Choisir une raison…</option><option value="Problème de paiement" data-cle="paiement">Problème de paiement</option><option value="Question sur le Quiz CRPE" data-cle="quiz">Question sur le Quiz CRPE</option><option value="Question sur le Tuteur IA" data-cle="tuteur">Question sur le Tuteur IA</option><option value="Problème technique" data-cle="technique">Problème technique</option><option value="Question sur mon compte" data-cle="compte">Question sur mon compte</option><option value="Demande de remboursement" data-cle="remboursement">Demande de remboursement</option><option value="Suggestion d'amélioration" data-cle="suggestion">Suggestion d'amélioration</option><option value="Partenariat ou presse" data-cle="partenariat">Partenariat ou presse</option><option value="Autre" data-cle="autre">Autre</option></select></div>
+        <select id="ct-raison" required><option value="">Choisir une raison…</option><option value="Question sur le Quiz CRPE" data-cle="quiz">Question sur le Quiz CRPE</option><option value="Question sur le Tuteur IA" data-cle="tuteur">Question sur le Tuteur IA</option><option value="Problème d'inscription ou de connexion" data-cle="inscription">Problème d'inscription ou de connexion</option><option value="Je n'ai pas reçu l'e-mail de confirmation" data-cle="confirmation">Je n'ai pas reçu l'e-mail de confirmation</option><option value="Problème de paiement" data-cle="paiement">Problème de paiement</option><option value="Question sur le concours CRPE" data-cle="crpe">Question sur le concours CRPE</option><option value="Partenariat ou presse" data-cle="partenariat">Partenariat ou presse</option><option value="Autre" data-cle="autre">Autre</option></select></div>
       <div class="ct-field"><label for="ct-message">Votre message</label>
         <textarea id="ct-message" required maxlength="5000" placeholder="Décrivez votre demande. Pour un problème de paiement, indiquez la date et le moyen de paiement utilisé."></textarea></div>
       <div class="ct-piege" aria-hidden="true"><label for="ct-site">Site</label><input id="ct-site" type="text" tabindex="-1" autocomplete="off"></div>
@@ -398,15 +405,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </script>
 <script>
 (function () {
+  var LISTES = {"visiteur": [["quiz", "Question sur le Quiz CRPE"], ["tuteur", "Question sur le Tuteur IA"], ["inscription", "Problème d'inscription ou de connexion"], ["confirmation", "Je n'ai pas reçu l'e-mail de confirmation"], ["paiement", "Problème de paiement"], ["crpe", "Question sur le concours CRPE"], ["partenariat", "Partenariat ou presse"], ["autre", "Autre"]], "connecte": [["paiement", "Problème de paiement"], ["quiz", "Question sur le Quiz CRPE"], ["tuteur", "Question sur le Tuteur IA"], ["technique", "Problème technique"], ["compte", "Question sur mon compte"], ["remboursement", "Demande de remboursement"], ["suggestion", "Suggestion d'amélioration"], ["partenariat", "Partenariat ou presse"], ["autre", "Autre"]]};
   var f = document.getElementById('ct-form'), sel = document.getElementById('ct-raison'), retour = document.getElementById('ct-retour'), btn = document.getElementById('ct-envoyer');
   // ?raison=paiement : raison présélectionnée (lien « Un problème avec le paiement ? » du quiz)
   var cle = new URLSearchParams(location.search).get('raison');
-  if (cle) for (var i = 0; i < sel.options.length; i++) if (sel.options[i].dataset.cle === cle) sel.selectedIndex = i;
+  function choisir(c) { if (c) for (var i = 0; i < sel.options.length; i++) if (sel.options[i].dataset.cle === c) sel.selectedIndex = i; }
+  // Liste des raisons : visiteur ou personne connectée (la raison déjà choisie est gardée si elle existe dans l'autre liste)
+  function remplir(liste) {
+    var avant = sel.selectedOptions[0] && sel.selectedOptions[0].dataset.cle;
+    sel.innerHTML = '<option value="">Choisir une raison…</option>' + liste.map(function (r) { return '<option value="' + r[1] + '" data-cle="' + r[0] + '">' + r[1] + '</option>'; }).join('');
+    choisir(avant || cle);
+  }
+  choisir(cle);
   var jeton = null;
   // Connecté : e-mail et prénom préremplis ; le ticket est rattaché au compte
   window.passcrpeSB.auth.getSession().then(function (r) {
     var s = r.data.session; if (!s) return;
     jeton = s.access_token;
+    remplir(LISTES.connecte);
+    var info = document.getElementById('ct-connexion'); if (info) info.hidden = true;
     var m = s.user.user_metadata || {}, em = document.getElementById('ct-email'), pr = document.getElementById('ct-prenom');
     if (!em.value) em.value = s.user.email || ''; if (!pr.value) pr.value = m.prenom || '';
   });

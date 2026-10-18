@@ -675,8 +675,10 @@ async function quizCorriger(id, reponse) {
 }
 
 /* ── Formulaire de contact (/contact) : crée un ticket dans le support (support_tickets), visible dans /admin-support ── */
+// Raisons des visiteurs non connectés et des personnes connectées (voir scripts/generate_contact.py)
 const CONTACT_RAISONS = ['Problème de paiement', 'Question sur le Quiz CRPE', 'Question sur le Tuteur IA', 'Problème technique',
-  'Question sur mon compte', 'Demande de remboursement', "Suggestion d'amélioration", 'Partenariat ou presse', 'Autre'];
+  'Question sur mon compte', 'Demande de remboursement', "Suggestion d'amélioration", 'Partenariat ou presse', 'Autre',
+  "Problème d'inscription ou de connexion", "Je n'ai pas reçu l'e-mail de confirmation", 'Question sur le concours CRPE'];
 const contactEnvois = new Map(); // limite simple : 5 messages par heure et par adresse IP
 app.post('/api/contact', async (req, res) => {
   const { prenom = '', email = '', raison = '', message = '', site = '' } = req.body || {};

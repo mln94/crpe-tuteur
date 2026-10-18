@@ -19,6 +19,18 @@ TEMPLATE = os.path.join(ROOT, 'landing', 'crpe-bac3-structure-premiere-epreuve-a
 SITE = 'https://www.passcrpe.fr'
 
 # Doit rester aligné avec CONTACT_RAISONS (app.js) ; la clé sert dans l'adresse (?raison=…)
+# Visiteur non connecté : raisons utiles avant l'inscription ou quand on n'arrive pas à se connecter
+RAISONS_VISITEUR = [
+    ('quiz', 'Question sur le Quiz CRPE'),
+    ('tuteur', 'Question sur le Tuteur IA'),
+    ('inscription', "Problème d'inscription ou de connexion"),
+    ('confirmation', "Je n'ai pas reçu l'e-mail de confirmation"),
+    ('paiement', 'Problème de paiement'),
+    ('crpe', 'Question sur le concours CRPE'),
+    ('partenariat', 'Partenariat ou presse'),
+    ('autre', 'Autre'),
+]
+# Personne connectée
 RAISONS = [
     ('paiement', 'Problème de paiement'),
     ('quiz', 'Question sur le Quiz CRPE'),
@@ -64,11 +76,17 @@ CSS = """
     @media (max-width: 600px) { .ct-row { grid-template-columns: 1fr; } .ct-card { padding: 20px 16px; } }
 """
 
-OPTIONS = ''.join(f'<option value="{label}" data-cle="{cle}">{label}</option>' for cle, label in RAISONS)
+def options(liste):
+    return ''.join(f'<option value="{label}" data-cle="{cle}">{label}</option>' for cle, label in liste)
+
+
+OPTIONS = options(RAISONS_VISITEUR)
+LISTES = json.dumps({'visiteur': RAISONS_VISITEUR, 'connecte': RAISONS}, ensure_ascii=False)
 
 BODY = f'''<main class="ct-wrap">
   <h1>Contactez-nous</h1>
   <p class="ct-lead">Une question, un problème de paiement ou une suggestion ? Écrivez-nous : nous vous répondons par e-mail dans les meilleurs délais.</p>
+  <p class="ct-lead" id="ct-connexion" style="font-size:14px;margin-top:-12px">Déjà inscrit ? <a href="/?auth=login">Connectez-vous</a> pour retrouver la réponse dans votre espace.</p>
   <div class="ct-card">
     <form class="ct-form" id="ct-form" novalidate>
       <div class="ct-row">
@@ -90,15 +108,25 @@ BODY = f'''<main class="ct-wrap">
 
 JS = """<script>
 (function () {
+  var LISTES = __LISTES__;
   var f = document.getElementById('ct-form'), sel = document.getElementById('ct-raison'), retour = document.getElementById('ct-retour'), btn = document.getElementById('ct-envoyer');
   // ?raison=paiement : raison présélectionnée (lien « Un problème avec le paiement ? » du quiz)
   var cle = new URLSearchParams(location.search).get('raison');
-  if (cle) for (var i = 0; i < sel.options.length; i++) if (sel.options[i].dataset.cle === cle) sel.selectedIndex = i;
+  function choisir(c) { if (c) for (var i = 0; i < sel.options.length; i++) if (sel.options[i].dataset.cle === c) sel.selectedIndex = i; }
+  // Liste des raisons : visiteur ou personne connectée (la raison déjà choisie est gardée si elle existe dans l'autre liste)
+  function remplir(liste) {
+    var avant = sel.selectedOptions[0] && sel.selectedOptions[0].dataset.cle;
+    sel.innerHTML = '<option value="">Choisir une raison…</option>' + liste.map(function (r) { return '<option value="' + r[1] + '" data-cle="' + r[0] + '">' + r[1] + '</option>'; }).join('');
+    choisir(avant || cle);
+  }
+  choisir(cle);
   var jeton = null;
   // Connecté : e-mail et prénom préremplis ; le ticket est rattaché au compte
   window.passcrpeSB.auth.getSession().then(function (r) {
     var s = r.data.session; if (!s) return;
     jeton = s.access_token;
+    remplir(LISTES.connecte);
+    var info = document.getElementById('ct-connexion'); if (info) info.hidden = true;
     var m = s.user.user_metadata || {}, em = document.getElementById('ct-email'), pr = document.getElementById('ct-prenom');
     if (!em.value) em.value = s.user.email || ''; if (!pr.value) pr.value = m.prenom || '';
   });
@@ -131,7 +159,7 @@ def page():
             + '  <meta name="description" content="Contactez l\'équipe PassCRPE : question sur le Quiz CRPE ou le tuteur IA, problème de paiement, suggestion." />\n'
             + f'  <link rel="canonical" href="{SITE}/contact" />\n'
             + CSS_BASE + CSS + nav_compte.CSS)
-    return head + BODY_NAV + BODY + nav_compte.JS + JS + TAIL
+    return head + BODY_NAV + BODY + nav_compte.JS + JS.replace('__LISTES__', LISTES) + TAIL
 
 
 open(os.path.join(ROOT, 'landing', 'contact.html'), 'w', encoding='utf-8').write(page())
