@@ -6,14 +6,14 @@ Usage : python3 scripts/quiz/construire.py <matiere> [<matiere>...] > lignes.jso
   (variable d'environnement PROGRAMME_JSON) ;
 - autres matières : référentiel.py (table programme_cycle4_disciplines).
 """
-import collections, json, os, sys
+import collections, json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from referentiel import R
 
 FICHIERS = {
     'mathematiques': ['m_facile', 'm_inter', 'm_difficile', 'm_complements'],
     'francais': ['f_facile', 'f_inter', 'f_difficile', 'f_lecture', 'f_culture'],
-    'histoire_geographie': ['hg_facile', 'hg_inter', 'hg_difficile'],
+    'histoire_geographie': ['hg_facile', 'hg_inter', 'hg_difficile', 'hg_complements'],
     'emc': ['emc_facile', 'emc_inter', 'emc_difficile'],
     'svt': ['svt_facile', 'svt_inter', 'svt_difficile'],
     'physique_chimie': ['pc_facile', 'pc_inter', 'pc_difficile'],
@@ -47,6 +47,11 @@ def lignes(matiere, prog=None):
             else:
                 r = REF[(matiere, n['ref'])]
                 meta = dict(classe=r['classe'], theme=r['theme'], sous_theme=r['sous_theme'], objectif=r['objectifs'][n['obj']])
+                if matiere == 'histoire_geographie':
+                    # Thème suivi dans la progression : discipline, classe et titre officiel (« Histoire 5e · Chrétientés et islam… ») ;
+                    # sous-thème : le point du programme (« Byzance et l'Europe carolingienne. »)
+                    titre = re.sub(r'^Thème \d+ : ', '', r['sous_theme'])
+                    meta.update(theme=f"{r['theme']} {r['classe']} · {titre}", sous_theme=meta['objectif'])
             for v in n['variantes']:
                 if v['type'] == 'qcm': assert v['reponse'] in v['choix'] and len(set(v['choix'])) == len(v['choix']), v['question']
                 niveaux[n['niveau']] += 1
