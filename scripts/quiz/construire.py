@@ -19,7 +19,7 @@ FICHIERS = {
     'physique_chimie': ['pc_facile', 'pc_inter', 'pc_difficile', 'pc_complements'],
     'technologie': ['techno_facile', 'techno_inter', 'techno_difficile', 'techno_complements'],
     'arts': ['arts_facile', 'arts_inter', 'arts_difficile', 'arts_complements'],
-    'anglais': ['anglais_facile', 'anglais_inter', 'anglais_difficile', 'anglais_complements'],
+    'anglais': ['anglais_facile', 'anglais_inter', 'anglais_difficile', 'anglais_complements', 'anglais_axes'],
 }
 REF = {(m, c): dict(classe=cl, theme=t, sous_theme=st, objectifs=o) for m, c, cl, t, st, s, o in R}
 

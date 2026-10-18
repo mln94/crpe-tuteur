@@ -23,7 +23,7 @@ SITE = 'https://www.passcrpe.fr'
 
 PRIX_QUIZ = '59 €'
 # Nombre de questions actives par matière (table quiz_questions du projet Supabase « crpe »)
-QUESTIONS = [451, 342, 549, 366, 324, 321, 321, 357, 336]
+QUESTIONS = [451, 342, 549, 366, 324, 321, 321, 357, 465]
 
 # (libellé, icône, exemples de thèmes)
 MATIERES = [
@@ -35,7 +35,7 @@ MATIERES = [
     ('Physique-chimie', '⚗️', 'Matière, mouvement, énergie, signaux'),
     ('Technologie', '⚙️', 'Objets techniques, programmation, conception'),
     ('Arts', '🎨', 'Arts plastiques et éducation musicale'),
-    ('Anglais', '🇬🇧', 'Grammaire, compréhension, culture anglophone'),
+    ('Anglais', '🇬🇧', 'Grammaire, compréhension, axes culturels de la 6e à la 3e'),
 ]
 
 FAQ = [
