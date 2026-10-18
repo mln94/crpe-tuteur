@@ -1,8 +1,7 @@
 """Menu du compte dans l'en-tête (pages /espace et /quizapp).
 
 Connecté : « Se connecter » et « Commencer » sont remplacés par le nom du profil, avec un menu déroulant
-(Mes outils, Tuteur IA, Quiz CRPE, Se déconnecter).
-Une page peut ajouter ses propres liens au menu avec window.passcrpeMenuExtra (HTML), défini avant ce script. Non connecté : l'en-tête reste celui du site.
+de trois liens : Mon espace, PassCRPE, QuizCRPE. Non connecté : l'en-tête reste celui du site.
 Le client Supabase (projet « crpe ») est partagé avec la page : window.passcrpeSB.
 """
 
@@ -69,15 +68,12 @@ JS = """<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/u
       var el = document.createElement('div'); el.className = 'nav-compte';
       el.innerHTML = '<button type="button" class="nav-compte-btn" aria-haspopup="true" aria-expanded="false"><span class="av">' + esc((nom[0] || '?').toUpperCase()) + '</span><span class="nom">' + esc(nom) +
         '</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>' +
-        '<div class="nav-compte-menu" role="menu"><div class="mail">' + esc(user.email) + '</div>' +
-        '<a href="/espace" role="menuitem">🏠 Mes outils</a><a href="/app" role="menuitem">🤖 Tuteur IA</a><a href="/quizapp" role="menuitem">🎯 Quiz CRPE</a>' +
-        (window.passcrpeMenuExtra || '') + '<hr>' +
-        '<button type="button" class="out" role="menuitem">Se déconnecter</button></div>';
+        '<div class="nav-compte-menu" role="menu">' +
+        '<a href="/espace" role="menuitem">🏠 Mon espace</a><a href="/app" role="menuitem">🤖 PassCRPE</a><a href="/quizapp" role="menuitem">🎯 QuizCRPE</a></div>';
       actions.insertBefore(el, actions.querySelector('.nav-burger'));
       nav.classList.add('connecte');
       var btn = el.querySelector('.nav-compte-btn');
       btn.addEventListener('click', function (e) { e.stopPropagation(); var o = el.classList.toggle('open'); btn.setAttribute('aria-expanded', o); });
-      el.querySelector('.out').addEventListener('click', function () { window.passcrpeSB.auth.signOut().then(function () { window.location.href = '/'; }); });
     }
     document.addEventListener('click', function (e) { var c = actions.querySelector('.nav-compte.open'); if (c && !c.contains(e.target)) { c.classList.remove('open'); c.querySelector('.nav-compte-btn').setAttribute('aria-expanded', 'false'); } });
     window.passcrpeSB.auth.getSession().then(function (r) { afficher(r.data.session && r.data.session.user); });

@@ -40,6 +40,25 @@ MATIERES = [
     ('anglais', 'Anglais', '🇬🇧'),
 ]
 PRIX = '59 €'
+# Profil : mêmes listes que le tuteur IA (src/App.jsx, CONCOURS_LIST et ACADEMIES_LIST)
+CONCOURS = [
+    'Concours externe et externe spécial — Bac+3',
+    'Concours externe et externe spécial — Bac+5',
+    'Troisième concours',
+    'Second concours interne et interne spécial (langues régionales)',
+    'Concours interne exceptionnel',
+    'Premier concours interne',
+    "Concours spécifiques à l'académie de Mayotte",
+]
+ACADEMIES = [
+    'Je ne sais pas encore',
+    'Aix-Marseille', 'Amiens', 'Besançon', 'Bordeaux', 'Caen',
+    'Clermont-Ferrand', 'Créteil', 'Dijon', 'Grenoble', 'Guadeloupe',
+    'Guyane', 'La Réunion', 'Lille', 'Limoges', 'Lyon',
+    'Martinique', 'Mayotte', 'Montpellier', 'Nancy-Metz', 'Nantes',
+    'Nice', 'Normandie', 'Orléans-Tours', 'Paris', 'Poitiers',
+    'Reims', 'Rennes', 'Rouen', 'Strasbourg', 'Toulouse', 'Versailles',
+]
 TAILLE_SERIE = 20
 BONNES_POUR_MAITRISER = 3
 INTERVALLES_JOURS = [1, 3]   # après la 1re puis la 2e bonne réponse
@@ -81,11 +100,6 @@ TABBAR = '<nav class="quiz-tabbar" aria-label="Navigation du quiz">' + ''.join(
         ('support', 'Support', '/quizapp?vue=support', ' id="tab-support"', '<span class="pastille" hidden></span>', ' data-vue="support"'),
         ('profil', 'Profil', '/quizapp?vue=profil', '', '', ' data-vue="profil"'),
     ]) + '</nav>\n'
-# Menu du compte : accès direct à « Mes séries » et au support du quiz
-MENU_QUIZ = ('<script>window.passcrpeMenuExtra = \'<a href="/quizapp?vue=series" role="menuitem">📊 Mes séries</a>'
-             '<a href="/quizapp?vue=test" role="menuitem">📋 Mon test de positionnement</a>'
-             '<a href="/quizapp?vue=support" role="menuitem">💬 Support QuizCRPE</a>\';</script>\n')
-
 CSS = """
     /* QUIZ */
     .quiz-wrap { max-width: 780px; margin: 0 auto; padding: 32px 20px 72px; color: var(--gray-700); }
@@ -366,34 +380,34 @@ CSS = """
     .qz-emojis button { flex: 1; font-size: 24px; padding: 6px 0; border-radius: 12px; border: 1px solid var(--gray-200); background: #fff; cursor: pointer; }
     .qz-emojis button:hover:not(:disabled) { border-color: #fb923c; background: #fff7ed; }
     /* Menu du compte aux couleurs de QuizCRPE */
-    .nav-compte-btn .av { background: #f97316; }
-    .nav-compte-btn:hover { border-color: #fb923c; }
-    .nav-compte-menu a:hover, .nav-compte-menu button:hover { background: #fff7ed; }
-    /* Profil QuizCRPE */
-    .pf { max-width: 560px; margin: 0 auto; }
-    .pf-carte { background: #fff; border: 1px solid var(--gray-100); border-radius: 16px; padding: 20px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
-    .pf-carte h2 { font-size: 15px; font-weight: 800; color: var(--gray-900); margin-bottom: 12px; }
-    .pf-carte p { font-size: 14px; line-height: 1.6; color: var(--gray-600); }
+    .site-nav .nav-compte-btn .av { background: #f97316; }
+    .site-nav .nav-compte-btn:hover { border-color: #fb923c; }
+    .site-nav .nav-compte-menu a:hover { background: #fff7ed; }
+    /* Profil : même format que le profil du tuteur IA, couleurs orange */
+    .pf { max-width: 640px; }
+    .pf-h { font-size: 20px; font-weight: 700; color: var(--gray-900); margin-bottom: 20px; }
+    .pf-carte { background: #fff; border: 1px solid var(--gray-100); border-radius: 16px; padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
     .pf-id { display: flex; align-items: center; gap: 16px; }
-    .pf-av { width: 56px; height: 56px; border-radius: 16px; background: #ffedd5; color: #ea580c; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 900; flex-shrink: 0; }
-    .pf-id b { display: block; font-size: 18px; color: var(--gray-900); }
-    .pf-id span { font-size: 14px; color: var(--gray-400); word-break: break-all; }
-    .pf-titre { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-    .pf-titre h2 { margin: 0; }
-    .pf-lien { background: none; border: 0; font: inherit; font-size: 13px; font-weight: 700; color: #ea580c; cursor: pointer; }
-    .pf-ligne { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--gray-50); font-size: 14px; }
+    .pf-av { width: 56px; height: 56px; border-radius: 16px; background: #ffedd5; color: #ea580c; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; flex-shrink: 0; }
+    .pf-id > div:last-child { min-width: 0; }
+    .pf-id b { display: block; font-size: 18px; font-weight: 700; color: var(--gray-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pf-id span { display: block; font-size: 14px; color: var(--gray-400); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .pf-titre { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .pf-titre h3 { font-size: 14px; font-weight: 600; color: var(--gray-800); }
+    .pf-actions { display: flex; gap: 12px; }
+    .pf-lien { background: none; border: 0; font: inherit; font-size: 12px; font-weight: 600; color: #ea580c; cursor: pointer; padding: 0; }
+    .pf-lien:hover { color: #c2410c; } .pf-lien.gris { color: var(--gray-400); font-weight: 500; } .pf-lien:disabled { opacity: .4; cursor: not-allowed; }
+    .pf-ligne { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--gray-50); }
     .pf-ligne:last-child { border-bottom: 0; }
-    .pf-ligne span { color: var(--gray-400); } .pf-ligne b { color: var(--gray-800); font-weight: 600; text-align: right; word-break: break-all; }
-    .pf input { width: 100%; border: 1px solid var(--gray-200); border-radius: 12px; padding: 10px 12px; font: inherit; font-size: 14px; color: var(--gray-800); background: var(--gray-50); }
-    .pf input:focus { outline: none; border-color: #fb923c; }
-    #pf-form { margin-top: 12px; }
-    .pf-badge { display: inline-block; font-size: 12.5px; font-weight: 800; padding: 4px 12px; border-radius: 100px; margin-bottom: 8px; }
-    .pf-badge.ok { background: #dcfce7; color: #166534; } .pf-badge.essai { background: #ffedd5; color: #9a3412; }
-    .pf .stats { margin: 0; }
-    .pf-menu { padding: 6px; }
-    .pf-menu a, .pf-menu button { display: block; width: 100%; text-align: left; padding: 13px 14px; border-radius: 10px; border: 0; background: none; font: inherit; font-size: 14.5px; font-weight: 600; color: var(--gray-800); text-decoration: none; cursor: pointer; }
-    .pf-menu a:hover, .pf-menu button:hover { background: #fff7ed; }
-    .pf-menu .pf-sortie { color: #b91c1c; border-top: 1px solid var(--gray-100); border-radius: 0 0 10px 10px; }
+    .pf-ligne span { font-size: 12px; font-weight: 500; color: var(--gray-400); } .pf-ligne b { font-size: 14px; font-weight: 600; color: var(--gray-800); text-align: right; }
+    .pf-champ { margin-bottom: 16px; }
+    .pf-champ label, .pf-champ .lbl { display: block; font-size: 12px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+    .pf input, .pf select { width: 100%; padding: 10px 12px; border: 1px solid var(--gray-200); border-radius: 12px; font: inherit; font-size: 14px; color: var(--gray-900); background: #fff; }
+    .pf input:focus, .pf select:focus { outline: none; border-color: transparent; box-shadow: 0 0 0 2px #fb923c; }
+    .pf-concours { display: flex; flex-direction: column; gap: 6px; }
+    .pf-concours button { padding: 8px 12px; border-radius: 12px; border: 2px solid var(--gray-100); background: #fff; font: inherit; font-size: 12px; font-weight: 500; color: var(--gray-600); text-align: left; cursor: pointer; }
+    .pf-concours button:hover { border-color: var(--gray-200); }
+    .pf-concours button.on { border-color: #f97316; background: #fff7ed; color: #c2410c; }
   .quiz-confirm { background: #dcfce7; color: #166534; font-weight: 600; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
 """
 
@@ -764,48 +778,42 @@ JS = """<script>
     return h + '</div>';
   }
 
-  // ── Profil QuizCRPE : identité du compte (prénom, nom), accès au quiz, activité, liens utiles ──
-  function profilVue(msg) {
-    st = null; tst = null; intro(false); marquerOnglet('profil');
+  // ── Profil : le même que celui de PassCRPE (prénom, concours, académie), aux couleurs de QuizCRPE ──
+  // Profil partagé avec le tuteur IA : localStorage « crpe_profile », sinon les données du compte
+  var CONCOURS = __CONCOURS__, ACADEMIES = __ACADEMIES__, pfEdit = null;
+  function profilVue() {
+    st = null; tst = null; intro(false); marquerOnglet('profil'); pfEdit = null;
     root.innerHTML = '<div class="quiz-card"><p>Chargement de votre profil…</p></div>';
-    SB.auth.getSession().then(function (r) {
-      var s = r.data.session; if (!s) return connexion();
-      return Promise.all([compte ? Promise.resolve(compte) : api('/api/quiz/compte'),
-        SB.from('quiz_series').select('score, total').then(function (x) { return x.data || []; })]).then(function (res) {
-        compte = res[0]; afficherProfil(s.user, res[1], msg);
-      });
-    }).catch(function (e) { if (e && e.status === 401) return connexion(); erreur('Votre profil n’a pas pu être chargé. Réessayez dans quelques instants.'); });
+    SB.auth.getSession().then(function (r) { var s = r.data.session; if (!s) return connexion(); pfUser = s.user; afficherProfil(); });
   }
-  function afficherProfil(u, series, msg) {
-    var m = u.user_metadata || {}, nom = ((m.prenom || '') + ' ' + (m.nom || '')).trim() || u.email, e = essaiActif();
-    var nb = series.length, q = 0, somme = 0; series.forEach(function (x) { q += x.total; somme += note20(x); });
-    var acces = compte.paid
-      ? '<span class="pf-badge ok">✓ Accès complet</span><p>Les 9 matières, les 3 niveaux et toutes les questions sont débloqués, avec vos révisions espacées jusqu’au concours.</p>'
-      : '<span class="pf-badge essai">' + (e && e.termine ? 'Essai terminé' : '🎁 Essai gratuit') + '</span><p>' +
-        (e ? e.matieres.filter(function (x) { return x.termine; }).length + ' / ' + e.matieres.length + ' séries d’essai faites. ' : '') +
-        'Débloquez les 9 matières et les 3 niveaux.</p><div class="quiz-actions"><button type="button" class="quiz-btn" data-act="payer">Débloquer le quiz pour ' + PRIX + '</button></div>';
-    root.innerHTML = '<div class="pf"><div class="qz-page-tete"><h1>Mon compte</h1></div>' +
-      (msg ? '<div class="quiz-msg ok-msg">' + esc(msg) + '</div>' : '') +
-      '<div class="pf-carte pf-id"><div class="pf-av">' + esc((nom[0] || '?').toUpperCase()) + '</div><div><b>' + esc(nom) + '</b><span>' + esc(u.email) + '</span></div></div>' +
-      '<div class="pf-carte"><div class="pf-titre"><h2>Mon profil</h2><button type="button" class="pf-lien" data-act="pf-modifier">Modifier</button></div>' +
-        '<div id="pf-lignes"><div class="pf-ligne"><span>Prénom</span><b>' + esc(m.prenom || '—') + '</b></div><div class="pf-ligne"><span>Nom</span><b>' + esc(m.nom || '—') + '</b></div><div class="pf-ligne"><span>E-mail</span><b>' + esc(u.email) + '</b></div></div>' +
-        '<form id="pf-form" hidden><div class="sp-champ"><label for="pf-prenom">Prénom</label><input id="pf-prenom" maxlength="80" autocomplete="given-name" value="' + esc(m.prenom || '') + '"></div>' +
-        '<div class="sp-champ"><label for="pf-nom">Nom</label><input id="pf-nom" maxlength="80" autocomplete="family-name" value="' + esc(m.nom || '') + '"></div>' +
-        '<p class="sp-erreur" id="pf-err"></p><div class="quiz-actions"><button type="submit" class="quiz-btn">Enregistrer</button><button type="button" class="quiz-btn ghost" data-act="pf-annuler">Annuler</button></div></form></div>' +
-      '<div class="pf-carte"><h2>Mon accès QuizCRPE</h2>' + acces + '</div>' +
-      '<div class="pf-carte"><h2>Mon activité</h2><div class="stats"><div class="stat"><b>' + nb + '</b><span>série' + (nb > 1 ? 's' : '') + ' terminée' + (nb > 1 ? 's' : '') + '</span></div>' +
-        '<div class="stat"><b>' + (nb ? noteTxt(Math.round(somme / nb * 2) / 2) + ' / 20' : '–') + '</b><span>note moyenne</span></div><div class="stat"><b>' + q + '</b><span>questions répondues</span></div></div></div>' +
-      '<div class="pf-carte pf-menu"><a href="/quizapp?vue=test">📋 Mon test de positionnement</a><a href="/quizapp?vue=series">📊 Mes séries</a><a href="/quizapp?vue=support">💬 Support QuizCRPE</a>' +
-        '<a href="/espace">🏠 Mes outils PassCRPE</a><button type="button" class="pf-sortie" data-act="pf-deconnexion">Se déconnecter</button></div></div>';
-    var f = document.getElementById('pf-form');
-    f.addEventListener('submit', function (ev) {
-      ev.preventDefault();
-      var p = document.getElementById('pf-prenom').value.trim(), n = document.getElementById('pf-nom').value.trim(), err = document.getElementById('pf-err'), btn = f.querySelector('button[type="submit"]');
-      if (!p || !n) { err.textContent = 'Indiquez votre prénom et votre nom.'; return; }
-      btn.disabled = true;
-      SB.auth.updateUser({ data: { prenom: p, nom: n } }).then(function (x) { if (x.error) throw x.error; profilVue('✓ Votre profil est mis à jour.'); })
-        .catch(function () { btn.disabled = false; err.textContent = 'Une erreur est survenue. Réessayez.'; });
-    });
+  var pfUser = null;
+  function lireProfil() {
+    var p = null; try { p = JSON.parse(localStorage.getItem('crpe_profile')); } catch (e) {}
+    var m = (pfUser && pfUser.user_metadata) || {};
+    return p || { prenom: m.prenom || '', concours: m.concours || '', academie: m.academie || '' };
+  }
+  function afficherProfil() {
+    var p = lireProfil(), e = pfEdit, initial = (p.prenom || '?')[0].toUpperCase();
+    root.innerHTML = '<div class="pf"><h2 class="pf-h">Mon compte</h2>' +
+      '<div class="pf-carte pf-id"><div class="pf-av">' + esc(initial) + '</div><div><b>' + esc(p.prenom) + '</b><span>' + esc(pfUser.email) + '</span></div></div>' +
+      '<div class="pf-carte"><div class="pf-titre"><h3>Profil CRPE</h3>' +
+      (e ? '<span class="pf-actions"><button type="button" class="pf-lien gris" data-act="pf-annuler">Annuler</button><button type="button" class="pf-lien" data-act="pf-enregistrer"' + (e.prenom.trim() && e.concours && e.academie ? '' : ' disabled') + '>Enregistrer</button></span>'
+         : '<button type="button" class="pf-lien" data-act="pf-modifier">Modifier</button>') + '</div>' +
+      (e ? '<div class="pf-champ"><label for="pf-prenom">Prénom</label><input id="pf-prenom" type="text" value="' + esc(e.prenom) + '"></div>' +
+           '<div class="pf-champ"><span class="lbl">Concours</span><div class="pf-concours">' + CONCOURS.map(function (c, i) { return '<button type="button" data-concours="' + i + '"' + (c === e.concours ? ' class="on"' : '') + '>' + esc(c) + '</button>'; }).join('') + '</div></div>' +
+           '<div class="pf-champ"><label for="pf-academie">Académie</label><select id="pf-academie"><option value="">Choisir une académie…</option>' + ACADEMIES.map(function (a) { return '<option' + (a === e.academie ? ' selected' : '') + '>' + esc(a) + '</option>'; }).join('') + '</select></div>'
+         : '<div class="pf-ligne"><span>Prénom</span><b>' + esc(p.prenom) + '</b></div><div class="pf-ligne"><span>Concours</span><b>' + esc(p.concours) + '</b></div><div class="pf-ligne"><span>Académie</span><b>' + esc(p.academie || '—') + '</b></div>') +
+      '</div></div>';
+    var ip = document.getElementById('pf-prenom'), sa = document.getElementById('pf-academie');
+    if (ip) ip.addEventListener('input', function () { pfEdit.prenom = ip.value; majEnregistrer(); });
+    if (sa) sa.addEventListener('change', function () { pfEdit.academie = sa.value; majEnregistrer(); });
+  }
+  function majEnregistrer() { var b = root.querySelector('[data-act="pf-enregistrer"]'); if (b) b.disabled = !(pfEdit.prenom.trim() && pfEdit.concours && pfEdit.academie); }
+  function enregistrerProfil() {
+    var p = { prenom: pfEdit.prenom.trim(), concours: pfEdit.concours, academie: pfEdit.academie };
+    try { localStorage.setItem('crpe_profile', JSON.stringify(p)); } catch (e) {}
+    SB.auth.updateUser({ data: { prenom: p.prenom, concours: p.concours, academie: p.academie } }).catch(function () {});
+    pfEdit = null; afficherProfil();
   }
 
   // ── Compte : connexion, test de positionnement, paiement ──
@@ -1149,6 +1157,7 @@ JS = """<script>
       return;
     }
     if (tst && b.dataset.ttok !== undefined) { var tk = +b.dataset.ttok, ti = tst.val.indexOf(tk); if (ti < 0) tst.val.push(tk); else tst.val.splice(ti, 1); b.classList.toggle('sel'); return; }
+    if (b.dataset.concours !== undefined && pfEdit) { pfEdit.concours = CONCOURS[+b.dataset.concours]; root.querySelectorAll('[data-concours]').forEach(function (x) { x.classList.toggle('on', x === b); }); majEnregistrer(); return; }
     if (b.dataset.resolu) { var fz = b.closest('.qz-ticket'); fz.querySelector('.qz-ticket-form').hidden = true; fz.querySelector('[data-noter]').hidden = false; return; }
     if (b.dataset.note && b.closest('[data-noter]')) {
       b.closest('.qz-emojis').querySelectorAll('button').forEach(function (x) { x.disabled = true; });
@@ -1206,8 +1215,9 @@ JS = """<script>
     else if (act === 'prog') progression(st.mat);
     else if (act === 'home') { accueil(); top(); }
     else if (act === 'sp-autre') supportVue();
-    else if (act === 'pf-modifier' || act === 'pf-annuler') { var fo = document.getElementById('pf-form'); fo.hidden = act === 'pf-annuler'; document.getElementById('pf-lignes').hidden = act === 'pf-modifier'; }
-    else if (act === 'pf-deconnexion') SB.auth.signOut().then(function () { window.location.href = '/'; });
+    else if (act === 'pf-modifier') { var pp = lireProfil(); pfEdit = { prenom: pp.prenom, concours: pp.concours, academie: pp.academie }; afficherProfil(); }
+    else if (act === 'pf-annuler') { pfEdit = null; afficherProfil(); }
+    else if (act === 'pf-enregistrer') enregistrerProfil();
     else if (act === 'quitter' && confirm('Quitter la série en cours ? Vos réponses déjà données sont enregistrées.')) { accueil(); top(); }
     else if (act === 'reset' && confirm('Effacer votre progression dans cette matière ?')) { var p = lire(); delete p[choix.mat]; ecrire(p); accueil(); }
   });
@@ -1277,9 +1287,10 @@ def page():
             + CSS_BASE + CSS + nav_compte.CSS)
     js = (JS.replace('__MATIERES__', json.dumps(MATIERES, ensure_ascii=False))
             .replace('__PRIX__', PRIX)
+            .replace('__CONCOURS__', json.dumps(CONCOURS, ensure_ascii=False)).replace('__ACADEMIES__', json.dumps(ACADEMIES, ensure_ascii=False))
             .replace('__SERIE__', str(TAILLE_SERIE)).replace('__MAITRISE__', str(BONNES_POUR_MAITRISER))
             .replace('__INTERVALLES__', json.dumps(INTERVALLES_JOURS)).replace('__APRES_ERREUR__', str(APRES_ERREUR_JOURS)))
-    return head + BODY_NAV + body + TABBAR + MENU_QUIZ + nav_compte.JS + js + TAIL
+    return head + BODY_NAV + body + TABBAR + nav_compte.JS + js + TAIL
 
 
 open(os.path.join(ROOT, 'landing', 'quizapp.html'), 'w', encoding='utf-8').write(page())

@@ -5973,14 +5973,11 @@ function SiteHeader({ authUser, profile, onSupport }) {
     const el = document.createElement('div');
     el.className = 'nav-compte';
     el.innerHTML = `<button type="button" class="nav-compte-btn" aria-haspopup="true" aria-expanded="false"><span class="av">${escHtml((nom[0] || '?').toUpperCase())}</span><span class="nom">${escHtml(nom)}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`
-      + `<div class="nav-compte-menu" role="menu"><div class="mail">${escHtml(authUser.email)}</div>`
-      + '<a href="/espace" role="menuitem">🏠 Mes outils</a><a href="/app" role="menuitem">🤖 Tuteur IA</a><a href="/quizapp" role="menuitem">🎯 Quiz CRPE</a><hr>'
-      + '<button type="button" class="out" role="menuitem">Se déconnecter</button></div>';
+      + '<div class="nav-compte-menu" role="menu"><a href="/espace" role="menuitem">🏠 Mon espace</a><a href="/app" role="menuitem">🤖 PassCRPE</a><a href="/quizapp" role="menuitem">🎯 QuizCRPE</a></div>';
     actions.insertBefore(el, actions.querySelector('.nav-burger'));
     nav.classList.add('connecte');
     const btn = el.querySelector('.nav-compte-btn');
     btn.addEventListener('click', (e) => { e.stopPropagation(); btn.setAttribute('aria-expanded', el.classList.toggle('open')); });
-    el.querySelector('.out').addEventListener('click', async () => { await sbClient.auth.signOut(); window.location.href = '/'; });
   }, [authUser, profile?.prenom, profile?.nom]);
   // Bouton Support de l'en-tête : ouvre l'onglet Support sans recharger la page
   useEffect(() => {
