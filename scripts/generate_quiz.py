@@ -21,6 +21,7 @@ import json
 import os
 
 import nav_compte
+from generate_quiz_vente import logo_quiz
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE = os.path.join(ROOT, 'landing', 'crpe-bac3-structure-premiere-epreuve-admissibilite.html')
@@ -57,21 +58,30 @@ assert BODY_START.count(NAV_BLOG) == 1
 BODY_NAV = BODY_START.replace(NAV_BLOG, '<li><a href="/blog">Blog</a></li>')
 # Application : en-tête sans le menu du site (logo, Support, menu du compte) et pas de pied de page
 _nav = BODY_NAV[BODY_NAV.index('<nav class="site-nav">'):BODY_NAV.index('</nav>') + len('</nav>')]
-BODY_NAV = BODY_NAV.replace(_nav, nav_compte.nav_application(_nav, '/app?onglet=support&produit=quiz'))
+# Logo QuizCRPE (cible orange, « by PassCRPE ») et bouton Support vers le support du quiz
+_nav_quiz = nav_compte.nav_application(_nav, '/quizapp?vue=support')
+assert _nav_quiz.count('<a href="/" class="nav-logo">') == 1
+_nav_quiz = logo_quiz(_nav_quiz.replace('<a href="/" class="nav-logo">', '<a href="/quizapp" class="nav-logo logo-quiz" aria-label="QuizCRPE by PassCRPE">'))
+BODY_NAV = BODY_NAV.replace(_nav, _nav_quiz)
 TAIL = TAIL[:TAIL.index('<footer>')] + TAIL[TAIL.index('</footer>') + len('</footer>'):]
 ICONES = {
     'accueil': '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
     'support': '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
+    'series': '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
     'profil': '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
 }
-# Barre d'onglets en bas, comme dans le tuteur IA : Accueil (quiz), Support et Profil (onglets du compte PassCRPE)
+# Barre d'onglets en bas : Accueil, Mes séries et Support du quiz (écrans de /quizapp), Profil (compte PassCRPE)
 TABBAR = '<nav class="quiz-tabbar" aria-label="Navigation du quiz">' + ''.join(
-    f'<a href="{href}"{cls}><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONES[k]}</svg>{extra}</span>{lib}</a>'
-    for k, lib, href, cls, extra in [
-        ('accueil', 'Accueil', '/quizapp', ' class="actif" aria-current="page"', ''),
-        ('support', 'Support', '/app?onglet=support&produit=quiz', ' id="tab-support"', '<span class="pastille" hidden></span>'),
-        ('profil', 'Profil', '/app?onglet=profile', '', ''),
+    f'<a href="{href}"{cls}{vue}><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONES[k]}</svg>{extra}</span>{lib}</a>'
+    for k, lib, href, cls, extra, vue in [
+        ('accueil', 'Accueil', '/quizapp', ' class="actif" aria-current="page"', '', ' data-vue=""'),
+        ('series', 'Mes séries', '/quizapp?vue=series', '', '', ' data-vue="series"'),
+        ('support', 'Support', '/quizapp?vue=support', ' id="tab-support"', '<span class="pastille" hidden></span>', ' data-vue="support"'),
+        ('profil', 'Profil', '/app?onglet=profile', '', '', ''),
     ]) + '</nav>\n'
+# Menu du compte : accès direct à « Mes séries » et au support du quiz
+MENU_QUIZ = ('<script>window.passcrpeMenuExtra = \'<a href="/quizapp?vue=series" role="menuitem">📊 Mes séries</a>'
+             '<a href="/quizapp?vue=support" role="menuitem">💬 Support QuizCRPE</a>\';</script>\n')
 
 CSS = """
     /* QUIZ */
@@ -250,6 +260,57 @@ CSS = """
     .qz-note { font-size: 12.5px; color: var(--gray-500); margin-top: 14px; }
     .ok-msg { background: #dcfce7 !important; color: #166534 !important; margin-bottom: 14px; }
     @media (max-width: 600px) { .qz-barre { top: 64px; padding: 12px; gap: 10px; } .qz-barre-champ { flex-basis: 100%; } .qz-tete .quiz-btn { width: 100%; } }
+    /* Logo QuizCRPE by PassCRPE (comme sur /quiz) */
+    .logo-quiz .nav-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
+    .logo-quiz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
+    .logo-quiz .nav-logo-text small { font-size: 10.5px; font-weight: 700; color: var(--gray-500); letter-spacing: .02em; }
+    .logo-quiz .nav-logo-text small b { font-weight: 800; color: var(--indigo-700); }
+    .quiz-tabbar a.actif { color: #ea580c; }
+    /* Mes séries */
+    .qz-page-tete h1 { font-size: clamp(26px, 4vw, 34px); font-weight: 900; color: var(--gray-900); letter-spacing: -.5px; margin-bottom: 6px; }
+    .qz-page-tete p { font-size: 15px; line-height: 1.6; margin-bottom: 18px; }
+    .qz-stats-series { margin-top: 0; }
+    .qz-total-q { margin: 6px 0 14px; }
+    .qz-series { display: grid; gap: 10px; }
+    .qz-serie { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 16px; overflow: hidden; }
+    .qz-serie summary { list-style: none; display: flex; align-items: center; gap: 14px; padding: 14px 16px; cursor: pointer; }
+    .qz-serie summary::-webkit-details-marker { display: none; }
+    .qz-serie summary:hover { background: var(--gray-50); }
+    .qz-serie[open] summary { border-bottom: 1px solid var(--gray-100); }
+    .qz-serie-note { flex-shrink: 0; width: 64px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 21px; font-weight: 900; }
+    .qz-serie-note small { font-size: 11px; font-weight: 700; margin-left: 1px; opacity: .75; }
+    .qz-serie-note.tres-bien { background: #dcfce7; color: #166534; } .qz-serie-note.bien { background: #ffedd5; color: #9a3412; }
+    .qz-serie-note.moyen { background: #fef3c7; color: #92400e; } .qz-serie-note.faible { background: #fee2e2; color: #991b1b; }
+    .qz-serie-info { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; font-size: 13.5px; color: var(--gray-600); }
+    .qz-serie-info b { font-size: 15.5px; color: var(--gray-900); }
+    .qz-serie-date { font-size: 12.5px; color: var(--gray-400); }
+    .qz-serie-voir::after { content: "▾"; font-size: 16px; color: var(--gray-400); }
+    .qz-serie[open] .qz-serie-voir::after { content: "▴"; }
+    .qz-serie .quiz-recap { margin: 0; padding: 12px 16px 16px; }
+    .qz-serie .quiz-recap > div { display: grid; grid-template-columns: 20px 1fr; align-items: start; }
+    .qz-recap-theme { display: block; font-size: 11px; font-weight: 800; color: #7c3aed; text-transform: uppercase; letter-spacing: .03em; }
+    /* Support QuizCRPE */
+    .qz-champ { margin-bottom: 14px; }
+    .qz-champ label { display: block; font-size: 13px; font-weight: 800; color: var(--gray-700); margin-bottom: 6px; }
+    .qz-textarea { width: 100%; padding: 12px 14px; font: inherit; font-size: 15px; color: var(--gray-900); border: 1.5px solid var(--gray-200); border-radius: 12px; resize: vertical; line-height: 1.5; }
+    .qz-textarea:focus { outline: none; border-color: #fb923c; }
+    .qz-demandes { margin: 24px 0 10px; }
+    .qz-ticket { margin-bottom: 12px; padding: 20px; }
+    .qz-ticket-tete { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 13px; font-weight: 800; color: var(--gray-600); margin-bottom: 8px; }
+    .qz-statut { font-size: 12px; padding: 2px 10px; border-radius: 100px; white-space: nowrap; }
+    .qz-statut.attente { background: #fef3c7; color: #92400e; } .qz-statut.repondu { background: #dcfce7; color: #166534; } .qz-statut.cloture { background: var(--gray-100); color: var(--gray-500); }
+    .qz-ticket-msg { font-size: 14.5px; line-height: 1.6; white-space: pre-line; color: var(--gray-800); }
+    .qz-ticket-date { font-size: 12px; color: var(--gray-400); margin-top: 4px; }
+    .qz-ticket-rep { margin-top: 12px; padding: 12px 14px; border-radius: 12px; font-size: 14px; line-height: 1.55; }
+    .qz-ticket-rep.admin { background: #fff7ed; border: 1px solid #fed7aa; } .qz-ticket-rep.moi { background: var(--gray-50); }
+    .qz-ticket-rep b { display: block; font-size: 12.5px; color: #c2410c; margin-bottom: 2px; } .qz-ticket-rep.moi b { color: var(--gray-500); }
+    .qz-ticket-rep p { white-space: pre-line; color: var(--gray-800); } .qz-ticket-rep span { font-size: 11.5px; color: var(--gray-400); }
+    .qz-ticket-form { margin-top: 12px; }
+    .qz-ticket-actions { margin-top: 8px; }
+    .qz-satisf { margin-top: 12px; font-size: 14px; font-weight: 700; color: var(--gray-800); }
+    .qz-emojis { display: flex; gap: 6px; margin-top: 8px; }
+    .qz-emojis button { flex: 1; font-size: 24px; padding: 6px 0; border-radius: 12px; border: 1.5px solid var(--gray-200); background: #fff; cursor: pointer; }
+    .qz-emojis button:hover:not(:disabled) { border-color: #fb923c; background: #fff7ed; }
   .quiz-confirm { background: #dcfce7; color: #166534; font-weight: 600; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
 """
 
@@ -371,6 +432,8 @@ JS = """<script>
   // Accueil : filtres, puis progression par thème (en questions, pour la matière et le niveau choisis) et lancement d'une série
   function accueil(message) {
     st = null; intro(true);
+    if (vue()) history.pushState(null, '', '/quizapp');
+    marquerOnglet('');
     var e = essaiActif();
     if (e && e.termine) {
       root.innerHTML = barreCompte() + barreFiltres(false) + '<div class="quiz-card essai-carte"><div class="essai-cadeau">🔓</div><div><h2>Votre essai est terminé</h2>' +
@@ -415,6 +478,142 @@ JS = """<script>
       if (err && (err.status === 401 || err.status === 402)) return boot();
       el.innerHTML = '<div class="quiz-msg">La progression n’a pas pu être chargée. Réessayez dans quelques instants.</div>';
     });
+  }
+
+  // ── Navigation interne : Accueil, Mes séries, Support (adresses /quizapp, /quizapp?vue=series, /quizapp?vue=support) ──
+  function vue() { return new URLSearchParams(location.search).get('vue') || ''; }
+  function marquerOnglet(v) {
+    document.querySelectorAll('.quiz-tabbar a[data-vue]').forEach(function (a) {
+      var on = a.dataset.vue === v; a.classList.toggle('actif', on);
+      if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
+    });
+  }
+  function route() {
+    var v = vue();
+    if (v === 'series') return mesSeries();
+    if (v === 'support') return supportVue();
+    marquerOnglet(''); boot();
+  }
+  window.addEventListener('popstate', route);
+  // Liens internes (onglets, logo, Support, menu du compte) : changement d'écran sans recharger la page
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest && e.target.closest('a[href^="/quizapp"]');
+    if (!a || e.metaKey || e.ctrlKey || e.shiftKey || a.target === '_blank') return;
+    e.preventDefault();
+    if (st && !st.fini && st.i > 0 && !confirm('Quitter la série en cours ? Vos réponses déjà données sont enregistrées.')) return;
+    fermerPaiement();
+    history.pushState(null, '', a.getAttribute('href')); route(); window.scrollTo(0, 0);
+  });
+
+  // ── Mes séries : historique des séries terminées (table quiz_series) ──
+  var filtreSeries = '';
+  function garderSerie(mat, niveau, score, total, essai, recap) {
+    SB.auth.getSession().then(function (r) {
+      var u = r.data.session && r.data.session.user; if (!u) return;
+      return SB.from('quiz_series').insert({ user_id: u.id, matiere: mat, niveau: niveau, score: score, total: total, essai: essai,
+        details: recap.map(function (x) { return { id: x.id, question: x.q, theme: x.theme, ok: x.ok, attendu: x.attendu }; }) });
+    }).catch(function () {});
+  }
+  function note20(x) { return Math.round(x.score / x.total * 40) / 2; }
+  function noteTxt(n) { return String(n).replace('.', ','); }
+  function mesSeries() {
+    st = null; tst = null; intro(false); marquerOnglet('series');
+    root.innerHTML = '<div class="quiz-card"><p>Chargement de vos séries…</p></div>';
+    SB.auth.getSession().then(function (r) {
+      if (!r.data.session) return connexion();
+      return SB.from('quiz_series').select('id, matiere, niveau, score, total, essai, details, created_at').order('created_at', { ascending: false }).limit(300)
+        .then(function (x) { if (x.error) throw x.error; afficherSeries(x.data || []); });
+    }).catch(function () { erreur('Vos séries n’ont pas pu être chargées. Réessayez dans quelques instants.'); });
+  }
+  function afficherSeries(toutes) {
+    var liste = filtreSeries ? toutes.filter(function (x) { return x.matiere === filtreSeries; }) : toutes;
+    var nb = liste.length, somme = 0, questions = 0, best = null, faites = {};
+    liste.forEach(function (x) { var n = note20(x); somme += n; questions += x.total; if (best === null || n > best) best = n; });
+    toutes.forEach(function (x) { faites[x.matiere] = true; });
+    var html = '<div class="qz-page-tete"><h1>Mes séries</h1><p>L’historique de vos séries terminées : votre note, la date et la correction de chaque question.</p></div>';
+    if (!toutes.length) {
+      root.innerHTML = html + '<div class="quiz-card"><h2>Aucune série terminée pour l’instant</h2><p>Chaque série terminée apparaîtra ici, avec votre note sur 20 et le détail de vos réponses.</p>' +
+        '<div class="quiz-actions"><a class="quiz-btn" href="/quizapp">Lancer une série</a></div></div>';
+      return;
+    }
+    html += '<div class="qz-barre"><div class="qz-barre-champ"><label for="series-mat">Matière</label><select id="series-mat" class="quiz-select"><option value="">Toutes les matières</option>' +
+      MATIERES.filter(function (m) { return faites[m[0]]; }).map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === filtreSeries ? ' selected' : '') + '>' + esc(m[1]) + '</option>'; }).join('') + '</select></div></div>' +
+      '<div class="stats qz-stats-series"><div class="stat"><b>' + nb + '</b><span>série' + (nb > 1 ? 's' : '') + ' terminée' + (nb > 1 ? 's' : '') + '</span></div>' +
+      '<div class="stat"><b>' + (nb ? noteTxt(Math.round(somme / nb * 2) / 2) : '–') + ' / 20</b><span>note moyenne</span></div>' +
+      '<div class="stat"><b>' + (best === null ? '–' : noteTxt(best)) + ' / 20</b><span>meilleure note</span></div></div>' +
+      '<p class="qz-note qz-total-q">' + questions + ' questions répondues' + (filtreSeries ? ' en ' + esc(label(filtreSeries)) : '') + '. Touchez une série pour voir le détail.</p>' +
+      '<div class="qz-series">' + liste.map(function (x) {
+        var n = note20(x), cl = n >= 16 ? 'tres-bien' : n >= 12 ? 'bien' : n >= 8 ? 'moyen' : 'faible', d = new Date(x.created_at);
+        return '<details class="qz-serie"><summary><span class="qz-serie-note ' + cl + '">' + noteTxt(n) + '<small>/20</small></span>' +
+          '<span class="qz-serie-info"><b>' + esc(label(x.matiere)) + '</b><span>' + NIVEAUX[x.niveau] + ' · ' + x.score + ' / ' + x.total + ' bonnes réponses' + (x.essai ? ' · série d’essai' : '') + '</span>' +
+          '<span class="qz-serie-date">' + d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + '</span></span>' +
+          '<span class="qz-serie-voir" aria-hidden="true"></span></summary>' +
+          '<div class="quiz-recap">' + (x.details || []).map(function (q) {
+            return '<div class="' + (q.ok ? 'r-ok' : 'r-ko') + '"><span>' + (q.theme ? '<span class="qz-recap-theme">' + esc(q.theme) + '</span>' : '') + esc(q.question) + (q.ok ? '' : ' <em>Réponse : ' + esc(q.attendu) + '</em>') + '</span></div>';
+          }).join('') + '</div></details>';
+      }).join('') + '</div>' +
+      '<div class="quiz-actions"><a class="quiz-btn" href="/quizapp">Lancer une nouvelle série</a></div>';
+    root.innerHTML = html;
+    var sel = document.getElementById('series-mat');
+    sel.addEventListener('change', function () { filtreSeries = sel.value; afficherSeries(toutes); });
+  }
+
+  // ── Support QuizCRPE : demandes enregistrées dans support_tickets (produit « quiz »), traitées dans /admin-support ──
+  var CATS_SUPPORT = [['quiz', 'Question sur le quiz'], ['erreur', 'Erreur dans une question'], ['technique', 'Problème technique'], ['paiement', 'Problème de paiement'],
+    ['compte', 'Question sur mon compte'], ['remboursement', 'Demande de remboursement'], ['suggestion', 'Suggestion d’amélioration'], ['autre', 'Autre']];
+  var STATUTS = { open: ['En attente', 'attente'], answered: ['Répondu', 'repondu'], closed: ['Clôturé', 'cloture'] };
+  var EMOJIS = ['😞', '🙁', '😐', '🙂', '😍'];
+  function supportVue(envoye) {
+    st = null; tst = null; intro(false); marquerOnglet('support');
+    var pre = new URLSearchParams(location.search).get('categorie');
+    SB.auth.getSession().then(function (r) {
+      var s = r.data.session; if (!s) return connexion();
+      root.innerHTML = '<div class="qz-page-tete"><h1>Support QuizCRPE</h1><p>Une question sur le quiz, une erreur dans une question, un souci de paiement ? Écrivez-nous : nous vous répondons ici, sous 24 à 48 h.</p></div>' +
+        '<div class="quiz-card">' + (envoye ? '<div class="quiz-msg ok-msg">✓ Message envoyé. Notre réponse apparaîtra ci-dessous, dans « Vos demandes ».</div>' : '') +
+        '<form id="sp-form"><div class="qz-champ"><label for="sp-cat">Catégorie</label><select id="sp-cat" class="quiz-select"><option value="">Choisir une catégorie…</option>' +
+        CATS_SUPPORT.map(function (c) { return '<option value="' + esc(c[1]) + '"' + (c[0] === pre && !envoye ? ' selected' : '') + '>' + esc(c[1]) + '</option>'; }).join('') + '</select></div>' +
+        '<div class="qz-champ"><label for="sp-msg">Message</label><textarea id="sp-msg" class="qz-textarea" rows="5" maxlength="5000" placeholder="Décrivez votre demande. Pour une erreur dans une question, recopiez la question concernée."></textarea></div>' +
+        '<p class="quiz-hint" id="sp-retour"></p><button type="submit" class="quiz-btn">Envoyer</button></form></div>' +
+        '<div id="sp-liste"></div>';
+      var f = document.getElementById('sp-form');
+      f.addEventListener('submit', function (ev) {
+        ev.preventDefault();
+        var cat = document.getElementById('sp-cat').value, msg = document.getElementById('sp-msg').value.trim(), ret = document.getElementById('sp-retour'), btn = f.querySelector('button');
+        if (!cat || msg.length < 5) { ret.textContent = 'Choisissez une catégorie et écrivez votre message.'; ret.style.color = '#b91c1c'; return; }
+        btn.disabled = true; btn.textContent = 'Envoi…';
+        var m = s.user.user_metadata || {};
+        SB.from('support_tickets').insert({ user_id: s.user.id, user_email: s.user.email, user_prenom: ((m.prenom || '') + ' ' + (m.nom || '')).trim() || null,
+          category: cat, produit: 'quiz', message: msg }).then(function (x) {
+          if (x.error) throw x.error;
+          if (pre) history.replaceState(null, '', '/quizapp?vue=support');
+          supportVue(true);
+        }).catch(function () { btn.disabled = false; btn.textContent = 'Envoyer'; ret.textContent = 'Le message n’a pas pu être envoyé. Réessayez.'; ret.style.color = '#b91c1c'; });
+      });
+      chargerTickets();
+    });
+  }
+  function chargerTickets() {
+    SB.from('support_tickets').select('*, support_messages(id, author, body, created_at)').eq('produit', 'quiz').order('created_at', { ascending: false }).then(function (x) {
+      var el = document.getElementById('sp-liste'), ts = x.data || []; if (!el) return;
+      el.innerHTML = ts.length ? '<h2 class="qz-sous-titre qz-demandes">Vos demandes</h2>' + ts.map(ticketHtml).join('') : '';
+      if (ts.some(function (t) { return t.admin_reply && !t.user_seen_reply; }))
+        SB.rpc('support_mark_seen').then(function () { var p = document.querySelector('#tab-support .pastille'); if (p) p.hidden = true; });
+    });
+  }
+  function ticketHtml(t) {
+    var msgs = (t.support_messages || []).slice().sort(function (a, b) { return a.created_at < b.created_at ? -1 : 1; });
+    var aReponse = msgs.some(function (m) { return m.author === 'admin'; }), ferme = t.status === 'closed', s = STATUTS[t.status] || STATUTS.open;
+    var h = '<div class="quiz-card qz-ticket"><div class="qz-ticket-tete"><span>' + esc(t.category) + '</span><span class="qz-statut ' + s[1] + '">' + s[0] + '</span></div>' +
+      '<p class="qz-ticket-msg">' + esc(t.message) + '</p><p class="qz-ticket-date">' + new Date(t.created_at).toLocaleDateString('fr-FR') + '</p>' +
+      msgs.map(function (m) {
+        return '<div class="qz-ticket-rep ' + (m.author === 'admin' ? 'admin' : 'moi') + '"><b>' + (m.author === 'admin' ? 'Réponse de l’équipe QuizCRPE' : 'Vous') + '</b><p>' + esc(m.body) + '</p><span>' + new Date(m.created_at).toLocaleDateString('fr-FR') + '</span></div>';
+      }).join('');
+    if (!ferme) h += '<form class="qz-ticket-form" data-repondre="' + t.id + '"><textarea class="qz-textarea" rows="2" placeholder="' + (aReponse ? 'Répondre à l’équipe QuizCRPE…' : 'Ajouter une précision…') + '"></textarea>' +
+      '<div class="quiz-actions qz-ticket-actions"><button type="submit" class="quiz-btn">Répondre</button>' + (aReponse ? '<button type="button" class="quiz-btn ghost" data-resolu="' + t.id + '">Ma question est résolue</button>' : '') + '</div></form>';
+    if (aReponse && !t.satisfaction) h += '<div class="qz-satisf" data-noter="' + t.id + '"' + (ferme ? '' : ' hidden') + '><p>' + (ferme ? 'Cette demande est clôturée. Êtes-vous satisfait de la réponse ?' : 'Avant de clôturer, êtes-vous satisfait de la réponse ?') + '</p>' +
+      '<div class="qz-emojis">' + EMOJIS.map(function (e, k) { return '<button type="button" data-note="' + (k + 1) + '" aria-label="Note ' + (k + 1) + ' sur 5">' + e + '</button>'; }).join('') + '</div></div>';
+    else if (t.satisfaction) h += '<p class="qz-note">Votre note : ' + EMOJIS[t.satisfaction - 1] + ' ' + t.satisfaction + ' / 5</p>';
+    return h + '</div>';
   }
 
   // ── Compte : connexion, test de positionnement, paiement ──
@@ -599,7 +798,7 @@ JS = """<script>
         '<div class="garantie pay-garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Pas convaincu ? Écrivez-nous dans les 14 jours suivant votre achat : nous vous remboursons intégralement, sans avoir à vous justifier.</div></div>' +
         '<div class="paypal-zone"><div id="pp-paypal"></div><div id="pp-carte"></div></div>' +
         '<p class="quiz-hint" id="pp-msg">Paiement sécurisé par PayPal, par compte PayPal ou carte bancaire.</p>' +
-        '<p class="pw-liens"><a class="quiz-link" href="/app?onglet=support&produit=quiz&categorie=paiement">Un problème avec le paiement ? Contactez le support</a><button type="button" class="quiz-link" data-pay="deja">J’ai déjà payé : actualiser mon accès</button></p></div>';
+        '<p class="pw-liens"><a class="quiz-link" href="/quizapp?vue=support&categorie=paiement">Un problème avec le paiement ? Contactez le support</a><button type="button" class="quiz-link" data-pay="deja">J’ai déjà payé : actualiser mon accès</button></p></div>';
       document.body.appendChild(m);
       m.addEventListener('click', function (ev) {
         if (ev.target === m || ev.target.closest('.pay-fermer')) fermerPaiement();
@@ -691,7 +890,7 @@ JS = """<script>
         afficher(d);
         var suite = enregistrer(q, d.correct);
         if (d.correct) st.score++;
-        st.recap.push({ q: q.question, ok: d.correct, attendu: d.attendu });
+        st.recap.push({ id: q.id, theme: q.theme, q: q.question, ok: d.correct, attendu: d.attendu });
         var last = st.i === st.serie.length - 1;
         document.getElementById('quiz-fb').innerHTML =
           '<div class="quiz-feedback ' + (d.correct ? 'ok' : 'ko') + '"><strong>' + (d.correct ? 'Bonne réponse !' : 'Ce n\\'est pas la bonne réponse. Réponse attendue : ' + esc(d.attendu)) + '</strong>' + esc(d.explication) +
@@ -724,6 +923,7 @@ JS = """<script>
   function fin() {
     var pm = prog(st.mat); pm.series = (pm.series || 0) + 1; sauver(st.mat, pm);
     var n = st.serie.length, s = st.score, b = bilan(st.mat, st.cat, st.niveau);
+    st.fini = true; garderSerie(st.mat, st.niveau, s, n, !!essaiActif(), st.recap);
     var note = Math.round(s / n * 20 * 2) / 2;
     var msg = note >= 16 ? 'Excellent travail !' : note >= 12 ? 'Bon travail, continuez comme ça.' : note >= 8 ? 'C\\'est un début : les notions ratées reviendront pour être retravaillées.' : 'Ces notions sont à retravailler : elles reviendront dans vos prochaines séries.';
     root.innerHTML = barreFiltres(false) + '<div class="quiz-card quiz-score">' +
@@ -731,8 +931,8 @@ JS = """<script>
       '<div class="big">' + String(note).replace('.', ',') + ' / 20</div><p>' + s + ' bonne' + (s > 1 ? 's' : '') + ' réponse' + (s > 1 ? 's' : '') + ' sur ' + n + '. ' + msg + '</p>' +
       '<div class="stats"><div class="stat"><b>' + b.maitrisees + '</b><span>notions maîtrisées</span></div><div class="stat"><b>' + b.encours + '</b><span>en cours</span></div><div class="stat"><b>' + (b.total - b.maitrisees - b.encours) + '</b><span>à découvrir</span></div></div>' +
       (b.prochaine && !b.dues ? '<p style="font-size:13px;color:var(--gray-500)">Prochaines révisions à partir du ' + dateFr(b.prochaine) + '.</p>' : '') +
-      (essaiActif() ? '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Continuer mon essai</button></div>'
-        : '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="again">Nouvelle série de ' + SERIE + '</button><button type="button" class="quiz-btn ghost" data-act="prog">Ma progression</button><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>') +
+      (essaiActif() ? '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Continuer mon essai</button><a class="quiz-btn ghost" href="/quizapp?vue=series">Mes séries</a></div>'
+        : '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="again">Nouvelle série de ' + SERIE + '</button><button type="button" class="quiz-btn ghost" data-act="prog">Ma progression</button><a class="quiz-btn ghost" href="/quizapp?vue=series">Mes séries</a><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>') +
       '<div class="quiz-recap">' + st.recap.map(function (r) {
         return '<div class="' + (r.ok ? 'r-ok' : 'r-ko') + '">' + esc(r.q) + (r.ok ? '' : ' <em>Réponse : ' + esc(r.attendu) + '</em>') + '</div>';
       }).join('') + '</div></div>';
@@ -754,6 +954,12 @@ JS = """<script>
       return;
     }
     if (tst && b.dataset.ttok !== undefined) { var tk = +b.dataset.ttok, ti = tst.val.indexOf(tk); if (ti < 0) tst.val.push(tk); else tst.val.splice(ti, 1); b.classList.toggle('sel'); return; }
+    if (b.dataset.resolu) { var fz = b.closest('.qz-ticket'); fz.querySelector('.qz-ticket-form').hidden = true; fz.querySelector('[data-noter]').hidden = false; return; }
+    if (b.dataset.note && b.closest('[data-noter]')) {
+      b.closest('.qz-emojis').querySelectorAll('button').forEach(function (x) { x.disabled = true; });
+      SB.rpc('support_user_close', { p_ticket: b.closest('[data-noter]').dataset.noter, p_satisfaction: +b.dataset.note }).then(chargerTickets);
+      return;
+    }
     if (b.dataset.niv) { choix.niveau = b.dataset.niv; garderChoix(); accueil(); return; }
     if (b.dataset.k !== undefined && st && !st.repondu) {
       var q = st.serie[st.i], k = +b.dataset.k, btns = root.querySelectorAll('.quiz-choice');
@@ -802,16 +1008,24 @@ JS = """<script>
   });
   root.addEventListener('submit', function (e) {
     e.preventDefault();
+    var fr = e.target.closest && e.target.closest('[data-repondre]');
+    if (fr) {
+      var ta = fr.querySelector('textarea'), bt = fr.querySelector('button[type="submit"]'), v = ta.value.trim(); if (!v) return;
+      bt.disabled = true;
+      SB.rpc('support_user_reply', { p_ticket: fr.dataset.repondre, p_body: v }).then(function (x) { if (x.error) throw x.error; chargerTickets(); })
+        .catch(function () { bt.disabled = false; alert('Une erreur est survenue. Réessayez.'); });
+      return;
+    }
     if (!st || st.repondu) return;
     var inp = root.querySelector('.quiz-num input'), v = inp.value.trim(); if (!v) return;
     inp.disabled = true; root.querySelector('.quiz-num button').disabled = true;
     envoyer(v, function (d) { inp.classList.add(d.correct ? 'good' : 'bad'); });
   });
-  boot();
-  // Pastille sur l'onglet Support : réponses du support pas encore lues
+  route();
+  // Pastille sur l'onglet Support : réponses du support du quiz pas encore lues
   SB.auth.getSession().then(function (r) {
     if (!r.data.session) return;
-    SB.from('support_tickets').select('id', { count: 'exact', head: true }).eq('user_seen_reply', false).not('admin_reply', 'is', null)
+    SB.from('support_tickets').select('id', { count: 'exact', head: true }).eq('produit', 'quiz').eq('user_seen_reply', false).not('admin_reply', 'is', null)
       .then(function (x) { var p = document.querySelector('#tab-support .pastille'); if (p && x.count) p.hidden = false; });
   });
 })();
@@ -843,7 +1057,7 @@ def page():
 </main>
 '''
     head = (HEAD_START
-            + f'  <title>{title} | PassCRPE</title>\n'
+            + f'  <title>{title} | QuizCRPE</title>\n'
             + f'  <meta name="description" content="{desc}" />\n'
             + '  <meta name="robots" content="noindex, nofollow" />\n'
             + f'  <link rel="canonical" href="{SITE}/quizapp" />\n'
@@ -852,7 +1066,7 @@ def page():
             .replace('__PRIX__', PRIX)
             .replace('__SERIE__', str(TAILLE_SERIE)).replace('__MAITRISE__', str(BONNES_POUR_MAITRISER))
             .replace('__INTERVALLES__', json.dumps(INTERVALLES_JOURS)).replace('__APRES_ERREUR__', str(APRES_ERREUR_JOURS)))
-    return head + BODY_NAV + body + TABBAR + nav_compte.JS + js + TAIL
+    return head + BODY_NAV + body + TABBAR + MENU_QUIZ + nav_compte.JS + js + TAIL
 
 
 open(os.path.join(ROOT, 'landing', 'quizapp.html'), 'w', encoding='utf-8').write(page())

@@ -58,7 +58,15 @@
     .filter-btn.active { background: #4f46e5; color: #fff; border-color: #4f46e5; }
     .ticket-item { padding: 16px; border-bottom: 1px solid #f3f4f6; cursor: pointer; transition: background .12s; }
     .ticket-item:hover { background: #f9fafb; }
-    .ticket-item.selected { background: #eef2ff; border-left: 3px solid #4f46e5; }
+    .ticket-item.selected { background: #eef2ff; }
+    /* Origine du ticket : orange = QuizCRPE, mauve = PassCRPE (tuteur IA, contact) */
+    .ticket-item { border-left: 5px solid #8b5cf6; }
+    .ticket-item.prod-quiz { border-left-color: #f97316; }
+    .ticket-item.prod-quiz.selected { background: #fff7ed; }
+    .detail-header { border-left: 6px solid #8b5cf6; padding-left: 14px; }
+    .detail-header.prod-quiz { border-left-color: #f97316; }
+    .legende { display: flex; gap: 14px; padding: 8px 16px; font-size: 11.5px; font-weight: 700; color: #6b7280; border-bottom: 1px solid #f3f4f6; }
+    .legende i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
     .ticket-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
     .ticket-prenom { font-size: 13px; font-weight: 700; color: #111827; }
     .ticket-date { font-size: 11px; color: #9ca3af; }
@@ -101,7 +109,7 @@
       .layout.show-detail .ticket-detail { display: block; }
     }
     .ticket-produit { display: inline-block; font-size: 10.5px; font-weight: 800; padding: 1px 7px; border-radius: 100px; margin-right: 6px; text-transform: uppercase; letter-spacing: .03em; }
-  .ticket-produit.quiz { background: #ffedd5; color: #9a3412; } .ticket-produit.tuteur { background: #e0e7ff; color: #3730a3; }
+  .ticket-produit.quiz { background: #ffedd5; color: #9a3412; } .ticket-produit.tuteur, .ticket-produit.passcrpe { background: #ede9fe; color: #5b21b6; }
   .ticket-sans-compte { color: #b45309; font-weight: 700; }
   .sans-compte { margin-top: 8px; font-size: 13px; line-height: 1.5; padding: 10px 12px; border-radius: 10px; background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
   .sans-compte a { color: #4f46e5; font-weight: 700; }
@@ -150,6 +158,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <button class="filter-btn" onclick="setFilter('answered', this)">Répondus</button>
         <button class="filter-btn" onclick="setFilter('closed', this)">Clôturés</button>
       </div>
+      <div class="legende"><span><i style="background:#8b5cf6"></i>PassCRPE</span><span><i style="background:#f97316"></i>QuizCRPE</span></div>
       <div id="ticketList"><p style="padding:20px;font-size:13px;color:#9ca3af">Chargement…</p></div>
     </div>
     <!-- TICKET DETAIL -->
@@ -160,7 +169,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 
 <script>
-  const PRODUITS = { tuteur: 'Tuteur IA', quiz: 'Quiz CRPE' };
+  const PRODUITS = { tuteur: 'PassCRPE · Tuteur IA', quiz: 'QuizCRPE' };
   const SB = window.supabase.createClient(
     'https://zqwcermgfvcusuwjfviz.supabase.co',
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8'
@@ -239,12 +248,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const el = document.getElementById('ticketList');
     if (!filtered.length) { el.innerHTML = '<p style="padding:20px;font-size:13px;color:#9ca3af">Aucun ticket</p>'; return; }
     el.innerHTML = filtered.map(t => `
-      <div class="ticket-item ${t.id === selectedId ? 'selected' : ''}" onclick="selectTicket('${t.id}')">
+      <div class="ticket-item ${t.produit === 'quiz' ? 'prod-quiz' : 'prod-passcrpe'} ${t.id === selectedId ? 'selected' : ''}" onclick="selectTicket('${t.id}')">
         <div class="ticket-meta">
           <span class="ticket-prenom">${esc(t.user_prenom || t.user_email)}</span>
           <span class="ticket-date">${new Date(t.created_at).toLocaleDateString('fr-FR')}</span>
         </div>
-        <div class="ticket-category">${t.produit ? `<span class="ticket-produit ${t.produit}">${PRODUITS[t.produit]}</span>` : ''}${esc(t.category)}${t.user_id ? '' : ' · <span class="ticket-sans-compte">sans compte</span>'}</div>
+        <div class="ticket-category"><span class="ticket-produit ${t.produit || 'passcrpe'}">${PRODUITS[t.produit] || 'PassCRPE'}</span>${esc(t.category)}${t.user_id ? '' : ' · <span class="ticket-sans-compte">sans compte</span>'}</div>
         <div class="ticket-preview">${esc((t.support_messages.at(-1) || t).body || t.message)}</div>
         <span class="status-pill status-${t.status}">${STATUS[t.status]}</span>${t.satisfaction ? `<span class="ticket-rating">${SATISFACTION[t.satisfaction].split(' ')[0]} ${t.satisfaction}/5</span>` : ''}
       </div>
@@ -262,7 +271,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       ? `Clôturée ${t.closed_by === 'user' ? 'par le candidat' : t.closed_by === 'admin' ? 'par vous' : ''}${t.closed_at ? ' le ' + new Date(t.closed_at).toLocaleString('fr-FR') : ''}`
       : '';
     d.innerHTML = `
-      <div class="detail-header">
+      <div class="detail-header ${t.produit === 'quiz' ? 'prod-quiz' : ''}">
         <div class="detail-name">${esc(t.user_prenom || '—')}</div>
         <div class="detail-email">${esc(t.user_email)}</div>
         <span class="detail-badge status-${t.status} status-pill">${STATUS[t.status]}</span>
@@ -270,7 +279,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <div class="detail-section">
         <div class="detail-section-label">Demande concernant</div>
-        <div class="detail-message">${t.produit ? PRODUITS[t.produit] : 'Non précisé'}</div>
+        <div class="detail-message">${PRODUITS[t.produit] || 'PassCRPE (non précisé)'}</div>
       </div>
 
       <div class="detail-section">
