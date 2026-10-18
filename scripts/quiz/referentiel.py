@@ -5,7 +5,7 @@
 # Sources :
 #  - Programme du cycle 4, arrêté du 17-7-2020, BO n°31 du 30-7-2020 (histoire-géographie, SVT, physique-chimie,
 #    arts plastiques, éducation musicale, langues vivantes) ;
-#  - Programme de technologie du cycle 4, BO n°9 du 29-2-2024 ;
+#  - Technologie : programme du cycle 4 en quatre thèmes, BO n°31 du 30-7-2020 ;
 #  - EMC : programme du cycle 4 en trois domaines (Respecter autrui ; Acquérir et partager les valeurs de la République ;
 #    Construire une culture civique), BO n°31 du 30-7-2020.
 BO2020 = 'BO n°31 du 30 juillet 2020'
@@ -129,12 +129,24 @@ R = [
 ('physique_chimie', 'SI-3', None, 'Des signaux pour observer et communiquer', "Signaux et communication", BO2020,
  ["Caractériser différents types de signaux (lumineux, sonores, radio…) et utiliser leurs propriétés pour communiquer."]),
 # ── Technologie (programme 2024) ──
-('technologie', 'T-1', None, 'Les objets et les systèmes techniques', 'Les objets et les systèmes techniques : leurs usages et leurs interactions à découvrir et à analyser', BO_TECHNO,
- ["Décrire les liens entre usages et évolutions technologiques des objets et des systèmes techniques.", "Décrire les interactions entre un objet ou un système technique, son environnement et les utilisateurs.", "Caractériser et choisir un objet ou un système technique selon différents critères."]),
-('technologie', 'T-2', None, 'Structure, fonctionnement, comportement', 'Structure, fonctionnement, comportement : des objets et des systèmes techniques à comprendre', BO_TECHNO,
- ["Décrire et caractériser l'organisation interne d'un objet ou d'un système technique et ses échanges avec son environnement (énergies, données).", "Identifier un dysfonctionnement d'un objet technique et y remédier.", "Comprendre et modifier un programme associé à une fonctionnalité d'un objet ou d'un système technique."]),
-('technologie', 'T-3', None, 'Création, conception, réalisation, innovations', 'Création, conception, réalisation, innovations : des objets à concevoir et à réaliser', BO_TECHNO,
- ["Imaginer, concevoir et réaliser une ou des solutions en réponse à un besoin, à des exigences (de développement durable, par exemple) ou à la nécessité d'améliorations dans une démarche de créativité.", "Valider les solutions techniques par des simulations ou par des protocoles de tests.", "Concevoir, écrire, tester et mettre au point un programme."]),
+('technologie', 'DI-1', None, 'Design, innovation et créativité', "Imaginer des solutions en réponse aux besoins", BO2020,
+ ["Besoin, contraintes, normalisation ; principaux éléments d'un cahier des charges.", "Design, innovation et créativité, veille ; représentation de solutions ; réalité augmentée, objets connectés.", "Organisation d'un groupe de projet, rôle des participants, planning, revue de projets ; outils numériques de présentation, charte graphique."]),
+('technologie', 'DI-2', None, 'Design, innovation et créativité', "Réaliser le prototype d'un objet communicant", BO2020,
+ ["Prototypage rapide de structures et de circuits de commande à partir de cartes standard ; FabLab, impression 3D, microcontrôleurs."]),
+('technologie', 'OT-1', None, 'Les objets techniques, les services et les changements induits dans la société', "Comparer et commenter les évolutions des objets et systèmes", BO2020,
+ ["L'évolution des objets ; familles et lignées ; inventions et innovations qui marquent des ruptures.", "Impacts sociétaux et environnementaux dus aux objets ; cycle de vie.", "Les règles d'un usage raisonné des objets communicants respectant la propriété intellectuelle et l'intégrité d'autrui."]),
+('technologie', 'OT-2', None, 'Les objets techniques, les services et les changements induits dans la société', "Exprimer sa pensée à l'aide d'outils de description adaptés", BO2020,
+ ["Croquis à main levée, différents schémas, carte heuristique, notion d'algorithme ; outils numériques de description des objets techniques."]),
+('technologie', 'MS-1', None, 'La modélisation et la simulation des objets et systèmes techniques', "Analyser le fonctionnement et la structure d'un objet", BO2020,
+ ["Procédures, protocoles, ergonomie ; règles de sécurité et d'utilisation des outils.", "Analyse fonctionnelle systémique ; représentation fonctionnelle des systèmes.", "Structure des systèmes.", "Chaîne d'énergie.", "Chaîne d'information."]),
+('technologie', 'MS-2', None, 'La modélisation et la simulation des objets et systèmes techniques', "Matériaux, énergie et mesures", BO2020,
+ ["Familles de matériaux avec leurs principales caractéristiques.", "Sources d'énergies.", "Instruments de mesure usuels ; principe d'un capteur, d'un codeur, d'un détecteur.", "Nature du signal (analogique ou numérique) et de l'information (logique ou analogique).", "Consommation énergétique des objets du quotidien, notamment les objets numériques."]),
+('technologie', 'MS-3', None, 'La modélisation et la simulation des objets et systèmes techniques', "Utiliser une modélisation et simuler le comportement d'un objet", BO2020,
+ ["Outils de description d'un fonctionnement, d'une structure et d'un comportement ; logiciels de CAO.", "Écarts entre les attentes du cahier des charges et les résultats de l'expérimentation ou de la simulation."]),
+('technologie', 'IP-1', None, "L'informatique et la programmation", "Comprendre le fonctionnement d'un réseau informatique", BO2020,
+ ["Composants d'un réseau, architecture d'un réseau local, moyens de connexion.", "Notion de protocole, organisation en couches, algorithme de routage ; Internet.", "Impact environnemental lié au stockage et aux flux de données et aux réseaux d'information."]),
+('technologie', 'IP-2', None, "L'informatique et la programmation", "Écrire, mettre au point et exécuter un programme", BO2020,
+ ["Notions d'algorithme et de programme ; notion de variable informatique.", "Déclenchement d'une action par un événement, séquences d'instructions, boucles, instructions conditionnelles.", "Systèmes embarqués ; forme et transmission du signal ; capteur, actionneur, interface."]),
 # ── Arts plastiques et éducation musicale ──
 ('arts', 'A-1', None, 'Arts plastiques', 'La représentation ; images, réalité et fiction', BO2020,
  ["La ressemblance : le rapport au réel et la valeur expressive de l'écart en art ; la différence entre ressemblance et vraisemblance.", "Le dispositif de représentation : l'espace en deux dimensions et en trois dimensions, la composition, les points de vue.", "La narration visuelle et la création, la reproduction et la diffusion des images (photographie, cinéma, numérique)."]),
@@ -260,4 +272,38 @@ PC_NOTIONS = {
     'pc-son': ('SI-2', 0), 'pc-son-milieux': ('SI-2', 0), 'pc-echo': ('SI-2', 0), 'pc-distance-orage': ('SI-2', 0),
     'pc-frequence-son': ('SI-2', 1), 'pc-periode-frequence': ('SI-2', 1), 'pc-protection-auditive': ('SI-2', 1),
     'pc-signaux-communication': ('SI-3', 0), 'pc-codage-information': ('SI-3', 0), 'pc-debit-numerique': ('SI-3', 0), 'pc-ondes-comparaison': ('SI-3', 0),
+}
+
+# Technologie : sous-thème (code, index de la connaissance) de chaque notion des fichiers techno_facile/inter/difficile,
+# rédigés à l'origine sur le programme de 2024 (codes T-1 à T-3)
+TECH_NOTIONS = {
+    'tec-objet-technique': ('DI-1', 0), 'tec-fonction-usage': ('DI-1', 0), 'tec-cahier-charges': ('DI-1', 0), 'tec-cahier-charges-fonctionnel': ('DI-1', 0),
+    'tec-criteres-choix': ('DI-1', 0), 'tec-choix-solution': ('DI-1', 0), 'tec-cout-objet': ('DI-1', 0), 'tec-normes-securite': ('DI-1', 0),
+    'tec-eco-conception': ('DI-1', 0), 'tec-design': ('DI-1', 1), 'tec-design-thinking': ('DI-1', 1), 'tec-recherche-solutions': ('DI-1', 1),
+    'tec-propriete-intellectuelle': ('DI-1', 1), 'tec-maison-connectee': ('DI-1', 1), 'tec-planning-projet': ('DI-1', 2),
+    'tec-fabrication': ('DI-2', 0), 'tec-fabrication-numerique': ('DI-2', 0), 'tec-microcontroleur': ('DI-2', 0), 'tec-tests': ('DI-2', 0),
+    'tec-evolution-objets': ('OT-1', 0), 'tec-innovation-rupture': ('OT-1', 0), 'tec-inventions': ('OT-1', 0), 'tec-objets-societe': ('OT-1', 0),
+    'tec-revolution-numerique': ('OT-1', 0), 'tec-revolutions-industrielles': ('OT-1', 0), 'tec-transports': ('OT-1', 0),
+    'tec-architecture-ouvrages': ('OT-1', 0), 'tec-analyse-cycle-vie': ('OT-1', 1), 'tec-impact-environnement': ('OT-1', 1),
+    'tec-indice-reparabilite': ('OT-1', 1), 'tec-recyclage-materiaux': ('OT-1', 1), 'tec-donnees-personnelles': ('OT-1', 2),
+    'tec-donnees-algorithmes': ('OT-1', 2), 'tec-fake-news': ('OT-1', 2), 'tec-ia': ('OT-1', 2), 'tec-sante-numerique': ('OT-1', 2),
+    'tec-securite-informatique': ('OT-1', 2), 'tec-chiffrement': ('OT-1', 2),
+    'tec-demarche-projet': ('OT-2', 0), 'tec-schemas': ('OT-2', 0), 'tec-modelisation-3d': ('OT-2', 0),
+    'tec-securite-objets': ('MS-1', 0), 'tec-maintenance': ('MS-1', 0), 'tec-depannage': ('MS-1', 0), 'tec-diagnostic-methode': ('MS-1', 0),
+    'tec-diagnostic-avance': ('MS-1', 0), 'tec-automatisme': ('MS-1', 1), 'tec-assemblages': ('MS-1', 2), 'tec-objets-quotidien': ('MS-1', 2),
+    'tec-transmission-mouvement': ('MS-1', 2), 'tec-transformation-mouvement': ('MS-1', 2), 'tec-rapport-transmission': ('MS-1', 2),
+    'tec-couple-vitesse': ('MS-1', 2), 'tec-chaine-energie': ('MS-1', 3), 'tec-actionneurs': ('MS-1', 3), 'tec-energie-systeme': ('MS-1', 3),
+    'tec-chaine-information': ('MS-1', 4), 'tec-chaines-completes': ('MS-1', 4),
+    'tec-materiaux-familles': ('MS-2', 0), 'tec-proprietes-materiaux': ('MS-2', 0), 'tec-materiaux-proprietes-avancees': ('MS-2', 0),
+    'tec-choix-materiaux-multicriteres': ('MS-2', 0), 'tec-energie-objets': ('MS-2', 1), 'tec-energies-renouvelables-objets': ('MS-2', 1),
+    'tec-stockage-energie': ('MS-2', 1), 'tec-mesures': ('MS-2', 2), 'tec-capteurs': ('MS-2', 2), 'tec-binaire': ('MS-2', 3),
+    'tec-signal-analogique-numerique': ('MS-2', 3), 'tec-images-numeriques': ('MS-2', 3), 'tec-compression': ('MS-2', 3),
+    'tec-stockage-donnees': ('MS-2', 3), 'tec-energie-maison': ('MS-2', 4), 'tec-impact-numerique': ('MS-2', 4),
+    'tec-simulation': ('MS-3', 0), 'tec-validation': ('MS-3', 1), 'tec-tests-statistiques': ('MS-3', 1),
+    'tec-reseaux-structure': ('IP-1', 0), 'tec-transmission-sans-fil': ('IP-1', 0), 'tec-reseaux-internet': ('IP-1', 1), 'tec-reseau-communication': ('IP-1', 1),
+    'tec-algorithme': ('IP-2', 0), 'tec-variables': ('IP-2', 0), 'tec-bug': ('IP-2', 0), 'tec-lecture-programme': ('IP-2', 0),
+    'tec-trace-programme': ('IP-2', 0), 'tec-listes': ('IP-2', 0), 'tec-python': ('IP-2', 0), 'tec-algorithmes-classiques': ('IP-2', 0),
+    'tec-decomposition-probleme': ('IP-2', 0), 'tec-boucles': ('IP-2', 1), 'tec-boucles-conditionnelles': ('IP-2', 1), 'tec-conditions': ('IP-2', 1),
+    'tec-conditions-imbriquees': ('IP-2', 1), 'tec-evenements': ('IP-2', 1), 'tec-messages-scratch': ('IP-2', 1),
+    'tec-operateurs-logiques': ('IP-2', 1), 'tec-coordonnees-scratch': ('IP-2', 1), 'tec-robot-programme': ('IP-2', 2),
 }
