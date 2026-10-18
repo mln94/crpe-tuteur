@@ -370,7 +370,9 @@ def main():
                       '      <li><a href="#matieres">Matières</a></li>\n'
                       '      <li><a href="#tarif">Tarif</a></li>\n')
     nav = nav.replace('<a href="#" class="nav-logo">', '<a href="/" class="nav-logo">')
-    nav = nav.replace('Commencer<span class="nav-cta-long"> gratuitement</span> →', "S'inscrire →")
+    # Bouton de l'en-tête : le test de positionnement gratuit plutôt qu'une simple inscription
+    nav = nav.replace('Commencer<span class="nav-cta-long"> gratuitement</span> →', 'Vérifier mon niveau<span class="nav-cta-long"> gratuitement</span> →')
+    nav = nav.replace('onclick="openAuth(event,\'register\')">Créer mon compte</a>', 'onclick="openAuth(event,\'register\')">Vérifier mon niveau gratuitement</a>')
 
     # Pied de page : liens vers l'accueil, sauf la FAQ de cette page
     footer = cut(src, '<!-- ═══════════════════════════════ FOOTER', '</footer>', include_end=True)
