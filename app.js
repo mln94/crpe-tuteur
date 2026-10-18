@@ -644,6 +644,14 @@ async function quizAcces(req, res) {
   }
 }
 
+// Libellé précis d'un thème pour le rapport : le sous-thème du programme, raccourci (« Thème 1 : », détails après « : » ou « ; »)
+function libelleTheme(q) {
+  let t = (q.sous_theme || q.theme || 'Notions').replace(/^Thème \d+\s*:\s*/, '');
+  if (t.length > 60 && t.includes(' : ')) t = t.split(' : ')[0];
+  if (t.length > 60 && t.includes(' ; ')) t = t.split(' ; ')[0].length >= 15 ? t.split(' ; ')[0] : (q.theme || t);
+  return t;
+}
+
 const nombre = v => Number(String(v ?? '').replace(/\s/g, '').replace(',', '.').replace('−', '-'));
 const indices = v => String(v ?? '').split(',').map(x => x.trim()).filter(Boolean).map(Number).sort((a, b) => a - b).join(',');
 async function quizCorriger(id, reponse) {
@@ -739,13 +747,15 @@ app.post('/api/quiz/positionnement', async (req, res) => {
     const parMatiere = {};
     reponses.forEach((r, i) => {
       const q = index[Number(r.id)], c = corrections[i]; if (!q || !c) return;
-      const m = parMatiere[q.matiere] ||= { matiere: q.matiere, label: QUIZ_LABELS[q.matiere], ok: 0, n: 0, themes: {} };
-      const t = m.themes[q.theme || 'Notions'] ||= { theme: q.theme || 'Notions', ok: 0, n: 0 };
-      m.n++; t.n++; if (c.correct) { m.ok++; t.ok++; }
+      const m = parMatiere[q.matiere] ||= { matiere: q.matiere, label: QUIZ_LABELS[q.matiere], ok: 0, n: 0, themes: {}, niveaux: {} };
+      const lib = libelleTheme(q);
+      const t = m.themes[lib] ||= { theme: lib, domaine: q.theme || '', ok: 0, n: 0 };
+      const nv = m.niveaux[q.niveau] ||= { ok: 0, n: 0 };
+      m.n++; t.n++; nv.n++; if (c.correct) { m.ok++; t.ok++; nv.ok++; }
     });
     const matieres = QUIZ_MATIERES.filter(m => parMatiere[m]).map(m => {
       const x = parMatiere[m];
-      return { matiere: m, label: x.label, ok: x.ok, n: x.n, pct: Math.round(x.ok / x.n * 100), themes: Object.values(x.themes) };
+      return { matiere: m, label: x.label, ok: x.ok, n: x.n, pct: Math.round(x.ok / x.n * 100), themes: Object.values(x.themes), niveaux: x.niveaux };
     });
     const ok = matieres.reduce((s, m) => s + m.ok, 0), n = matieres.reduce((s, m) => s + m.n, 0);
     const resultat = { date: new Date().toISOString(), ok, n, pct: n ? Math.round(ok / n * 100) : 0, matieres };

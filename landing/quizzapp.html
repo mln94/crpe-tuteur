@@ -296,25 +296,43 @@
     .quiz-card > p { font-size: 15px; line-height: 1.6; margin-bottom: 10px; }
     .quiz-points { margin: 6px 0 4px 18px; font-size: 15px; line-height: 1.7; }
     .quiz-choice.sel { border-color: #f97316; background: #fff7ed; font-weight: 700; }
-    .carte-global { text-align: center; margin: 8px 0 18px; }
-    .carte-global .big { font-size: 52px; font-weight: 900; color: var(--gray-900); line-height: 1; }
-    .carte-ligne { display: grid; grid-template-columns: 150px 1fr 48px; gap: 10px; align-items: center; margin: 9px 0; font-size: 14px; font-weight: 700; color: var(--gray-800); }
-    .carte-ligne .barre { height: 12px; border-radius: 10px; background: var(--gray-100); overflow: hidden; }
-    .carte-ligne .barre span { display: block; height: 100%; border-radius: 10px; }
-    .carte-ligne .pct { text-align: right; font-weight: 900; }
-    .fort { background: #16a34a; } .moyen { background: #f59e0b; } .faible { background: #dc2626; }
-    .carte-listes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
-    .carte-listes div { background: var(--gray-50); border-radius: 14px; padding: 14px; }
-    .carte-listes h3 { font-size: 14px; font-weight: 900; color: var(--gray-900); margin-bottom: 6px; }
-    .carte-listes li { font-size: 13.5px; line-height: 1.5; margin: 3px 0 3px 16px; }
-    .paywall { margin-top: 18px; border: 2px solid #fdba74; background: linear-gradient(160deg, #fff7ed, #fff 60%); }
+    /* Rapport de positionnement : couleurs PassCRPE (indigo, violet) */
+    .rp-tete { border-radius: 22px; padding: 28px 24px; margin-bottom: 16px; color: #fff; text-align: center; background: linear-gradient(140deg, #312e81, #4f46e5 60%, #7c3aed); box-shadow: 0 16px 40px rgba(79,70,229,.25); }
+    .rp-sur { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
+    .rp-score { font-size: 64px; font-weight: 900; line-height: 1; margin: 10px 0 6px; letter-spacing: -1px; }
+    .rp-titre { font-size: 22px; font-weight: 900; }
+    .rp-sous { font-size: 14px; opacity: .85; margin-top: 6px; }
+    .rp-bloc { margin-bottom: 16px; }
+    .rp-bloc p { font-size: 15.5px; line-height: 1.7; color: var(--gray-700); }
+    .rp-bloc strong { color: #3730a3; }
+    .rp-mat { padding: 12px 0; border-bottom: 1px solid #eef2ff; }
+    .rp-mat:last-child { border-bottom: 0; }
+    .rp-ligne { display: grid; grid-template-columns: 150px 1fr 48px; gap: 12px; align-items: center; font-size: 15px; font-weight: 800; color: var(--gray-900); }
+    .rp-ligne .barre { height: 12px; border-radius: 10px; background: #eef2ff; overflow: hidden; }
+    .rp-ligne .barre span { display: block; height: 100%; border-radius: 10px; }
+    .rp-ligne .pct { text-align: right; color: #3730a3; }
+    .barre .acquis { background: #3730a3; } .barre .engage { background: #6366f1; } .barre .cours { background: #a5b4fc; } .barre .construire { background: #c4b5fd; }
+    .rp-info { font-size: 13.5px; line-height: 1.55; color: var(--gray-600); margin-top: 6px; }
+    .rp-chip { display: inline-block; font-size: 11.5px; font-weight: 800; padding: 3px 10px; border-radius: 100px; margin-right: 8px; }
+    .rp-chip.acquis { background: #3730a3; color: #fff; } .rp-chip.engage { background: #e0e7ff; color: #3730a3; } .rp-chip.cours { background: #eef2ff; color: #4f46e5; } .rp-chip.construire { background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe; }
+    .rp-niv { display: block; margin-top: 3px; color: var(--gray-500); }
+    .rp-niv strong { color: #4f46e5; }
+    .rp-listes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .rp-listes h3 { font-size: 16px; font-weight: 900; color: var(--gray-900); margin-bottom: 8px; }
+    .rp-listes ul { list-style: none; display: grid; gap: 8px; }
+    .rp-listes li { font-size: 14px; line-height: 1.45; color: var(--gray-700); }
+    .rp-listes .mat { display: block; font-size: 11.5px; font-weight: 800; color: #6366f1; text-transform: uppercase; letter-spacing: .03em; }
+    .rp-plan { margin: 4px 0 0 20px; display: grid; gap: 8px; font-size: 15px; line-height: 1.6; color: var(--gray-700); }
+    .rp-plan .niv { font-size: 12px; font-weight: 800; color: #4f46e5; background: #eef2ff; border-radius: 100px; padding: 2px 8px; }
+    .rp-note { font-size: 13px !important; color: var(--gray-500) !important; margin-top: 14px; }
+    @media (max-width: 600px) { .rp-ligne { grid-template-columns: 105px 1fr 42px; font-size: 13.5px; } .rp-listes { grid-template-columns: 1fr; } .rp-score { font-size: 52px; } }
+    .paywall { margin-top: 18px; border: 2px solid #c7d2fe; background: linear-gradient(160deg, #eef2ff, #fff 60%); }
     .paywall .prix { font-size: 40px; font-weight: 900; color: var(--gray-900); letter-spacing: -1px; }
     .paywall .prix span { font-size: 14px; font-weight: 600; color: var(--gray-500); letter-spacing: 0; }
     .garantie { display: flex; gap: 14px; align-items: flex-start; margin: 16px 0 4px; padding: 14px 16px; border-radius: 14px; background: #f0fdf4; border: 2px solid #86efac; max-width: 560px; font-size: 14px; line-height: 1.55; color: #14532d; }
     .garantie .sceau { font-size: 30px; line-height: 1; flex-shrink: 0; }
     .garantie strong { display: block; font-size: 16px; font-weight: 900; color: #14532d; margin-bottom: 2px; }
     .paypal-zone { display: grid; gap: 10px; margin-top: 16px; max-width: 420px; }
-    @media (max-width: 600px) { .carte-ligne { grid-template-columns: 105px 1fr 42px; font-size: 13px; } .carte-listes { grid-template-columns: 1fr; } }
   .quiz-confirm { background: #dcfce7; color: #166534; font-weight: 600; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; }
 
     /* MENU DU COMPTE */
@@ -668,22 +686,76 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       compte.positionnement = d.resultat; tst = null; resultat(d.resultat); top();
     }).catch(function () { tst.i--; garderTest(); erreur('Votre test n\'a pas pu être corrigé. Vos réponses sont gardées : réessayez.'); });
   }
-  // Carte des forces et faiblesses ; tant que le compte n'est pas payé, elle se termine par le paiement
-  function resultat(r) {
-    var classe = function (p) { return p >= 75 ? 'fort' : p >= 50 ? 'moyen' : 'faible'; };
-    var forts = [], faibles = [];
-    // points forts pris dans les matières les mieux réussies, priorités dans les moins bien réussies
+  // ── Rapport de positionnement : diagnostic qualitatif construit par des règles fixes (sans IA) ──
+  var CATS = [
+    { min: 80, cle: 'acquis', label: 'Acquis', txt: "Des connaissances solides dans cette matière." },
+    { min: 60, cle: 'engage', label: 'Bien engagé', txt: "Les bases sont là ; quelques notions restent à fixer." },
+    { min: 40, cle: 'cours', label: "En cours d'acquisition", txt: "Des repères existent, mais plusieurs notions sont à revoir." },
+    { min: 0, cle: 'construire', label: 'À construire', txt: "C'est ici que vos révisions auront le plus d'effet." }
+  ];
+  function categorie(p) { for (var i = 0; i < CATS.length; i++) if (p >= CATS[i].min) return CATS[i]; return CATS[CATS.length - 1]; }
+  function taux(x) { return x && x.n ? x.ok / x.n : null; }
+  // Niveau conseillé pour démarrer une matière, d'après les questions faciles et intermédiaires du test
+  function niveauConseille(m) {
+    if (!m.niveaux) return m.pct >= 80 ? 'difficile' : m.pct >= 40 ? 'intermediaire' : 'facile';
+    var f = taux(m.niveaux.facile), i = taux(m.niveaux.intermediaire);
+    if (f !== null && f < 1) return 'facile';
+    if (i !== null && i < 1) return 'intermediaire';
+    return 'difficile';
+  }
+  function liste(noms) { return noms.length < 2 ? noms.join('') : noms.slice(0, -1).join(', ') + ' et ' + noms[noms.length - 1]; }
+  function profil(r) {
+    var p = r.pct, titre = p >= 75 ? 'Un profil solide' : p >= 50 ? 'Un profil en bonne voie' : p >= 30 ? 'Des bases à consolider' : 'Un profil à construire';
     var tri = r.matieres.slice().sort(function (a, b) { return b.pct - a.pct; });
-    tri.forEach(function (m) { m.themes.forEach(function (t) { if (t.ok === t.n) forts.push(m.label + ' : ' + t.theme); }); });
-    tri.slice().reverse().forEach(function (m) { m.themes.forEach(function (t) { if (t.ok / t.n < .5) faibles.push(m.label + ' : ' + t.theme); }); });
-    var html = barreCompte() + '<div class="quiz-card"><h2>Votre carte de positionnement</h2>' +
-      '<div class="carte-global"><div class="big">' + r.pct + ' %</div><p>' + r.ok + ' bonnes réponses sur ' + r.n + '</p></div>' +
-      r.matieres.slice().sort(function (a, b) { return b.pct - a.pct; }).map(function (m) {
-        return '<div class="carte-ligne"><span>' + esc(m.label) + '</span><div class="barre"><span class="' + classe(m.pct) + '" style="width:' + Math.max(m.pct, 3) + '%"></span></div><span class="pct">' + m.pct + ' %</span></div>'; }).join('') +
-      '<div class="carte-listes"><div><h3>💪 Vos points forts</h3><ul>' + (forts.slice(0, 6).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') || '<li>À construire : le quiz est fait pour ça.</li>') + '</ul></div>' +
-      '<div><h3>🎯 À travailler en priorité</h3><ul>' + (faibles.slice(0, 6).map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') || '<li>Aucune lacune nette : visez la maîtrise complète.</li>') + '</ul></div></div>';
-    if (compte && compte.paid) html += '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Aller au quiz</button></div></div>';
-    else html += '</div><div class="quiz-card paywall"><h2>Débloquez le Quiz CRPE pour combler ces lacunes</h2>' +
+    var appuis = tri.filter(function (m) { return m.pct >= 80; }).map(function (m) { return m.label; });
+    if (!appuis.length && tri[0] && tri[0].pct >= 60) appuis = [tri[0].label];
+    var priorites = tri.slice().reverse().filter(function (m) { return m.pct < 60; }).slice(0, 3).map(function (m) { return m.label; });
+    var phrases = [];
+    if (appuis.length) phrases.push('Vos points d’appui : <strong>' + esc(liste(appuis)) + '</strong>.');
+    if (priorites.length) phrases.push('Vos priorités : <strong>' + esc(liste(priorites)) + '</strong>.');
+    // Lecture par niveau de difficulté, sur l'ensemble du test
+    var F = { ok: 0, n: 0 }, A = { ok: 0, n: 0 };
+    r.matieres.forEach(function (m) { if (!m.niveaux) return; ['facile'].forEach(function (k) { var x = m.niveaux[k]; if (x) { F.ok += x.ok; F.n += x.n; } }); var a = m.niveaux.difficile; if (a) { A.ok += a.ok; A.n += a.n; } });
+    var tf = taux(F), ta = taux(A);
+    if (tf !== null) {
+      if (tf < .5) phrases.push("Les questions faciles vous ont posé difficulté dans plusieurs matières : priorité aux fondamentaux. C'est aussi là que les progrès sont les plus rapides.");
+      else if (ta !== null && ta < .5) phrases.push("Les fondamentaux sont bien là : ce sont les questions avancées qui feront maintenant la différence.");
+      else phrases.push("Vous réussissez aussi bien les questions faciles que les plus exigeantes : continuez à monter en difficulté.");
+    }
+    return { titre: titre, texte: phrases.join(' ') };
+  }
+  // Plan de révision : les matières les plus fragiles d'abord, deux par semaine, avec le niveau conseillé
+  function plan(r) {
+    // seules les matières pas encore acquises entrent dans le plan
+    var tri = r.matieres.filter(function (m) { return m.pct < 80; }).sort(function (a, b) { return a.pct - b.pct; }), semaines = [];
+    for (var i = 0; i < tri.length && semaines.length < 3; i += 2) semaines.push(tri.slice(i, i + 2));
+    return semaines.map(function (s, k) {
+      return '<li><strong>Semaine ' + (k + 1) + '</strong> : ' + s.map(function (m) { return esc(m.label) + ' <span class="niv">' + NIVEAUX[niveauConseille(m)] + '</span>'; }).join(' · ') + '</li>';
+    }).join('') + '<li><strong>Ensuite</strong> : consolidez vos matières fortes au niveau avancé, et laissez les révisions espacées faire revenir chaque notion.</li>';
+  }
+  function resultat(r) {
+    var pf = profil(r), tri = r.matieres.slice().sort(function (a, b) { return b.pct - a.pct; }), forts = [], faibles = [];
+    tri.forEach(function (m) { m.themes.forEach(function (t) { if (t.ok === t.n) forts.push([m.label, t.theme]); }); });
+    tri.slice().reverse().forEach(function (m) { m.themes.forEach(function (t) { if (t.ok / t.n < .5) faibles.push([m.label, t.theme]); }); });
+    var item = function (x) { return '<li><span class="mat">' + esc(x[0]) + '</span>' + esc(x[1]) + '</li>'; };
+    var date = r.date ? new Date(r.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+    var html = barreCompte() +
+      '<div class="rp-tete"><div class="rp-sur">Rapport de positionnement' + (date ? ' · ' + date : '') + '</div>' +
+      '<div class="rp-score">' + r.pct + ' %</div><div class="rp-titre">' + pf.titre + '</div>' +
+      '<div class="rp-sous">' + r.ok + ' bonnes réponses sur ' + r.n + ' · 9 matières · 3 niveaux</div></div>' +
+      '<div class="quiz-card rp-bloc"><h2>Votre profil</h2><p>' + pf.texte + '</p></div>' +
+      '<div class="quiz-card rp-bloc"><h2>Matière par matière</h2>' +
+      tri.map(function (m) {
+        var c = categorie(m.pct), nv = m.niveaux, det = nv ? ['facile', 'intermediaire', 'difficile'].filter(function (k) { return nv[k]; }).map(function (k) { return NIVEAUX[k].toLowerCase() + ' ' + nv[k].ok + '/' + nv[k].n; }).join(' · ') : '';
+        return '<div class="rp-mat"><div class="rp-ligne"><span class="nom">' + esc(m.label) + '</span><div class="barre"><span class="' + c.cle + '" style="width:' + Math.max(m.pct, 4) + '%"></span></div><span class="pct">' + m.pct + ' %</span></div>' +
+          '<div class="rp-info"><span class="rp-chip ' + c.cle + '">' + c.label + '</span>' + c.txt + ' <span class="rp-niv">Niveau conseillé pour démarrer : <strong>' + NIVEAUX[niveauConseille(m)] + '</strong>' + (det ? ' (' + det + ')' : '') + '</span></div></div>';
+      }).join('') + '</div>' +
+      '<div class="rp-listes"><div class="quiz-card"><h3>💪 Vos points forts</h3><ul>' + (forts.slice(0, 6).map(item).join('') || '<li>Ils apparaîtront au fil de vos séries.</li>') + '</ul></div>' +
+      '<div class="quiz-card"><h3>🎯 À travailler en priorité</h3><ul>' + (faibles.slice(0, 6).map(item).join('') || '<li>Aucune lacune nette : visez la maîtrise complète.</li>') + '</ul></div></div>' +
+      '<div class="quiz-card rp-bloc"><h2>Votre plan de révision</h2><ol class="rp-plan">' + plan(r) + '</ol>' +
+      '<p class="rp-note">Ce diagnostic repose sur 45 questions (5 par matière) : c’est une première photographie de votre niveau. Vos séries d’entraînement l’affinent jour après jour.</p></div>';
+    if (compte && compte.paid) html += '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Aller au quiz</button></div>';
+    else html += '<div class="quiz-card paywall"><h2>Débloquez le Quiz CRPE pour combler ces lacunes</h2>' +
       '<ul class="quiz-points"><li>2 700 questions dans les 9 matières, en facile, intermédiaire et avancé ;</li><li>des séries de 20 notées sur 20, avec l\'explication de chaque erreur ;</li><li>des révisions espacées : chaque notion revient jusqu\'à être maîtrisée ;</li><li>votre progression par matière, par niveau et par thème.</li></ul>' +
       '<div class="prix">' + PRIX + ' <span>TTC · paiement unique</span></div>' +
       '<div class="garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Si le quiz ne vous convient pas, écrivez-nous à contact@passcrpe.fr dans les 14 jours suivant votre achat : nous vous remboursons intégralement, sans avoir à vous justifier.</div></div>' +
