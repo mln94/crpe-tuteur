@@ -579,8 +579,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     el.textContent = 'Chargement…';
     charger(mat).then(function (cat) {
       if (!document.getElementById('quiz-resume') || choix.mat !== mat || choix.niveau !== niveau) return;
-      var b = bilan(mat, cat, niveau);
-      el.innerHTML = '<b>' + esc(label(mat)) + ' · ' + NIVEAUX[niveau] + '</b> : ' + b.total + ' notions, ' + b.maitrisees + ' maîtrisée' + (b.maitrisees > 1 ? 's' : '') +
+      var b = bilan(mat, cat, niveau), nq = 0;
+      cat.ordre.forEach(function (k) { if (cat.notions[k].niveau === niveau) nq += cat.notions[k].questions.length; });
+      // Une série pose une question par notion non maîtrisée, dans la limite de 20
+      var serie = Math.min(SERIE, b.total - b.maitrisees);
+      el.innerHTML = '<b>' + esc(label(mat)) + ' · ' + NIVEAUX[niveau] + '</b> : ' + nq + ' questions sur ' + b.total + ' notions' +
+        (serie ? ', en séries de ' + serie + ' questions' : '') + '. ' +
+        b.maitrisees + ' notion' + (b.maitrisees > 1 ? 's' : '') + ' maîtrisée' + (b.maitrisees > 1 ? 's' : '') +
         (b.dues ? ', <b>' + b.dues + ' à réviser aujourd\'hui</b>' : '') + '.';
     }).catch(function () { el.textContent = 'Le quiz n\'a pas pu être chargé. Réessaie dans quelques instants.'; });
   }
