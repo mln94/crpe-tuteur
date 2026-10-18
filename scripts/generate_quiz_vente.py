@@ -35,7 +35,7 @@ MATIERES = [
     ('Physique-chimie', '⚗️', 'Matière, mouvement, énergie, signaux'),
     ('Technologie', '⚙️', 'Objets techniques, programmation, conception'),
     ('Arts', '🎨', 'Arts plastiques et éducation musicale'),
-    ('Anglais', '🇬🇧', 'Grammaire, compréhension, axes culturels de la 6e à la 3e'),
+    ('Anglais', '🇬🇧', 'Repères culturels, repères linguistiques, grammaire'),
 ]
 
 FAQ = [
