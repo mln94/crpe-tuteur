@@ -61,7 +61,7 @@ async function markUserPaid(userId, email) {
   }
 }
 
-// Déblocage du Quiz CRPE (projet quizzcrpe) + Klaviyo quiz_paid ; appelée par la capture et par le webhook
+// Déblocage du Quiz CRPE (table quiz_comptes) + Klaviyo quiz_paid ; appelée par la capture et par le webhook
 async function markQuizPaid(userId, ref, email) {
   const { data: avant } = await supabaseAdmin.from('quiz_comptes').select('paid, email').eq('user_id', userId).maybeSingle();
   if (avant?.paid) return; // déjà débloqué (capture puis webhook pour le même paiement)
@@ -177,7 +177,7 @@ app.post('/api/webhook/paypal', async (req, res) => {
     const event = req.body;
     if (event.event_type === 'PAYMENT.CAPTURE.COMPLETED') {
       const customId = event.resource?.custom_id;
-      // Paiements du quiz : custom_id « quiz:<id du compte quizzcrpe> » ; sinon compte du tuteur IA
+      // Paiements du quiz : custom_id « quiz:<id du compte> » ; sinon compte du tuteur IA
       if (customId?.startsWith('quiz:')) await markQuizPaid(customId.slice(5), event.resource?.id);
       else if (customId) await markUserPaid(customId);
     }
@@ -594,7 +594,7 @@ const CHAT_MODEL = 'claude-sonnet-4-6';
    Tables quiz_questions et quiz_comptes, lues et écrites par le serveur (clé service_role). */
 const QUIZ_MATIERES = ['francais', 'mathematiques', 'histoire_geographie', 'emc', 'svt', 'physique_chimie', 'technologie', 'arts', 'anglais'];
 const QUIZ_LABELS = { francais: 'Français', mathematiques: 'Mathématiques', histoire_geographie: 'Histoire-géographie', emc: 'EMC', svt: 'SVT', physique_chimie: 'Physique-chimie', technologie: 'Technologie', arts: 'Arts', anglais: 'Anglais' };
-const QUIZ_PRICE = { currency_code: 'EUR', value: '59.00' }; // 59 € TTC, aligné avec la page /quizz
+const QUIZ_PRICE = { currency_code: 'EUR', value: '59.00' }; // 59 € TTC, aligné avec la page /quiz
 const POSITIONNEMENT_PAR_MATIERE = { facile: 2, intermediaire: 2, difficile: 1 }; // 5 questions × 9 matières = 45 questions
 const melanger = a => { const t = [...a]; for (let i = t.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [t[i], t[j]] = [t[j], t[i]]; } return t; };
 
@@ -612,7 +612,7 @@ async function quizCatalogue(matiere) {
   return questions;
 }
 
-// Compte du quiz à partir du jeton (projet quizzcrpe), avec son état (positionnement, paiement), gardé 2 minutes
+// Compte du quiz à partir du jeton, avec son état (positionnement, paiement), gardé 2 minutes
 const quizSessions = new Map();
 async function quizCompte(req, { frais = false } = {}) {
   const auth = req.headers.authorization || '';

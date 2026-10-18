@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Génère la page de l'application « Quiz CRPE » : /quizzapp.
+"""Génère la page de l'application « Quiz CRPE » : /quizapp.
 
 Gabarit : landing/crpe-bac3-structure-premiere-epreuve-admissibilite.html (menu, pied de page, suivi)
-Sortie  : landing/quizzapp.html
+Sortie  : landing/quizapp.html
 Données : table Supabase quiz_questions, servie par /api/quiz/catalogue et /api/quiz/reponse (app.js)
 Usage   : python3 scripts/generate_quiz.py
 
-Accès : compte PassCRPE (projet Supabase « crpe », le même que le tuteur IA), créé sur /quizz ou sur l'accueil. Test de positionnement gratuit et obligatoire
+Accès : compte PassCRPE (projet Supabase « crpe », le même que le tuteur IA), créé sur /quiz ou sur l'accueil. Test de positionnement gratuit et obligatoire
 (45 questions, carte des forces et faiblesses), puis paiement PayPal (59 € TTC) pour débloquer le quiz. Le serveur
 (app.js) vérifie le paiement avant de servir les questions.
 
@@ -68,7 +68,7 @@ ICONES = {
 TABBAR = '<nav class="quiz-tabbar" aria-label="Navigation du quiz">' + ''.join(
     f'<a href="{href}"{cls}><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONES[k]}</svg>{extra}</span>{lib}</a>'
     for k, lib, href, cls, extra in [
-        ('accueil', 'Accueil', '/quizzapp', ' class="actif" aria-current="page"', ''),
+        ('accueil', 'Accueil', '/quizapp', ' class="actif" aria-current="page"', ''),
         ('support', 'Support', '/app?onglet=support&produit=quiz', ' id="tab-support"', '<span class="pastille" hidden></span>'),
         ('profil', 'Profil', '/app?onglet=profile', '', ''),
     ]) + '</nav>\n'
@@ -363,7 +363,7 @@ JS = """<script>
   function connexion() {
     root.innerHTML = '<div class="quiz-card"><h2>Connectez-vous pour accéder au Quiz CRPE</h2>' +
       '<p>Créez votre compte gratuitement : vous commencez par un <strong>test de positionnement de 15 minutes</strong> qui vous donne la carte de vos forces et faiblesses dans les 9 matières.</p>' +
-      '<div class="quiz-actions"><a class="quiz-btn" href="/quizz?auth=register">Créer mon compte gratuitement</a><a class="quiz-btn ghost" href="/quizz?auth=login">J\\'ai déjà un compte PassCRPE</a></div></div>';
+      '<div class="quiz-actions"><a class="quiz-btn" href="/quiz?auth=register">Créer mon compte gratuitement</a><a class="quiz-btn ghost" href="/quiz?auth=login">J\\'ai déjà un compte PassCRPE</a></div></div>';
   }
   function introTest() {
     var t = lireTest();
@@ -757,7 +757,7 @@ def page():
             + f'  <title>{title} | PassCRPE</title>\n'
             + f'  <meta name="description" content="{desc}" />\n'
             + '  <meta name="robots" content="noindex, nofollow" />\n'
-            + f'  <link rel="canonical" href="{SITE}/quizzapp" />\n'
+            + f'  <link rel="canonical" href="{SITE}/quizapp" />\n'
             + CSS_BASE + CSS + nav_compte.CSS)
     js = (JS.replace('__MATIERES__', json.dumps(MATIERES, ensure_ascii=False))
             .replace('__PRIX__', PRIX)
@@ -766,5 +766,5 @@ def page():
     return head + BODY_NAV + body + TABBAR + nav_compte.JS + js + TAIL
 
 
-open(os.path.join(ROOT, 'landing', 'quizzapp.html'), 'w', encoding='utf-8').write(page())
-print('landing/quizzapp.html')
+open(os.path.join(ROOT, 'landing', 'quizapp.html'), 'w', encoding='utf-8').write(page())
+print('landing/quizapp.html')

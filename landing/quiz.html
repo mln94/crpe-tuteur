@@ -31,7 +31,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Quiz CRPE : arrivez au CRPE sans aucune notion incomprise</title>
   <meta name="description" content="Le Quiz CRPE : 300 questions par matière sur le programme du cycle 4, des séries de 20 notées sur 20, l'explication de chaque erreur et des révisions espacées. Test de positionnement gratuit." />
-  <link rel="canonical" href="https://www.passcrpe.fr/quizz" />
+  <link rel="canonical" href="https://www.passcrpe.fr/quiz" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -1019,12 +1019,15 @@
     .qz-feature h3 { font-size: 17px; font-weight: 800; color: var(--gray-900); margin-bottom: 8px; }
     .qz-feature p { font-size: 14px; color: var(--gray-600); line-height: 1.6; }
 
-    /* Logo QuizzCRPE by PassCRPE */
-    .logo-quizz .nav-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
-    .logo-quizz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
-    .logo-quizz .nav-logo-text small { font-size: 10.5px; font-weight: 700; color: var(--gray-500); letter-spacing: .02em; }
-    .footer-brand .logo-quizz .nav-logo-text { color: #fb923c; }
-    .footer-brand .logo-quizz .nav-logo-text small { font-size: 12px; color: #9ca3af; }
+    /* Logo QuizCRPE by PassCRPE */
+    .logo-quiz .nav-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
+    .logo-quiz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
+    .logo-quiz .nav-logo-text small { font-size: 10.5px; font-weight: 700; color: var(--gray-500); letter-spacing: .02em; }
+    .footer-brand .logo-quiz .nav-logo-text { color: #fb923c; }
+    .footer-brand .logo-quiz .nav-logo-text small { font-size: 12px; color: #9ca3af; }
+    /* « PassCRPE » garde la couleur du logo principal : indigo dans l'en-tête, blanc dans le pied de page */
+    .logo-quiz .nav-logo-text small b { font-weight: 800; color: var(--indigo-700); }
+    .footer-brand .logo-quiz .nav-logo-text small b { color: #fff; }
     .qz-test { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
     .qz-carte { display: grid; grid-template-columns: 130px 1fr 44px; gap: 10px; align-items: center; margin: 9px 0; font-size: 13.5px; font-weight: 700; color: var(--gray-800); }
     .qz-carte div { height: 10px; border-radius: 10px; background: var(--gray-100); overflow: hidden; }
@@ -1076,11 +1079,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
 <nav class="site-nav">
   <div class="nav-inner">
-    <a href="/quizz" class="nav-logo logo-quizz" aria-label="QuizzCRPE by PassCRPE">
+    <a href="/quiz" class="nav-logo logo-quiz" aria-label="QuizCRPE by PassCRPE">
       <div class="nav-logo-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>
       </div>
-      <span class="nav-logo-text">QuizzCRPE<small>by PassCRPE</small></span>
+      <span class="nav-logo-text">QuizCRPE<small>by <b>PassCRPE</b></small></span>
     </a>
     <ul class="nav-links">
       <li><a href="/">Tuteur IA</a></li>
@@ -1373,11 +1376,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="footer-inner">
     <div class="footer-top">
       <div class="footer-brand">
-        <div class="nav-logo logo-quizz" style="margin-bottom:12px">
+        <div class="nav-logo logo-quiz" style="margin-bottom:12px">
           <div class="nav-logo-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:#fff"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>
           </div>
-          <span class="nav-logo-text">QuizzCRPE<small>by PassCRPE</small></span>
+          <span class="nav-logo-text">QuizCRPE<small>by <b>PassCRPE</b></small></span>
         </div>
         <p>Préparez le CRPE 2027 avec PassCRPE : des milliers d'exercices en français et mathématiques adaptés à votre niveau, des corrections selon les exigences du jury et des conseils personnalisés pour progresser.</p>
       </div>
@@ -1386,7 +1389,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <ul>
           <li><a href="/#fonctionnalites">Fonctionnalités</a></li>
           <li><a href="/#offres">Tuteur IA</a></li>
-          <li><a href="/quizz">Quiz CRPE</a></li>
+          <li><a href="/quiz">Quiz CRPE</a></li>
           <li><a href="#" onclick="openAuth(event,'register')">S'inscrire</a></li>
         </ul>
       </div>
@@ -1767,7 +1770,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   window.AFTER_LOGIN_URL = '/espace';
   window.SIGNUP_SUCCESS_MESSAGE = '✓ Compte créé ! Confirmez votre adresse en cliquant sur le lien envoyé à {email} (pensez aux spams) : il vous ramènera ici, connecté, pour votre test de positionnement gratuit.';
   // Lien de l'e-mail de confirmation : retour sur cette page, session ouverte automatiquement, puis départ vers le test
-  window.EMAIL_REDIRECT_URL = 'https://www.passcrpe.fr/quizz';
+  window.EMAIL_REDIRECT_URL = 'https://www.passcrpe.fr/quiz';
 </script>
 <script>
   /* ── FAQ accordion ── */
@@ -2095,7 +2098,7 @@ function openKlaviyoNewsletter() {
   });
 </script>
 <script>
-  function allerAuTest() { getSB().auth.getSession().then(function () { window.location.href = '/quizzapp'; }); }
+  function allerAuTest() { getSB().auth.getSession().then(function () { window.location.href = '/quizapp'; }); }
   (function () {
     var h = new URLSearchParams(window.location.hash.slice(1));
     if (h.get('type') !== 'signup' || !h.get('access_token')) return;

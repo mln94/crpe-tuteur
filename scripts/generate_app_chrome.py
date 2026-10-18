@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Génère src/siteChrome.js : l'en-tête et le pied de page du site pour le tuteur IA (/app).
 
-Même structure que /quizzapp et /espace : menu du site, menu du compte (nom du profil, Mes outils, Tuteur IA,
+Même structure que /quizapp et /espace : menu du site, menu du compte (nom du profil, Mes outils, Tuteur IA,
 Quiz CRPE, Se déconnecter) et pied de page. Le HTML et les styles sont repris du gabarit des pages du site ;
 seules les règles CSS du menu et du pied de page sont gardées, pour ne pas toucher aux styles de l'application.
 Gabarit : landing/crpe-bac3-structure-premiere-epreuve-admissibilite.html ; menu du compte : scripts/nav_compte.py
@@ -67,7 +67,7 @@ CSS = filtrer(css_all) + nav_compte.CSS + """
 """
 
 MODULE = f"""// Généré par scripts/generate_app_chrome.py — ne pas modifier à la main.
-// En-tête et pied de page du site pour le tuteur IA, identiques à /quizzapp et /espace.
+// En-tête et pied de page du site pour le tuteur IA, identiques à /quizapp et /espace.
 export const SITE_NAV_HTML = {json.dumps(NAV, ensure_ascii=False)};
 // En-tête de l'application : logo, bouton Support et menu du compte, sans le menu du site
 export const APP_NAV_HTML = {json.dumps(nav_compte.nav_application(NAV, '/app?onglet=support'), ensure_ascii=False)};

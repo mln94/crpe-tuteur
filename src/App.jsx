@@ -5688,7 +5688,7 @@ function SupportView({ authUser, onUnreadChange, preset }) {
         </div>
 
         {preset?.produit === 'quiz' && (
-          <a href="/quizzapp" className="inline-block mb-4 text-sm font-semibold text-indigo-600 hover:underline">← Retour au Quiz CRPE</a>
+          <a href="/quizapp" className="inline-block mb-4 text-sm font-semibold text-indigo-600 hover:underline">← Retour au Quiz CRPE</a>
         )}
 
         {/* Form */}
@@ -5920,7 +5920,7 @@ function SupportTicketCard({ ticket: t, statusLabel, statusColor, onReply, onClo
 }
 
 // ---------------------------------------------------------------------------
-// En-tête et pied de page du site (même structure que /quizzapp et /espace)
+// En-tête et pied de page du site (même structure que /quizapp et /espace)
 // ---------------------------------------------------------------------------
 // Fonctions des menus du site, appelées par les attributs onclick du HTML repris du gabarit
 if (typeof window !== 'undefined' && !window.toggleMobileMenu) {
@@ -5974,7 +5974,7 @@ function SiteHeader({ authUser, profile, onSupport }) {
     el.className = 'nav-compte';
     el.innerHTML = `<button type="button" class="nav-compte-btn" aria-haspopup="true" aria-expanded="false"><span class="av">${escHtml((nom[0] || '?').toUpperCase())}</span><span class="nom">${escHtml(nom)}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`
       + `<div class="nav-compte-menu" role="menu"><div class="mail">${escHtml(authUser.email)}</div>`
-      + '<a href="/espace" role="menuitem">🏠 Mes outils</a><a href="/app" role="menuitem">🤖 Tuteur IA</a><a href="/quizzapp" role="menuitem">🎯 Quiz CRPE</a><hr>'
+      + '<a href="/espace" role="menuitem">🏠 Mes outils</a><a href="/app" role="menuitem">🤖 Tuteur IA</a><a href="/quizapp" role="menuitem">🎯 Quiz CRPE</a><hr>'
       + '<button type="button" class="out" role="menuitem">Se déconnecter</button></div>';
     actions.insertBefore(el, actions.querySelector('.nav-burger'));
     nav.classList.add('connecte');

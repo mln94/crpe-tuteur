@@ -3,7 +3,9 @@
   "outputDirectory": "dist",
   "regions": ["dub1"],
   "redirects": [
-    { "source": "/rapports-jury-crpe", "destination": "/rapports-jury-crpe/2026", "permanent": false }
+    { "source": "/rapports-jury-crpe", "destination": "/rapports-jury-crpe/2026", "permanent": false },
+    { "source": "/quizz", "destination": "/quiz", "permanent": true },
+    { "source": "/quizzapp", "destination": "/quizapp", "permanent": true }
   ],
   "rewrites": [
     { "source": "/api/:path*", "destination": "/api/index" },
@@ -19,8 +21,8 @@
     { "source": "/crpe-par-academie/:slug", "destination": "/academies/:slug.html" },
     { "source": "/rapports-jury-crpe/2026", "destination": "/rapports-jury-crpe-2026.html" },
     { "source": "/rapports-jury-crpe/2025", "destination": "/rapports-jury-crpe-2025.html" },
-    { "source": "/quizzapp", "destination": "/quizzapp.html" },
-    { "source": "/quizz", "destination": "/quizz.html" },
+    { "source": "/quizapp", "destination": "/quizapp.html" },
+    { "source": "/quiz", "destination": "/quiz.html" },
     { "source": "/espace", "destination": "/espace.html" },
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/outils", "destination": "/outils.html" },

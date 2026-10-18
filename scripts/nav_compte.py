@@ -1,4 +1,4 @@
-"""Menu du compte dans l'en-tête (pages /espace et /quizzapp).
+"""Menu du compte dans l'en-tête (pages /espace et /quizapp).
 
 Connecté : « Se connecter » et « Commencer » sont remplacés par le nom du profil, avec un menu déroulant
 (Mes outils, Tuteur IA, Quiz CRPE, Se déconnecter). Non connecté : l'en-tête reste celui du site.
@@ -68,7 +68,7 @@ JS = """<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/u
       el.innerHTML = '<button type="button" class="nav-compte-btn" aria-haspopup="true" aria-expanded="false"><span class="av">' + esc((nom[0] || '?').toUpperCase()) + '</span><span class="nom">' + esc(nom) +
         '</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>' +
         '<div class="nav-compte-menu" role="menu"><div class="mail">' + esc(user.email) + '</div>' +
-        '<a href="/espace" role="menuitem">🏠 Mes outils</a><a href="/app" role="menuitem">🤖 Tuteur IA</a><a href="/quizzapp" role="menuitem">🎯 Quiz CRPE</a><hr>' +
+        '<a href="/espace" role="menuitem">🏠 Mes outils</a><a href="/app" role="menuitem">🤖 Tuteur IA</a><a href="/quizapp" role="menuitem">🎯 Quiz CRPE</a><hr>' +
         '<button type="button" class="out" role="menuitem">Se déconnecter</button></div>';
       actions.insertBefore(el, actions.querySelector('.nav-burger'));
       nav.classList.add('connecte');

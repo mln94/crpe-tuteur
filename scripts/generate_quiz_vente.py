@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Génère la page de vente du Quiz CRPE : /quizz.
+"""Génère la page de vente du Quiz CRPE : /quiz.
 
 Gabarit : landing/index.html (styles, menu, pied de page, fenêtre de connexion/inscription et ses scripts)
-Sortie  : landing/quizz.html
-Usage   : python3 scripts/generate_quizz_vente.py
+Sortie  : landing/quiz.html
+Usage   : python3 scripts/generate_quiz_vente.py
 
 L'inscription est le même formulaire que sur la page d'accueil (compte Supabase + /api/klaviyo/signup).
 Différences : window.SIGNUP_PARCOURS = 'quizcrpe', envoyé à Klaviyo dans la propriété « parcours », et
 window.SIGNUP_SUCCESS_MESSAGE : après l'inscription, message « confirmez votre e-mail » ; window.AFTER_LOGIN_URL = '/espace' :
 après la connexion, la personne choisit son outil (tuteur IA ou quiz).
-Un seul compte pour le tuteur IA et le quiz (projet Supabase « crpe »), et le lien de l'e-mail de confirmation ramène sur /quizz (window.EMAIL_REDIRECT_URL) : la session est ouverte
-automatiquement et la personne part sur /quizzapp pour son test de positionnement gratuit, puis le paiement.
+Un seul compte pour le tuteur IA et le quiz (projet Supabase « crpe »), et le lien de l'e-mail de confirmation ramène sur /quiz (window.EMAIL_REDIRECT_URL) : la session est ouverte
+automatiquement et la personne part sur /quizapp pour son test de positionnement gratuit, puis le paiement.
 À relancer après une modification du formulaire d'inscription, du menu ou du pied de page de l'accueil.
 """
 import os
@@ -18,7 +18,7 @@ import re
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SRC = os.path.join(ROOT, 'landing', 'index.html')
-OUT = os.path.join(ROOT, 'landing', 'quizz.html')
+OUT = os.path.join(ROOT, 'landing', 'quiz.html')
 SITE = 'https://www.passcrpe.fr'
 
 PRIX_QUIZ = '59 €'
@@ -106,12 +106,15 @@ CSS = """
     .qz-feature h3 { font-size: 17px; font-weight: 800; color: var(--gray-900); margin-bottom: 8px; }
     .qz-feature p { font-size: 14px; color: var(--gray-600); line-height: 1.6; }
 
-    /* Logo QuizzCRPE by PassCRPE */
-    .logo-quizz .nav-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
-    .logo-quizz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
-    .logo-quizz .nav-logo-text small { font-size: 10.5px; font-weight: 700; color: var(--gray-500); letter-spacing: .02em; }
-    .footer-brand .logo-quizz .nav-logo-text { color: #fb923c; }
-    .footer-brand .logo-quizz .nav-logo-text small { font-size: 12px; color: #9ca3af; }
+    /* Logo QuizCRPE by PassCRPE */
+    .logo-quiz .nav-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
+    .logo-quiz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
+    .logo-quiz .nav-logo-text small { font-size: 10.5px; font-weight: 700; color: var(--gray-500); letter-spacing: .02em; }
+    .footer-brand .logo-quiz .nav-logo-text { color: #fb923c; }
+    .footer-brand .logo-quiz .nav-logo-text small { font-size: 12px; color: #9ca3af; }
+    /* « PassCRPE » garde la couleur du logo principal : indigo dans l'en-tête, blanc dans le pied de page */
+    .logo-quiz .nav-logo-text small b { font-weight: 800; color: var(--indigo-700); }
+    .footer-brand .logo-quiz .nav-logo-text small b { color: #fff; }
     .qz-test { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
     .qz-carte { display: grid; grid-template-columns: 130px 1fr 44px; gap: 10px; align-items: center; margin: 9px 0; font-size: 13.5px; font-weight: 700; color: var(--gray-800); }
     .qz-carte div { height: 10px; border-radius: 10px; background: var(--gray-100); overflow: hidden; }
@@ -319,7 +322,7 @@ def contenu():
 
 # Retour depuis l'e-mail de confirmation : le client Supabase lit la session dans l'URL, puis direction le test
 RETOUR_CONFIRMATION = """<script>
-  function allerAuTest() { getSB().auth.getSession().then(function () { window.location.href = '/quizzapp'; }); }
+  function allerAuTest() { getSB().auth.getSession().then(function () { window.location.href = '/quizapp'; }); }
   (function () {
     var h = new URLSearchParams(window.location.hash.slice(1));
     if (h.get('type') !== 'signup' || !h.get('access_token')) return;
@@ -330,17 +333,17 @@ RETOUR_CONFIRMATION = """<script>
 """
 
 
-ICONE_QUIZZ = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"{style}>'
+ICONE_QUIZ = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"{style}>'
                '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>')
 
 
-def logo_quizz(html):
-    """Remplace le premier logo PassCRPE (icône + nom) par celui de QuizzCRPE : cible orange et « by PassCRPE »."""
+def logo_quiz(html):
+    """Remplace le premier logo PassCRPE (icône + nom) par celui de QuizCRPE : cible orange et « by PassCRPE »."""
     i = html.index('<div class="nav-logo-icon">')
     j = html.index('</svg>', i) + len('</svg>')
     style = ' style="width:20px;height:20px;color:#fff"' if 'style="width:20px' in html[i:j] else ''
-    html = html[:i] + '<div class="nav-logo-icon">\n            ' + ICONE_QUIZZ.format(style=style) + html[j:]
-    return html.replace('<span class="nav-logo-text">PassCRPE</span>', '<span class="nav-logo-text">QuizzCRPE<small>by PassCRPE</small></span>', 1)
+    html = html[:i] + '<div class="nav-logo-icon">\n            ' + ICONE_QUIZ.format(style=style) + html[j:]
+    return html.replace('<span class="nav-logo-text">PassCRPE</span>', '<span class="nav-logo-text">QuizCRPE<small>by <b>PassCRPE</b></small></span>', 1)
 
 
 def main():
@@ -352,7 +355,7 @@ def main():
     head = re.sub(r'<meta name="description"[^>]*/>',
                   '<meta name="description" content="Le Quiz CRPE : 300 questions par matière sur le programme du cycle 4, '
                   'des séries de 20 notées sur 20, l\'explication de chaque erreur et des révisions espacées. Test de positionnement gratuit." />\n'
-                  f'  <link rel="canonical" href="{SITE}/quizz" />', head)
+                  f'  <link rel="canonical" href="{SITE}/quiz" />', head)
     head = head.replace('href="favicon.svg"', 'href="/favicon.svg"')
     head = head.replace('  </style>', CSS + '  </style>', 1)
     assert CSS in head
@@ -367,17 +370,17 @@ def main():
                       '      <li><a href="#fonctionnement">Le quiz</a></li>\n'
                       '      <li><a href="#matieres">Matières</a></li>\n'
                       '      <li><a href="#tarif">Tarif</a></li>\n')
-    # Logo de la page : « QuizzCRPE by PassCRPE », en orange (marque du quiz)
-    nav = nav.replace('<a href="#" class="nav-logo">', '<a href="/quizz" class="nav-logo logo-quizz" aria-label="QuizzCRPE by PassCRPE">')
-    nav = logo_quizz(nav)
+    # Logo de la page : « QuizCRPE by PassCRPE », en orange (marque du quiz)
+    nav = nav.replace('<a href="#" class="nav-logo">', '<a href="/quiz" class="nav-logo logo-quiz" aria-label="QuizCRPE by PassCRPE">')
+    nav = logo_quiz(nav)
     # Bouton de l'en-tête : le test de positionnement gratuit plutôt qu'une simple inscription
     nav = nav.replace('Commencer<span class="nav-cta-long"> gratuitement</span> →', 'Vérifier mon niveau<span class="nav-cta-long"> gratuitement</span> →')
     nav = nav.replace('onclick="openAuth(event,\'register\')">Créer mon compte</a>', 'onclick="openAuth(event,\'register\')">Vérifier mon niveau gratuitement</a>')
 
     # Pied de page : liens vers l'accueil, sauf la FAQ de cette page
     footer = cut(src, '<!-- ═══════════════════════════════ FOOTER', '</footer>', include_end=True)
-    footer = footer.replace('<li><a href="#offres">Quiz CRPE</a></li>', '<li><a href="/quizz">Quiz CRPE</a></li>')
-    footer = logo_quizz(footer.replace('<div class="nav-logo" style="margin-bottom:12px">', '<div class="nav-logo logo-quizz" style="margin-bottom:12px">', 1))
+    footer = footer.replace('<li><a href="#offres">Quiz CRPE</a></li>', '<li><a href="/quiz">Quiz CRPE</a></li>')
+    footer = logo_quiz(footer.replace('<div class="nav-logo" style="margin-bottom:12px">', '<div class="nav-logo logo-quiz" style="margin-bottom:12px">', 1))
     footer = re.sub(r'href="#(?!faq")([a-z]+)"', r'href="/#\1"', footer)
 
     # Fenêtres de confirmation et de connexion/inscription, identiques à l'accueil
@@ -399,7 +402,7 @@ def main():
             + "<script>\n  // Parcours Klaviyo des inscriptions faites sur cette page\n  window.SIGNUP_PARCOURS = 'quizcrpe';\n  // Après la connexion : page « Mes outils » (tuteur IA ou quiz)\n  window.AFTER_LOGIN_URL = '/espace';\n"
             + "  window.SIGNUP_SUCCESS_MESSAGE = '✓ Compte créé ! Confirmez votre adresse en cliquant sur le lien envoyé à {email} (pensez aux spams) : il vous ramènera ici, connecté, pour votre test de positionnement gratuit.';\n"
             + f"  // Lien de l'e-mail de confirmation : retour sur cette page, session ouverte automatiquement, puis départ vers le test\n"
-            + f"  window.EMAIL_REDIRECT_URL = '{SITE}/quizz';\n</script>\n"
+            + f"  window.EMAIL_REDIRECT_URL = '{SITE}/quiz';\n</script>\n"
             + scripts + RETOUR_CONFIRMATION + '</body>\n</html>\n')
     open(OUT, 'w', encoding='utf-8').write(page)
     print('Écrit :', os.path.relpath(OUT, ROOT), f'({len(page) // 1024} ko)')

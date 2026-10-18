@@ -2,7 +2,7 @@
 """Génère la page « Mes outils » : /espace.
 
 Un seul compte PassCRPE (projet Supabase « crpe ») donne accès aux deux outils. Après la connexion, la personne
-choisit ici le tuteur IA (/app) ou le Quiz CRPE (/quizzapp), avec l'état de chacun (essai, accès débloqué, test à passer…).
+choisit ici le tuteur IA (/app) ou le Quiz CRPE (/quizapp), avec l'état de chacun (essai, accès débloqué, test à passer…).
 Gabarit : landing/crpe-bac3-structure-premiere-epreuve-admissibilite.html (menu, pied de page, suivi)
 Données : /api/espace (app.js)
 Sortie  : landing/espace.html
@@ -75,7 +75,7 @@ JS = """<script>
       '<a class="esp-btn" href="/app">Ouvrir le tuteur IA →</a></div>' +
       '<div class="esp-card quiz"><div class="esp-head"><div class="esp-icon">🎯</div><h2>Quiz CRPE</h2></div>' + etatQ +
       '<p>2 700 questions dans les 9 matières du concours, en séries de 20, avec révisions espacées.</p>' +
-      '<a class="esp-btn" href="/quizzapp">' + (!q || q.paid ? 'Ouvrir le quiz →' : q.positionnement ? 'Voir mon résultat →' : 'Passer mon test gratuit →') + '</a></div>' +
+      '<a class="esp-btn" href="/quizapp">' + (!q || q.paid ? 'Ouvrir le quiz →' : q.positionnement ? 'Voir mon résultat →' : 'Passer mon test gratuit →') + '</a></div>' +
       '</div>';
     var p = document.getElementById('esp-prenom'); if (p && d && d.prenom) p.textContent = 'Bonjour ' + d.prenom + ' !';
   }
