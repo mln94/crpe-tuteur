@@ -6,7 +6,8 @@
 #  - Programme du cycle 4, arrêté du 17-7-2020, BO n°31 du 30-7-2020 (histoire-géographie, SVT, physique-chimie,
 #    arts plastiques, éducation musicale, langues vivantes) ;
 #  - Programme de technologie du cycle 4, BO n°9 du 29-2-2024 ;
-#  - Programme d'enseignement moral et civique, BO n°24 du 13-6-2024 (en vigueur à tous les niveaux en 2026-2027).
+#  - EMC : programme du cycle 4 en trois domaines (Respecter autrui ; Acquérir et partager les valeurs de la République ;
+#    Construire une culture civique), BO n°31 du 30-7-2020.
 BO2020 = 'BO n°31 du 30 juillet 2020'
 BO_TECHNO = 'BO n°9 du 29 février 2024'
 BO_EMC = 'BO n°24 du 13 juin 2024'
@@ -50,20 +51,29 @@ R = [
 ('histoire_geographie', 'G3-3', '3e', 'Géographie', "Thème 3 : La France et l'Union européenne", BO2020,
  ["L'Union européenne, un nouveau territoire de référence et d'appartenance.", "La France et l'Europe dans le monde."]),
 # ── Enseignement moral et civique (programme 2024) ──
-('emc', 'E5-1', '5e', 'Égalité, fraternité et solidarité', "Agir pour l'égalité femmes-hommes et lutter contre les discriminations", BO_EMC,
- ["Comprendre que l'égalité entre les femmes et les hommes est un principe fondamental de la République, garanti par la Constitution, et le résultat de combats.", "Identifier les discriminations, connaître leur interdiction par la loi et les moyens de lutter contre elles."]),
-('emc', 'E5-2', '5e', 'Égalité, fraternité et solidarité', 'La solidarité et ses échelles', BO_EMC,
- ["Comprendre la fraternité et la solidarité comme fondements du projet social de la République.", "Connaître l'action des acteurs publics et associatifs de la solidarité, du local au national (protection sociale, sécurité civile)."]),
-('emc', 'E4-1', '4e', 'Défendre les droits et les libertés', "L'État de droit et les libertés", BO_EMC,
- ["Comprendre l'État de droit : hiérarchie des normes, séparation des pouvoirs, rôle de la justice.", "Connaître les libertés fondamentales (expression, conscience, presse, association…), leurs garanties et leurs limites, dont la laïcité."]),
-('emc', 'E4-2', '4e', 'Défendre les droits et les libertés', 'Défendre le cadre démocratique : sécurité et défense nationale', BO_EMC,
- ["Comprendre les missions de la défense nationale et des forces de sécurité au service de la protection des citoyens.", "Connaître les menaces qui pèsent sur la démocratie et les moyens de la défendre (terrorisme, cybermenaces, désinformation)."]),
-('emc', 'E3-1', '3e', 'Faire vivre la démocratie', 'Les règles du jeu démocratique', BO_EMC,
- ["Connaître les principes et les institutions de la Ve République et le fonctionnement des élections.", "Comprendre la place des valeurs et principes de la République (laïcité, indivisibilité, souveraineté nationale) dans la vie démocratique."]),
-('emc', 'E3-2', '3e', 'Faire vivre la démocratie', "Les acteurs du jeu démocratique et leur engagement (1) : l'opinion", BO_EMC,
- ["Comprendre la formation de l'opinion publique et le rôle des médias et des réseaux sociaux.", "Exercer son esprit critique face à l'information (sources, désinformation)."]),
-('emc', 'E3-3', '3e', 'Faire vivre la démocratie', "Les acteurs du jeu démocratique et leur engagement (2) : l'engagement collectif", BO_EMC,
- ["Connaître les formes de l'engagement collectif : partis politiques, syndicats, associations.", "Comprendre l'engagement citoyen et ses formes (vote, bénévolat, service civique, défense)."]),
+# EMC : programme du cycle 4 en trois domaines (BO n°31 du 30 juillet 2020) ; sous-thème = section, objectifs = objets d'enseignement
+('emc', 'RA-1', None, 'Respecter autrui', 'Construire le respect de soi', BO2020,
+ ["La notion de respect.", "La prise de décision individuelle, face ou dans un groupe : addictions, mise en danger.", "L'identité personnelle ; l'identité légale, en incluant l'identité numérique.", "La responsabilité individuelle et la responsabilité légale."]),
+('emc', 'RA-2', None, 'Respecter autrui', "Respect d'autrui", BO2020,
+ ["Autrui est égal à soi en dignité.", "Les différentes formes de discrimination : raciales, antisémites, religieuses, xénophobes, sexistes, homophobes, transphobes.", "Le harcèlement en situation scolaire, sur internet et les réseaux sociaux.", "La dignité humaine et l'intégrité de la personne ; le rôle du Défenseur des droits.", "Le principe de laïcité et l'expression des convictions philosophiques et religieuses.", "Situations de mise en tension des valeurs de la République."]),
+('emc', 'RA-3', None, 'Respecter autrui', "La morale et l'éthique", BO2020,
+ ["L'acteur et le rôle du témoin : le témoin muet devient complice (harcèlement, discrimination), non-assistance à personne en danger.", "La prise de décision du juge, du médecin.", "Éthique personnelle, déontologie professionnelle et vocabulaire des sentiments moraux."]),
+('emc', 'RA-4', None, 'Respecter autrui', "Le rôle de la loi dans une société", BO2020,
+ ["La liberté, principe premier dans le droit français, et le rôle de protection de la loi.", "Les valeurs et les principes qui régissent le règlement de l'établissement et les textes qui organisent la vie éducative.", "De la proposition à la loi : exemples de lois éthiques, morales ou sociétales.", "Le respect du droit de propriété.", "La protection contre les risques sociaux, le droit du travail, le droit de grève, la liberté syndicale.", "Le droit et la jurisprudence, les acteurs de la justice ; la justice des mineurs.", "Droit national et droit international, les traités internationaux."]),
+('emc', 'VR-1', None, 'Acquérir et partager les valeurs de la République', "Principes, valeurs et symboles de la citoyenneté française et européenne", BO2020,
+ ["La citoyenneté française et la citoyenneté européenne : principes, valeurs, symboles.", "Le drapeau, l'hymne national, la fête nationale, les monuments, la langue française.", "Le drapeau, l'hymne européen, la journée du 9 mai.", "Les libertés de conscience, d'expression, d'association, de presse.", "L'égalité et la non-discrimination, l'égalité fille-garçon.", "Les principes de la laïcité : liberté de conscience et égalité des citoyens.", "Les lois scolaires, la loi de 1905, la loi de 2004."]),
+('emc', 'VR-2', None, 'Acquérir et partager les valeurs de la République', "Les grands principes des sociétés démocratiques", BO2020,
+ ["Les différentes déclarations des droits de l'homme.", "Le statut juridique de l'enfant.", "La liberté de la presse et la liberté d'expression ; la place et la diversité des médias.", "Les dimensions de l'expression du citoyen : vote, expression des tensions, réseaux sociaux, association."]),
+('emc', 'VR-3', None, 'Acquérir et partager les valeurs de la République', "Les grandes caractéristiques d'un État démocratique", BO2020,
+ ["Une Constitution qui définit et protège les droits et libertés et organise les institutions.", "Les institutions de la Ve République.", "Le pluralisme démocratique, la prise de décision et le respect de la règle majoritaire.", "La consultation du peuple : du vote à la démocratie participative.", "Les fonctions régaliennes : défense, diplomatie, justice, police et fiscalité.", "Le fonctionnement de l'État : décentralisation, déconcentration.", "La nation, la nationalité et le sentiment d'appartenance ; la francophonie ; les journées mémorielles."]),
+('emc', 'CC-1', None, 'Construire une culture civique', "Le vote, un droit fondamental en démocratie", BO2020,
+ ["La conquête progressive du droit de vote.", "Les droits et devoirs des citoyens.", "L'élection des représentants et du chef de l'État, les référendums, les élections locales ; la question de l'abstention."]),
+('emc', 'CC-2', None, 'Construire une culture civique', "L'élection, la représentation citoyenne dans une démocratie", BO2020,
+ ["La démocratie représentative et la souveraineté nationale.", "Le scrutin majoritaire, proportionnel, de liste.", "Le rôle de l'opinion comme soutien ou obstacle au pouvoir ; la transparence démocratique."]),
+('emc', 'CC-3', None, 'Construire une culture civique', "La Défense et la sécurité", BO2020,
+ ["Les problèmes de la paix et de la guerre dans le monde et les causes des conflits.", "Les engagements européens et internationaux de la France ; la dissuasion.", "La sécurité des personnes et des biens : organisations, problèmes et objectifs.", "La Journée défense et citoyenneté, le service national universel, les dispositifs Armée-jeunesse."]),
+('emc', 'CC-4', None, 'Construire une culture civique', "L'engagement ou les engagements", BO2020,
+ ["Les formes d'engagement : politique, social, associatif ; l'engagement individuel et collectif.", "Les responsabilités individuelles et collectives face aux risques majeurs.", "La responsabilité du citoyen consommateur.", "Le rôle des médias et des réseaux dans l'information et la vie démocratique ; les lanceurs d'alerte.", "L'évolution des droits des femmes dans l'histoire et dans le monde.", "L'engagement politique, syndical, associatif, humanitaire et environnemental ; l'engagement solidaire et coopératif de la France."]),
 # ── Sciences de la vie et de la Terre ──
 ('svt', 'S-1', None, "La planète Terre, l'environnement et l'action humaine", "La planète Terre, l'environnement et l'action humaine", BO2020,
  ["Explorer et expliquer certains phénomènes géologiques liés au fonctionnement de la Terre.", "Explorer et expliquer certains éléments de météorologie et de climatologie.", "Identifier les principaux impacts de l'action humaine, bénéfices et risques, à la surface de la planète Terre.", "Envisager ou justifier des comportements responsables face à l'environnement et à la préservation des ressources limitées de la planète."]),
@@ -106,3 +116,42 @@ R = [
 ('anglais', 'L-3', None, 'Culture et lexique', 'Langages ; école et société ; voyages et migrations ; rencontres avec d\'autres cultures', BO2020,
  ["Connaître des repères géographiques, historiques et culturels des pays anglophones.", "Connaître les codes socio-culturels, le système scolaire et les modes de vie des pays anglophones."]),
 ]
+
+# EMC : section du programme (code, index de l'objet d'enseignement) de chaque notion des fichiers emc_facile/inter/difficile,
+# rédigés à l'origine sur le programme de 2024 (codes E5-1… E3-3)
+EMC_NOTIONS = {
+    'emc-vie-privee': ('RA-1', 2),
+    'emc-discrimination-definition': ('RA-2', 1), 'emc-discrimination-indirecte': ('RA-2', 1), 'emc-racisme-antisemitisme': ('RA-2', 1),
+    'emc-stereotypes-prejuges': ('RA-2', 1), 'emc-harcelement': ('RA-2', 2), 'emc-sanctions-discrimination': ('RA-2', 3),
+    'emc-defenseur-des-droits': ('RA-2', 3), 'emc-violences-sexistes': ('RA-2', 3), 'emc-charte-laicite': ('RA-2', 4),
+    'emc-laicite-jurisprudence': ('RA-2', 4), 'emc-liberte-conscience-culte': ('RA-2', 4), 'emc-accessibilite': ('RA-2', 0),
+    'emc-handicap-inclusion': ('RA-2', 0),
+    'emc-protection-enfance': ('RA-3', 0),
+    'emc-hierarchie-normes': ('RA-4', 0), 'emc-bloc-constitutionnalite': ('RA-4', 0), 'emc-loi-decret': ('RA-4', 2),
+    'emc-navette-parlementaire': ('RA-4', 2), 'emc-ivg-constitution': ('RA-4', 2), 'emc-securite-sociale': ('RA-4', 4),
+    'emc-protection-sociale': ('RA-4', 4), 'emc-solidarite-generations': ('RA-4', 4), 'emc-histoire-syndicats': ('RA-4', 4),
+    'emc-democratie-sociale': ('RA-4', 4), 'emc-justice': ('RA-4', 5), 'emc-ordres-juridictions': ('RA-4', 5),
+    'emc-presomption-innocence': ('RA-4', 5), 'emc-garde-a-vue': ('RA-4', 5), 'emc-cours-europeennes': ('RA-4', 6), 'emc-cedh': ('RA-4', 6),
+    'emc-fraternite': ('VR-1', 0), 'emc-fraternite-2018': ('VR-1', 0), 'emc-article-1-constitution': ('VR-1', 0),
+    'emc-principes-republique': ('VR-1', 0), 'emc-europe-citoyennete': ('VR-1', 0), 'emc-solidarite': ('VR-1', 0),
+    'emc-symboles': ('VR-1', 1), 'emc-indivisibilite-langues': ('VR-1', 1), 'emc-libertes-fondamentales': ('VR-1', 3),
+    'emc-associations': ('VR-1', 3), 'emc-lois-egalite': ('VR-1', 4), 'emc-egalite-constitution': ('VR-1', 4),
+    'emc-egalite-ecole': ('VR-1', 4), 'emc-egalite-reelle': ('VR-1', 4), 'emc-inegalites-persistantes': ('VR-1', 4),
+    'emc-laicite': ('VR-1', 6), 'emc-laicite-ecole': ('VR-1', 6),
+    'emc-droits-enfant': ('VR-2', 1), 'emc-liberte-presse': ('VR-2', 2), 'emc-medias': ('VR-2', 2), 'emc-independance-medias': ('VR-2', 2),
+    'emc-cadre-juridique-information': ('VR-2', 2), 'emc-esprit-critique': ('VR-2', 2), 'emc-education-medias': ('VR-2', 2),
+    'emc-biais-cognitifs': ('VR-2', 2), 'emc-manifestation': ('VR-2', 3), 'emc-sondages-reseaux': ('VR-2', 3),
+    'emc-etat-de-droit': ('VR-3', 0), 'emc-separation-pouvoirs': ('VR-3', 0), 'emc-qpc': ('VR-3', 0), 'emc-qpc-filtre': ('VR-3', 0),
+    'emc-revision-constitution': ('VR-3', 0), 'emc-conseil-constitutionnel': ('VR-3', 1), 'emc-president': ('VR-3', 1),
+    'emc-pouvoirs-president': ('VR-3', 1), 'emc-gouvernement': ('VR-3', 1), 'emc-parlement': ('VR-3', 1),
+    'emc-dissolution-censure': ('VR-3', 1), 'emc-motion-censure': ('VR-3', 1), 'emc-menaces-democratie': ('VR-3', 2),
+    'emc-cese': ('VR-3', 3), 'emc-decentralisation': ('VR-3', 5), 'emc-collectivites': ('VR-3', 5), 'emc-echelles-solidarite': ('VR-3', 5),
+    'emc-droit-de-vote': ('CC-1', 1), 'emc-abstention': ('CC-1', 2), 'emc-referendum': ('CC-1', 2), 'emc-rip': ('CC-1', 2),
+    'emc-elections-locales': ('CC-1', 2),
+    'emc-souverainete': ('CC-2', 0), 'emc-partis-syndicats': ('CC-2', 0), 'emc-modes-scrutin': ('CC-2', 1), 'emc-partis-financement': ('CC-2', 2),
+    'emc-operations-exterieures': ('CC-3', 0), 'emc-desinformation-ingerence': ('CC-3', 0), 'emc-defense-alliances': ('CC-3', 1),
+    'emc-missions-armees': ('CC-3', 1), 'emc-forces-securite': ('CC-3', 2), 'emc-cybersecurite': ('CC-3', 2),
+    'emc-terrorisme-memoire': ('CC-3', 2), 'emc-numeros-urgence': ('CC-3', 2), 'emc-defense-nationale': ('CC-3', 3),
+    'emc-benevolat': ('CC-4', 0), 'emc-engagement': ('CC-4', 0), 'emc-formes-engagement': ('CC-4', 0), 'emc-securite-civile': ('CC-4', 1),
+    'emc-cybermenaces': ('CC-4', 3), 'emc-solidarite-internationale': ('CC-4', 5),
+}
