@@ -320,9 +320,10 @@ app.post('/api/klaviyo/signup', async (req, res) => {
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP,
       { email_verified: false, trial: true, paid_user: false, form_trial: false, consent_conseils, consent_partenaires, parcours: parcoursOf(req.body?.parcours) },
       phoneAttrs, consent_conseils);
-    // Newsletter : chaque inscrit rejoint aussi la liste newsletter ; il n'est abonné (et ne reçoit la newsletter)
-    // que s'il a coché la case de consentement (consentement explicite exigé pour la prospection par e-mail)
-    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours: parcoursOf(req.body?.parcours) }, phoneAttrs, consent_conseils);
+    // Newsletter : seuls les inscrits qui ont coché la case rejoignent la liste newsletter, et y sont abonnés
+    // (consentement explicite exigé pour la prospection par e-mail)
+    if (consent_conseils)
+      await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours: parcoursOf(req.body?.parcours) }, phoneAttrs, true);
 
     // Créer la ligne profil Supabase avec trial = true (un seul compte pour le tuteur IA et le quiz)
     if (user_id) {
@@ -337,6 +338,21 @@ app.post('/api/klaviyo/signup', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+/* ── Klaviyo : newsletter à la confirmation de l'inscription ──
+   Toutes les fenêtres d'inscription du site enregistrent la case « Je souhaite recevoir la newsletter PassCRPE »
+   dans les métadonnées Supabase (consent_conseils). À la confirmation de l'e-mail, si la case est cochée,
+   la personne est ajoutée à la liste newsletter et abonnée. Une seule fois par compte (newsletter_sync_at),
+   pour ne jamais réabonner quelqu'un qui se serait désinscrit ensuite. */
+async function klaviyoNewsletterDepuisInscription(user) {
+  const meta = user.user_metadata || {};
+  if (meta.consent_conseils !== true || meta.newsletter_sync_at) return;
+  const prenom = meta.prenom || '', nom = meta.nom || '';
+  await klaviyoSubscribePipeline(user.email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours: parcoursOf(meta.parcours) });
+  const { error } = await supabaseAdmin.auth.admin.updateUserById(user.id, { user_metadata: { ...meta, newsletter_sync_at: new Date().toISOString() } });
+  if (error) console.error('[Klaviyo newsletter inscription] marque non enregistrée :', error.message);
+  console.log(`[Klaviyo] newsletter : ${user.email} ajouté à la liste ${KLAVIYO_LIST_NEWSLETTER}`);
+}
 
 /* ── Klaviyo : passer email_verified à true pour un email donné ── */
 async function klaviyoSetEmailVerified(email) {
@@ -414,6 +430,7 @@ app.post('/api/klaviyo/email-verified', async (req, res) => {
     if (error || !data?.user) return res.status(401).json({ error: 'Token invalide.' });
     const email = data.user.email;
     if (!email) return res.status(400).json({ error: 'Email introuvable dans le token.' });
+    await klaviyoNewsletterDepuisInscription(data.user);
     await klaviyoSetEmailVerified(email);
     res.json({ ok: true });
   } catch (err) {
