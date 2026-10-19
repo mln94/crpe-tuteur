@@ -408,6 +408,8 @@ def main():
             + f"  // Lien de l'e-mail de confirmation : retour sur cette page, session ouverte automatiquement, puis départ vers le test\n"
             + f"  window.EMAIL_REDIRECT_URL = '{SITE}/quiz';\n</script>\n"
             + scripts + RETOUR_CONFIRMATION + '</body>\n</html>\n')
+    # Suivi Tag Manager : les boutons d'inscription de cette page ont leur propre classe (cta-commencer sur PassCRPE)
+    page = re.sub(r'\bcta-commencer\b', 'cta-commencer-quizcrpe', page)
     open(OUT, 'w', encoding='utf-8').write(page)
     print('Écrit :', os.path.relpath(OUT, ROOT), f'({len(page) // 1024} ko)')
 
