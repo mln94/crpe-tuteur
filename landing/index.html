@@ -1969,7 +1969,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         window.dataLayer.push({ event: 'sign_up_error', error_reason: error.message });
         showAuthMessage(translateSupabaseError(error.message), 'error');
       } else {
-        window.dataLayer.push({ event: 'sign_up', method: 'email' });
+        window.dataLayer.push({ event: 'sign_up_' + (window.SIGNUP_PARCOURS||(location.pathname.indexOf('/quiz')===0?'quizcrpe':'passcrpe')), method: 'email' });
         // Klaviyo + Supabase profil — fire and forget
         fetch('/api/klaviyo/signup', {
           method: 'POST',

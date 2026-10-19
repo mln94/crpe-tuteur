@@ -703,7 +703,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (authMode==='register') {
       const {data,error}=await sb.auth.signUp({email,password,options:{data:{prenom,nom,concours,academie,telephone,consent_conseils:document.getElementById('authConsentConseils').checked,consent_partenaires:document.getElementById('authConsentPartenaires').checked,consent_version:'2026-10-12',consent_at:new Date().toISOString()}}});
       if (error) { window.dataLayer.push({event:'sign_up_error',error_reason:error.message}); showAuthMessage(error.message,'error'); }
-      else { window.dataLayer.push({event:'sign_up',method:'email'}); _lastEmail=email; document.getElementById('authForm').style.display='none'; document.getElementById('authTabs').style.display='none'; document.getElementById('authToggle').style.display='none'; document.getElementById('resendBlock').style.display='block'; showAuthMessage('✓ E-mail de confirmation envoyé à '+email+'. Vérifiez vos spams.','success'); }
+      else { window.dataLayer.push({event:'sign_up_'+(window.SIGNUP_PARCOURS||(location.pathname.indexOf('/quiz')===0?'quizcrpe':'passcrpe')),method:'email'}); _lastEmail=email; document.getElementById('authForm').style.display='none'; document.getElementById('authTabs').style.display='none'; document.getElementById('authToggle').style.display='none'; document.getElementById('resendBlock').style.display='block'; showAuthMessage('✓ E-mail de confirmation envoyé à '+email+'. Vérifiez vos spams.','success'); }
     } else {
       const {data,error}=await sb.auth.signInWithPassword({email,password});
       if (error) { showAuthMessage(error.message,'error'); }
