@@ -18,8 +18,8 @@ FICHIERS = {
     'svt': ['svt_facile', 'svt_inter', 'svt_difficile', 'svt_complements'],
     'physique_chimie': ['pc_facile', 'pc_inter', 'pc_difficile', 'pc_complements'],
     'technologie': ['techno_facile', 'techno_inter', 'techno_difficile', 'techno_complements'],
-    'arts': ['arts_facile', 'arts_inter', 'arts_difficile', 'arts_complements'],
-    'anglais': ['anglais_facile', 'anglais_inter', 'anglais_difficile', 'anglais_complements', 'anglais_axes'],
+    'arts': ['arts_facile', 'arts_inter', 'arts_difficile', 'arts_complements', 'arts_ar', 'arts_am', 'arts_ae', 'arts_mus'],
+    'anglais': ['anglais_facile', 'anglais_inter', 'anglais_difficile', 'anglais_complements', 'anglais_axes', 'ang_c6a', 'ang_c6b', 'ang_c5a', 'ang_c5b', 'ang_c4a', 'ang_c4b', 'ang_c3a', 'ang_c3b', 'ang_rla', 'ang_rlog'],
 }
 REF = {(m, c): dict(classe=cl, theme=t, sous_theme=st, objectifs=o) for m, c, cl, t, st, s, o in R}
 
