@@ -203,7 +203,8 @@ function klaviyoHeaders() {
   };
 }
 
-// Propriété Klaviyo « parcours » : d'où vient le contact (site PassCRPE ou page du quiz)
+// Propriétés Klaviyo « parcours_signup » (page de l'inscription) et « parcours_newsletter » (page de l'abonnement
+// à la newsletter) : site PassCRPE ou page du quiz
 const PARCOURS = new Set(['passcrpe', 'quizcrpe']);
 const parcoursOf = v => (PARCOURS.has(v) ? v : 'passcrpe');
 
@@ -228,12 +229,13 @@ async function klaviyoSubscribePipeline(email, prenom, nom, listId, properties =
     const dup = await profileRes.json();
     profileId = dup.errors?.[0]?.meta?.duplicate_profile_id;
     if (!profileId) throw new Error('Profil en double sans ID récupérable.');
-    // Profil existant : seule la propriété « parcours » est mise à jour (les autres propriétés ne sont pas écrasées)
-    if (properties.parcours) {
+    // Profil existant : seules les propriétés de parcours sont mises à jour (les autres propriétés ne sont pas écrasées)
+    const parcoursProps = Object.fromEntries(['parcours_signup', 'parcours_newsletter'].filter(k => properties[k]).map(k => [k, properties[k]]));
+    if (Object.keys(parcoursProps).length) {
       await fetch(`${KLAVIYO_API_BASE}/profiles/${profileId}`, {
         method: 'PATCH',
         headers: klaviyoHeaders(),
-        body: JSON.stringify({ data: { type: 'profile', id: profileId, attributes: { properties: { parcours: properties.parcours } } } }),
+        body: JSON.stringify({ data: { type: 'profile', id: profileId, attributes: { properties: parcoursProps } } }),
       });
     }
   } else if (profileRes.ok) {
@@ -299,7 +301,7 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
   if (!prenom || !nom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ error: 'Données invalides.' });
   try {
-    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours: parcoursOf(req.body?.parcours) });
+    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours_newsletter: parcoursOf(req.body?.parcours) });
     res.json({ ok: true });
   } catch (err) {
     console.error('[Klaviyo newsletter]', err.message);
@@ -318,12 +320,12 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   try {
     const phoneAttrs = telephone ? { phone_number: telephone } : {};
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP,
-      { email_verified: false, trial: true, paid_user: false, form_trial: false, consent_conseils, consent_partenaires, parcours: parcoursOf(req.body?.parcours) },
+      { email_verified: false, trial: true, paid_user: false, form_trial: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(req.body?.parcours) },
       phoneAttrs, consent_conseils);
     // Newsletter : seuls les inscrits qui ont coché la case rejoignent la liste newsletter, et y sont abonnés
     // (consentement explicite exigé pour la prospection par e-mail)
     if (consent_conseils)
-      await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours: parcoursOf(req.body?.parcours) }, phoneAttrs, true);
+      await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours_newsletter: parcoursOf(req.body?.parcours) }, phoneAttrs, true);
 
     // Créer la ligne profil Supabase avec trial = true (un seul compte pour le tuteur IA et le quiz)
     if (user_id) {
@@ -348,7 +350,7 @@ async function klaviyoNewsletterDepuisInscription(user) {
   const meta = user.user_metadata || {};
   if (meta.consent_conseils !== true || meta.newsletter_sync_at) return;
   const prenom = meta.prenom || '', nom = meta.nom || '';
-  await klaviyoSubscribePipeline(user.email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours: parcoursOf(meta.parcours) });
+  await klaviyoSubscribePipeline(user.email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours_signup: parcoursOf(meta.parcours), parcours_newsletter: parcoursOf(meta.parcours) });
   const { error } = await supabaseAdmin.auth.admin.updateUserById(user.id, { user_metadata: { ...meta, newsletter_sync_at: new Date().toISOString() } });
   if (error) console.error('[Klaviyo newsletter inscription] marque non enregistrée :', error.message);
   console.log(`[Klaviyo] newsletter : ${user.email} ajouté à la liste ${KLAVIYO_LIST_NEWSLETTER}`);
@@ -770,7 +772,7 @@ app.post('/api/contact', async (req, res) => {
       const proprietes = { contact_raison: raison, contact_date: new Date().toISOString() };
       try {
         await klaviyoSubscribePipeline(user?.email || mail, p, n, KLAVIYO_LIST_CONTACT, proprietes, {}, false);
-        // profil déjà existant : le pipeline ne met à jour que « parcours », on ajoute donc la raison explicitement
+        // profil déjà existant : le pipeline ne met à jour que les propriétés de parcours, on ajoute donc la raison explicitement
         await klaviyoSetProperties(user?.email || mail, proprietes);
       } catch (e) { console.error('[contact Klaviyo]', e.message); }
     }

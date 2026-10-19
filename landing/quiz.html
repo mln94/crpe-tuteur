@@ -1373,6 +1373,40 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </section>
 
+<!-- ═══════════════════════════════ NEWSLETTER ═══════════════════════════════ -->
+<section class="nl-section" id="newsletter">
+  <div class="nl-inner">
+    <div class="section-eyebrow">Newsletter</div>
+    <p class="section-sub">Recevez toutes les deux semaines les mises à jour de l'application et les informations importantes sur le concours.</p>
+
+    <form id="nl-form" novalidate>
+      <div class="nl-form-row">
+        <div class="nl-field">
+          <label for="nl-prenom">Prénom</label>
+          <input type="text" id="nl-prenom" placeholder="Marie" autocomplete="given-name" required />
+        </div>
+        <div class="nl-field">
+          <label for="nl-nom">Nom</label>
+          <input type="text" id="nl-nom" placeholder="Dupont" autocomplete="family-name" required />
+        </div>
+      </div>
+      <div class="nl-form-row">
+        <div class="nl-field full">
+          <label for="nl-email">Adresse e-mail</label>
+          <input type="email" id="nl-email" placeholder="marie.dupont@email.fr" autocomplete="email" required />
+        </div>
+      </div>
+      <div class="nl-consent">
+        <input type="checkbox" id="nl-consent" />
+        <label for="nl-consent">J'accepte de recevoir la newsletter de PassCRPE par e-mail. Je peux me désinscrire à tout moment (<a href="/politique-de-confidentialite" target="_blank" rel="noopener">politique de confidentialité</a>).</label>
+      </div>
+      <button type="submit" class="nl-submit" id="nl-submit">Rester informé des nouveautés PassCRPE</button>
+      <div class="nl-alert" id="nl-alert"></div>
+    </form>
+    <p class="nl-privacy">Désabonnement en un clic à tout moment. Vos données ne sont jamais revendues.</p>
+  </div>
+</section>
+
 <!-- ═══════════════════════════════ FOOTER ═══════════════════════════════ -->
 <footer>
   <div class="footer-inner">
@@ -1408,6 +1442,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h4>Ressources</h4>
         <ul>
           <li><a href="/blog">Blog</a></li>
+          <li><a href="#newsletter">Newsletter</a></li>
           <li><a href="/outils">Outils</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="/#temoignages">Témoignages</a></li>
@@ -1768,6 +1803,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <script>
   // Parcours Klaviyo des inscriptions faites sur cette page
   window.SIGNUP_PARCOURS = 'quizcrpe';
+  // Parcours Klaviyo des abonnements à la newsletter faits sur cette page
+  window.nlParcours = 'quizcrpe';
   // Après la connexion : page « Mes outils » (tuteur IA ou quiz)
   window.AFTER_LOGIN_URL = '/espace';
   window.SIGNUP_SUCCESS_MESSAGE = '✓ Compte créé ! Confirmez votre adresse en cliquant sur le lien envoyé à {email} (pensez aux spams) : il vous ramènera ici, sur QuizCRPE.';
@@ -2010,6 +2047,61 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       window.location.href = appBase;
     }
   }
+
+  /* ── Newsletter form ── */
+  document.getElementById('nl-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const btn   = document.getElementById('nl-submit');
+    const alert = document.getElementById('nl-alert');
+    alert.className = 'nl-alert';
+    alert.textContent = '';
+
+    const prenom = document.getElementById('nl-prenom').value.trim();
+    const nom    = document.getElementById('nl-nom').value.trim();
+    const email  = document.getElementById('nl-email').value.trim();
+
+    if (!prenom || !nom || !email) {
+      alert.className = 'nl-alert error';
+      alert.textContent = 'Veuillez remplir tous les champs.';
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert.className = 'nl-alert error';
+      alert.textContent = 'Adresse e-mail invalide.';
+      return;
+    }
+    if (!document.getElementById('nl-consent').checked) {
+      alert.className = 'nl-alert error';
+      alert.textContent = 'Veuillez cocher la case de consentement pour continuer.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Inscription en cours…';
+
+    try {
+      const res = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // Parcours : « quizcrpe » si la personne vient du quiz (boutons du quiz ou du pack, ou lien ?parcours=quizcrpe), sinon « passcrpe »
+        body: JSON.stringify({ prenom, nom, email, parcours: (window.nlParcours || new URLSearchParams(location.search).get('parcours')) === 'quizcrpe' ? 'quizcrpe' : 'passcrpe' }),
+      });
+      const json = await res.json();
+      if (res.ok && json.ok) {
+        alert.className = 'nl-alert success';
+        alert.textContent = '✓ Inscription confirmée ! Vous recevrez bientôt nos premiers conseils CRPE.';
+        e.target.reset();
+      } else {
+        throw new Error(json.error || `Erreur ${res.status}`);
+      }
+    } catch {
+      alert.className = 'nl-alert error';
+      alert.textContent = 'Une erreur est survenue. Veuillez réessayer.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Rester informé des nouveautés PassCRPE';
+    }
+  });
 
   function translateSupabaseError(msg) {
     if (msg.includes('already registered') || msg.includes('User already registered'))

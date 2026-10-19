@@ -375,18 +375,24 @@ def main():
     footer = footer.replace('<li><a href="#offres">Quiz CRPE</a></li>', '<li><a href="/quizcrpe">Quiz CRPE</a></li>')
     footer = logo_quiz(footer.replace('<div class="nav-logo" style="margin-bottom:12px">', '<div class="nav-logo logo-quiz" style="margin-bottom:12px">', 1))
     footer = re.sub(r'href="#(?!faq")([a-z]+)"', r'href="/#\1"', footer)
+    # Lien vers le formulaire de newsletter de cette page
+    a = '<a href="/blog">Blog</a>'
+    assert footer.count(a) == 1
+    footer = footer.replace(a, a + '</li>\n          <li><a href="#newsletter">Newsletter</a>', 1)
 
     # Fenêtres de confirmation et de connexion/inscription, identiques à l'accueil
     modales = cut(src, '<!-- ═══════════════════════ CONFIRMATION POPUP', '<script>\n  /* ── FAQ accordion')
 
-    # Scripts de l'accueil (FAQ, animations, inscription, menus), sans le formulaire de newsletter absent de cette page
-    scripts = src[src.index('<script>\n  /* ── FAQ accordion'):src.index('</body>')]
-    nl = cut(scripts, '  /* ── Newsletter form ── */', '  function translateSupabaseError')
-    scripts = scripts.replace(nl, '')
-    assert 'nl-form' not in scripts and "window.SIGNUP_PARCOURS || 'passcrpe'" in scripts
+    # Formulaire de newsletter de l'accueil, même liste Klaviyo (parcours_newsletter = quizcrpe, via window.nlParcours)
+    newsletter = cut(src, '<!-- ═══════════════════════════════ NEWSLETTER', '<!-- ═══════════════════════════════ FOOTER')
+    assert 'id="nl-form"' in newsletter
 
-    page = (head + '</head>\n' + body_pre + nav + '\n' + contenu() + '\n' + footer + '\n\n' + modales
-            + "<script>\n  // Parcours Klaviyo des inscriptions faites sur cette page\n  window.SIGNUP_PARCOURS = 'quizcrpe';\n  // Après la connexion : page « Mes outils » (tuteur IA ou quiz)\n  window.AFTER_LOGIN_URL = '/espace';\n"
+    # Scripts de l'accueil (FAQ, animations, inscription, menus, newsletter)
+    scripts = src[src.index('<script>\n  /* ── FAQ accordion'):src.index('</body>')]
+    assert "getElementById('nl-form')" in scripts and "window.SIGNUP_PARCOURS || 'passcrpe'" in scripts
+
+    page = (head + '</head>\n' + body_pre + nav + '\n' + contenu() + '\n' + newsletter + footer + '\n\n' + modales
+            + "<script>\n  // Parcours Klaviyo des inscriptions faites sur cette page\n  window.SIGNUP_PARCOURS = 'quizcrpe';\n  // Parcours Klaviyo des abonnements à la newsletter faits sur cette page\n  window.nlParcours = 'quizcrpe';\n  // Après la connexion : page « Mes outils » (tuteur IA ou quiz)\n  window.AFTER_LOGIN_URL = '/espace';\n"
             + "  window.SIGNUP_SUCCESS_MESSAGE = '✓ Compte créé ! Confirmez votre adresse en cliquant sur le lien envoyé à {email} (pensez aux spams) : il vous ramènera ici, sur QuizCRPE.';\n"
             + f"  // Lien de l'e-mail de confirmation : retour sur cette page, avec la même fenêtre de confirmation que l'accueil\n"
             + f"  window.EMAIL_REDIRECT_URL = '{SITE}/quizcrpe';\n</script>\n"
