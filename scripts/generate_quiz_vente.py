@@ -9,8 +9,8 @@ L'inscription est le même formulaire que sur la page d'accueil (compte Supabase
 Différences : window.SIGNUP_PARCOURS = 'quizcrpe', envoyé à Klaviyo dans la propriété « parcours », et
 window.SIGNUP_SUCCESS_MESSAGE : après l'inscription, message « confirmez votre e-mail » ; window.AFTER_LOGIN_URL = '/espace' :
 après la connexion, la personne choisit son outil (tuteur IA ou quiz).
-Un seul compte pour le tuteur IA et le quiz (projet Supabase « crpe »), et le lien de l'e-mail de confirmation ramène sur /quiz, redirigé vers /quizcrpe (window.EMAIL_REDIRECT_URL, adresse autorisée dans Supabase) : la session est ouverte
-automatiquement et la personne part sur /quizapp pour son test de positionnement gratuit, puis le paiement.
+Un seul compte pour le tuteur IA et le quiz (projet Supabase « crpe »), et le lien de l'e-mail de confirmation ramène sur /quizcrpe (window.EMAIL_REDIRECT_URL, même domaine que la Site URL de Supabase) :
+comme sur l'accueil, la fenêtre « Votre compte est activé ! » invite à se connecter.
 À relancer après une modification du formulaire d'inscription, du menu ou du pied de page de l'accueil.
 """
 import os
@@ -324,17 +324,6 @@ def contenu():
 '''
 
 
-# Retour depuis l'e-mail de confirmation : le client Supabase lit la session dans l'URL, puis direction le test
-RETOUR_CONFIRMATION = """<script>
-  function allerAuTest() { getSB().auth.getSession().then(function () { window.location.href = '/quizapp'; }); }
-  (function () {
-    var h = new URLSearchParams(window.location.hash.slice(1));
-    if (h.get('type') !== 'signup' || !h.get('access_token')) return;
-    getSB();
-    setTimeout(allerAuTest, 3500);
-  })();
-</script>
-"""
 
 
 ICONE_QUIZ = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"{style}>'
@@ -389,12 +378,6 @@ def main():
 
     # Fenêtres de confirmation et de connexion/inscription, identiques à l'accueil
     modales = cut(src, '<!-- ═══════════════════════ CONFIRMATION POPUP', '<script>\n  /* ── FAQ accordion')
-    for a, b in [('<p>Votre adresse e-mail a bien été confirmée.<br>Vous pouvez maintenant vous connecter et commencer votre préparation.</p>',
-                  '<p>Votre adresse e-mail est confirmée.<br>Place à votre test de positionnement gratuit (15 minutes).</p>'),
-                 ('<button class="confirm-btn" onclick="closeConfirmPopup(); openAuth(event,\'login\')">Se connecter</button>',
-                  '<button class="confirm-btn" onclick="allerAuTest()">Commencer mon test</button>')]:
-        assert a in modales, a
-        modales = modales.replace(a, b)
 
     # Scripts de l'accueil (FAQ, animations, inscription, menus), sans le formulaire de newsletter absent de cette page
     scripts = src[src.index('<script>\n  /* ── FAQ accordion'):src.index('</body>')]
@@ -404,10 +387,10 @@ def main():
 
     page = (head + '</head>\n' + body_pre + nav + '\n' + contenu() + '\n' + footer + '\n\n' + modales
             + "<script>\n  // Parcours Klaviyo des inscriptions faites sur cette page\n  window.SIGNUP_PARCOURS = 'quizcrpe';\n  // Après la connexion : page « Mes outils » (tuteur IA ou quiz)\n  window.AFTER_LOGIN_URL = '/espace';\n"
-            + "  window.SIGNUP_SUCCESS_MESSAGE = '✓ Compte créé ! Confirmez votre adresse en cliquant sur le lien envoyé à {email} (pensez aux spams) : il vous ramènera ici, connecté, pour votre test de positionnement gratuit.';\n"
-            + f"  // Lien de l'e-mail de confirmation : retour sur cette page, session ouverte automatiquement, puis départ vers le test\n"
-            + f"  window.EMAIL_REDIRECT_URL = '{SITE}/quiz';\n</script>\n"
-            + scripts + RETOUR_CONFIRMATION + '</body>\n</html>\n')
+            + "  window.SIGNUP_SUCCESS_MESSAGE = '✓ Compte créé ! Confirmez votre adresse en cliquant sur le lien envoyé à {email} (pensez aux spams) : il vous ramènera ici, sur QuizCRPE.';\n"
+            + f"  // Lien de l'e-mail de confirmation : retour sur cette page, avec la même fenêtre de confirmation que l'accueil\n"
+            + f"  window.EMAIL_REDIRECT_URL = '{SITE}/quizcrpe';\n</script>\n"
+            + scripts + '</body>\n</html>\n')
     # Suivi Tag Manager : les boutons d'inscription de cette page ont leur propre classe (cta-commencer sur PassCRPE)
     page = re.sub(r'\bcta-commencer\b', 'cta-commencer-quizcrpe', page)
     open(OUT, 'w', encoding='utf-8').write(page)
