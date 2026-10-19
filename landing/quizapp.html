@@ -1565,7 +1565,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var h = new URLSearchParams(location.hash.slice(1));
     if (h.get('type') !== 'signup' || !h.get('access_token')) return;
     document.getElementById('quiz-confirm').hidden = false;
-    window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'inscription_confirmee', parcours: 'quizcrpe' });
+    window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'inscription_confirmee_quizcrpe' });
     fetch('/api/klaviyo/email-verified', { method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ access_token: h.get('access_token') }) }).catch(function () {});
     history.replaceState(null, '', location.pathname + location.search);
