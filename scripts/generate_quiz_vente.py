@@ -186,7 +186,7 @@ def contenu():
       <div class="qz-stats">
         <div class="qz-stat"><strong>{total_txt}</strong><span>questions</span></div>
         <div class="qz-stat"><strong>{len(MATIERES)}</strong><span>matières</span></div>
-        <div class="qz-stat"><strong>3</strong><span>types de questions</span></div>
+        <div class="qz-stat"><strong>3</strong><span>niveaux de difficulté</span></div>
       </div>
     </div>
     <div class="qz-demo" aria-label="Exemple de question du quiz">
