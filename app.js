@@ -594,7 +594,7 @@ const CHAT_MODEL = 'claude-sonnet-4-6';
    Tables quiz_questions et quiz_comptes, lues et écrites par le serveur (clé service_role). */
 const QUIZ_MATIERES = ['francais', 'mathematiques', 'histoire_geographie', 'emc', 'svt', 'physique_chimie', 'technologie', 'arts', 'anglais'];
 const QUIZ_LABELS = { francais: 'Français', mathematiques: 'Mathématiques', histoire_geographie: 'Histoire-géographie', emc: 'EMC', svt: 'SVT', physique_chimie: 'Physique-chimie', technologie: 'Technologie', arts: 'Arts', anglais: 'Anglais' };
-const QUIZ_PRICE = { currency_code: 'EUR', value: '59.00' }; // 59 € TTC, aligné avec la page /quiz
+const QUIZ_PRICE = { currency_code: 'EUR', value: '59.00' }; // 59 € TTC, aligné avec la page /quizcrpe
 const POSITIONNEMENT_PAR_MATIERE = { facile: 2, intermediaire: 2, difficile: 1 }; // 5 questions × 9 matières = 45 questions
 const melanger = a => { const t = [...a]; for (let i = t.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [t[i], t[j]] = [t[j], t[i]]; } return t; };
 

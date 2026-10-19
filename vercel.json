@@ -4,7 +4,8 @@
   "regions": ["dub1"],
   "redirects": [
     { "source": "/rapports-jury-crpe", "destination": "/rapports-jury-crpe/2026", "permanent": false },
-    { "source": "/quizz", "destination": "/quiz", "permanent": true },
+    { "source": "/quizz", "destination": "/quizcrpe", "permanent": true },
+    { "source": "/quiz", "destination": "/quizcrpe", "permanent": true },
     { "source": "/quizzapp", "destination": "/quizapp", "permanent": true }
   ],
   "rewrites": [
@@ -22,7 +23,7 @@
     { "source": "/rapports-jury-crpe/2026", "destination": "/rapports-jury-crpe-2026.html" },
     { "source": "/rapports-jury-crpe/2025", "destination": "/rapports-jury-crpe-2025.html" },
     { "source": "/quizapp", "destination": "/quizapp.html" },
-    { "source": "/quiz", "destination": "/quiz.html" },
+    { "source": "/quizcrpe", "destination": "/quiz.html" },
     { "source": "/espace", "destination": "/espace.html" },
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/outils", "destination": "/outils.html" },

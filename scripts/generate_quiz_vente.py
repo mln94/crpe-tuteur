@@ -9,7 +9,7 @@ L'inscription est le même formulaire que sur la page d'accueil (compte Supabase
 Différences : window.SIGNUP_PARCOURS = 'quizcrpe', envoyé à Klaviyo dans la propriété « parcours », et
 window.SIGNUP_SUCCESS_MESSAGE : après l'inscription, message « confirmez votre e-mail » ; window.AFTER_LOGIN_URL = '/espace' :
 après la connexion, la personne choisit son outil (tuteur IA ou quiz).
-Un seul compte pour le tuteur IA et le quiz (projet Supabase « crpe »), et le lien de l'e-mail de confirmation ramène sur /quiz (window.EMAIL_REDIRECT_URL) : la session est ouverte
+Un seul compte pour le tuteur IA et le quiz (projet Supabase « crpe »), et le lien de l'e-mail de confirmation ramène sur /quiz, redirigé vers /quizcrpe (window.EMAIL_REDIRECT_URL, adresse autorisée dans Supabase) : la session est ouverte
 automatiquement et la personne part sur /quizapp pour son test de positionnement gratuit, puis le paiement.
 À relancer après une modification du formulaire d'inscription, du menu ou du pied de page de l'accueil.
 """
@@ -359,7 +359,7 @@ def main():
     head = re.sub(r'<meta name="description"[^>]*/>',
                   '<meta name="description" content="Le Quiz CRPE : au moins 300 questions par matière sur le programme du cycle 4, '
                   'des séries de 20 notées sur 20, l\'explication de chaque erreur et des révisions espacées. Test de positionnement gratuit." />\n'
-                  f'  <link rel="canonical" href="{SITE}/quiz" />', head)
+                  f'  <link rel="canonical" href="{SITE}/quizcrpe" />', head)
     head = head.replace('href="favicon.svg"', 'href="/favicon.svg"')
     head = head.replace('  </style>', CSS + '  </style>', 1)
     assert CSS in head
@@ -375,7 +375,7 @@ def main():
                       '      <li><a href="#matieres">Matières</a></li>\n'
                       '      <li><a href="#tarif">Tarif</a></li>\n')
     # Logo de la page : « QuizCRPE by PassCRPE », en orange (marque du quiz)
-    nav = nav.replace('<a href="#" class="nav-logo">', '<a href="/quiz" class="nav-logo logo-quiz" aria-label="QuizCRPE by PassCRPE">')
+    nav = nav.replace('<a href="#" class="nav-logo">', '<a href="/quizcrpe" class="nav-logo logo-quiz" aria-label="QuizCRPE by PassCRPE">')
     nav = logo_quiz(nav)
     # Bouton de l'en-tête : le test de positionnement gratuit plutôt qu'une simple inscription
     nav = nav.replace('Commencer<span class="nav-cta-long"> gratuitement</span> →', 'Vérifier mon niveau<span class="nav-cta-long"> gratuitement</span> →')
@@ -383,7 +383,7 @@ def main():
 
     # Pied de page : liens vers l'accueil, sauf la FAQ de cette page
     footer = cut(src, '<!-- ═══════════════════════════════ FOOTER', '</footer>', include_end=True)
-    footer = footer.replace('<li><a href="#offres">Quiz CRPE</a></li>', '<li><a href="/quiz">Quiz CRPE</a></li>')
+    footer = footer.replace('<li><a href="#offres">Quiz CRPE</a></li>', '<li><a href="/quizcrpe">Quiz CRPE</a></li>')
     footer = logo_quiz(footer.replace('<div class="nav-logo" style="margin-bottom:12px">', '<div class="nav-logo logo-quiz" style="margin-bottom:12px">', 1))
     footer = re.sub(r'href="#(?!faq")([a-z]+)"', r'href="/#\1"', footer)
 
