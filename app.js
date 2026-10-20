@@ -42,10 +42,10 @@ async function getAuthenticatedUser(req) {
   return data.user;
 }
 
-async function markUserPaid(userId, email) {
+async function markUserPaid(userId, email, ref) {
   await supabaseAdmin
     .from('profils_utilisateurs')
-    .upsert({ user_id: userId, crpe_paid: true, paid_at: new Date().toISOString() }, { onConflict: 'user_id' });
+    .upsert({ user_id: userId, crpe_paid: true, paid_at: new Date().toISOString(), ...(ref ? { paypal_ref_passcrpe: ref } : {}) }, { onConflict: 'user_id' });
 
   // Klaviyo : paid_user = true — resynchronise même en flux webhook (pas d'email direct dans l'event PayPal)
   try {
@@ -140,9 +140,10 @@ app.post('/api/paypal/capture-order', async (req, res) => {
     const capture = await captureRes.json();
     if (!captureRes.ok) throw new Error(capture.message || 'Erreur de capture PayPal');
 
-    const customId = capture.purchase_units?.[0]?.payments?.captures?.[0]?.custom_id;
+    const captureTuteur = capture.purchase_units?.[0]?.payments?.captures?.[0];
+    const customId = captureTuteur?.custom_id;
     if (capture.status === 'COMPLETED' && customId === user.id) {
-      await markUserPaid(user.id, user.email);
+      await markUserPaid(user.id, user.email, captureTuteur.id);
     }
     res.json({ status: capture.status });
   } catch (err) {
@@ -179,7 +180,7 @@ app.post('/api/webhook/paypal', async (req, res) => {
       const customId = event.resource?.custom_id;
       // Paiements du quiz : custom_id « quiz:<id du compte> » ; sinon compte du tuteur IA
       if (customId?.startsWith('quiz:')) await markQuizPaid(customId.slice(5), event.resource?.id);
-      else if (customId) await markUserPaid(customId);
+      else if (customId) await markUserPaid(customId, null, event.resource?.id);
     }
     res.status(200).json({ received: true });
   } catch (err) {
