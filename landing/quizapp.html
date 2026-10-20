@@ -1419,7 +1419,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     } else if (q.type === 'cliquer_mot') {
       corps = '<p class="quiz-hint">Cliquez sur le ou les mots, puis validez.</p><div class="quiz-phrase">' + q.choix.map(function (t, k) {
         return /[\wÀ-ÿ]/.test(t) ? '<button type="button" class="tok" data-tok="' + k + '">' + esc(t) + '</button>' : '<span class="punct">' + esc(t) + '</span>';
-      }).join(' ') + '</div><button type="button" class="quiz-btn" data-act="valider" disabled>Valider</button>';
+      }).join(' ') + '</div><div class="quiz-actions"><button type="button" class="quiz-btn" data-act="valider" disabled>Valider</button>' +
+        '<button type="button" class="quiz-btn ghost" data-act="nsp">Je ne sais pas</button></div>';
     } else {
       corps = '<div class="quiz-choices">' + q.choix.map(function (c, k) { return '<button type="button" class="quiz-choice" data-k="' + k + '">' + esc(c) + '</button>'; }).join('') + '</div>';
     }
@@ -1562,10 +1563,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     else if (act === 'test-start') testStart();
     else if (act === 't-suivant') testRepondre(false);
     else if (act === 't-passer') testRepondre(true);
-    // Question à saisir : « Je ne sais pas » compte comme une erreur, affiche la réponse attendue et permet de passer à la suite
+    // Question à saisir ou mots à cliquer : « Je ne sais pas » compte comme une erreur, affiche la réponse attendue et permet de passer à la suite
     else if (act === 'nsp' && st && !st.repondu) {
-      var ni = root.querySelector('.quiz-num input'); root.querySelectorAll('.quiz-num input, .quiz-num button').forEach(function (x) { x.disabled = true; });
-      envoyer('', function () { if (ni) ni.classList.add('bad'); });
+      var ni = root.querySelector('.quiz-num input'), tk = root.querySelectorAll('.tok');
+      root.querySelectorAll('.quiz-num input, .quiz-num button, .tok, [data-act="valider"], [data-act="nsp"]').forEach(function (x) { x.disabled = true; });
+      envoyer('', function (d) {
+        if (ni) ni.classList.add('bad');
+        if (tk.length) { var att = d.reponse.split(',').map(Number); tk.forEach(function (x) { x.classList.remove('sel'); if (att.indexOf(+x.dataset.tok) >= 0) x.classList.add('good'); }); }
+      });
     }
     else if (act === 'voir-resultat') { resultat(compte.positionnement); top(); }
     else if (act === 'start') demarrer(choix.mat, choix.niveau);

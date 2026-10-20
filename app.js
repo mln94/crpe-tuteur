@@ -61,12 +61,12 @@ async function markUserPaid(userId, email, ref) {
   }
 }
 
-// Déblocage du Quiz CRPE (table quiz_comptes) + Klaviyo quiz_paid ; appelée par la capture et par le webhook
+// Déblocage du Quiz CRPE (profils_utilisateurs.quizcrpe_paye) + Klaviyo quiz_paid ; appelée par la capture et par le webhook
 async function markQuizPaid(userId, ref, email) {
-  const { data: avant } = await supabaseAdmin.from('quiz_comptes').select('paid, email').eq('user_id', userId).maybeSingle();
-  if (avant?.paid) return; // déjà débloqué (capture puis webhook pour le même paiement)
-  const { error } = await supabaseAdmin.from('quiz_comptes')
-    .upsert({ user_id: userId, paid: true, paid_at: new Date().toISOString(), paypal_ref: ref || null, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
+  const { data: avant } = await supabaseAdmin.from('profils_utilisateurs').select('quizcrpe_paye, email').eq('user_id', userId).maybeSingle();
+  if (avant?.quizcrpe_paye) return; // déjà débloqué (capture puis webhook pour le même paiement)
+  const { error } = await supabaseAdmin.from('profils_utilisateurs')
+    .upsert({ user_id: userId, quizcrpe_paye: true, quizcrpe_paye_at: new Date().toISOString(), paypal_ref_quizcrpe: ref || null }, { onConflict: 'user_id' });
   if (error) throw new Error(`Déblocage du quiz : ${error.message}`);
   quizOublier(userId);
   try {
@@ -648,10 +648,14 @@ async function quizCompte(req, { frais = false } = {}) {
   if (!frais && c && c.until > Date.now()) return c.compte;
   const { data, error } = await supabaseAdmin.auth.getUser(token);
   if (error || !data?.user) return null;
-  const { data: ligne, error: e2 } = await supabaseAdmin.from('quiz_comptes').select('positionnement, paid, essai_reponses').eq('user_id', data.user.id).maybeSingle();
-  if (e2) throw new Error(e2.message);
+  // Accès payé : profils_utilisateurs.quizcrpe_paye (source de vérité, modifiable à la main dans Supabase)
+  const [{ data: ligne, error: e2 }, { data: profil, error: e3 }] = await Promise.all([
+    supabaseAdmin.from('quiz_comptes').select('positionnement, essai_reponses').eq('user_id', data.user.id).maybeSingle(),
+    supabaseAdmin.from('profils_utilisateurs').select('quizcrpe_paye').eq('user_id', data.user.id).maybeSingle(),
+  ]);
+  if (e2 || e3) throw new Error((e2 || e3).message);
   const l = ligne || {};
-  const compte = { id: data.user.id, email: data.user.email, positionnement: l.positionnement || null, paid: l.paid === true, essaiReponses: l.essai_reponses || {} };
+  const compte = { id: data.user.id, email: data.user.email, positionnement: l.positionnement || null, paid: profil?.quizcrpe_paye === true, essaiReponses: l.essai_reponses || {} };
   quizSessions.set(token, { compte, until: Date.now() + 120000 });
   return compte;
 }
@@ -790,13 +794,13 @@ app.get('/api/espace', async (req, res) => {
     const user = await getAuthenticatedUser(req);
     if (!user) return res.status(401).json({ error: 'Connexion requise.' });
     const [{ data: profil }, { data: quiz }] = await Promise.all([
-      supabaseAdmin.from('profils_utilisateurs').select('crpe_paid, trial').eq('user_id', user.id).maybeSingle(),
-      supabaseAdmin.from('quiz_comptes').select('positionnement, paid').eq('user_id', user.id).maybeSingle(),
+      supabaseAdmin.from('profils_utilisateurs').select('crpe_paid, trial, quizcrpe_paye').eq('user_id', user.id).maybeSingle(),
+      supabaseAdmin.from('quiz_comptes').select('positionnement').eq('user_id', user.id).maybeSingle(),
     ]);
     res.json({
       email: user.email, prenom: user.user_metadata?.prenom || '',
       tuteur: { paid: profil?.crpe_paid === true, trial: profil?.trial !== false },
-      quiz: { positionnement: !!quiz?.positionnement, score: quiz?.positionnement?.pct ?? null, paid: quiz?.paid === true },
+      quiz: { positionnement: !!quiz?.positionnement, score: quiz?.positionnement?.pct ?? null, paid: profil?.quizcrpe_paye === true },
     });
   } catch (err) {
     console.error('[espace]', err.message);
