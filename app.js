@@ -615,7 +615,7 @@ const CHAT_MODEL = 'claude-sonnet-4-6';
 const QUIZ_MATIERES = ['francais', 'mathematiques', 'histoire_geographie', 'emc', 'svt', 'physique_chimie', 'technologie', 'arts', 'anglais'];
 const QUIZ_LABELS = { francais: 'Français', mathematiques: 'Mathématiques', histoire_geographie: 'Histoire-géographie', emc: 'EMC', svt: 'SVT', physique_chimie: 'Physique-chimie', technologie: 'Technologie', arts: 'Arts', anglais: 'Anglais' };
 const QUIZ_PRICE = { currency_code: 'EUR', value: '59.00' }; // 59 € TTC, aligné avec la page /quizcrpe
-const POSITIONNEMENT_PAR_MATIERE = { facile: 2, intermediaire: 2, difficile: 1 }; // 5 questions × 9 matières = 45 questions
+const POSITIONNEMENT_PAR_MATIERE = { facile: 2, intermediaire: 3, difficile: 2 }; // 7 questions × 9 matières = 63 questions
 const melanger = a => { const t = [...a]; for (let i = t.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [t[i], t[j]] = [t[j], t[i]]; } return t; };
 
 // Catalogue d'une matière (sans réponses), gardé 10 minutes en mémoire
@@ -818,7 +818,7 @@ app.get('/api/quiz/compte', async (req, res) => {
   }
 });
 
-// Test de positionnement : 5 questions par matière (2 faciles, 2 intermédiaires, 1 avancée), sur des thèmes variés
+// Test de positionnement : 7 questions par matière (2 faciles, 3 intermédiaires, 2 avancées), sur des thèmes variés
 app.get('/api/quiz/positionnement', async (req, res) => {
   try {
     const compte = await quizCompte(req);
@@ -850,7 +850,7 @@ app.post('/api/quiz/positionnement', async (req, res) => {
     const compte = await quizCompte(req, { frais: true });
     if (!compte) return res.status(401).json({ error: 'Connexion requise.' });
     if (compte.positionnement) return res.json({ resultat: compte.positionnement });
-    const reponses = Array.isArray(req.body?.reponses) ? req.body.reponses.slice(0, 60) : [];
+    const reponses = Array.isArray(req.body?.reponses) ? req.body.reponses.slice(0, 80) : [];
     if (reponses.length < 9) return res.status(400).json({ error: 'Test incomplet.' });
     const index = {};
     (await Promise.all(QUIZ_MATIERES.map(quizCatalogue))).forEach((cat, im) => cat.forEach(q => { index[q.id] = { ...q, matiere: QUIZ_MATIERES[im] }; }));

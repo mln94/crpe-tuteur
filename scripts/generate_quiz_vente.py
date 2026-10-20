@@ -54,7 +54,7 @@ FAQ = [
      f"Le Quiz CRPE coûte {PRIX_QUIZ} TTC, en paiement unique, après un test de positionnement gratuit. "
      "Il est satisfait ou remboursé pendant 14 jours."),
     ("Le test de positionnement est-il vraiment gratuit ?",
-     "Oui. Après votre inscription, vous passez un test de 45 questions (environ 15 minutes) et obtenez gratuitement votre "
+     "Oui. Après votre inscription, vous passez un test de 63 questions (environ 20 minutes) et obtenez gratuitement votre "
      "carte des forces et faiblesses dans les 9 matières. Vous décidez ensuite de débloquer le quiz complet, sans engagement."),
     ("Et si le quiz ne me convient pas ?",
      "Vous êtes remboursé. Le Quiz CRPE est satisfait ou remboursé pendant 14 jours : écrivez-nous à contact@passcrpe.fr "
@@ -182,7 +182,7 @@ def contenu():
         <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
         <a href="#fonctionnement" class="btn-secondary">Voir comment ça marche</a>
       </div>
-      <p class="qz-hero-price"><strong>Test de positionnement gratuit</strong> (15 min) · puis <strong>{PRIX_QUIZ} TTC</strong> pour débloquer le quiz</p>
+      <p class="qz-hero-price"><strong>Test de positionnement gratuit</strong> (20 min) · puis <strong>{PRIX_QUIZ} TTC</strong> pour débloquer le quiz</p>
       <p class="qz-garantie-ligne">🛡️ <strong>Satisfait ou remboursé pendant 14 jours</strong></p>
       <div class="qz-stats">
         <div class="qz-stat"><strong>+ de {total_txt}</strong><span>questions</span></div>
@@ -211,9 +211,9 @@ def contenu():
   <div class="container">
     <div class="qz-test">
       <div>
-        <div class="section-eyebrow">Gratuit · 15 minutes</div>
+        <div class="section-eyebrow">Gratuit · 20 minutes</div>
         <h2 class="section-title">Votre carte des forces et faiblesses dès le premier jour</h2>
-        <p class="section-sub">Juste après votre inscription, un test de positionnement de 45 questions (5 par matière, sur les trois niveaux) vous montre où vous en êtes. Vous savez immédiatement par où commencer.</p>
+        <p class="section-sub">Juste après votre inscription, un test de positionnement de 63 questions (7 par matière, sur les trois niveaux) vous montre où vous en êtes. Vous savez immédiatement par où commencer.</p>
         <div class="hero-actions" style="justify-content:flex-start;margin-top:24px">
           <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
         </div>

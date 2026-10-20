@@ -294,34 +294,41 @@
     .quiz-points { margin: 6px 0 4px 18px; font-size: 15px; line-height: 1.7; }
     .quiz-choice.sel { border-color: #f97316; background: #fff7ed; font-weight: 700; }
     /* Rapport de positionnement : couleurs PassCRPE (indigo, violet) */
-    .rp-tete { border-radius: 22px; padding: 28px 24px; margin-bottom: 16px; color: #fff; text-align: center; background: linear-gradient(140deg, #312e81, #4f46e5 60%, #7c3aed); box-shadow: 0 16px 40px rgba(79,70,229,.25); }
+    .rp-tete { border-radius: 22px; padding: 28px 24px; margin-bottom: 16px; color: #fff; text-align: center; background: linear-gradient(140deg, #9a3412, #ea580c 55%, #fb923c); box-shadow: 0 16px 40px rgba(234,88,12,.25); }
     .rp-sur { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
     .rp-score { font-size: 64px; font-weight: 900; line-height: 1; margin: 10px 0 6px; letter-spacing: -1px; }
     .rp-titre { font-size: 22px; font-weight: 900; }
     .rp-sous { font-size: 14px; opacity: .85; margin-top: 6px; }
     .rp-bloc { margin-bottom: 16px; }
     .rp-bloc p { font-size: 15.5px; line-height: 1.7; color: var(--gray-700); }
-    .rp-bloc strong { color: #3730a3; }
-    .rp-mat { padding: 12px 0; border-bottom: 1px solid #eef2ff; }
+    .rp-bloc strong { color: #9a3412; }
+    .rp-mat { padding: 12px 0; border-bottom: 1px solid #fff7ed; }
     .rp-mat:last-child { border-bottom: 0; }
     .rp-ligne { display: grid; grid-template-columns: 150px 1fr 48px; gap: 12px; align-items: center; font-size: 15px; font-weight: 800; color: var(--gray-900); }
-    .rp-ligne .barre { height: 12px; border-radius: 10px; background: #eef2ff; overflow: hidden; }
+    .rp-ligne .barre { height: 12px; border-radius: 10px; background: #fff7ed; overflow: hidden; }
     .rp-ligne .barre span { display: block; height: 100%; border-radius: 10px; }
-    .rp-ligne .pct { text-align: right; color: #3730a3; }
-    .barre .acquis { background: #3730a3; } .barre .engage { background: #6366f1; } .barre .cours { background: #a5b4fc; } .barre .construire { background: #c4b5fd; }
+    .rp-ligne .pct { text-align: right; color: #9a3412; }
+    .barre .acquis { background: #9a3412; } .barre .engage { background: #f97316; } .barre .cours { background: #fdba74; } .barre .construire { background: #fed7aa; }
     .rp-info { font-size: 13.5px; line-height: 1.55; color: var(--gray-600); margin-top: 6px; }
     .rp-chip { display: inline-block; font-size: 11.5px; font-weight: 800; padding: 3px 10px; border-radius: 100px; margin-right: 8px; }
-    .rp-chip.acquis { background: #3730a3; color: #fff; } .rp-chip.engage { background: #e0e7ff; color: #3730a3; } .rp-chip.cours { background: #eef2ff; color: #4f46e5; } .rp-chip.construire { background: #f5f3ff; color: #6d28d9; border: 1px solid #ddd6fe; }
+    .rp-chip.acquis { background: #9a3412; color: #fff; } .rp-chip.engage { background: #ffedd5; color: #9a3412; } .rp-chip.cours { background: #fff7ed; color: #ea580c; } .rp-chip.construire { background: #fffbf5; color: #c2410c; border: 1px solid #fed7aa; }
     .rp-niv { display: block; margin-top: 3px; color: var(--gray-500); }
-    .rp-niv strong { color: #4f46e5; }
+    .rp-niv strong { color: #ea580c; }
     .rp-listes { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
     .rp-listes h3 { font-size: 16px; font-weight: 900; color: var(--gray-900); margin-bottom: 8px; }
     .rp-listes ul { list-style: none; display: grid; gap: 8px; }
     .rp-listes li { font-size: 14px; line-height: 1.45; color: var(--gray-700); }
-    .rp-listes .mat { display: block; font-size: 11.5px; font-weight: 800; color: #6366f1; text-transform: uppercase; letter-spacing: .03em; }
+    .rp-listes .mat { display: block; font-size: 11.5px; font-weight: 800; color: #f97316; text-transform: uppercase; letter-spacing: .03em; }
     .rp-plan { margin: 4px 0 0 20px; display: grid; gap: 8px; font-size: 15px; line-height: 1.6; color: var(--gray-700); }
-    .rp-plan .niv { font-size: 12px; font-weight: 800; color: #4f46e5; background: #eef2ff; border-radius: 100px; padding: 2px 8px; }
+    .rp-plan .niv { font-size: 12px; font-weight: 800; color: #ea580c; background: #fff7ed; border-radius: 100px; padding: 2px 8px; }
     .rp-note { font-size: 13px !important; color: var(--gray-500) !important; margin-top: 14px; }
+    .rp-niveau { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; opacity: .85; margin-top: 6px; }
+    .rp-sur20 { font-size: .45em; font-weight: 800; opacity: .8; margin-left: 4px; }
+    .rp-depart { font-size: 13.5px; opacity: .85; margin-top: 10px; }
+    .rp-avert { font-size: 13.5px !important; color: var(--gray-500) !important; margin: -4px 0 14px; line-height: 1.5; }
+    .rp-notions ul { list-style: none; display: grid; gap: 10px; }
+    .rp-notions li { font-size: 14px; line-height: 1.45; color: var(--gray-700); }
+    .rp-notions .mat { display: block; font-size: 11.5px; font-weight: 800; color: #f97316; text-transform: uppercase; letter-spacing: .03em; }
     @media (max-width: 600px) { .rp-ligne { grid-template-columns: 105px 1fr 42px; font-size: 13.5px; } .rp-listes { grid-template-columns: 1fr; } .rp-score { font-size: 52px; } }
     .paywall { margin: 0 0 16px; border: 2px solid #c7d2fe; background: linear-gradient(160deg, #eef2ff, #fff 60%); }
     .pw-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
@@ -348,8 +355,8 @@
     .quiz-tabbar .pastille { position: absolute; top: -2px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; border: 1.5px solid #fff; }
     /* Essai gratuit et fenêtre de paiement */
     .quiz-niveau:disabled { opacity: .45; cursor: not-allowed; }
-    .essai-annonce { display: block; margin: 0 0 16px; padding: 12px 16px; border-radius: 14px; background: #eef2ff; color: #3730a3; font-weight: 700; text-decoration: none; text-align: center; }
-    .essai-carte { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; border: 2px solid #c7d2fe; background: linear-gradient(160deg, #eef2ff, #fff 60%); }
+    .essai-annonce { display: block; margin: 0 0 16px; padding: 12px 16px; border-radius: 14px; background: #fff7ed; color: #9a3412; font-weight: 700; text-decoration: none; text-align: center; }
+    .essai-carte { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; border: 2px solid #fed7aa; background: linear-gradient(160deg, #fff7ed, #fff 60%); }
     .essai-cadeau { font-size: 36px; line-height: 1; }
     .essai-liste { margin: 8px 0 4px 18px; font-size: 15px; line-height: 1.8; color: var(--gray-700); }
     .essai-bandeau { margin: 0 0 14px; padding: 12px 16px; border-radius: 14px; background: #eef2ff; color: #3730a3; font-size: 14px; line-height: 1.5; }
@@ -1138,7 +1145,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
   function connexion() {
     root.innerHTML = '<div class="quiz-card"><h2>Connectez-vous pour accéder au Quiz CRPE</h2>' +
-      '<p>Créez votre compte gratuitement : vous commencez par un <strong>test de positionnement de 15 minutes</strong> qui vous donne la carte de vos forces et faiblesses dans les 9 matières.</p>' +
+      '<p>Créez votre compte gratuitement : vous commencez par un <strong>test de positionnement de 20 minutes</strong> qui vous donne la carte de vos forces et faiblesses dans les 9 matières.</p>' +
       '<div class="quiz-actions"><a class="quiz-btn" href="/quizcrpe?auth=register">Créer mon compte gratuitement</a><a class="quiz-btn ghost" href="/quizcrpe?auth=login">J\'ai déjà un compte PassCRPE</a></div></div>';
   }
   function introTest() {
@@ -1146,8 +1153,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     // Le test est préparé en arrière-plan pendant la lecture de l'introduction : « Commencer » est immédiat
     if (!t && !testPret) testPret = api('/api/quiz/positionnement').catch(function (e) { testPret = null; throw e; });
     root.innerHTML = barreCompte() + '<div class="quiz-card"><h2>Votre test de positionnement</h2>' +
-      '<p>Avant d\'accéder au quiz, faites le point sur votre niveau. Le test est <strong>gratuit</strong> et dure environ <strong>15 minutes</strong> :</p>' +
-      '<ul class="quiz-points"><li>45 questions, 5 dans chacune des 9 matières ;</li><li>des questions faciles, intermédiaires et avancées ;</li><li>pas de correction pendant le test : à la fin, vous obtenez votre carte des forces et faiblesses, matière par matière.</li></ul>' +
+      '<p>Avant d\'accéder au quiz, faites le point sur votre niveau. Le test est <strong>gratuit</strong> et dure environ <strong>20 minutes</strong> :</p>' +
+      '<ul class="quiz-points"><li>63 questions, 7 dans chacune des 9 matières ;</li><li>des questions faciles, intermédiaires et avancées ;</li><li>pas de correction pendant le test : à la fin, vous obtenez votre carte des forces et faiblesses, matière par matière.</li></ul>' +
       '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="test-start">' + (t ? 'Reprendre mon test (question ' + (t.i + 1) + ' / ' + t.qs.length + ')' : 'Commencer mon test') + '</button></div></div>';
   }
   function lireTest() { try { var t = JSON.parse(localStorage.getItem(CLE_TEST)); return t && t.qs && t.qs.length && t.user === (compte && compte.email) ? t : null; } catch (e) { return null; } }
@@ -1240,27 +1247,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }).join('') + '<li><strong>Ensuite</strong> : consolidez vos matières fortes au niveau avancé, et laissez les révisions espacées faire revenir chaque notion.</li>';
   }
   function resultat(r) {
-    var pf = profil(r), tri = r.matieres.slice().sort(function (a, b) { return b.pct - a.pct; }), forts = [], faibles = [];
-    tri.forEach(function (m) { m.themes.forEach(function (t) { if (t.ok === t.n) forts.push([m.label, t.theme]); }); });
-    tri.slice().reverse().forEach(function (m) { m.themes.forEach(function (t) { if (t.ok / t.n < .5) faibles.push([m.label, t.theme]); }); });
-    var item = function (x) { return '<li><span class="mat">' + esc(x[0]) + '</span>' + esc(x[1]) + '</li>'; };
+    var pf = profil(r), tri = r.matieres.slice().sort(function (a, b) { return b.pct - a.pct; });
+    // Note sur 20 : le niveau global, seul résultat assez précis avec 63 questions
+    var note = r.n ? (Math.round(r.ok / r.n * 200) / 10).toLocaleString('fr-FR') : '0';
+    // Notions vues pendant le test, sans les classer en forces ou faiblesses (1 à 3 questions par thème : trop peu pour juger)
+    var notions = r.matieres.map(function (m) {
+      return '<li><span class="mat">' + esc(m.label) + '</span>' + m.themes.map(function (t) { return esc(t.theme); }).join(' · ') + '</li>';
+    }).join('');
     var date = r.date ? new Date(r.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
     var html = barreCompte() +
       '<div class="rp-tete"><div class="rp-sur">Rapport de positionnement' + (date ? ' · ' + date : '') + '</div>' +
-      '<div class="rp-score">' + r.pct + ' %</div><div class="rp-titre">' + pf.titre + '</div>' +
-      '<div class="rp-sous">' + r.ok + ' bonnes réponses sur ' + r.n + ' · 9 matières · 3 niveaux</div></div>' +
+      '<div class="rp-niveau">Votre niveau global</div>' +
+      '<div class="rp-score">' + note + '<span class="rp-sur20">/20</span></div><div class="rp-titre">' + pf.titre + '</div>' +
+      '<div class="rp-sous">' + r.pct + ' % de bonnes réponses · ' + r.ok + ' sur ' + r.n + ' · 9 matières · 3 niveaux</div>' +
+      '<div class="rp-depart">Un point de départ, pas un verdict : votre carte se précise à chaque série.</div></div>' +
       '<!--PAIEMENT-->' +
       '<div class="quiz-card rp-bloc"><h2>Votre profil</h2><p>' + pf.texte + '</p></div>' +
-      '<div class="quiz-card rp-bloc"><h2>Matière par matière</h2>' +
+      '<div class="quiz-card rp-bloc"><h2>Tendances par matière</h2>' +
+      '<p class="rp-avert">7 questions par matière : ce sont des tendances, à confirmer avec vos séries. Une seule réponse fait varier le score d’une matière de 14 points.</p>' +
       tri.map(function (m) {
         var c = categorie(m.pct), nv = m.niveaux, det = nv ? ['facile', 'intermediaire', 'difficile'].filter(function (k) { return nv[k]; }).map(function (k) { return NIVEAUX[k].toLowerCase() + ' ' + nv[k].ok + '/' + nv[k].n; }).join(' · ') : '';
         return '<div class="rp-mat"><div class="rp-ligne"><span class="nom">' + esc(m.label) + '</span><div class="barre"><span class="' + c.cle + '" style="width:' + Math.max(m.pct, 4) + '%"></span></div><span class="pct">' + m.pct + ' %</span></div>' +
           '<div class="rp-info"><span class="rp-chip ' + c.cle + '">' + c.label + '</span>' + c.txt + ' <span class="rp-niv">Niveau conseillé pour démarrer : <strong>' + NIVEAUX[niveauConseille(m)] + '</strong>' + (det ? ' (' + det + ')' : '') + '</span></div></div>';
       }).join('') + '</div>' +
-      '<div class="rp-listes"><div class="quiz-card"><h3>💪 Vos points forts</h3><ul>' + (forts.slice(0, 6).map(item).join('') || '<li>Ils apparaîtront au fil de vos séries.</li>') + '</ul></div>' +
-      '<div class="quiz-card"><h3>🎯 À travailler en priorité</h3><ul>' + (faibles.slice(0, 6).map(item).join('') || '<li>Aucune lacune nette : visez la maîtrise complète.</li>') + '</ul></div></div>' +
+      '<div class="quiz-card rp-bloc rp-notions"><h2>Les notions abordées pendant le test</h2>' +
+      '<p class="rp-avert">Chaque notion n’a été testée que sur 1 à 3 questions : trop peu pour la juger. Vos séries diront lesquelles sont acquises et lesquelles revoir.</p>' +
+      '<ul>' + notions + '</ul></div>' +
       '<div class="quiz-card rp-bloc"><h2>Votre plan de révision</h2><ol class="rp-plan">' + plan(r) + '</ol>' +
-      '<p class="rp-note">Ce diagnostic repose sur 45 questions (5 par matière) : c’est une première photographie de votre niveau. Vos séries d’entraînement l’affinent jour après jour.</p></div>';
+      '<p class="rp-note">Ce test repose sur 63 questions (7 par matière) : votre niveau global est fiable, le détail par matière donne des tendances. Vos séries d’entraînement affinent ce diagnostic jour après jour.</p></div>';
     if (compte && compte.paid) html = html.replace('<!--PAIEMENT-->', '') + '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Aller au quiz</button></div>';
     else {
       // Pas de paiement sur le rapport : les 2 séries d'essai offertes, dans les matières les plus fragiles
