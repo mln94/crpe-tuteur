@@ -870,12 +870,18 @@ app.post('/api/quiz/positionnement', async (req, res) => {
     });
     const ok = matieres.reduce((s, m) => s + m.ok, 0), n = matieres.reduce((s, m) => s + m.n, 0);
     const resultat = { date: new Date().toISOString(), ok, n, pct: n ? Math.round(ok / n * 100) : 0, matieres };
+    // Détail des réponses données, conservé dans quiz_comptes.reponses_positionnement
+    const detail = reponses.map((r, i) => {
+      const q = index[Number(r.id)], c = corrections[i]; if (!q || !c) return null;
+      return { id: q.id, matiere: q.matiere, niveau: q.niveau, theme: libelleTheme(q), question: q.question,
+        reponse: r.reponse ?? '', attendu: c.attendu, correct: c.correct };
+    }).filter(Boolean);
     // Enregistré une seule fois : un second envoi ne remplace pas le premier résultat
     const { data: existant } = await supabaseAdmin.from('quiz_comptes').select('positionnement').eq('user_id', compte.id).maybeSingle();
     let enregistre = existant?.positionnement;
     if (!enregistre) {
       const { error } = await supabaseAdmin.from('quiz_comptes').upsert({ user_id: compte.id, email: compte.email, positionnement: resultat,
-        positionnement_at: resultat.date, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
+        positionnement_at: resultat.date, reponses_positionnement: detail, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
       if (error) throw new Error(error.message);
       enregistre = resultat;
     }
