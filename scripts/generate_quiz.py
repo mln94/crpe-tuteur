@@ -1180,7 +1180,8 @@ JS = """<script>
     var q = st.serie[st.i], corps = '';
     st.repondu = false; st.sel = [];
     if (q.type === 'numerique') {
-      corps = '<form class="quiz-num" data-form="num"><input type="text" inputmode="decimal" autocomplete="off" placeholder="Votre réponse (nombre)" aria-label="Votre réponse"><button type="submit" class="quiz-btn">Valider</button></form>';
+      corps = '<form class="quiz-num" data-form="num"><input type="text" inputmode="decimal" autocomplete="off" placeholder="Votre réponse (nombre)" aria-label="Votre réponse"><button type="submit" class="quiz-btn">Valider</button>' +
+        '<button type="button" class="quiz-btn ghost" data-act="nsp">Je ne sais pas</button></form>';
     } else if (q.type === 'cliquer_mot') {
       corps = '<p class="quiz-hint">Cliquez sur le ou les mots, puis validez.</p><div class="quiz-phrase">' + q.choix.map(function (t, k) {
         return /[\\wÀ-ÿ]/.test(t) ? '<button type="button" class="tok" data-tok="' + k + '">' + esc(t) + '</button>' : '<span class="punct">' + esc(t) + '</span>';
@@ -1327,6 +1328,11 @@ JS = """<script>
     else if (act === 'test-start') testStart();
     else if (act === 't-suivant') testRepondre(false);
     else if (act === 't-passer') testRepondre(true);
+    // Question à saisir : « Je ne sais pas » compte comme une erreur, affiche la réponse attendue et permet de passer à la suite
+    else if (act === 'nsp' && st && !st.repondu) {
+      var ni = root.querySelector('.quiz-num input'); root.querySelectorAll('.quiz-num input, .quiz-num button').forEach(function (x) { x.disabled = true; });
+      envoyer('', function () { if (ni) ni.classList.add('bad'); });
+    }
     else if (act === 'voir-resultat') { resultat(compte.positionnement); top(); }
     else if (act === 'start') demarrer(choix.mat, choix.niveau);
     else if (act === 'prog-choix') { st = null; progression(choix.mat); }
