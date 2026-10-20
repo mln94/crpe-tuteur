@@ -167,7 +167,8 @@ def contenu():
         <div class="faq-answer"><p>{r}</p></div>
       </div>''' for q, r in FAQ)
     total = sum(QUESTIONS)
-    total_txt = f'{total:,}'.replace(',', ' ')
+    # Total arrondi au millier inférieur : « plus de 9 000 questions »
+    total_txt = f'{total // 1000 * 1000:,}'.replace(',', ' ')
     return f'''
 <!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
 <header class="qz-hero">
@@ -175,7 +176,7 @@ def contenu():
     <div>
       <div class="hero-badge"><span></span>Nouveau · Quiz CRPE</div>
       <h1>Arrivez au CRPE <em>sans aucune notion incomprise</em></h1>
-      <p class="hero-sub">Évaluez votre niveau, puis progressez par séries de 20 questions, du facile au difficile. Chaque erreur est expliquée, chaque notion revient jusqu’à être comprise. {total_txt} questions conformes aux programmes officiels : rien ne vous échappe.</p>
+      <p class="hero-sub">Évaluez votre niveau, puis progressez par séries de 20 questions, du facile au difficile. Chaque erreur est expliquée, chaque notion revient jusqu’à être comprise. Plus de {total_txt} questions conformes aux programmes officiels : rien ne vous échappe.</p>
       <p class="qz-accroche">📚 Plus vous répondez, plus votre culture du programme s’élargit.</p>
       <div class="hero-actions">
         <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
@@ -184,7 +185,7 @@ def contenu():
       <p class="qz-hero-price"><strong>Test de positionnement gratuit</strong> (15 min) · puis <strong>{PRIX_QUIZ} TTC</strong> pour débloquer le quiz</p>
       <p class="qz-garantie-ligne">🛡️ <strong>Satisfait ou remboursé pendant 14 jours</strong></p>
       <div class="qz-stats">
-        <div class="qz-stat"><strong>{total_txt}</strong><span>questions</span></div>
+        <div class="qz-stat"><strong>+ de {total_txt}</strong><span>questions</span></div>
         <div class="qz-stat"><strong>{len(MATIERES)}</strong><span>matières</span></div>
         <div class="qz-stat"><strong>3</strong><span>niveaux de difficulté</span></div>
       </div>
@@ -284,7 +285,7 @@ def contenu():
         <div class="offre-price"><strong>{PRIX_QUIZ}</strong><span>TTC</span></div>
         <ul class="offre-list">
           <li>Test de positionnement gratuit : votre carte des forces et faiblesses</li>
-          <li>{total_txt} questions dans {len(MATIERES)} matières</li>
+          <li>Plus de {total_txt} questions dans {len(MATIERES)} matières</li>
           <li>Séries de 20 questions notées sur 20</li>
           <li>Explication de chaque erreur et révision espacée</li>
           <li>Progression par thème du programme</li>
