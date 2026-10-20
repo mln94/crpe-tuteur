@@ -167,6 +167,9 @@ def contenu():
         <div class="faq-answer"><p>{r}</p></div>
       </div>''' for q, r in FAQ)
     total = sum(QUESTIONS)
+    # « français, mathématiques, … et anglais »
+    noms = [m[0] if m[0] in ('EMC', 'SVT') else m[0].lower() for m in MATIERES]
+    liste_matieres = ', '.join(noms[:-1]) + ' et ' + noms[-1]
     # Total arrondi au millier inférieur : « plus de 9 000 questions »
     total_txt = f'{total // 1000 * 1000:,}'.replace(',', ' ')
     return f'''
@@ -176,7 +179,7 @@ def contenu():
     <div>
       <div class="hero-badge"><span></span>Nouveau · Quiz CRPE</div>
       <h1>Arrivez au CRPE <em>sans aucune notion incomprise</em></h1>
-      <p class="hero-sub">Évaluez votre niveau, puis progressez par séries de 20 questions, du facile au difficile. Chaque erreur est expliquée, chaque notion revient jusqu’à être comprise. Plus de {total_txt} questions conformes aux programmes officiels : rien ne vous échappe.</p>
+      <p class="hero-sub">Évaluez votre niveau, puis progressez par séries de 20 questions, du facile au difficile. Chaque erreur est expliquée, chaque notion revient jusqu’à être comprise. Plus de {total_txt} questions conformes aux programmes officiels, dans les {len(MATIERES)} matières du CRPE ({liste_matieres}) : rien ne vous échappe.</p>
       <p class="qz-accroche">📚 Plus vous répondez, plus votre culture du programme s’élargit.</p>
       <div class="hero-actions">
         <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
