@@ -249,7 +249,7 @@ CSS = """
     .quiz-tabbar .pastille { position: absolute; top: -2px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; border: 1.5px solid #fff; }
     /* Essai gratuit et fenêtre de paiement */
     .quiz-niveau:disabled { opacity: .45; cursor: not-allowed; }
-    .essai-annonce { display: block; margin: 0 0 16px; padding: 12px 16px; border-radius: 14px; background: #fff7ed; color: #9a3412; font-weight: 700; text-decoration: none; text-align: center; }
+    .essai-annonce { display: block; width: 100%; border: 0; cursor: pointer; font-family: inherit; font-size: 15px; margin: 0 0 16px; padding: 12px 16px; border-radius: 14px; background: #fff7ed; color: #9a3412; font-weight: 700; text-decoration: none; text-align: center; }
     .essai-carte { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; border: 2px solid #fed7aa; background: linear-gradient(160deg, #fff7ed, #fff 60%); }
     .essai-cadeau { font-size: 36px; line-height: 1; }
     .essai-liste { margin: 8px 0 4px 18px; font-size: 15px; line-height: 1.8; color: var(--gray-700); }
@@ -962,7 +962,11 @@ JS = """<script>
     root.innerHTML = '<div class="quiz-card"><p>Correction de votre test…</p></div>';
     api('/api/quiz/positionnement', { method: 'POST', body: JSON.stringify({ reponses: tst.rep }) }).then(function (d) {
       try { localStorage.removeItem(CLE_TEST); } catch (e) {}
-      compte.positionnement = d.resultat; tst = null; resultat(d.resultat); top();
+      compte.positionnement = d.resultat; tst = null;
+      // Compte rechargé : l'offre d'essai (2 matières les plus fragiles) est calculée par le serveur d'après le test
+      return api('/api/quiz/compte').then(function (c) { compte = c; }).catch(function () {}).then(function () {
+        resultat(d.resultat); top(); proposerEssai();
+      });
     }).catch(function () { tst.i--; garderTest(); erreur('Votre test n\\'a pas pu être corrigé. Vos réponses sont gardées : réessayez.'); });
   }
   // ── Rapport de positionnement : diagnostic qualitatif construit par des règles fixes (sans IA) ──
@@ -1049,14 +1053,43 @@ JS = """<script>
         ? '<div class="quiz-card essai-carte" id="essai"><div class="essai-cadeau">🎁</div><div><h2>Vos 2 séries d’essai offertes</h2>' +
           '<p>Commencez gratuitement par vos deux matières les plus fragiles, au niveau conseillé par votre test :</p><ul class="essai-liste">' +
           e.matieres.map(function (m) { return '<li><strong>' + esc(m.label) + '</strong> · niveau ' + NIVEAUX[m.niveau] + ' · ' + m.max + ' questions' + (m.termine ? ' ✓' : '') + '</li>'; }).join('') +
-          '</ul><div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="essai">Commencer mon essai gratuit →</button></div></div></div>'
+          '</ul><div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="essai-go">Commencer mon essai gratuit →</button></div></div></div>'
         : '<div class="quiz-card essai-carte"><div class="essai-cadeau">🔓</div><div><h2>Votre essai est terminé</h2><p>Débloquez les 9 matières pour continuer votre préparation.</p>' +
           '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz</button></div></div></div>';
-      var annonce = e && !e.termine ? '<a class="essai-annonce" href="#essai">🎁 2 séries d’essai offertes vous attendent à la fin de votre rapport</a>' : '';
+      var annonce = e && !e.termine ? '<button type="button" class="essai-annonce" data-act="essai-go">🎁 Commencer mes 2 séries d’essai offertes →</button>' : '';
       html = html.replace('<!--PAIEMENT-->', annonce) + offre;
     }
     root.innerHTML = html;
     intro(false); // l'introduction du quiz est masquée sur le rapport
+  }
+  // Prochaine série d'essai non terminée : matière et niveau conseillés par le test
+  function lancerEssai() {
+    var e = essaiActif(), m = e && e.matieres.filter(function (x) { return !x.termine; })[0];
+    if (!m) { accueil(); top(); return; }
+    choix.mat = m.matiere; choix.niveau = m.niveau; garderChoix(); demarrer(m.matiere, m.niveau); top();
+  }
+  // Fin du test : proposition immédiate des 2 séries d'essai, dans les matières les plus fragiles
+  function proposerEssai() {
+    var e = essaiActif();
+    if (!e || e.termine) return;
+    var m = document.getElementById('essai-modal');
+    if (m) m.remove();
+    m = document.createElement('div');
+    m.id = 'essai-modal'; m.className = 'pay-overlay'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'essai-titre');
+    m.innerHTML = '<div class="pay-card"><button type="button" class="pay-fermer" aria-label="Fermer">×</button>' +
+      '<div class="pay-badge">🎁 Offert</div><h2 id="essai-titre">Votre test est terminé : essayez 2 séries gratuites</h2>' +
+      '<p class="pay-texte">Commencez par vos deux matières les plus fragiles, au niveau conseillé par votre test :</p><ul class="essai-liste">' +
+      e.matieres.map(function (x) { return '<li><strong>' + esc(x.label) + '</strong> · niveau ' + NIVEAUX[x.niveau] + ' · ' + x.max + ' questions' + (x.termine ? ' ✓' : '') + '</li>'; }).join('') +
+      '</ul><div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-essai="go">Commencer ma première série →</button></div>' +
+      '<p class="pw-liens"><button type="button" class="quiz-link" data-essai="rapport">Voir d’abord mon rapport</button></p></div>';
+    document.body.appendChild(m);
+    document.body.style.overflow = 'hidden';
+    var fermer = function () { m.remove(); document.body.style.overflow = ''; };
+    m.addEventListener('click', function (ev) {
+      if (ev.target.closest('[data-essai="go"]')) { fermer(); lancerEssai(); }
+      else if (ev.target === m || ev.target.closest('.pay-fermer') || ev.target.closest('[data-essai="rapport"]')) fermer();
+    });
+    document.addEventListener('keydown', function surEchap(ev) { if (ev.key === 'Escape') { fermer(); document.removeEventListener('keydown', surEchap); } });
   }
   // Fenêtre de paiement, à la fin de l'essai : prix, prix par question, garantie, boutons PayPal
   function ouvrirPaiement() {
@@ -1289,6 +1322,7 @@ JS = """<script>
     else if (act === 'next') { if (st.i < st.serie.length - 1) { st.i++; question(); } else fin(); }
     else if (act === 'boot') boot();
     else if (act === 'essai') { accueil(); top(); }
+    else if (act === 'essai-go') lancerEssai();
     else if (act === 'payer') ouvrirPaiement();
     else if (act === 'test-start') testStart();
     else if (act === 't-suivant') testRepondre(false);
