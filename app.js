@@ -903,6 +903,18 @@ app.post('/api/quiz/positionnement', async (req, res) => {
   }
 });
 
+// Bilan global de l'app : nombre de questions et de notions de chaque matière (catalogues gardés 10 minutes en mémoire)
+app.get('/api/quiz/totaux', async (req, res) => {
+  try {
+    const compte = await quizCompte(req);
+    if (!compte) return res.status(401).json({ error: 'Connexion requise.' });
+    const catalogues = await Promise.all(QUIZ_MATIERES.map(quizCatalogue));
+    const matieres = QUIZ_MATIERES.map((m, i) => ({ matiere: m, label: QUIZ_LABELS[m], questions: catalogues[i].length,
+      notions: new Set(catalogues[i].map(q => q.notion)).size }));
+    res.json({ matieres, questions: matieres.reduce((t, m) => t + m.questions, 0), notions: matieres.reduce((t, m) => t + m.notions, 0) });
+  } catch (err) { console.error('[quiz/totaux]', err.message); res.status(500).json({ error: 'Le bilan n\'a pas pu être chargé.' }); }
+});
+
 // Catalogue d'une matière sans les réponses : la sélection des séries de 20 et la révision espacée se font côté navigateur
 app.get('/api/quiz/catalogue', async (req, res) => {
   const matiere = String(req.query.matiere || '');

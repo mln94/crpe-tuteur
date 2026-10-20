@@ -163,6 +163,10 @@ CSS = """
     .quiz-score p { font-size: 16px; margin-bottom: 6px; }
     .quiz-score .quiz-actions { justify-content: center; }
     .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 18px 0 4px; }
+    #qz-tableau .stats { grid-template-columns: repeat(2, 1fr); }
+    #qz-bilan { margin-bottom: 16px; }
+    .qz-bilan-titre { font-size: 20px; font-weight: 900; color: var(--gray-900); }
+    .qz-bilan-barre { margin: 14px 0 8px; }
     .stat { background: var(--gray-50); border-radius: 12px; padding: 12px 8px; text-align: center; }
     .stat b { display: block; font-size: 22px; font-weight: 900; color: var(--gray-900); }
     .stat span { font-size: 12px; color: var(--gray-500); }
@@ -611,8 +615,31 @@ JS = """<script>
     root.innerHTML = barreCompte() + barreFiltres(false) +
       (e ? '<div class="essai-bandeau">🎁 <strong>Essai gratuit : ' + faites + ' / ' + e.matieres.length + ' séries faites.</strong> Les autres matières et niveaux se débloquent avec l’accès complet.</div>' : '') +
       (message ? '<div class="quiz-msg ok-msg">' + esc(message) + '</div>' : '') +
+      '<div class="quiz-card" id="qz-bilan"><p>Chargement de votre bilan…</p></div>' +
       '<div class="quiz-card" id="qz-tableau"><p>Chargement de votre progression…</p></div>';
+    bilanGlobal();
     tableau();
+  }
+
+  // Bilan global, toutes matières : questions faites et notions maîtrisées (progression gardée dans ce navigateur)
+  function bilanGlobal() {
+    var el = document.getElementById('qz-bilan'); if (!el) return;
+    (bilanGlobal.totaux ? Promise.resolve(bilanGlobal.totaux) : api('/api/quiz/totaux')).then(function (t) {
+      bilanGlobal.totaux = t;
+      if (!document.getElementById('qz-bilan')) return;
+      var p = lire(), faites = 0, maitrisees = 0;
+      t.matieres.forEach(function (m) {
+        var pm = p[m.matiere]; if (!pm || !pm.notions) return;
+        Object.keys(pm.notions).forEach(function (k) { var s = pm.notions[k]; faites += (s.vus || []).length; if (s.maitrise) maitrisees++; });
+      });
+      var nb = function (x) { return x.toLocaleString('fr-FR'); }, pc = t.questions ? Math.min(100, Math.round(faites / t.questions * 100)) : 0;
+      el.innerHTML = '<h2 class="qz-bilan-titre">Votre bilan global</h2>' +
+        '<div class="stats"><div class="stat"><b>' + nb(t.questions) + '</b><span>questions dans le quiz</span></div>' +
+        '<div class="stat"><b>' + nb(faites) + '</b><span>questions faites</span></div>' +
+        '<div class="stat"><b>' + nb(maitrisees) + ' / ' + nb(t.notions) + '</b><span>notions maîtrisées</span></div></div>' +
+        '<div class="prog-bar qz-bilan-barre" aria-label="' + pc + ' % des questions faites"><span class="m" style="width:' + pc + '%"></span></div>' +
+        '<p class="qz-note">' + pc + ' % des questions du quiz faites, toutes matières confondues.</p>';
+    }).catch(function () { el.hidden = true; });
   }
 
   // Progression : chaque question compte dans un thème, la somme des thèmes = toutes les questions du niveau
@@ -644,7 +671,7 @@ JS = """<script>
         (ths && !ths.length ? '<button type="button" class="quiz-btn" disabled>Choisissez au moins un thème</button></div>'
           : '<button type="button" class="quiz-btn" data-act="start"' + (serie ? '' : ' disabled') + '>Lancer une série de ' + serie + ' questions</button></div>') +
         (ths && ths.length ? '<p class="qz-note qz-themes-choisis">Série sur ' + ths.length + ' thème' + (ths.length > 1 ? 's' : '') + ' choisi' + (ths.length > 1 ? 's' : '') + ' : ' + esc(ths.join(' · ')) + '</p>' : '') +
-        '<div class="stats"><div class="stat"><b>' + reussies + ' / ' + total + '</b><span>questions réussies</span></div><div class="stat"><b>' + b.maitrisees + ' / ' + b.total + '</b><span>notions maîtrisées</span></div><div class="stat"><b>' + b.dues + '</b><span>à réviser aujourd’hui</span></div></div>' +
+        '<div class="stats"><div class="stat"><b>' + reussies + ' / ' + total + '</b><span>questions réussies</span></div><div class="stat"><b>' + b.maitrisees + ' / ' + b.total + '</b><span>notions maîtrisées</span></div></div>' +
         '<h3 class="qz-sous-titre">Progression par thème</h3>' +
         blocs(ordre).map(function (bl) {
           var ligne = function (t) {
