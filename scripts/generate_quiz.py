@@ -486,12 +486,71 @@ JS = """<script>
     qs.forEach(function (q) { if (!notions[q.notion]) { notions[q.notion] = { cle: q.notion, niveau: q.niveau, theme: q.theme, questions: [] }; ordre.push(q.notion); } notions[q.notion].questions.push(q); });
     return { notions: notions, ordre: ordre };
   }
+  // ── Catalogues gardés dans le navigateur (IndexedDB) : lancement immédiat, mise à jour en arrière-plan ──
+  // Une copie par matière et par compte ; vidée à la déconnexion. Sans IndexedDB : téléchargement à chaque visite.
+  var IDB = null;
+  function idb() {
+    if (IDB) return IDB;
+    IDB = new Promise(function (ok) {
+      try {
+        var r = indexedDB.open('passcrpe-quiz', 1);
+        r.onupgradeneeded = function () { r.result.createObjectStore('catalogues'); };
+        r.onsuccess = function () { ok(r.result); }; r.onerror = function () { ok(null); };
+      } catch (e) { ok(null); }
+    });
+    return IDB;
+  }
+  function idbFaire(mode, f) {
+    return idb().then(function (db) {
+      if (!db) return null;
+      return new Promise(function (ok) {
+        try { var tx = db.transaction('catalogues', mode), r = f(tx.objectStore('catalogues')); tx.oncomplete = function () { ok(r && r.result); }; tx.onerror = tx.onabort = function () { ok(null); }; }
+        catch (e) { ok(null); }
+      });
+    });
+  }
+  function idbLire(mat) { return idbFaire('readonly', function (o) { return o.get(mat); }); }
+  function idbEcrire(mat, v) { return idbFaire('readwrite', function (o) { return o.put(v, mat); }); }
+  function idbOublier(mat) { return idbFaire('readwrite', function (o) { return mat ? o.delete(mat) : o.clear(); }); }
+  function proprietaire() { return SB.auth.getSession().then(function (r) { return r.data.session ? r.data.session.user.id : null; }); }
+  var enCours = {};
+  SB.auth.onAuthStateChange(function (ev) { if (ev === 'SIGNED_OUT') { catalogues = {}; enCours = {}; compte = null; idbOublier(); } });
+  function telecharger(mat, version) {
+    return api('/api/quiz/catalogue?matiere=' + encodeURIComponent(mat) + (version ? '&version=' + encodeURIComponent(version) : ''));
+  }
   function charger(mat) {
     if (catalogues[mat]) return Promise.resolve(catalogues[mat]);
-    return api('/api/quiz/catalogue?matiere=' + encodeURIComponent(mat)).then(function (d) {
-      if (!d.questions || !d.questions.length) throw new Error(d.error || 'vide');
-      catalogues[mat] = grouper(d.questions); return catalogues[mat];
+    if (enCours[mat]) return enCours[mat];
+    var p = enCours[mat] = Promise.all([idbLire(mat), proprietaire()]).then(function (x) {
+      var copie = x[0], uid = x[1];
+      if (copie && copie.uid === uid && copie.questions && copie.questions.length) {
+        catalogues[mat] = grouper(copie.questions);
+        // Vérification en arrière-plan : nouvelle version téléchargée seulement si le catalogue a changé
+        telecharger(mat, copie.version).then(function (d) {
+          if (d.inchange || !d.questions || !d.questions.length) return;
+          idbEcrire(mat, { uid: uid, version: d.version, questions: d.questions });
+          if (!st || st.mat !== mat) catalogues[mat] = grouper(d.questions);
+        }).catch(function (e) { if (e && e.status === 402) { delete catalogues[mat]; idbOublier(mat); } });
+        return catalogues[mat];
+      }
+      return telecharger(mat).then(function (d) {
+        if (!d.questions || !d.questions.length) throw new Error(d.error || 'vide');
+        if (uid) idbEcrire(mat, { uid: uid, version: d.version, questions: d.questions });
+        catalogues[mat] = grouper(d.questions); return catalogues[mat];
+      });
     });
+    p.then(function () { delete enCours[mat]; }, function () { delete enCours[mat]; });
+    return p;
+  }
+  // Préchargement en arrière-plan des matières utiles : celles de l'essai, ou celles déjà travaillées
+  function precharger() {
+    var e = essaiActif(), pr = lire(), mats = e ? e.matieres.filter(function (m) { return !m.termine; }).map(function (m) { return m.matiere; })
+      : MATIERES.map(function (m) { return m[0]; }).filter(function (k) { return pr[k] && pr[k].series; });
+    var suivante = function () {
+      var k = mats.shift(); if (!k) return;
+      (catalogues[k] ? Promise.resolve() : charger(k)).catch(function () {}).then(function () { setTimeout(suivante, 300); });
+    };
+    (window.requestIdleCallback || function (f) { setTimeout(f, 800); })(suivante);
   }
 
   // ── Composition d'une série du niveau choisi : révisions dues, puis nouvelles notions, puis révisions anticipées ──
@@ -687,7 +746,7 @@ JS = """<script>
         (essaiActif() ? '' : '<p style="margin-top:10px"><button type="button" class="quiz-link" data-act="reset">Réinitialiser ma progression dans cette matière</button></p>');
       el.querySelectorAll('details.prog-groupe').forEach(function (d) { d.addEventListener('toggle', function () { groupesOuverts[d.dataset.groupe] = d.open; }); });
     }).catch(function (err) {
-      if (err && (err.status === 401 || err.status === 402)) return boot();
+      if (err && (err.status === 401 || err.status === 402)) return boot(true);
       el.innerHTML = '<div class="quiz-msg">La progression n’a pas pu être chargée. Réessayez dans quelques instants.</div>';
     });
   }
@@ -919,21 +978,36 @@ JS = """<script>
     root.innerHTML = '<div class="quiz-msg">' + esc(msg) + '</div><div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-act="boot">Réessayer</button></div>';
   }
   // Choix de l'écran selon le compte : connexion → test → résultat et paiement → quiz
-  function boot() {
+  // Choix de l'écran d'après le compte
+  function aiguiller(c) {
+    if (!c.positionnement) return introTest();
+    if (c.paid) { fermerPaiement(); accueil(); return precharger(); }
+    // Pas encore payé : rapport d'abord, puis les 2 séries d'essai offertes, puis le paiement
+    var e = c.essai;
+    if (e && e.termine) { accueil(); return ouvrirPaiement(); }
+    precharger();
+    if (e && e.matieres.some(function (m) { return m.faites > 0; })) return accueil();
+    resultat(c.positionnement);
+  }
+  function etatCompte(c) { return c ? [!!c.paid, !!c.positionnement, c.essai ? c.essai.matieres.map(function (m) { return m.faites + (m.termine ? 't' : ''); }).join() : ''].join('|') : ''; }
+  // Compte déjà chargé (changement de menu) : écran affiché tout de suite, compte rafraîchi en arrière-plan.
+  // boot(true) force le rechargement (paiement, erreur d'accès, bouton « Réessayer »).
+  function boot(forcer) {
     st = null; tst = null;
+    if (compte && forcer !== true) {
+      var avant = etatCompte(compte);
+      aiguiller(compte);
+      api('/api/quiz/compte').then(function (c) {
+        compte = c;
+        // L'écran n'est redessiné que si le compte a changé et qu'aucune série ni test n'a commencé entre-temps
+        if (etatCompte(c) !== avant && !st && !tst && !vue()) aiguiller(c);
+      }).catch(function (e) { if (e.status === 401) { compte = null; connexion(); } });
+      return;
+    }
     root.innerHTML = '<div class="quiz-card"><p>Chargement…</p></div>';
     jeton().then(function (t) {
       if (!t) return connexion();
-      return api('/api/quiz/compte').then(function (c) {
-        compte = c;
-        if (!c.positionnement) return introTest();
-        if (c.paid) { fermerPaiement(); return accueil(); }
-        // Pas encore payé : rapport d'abord, puis les 2 séries d'essai offertes, puis le paiement
-        var e = c.essai;
-        if (e && e.termine) { accueil(); return ouvrirPaiement(); }
-        if (e && e.matieres.some(function (m) { return m.faites > 0; })) return accueil();
-        resultat(c.positionnement);
-      });
+      return api('/api/quiz/compte').then(function (c) { compte = c; aiguiller(c); });
     }).catch(function (e) { if (e.status === 401) return connexion(); erreur('Votre compte n\\'a pas pu être chargé. Réessayez dans quelques instants.'); });
   }
   function connexion() {
@@ -1136,7 +1210,7 @@ JS = """<script>
       document.body.appendChild(m);
       m.addEventListener('click', function (ev) {
         if (ev.target === m || ev.target.closest('.pay-fermer')) fermerPaiement();
-        else if (ev.target.closest('[data-pay="deja"]')) { fermerPaiement(); boot(); }
+        else if (ev.target.closest('[data-pay="deja"]')) { fermerPaiement(); boot(true); }
       });
       document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') fermerPaiement(); });
     }
@@ -1165,7 +1239,7 @@ JS = """<script>
           return api('/api/quiz/paypal/capture-order', { method: 'POST', body: JSON.stringify({ orderID: data.orderID }) }).then(function (d) {
             if (d.status !== 'COMPLETED') throw new Error('non confirmé');
             window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'purchase', parcours: 'quizcrpe', value: 59, currency: 'EUR' });
-            boot();
+            boot(true);
           }).catch(function () { msg('Le paiement n\\'a pas pu être confirmé. S\\'il a été débité, cliquez sur « J\\'ai déjà payé » dans quelques instants.', true); });
         },
         onError: function () { msg('Une erreur est survenue avec PayPal. Réessayez.', true); }
@@ -1182,13 +1256,14 @@ JS = """<script>
     charger(mat).then(function (cat) {
       var ths = themesChoisis(mat);
       if (ths) ths = ths.filter(function (t) { return cat.ordre.some(function (k) { return cat.notions[k].niveau === niveau && (cat.notions[k].theme || 'Notions') === t; }); });
-      var serie = composer(cat, prog(mat), niveau, ths);
+      // Choix des QCM mélangés à chaque série (la copie gardée dans le navigateur a un ordre fixe)
+      var serie = composer(cat, prog(mat), niveau, ths).map(function (q) { return q.type === 'qcm' ? Object.assign({}, q, { choix: melange(q.choix) }) : q; });
       if (!serie.length) return progression(mat, ths ? 'Toutes les notions de vos thèmes choisis sont maîtrisées à ce niveau. Bravo ! Ajoutez d’autres thèmes ou changez de niveau.'
         : 'Toutes les notions de niveau ' + NIVEAUX[niveau].toLowerCase() + ' sont maîtrisées dans cette matière. Bravo ! Essayez un autre niveau.');
       st = { mat: mat, niveau: niveau, themes: ths, cat: cat, serie: serie, i: 0, score: 0, recap: [], sel: [], repondu: false };
       question();
     }).catch(function (e) {
-      if (e.status === 401 || e.status === 402) return boot();
+      if (e.status === 401 || e.status === 402) return boot(true);
       root.innerHTML = '<div class="quiz-msg">Le quiz n\\'a pas pu être chargé. Réessaie dans quelques instants.</div><div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>';
     });
   }
@@ -1245,7 +1320,7 @@ JS = """<script>
         var fb = document.getElementById('quiz-fb'), r = fb.getBoundingClientRect();
         if (r.bottom > window.innerHeight - 70) window.scrollBy({ top: r.top - 130, behavior: 'smooth' });
       }).catch(function (e) {
-        if (e.status === 401 || e.status === 402) return boot();
+        if (e.status === 401 || e.status === 402) return boot(true);
         st.repondu = false;
         document.getElementById('quiz-fb').innerHTML = '<div class="quiz-msg" style="margin-top:16px">La correction n\\'a pas pu être chargée. Réessaie.</div>';
       });
@@ -1349,7 +1424,7 @@ JS = """<script>
       });
     }
     else if (act === 'next') { if (st.i < st.serie.length - 1) { st.i++; question(); } else fin(); }
-    else if (act === 'boot') boot();
+    else if (act === 'boot') boot(true);
     else if (act === 'essai') { accueil(); top(); }
     else if (act === 'essai-go') lancerEssai();
     else if (act === 'payer') ouvrirPaiement();

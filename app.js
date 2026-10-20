@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
+import { createHash } from 'crypto';
 import { registerEntraineurRoutes } from './entraineur/routes.js';
 
 config();
@@ -634,9 +635,12 @@ async function quizCatalogue(matiere) {
     if (page.length < 1000) break;
   }
   const questions = data.map(q => ({ ...q, notion: q.notion || `q${q.id}`, niveau: q.niveau || 'facile' }));
-  quizCatalogues.set(matiere, { data: questions, until: Date.now() + 600000 });
+  // Version du catalogue (empreinte du contenu) : le navigateur garde sa copie tant qu'elle ne change pas
+  const version = createHash('sha1').update(JSON.stringify(questions)).digest('hex').slice(0, 16);
+  quizCatalogues.set(matiere, { data: questions, version, until: Date.now() + 600000 });
   return questions;
 }
+const quizVersion = matiere => quizCatalogues.get(matiere)?.version;
 
 // Compte du quiz à partir du jeton, avec son état (positionnement, paiement), gardé 2 minutes
 const quizSessions = new Map();
@@ -903,26 +907,34 @@ app.post('/api/quiz/positionnement', async (req, res) => {
   }
 });
 
-// Bilan global de l'app : nombre de questions et de notions de chaque matière (catalogues gardés 10 minutes en mémoire)
+// Bilan global de l'app : nombre de questions et de notions de chaque matière, comptés en base (gardés 10 minutes)
+let quizTotaux = null;
 app.get('/api/quiz/totaux', async (req, res) => {
   try {
     const compte = await quizCompte(req);
     if (!compte) return res.status(401).json({ error: 'Connexion requise.' });
-    const catalogues = await Promise.all(QUIZ_MATIERES.map(quizCatalogue));
-    const matieres = QUIZ_MATIERES.map((m, i) => ({ matiere: m, label: QUIZ_LABELS[m], questions: catalogues[i].length,
-      notions: new Set(catalogues[i].map(q => q.notion)).size }));
-    res.json({ matieres, questions: matieres.reduce((t, m) => t + m.questions, 0), notions: matieres.reduce((t, m) => t + m.notions, 0) });
+    if (!quizTotaux || quizTotaux.until < Date.now()) {
+      const { data, error } = await supabaseAdmin.rpc('quiz_totaux');
+      if (error) throw new Error(error.message);
+      const par = Object.fromEntries((data || []).map(r => [r.matiere, r]));
+      const matieres = QUIZ_MATIERES.map(m => ({ matiere: m, label: QUIZ_LABELS[m], questions: Number(par[m]?.questions || 0), notions: Number(par[m]?.notions || 0) }));
+      quizTotaux = { until: Date.now() + 600000, data: { matieres, questions: matieres.reduce((t, m) => t + m.questions, 0), notions: matieres.reduce((t, m) => t + m.notions, 0) } };
+    }
+    res.json(quizTotaux.data);
   } catch (err) { console.error('[quiz/totaux]', err.message); res.status(500).json({ error: 'Le bilan n\'a pas pu être chargé.' }); }
 });
 
-// Catalogue d'une matière sans les réponses : la sélection des séries de 20 et la révision espacée se font côté navigateur
+// Catalogue d'une matière sans les réponses : la sélection des séries de 20 et la révision espacée se font côté navigateur.
+// Le navigateur garde sa copie (IndexedDB) et envoie sa version : si elle est à jour, seule la version est renvoyée.
+// Les choix des QCM sont mélangés par le navigateur à chaque série.
 app.get('/api/quiz/catalogue', async (req, res) => {
   const matiere = String(req.query.matiere || '');
   if (!QUIZ_MATIERES.includes(matiere)) return res.status(400).json({ error: 'Matière inconnue.' });
   if (!(await quizAcces(req, res, matiere))) return;
   try {
-    const data = await quizCatalogue(matiere);
-    res.json({ questions: data.map(q => ({ ...q, choix: q.type === 'qcm' ? melanger(q.choix) : q.choix })) });
+    const data = await quizCatalogue(matiere), version = quizVersion(matiere);
+    if (req.query.version && req.query.version === version) return res.json({ version, inchange: true });
+    res.json({ version, questions: data });
   } catch (err) { console.error('[quiz/catalogue]', err.message); res.status(500).json({ error: 'Le quiz n\'a pas pu être chargé.' }); }
 });
 
