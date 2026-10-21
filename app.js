@@ -74,7 +74,7 @@ async function markQuizPaid(userId, ref, email) {
     let e = email;
     if (!e) e = avant?.email;
     if (!e) { const { data } = await supabaseAdmin.auth.admin.getUserById(userId); e = data?.user?.email; }
-    if (e) await klaviyoSetProperties(e, { quiz_paid: true, quiz_date_paid: new Date().toISOString() });
+    if (e) await klaviyoSetProperties(e, { quiz_paid: true, paid_quizcrpe: true, quiz_date_paid: new Date().toISOString() });
   } catch (err) {
     console.error('[markQuizPaid] Klaviyo sync échouée (accès débloqué quand même) :', err.message);
   }
@@ -324,7 +324,7 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   try {
     const phoneAttrs = telephone ? { phone_number: telephone } : {};
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP,
-      { email_verified: false, passcrpe_trial: true, trial: true, paid_user: false, form_trial: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(req.body?.parcours) },
+      { email_verified: false, passcrpe_trial: true, trial: true, paid_user: false, paid_passcrpe: false, paid_quizcrpe: false, form_trial: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(req.body?.parcours) },
       phoneAttrs, consent_conseils);
     // Newsletter : seuls les inscrits qui ont coché la case rejoignent la liste newsletter, et y sont abonnés
     // (consentement explicite exigé pour la prospection par e-mail)
@@ -398,7 +398,9 @@ async function klaviyoSetProperties(email, properties) {
   if (!patchRes.ok) { const err = await patchRes.json(); throw new Error(err.errors?.[0]?.detail || `Erreur PATCH profil: ${patchRes.status}`); }
 }
 
-/* ── Klaviyo : passer paid_user à true pour un email donné ── */
+/* ── Klaviyo : passer paid_user et paid_passcrpe à true pour un email donné ──
+   Paiements : paid_passcrpe (tuteur IA) et paid_quizcrpe (quiz), false à l'inscription, true au paiement.
+   paid_user et quiz_paid (anciens noms) sont encore écrits : le segment Paid_user_passCRPE et des flows les utilisent. */
 async function klaviyoSetPaidUser(email) {
   const searchRes = await fetch(
     `${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`,
@@ -414,7 +416,7 @@ async function klaviyoSetPaidUser(email) {
     method: 'PATCH',
     headers: klaviyoHeaders(),
     body: JSON.stringify({
-      data: { type: 'profile', id: profileId, attributes: { properties: { paid_user: true, date_paid: new Date().toISOString() } } },
+      data: { type: 'profile', id: profileId, attributes: { properties: { paid_user: true, paid_passcrpe: true, date_paid: new Date().toISOString() } } },
     }),
   });
   if (!patchRes.ok) {
