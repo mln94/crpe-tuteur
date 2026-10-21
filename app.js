@@ -611,11 +611,11 @@ const CHAT_MODEL = 'claude-sonnet-5-5';
 
 /* ── Quiz CRPE ──
    Même projet Supabase et même compte que le tuteur IA (un seul compte, une seule authentification). Parcours : compte → test de positionnement gratuit (obligatoire) → paiement PayPal
-   (59 € TTC) → accès au quiz. Le blocage est vérifié ici : catalogue et correction réservés aux comptes payés.
+   (79 € TTC pour 1 an d'accès, en une seule fois) → accès au quiz. Le blocage est vérifié ici : catalogue et correction réservés aux comptes payés.
    Tables quiz_questions et quiz_comptes, lues et écrites par le serveur (clé service_role). */
 const QUIZ_MATIERES = ['francais', 'mathematiques', 'histoire_geographie', 'emc', 'svt', 'physique_chimie', 'technologie', 'arts', 'anglais'];
 const QUIZ_LABELS = { francais: 'Français', mathematiques: 'Mathématiques', histoire_geographie: 'Histoire-géographie', emc: 'EMC', svt: 'SVT', physique_chimie: 'Physique-chimie', technologie: 'Technologie', arts: 'Arts', anglais: 'Anglais' };
-const QUIZ_PRICE = { currency_code: 'EUR', value: '59.00' }; // 59 € TTC, aligné avec la page /quizcrpe
+const QUIZ_PRICE = { currency_code: 'EUR', value: '79.00' }; // 79 € TTC pour 1 an d'accès, en une seule fois, aligné avec la page /quizcrpe
 const POSITIONNEMENT_PAR_MATIERE = { facile: 2, intermediaire: 3, difficile: 2 }; // 7 questions × 9 matières = 63 questions
 const melanger = a => { const t = [...a]; for (let i = t.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [t[i], t[j]] = [t[j], t[i]]; } return t; };
 

@@ -7,7 +7,7 @@ Données : table Supabase quiz_questions, servie par /api/quiz/catalogue et /api
 Usage   : python3 scripts/generate_quiz.py
 
 Accès : compte PassCRPE (projet Supabase « crpe », le même que le tuteur IA), créé sur /quizcrpe ou sur l'accueil. Test de positionnement gratuit et obligatoire
-(63 questions, carte des forces et faiblesses), puis paiement PayPal (59 € TTC) pour débloquer le quiz. Le serveur
+(63 questions, carte des forces et faiblesses), puis paiement PayPal (79 € TTC pour 1 an d'accès) pour débloquer le quiz. Le serveur
 (app.js) vérifie le paiement avant de servir les questions.
 
 Fonctionnement du quiz :
@@ -39,7 +39,7 @@ MATIERES = [
     ('arts', 'Arts', '🎨'),
     ('anglais', 'Anglais', '🇬🇧'),
 ]
-PRIX = '59 €'
+PRIX = '79 €'
 # Profil : mêmes listes que le tuteur IA (src/App.jsx, CONCOURS_LIST et ACADEMIES_LIST)
 CONCOURS = [
     'Concours externe et externe spécial — Bac+3',
@@ -1201,8 +1201,8 @@ JS = """<script>
       m.innerHTML = '<div class="pay-card"><button type="button" class="pay-fermer" aria-label="Fermer">×</button>' +
         '<div class="pay-badge">🎉 Essai terminé</div><h2 id="pay-titre">Continuez votre préparation sur les 9 matières</h2>' +
         '<p class="pay-texte">Vous avez fait vos séries d’essai. Débloquez les 9 415 questions, en facile, intermédiaire et avancé, avec vos révisions espacées jusqu’au concours.</p>' +
-        '<div class="pay-prix">' + PRIX + ' <span>TTC · paiement unique, sans abonnement</span></div>' +
-        '<div class="pay-decoupe"><div><b>&lt; 1 centime</b><span>par question</span></div><div><b>&lt; 2,30 €</b><span>par semaine sur 6 mois</span></div><div><b>9 415</b><span>questions corrigées</span></div></div>' +
+        '<div class="pay-prix">' + PRIX + ' <span>TTC · pour 1 an d’accès, en une seule fois, sans abonnement</span></div>' +
+        '<div class="pay-decoupe"><div><b>&lt; 1 centime</b><span>par question</span></div><div><b>&lt; 1,55 €</b><span>par semaine sur 1 an</span></div><div><b>9 415</b><span>questions corrigées</span></div></div>' +
         '<div class="garantie pay-garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Pas convaincu ? Écrivez-nous dans les 14 jours suivant votre achat : nous vous remboursons intégralement, sans avoir à vous justifier.</div></div>' +
         '<div class="paypal-zone"><div id="pp-paypal"></div><div id="pp-carte"></div></div>' +
         '<p class="quiz-hint" id="pp-msg">Paiement sécurisé par PayPal, par compte PayPal ou carte bancaire.</p>' +
@@ -1238,7 +1238,7 @@ JS = """<script>
           msg('Confirmation du paiement…');
           return api('/api/quiz/paypal/capture-order', { method: 'POST', body: JSON.stringify({ orderID: data.orderID }) }).then(function (d) {
             if (d.status !== 'COMPLETED') throw new Error('non confirmé');
-            window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'purchase', parcours: 'quizcrpe', value: 59, currency: 'EUR' });
+            window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'purchase', parcours: 'quizcrpe', value: 79, currency: 'EUR' });
             boot(true);
           }).catch(function () { msg('Le paiement n\\'a pas pu être confirmé. S\\'il a été débité, cliquez sur « J\\'ai déjà payé » dans quelques instants.', true); });
         },

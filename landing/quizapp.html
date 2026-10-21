@@ -677,7 +677,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </script>
 <script>
 (function () {
-  var SB = window.passcrpeSB, PRIX = '59 €';
+  var SB = window.passcrpeSB, PRIX = '79 €';
   var compte = null, tst = null, CLE_TEST = 'passcrpe-quiz-test', testPret = null;
   function jeton() { return SB.auth.getSession().then(function (r) { return r.data.session ? r.data.session.access_token : null; }); }
   // Appels à l'API du quiz avec le jeton du compte ; les erreurs gardent leur code (connexion, paiement)
@@ -1435,8 +1435,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       m.innerHTML = '<div class="pay-card"><button type="button" class="pay-fermer" aria-label="Fermer">×</button>' +
         '<div class="pay-badge">🎉 Essai terminé</div><h2 id="pay-titre">Continuez votre préparation sur les 9 matières</h2>' +
         '<p class="pay-texte">Vous avez fait vos séries d’essai. Débloquez les 9 415 questions, en facile, intermédiaire et avancé, avec vos révisions espacées jusqu’au concours.</p>' +
-        '<div class="pay-prix">' + PRIX + ' <span>TTC · paiement unique, sans abonnement</span></div>' +
-        '<div class="pay-decoupe"><div><b>&lt; 1 centime</b><span>par question</span></div><div><b>&lt; 2,30 €</b><span>par semaine sur 6 mois</span></div><div><b>9 415</b><span>questions corrigées</span></div></div>' +
+        '<div class="pay-prix">' + PRIX + ' <span>TTC · pour 1 an d’accès, en une seule fois, sans abonnement</span></div>' +
+        '<div class="pay-decoupe"><div><b>&lt; 1 centime</b><span>par question</span></div><div><b>&lt; 1,55 €</b><span>par semaine sur 1 an</span></div><div><b>9 415</b><span>questions corrigées</span></div></div>' +
         '<div class="garantie pay-garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Pas convaincu ? Écrivez-nous dans les 14 jours suivant votre achat : nous vous remboursons intégralement, sans avoir à vous justifier.</div></div>' +
         '<div class="paypal-zone"><div id="pp-paypal"></div><div id="pp-carte"></div></div>' +
         '<p class="quiz-hint" id="pp-msg">Paiement sécurisé par PayPal, par compte PayPal ou carte bancaire.</p>' +
@@ -1472,7 +1472,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           msg('Confirmation du paiement…');
           return api('/api/quiz/paypal/capture-order', { method: 'POST', body: JSON.stringify({ orderID: data.orderID }) }).then(function (d) {
             if (d.status !== 'COMPLETED') throw new Error('non confirmé');
-            window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'purchase', parcours: 'quizcrpe', value: 59, currency: 'EUR' });
+            window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: 'purchase', parcours: 'quizcrpe', value: 79, currency: 'EUR' });
             boot(true);
           }).catch(function () { msg('Le paiement n\'a pas pu être confirmé. S\'il a été débité, cliquez sur « J\'ai déjà payé » dans quelques instants.', true); });
         },

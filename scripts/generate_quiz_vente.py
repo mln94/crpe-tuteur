@@ -21,7 +21,7 @@ SRC = os.path.join(ROOT, 'landing', 'index.html')
 OUT = os.path.join(ROOT, 'landing', 'quiz.html')
 SITE = 'https://www.passcrpe.fr'
 
-PRIX_QUIZ = '59 €'
+PRIX_QUIZ = '79 €'
 # Nombre de questions actives par matière (table quiz_questions du projet Supabase « crpe »)
 QUESTIONS = [451, 342, 2760, 738, 324, 321, 321, 1467, 2691]
 milliers = lambda n: f"{n:,}".replace(",", "\u202f")  # « 1 653 », espace fine insécable comme les autres totaux
@@ -51,7 +51,7 @@ FAQ = [
      "Des QCM, des réponses numériques à saisir (calculs en mathématiques ou en physique-chimie) et des questions où l'on "
      "clique sur le bon mot d'une phrase, par exemple le complément d'objet ou le verbe conjugué."),
     ("Combien coûte le quiz ?",
-     f"Le Quiz CRPE coûte {PRIX_QUIZ} TTC, en paiement unique, après un test de positionnement gratuit. "
+     f"Le Quiz CRPE coûte {PRIX_QUIZ} TTC pour 1 an d'accès, payés en une seule fois, après un test de positionnement gratuit. "
      "Il est satisfait ou remboursé pendant 14 jours."),
     ("Le test de positionnement est-il vraiment gratuit ?",
      "Oui. Après votre inscription, vous passez un test de 63 questions (environ 20 minutes) et obtenez gratuitement votre "
@@ -60,7 +60,7 @@ FAQ = [
      "Vous êtes remboursé. Le Quiz CRPE est satisfait ou remboursé pendant 14 jours : écrivez-nous à contact@passcrpe.fr "
      "dans les 14 jours suivant votre achat et nous vous remboursons intégralement, sans avoir à vous justifier."),
     ("Comment débloquer le quiz ?",
-     f"Par un paiement unique de {PRIX_QUIZ} TTC via PayPal, par compte PayPal ou carte bancaire. L'accès est débloqué "
+     f"Par un paiement unique de {PRIX_QUIZ} TTC via PayPal, par compte PayPal ou carte bancaire, pour 1 an d'accès. L'accès est débloqué "
      "aussitôt le paiement confirmé."),
 ]
 
@@ -185,7 +185,7 @@ def contenu():
         <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
         <a href="#fonctionnement" class="btn-secondary">Voir comment ça marche</a>
       </div>
-      <p class="qz-hero-price"><strong>Test de positionnement gratuit</strong> (20 min) · puis <strong>{PRIX_QUIZ} TTC</strong> pour débloquer le quiz</p>
+      <p class="qz-hero-price"><strong>Test de positionnement gratuit</strong> (20 min) · puis <strong>{PRIX_QUIZ} TTC</strong> pour 1 an d’accès, en une seule fois</p>
       <p class="qz-garantie-ligne">🛡️ <strong>Satisfait ou remboursé pendant 14 jours</strong></p>
       <div class="qz-stats">
         <div class="qz-stat"><strong>+ de {total_txt}</strong><span>questions</span></div>
@@ -285,7 +285,7 @@ def contenu():
           <div class="offre-icon">🎯</div>
           <div><h3>Quiz CRPE</h3><p class="offre-tagline">Réviser vite, dans toutes les matières</p></div>
         </div>
-        <div class="offre-price"><strong>{PRIX_QUIZ}</strong><span>TTC</span></div>
+        <div class="offre-price"><strong>{PRIX_QUIZ}</strong><span>TTC</span><span>pour 1 an d’accès, en une seule fois</span></div>
         <ul class="offre-list">
           <li>Test de positionnement gratuit : votre carte des forces et faiblesses</li>
           <li>Plus de {total_txt} questions dans {len(MATIERES)} matières</li>
@@ -296,7 +296,7 @@ def contenu():
         <div class="offre-cta">
           <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">Vérifiez votre niveau gratuitement</a>
           <div class="qz-garantie"><span>🛡️</span><div><strong>Satisfait ou remboursé 14 jours</strong>Pas convaincu ? Un e-mail suffit : remboursement intégral, sans justification.</div></div>
-          <p class="offre-note">Paiement unique via PayPal après votre test gratuit.</p>
+          <p class="offre-note">Paiement unique via PayPal après votre test gratuit, pour 1 an d’accès.</p>
         </div>
       </div>
     </div>
@@ -322,7 +322,7 @@ def contenu():
     <div class="cta-form">
       <button type="button" class="btn-white cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</button>
     </div>
-    <p class="cta-note">Test de positionnement gratuit · Quiz CRPE {PRIX_QUIZ} TTC · 🛡️ Satisfait ou remboursé 14 jours</p>
+    <p class="cta-note">Test de positionnement gratuit · Quiz CRPE {PRIX_QUIZ} TTC pour 1 an d’accès · 🛡️ Satisfait ou remboursé 14 jours</p>
   </div>
 </section>
 '''
