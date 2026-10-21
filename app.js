@@ -191,6 +191,8 @@ app.post('/api/webhook/paypal', async (req, res) => {
 });
 
 /* ── Klaviyo ── */
+// Essai du tuteur IA : propriété passcrpe_trial. L'ancienne propriété « trial » est encore écrite en double, tant que le flow
+// actif « Trial Non-Complété - 14j » (SsQhxw) teste trial (sa condition ne se modifie pas par l'API) : à retirer ensuite.
 const KLAVIYO_API_BASE      = 'https://a.klaviyo.com/api';
 const KLAVIYO_LIST_NEWSLETTER = 'U97rGQ';
 const KLAVIYO_LIST_SIGNUP     = 'SgJQyM';
@@ -322,18 +324,18 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   try {
     const phoneAttrs = telephone ? { phone_number: telephone } : {};
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP,
-      { email_verified: false, trial: true, paid_user: false, form_trial: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(req.body?.parcours) },
+      { email_verified: false, passcrpe_trial: true, trial: true, paid_user: false, form_trial: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(req.body?.parcours) },
       phoneAttrs, consent_conseils);
     // Newsletter : seuls les inscrits qui ont coché la case rejoignent la liste newsletter, et y sont abonnés
     // (consentement explicite exigé pour la prospection par e-mail)
     if (consent_conseils)
       await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours_newsletter: parcoursOf(req.body?.parcours) }, phoneAttrs, true);
 
-    // Créer la ligne profil Supabase avec trial = true (un seul compte pour le tuteur IA et le quiz)
+    // Créer la ligne profil Supabase avec passcrpe_trial = true (un seul compte pour le tuteur IA et le quiz)
     if (user_id) {
       await supabaseAdmin
         .from('profils_utilisateurs')
-        .upsert({ user_id, trial: true }, { onConflict: 'user_id', ignoreDuplicates: true });
+        .upsert({ user_id, passcrpe_trial: true }, { onConflict: 'user_id', ignoreDuplicates: true });
     }
 
     res.json({ ok: true });
@@ -456,11 +458,11 @@ app.post('/api/klaviyo/trial-ended', async (req, res) => {
 
     const now = new Date().toISOString();
 
-    // Supabase : trial = false + trial_ended_at
+    // Supabase : passcrpe_trial = false + trial_ended_at
     await supabaseAdmin
       .from('profils_utilisateurs')
       .upsert(
-        { user_id: userId, trial: false, trial_ended_at: now },
+        { user_id: userId, passcrpe_trial: false, trial_ended_at: now },
         { onConflict: 'user_id' }
       );
 
@@ -483,7 +485,7 @@ app.post('/api/klaviyo/trial-ended', async (req, res) => {
         data: {
           type: 'profile',
           id: profileId,
-          attributes: { properties: { trial: false, date_trial_ended: now } },
+          attributes: { properties: { passcrpe_trial: false, trial: false, date_trial_ended: now } },
         },
       }),
     });
@@ -491,7 +493,7 @@ app.post('/api/klaviyo/trial-ended', async (req, res) => {
       const err = await patchRes.json();
       throw new Error(err.errors?.[0]?.detail || `Erreur PATCH: ${patchRes.status}`);
     }
-    console.log(`[trial-ended] trial=false pour ${email}`);
+    console.log(`[trial-ended] passcrpe_trial=false pour ${email}`);
     res.json({ ok: true });
   } catch (err) {
     console.error('[Klaviyo trial-ended]', err.message);
@@ -802,12 +804,12 @@ app.get('/api/espace', async (req, res) => {
     const user = await getAuthenticatedUser(req);
     if (!user) return res.status(401).json({ error: 'Connexion requise.' });
     const [{ data: profil }, { data: quiz }] = await Promise.all([
-      supabaseAdmin.from('profils_utilisateurs').select('crpe_paid, trial, quizcrpe_paye').eq('user_id', user.id).maybeSingle(),
+      supabaseAdmin.from('profils_utilisateurs').select('crpe_paid, passcrpe_trial, quizcrpe_paye').eq('user_id', user.id).maybeSingle(),
       supabaseAdmin.from('quiz_comptes').select('positionnement').eq('user_id', user.id).maybeSingle(),
     ]);
     res.json({
       email: user.email, prenom: user.user_metadata?.prenom || '',
-      tuteur: { paid: profil?.crpe_paid === true, trial: profil?.trial !== false },
+      tuteur: { paid: profil?.crpe_paid === true, trial: profil?.passcrpe_trial !== false },
       quiz: { positionnement: !!quiz?.positionnement, score: quiz?.positionnement?.pct ?? null, paid: profil?.quizcrpe_paye === true },
     });
   } catch (err) {
