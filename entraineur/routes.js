@@ -41,7 +41,9 @@ const SOURCE = {
 const MATIERE_LABEL = { maths: 'Mathématiques', francais: 'Français' };
 const NIVEAU_LABEL = { a_retravailler: 'À retravailler', en_bonne_voie: 'En bonne voie', attendu_atteint: 'Attendu du CRPE atteint' };
 
-export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model, klaviyoHeaders, klaviyoApiBase }) {
+export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model, modelCorrection = model, klaviyoHeaders, klaviyoApiBase }) {
+  // Synthèse (analyse fine de la manière de rédiger) : model ; correction de chaque réponse, plus cadrée : modelCorrection
+  const modeles = modelCorrection === model ? model : `${model} + ${modelCorrection}`;
   const SECRET = process.env.ENTRAINEUR_SECRET || process.env.SUPABASE_SERVICE_ROLE_KEY || '';
   const hmac = v => crypto.createHmac('sha256', SECRET).update(v).digest('base64url');
   const fail = (res, status, error, extra = {}) => res.status(status).json({ error, ...extra });
@@ -251,11 +253,11 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
   }
 
   // Appel au modèle avec sortie forcée dans un outil ; une nouvelle tentative si le JSON est invalide
-  async function callTool(system, tool, content, validate, maxTokens) {
+  async function callTool(system, tool, content, validate, maxTokens, modele = model) {
     const usage = { input_tokens: 0, output_tokens: 0 };
     for (let essai = 0; essai < 2; essai++) {
       const msg = await anthropic.messages.create({
-        model,
+        model: modele,
         max_tokens: maxTokens,
         system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }],
         tools: [tool],
@@ -293,7 +295,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       reponse_candidat: anonymise(it.reponse, prenom, nom),
       note: it.evaluation.note, niveau: it.evaluation.niveau,
       evaluation: JSON.parse(anonymise(JSON.stringify(it.evaluation), prenom, nom)),
-      synthese_serie: syntheseAnonyme, model, created_at: `${mois}T00:00:00Z`,
+      synthese_serie: syntheseAnonyme, model: modeles, created_at: `${mois}T00:00:00Z`,
     }));
     try {
       const { error } = await supabaseAdmin.from('entraineur_corpus').insert(rows);
@@ -345,9 +347,9 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       const vide = { out: { note: 0, niveau: 'a_retravailler', appreciation: 'Pas de réponse.', points_forts: [], points_a_ameliorer: [],
         elements_manquants: ['Une réponse rédigée'], langue: [], explication: 'Consulte la réponse attendue ci-dessous.' }, usage: { input_tokens: 0, output_tokens: 0 } };
       const [synth, ...evals] = await Promise.all([
-        callTool(synthesePrompt(set.m), SYNTHESE_TOOL, syntheseMessage({ matiere: set.m, items }), validateSynthese, 3000),
+        callTool(synthesePrompt(set.m), SYNTHESE_TOOL, syntheseMessage({ matiere: set.m, items }), validateSynthese, 2400),
         ...items.map(it => it.reponse
-          ? callTool(questionPrompt(set.m), QUESTION_TOOL, questionMessage({ matiere: set.m, q: it, reponse: it.reponse }), validateQuestion, 1800)
+          ? callTool(questionPrompt(set.m), QUESTION_TOOL, questionMessage({ matiere: set.m, q: it, reponse: it.reponse }), validateQuestion, 1400, modelCorrection)
           : Promise.resolve(vide)),
       ]);
       if (!synth.out || evals.some(e => !e.out)) return fail(res, 502, 'Le rapport n\'a pas pu être généré. Réessaie dans quelques instants.');
@@ -357,7 +359,7 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       const usage = [...evals, synth].reduce((u, e) => ({ input_tokens: u.input_tokens + e.usage.input_tokens, output_tokens: u.output_tokens + e.usage.output_tokens }), { input_tokens: 0, output_tokens: 0 });
       const token = crypto.randomBytes(24).toString('base64url');
       const { data: rapport, error } = await supabaseAdmin.from('entraineur_rapports').insert({
-        token, lead_id: lead.id, matiere: set.m, questions: items, synthese: synth.out, note, model, ...usage,
+        token, lead_id: lead.id, matiere: set.m, questions: items, synthese: synth.out, note, model: modeles, ...usage,
       }).select('id').single();
       if (error) throw error;
 

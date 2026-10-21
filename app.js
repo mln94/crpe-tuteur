@@ -1056,7 +1056,9 @@ const entraineurClient = new Anthropic({
   // Une clé utilisateur (sk-ant-usr-…) non rattachée à un espace de travail doit préciser lequel facturer
   ...(cleanKey(process.env.ANTHROPIC_WORKSPACE_ID_ENTRAINEUR) ? { defaultHeaders: { 'anthropic-workspace-id': cleanKey(process.env.ANTHROPIC_WORKSPACE_ID_ENTRAINEUR) } } : {}),
 });
-registerEntraineurRoutes(app, { supabaseAdmin, anthropic: entraineurClient, model: CHAT_MODEL, klaviyoHeaders, klaviyoApiBase: KLAVIYO_API_BASE });
+// Entraîneur : Sonnet pour la synthèse, Haiku (environ 3 fois moins cher) pour corriger chacune des 5 réponses
+const ENTRAINEUR_MODEL_CORRECTION = process.env.ENTRAINEUR_MODEL_CORRECTION || 'claude-haiku-5-5';
+registerEntraineurRoutes(app, { supabaseAdmin, anthropic: entraineurClient, model: CHAT_MODEL, modelCorrection: ENTRAINEUR_MODEL_CORRECTION, klaviyoHeaders, klaviyoApiBase: KLAVIYO_API_BASE });
 
 /* ── Static (dev local uniquement — sur Vercel ces fichiers sont servis directement depuis dist/) ── */
 app.use(express.static(path.join(__dirname, 'landing')));
