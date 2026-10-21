@@ -124,6 +124,12 @@ CSS = """
     .breadcrumb a:hover { color: var(--indigo-600); }
     .breadcrumb [aria-current] { color: var(--gray-700); font-weight: 600; }
 
+    .attente-2027 { display: flex; gap: 18px; align-items: flex-start; margin: 28px 0 8px; padding: 26px 24px; border-radius: 18px; background: var(--indigo-50); border: 1px solid var(--indigo-100); }
+    .attente-2027 h2 { margin: 0 0 10px; font-size: 21px; }
+    .attente-btn { display: inline-block; margin-top: 6px; padding: 12px 20px; border-radius: 12px; background: var(--indigo-600); color: #fff !important; font-weight: 700; font-size: 15px; text-decoration: none; }
+    .attente-btn:hover { background: var(--indigo-700); }
+    .attente-icone { font-size: 34px; line-height: 1; }
+    @media (max-width: 600px) { .attente-2027 { flex-direction: column; gap: 10px; padding: 20px 18px; } }
     .kpis { display: flex; gap: 10px; margin: 24px 0 8px; overflow-x: auto; padding-bottom: 4px; }
     .kpi { flex: 1 1 0; min-width: 118px; }
     .kpi { border: 1px solid var(--gray-200); border-radius: 14px; padding: 14px 14px; display: flex; flex-direction: column; gap: 2px; }
@@ -643,10 +649,34 @@ def page_hub():
                 HUB_URL, breadcrumb_ld([('Accueil', '/'), ('CRPE par académie', HUB_URL)]), body,
                 f'Résultats du CRPE {SESSION} par académie : inscrits, admis et taux de réussite')
 
+# ── Session 2027 : chiffres pas encore publiés ───────────────────────────────
+URL_2027 = '/crpe-par-academie-2027'
+def page_2027():
+    body = f'''<div class="acad-wrap">
+  <nav class="breadcrumb" aria-label="Fil d'Ariane"><a href="/">Accueil</a><span>›</span><a href="{HUB_URL}">CRPE par académie</a><span>›</span><span aria-current="page">Session 2027</span></nav>
+  <h1>Résultats du CRPE 2027 par académie</h1>
+  <div class="attente-2027">
+    <div class="attente-icone">⏳</div>
+    <div>
+      <h2>Les chiffres du CRPE 2027 ne sont pas encore disponibles</h2>
+      <p>Les postes, inscrits, admissibles et admis de la session 2027, académie par académie, seront publiés sur cette page dès leur parution officielle.</p>
+      <p>En attendant, les résultats de la session {SESSION} vous donnent un bon repère pour choisir votre académie : nombre de postes, sélectivité et taux de réussite.</p>
+      <a class="attente-btn" href="{HUB_URL}">Voir les résultats du CRPE {SESSION} par académie →</a>
+    </div>
+  </div>
+</div>'''
+    html = page('Résultats du CRPE 2027 par académie : chiffres à venir | PassCRPE',
+                "Les résultats du CRPE 2027 par académie (postes, inscrits, admis) seront publiés dès leur parution officielle. En attendant, consultez les résultats de la session 2026.",
+                URL_2027, breadcrumb_ld([('Accueil', '/'), ('CRPE par académie', HUB_URL), ('Session 2027', URL_2027)]), body,
+                'Résultats du CRPE 2027 par académie : chiffres à venir')
+    # Page d'attente sans contenu propre : non indexée tant que les chiffres ne sont pas publiés
+    return html.replace('  <link rel="canonical"', '  <meta name="robots" content="noindex, follow" />\n  <link rel="canonical"', 1)
+
 # ── Écriture ─────────────────────────────────────────────────────────────────
 out_dir = os.path.join(ROOT, 'landing', 'academies')
 os.makedirs(out_dir, exist_ok=True)
 for a in ACADS:
     open(os.path.join(out_dir, a['slug'] + '.html'), 'w', encoding='utf-8').write(page_academie(a))
 open(os.path.join(ROOT, 'landing', 'crpe-par-academie.html'), 'w', encoding='utf-8').write(page_hub())
+open(os.path.join(ROOT, 'landing', 'crpe-par-academie-2027.html'), 'w', encoding='utf-8').write(page_2027())
 print(f'{N} pages académie + page hub générées.')

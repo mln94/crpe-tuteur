@@ -227,6 +227,12 @@
     .breadcrumb a:hover { color: var(--indigo-600); }
     .breadcrumb [aria-current] { color: var(--gray-700); font-weight: 600; }
 
+    .attente-2027 { display: flex; gap: 18px; align-items: flex-start; margin: 28px 0 8px; padding: 26px 24px; border-radius: 18px; background: var(--indigo-50); border: 1px solid var(--indigo-100); }
+    .attente-2027 h2 { margin: 0 0 10px; font-size: 21px; }
+    .attente-btn { display: inline-block; margin-top: 6px; padding: 12px 20px; border-radius: 12px; background: var(--indigo-600); color: #fff !important; font-weight: 700; font-size: 15px; text-decoration: none; }
+    .attente-btn:hover { background: var(--indigo-700); }
+    .attente-icone { font-size: 34px; line-height: 1; }
+    @media (max-width: 600px) { .attente-2027 { flex-direction: column; gap: 10px; padding: 20px 18px; } }
     .kpis { display: flex; gap: 10px; margin: 24px 0 8px; overflow-x: auto; padding-bottom: 4px; }
     .kpi { flex: 1 1 0; min-width: 118px; }
     .kpi { border: 1px solid var(--gray-200); border-radius: 14px; padding: 14px 14px; display: flex; flex-direction: column; gap: 2px; }
@@ -402,7 +408,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <button type="button" class="nav-sub-toggle" aria-expanded="false" onclick="toggleNavSub(this)">CRPE par académie <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="nav-sub-menu">
             <a href="/crpe-par-academie">Session 2026</a>
-            <a href="/crpe-par-academie">Session 2027</a>
+            <a href="/crpe-par-academie-2027">Session 2027</a>
           </div>
           <button type="button" class="nav-sub-toggle" aria-expanded="false" onclick="toggleNavSub(this)">Rapports de jury <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="nav-sub-menu">
