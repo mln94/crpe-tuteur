@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-TMLHJT3Q');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P4BXMJXQT5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-P4BXMJXQT5');
+  </script>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Votre avis sur l'essai QuizCRPE</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --indigo-500: #f97316;
+      --indigo-600: #ea580c;
+      --indigo-700: #c2410c;
+      --gray-100:   #f3f4f6;
+      --gray-200:   #e5e7eb;
+      --gray-300:   #d1d5db;
+      --gray-400:   #9ca3af;
+      --gray-500:   #6b7280;
+      --gray-600:   #4b5563;
+      --gray-700:   #374151;
+      --gray-900:   #111827;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #fff;
+      color: var(--gray-900);
+      overflow: hidden;
+    }
+
+    /* ── PROGRESS BAR ── */
+    #progress-bar-wrap {
+      position: fixed; top: 0; left: 0; right: 0;
+      height: 4px; background: var(--gray-100); z-index: 100;
+    }
+    #progress-bar {
+      height: 100%;
+      background: var(--indigo-600);
+      transition: width .4s ease;
+    }
+
+    /* ── NAV ── */
+    #nav {
+      position: fixed; top: 4px; left: 0; right: 0;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 24px; z-index: 99;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 7px;
+      text-decoration: none;
+    }
+    .nav-logo-icon {
+      width: 28px; height: 28px;
+      background: linear-gradient(135deg, #fb923c, #ea580c); border-radius: 7px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon svg { width: 15px; height: 15px; color: #fff; }
+    .nav-logo-text { font-size: 14px; font-weight: 800; color: var(--indigo-600); display: flex; flex-direction: column; line-height: 1.05; }
+    .nav-logo-text small { font-size: 10px; font-weight: 700; color: var(--gray-500); }
+    .nav-logo-text small b { color: #4338ca; font-weight: 800; }
+    #nav-counter { font-size: 13px; color: var(--gray-400); font-weight: 600; }
+
+    /* ── STAGE ── */
+    #stage {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      padding: 80px 24px 100px;
+      overflow: hidden;
+    }
+
+    /* ── QUESTION SLIDE ── */
+    .q-slide {
+      position: absolute;
+      width: 100%; max-width: 680px;
+      padding: 0 24px;
+      display: flex; flex-direction: column; gap: 28px;
+      will-change: transform;
+      pointer-events: none;
+    }
+    .q-slide.active { pointer-events: auto; }
+
+    /* ── QUESTION LABEL ── */
+    .q-num {
+      font-size: 13px; font-weight: 700;
+      color: var(--indigo-600); letter-spacing: .5px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .q-num::after { content: '→'; font-size: 11px; }
+    .q-label {
+      font-size: clamp(20px, 4vw, 28px);
+      font-weight: 800; line-height: 1.25;
+      color: var(--gray-900); letter-spacing: -.4px;
+    }
+
+    /* ── RATING ── */
+    .rating-row {
+      display: flex; flex-wrap: nowrap; gap: 6px;
+      width: 100%;
+    }
+    .rating-btn {
+      flex: 1; min-width: 0;
+      aspect-ratio: 1;
+      border: 2px solid var(--gray-200);
+      border-radius: 10px; background: #fff;
+      font-size: clamp(13px, 2vw, 16px); font-weight: 700; color: var(--gray-600);
+      cursor: pointer; transition: all .15s;
+      display: flex; align-items: center; justify-content: center;
+      padding: 0;
+    }
+    .rating-btn:hover { border-color: var(--indigo-500); color: var(--indigo-600); transform: scale(1.05); }
+    .rating-btn.selected {
+      background: var(--indigo-600); color: #fff;
+      border-color: var(--indigo-600);
+      box-shadow: 0 4px 14px rgba(234,88,12,.35);
+    }
+    .rating-labels {
+      display: flex; justify-content: space-between;
+      font-size: 12px; color: var(--gray-400); margin-top: -12px;
+    }
+
+    /* ── PILL OPTIONS ── */
+    .pill-group { display: flex; flex-wrap: wrap; gap: 10px; }
+    .pill {
+      padding: 11px 22px;
+      border: 2px solid var(--gray-200);
+      border-radius: 10px; background: #fff;
+      font-size: 15px; font-weight: 600; color: var(--gray-700);
+      cursor: pointer; transition: all .15s; user-select: none;
+    }
+    .pill:hover { border-color: var(--indigo-500); color: var(--indigo-600); }
+    .pill.selected {
+      background: var(--indigo-600); color: #fff;
+      border-color: var(--indigo-600);
+      box-shadow: 0 3px 12px rgba(234,88,12,.30);
+    }
+    .pill-letter {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 20px; height: 20px; border-radius: 4px;
+      background: var(--gray-100); color: var(--gray-500);
+      font-size: 11px; font-weight: 800; margin-right: 8px;
+      transition: all .15s;
+    }
+    .pill.selected .pill-letter { background: rgba(255,255,255,.25); color: #fff; }
+
+    /* ── TEXTAREA ── */
+    .q-textarea {
+      width: 100%;
+      background: transparent;
+      border: none; border-bottom: 2px solid var(--gray-200);
+      padding: 12px 0; font-size: 18px;
+      font-family: inherit; color: var(--gray-900);
+      outline: none; resize: none; min-height: 60px;
+      transition: border-color .2s;
+      line-height: 1.6;
+    }
+    .q-textarea:focus { border-bottom-color: var(--indigo-500); }
+    .q-textarea::placeholder { color: var(--gray-300); }
+
+    /* ── ACTIONS ── */
+    .q-actions { display: flex; align-items: center; gap: 16px; }
+    .btn-continue {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--indigo-600); color: #fff;
+      border: none; border-radius: 10px;
+      padding: 12px 24px; font-size: 14px; font-weight: 700;
+      font-family: inherit; cursor: pointer;
+      box-shadow: 0 4px 16px rgba(234,88,12,.30);
+      transition: background .2s, transform .15s;
+    }
+    .btn-continue:hover { background: var(--indigo-700); transform: translateY(-1px); }
+    .btn-continue:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+    .btn-continue svg { width: 14px; height: 14px; }
+    .btn-skip {
+      font-size: 13px; font-weight: 600; color: var(--gray-400);
+      background: none; border: none; cursor: pointer;
+      font-family: inherit; transition: color .15s;
+    }
+    .btn-skip:hover { color: var(--gray-600); }
+    .key-hint {
+      font-size: 12px; color: var(--gray-300);
+      display: flex; align-items: center; gap: 4px;
+    }
+    kbd {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 2px 6px; border-radius: 4px;
+      border: 1px solid var(--gray-200); background: var(--gray-100);
+      font-size: 11px; font-weight: 700; font-family: inherit;
+      color: var(--gray-500);
+    }
+
+    /* ── BACK BUTTON ── */
+    #btn-back {
+      position: fixed; bottom: 28px; left: 24px;
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; font-weight: 600; color: var(--gray-400);
+      background: none; border: none; cursor: pointer;
+      font-family: inherit; transition: color .15s;
+    }
+    #btn-back:hover { color: var(--gray-700); }
+    #btn-back svg { width: 14px; height: 14px; }
+
+    /* ── SUCCESS ── */
+    #success-screen {
+      display: none; position: fixed; inset: 0;
+      background: #fff; align-items: center; justify-content: center;
+      flex-direction: column; text-align: center; padding: 40px;
+      animation: fadeIn .4s ease;
+    }
+    #success-screen.visible { display: flex; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+    .success-emoji { font-size: 56px; margin-bottom: 20px; }
+    #success-screen h2 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+    #success-screen p { font-size: 16px; color: var(--gray-500); max-width: 380px; line-height: 1.6; margin-bottom: 28px; }
+    .btn-home {
+      display: inline-block; background: var(--indigo-600); color: #fff;
+      text-decoration: none; border-radius: 12px;
+      padding: 13px 32px; font-size: 15px; font-weight: 700;
+      transition: background .2s;
+    }
+    .btn-home:hover { background: var(--indigo-700); }
+
+    /* ── SUBMIT ERROR ── */
+    #submit-error {
+      display: none; position: fixed; bottom: 24px; right: 24px;
+      background: #fef2f2; color: #dc2626;
+      border-radius: 10px; padding: 12px 16px;
+      font-size: 13px; font-weight: 600;
+      box-shadow: 0 4px 16px rgba(0,0,0,.1);
+    }
+  </style>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2908206909538261');
+fbq('track', 'PageView');
+</script>
+<!-- End Meta Pixel Code -->
+</head>
+<body>
+<!-- Meta Pixel Code (noscript) -->
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=2908206909538261&ev=PageView&noscript=1"
+/></noscript>
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TMLHJT3Q"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <!-- Progress -->
+  <div id="progress-bar-wrap"><div id="progress-bar" style="width:0%"></div></div>
+
+  <!-- Nav -->
+  <div id="nav">
+    <a href="/quizcrpe" class="nav-logo" aria-label="QuizCRPE by PassCRPE">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">QuizCRPE<small>by <b>PassCRPE</b></small></span>
+    </a>
+    <span id="nav-counter"></span>
+  </div>
+
+  <!-- Questions stage -->
+  <div id="stage"></div>
+
+  <!-- Back -->
+  <button id="btn-back" style="display:none">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+    Précédent
+  </button>
+
+  <!-- Success -->
+  <div id="success-screen">
+    <div class="success-emoji">🙏</div>
+    <h2>Merci pour votre retour !</h2>
+    <p>Votre avis nous aide à améliorer le Quiz CRPE pour tous les futurs candidats au concours.</p>
+    <a href="/quizapp" class="btn-home">Retour au quiz</a>
+  </div>
+
+  <div id="submit-error">Une erreur est survenue. Veuillez réessayer.</div>
+
+  <script>
+  (function () {
+    const email = new URLSearchParams(window.location.search).get('email') || null;
+    const answers = {};
+    let current = 0;
+    let slideEl = null;
+
+    /* ── Définition des questions ── */
+    const QUESTIONS = [
+      {
+        id: 'note_globale', type: 'rating', required: true,
+        label: 'Sur une note de 0 à 10, comment évalueriez-vous votre essai du Quiz CRPE ?',
+        min: 'Très décevant', max: 'Excellent',
+      },
+      {
+        id: 'peut_aider', type: 'radio', required: true,
+        label: 'Est-ce que vous pensez que le Quiz CRPE peut vous aider à préparer le concours ?',
+        options: ['Oui', 'Non', 'Je ne sais pas encore'],
+        values: ['oui', 'non', 'je_ne_sais_pas'],
+      },
+      {
+        id: 'pourquoi', type: 'textarea',
+        label: 'Pourquoi ?',
+        placeholder: 'Expliquez en quelques mots…',
+      },
+      {
+        id: 'test_positionnement', type: 'radio',
+        label: 'Votre test de positionnement reflète-t-il bien votre niveau ?',
+        options: ['Oui', 'En partie', 'Non'],
+        values: ['oui', 'en_partie', 'non'],
+      },
+      {
+        id: 'plus_apprecie', type: 'textarea',
+        label: "Qu'est-ce que vous avez le plus apprécié dans le quiz ?",
+        placeholder: 'Ce qui vous a le plus plu…',
+      },
+      {
+        id: 'moins_apprecie', type: 'textarea',
+        label: "Qu'est-ce que vous avez le moins apprécié ?",
+        placeholder: 'Ce qui vous a déplu ou manqué…',
+      },
+      {
+        id: 'exercices_attendus', type: 'radio',
+        label: 'Est-ce que les questions correspondaient au programme et à ce que vous attendiez ?',
+        options: ['Oui', 'Pas vraiment', 'Non'],
+        values: ['oui', 'pas_vraiment', 'non'],
+      },
+      {
+        id: 'corrections_utiles', type: 'radio',
+        label: 'Est-ce que les explications après chaque erreur vous ont appris quelque chose ?',
+        options: ['Oui', 'Pas vraiment', 'Non'],
+        values: ['oui', 'pas_vraiment', 'non'],
+      },
+      {
+        id: 'manquait', type: 'textarea',
+        label: "Est-ce qu'il y a quelque chose qui vous a manqué ?",
+        placeholder: 'Une matière, un type de question, une fonctionnalité…',
+      },
+      {
+        id: 'calibrage_questions', type: 'radio',
+        label: 'Les questions vous ont-elles semblé trop faciles, trop difficiles ou bien calibrées pour le CRPE ?',
+        options: ['Trop faciles', 'Bien calibrées', 'Trop difficiles', 'Ça variait'],
+        values: ['trop_faciles', 'bien_calibrees', 'trop_difficiles', 'ca_variait'],
+      },
+      {
+        id: 'frein_souscription', type: 'radio',
+        label: "Vous n'avez pas encore débloqué le Quiz CRPE. Qu'est-ce qui vous retient ?",
+        options: [
+          'Le prix',
+          'Manque de temps',
+          'Je veux d\'abord voir si ça m\'aide vraiment',
+          'Pas sûr(e) de passer le concours cette année',
+          'Comparer avec d\'autres outils',
+          'Je préfère les supports papier / annales',
+          'Autre',
+        ],
+        values: [
+          'Le prix',
+          'Je manque de temps pour réviser en ligne',
+          'Je veux d\'abord voir si ça m\'aide vraiment',
+          'Je ne suis pas sûr(e) de passer le concours cette année',
+          'Je veux comparer avec d\'autres outils',
+          'Je préfère les supports papier / annales',
+          '__autre__',
+        ],
+        hasOther: true,
+      },
+      {
+        id: 'continuer', type: 'radio',
+        label: 'Est-ce que vous comptez continuer à utiliser le Quiz CRPE ?',
+        options: ['Oui', 'Non', 'Peut-être'],
+        values: ['oui', 'non', 'peut_etre'],
+      },
+      {
+        id: 'frein_continuer', type: 'textarea',
+        label: "Qu'est-ce qui vous ferait changer d'avis et continuer à utiliser le Quiz CRPE ?",
+        placeholder: 'Votre réponse…',
+        conditional: () => answers['continuer'] === 'non',
+      },
+      {
+        id: 'recommander', type: 'radio',
+        label: 'Est-ce que vous recommanderiez le Quiz CRPE à quelqu\'un qui prépare le concours ?',
+        options: ['Oui', 'Non', 'Je ne sais pas encore'],
+        values: ['oui', 'non', 'je_ne_sais_pas'],
+      },
+      {
+        id: 'autres_outils', type: 'radio',
+        label: 'Utilisez-vous d\'autres outils pour préparer le CRPE ?',
+        options: ['Oui', 'Non'],
+        values: ['oui', 'non'],
+      },
+      {
+        id: 'lesquels_outils', type: 'textarea',
+        label: "Lesquels, et qu'est-ce qu'ils ont que le Quiz CRPE n'a pas ?",
+        placeholder: 'Annales, manuels, autres quiz ou applications…',
+        conditional: () => answers['autres_outils'] === 'oui',
+      },
+      {
+        id: 'suggestions', type: 'textarea',
+        label: 'Quelle matière, quel service ou quel outil aimeriez-vous qu\'on ajoute au Quiz CRPE ?',
+        placeholder: 'Vos idées sont précieuses…',
+        isLast: true,
+      },
+    ];
+
+    /* ── Questions actives (filtre les conditionnelles) ── */
+    function activeQuestions() {
+      return QUESTIONS.filter(q => !q.conditional || q.conditional());
+    }
+
+    /* ── Rendu d'une question ── */
+    function renderQuestion(q, idx, total) {
+      const el = document.createElement('div');
+      el.className = 'q-slide';
+      el.dataset.qid = q.id;
+
+      const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      const isLast = idx === total - 1;
+
+      let inner = `
+        <div>
+          <div class="q-num">${idx + 1} sur ${total}</div>
+          <div class="q-label">${q.label}</div>
+        </div>
+      `;
+
+      if (q.type === 'rating') {
+        inner += `<div>
+          <div class="rating-row" id="rating-row">
+            ${[0,1,2,3,4,5,6,7,8,9,10].map(n =>
+              `<button type="button" class="rating-btn${answers[q.id] === n ? ' selected' : ''}" data-val="${n}">${n}</button>`
+            ).join('')}
+          </div>
+        </div>`;
+
+      } else if (q.type === 'radio') {
+        const curVal = answers[q.id];
+        inner += `<div class="pill-group">
+          ${q.options.map((opt, i) =>
+            `<div class="pill${curVal === q.values[i] || (q.values[i] === '__autre__' && curVal?.startsWith('Autre')) ? ' selected' : ''}" data-val="${q.values[i]}">
+              <span class="pill-letter">${letters[i]}</span>${opt}
+            </div>`
+          ).join('')}
+        </div>`;
+        if (q.hasOther) {
+          const showOther = curVal?.startsWith('Autre');
+          const otherText = showOther ? curVal.replace(/^Autre : ?/, '') : '';
+          inner += `<div id="other-wrap" style="${showOther ? '' : 'display:none;'}margin-top:16px">
+            <textarea class="q-textarea" id="autre-input" placeholder="Précisez…" style="min-height:44px">${otherText}</textarea>
+          </div>
+          <div id="autre-actions" class="q-actions" style="${showOther ? '' : 'display:none;'}margin-top:8px">
+            <button class="btn-continue" id="btn-cont">
+              Continuer
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+          </div>`;
+        }
+
+      } else if (q.type === 'textarea') {
+        const val = answers[q.id] || '';
+        inner += `<div>
+          <textarea class="q-textarea" id="ta-input" placeholder="${q.placeholder || ''}" rows="3">${val}</textarea>
+        </div>
+        <div class="q-actions">
+          <button class="btn-continue" id="btn-cont">
+            ${isLast ? 'Envoyer mon avis' : 'Continuer'}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+          ${!q.required && !isLast ? `<button class="btn-skip" id="btn-skip">Passer</button>` : ''}
+          <span class="key-hint"><kbd>Entrée</kbd> pour continuer</span>
+        </div>`;
+
+      }
+
+      el.innerHTML = inner;
+
+      /* Events */
+      if (q.type === 'rating') {
+        el.querySelectorAll('.rating-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            answers[q.id] = parseInt(btn.dataset.val, 10);
+            el.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            setTimeout(() => advance(), 350);
+          });
+        });
+      }
+
+      if (q.type === 'radio') {
+        el.querySelectorAll('.pill').forEach(pill => {
+          pill.addEventListener('click', () => {
+            const val = pill.dataset.val;
+            el.querySelectorAll('.pill').forEach(p => p.classList.remove('selected'));
+            pill.classList.add('selected');
+
+            if (q.hasOther && val === '__autre__') {
+              answers[q.id] = 'Autre';
+              el.querySelector('#other-wrap').style.display = 'block';
+              el.querySelector('#autre-actions').style.display = 'flex';
+              setTimeout(() => el.querySelector('#autre-input')?.focus(), 50);
+            } else {
+              answers[q.id] = val;
+              if (q.hasOther) {
+                el.querySelector('#other-wrap').style.display = 'none';
+                el.querySelector('#autre-actions').style.display = 'none';
+              }
+              setTimeout(() => advance(), 350);
+            }
+          });
+        });
+
+        if (q.hasOther) {
+          const ta = el.querySelector('#autre-input');
+          ta?.addEventListener('input', () => {
+            answers[q.id] = 'Autre' + (ta.value.trim() ? ' : ' + ta.value.trim() : '');
+          });
+          ta?.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); advance(); }
+          });
+          el.querySelector('#btn-cont')?.addEventListener('click', advance);
+        }
+      }
+
+      if (q.type === 'textarea') {
+        const ta = el.querySelector('#ta-input');
+        ta?.addEventListener('input', () => { answers[q.id] = ta.value; });
+        ta?.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); advance(); }
+        });
+        el.querySelector('#btn-cont')?.addEventListener('click', () => {
+          if (q.isLast) { submitForm(); } else { advance(); }
+        });
+        el.querySelector('#btn-skip')?.addEventListener('click', advance);
+        setTimeout(() => ta?.focus(), 50);
+      }
+
+      return el;
+    }
+
+    /* ── Navigation — swipe simultané ── */
+    const SWIPE_DURATION = 400;
+    const SWIPE_EASE = 'cubic-bezier(.4,0,.2,1)';
+
+    function goTo(idx, direction = 'forward') {
+      const qs = activeQuestions();
+      const total = qs.length;
+      const q = qs[idx];
+      const stage = document.getElementById('stage');
+      const old = slideEl;
+
+      updateProgress(idx, total);
+      document.getElementById('nav-counter').textContent = `${idx + 1} / ${total}`;
+      document.getElementById('btn-back').style.display = idx > 0 ? 'flex' : 'none';
+
+      const newSlide = renderQuestion(q, idx, total);
+      const startX = direction === 'forward' ? '100vw' : '-100vw';
+      const endX   = direction === 'forward' ? '-100vw' : '100vw';
+
+      // Positionner la nouvelle slide hors écran sans transition
+      newSlide.style.transform = `translateX(${startX})`;
+      newSlide.style.transition = 'none';
+      stage.appendChild(newSlide);
+
+      // Forcer le reflow pour que la position initiale soit prise en compte
+      newSlide.getBoundingClientRect();
+
+      // Lancer le swipe simultané
+      newSlide.style.transition = `transform ${SWIPE_DURATION}ms ${SWIPE_EASE}`;
+      newSlide.style.transform = 'translateX(0)';
+      newSlide.classList.add('active');
+
+      if (old) {
+        old.classList.remove('active');
+        old.style.transition = `transform ${SWIPE_DURATION}ms ${SWIPE_EASE}`;
+        old.style.transform = `translateX(${endX})`;
+        setTimeout(() => old.remove(), SWIPE_DURATION + 50);
+      }
+
+      slideEl = newSlide;
+      current = idx;
+    }
+
+    function advance() {
+      const qs = activeQuestions();
+      if (current < qs.length - 1) {
+        goTo(current + 1, 'forward');
+      }
+    }
+
+    function back() {
+      if (current > 0) goTo(current - 1, 'backward');
+    }
+
+    function updateProgress(idx, total) {
+      document.getElementById('progress-bar').style.width = `${((idx + 1) / total) * 100}%`;
+    }
+
+    /* ── Sérialiser les réponses ── */
+    function serializeAnswers() {
+      const out = { email, produit: 'quizcrpe' };
+      QUESTIONS.forEach(q => { out[q.id] = answers[q.id] ?? null; });
+      return out;
+    }
+
+    /* ── Soumission ── */
+    async function submitForm() {
+      const payload = serializeAnswers();
+      const btn = slideEl?.querySelector('#btn-cont');
+      if (btn) { btn.disabled = true; btn.textContent = 'Envoi…'; }
+
+      try {
+        const res = await fetch('/api/feedback/trial', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) throw new Error();
+        document.getElementById('progress-bar').style.width = '100%';
+        document.getElementById('stage').style.display = 'none';
+        document.getElementById('btn-back').style.display = 'none';
+        document.getElementById('nav-counter').textContent = '';
+        document.getElementById('success-screen').classList.add('visible');
+      } catch {
+        document.getElementById('submit-error').style.display = 'block';
+        setTimeout(() => document.getElementById('submit-error').style.display = 'none', 4000);
+        if (btn) { btn.disabled = false; btn.textContent = 'Envoyer mon avis'; }
+      }
+    }
+
+    /* ── Back button ── */
+    document.getElementById('btn-back').addEventListener('click', back);
+
+    /* ── Démarrage ── */
+    goTo(0);
+  })();
+  </script>
+</body>
+</html>

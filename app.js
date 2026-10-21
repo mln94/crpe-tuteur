@@ -509,13 +509,17 @@ app.post('/api/feedback/trial', async (req, res) => {
     email, note_globale, peut_aider, pourquoi, plus_apprecie, moins_apprecie,
     exercices_attendus, corrections_utiles, manquait,
     calibrage_questions, frein_souscription, continuer, frein_continuer,
-    recommander, autres_outils, lesquels_outils, suggestions,
+    recommander, autres_outils, lesquels_outils, suggestions, test_positionnement,
   } = req.body || {};
+  // Page d'avis de l'essai QuizCRPE (/avis-essai-quizcrpe) ou de PassCRPE (/avis-essai)
+  const produit = req.body?.produit === 'quizcrpe' ? 'quizcrpe' : 'passcrpe';
 
   if (note_globale == null || !peut_aider)
     return res.status(400).json({ error: 'Champs obligatoires manquants.' });
 
-  const { error } = await supabaseAdmin.from('avis_trial').insert({
+  // Une table par produit : avis_trial_passcrpe et avis_trial_quizcrpe (qui a en plus la question sur le test de positionnement)
+  const { error } = await supabaseAdmin.from(produit === 'quizcrpe' ? 'avis_trial_quizcrpe' : 'avis_trial_passcrpe').insert({
+    ...(produit === 'quizcrpe' ? { test_positionnement: test_positionnement || null } : {}),
     email:                email || null,
     note_globale:         Number(note_globale),
     peut_aider,
@@ -554,7 +558,7 @@ app.post('/api/feedback/trial', async (req, res) => {
           method: 'PATCH',
           headers: klaviyoHeaders(),
           body: JSON.stringify({
-            data: { type: 'profile', id: profileId, attributes: { properties: { form_trial: true } } },
+            data: { type: 'profile', id: profileId, attributes: { properties: produit === 'quizcrpe' ? { form_trial_quizcrpe: true } : { form_trial: true } } },
           }),
         });
       }
