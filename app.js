@@ -715,7 +715,7 @@ async function quizMatiereDe(id) {
 
 // Propriétés Klaviyo du test de positionnement
 const proprietesTest = (r, lien) => ({ test_positionnement_realise: true, test_positionnement_date: r.date, test_positionnement_score: r.pct,
-  quizcrpe_trial: false, ...(lien ? { quiz_rapport_url: lien.url, quiz_rapport_expire: lien.expire } : {}) });
+  quizcrpe_trial: true, ...(lien ? { quiz_rapport_url: lien.url, quiz_rapport_expire: lien.expire } : {}) });
 // Lien provisoire du rapport de positionnement : jeton aléatoire, valable 7 jours (effacé ensuite par une tâche planifiée Supabase)
 const RAPPORT_JOURS = 7;
 const lienRapport = token => `https://www.passcrpe.fr/quizapp?rapport=${token}`;
@@ -962,13 +962,14 @@ app.post('/api/quiz/reponse', async (req, res) => {
       const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_reponses: essai, updated_at: new Date().toISOString() }).eq('user_id', compte.id);
       if (error) { console.error('[quiz/essai]', error.message); return res.status(500).json({ error: 'La correction n\'a pas pu être chargée.' }); }
       compte.essaiReponses = essai;
-      // Cette réponse termine la série d'essai de la matière : si les 2 séries sont faites, essai terminé (profil et Klaviyo)
+      // Cette réponse termine la série d'essai de la matière : si les 2 séries sont faites, essai terminé :
+      // quizcrpe_trial passe à false (même logique que trial pour PassCRPE : true tant que l'essai est en cours)
       if (deja.length + 1 >= compte.essaiMatiere.max) {
         try {
           const e = await quizEssai(compte);
           if (e?.termine) {
-            await supabaseAdmin.from('profils_utilisateurs').update({ quizcrpe_trial: true }).eq('user_id', compte.id);
-            if (compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) await klaviyoSetProperties(compte.email, { quizcrpe_trial: true });
+            await supabaseAdmin.from('profils_utilisateurs').update({ quizcrpe_trial: false }).eq('user_id', compte.id);
+            if (compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) await klaviyoSetProperties(compte.email, { quizcrpe_trial: false });
           }
         } catch (err) { console.error('[quiz/essai terminé]', err.message); }
       }
