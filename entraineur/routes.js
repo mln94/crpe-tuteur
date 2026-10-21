@@ -253,17 +253,26 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
   }
 
   // Appel au modèle avec sortie forcée dans un outil ; une nouvelle tentative si le JSON est invalide
+  // Certains modèles (ex. claude-sonnet-5-5) refusent l'outil imposé : on passe alors en choix libre,
+  // les consignes demandant de répondre uniquement via l'outil (et la validation relance une fois sinon)
+  const sansOutilImpose = new Set();
   async function callTool(system, tool, content, validate, maxTokens, modele = model) {
     const usage = { input_tokens: 0, output_tokens: 0 };
+    const appel = () => anthropic.messages.create({
+      model: modele,
+      max_tokens: maxTokens,
+      system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }],
+      tools: [tool],
+      tool_choice: sansOutilImpose.has(modele) ? { type: 'auto' } : { type: 'tool', name: tool.name },
+      messages: [{ role: 'user', content }],
+    });
     for (let essai = 0; essai < 2; essai++) {
-      const msg = await anthropic.messages.create({
-        model: modele,
-        max_tokens: maxTokens,
-        system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }],
-        tools: [tool],
-        tool_choice: { type: 'tool', name: tool.name },
-        messages: [{ role: 'user', content }],
-      });
+      let msg;
+      try { msg = await appel(); }
+      catch (e) {
+        if (e?.status !== 400 || !/tool_choice/.test(e.message || '') || sansOutilImpose.has(modele)) throw e;
+        sansOutilImpose.add(modele); msg = await appel();
+      }
       usage.input_tokens += msg.usage?.input_tokens || 0;
       usage.output_tokens += msg.usage?.output_tokens || 0;
       const out = validate(msg.content.find(c => c.type === 'tool_use' && c.name === tool.name)?.input);

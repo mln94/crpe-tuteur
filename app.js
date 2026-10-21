@@ -607,7 +607,7 @@ async function logConsommation({ meta, model, usage, dureeMs, success }) {
   }
 }
 
-const CHAT_MODEL = 'claude-sonnet-4-6';
+const CHAT_MODEL = 'claude-sonnet-5-5';
 
 /* ── Quiz CRPE ──
    Même projet Supabase et même compte que le tuteur IA (un seul compte, une seule authentification). Parcours : compte → test de positionnement gratuit (obligatoire) → paiement PayPal
