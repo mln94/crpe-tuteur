@@ -784,7 +784,21 @@ JS = """<script>
       if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
   }
+  // Rapport de positionnement ouvert par son lien provisoire (/quizapp?rapport=…), sans connexion
+  function rapportPartage(token) {
+    marquerOnglet('test');
+    root.innerHTML = '<div class="quiz-card"><p>Chargement du rapport…</p></div>';
+    fetch('/api/quiz/rapport?token=' + encodeURIComponent(token)).then(function (r) { return r.json().then(function (d) { if (!r.ok) throw d; return d; }); })
+      .then(function (d) { resultat(d.resultat, { expire: d.expire, prenom: d.prenom }); top(); })
+      .catch(function () {
+        intro(false);
+        root.innerHTML = '<div class="quiz-card"><h2>Ce lien a expiré</h2><p>Les liens vers un rapport de positionnement sont valables 7 jours. Connectez-vous pour retrouver votre rapport dans l’onglet « Mon test ».</p>' +
+          '<div class="quiz-actions"><a class="quiz-btn" href="/quizapp?vue=test">Voir mon rapport</a><a class="quiz-btn ghost" href="/quizcrpe">Découvrir le Quiz CRPE</a></div></div>';
+      });
+  }
   function route() {
+    var jr = new URLSearchParams(location.search).get('rapport');
+    if (jr) return rapportPartage(jr);
     var v = vue();
     if (v === 'series') return mesSeries();
     if (v === 'support') return supportVue();
@@ -1117,7 +1131,7 @@ JS = """<script>
       return '<li><strong>Semaine ' + (k + 1) + '</strong> : ' + s.map(function (m) { return esc(m.label) + ' <span class="niv">' + NIVEAUX[niveauConseille(m)] + '</span>'; }).join(' · ') + '</li>';
     }).join('') + '<li><strong>Ensuite</strong> : consolidez vos matières fortes au niveau avancé, et laissez les révisions espacées faire revenir chaque notion.</li>';
   }
-  function resultat(r) {
+  function resultat(r, lecture) {
     var pf = profil(r), tri = r.matieres.slice().sort(function (a, b) { return b.pct - a.pct; });
     // Note sur 20 : le niveau global, seul résultat assez précis avec 63 questions
     var note = r.n ? (Math.round(r.ok / r.n * 200) / 10).toLocaleString('fr-FR') : '0';
@@ -1146,6 +1160,14 @@ JS = """<script>
       '<ul>' + notions + '</ul></div>' +
       '<div class="quiz-card rp-bloc"><h2>Votre plan de révision</h2><ol class="rp-plan">' + plan(r) + '</ol>' +
       '<p class="rp-note">Ce test repose sur 63 questions (7 par matière) : votre niveau global est fiable, le détail par matière donne des tendances. Vos séries d’entraînement affinent ce diagnostic jour après jour.</p></div>';
+    // Lien provisoire (lecture seule, sans connexion) : ni essai ni paiement, date d'expiration et invitation à découvrir le quiz
+    if (lecture) {
+      var fin = new Date(lecture.expire).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+      root.innerHTML = html.replace('<!--PAIEMENT-->', '<div class="essai-annonce">🔗 Rapport partagé' + (lecture.prenom ? ' de ' + esc(lecture.prenom) : '') + ' · lien valable jusqu’au ' + fin + '</div>') +
+        '<div class="quiz-card rp-bloc"><h2>Préparez le CRPE avec le Quiz CRPE</h2><p>Plus de 9 000 questions corrigées et expliquées dans les 9 matières, avec un test de positionnement gratuit.</p>' +
+        '<div class="quiz-actions"><a class="quiz-btn" href="/quizcrpe">Découvrir le Quiz CRPE</a></div></div>';
+      intro(false); return;
+    }
     if (compte && compte.paid) html = html.replace('<!--PAIEMENT-->', '') + '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Aller au quiz</button></div>';
     else {
       // Pas de paiement sur le rapport : les 2 séries d'essai offertes, dans les matières les plus fragiles

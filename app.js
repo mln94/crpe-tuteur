@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
-import { createHash } from 'crypto';
+import { createHash, randomBytes } from 'crypto';
 import { registerEntraineurRoutes } from './entraineur/routes.js';
 
 config();
@@ -714,7 +714,11 @@ async function quizMatiereDe(id) {
 }
 
 // Propriétés Klaviyo du test de positionnement
-const proprietesTest = r => ({ test_positionnement_realise: true, test_positionnement_date: r.date, test_positionnement_score: r.pct });
+const proprietesTest = (r, lien) => ({ test_positionnement_realise: true, test_positionnement_date: r.date, test_positionnement_score: r.pct,
+  quizcrpe_trial: false, ...(lien ? { quiz_rapport_url: lien.url, quiz_rapport_expire: lien.expire } : {}) });
+// Lien provisoire du rapport de positionnement : jeton aléatoire, valable 7 jours (effacé ensuite par une tâche planifiée Supabase)
+const RAPPORT_JOURS = 7;
+const lienRapport = token => `https://www.passcrpe.fr/quizapp?rapport=${token}`;
 
 // Libellé précis d'un thème pour le rapport : le sous-thème du programme, raccourci (« Thème 1 : », détails après « : » ou « ; »)
 function libelleTheme(q) {
@@ -886,10 +890,13 @@ app.post('/api/quiz/positionnement', async (req, res) => {
     }).filter(Boolean);
     // Enregistré une seule fois : un second envoi ne remplace pas le premier résultat
     const { data: existant } = await supabaseAdmin.from('quiz_comptes').select('positionnement').eq('user_id', compte.id).maybeSingle();
-    let enregistre = existant?.positionnement;
+    let enregistre = existant?.positionnement, lien = null;
     if (!enregistre) {
+      const rapport_token = randomBytes(24).toString('base64url');
+      const rapport_expire_at = new Date(Date.parse(resultat.date) + RAPPORT_JOURS * 86400000).toISOString();
       const { error } = await supabaseAdmin.from('quiz_comptes').upsert({ user_id: compte.id, email: compte.email, positionnement: resultat,
-        positionnement_at: resultat.date, reponses_positionnement: detail, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
+        positionnement_at: resultat.date, reponses_positionnement: detail, rapport_token, rapport_expire_at, updated_at: new Date().toISOString() }, { onConflict: 'user_id' });
+      lien = { url: lienRapport(rapport_token), expire: rapport_expire_at };
       if (error) throw new Error(error.message);
       enregistre = resultat;
     }
@@ -897,7 +904,7 @@ app.post('/api/quiz/positionnement', async (req, res) => {
     // Klaviyo : test réalisé, date et score global (relances vers le paiement). Attendu avant de répondre :
     // sur Vercel, le serveur peut s'arrêter dès la réponse envoyée et un envoi lancé après serait perdu
     if (compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) {
-      try { await klaviyoSetProperties(compte.email, proprietesTest(enregistre || resultat)); }
+      try { await klaviyoSetProperties(compte.email, proprietesTest(enregistre || resultat, lien)); }
       catch (e) { console.error('[Klaviyo positionnement]', e.message); }
     }
     res.json({ resultat: enregistre || resultat });
@@ -955,11 +962,35 @@ app.post('/api/quiz/reponse', async (req, res) => {
       const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_reponses: essai, updated_at: new Date().toISOString() }).eq('user_id', compte.id);
       if (error) { console.error('[quiz/essai]', error.message); return res.status(500).json({ error: 'La correction n\'a pas pu être chargée.' }); }
       compte.essaiReponses = essai;
+      // Cette réponse termine la série d'essai de la matière : si les 2 séries sont faites, essai terminé (profil et Klaviyo)
+      if (deja.length + 1 >= compte.essaiMatiere.max) {
+        try {
+          const e = await quizEssai(compte);
+          if (e?.termine) {
+            await supabaseAdmin.from('profils_utilisateurs').update({ quizcrpe_trial: true }).eq('user_id', compte.id);
+            if (compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) await klaviyoSetProperties(compte.email, { quizcrpe_trial: true });
+          }
+        } catch (err) { console.error('[quiz/essai terminé]', err.message); }
+      }
     }
   }
   const c = await quizCorriger(id, reponse);
   if (!c) return res.status(404).json({ error: 'Question inconnue.' });
   res.json(c);
+});
+
+// Rapport de positionnement par lien provisoire (sans connexion) : valable jusqu'à rapport_expire_at, ensuite introuvable
+app.get('/api/quiz/rapport', async (req, res) => {
+  const token = String(req.query.token || '');
+  if (!/^[A-Za-z0-9_-]{20,80}$/.test(token)) return res.status(404).json({ error: 'Ce lien n\'existe pas ou a expiré.' });
+  try {
+    const { data, error } = await supabaseAdmin.from('quiz_comptes').select('positionnement, rapport_expire_at, prenom')
+      .eq('rapport_token', token).maybeSingle();
+    if (error) throw new Error(error.message);
+    if (!data?.positionnement || !data.rapport_expire_at || Date.parse(data.rapport_expire_at) < Date.now())
+      return res.status(404).json({ error: 'Ce lien n\'existe pas ou a expiré.' });
+    res.set('Cache-Control', 'no-store').json({ resultat: data.positionnement, expire: data.rapport_expire_at, prenom: data.prenom || '' });
+  } catch (err) { console.error('[quiz/rapport]', err.message); res.status(500).json({ error: 'Le rapport n\'a pas pu être chargé.' }); }
 });
 
 // Paiement PayPal du quiz : même fonctionnement que PassCRPE (commande serveur, custom_id = « quiz:<id du compte> »)
