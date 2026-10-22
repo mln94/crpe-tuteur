@@ -7,6 +7,7 @@ Usage   : python3 scripts/generate_rapports_jury.py
 """
 import json
 import os
+import re
 import unicodedata
 from html import escape
 
@@ -108,6 +109,9 @@ CSS = """
     .na-label { display: inline-block; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 8px; background: var(--gray-100); color: var(--gray-500); }
     .callout { background: var(--indigo-50); border: 1px solid var(--indigo-100); border-radius: 14px; padding: 18px 20px; margin: 22px 0; font-size: 15px; }
     .callout p:last-child { margin-bottom: 0; }
+    .autre-session { margin-top: 18px; font-size: 15px; font-weight: 600; }
+    .faq-item { border-top: 1px solid var(--gray-200); padding-top: 14px; margin-top: 14px; }
+    .faq-item h3 { font-size: 17px; font-weight: 800; color: var(--gray-900); margin-bottom: 6px; }
     .analyse-cta { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin: 22px 0 14px; padding: 20px 22px; border-radius: 16px; background: var(--indigo-50); border: 1.5px solid var(--indigo-100); text-decoration: none; color: var(--gray-700) !important; transition: border-color .15s, box-shadow .15s; }
     .analyse-cta:hover { border-color: var(--indigo-600); box-shadow: 0 6px 18px rgba(79,70,229,.12); }
     .analyse-txt { flex: 1 1 320px; font-size: 15px; line-height: 1.55; }
@@ -165,10 +169,51 @@ INTRO = {
 }
 
 
+SUJETS = 'https://www.devenirenseignant.gouv.fr/les-sujets-des-epreuves-ecrites-et-rapports-des-jurys-des-crpe-1163'
+
+
+def faq(annee, nb):
+    """Questions fréquentes de la page de téléchargement (texte HTML simple, repris dans le balisage FAQPage)."""
+    commun_debut = [
+        ("Qu'est-ce qu'un rapport de jury du CRPE ?",
+         "C'est un document publié par une académie après la session du concours. Les présidents de jury y présentent les sujets, "
+         "les statistiques (nombre de candidats, moyennes, notes éliminatoires) et surtout l'analyse des copies et des oraux : ce que "
+         "les correcteurs ont valorisé, les erreurs les plus fréquentes et leurs conseils aux futurs candidats."),
+        (f"Toutes les académies publient-elles un rapport de jury {annee} ?",
+         f"Non. Chaque académie décide de publier ou non son rapport, et à quel moment. À ce jour, nous avons trouvé un rapport en "
+         f"ligne pour {nb} académies ; les autres sont indiquées « Non disponible » et la liste est complétée dès qu'un rapport paraît."),
+    ]
+    if annee == '2026':
+        specifique = [
+            ("Pourquoi y a-t-il des rapports bac+3 et des rapports bac+5 en 2026 ?",
+             "La session 2026 est la première à réunir deux concours externes : le nouveau concours de niveau bac+3 (licence) et le "
+             "concours de niveau bac+5 (master), dont les épreuves sont différentes. Certaines académies publient un rapport par "
+             "concours, d'autres un rapport commun aux deux."),
+        ]
+    else:
+        specifique = [
+            ("Les rapports de jury 2025 sont-ils encore utiles pour préparer le CRPE ?",
+             "Oui. Les rapports 2025 portent sur le concours de niveau bac+5, qui continue d'être organisé avec les mêmes épreuves. "
+             "Les erreurs relevées par les jurys en grammaire, en lexique, en rédaction et en mathématiques concernent aussi les "
+             "candidats au concours bac+3, qui sont évalués sur les mêmes notions."),
+        ]
+    commun_fin = [
+        ("Comment utiliser un rapport de jury pour réviser ?",
+         "Commencez par faire le sujet de l'épreuve en temps limité. Lisez ensuite la partie du rapport qui la concerne : notez les "
+         "attendus, les erreurs fréquentes et les conseils, puis comparez-les à votre copie. Lire plusieurs académies permet de voir "
+         "les remarques qui reviennent partout. Notre <a href=\"/" + SLUG + "/disciplines\">analyse par discipline</a> fait ce travail "
+         "de synthèse pour vous."),
+        ("Où trouver les sujets officiels du CRPE ?",
+         f"Les sujets des épreuves écrites sont publiés par le ministère sur <a href=\"{SUJETS}\" target=\"_blank\" "
+         "rel=\"noopener\">devenirenseignant.gouv.fr</a>, avec une partie des rapports de jury."),
+    ]
+    return commun_debut + specifique + commun_fin
+
+
 def page(annee, rows):
     title = f'Télécharger les rapports de jury du CRPE {annee} par académie'
     desc = (f"Téléchargez les rapports de jury officiels du CRPE {annee}, académie par académie"
-            + (" (concours bac+3 et bac+5)" if annee == '2026' else '') + ". Liens directs vers les sites des académies.")
+            + (" (concours bac+3 et bac+5)" if annee == '2026' else ' (concours bac+5)') + ". Liens directs vers les sites des académies.")
     url = f'{SITE}/{SLUG}/{annee}'
     ld = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
         {'@type': 'ListItem', 'position': 1, 'name': 'Accueil', 'item': SITE + '/'},
@@ -177,6 +222,13 @@ def page(annee, rows):
     nb = len({r[0] for r in dispo})
     manquants = len({r[0] for r in rows if not r[2]})
     lien = 'style="font-weight:600;" target="_blank" rel="noopener"'
+    autre = '2025' if annee == '2026' else '2026'
+    autre_session = (f'Vous cherchez une autre session ? <a href="/{SLUG}/{autre}">Télécharger les rapports de jury du CRPE {autre}</a>'
+                     f' · <a href="/{SLUG}/disciplines">Analyse des rapports par discipline</a>')
+    questions = faq(annee, nb)
+    faq_html = '\n'.join(f'  <div class="faq-item">\n    <h3>{q}</h3>\n    <p>{r}</p>\n  </div>' for q, r in questions)
+    ld_faq = {'@context': 'https://schema.org', '@type': 'FAQPage', 'mainEntity': [
+        {'@type': 'Question', 'name': q, 'acceptedAnswer': {'@type': 'Answer', 'text': re.sub('<[^>]+>', '', r)}} for q, r in questions]}
     body = f'''<main class="page-wrap">
   <nav class="breadcrumb" aria-label="Fil d'Ariane">
     <a href="/">Accueil</a><span>›</span><span aria-current="page">Rapports de jury CRPE {annee}</span>
@@ -196,6 +248,11 @@ def page(annee, rows):
 
   <p style="margin-top:28px;font-size:14px;color:var(--gray-500);">Les liens mènent aux sites officiels des académies et du ministère : « Télécharger » ouvre directement le PDF, « Consulter » ouvre la page de l'académie où se trouve le rapport. « Non disponible » signifie qu'aucun rapport n'est publié en ligne pour l'instant : la liste sera complétée dès sa parution. D'autres rapports sont aussi rassemblés sur <a href="https://www.devenirenseignant.gouv.fr/les-sujets-des-epreuves-ecrites-et-rapports-des-jurys-des-concours-de-recrutement-de-professeurs-des-1163" target="_blank" rel="noopener">devenirenseignant.gouv.fr</a>.</p>
 
+  <p class="autre-session">{autre_session}</p>
+
+  <h2>Questions fréquentes sur les rapports de jury du CRPE {annee}</h2>
+{faq_html}
+
   <div class="page-cta">
     <h2>Entraînez-vous comme le jury l'attend</h2>
     <p>Répondez à 5 questions de français ou de mathématiques et recevez un rapport détaillé sur votre manière de répondre.</p>
@@ -212,6 +269,7 @@ def page(annee, rows):
             + '  <meta property="og:type" content="website" />\n'
             + f'  <meta property="og:url" content="{url}" />\n'
             + f'  <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
+            + f'  <script type="application/ld+json">{json.dumps(ld_faq, ensure_ascii=False)}</script>\n'
             + CSS_BASE + CSS)
     return head + BODY_NAV + body + TAIL
 
@@ -229,7 +287,6 @@ for annee, rows in SESSIONS:
 # ── Page « Rapports de jury par discipline » : /rapports-jury-crpe/disciplines ──────────────────────────
 # Le contenu est extrait, sans réécriture, des articles du blog sur les rapports de jury (une session par article).
 # Chaque discipline reçoit les sections ou les points de liste qui la concernent ; sans contenu : état vide.
-import re
 
 DISCIPLINES = [
     # (id, épreuve, libellé, icône)
