@@ -422,7 +422,7 @@ def page_disciplines():
     js_disc = json.dumps([{'id': i, 'epreuve': e, 'label': l, 'ic': ic} for i, e, l, ic in DISCIPLINES], ensure_ascii=False)
     body = f'''<main class="page-wrap rd-wrap">
   <nav class="breadcrumb" aria-label="Fil d'Ariane">
-    <a href="/">Accueil</a><span>›</span><span>Rapports de jury</span><span>›</span><span aria-current="page">Par discipline</span>
+    <a href="/">Accueil</a><span>›</span><span>Rapports de jury</span><span>›</span><span aria-current="page">Analyse par discipline</span>
   </nav>
   <h1>Rapports de jury du CRPE par discipline</h1>
   <p class="lead">Choisissez une épreuve et une discipline : vous lisez les conseils des jurys, ce qu'ils ont valorisé et ce qu'ils ont pénalisé, tirés des rapports officiels des académies.</p>
