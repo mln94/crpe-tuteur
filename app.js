@@ -196,6 +196,7 @@ app.post('/api/webhook/paypal', async (req, res) => {
 const KLAVIYO_API_BASE      = 'https://a.klaviyo.com/api';
 const KLAVIYO_LIST_NEWSLETTER = 'U97rGQ';
 const KLAVIYO_LIST_SIGNUP     = 'SgJQyM';
+const KLAVIYO_LISTES_AVIS     = { passcrpe: 'VniHUM', quizcrpe: 'UKhFia' }; // « Avis essai PassCRPE », « Avis essai QuizCRPE »
 const KLAVIYO_REVISION      = '2026-04-15';
 
 function klaviyoHeaders() {
@@ -544,26 +545,18 @@ app.post('/api/feedback/trial', async (req, res) => {
     return res.status(500).json({ error: error.message });
   }
 
-  // Klaviyo : form_trial = true si on a l'email
-  if (email) {
+  // Klaviyo, si l'e-mail est connu (lien des e-mails : ?email=…) : liste « Avis essai PassCRPE » ou « Avis essai QuizCRPE »
+  // (simple ajout, sans e-mail de confirmation ni abonnement marketing), form_trial(_quizcrpe) = true,
+  // et avis_essai_<produit>_frein = réponse à « Qu'est-ce qui vous retient ? »
+  if (email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) && process.env.KLAVIYO_PRIVATE_API_KEY) {
     try {
-      const searchRes = await fetch(
-        `${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`,
-        { headers: klaviyoHeaders() }
-      );
-      const searchData = await searchRes.json();
-      const profileId  = searchData.data?.[0]?.id;
-      if (profileId) {
-        await fetch(`${KLAVIYO_API_BASE}/profiles/${profileId}`, {
-          method: 'PATCH',
-          headers: klaviyoHeaders(),
-          body: JSON.stringify({
-            data: { type: 'profile', id: profileId, attributes: { properties: produit === 'quizcrpe' ? { form_trial_quizcrpe: true } : { form_trial: true } } },
-          }),
-        });
-      }
+      await klaviyoSubscribePipeline(email, '', '', KLAVIYO_LISTES_AVIS[produit], {}, {}, false);
+      await klaviyoSetProperties(email, {
+        ...(produit === 'quizcrpe' ? { form_trial_quizcrpe: true } : { form_trial: true }),
+        ...(frein_souscription ? { [`avis_essai_${produit}_frein`]: String(frein_souscription).slice(0, 500) } : {}),
+      });
     } catch (e) {
-      console.warn('[feedback/trial] Klaviyo patch form_trial:', e.message);
+      console.warn('[feedback/trial] Klaviyo :', e.message);
     }
   }
 

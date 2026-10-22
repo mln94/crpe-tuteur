@@ -436,6 +436,13 @@ src="https://www.facebook.com/tr?id=2908206909538261&ev=PageView&noscript=1"
       return QUESTIONS.filter(q => !q.conditional || q.conditional());
     }
 
+    /* ── Numérotation : seules les questions principales comptent ; une question de précision garde le numéro de la précédente ── */
+    const TOTAL_PRINCIPALES = QUESTIONS.filter(q => !q.conditional).length;
+    function numero(q) {
+      const i = QUESTIONS.indexOf(q);
+      return QUESTIONS.slice(0, i + 1).filter(x => !x.conditional).length;
+    }
+
     /* ── Rendu d'une question ── */
     function renderQuestion(q, idx, total) {
       const el = document.createElement('div');
@@ -447,7 +454,7 @@ src="https://www.facebook.com/tr?id=2908206909538261&ev=PageView&noscript=1"
 
       let inner = `
         <div>
-          <div class="q-num">${idx + 1} sur ${total}</div>
+          <div class="q-num">${q.conditional ? 'Précision · ' : ''}${numero(q)} sur ${TOTAL_PRINCIPALES}</div>
           <div class="q-label">${q.label}</div>
         </div>
       `;
@@ -509,7 +516,7 @@ src="https://www.facebook.com/tr?id=2908206909538261&ev=PageView&noscript=1"
             answers[q.id] = parseInt(btn.dataset.val, 10);
             el.querySelectorAll('.rating-btn').forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
-            setTimeout(() => advance(), 350);
+            setTimeout(() => advance(el), 200);
           });
         });
       }
@@ -525,14 +532,14 @@ src="https://www.facebook.com/tr?id=2908206909538261&ev=PageView&noscript=1"
               answers[q.id] = 'Autre';
               el.querySelector('#other-wrap').style.display = 'block';
               el.querySelector('#autre-actions').style.display = 'flex';
-              setTimeout(() => el.querySelector('#autre-input')?.focus(), 50);
+              el.querySelector('#autre-input')?.focus({ preventScroll: true });
             } else {
               answers[q.id] = val;
               if (q.hasOther) {
                 el.querySelector('#other-wrap').style.display = 'none';
                 el.querySelector('#autre-actions').style.display = 'none';
               }
-              setTimeout(() => advance(), 350);
+              setTimeout(() => advance(el), 200);
             }
           });
         });
@@ -543,9 +550,9 @@ src="https://www.facebook.com/tr?id=2908206909538261&ev=PageView&noscript=1"
             answers[q.id] = 'Autre' + (ta.value.trim() ? ' : ' + ta.value.trim() : '');
           });
           ta?.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); advance(); }
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); advance(el); }
           });
-          el.querySelector('#btn-cont')?.addEventListener('click', advance);
+          el.querySelector('#btn-cont')?.addEventListener('click', () => advance(el));
         }
       }
 
@@ -553,20 +560,20 @@ src="https://www.facebook.com/tr?id=2908206909538261&ev=PageView&noscript=1"
         const ta = el.querySelector('#ta-input');
         ta?.addEventListener('input', () => { answers[q.id] = ta.value; });
         ta?.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); advance(); }
+          if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); advance(el); }
         });
         el.querySelector('#btn-cont')?.addEventListener('click', () => {
-          if (q.isLast) { submitForm(); } else { advance(); }
+          if (q.isLast) { submitForm(); } else { advance(el); }
         });
-        el.querySelector('#btn-skip')?.addEventListener('click', advance);
-        setTimeout(() => ta?.focus(), 50);
+        el.querySelector('#btn-skip')?.addEventListener('click', () => advance(el));
+        setTimeout(() => ta?.focus({ preventScroll: true }), SWIPE_DURATION + 20);
       }
 
       return el;
     }
 
     /* ── Navigation — swipe simultané ── */
-    const SWIPE_DURATION = 400;
+    const SWIPE_DURATION = 300;
     const SWIPE_EASE = 'cubic-bezier(.4,0,.2,1)';
 
     function goTo(idx, direction = 'forward') {
@@ -576,8 +583,8 @@ src="https://www.facebook.com/tr?id=2908206909538261&ev=PageView&noscript=1"
       const stage = document.getElementById('stage');
       const old = slideEl;
 
-      updateProgress(idx, total);
-      document.getElementById('nav-counter').textContent = `${idx + 1} / ${total}`;
+      updateProgress(numero(q), TOTAL_PRINCIPALES);
+      document.getElementById('nav-counter').textContent = `${numero(q)} / ${TOTAL_PRINCIPALES}`;
       document.getElementById('btn-back').style.display = idx > 0 ? 'flex' : 'none';
 
       const newSlide = renderQuestion(q, idx, total);
@@ -608,7 +615,11 @@ src="https://www.facebook.com/tr?id=2908206909538261&ev=PageView&noscript=1"
       current = idx;
     }
 
-    function advance() {
+    function advance(source) {
+      // Une question ne déclenche qu'un seul passage à la suivante (double clic, Entrée répétée),
+      // et seulement si elle est encore affichée (un clic en retard ne fait pas sauter la question suivante)
+      if (!slideEl || (source && source !== slideEl) || slideEl.dataset.partie) return;
+      slideEl.dataset.partie = '1';
       const qs = activeQuestions();
       if (current < qs.length - 1) {
         goTo(current + 1, 'forward');
