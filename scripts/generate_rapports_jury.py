@@ -161,7 +161,7 @@ INTRO = {
 
 
 def page(annee, rows):
-    title = f'Rapports de jury du CRPE {annee} par académie : téléchargement'
+    title = f'Télécharger les rapports de jury du CRPE {annee} par académie'
     desc = (f"Téléchargez les rapports de jury officiels du CRPE {annee}, académie par académie"
             + (" (concours bac+3 et bac+5)" if annee == '2026' else '') + ". Liens directs vers les sites des académies.")
     url = f'{SITE}/{SLUG}/{annee}'
@@ -176,7 +176,7 @@ def page(annee, rows):
   <nav class="breadcrumb" aria-label="Fil d'Ariane">
     <a href="/">Accueil</a><span>›</span><span aria-current="page">Rapports de jury CRPE {annee}</span>
   </nav>
-  <h1>Rapports de jury du CRPE {annee} par académie</h1>
+  <h1>Télécharger les rapports de jury du CRPE {annee} par académie</h1>
   <p class="lead">Chaque année, les jurys du CRPE publient un <strong>rapport de jury</strong> par académie : les correcteurs y expliquent ce qu'ils ont valorisé, ce qu'ils ont pénalisé et les erreurs qui reviennent d'une copie à l'autre. {INTRO[annee]}</p>
 
   <div class="callout">
@@ -414,7 +414,7 @@ CSS_DISC = """
     .rd-chips a { font-size: 13.5px; font-weight: 700; padding: 7px 12px; border-radius: 100px; border: 1.5px solid var(--gray-200); color: var(--gray-700); text-decoration: none; background: #fff; }
     .rd-chips a:hover { border-color: var(--indigo-600); color: var(--indigo-700); }
     .rd-chips a[aria-current="page"] { background: var(--indigo-50); border-color: var(--indigo-600); color: var(--indigo-700); }
-    .rd-tabs { position: sticky; top: 74px; z-index: 5; display: flex; gap: 4px; background: var(--gray-100); border-radius: 12px; padding: 4px; width: max-content; max-width: 100%; margin: 26px 0 18px; }
+    .rd-tabs { display: flex; gap: 4px; background: var(--gray-100); border-radius: 12px; padding: 4px; width: max-content; max-width: 100%; margin: 26px 0 18px; }
     .rd-tabs button { border: 0; background: none; font-family: inherit; font-size: 14px; font-weight: 700; color: var(--gray-600); padding: 9px 18px; border-radius: 9px; cursor: pointer; }
     .rd-tabs button[aria-selected="true"] { background: #fff; color: var(--indigo-700); box-shadow: 0 1px 4px rgba(17,24,39,.12); }
     .rd-rapport { border: 1px solid var(--gray-200); border-radius: 20px; padding: 30px; background: #fff; }
@@ -435,7 +435,7 @@ CSS_DISC = """
     .rd-btn.plein { background: var(--indigo-600); color: #fff !important; }
     /* Analyse rédigée */
     .rj-intro { font-size: 16.5px; }
-    .rd-rapport h2 { font-size: 23px; margin: 40px 0 12px; scroll-margin-top: 130px; }
+    .rd-rapport h2 { font-size: 23px; margin: 40px 0 12px; scroll-margin-top: 90px; }
     .rd-rapport h3 { font-size: 18.5px; font-weight: 800; color: var(--gray-900); margin: 28px 0 10px; }
     .rj-sommaire { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 14px; padding: 16px 20px; margin: 18px 0 8px; font-size: 15px; }
     .rj-sommaire p { font-weight: 800; color: var(--gray-900); margin-bottom: 6px; }
@@ -463,7 +463,7 @@ CSS_DISC = """
     .rj-sommaire ol ol { margin: 4px 0 6px 18px !important; list-style: lower-alpha; font-size: 14.5px; }
     .rj-sujets { border: 1.5px solid var(--indigo-100); background: #fff; border-radius: 16px; padding: 16px 20px 6px; margin: 20px 0; }
     .rj-sujets-titre { font-weight: 900; color: var(--gray-900); margin-bottom: 8px !important; }
-    .rd-rapport h3 { scroll-margin-top: 130px; }
+    .rd-rapport h3 { scroll-margin-top: 90px; }
     .rj-question { background: var(--gray-50); border: 1px solid var(--gray-200); border-left: 4px solid var(--indigo-600); border-radius: 0 14px 14px 0; padding: 14px 18px 4px; margin: 26px 0 14px; }
     .rj-q-label { font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--indigo-600); margin-bottom: 4px !important; }
     .rj-q-consigne { font-weight: 700; color: var(--gray-900); }
@@ -474,7 +474,6 @@ CSS_DISC = """
     @media (max-width: 600px) {
       .rd-rapport { padding: 20px 16px; border-radius: 16px; }
       .rd-grille { grid-template-columns: 1fr; }
-      .rd-tabs { top: 70px; }
       .rd-rapport h2 { font-size: 21px; }
       .rj-table { font-size: 13.5px; }
       .rj-table tbody th { white-space: normal; }
