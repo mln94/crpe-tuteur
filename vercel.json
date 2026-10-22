@@ -24,6 +24,7 @@
     { "source": "/crpe-par-academie/:slug", "destination": "/academies/:slug.html" },
     { "source": "/rapports-jury-crpe/2026", "destination": "/rapports-jury-crpe-2026.html" },
     { "source": "/rapports-jury-crpe/2025", "destination": "/rapports-jury-crpe-2025.html" },
+    { "source": "/rapports-jury-crpe/disciplines", "destination": "/rapports-jury-crpe-disciplines.html" },
     { "source": "/quizapp", "destination": "/quizapp.html" },
     { "source": "/quizcrpe", "destination": "/quiz.html" },
     { "source": "/espace", "destination": "/espace.html" },
