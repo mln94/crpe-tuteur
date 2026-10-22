@@ -377,12 +377,12 @@ DOSSIER = 'rapports-jury-disciplines'          # landing/<DOSSIER>/<id>.html, se
 EPREUVE_COURT = {'admissibilite': 'écrit', 'admission': 'oral'}
 SEO = {
     'admissibilite-francais': (
-        'Rapport de jury CRPE français (écrit) 2026 et 2025 : analyse et conseils',
-        "Ce que disent les jurys du CRPE sur l'écrit de français en 2026 (bac+3 et bac+5) et en 2025 : barème, erreurs "
-        "fréquentes en grammaire, en lexique et en réflexion, et conseils pour s'y préparer.",
+        'Rapport de jury CRPE français (écrit) 2026 et 2025 : sujets, corrigés et conseils',
+        "L'écrit de français du CRPE question par question : énoncés officiels, corrigés des jurys et erreurs fréquentes, "
+        "pour le bac+3 et le bac+5 en 2026 et pour la session 2025.",
         "Rapport de jury CRPE : l'écrit de français",
-        "Étude de la langue, lexique, réflexion : ce que les jurys ont valorisé, les erreurs qu'ils ont relevées académie par "
-        "académie, et ce qu'il faut travailler pour la prochaine session."),
+        "Question par question : l'énoncé officiel, le corrigé publié par le jury, les erreurs relevées académie par "
+        "académie et ce qu'il faut travailler. Bac+3 et bac+5 en 2026, et session 2025."),
 }
 
 
@@ -456,6 +456,17 @@ CSS_DISC = """
     .rj-action + .rj-action-liste { margin-top: -8px !important; background: #ecfdf5; border-left: 4px solid #10b981; border-radius: 0 0 12px 0; padding: 4px 16px 10px 38px; margin-left: 0 !important; }
     .rj-action:has(+ .rj-action-liste) { border-radius: 0 12px 0 0; margin-bottom: 0; padding-bottom: 4px; }
     .rj-plan li { margin-bottom: 10px; }
+    .rj-sommaire ol ol { margin: 4px 0 6px 18px !important; list-style: lower-alpha; font-size: 14.5px; }
+    .rj-sujets { border: 1.5px solid var(--indigo-100); background: #fff; border-radius: 16px; padding: 16px 20px 6px; margin: 20px 0; }
+    .rj-sujets-titre { font-weight: 900; color: var(--gray-900); margin-bottom: 8px !important; }
+    .rd-rapport h3 { scroll-margin-top: 130px; }
+    .rj-question { background: var(--gray-50); border: 1px solid var(--gray-200); border-left: 4px solid var(--indigo-600); border-radius: 0 14px 14px 0; padding: 14px 18px 4px; margin: 26px 0 14px; }
+    .rj-q-label { font-size: 12px; font-weight: 800; letter-spacing: .05em; text-transform: uppercase; color: var(--indigo-600); margin-bottom: 4px !important; }
+    .rj-q-consigne { font-weight: 700; color: var(--gray-900); }
+    .rd-rapport blockquote { margin: 0 0 12px; padding: 0 0 0 14px; border-left: 3px solid var(--gray-300, #d1d5db); font-style: italic; color: var(--gray-700); }
+    .rd-rapport blockquote u { text-decoration-thickness: 2px; text-underline-offset: 3px; }
+    .rd-rapport blockquote.rj-reponse { font-style: normal; border-left-color: #10b981; background: #f0fdf4; padding: 10px 14px; border-radius: 0 10px 10px 0; }
+    .rj-corrige-titre { font-size: 13px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #047857; margin: 10px 0 6px !important; }
     @media (max-width: 600px) {
       .rd-rapport { padding: 20px 16px; border-radius: 16px; }
       .rd-grille { grid-template-columns: 1fr; }
@@ -540,11 +551,20 @@ def page_hub(data):
 
 
 def sommaire(html):
-    titres = re.findall(r'<h2 id="([^"]+)">(.*?)</h2>', html)
+    """Sommaire des h2 et h3 qui portent un id, les h3 imbriqués sous leur h2."""
+    titres = re.findall(r'<(h[23]) id="([^"]+)">(.*?)</h[23]>', html)
     if len(titres) < 3:
         return ''
-    return ('<nav class="rj-sommaire" aria-label="Sommaire"><p>Sommaire</p><ol>'
-            + ''.join(f'<li><a href="#{i}">{t}</a></li>' for i, t in titres) + '</ol></nav>')
+    out, ouvert = '', False
+    for niveau, i, t in titres:
+        if niveau == 'h2':
+            out += ('</ol></li>' if ouvert else '</li>' if out else '') + f'<li><a href="#{i}">{t}</a>'
+            ouvert = False
+        else:
+            out += ('' if ouvert else '<ol>') + f'<li><a href="#{i}">{t}</a></li>'
+            ouvert = True
+    out += '</ol></li>' if ouvert else '</li>'
+    return f'<nav class="rj-sommaire" aria-label="Sommaire"><p>Sommaire</p><ol>{out}</ol></nav>'
 
 
 def panneau(data, id_, label, ic, annee, actif, autres):
