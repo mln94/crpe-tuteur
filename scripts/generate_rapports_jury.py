@@ -108,6 +108,11 @@ CSS = """
     .na-label { display: inline-block; font-size: 13px; font-weight: 600; padding: 6px 12px; border-radius: 8px; background: var(--gray-100); color: var(--gray-500); }
     .callout { background: var(--indigo-50); border: 1px solid var(--indigo-100); border-radius: 14px; padding: 18px 20px; margin: 22px 0; font-size: 15px; }
     .callout p:last-child { margin-bottom: 0; }
+    .analyse-cta { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; margin: 22px 0 14px; padding: 20px 22px; border-radius: 16px; background: var(--indigo-50); border: 1.5px solid var(--indigo-100); text-decoration: none; color: var(--gray-700) !important; transition: border-color .15s, box-shadow .15s; }
+    .analyse-cta:hover { border-color: var(--indigo-600); box-shadow: 0 6px 18px rgba(79,70,229,.12); }
+    .analyse-txt { flex: 1 1 320px; font-size: 15px; line-height: 1.55; }
+    .analyse-txt strong { display: block; font-size: 17px; color: var(--gray-900); margin-bottom: 4px; }
+    .analyse-btn { flex: none; background: var(--indigo-600); color: #fff; font-size: 14px; font-weight: 800; padding: 11px 18px; border-radius: 10px; }
     .page-cta { margin-top: 48px; background: linear-gradient(135deg, var(--indigo-600) 0%, #818cf8 100%); border-radius: 20px; padding: 32px; text-align: center; color: #fff; }
     .page-cta h2 { color: #fff; margin: 0 0 10px; font-size: 22px; }
     .page-cta p { opacity: .9; margin-bottom: 20px; }
@@ -179,9 +184,11 @@ def page(annee, rows):
   <h1>Télécharger les rapports de jury du CRPE {annee} par académie</h1>
   <p class="lead">Chaque année, les jurys du CRPE publient un <strong>rapport de jury</strong> par académie : les correcteurs y expliquent ce qu'ils ont valorisé, ce qu'ils ont pénalisé et les erreurs qui reviennent d'une copie à l'autre. {INTRO[annee]}</p>
 
-  <div class="callout">
-    <p><strong>Envie d'aller à l'essentiel ?</strong> Nous avons lu ces rapports et résumé les conseils des jurys, épreuve par épreuve, dans notre article <a href="/blog/rapport-jury-crpe-{annee}-conseils" {lien}>Rapport de jury CRPE {annee} : les conseils des jurys</a>.</p>
-  </div>
+  <a class="analyse-cta" href="/{SLUG}/disciplines">
+    <span class="analyse-txt"><strong>L'analyse détaillée, discipline par discipline</strong>Nous avons lu ces rapports pour vous : attentes des jurys, erreurs fréquentes et conseils, discipline par discipline, à l'écrit comme à l'oral. Pour le français écrit : sujets officiels et corrigés question par question.</span>
+    <span class="analyse-btn">Voir l'analyse par discipline →</span>
+  </a>
+  <p style="font-size:15px;">Pour un résumé rapide, lisez aussi notre article <a href="/blog/rapport-jury-crpe-{annee}-conseils" {lien}>Rapport de jury CRPE {annee} : les conseils des jurys</a>.</p>
 
   <h2>Rapports de jury CRPE {annee}</h2>
   <p class="session-count">{len(dispo)} rapports, {nb} académies · {manquants} académies sans rapport en ligne pour l'instant</p>
