@@ -292,69 +292,9 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://www.passcrpe.fr/rapports-jury-crpe/disciplines/admissibilite-arts</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.passcrpe.fr/rapports-jury-crpe/disciplines/admissibilite-emc</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
     <loc>https://www.passcrpe.fr/rapports-jury-crpe/disciplines/admissibilite-francais</loc>
     <lastmod>2026-10-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://www.passcrpe.fr/rapports-jury-crpe/disciplines/admissibilite-histoire-geographie</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.passcrpe.fr/rapports-jury-crpe/disciplines/admissibilite-langue-vivante</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.passcrpe.fr/rapports-jury-crpe/disciplines/admissibilite-mathematiques</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.passcrpe.fr/rapports-jury-crpe/disciplines/admissibilite-sciences-technologie</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.passcrpe.fr/rapports-jury-crpe/disciplines/admission-entretien</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.passcrpe.fr/rapports-jury-crpe/disciplines/admission-eps</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.passcrpe.fr/rapports-jury-crpe/disciplines/admission-francais</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://www.passcrpe.fr/rapports-jury-crpe/disciplines/admission-mathematiques</loc>
-    <lastmod>2026-10-22</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
   </url>
 </urlset>

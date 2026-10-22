@@ -185,7 +185,7 @@ def page(annee, rows):
   <p class="lead">Chaque année, les jurys du CRPE publient un <strong>rapport de jury</strong> par académie : les correcteurs y expliquent ce qu'ils ont valorisé, ce qu'ils ont pénalisé et les erreurs qui reviennent d'une copie à l'autre. {INTRO[annee]}</p>
 
   <a class="analyse-cta" href="/{SLUG}/disciplines">
-    <span class="analyse-txt"><strong>L'analyse détaillée, discipline par discipline</strong>Nous avons lu ces rapports pour vous : attentes des jurys, erreurs fréquentes et conseils, discipline par discipline, à l'écrit comme à l'oral. Pour le français écrit : sujets officiels et corrigés question par question.</span>
+    <span class="analyse-txt"><strong>L'analyse détaillée, discipline par discipline</strong>Nous avons lu ces rapports pour vous. Déjà disponible : l'écrit de français, avec les sujets officiels, les corrigés question par question, les erreurs fréquentes et les conseils des jurys. Les autres disciplines arrivent d'ici le 3 novembre.</span>
     <span class="analyse-btn">Voir l'analyse par discipline →</span>
   </a>
   <p style="font-size:15px;">Pour un résumé rapide, lisez aussi notre article <a href="/blog/rapport-jury-crpe-{annee}-conseils" {lien}>Rapport de jury CRPE {annee} : les conseils des jurys</a>.</p>
@@ -514,7 +514,22 @@ CTA = '''  <div class="page-cta">
   </div>'''
 
 
+# Disciplines dont l'analyse est publiée ; les autres sont annoncées « À venir » avec leur date prévue.
+PUBLIEES = {'admissibilite-francais'}
+PREVUES = {  # deux disciplines tous les deux jours
+    'admissibilite-mathematiques': '24 octobre', 'admissibilite-histoire-geographie': '24 octobre',
+    'admissibilite-sciences-technologie': '26 octobre', 'admissibilite-emc': '26 octobre',
+    'admissibilite-arts': '28 octobre', 'admissibilite-langue-vivante': '28 octobre',
+    'admissibilite-langues-regionales': '30 octobre', 'admission-francais': '30 octobre',
+    'admission-mathematiques': '1er novembre', 'admission-eps': '1er novembre',
+    'admission-entretien': '3 novembre', 'admission-langue-regionale': '3 novembre',
+}
+assert set(PREVUES) | PUBLIEES == {d[0] for d in DISCIPLINES} and not set(PREVUES) & PUBLIEES
+
+
 def sessions_dispo(data, id_):
+    if id_ not in PUBLIEES:
+        return []
     return [a for a, _ in SESSIONS if analyse(id_, a) or data.get(a, {}).get(id_)]
 
 
@@ -535,7 +550,7 @@ def page_hub(data):
                 info = f'<span class="info ok">Analyse détaillée</span>' if riche else f'<span class="info">Sessions {" et ".join(dispo)}</span>'
                 cartes.append(f'      <a class="rd-disc" href="{url_disc(id_)}"><span class="ic" aria-hidden="true">{ic}</span><span class="t">{escape(label)}{info}</span></a>')
             else:
-                cartes.append(f'      <span class="rd-disc"><span class="ic" aria-hidden="true">{ic}</span><span class="t">{escape(label)}<span class="info">À venir</span></span></span>')
+                cartes.append(f'      <span class="rd-disc"><span class="ic" aria-hidden="true">{ic}</span><span class="t">{escape(label)}<span class="info">À venir · <span style="white-space:nowrap">prévu le {PREVUES[id_]}</span></span></span></span>')
         blocs.append(f'  <section class="rd-epreuve">\n    <h2>{nom}</h2>\n    <div class="rd-grille">\n' + '\n'.join(cartes) + '\n    </div>\n  </section>')
     body = f'''<main class="page-wrap rd-wrap">
   <nav class="breadcrumb" aria-label="Fil d'Ariane">
@@ -621,7 +636,7 @@ def page_discipline(data, id_, ep, label, ic):
   </nav>
   <h1>{escape(h1)}</h1>
   <p class="lead">{lead}</p>
-  <div class="rd-autres"><div class="rd-label">{EPREUVES[ep]} : autres disciplines</div><div class="rd-chips">{chips}</div></div>
+{f'  <div class="rd-autres"><div class="rd-label">{EPREUVES[ep]} : autres disciplines</div><div class="rd-chips">{chips}</div></div>' if chips.count('<a ') > 1 else ''}
 
   <div class="rd-tabs" role="tablist" aria-label="Session">{onglets}</div>
 {panneaux}
@@ -665,6 +680,9 @@ out = f'landing/{SLUG}-disciplines.html'
 open(os.path.join(ROOT, out), 'w', encoding='utf-8').write(page_hub(data))
 print(out)
 os.makedirs(os.path.join(ROOT, 'landing', DOSSIER), exist_ok=True)
+for f in os.listdir(os.path.join(ROOT, 'landing', DOSSIER)):
+    if f[:-5] not in PUBLIEES:
+        os.remove(os.path.join(ROOT, 'landing', DOSSIER, f))
 for id_, ep, label, ic in DISCIPLINES:
     if sessions_dispo(data, id_):
         out = f'landing/{DOSSIER}/{id_}.html'
