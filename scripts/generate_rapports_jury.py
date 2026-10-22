@@ -368,147 +368,274 @@ def contenus():
     return data
 
 
+
+
+# Analyses rédigées à partir des rapports de jury : scripts/rapports_jury/<discipline>-<session>.html.
+# Elles remplacent, pour cette session, les extraits des articles du blog.
+ANALYSES = os.path.join(ROOT, 'scripts', 'rapports_jury')
+DOSSIER = 'rapports-jury-disciplines'          # landing/<DOSSIER>/<id>.html, servi sous /rapports-jury-crpe/disciplines/<id>
+EPREUVE_COURT = {'admissibilite': 'écrit', 'admission': 'oral'}
+SEO = {
+    'admissibilite-francais': (
+        'Rapport de jury CRPE français (écrit) 2026 et 2025 : analyse et conseils',
+        "Ce que disent les jurys du CRPE sur l'écrit de français en 2026 (bac+3 et bac+5) et en 2025 : barème, erreurs "
+        "fréquentes en grammaire, en lexique et en réflexion, et conseils pour s'y préparer.",
+        "Rapport de jury CRPE : l'écrit de français",
+        "Étude de la langue, lexique, réflexion : ce que les jurys ont valorisé, les erreurs qu'ils ont relevées académie par "
+        "académie, et ce qu'il faut travailler pour la prochaine session."),
+}
+
+
+def analyse(id_, annee):
+    f = os.path.join(ANALYSES, f'{id_}-{annee}.html')
+    return open(f, encoding='utf-8').read() if os.path.exists(f) else None
+
+
+def url_disc(id_):
+    return f'/{SLUG}/disciplines/{id_}'
+
+
 CSS_DISC = """
     /* RAPPORTS PAR DISCIPLINE */
     .rd-wrap { max-width: 980px; }
-    .rd-panneau { background: #fff; border: 1px solid var(--gray-200); border-radius: 20px; padding: 22px; box-shadow: 0 10px 30px rgba(17,24,39,.05); margin: 26px 0 22px; }
-    .rd-ligne { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
-    .rd-label { font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--gray-500); margin-bottom: 8px; }
-    .rd-seg { display: inline-flex; background: var(--gray-100); border-radius: 12px; padding: 4px; gap: 4px; }
-    .rd-seg button { border: 0; background: none; font-family: inherit; font-size: 14px; font-weight: 700; color: var(--gray-600); padding: 9px 16px; border-radius: 9px; cursor: pointer; transition: background .15s, color .15s; }
-    .rd-seg button[aria-selected="true"] { background: #fff; color: var(--indigo-700); box-shadow: 0 1px 4px rgba(17,24,39,.12); }
-    .rd-grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
-    .rd-disc { display: flex; align-items: center; gap: 10px; text-align: left; border: 1.5px solid var(--gray-200); background: #fff; border-radius: 14px; padding: 12px 14px; font-family: inherit; font-size: 14.5px; font-weight: 700; color: var(--gray-700); cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .15s; }
-    .rd-disc:hover { border-color: var(--indigo-500, #6366f1); transform: translateY(-1px); }
-    .rd-disc[aria-pressed="true"] { border-color: var(--indigo-600); background: var(--indigo-50); color: var(--indigo-700); box-shadow: 0 4px 14px rgba(79,70,229,.15); }
+    .rd-epreuve { margin-top: 30px; }
+    .rd-epreuve h2 { margin: 0 0 12px; font-size: 21px; }
+    .rd-grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+    .rd-disc { display: flex; align-items: center; gap: 10px; border: 1.5px solid var(--gray-200); background: #fff; border-radius: 14px; padding: 13px 14px; font-size: 14.5px; font-weight: 700; color: var(--gray-700) !important; text-decoration: none; transition: border-color .15s, box-shadow .15s, transform .15s; }
+    a.rd-disc:hover { border-color: var(--indigo-600); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(79,70,229,.12); }
+    .rd-disc[aria-current="page"] { border-color: var(--indigo-600); background: var(--indigo-50); color: var(--indigo-700) !important; }
     .rd-disc .ic { font-size: 20px; line-height: 1; }
-    .rd-disc .vide { margin-left: auto; font-size: 11px; font-weight: 700; color: var(--gray-400); }
-    .rd-rapport { border: 1px solid var(--gray-200); border-radius: 20px; padding: 28px; background: #fff; }
+    .rd-disc .info { display: block; margin-top: 2px; font-size: 12px; font-weight: 600; color: var(--gray-400); }
+    .rd-disc .info.ok { color: var(--indigo-600); }
+    span.rd-disc { color: var(--gray-400) !important; background: var(--gray-50); }
+    .rd-autres { margin: 22px 0 6px; }
+    .rd-autres .rd-label { font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--gray-500); margin-bottom: 8px; }
+    .rd-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .rd-chips a { font-size: 13.5px; font-weight: 700; padding: 7px 12px; border-radius: 100px; border: 1.5px solid var(--gray-200); color: var(--gray-700); text-decoration: none; background: #fff; }
+    .rd-chips a:hover { border-color: var(--indigo-600); color: var(--indigo-700); }
+    .rd-chips a[aria-current="page"] { background: var(--indigo-50); border-color: var(--indigo-600); color: var(--indigo-700); }
+    .rd-tabs { position: sticky; top: 74px; z-index: 5; display: flex; gap: 4px; background: var(--gray-100); border-radius: 12px; padding: 4px; width: max-content; max-width: 100%; margin: 26px 0 18px; }
+    .rd-tabs button { border: 0; background: none; font-family: inherit; font-size: 14px; font-weight: 700; color: var(--gray-600); padding: 9px 18px; border-radius: 9px; cursor: pointer; }
+    .rd-tabs button[aria-selected="true"] { background: #fff; color: var(--indigo-700); box-shadow: 0 1px 4px rgba(17,24,39,.12); }
+    .rd-rapport { border: 1px solid var(--gray-200); border-radius: 20px; padding: 30px; background: #fff; }
     .rd-sur { font-size: 12px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; color: var(--indigo-600); }
-    .rd-rapport h2 { margin: 6px 0 6px; font-size: 26px; }
+    .rd-rapport > h2:first-of-type { margin-top: 6px; }
     .rd-source { font-size: 14px; color: var(--gray-500); margin-bottom: 18px !important; }
     .rd-bloc { border-top: 1px solid var(--gray-100); padding-top: 18px; margin-top: 18px; }
     .rd-bloc h3 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 18px; font-weight: 800; color: var(--gray-900); margin-bottom: 10px; }
     .rd-concours { font-size: 11.5px; font-weight: 800; padding: 3px 10px; border-radius: 100px; background: var(--indigo-50); color: var(--indigo-700); }
-    .rd-bloc ul { margin: 0 0 6px 20px; }
-    .rd-bloc li { margin-bottom: 8px; }
+    .rd-rapport ul, .rd-rapport ol { margin: 0 0 14px 22px; }
+    .rd-rapport li { margin-bottom: 8px; }
+    .rd-rapport li ul { margin-top: 8px; }
     .rd-vide { text-align: center; padding: 36px 16px; }
     .rd-vide .ic { font-size: 40px; margin-bottom: 10px; }
     .rd-vide h2 { font-size: 21px; margin: 0 0 8px; }
     .rd-vide p { max-width: 520px; margin: 0 auto 16px; }
     .rd-btn { display: inline-block; font-size: 14px; font-weight: 700; padding: 10px 18px; border-radius: 10px; text-decoration: none; margin: 4px; border: 1.5px solid var(--indigo-600); color: var(--indigo-700) !important; background: #fff; cursor: pointer; font-family: inherit; }
     .rd-btn.plein { background: var(--indigo-600); color: #fff !important; }
+    /* Analyse rédigée */
+    .rj-intro { font-size: 16.5px; }
+    .rd-rapport h2 { font-size: 23px; margin: 40px 0 12px; scroll-margin-top: 130px; }
+    .rd-rapport h3 { font-size: 18.5px; font-weight: 800; color: var(--gray-900); margin: 28px 0 10px; }
+    .rj-sommaire { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 14px; padding: 16px 20px; margin: 18px 0 8px; font-size: 15px; }
+    .rj-sommaire p { font-weight: 800; color: var(--gray-900); margin-bottom: 6px; }
+    .rj-sommaire ol { margin: 0 0 0 20px !important; }
+    .rj-sommaire li { margin-bottom: 3px !important; }
+    .rj-retenir { background: var(--indigo-50); border: 1px solid var(--indigo-100); border-radius: 16px; padding: 18px 22px 8px; margin: 22px 0; }
+    .rj-retenir-titre { font-weight: 900; color: var(--indigo-700); font-size: 16px; margin-bottom: 8px !important; }
+    .rj-table-wrap { overflow-x: auto; margin: 14px 0 16px; border: 1px solid var(--gray-200); border-radius: 12px; }
+    .rj-table { width: 100%; border-collapse: collapse; font-size: 14.5px; line-height: 1.5; }
+    .rj-table th, .rj-table td { padding: 9px 12px; border-bottom: 1px solid var(--gray-100); text-align: left; vertical-align: top; }
+    .rj-table thead th { font-size: 12px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--gray-500); background: var(--gray-50); }
+    .rj-table tbody th { font-weight: 700; color: var(--gray-900); white-space: nowrap; }
+    .rj-table tbody th small { font-weight: 500; color: var(--gray-500); }
+    .rj-table tr:last-child th, .rj-table tr:last-child td { border-bottom: 0; }
+    .rj-table tr.rj-sep td { background: var(--gray-50); font-weight: 800; color: var(--indigo-700); font-size: 13px; }
+    .rj-note { font-size: 13.5px; color: var(--gray-500); }
+    .rj-action { background: #ecfdf5; border-left: 4px solid #10b981; border-radius: 0 12px 12px 0; padding: 12px 16px; margin: 14px 0; }
+    .rj-action + .rj-action-liste { margin-top: -8px !important; background: #ecfdf5; border-left: 4px solid #10b981; border-radius: 0 0 12px 0; padding: 4px 16px 10px 38px; margin-left: 0 !important; }
+    .rj-action:has(+ .rj-action-liste) { border-radius: 0 12px 0 0; margin-bottom: 0; padding-bottom: 4px; }
+    .rj-plan li { margin-bottom: 10px; }
     @media (max-width: 600px) {
-      .rd-panneau, .rd-rapport { padding: 18px 16px; border-radius: 16px; }
-      .rd-grille { grid-template-columns: 1fr 1fr; }
-      .rd-disc { font-size: 13.5px; padding: 10px 11px; }
-      .rd-rapport h2 { font-size: 22px; }
+      .rd-rapport { padding: 20px 16px; border-radius: 16px; }
+      .rd-grille { grid-template-columns: 1fr; }
+      .rd-tabs { top: 70px; }
+      .rd-rapport h2 { font-size: 21px; }
+      .rj-table { font-size: 13.5px; }
+      .rj-table tbody th { white-space: normal; }
     }
 """
 
 
-def page_disciplines():
-    data = contenus()
-    sessions = [a for a, _ in SESSIONS]
-    url = f'{SITE}/{SLUG}/disciplines'
-    title = 'Rapports de jury du CRPE par discipline : les conseils des jurys'
-    desc = ("Choisissez une discipline du CRPE, à l'écrit (admissibilité) ou à l'oral (admission), et lisez ce que les jurys "
-            "ont valorisé et pénalisé, session par session.")
-    ld = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
-        {'@type': 'ListItem', 'position': 1, 'name': 'Accueil', 'item': SITE + '/'},
-        {'@type': 'ListItem', 'position': 2, 'name': 'Rapports de jury par discipline', 'item': url}]}
-    js_data = json.dumps({an: {k: [{'titre': t, 'concours': c, 'html': h} for t, c, h in blocs] for k, blocs in d.items()} for an, d in data.items()},
-                         ensure_ascii=False).replace('</', '<\\/')
-    js_disc = json.dumps([{'id': i, 'epreuve': e, 'label': l, 'ic': ic} for i, e, l, ic in DISCIPLINES], ensure_ascii=False)
-    body = f'''<main class="page-wrap rd-wrap">
-  <nav class="breadcrumb" aria-label="Fil d'Ariane">
-    <a href="/">Accueil</a><span>›</span><span>Rapports de jury</span><span>›</span><span aria-current="page">Analyse par discipline</span>
-  </nav>
-  <h1>Rapports de jury du CRPE par discipline</h1>
-  <p class="lead">Choisissez une épreuve et une discipline : vous lisez les conseils des jurys, ce qu'ils ont valorisé et ce qu'ils ont pénalisé, tirés des rapports officiels des académies.</p>
-
-  <section class="rd-panneau" aria-label="Choix de la discipline">
-    <div class="rd-ligne">
-      <div><div class="rd-label">Épreuve</div><div class="rd-seg" role="tablist" id="rd-epreuves"></div></div>
-      <div><div class="rd-label">Session</div><div class="rd-seg" role="tablist" id="rd-sessions"></div></div>
-    </div>
-    <div class="rd-label">Discipline</div>
-    <div class="rd-grille" id="rd-disciplines"></div>
-  </section>
-
-  <article class="rd-rapport" id="rd-rapport" aria-live="polite"></article>
-
-  <p style="margin-top:22px;font-size:14px;color:var(--gray-500);">Les conseils proviennent des rapports de jury officiels publiés par les académies. Pour lire un rapport complet, rendez-vous sur <a href="/{SLUG}/2026">la page de téléchargement des rapports</a>.</p>
-
-  <div class="page-cta">
-    <h2>Vérifiez votre niveau dans chaque discipline</h2>
-    <p>Le Quiz CRPE : un test de positionnement gratuit sur les 9 matières, puis plus de 9 000 questions corrigées et expliquées.</p>
-    <a href="/quizcrpe">Faire le test gratuit →</a>
-  </div>
-</main>
-<script>
-(function () {{
-  var DATA = {js_data};
-  var DISC = {js_disc};
-  var EPREUVES = {json.dumps(EPREUVES, ensure_ascii=False)};
-  var SESSIONS = {json.dumps(sessions)};
-  var ARTICLES = {{ '2026': '/blog/rapport-jury-crpe-2026-conseils', '2025': '/blog/rapport-jury-crpe-2025-conseils' }};
-  var q = new URLSearchParams(location.search);
-  var etat = {{ session: SESSIONS.indexOf(q.get('session')) >= 0 ? q.get('session') : SESSIONS[0], disc: q.get('discipline') }};
-  if (!DISC.some(function (d) {{ return d.id === etat.disc; }})) etat.disc = DISC[0].id;
-  function disc(id) {{ return DISC.filter(function (d) {{ return d.id === id; }})[0]; }}
-  function esc(t) {{ return String(t).replace(/[&<>"]/g, function (c) {{ return {{ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }}[c]; }}); }}
-  function aContenu(id, s) {{ return !!(DATA[s] && DATA[s][id] && DATA[s][id].length); }}
-
-  function rendre(defiler) {{
-    var d = disc(etat.disc);
-    document.getElementById('rd-epreuves').innerHTML = Object.keys(EPREUVES).map(function (k) {{
-      return '<button type="button" role="tab" data-epreuve="' + k + '" aria-selected="' + (d.epreuve === k) + '">' + EPREUVES[k] + '</button>'; }}).join('');
-    document.getElementById('rd-sessions').innerHTML = SESSIONS.map(function (s) {{
-      return '<button type="button" role="tab" data-session="' + s + '" aria-selected="' + (etat.session === s) + '">' + s + '</button>'; }}).join('');
-    document.getElementById('rd-disciplines').innerHTML = DISC.filter(function (x) {{ return x.epreuve === d.epreuve; }}).map(function (x) {{
-      return '<button type="button" class="rd-disc" data-disc="' + x.id + '" aria-pressed="' + (x.id === d.id) + '"><span class="ic" aria-hidden="true">' + x.ic + '</span>' + esc(x.label) +
-        (aContenu(x.id, etat.session) ? '' : '<span class="vide">À venir</span>') + '</button>'; }}).join('');
-    var r = document.getElementById('rd-rapport'), blocs = (DATA[etat.session] || {{}})[d.id] || [];
-    var entete = '<div class="rd-sur">' + EPREUVES[d.epreuve] + ' · Session ' + etat.session + '</div>';
-    if (!blocs.length) {{
-      var autre = SESSIONS.filter(function (s) {{ return s !== etat.session && aContenu(d.id, s); }})[0];
-      r.innerHTML = '<div class="rd-vide"><div class="ic" aria-hidden="true">' + d.ic + '</div>' + entete + '<h2>' + esc(d.label) + ' : rapport à venir</h2>' +
-        '<p>Nous n\\'avons pas encore de synthèse des jurys pour cette discipline' + ' en ' + etat.session + '. Elle sera ajoutée ici dès que possible.</p>' +
-        (autre ? '<button type="button" class="rd-btn plein" data-session="' + autre + '">Voir la session ' + autre + '</button>' : '') +
-        '<a class="rd-btn" href="/{SLUG}/' + etat.session + '">Télécharger les rapports officiels ' + etat.session + '</a></div>';
-    }} else {{
-      r.innerHTML = entete + '<h2>' + esc(d.label) + '</h2>' +
-        '<p class="rd-source">Synthèse des rapports de jury officiels, extraite de notre article <a href="' + ARTICLES[etat.session] + '">Rapport de jury CRPE ' + etat.session + '</a>.</p>' +
-        blocs.map(function (b) {{ return '<section class="rd-bloc"><h3>' + esc(b.titre) + ' <span class="rd-concours">' + esc(b.concours) + '</span></h3>' + b.html + '</section>'; }}).join('');
-    }}
-    var u = new URL(location.href); u.searchParams.set('discipline', d.id); u.searchParams.set('session', etat.session);
-    history.replaceState(null, '', u.pathname + u.search);
-    if (defiler && r.getBoundingClientRect().top > window.innerHeight * .6) r.scrollIntoView({{ behavior: 'smooth', block: 'start' }});
-  }}
-  document.addEventListener('click', function (e) {{
-    var b = e.target.closest && e.target.closest('[data-epreuve], [data-session], [data-disc]'); if (!b) return;
-    if (b.dataset.epreuve) {{ var d = disc(etat.disc); if (d.epreuve !== b.dataset.epreuve) etat.disc = DISC.filter(function (x) {{ return x.epreuve === b.dataset.epreuve; }})[0].id; rendre(false); }}
-    else if (b.dataset.session) {{ etat.session = b.dataset.session; rendre(false); }}
-    else if (b.dataset.disc) {{ etat.disc = b.dataset.disc; rendre(true); }}
-  }});
-  rendre(false);
-}})();
-</script>
-'''
-    head = (HEAD_START
+def tete(title, desc, url, ld):
+    return (HEAD_START
             + f'  <title>{escape(title)} | PassCRPE</title>\n'
             + f'  <meta name="description" content="{escape(desc)}" />\n'
             + f'  <link rel="canonical" href="{url}" />\n'
             + f'  <meta property="og:title" content="{escape(title)}" />\n'
             + f'  <meta property="og:description" content="{escape(desc)}" />\n'
-            + '  <meta property="og:type" content="website" />\n'
+            + '  <meta property="og:type" content="article" />\n'
             + f'  <meta property="og:url" content="{url}" />\n'
             + f'  <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
             + CSS_BASE + CSS + CSS_DISC)
-    return head + BODY_NAV + body + TAIL
 
 
+def fil(*etapes):
+    return {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
+        {'@type': 'ListItem', 'position': i + 1, 'name': n, 'item': u} for i, (n, u) in enumerate(etapes)]}
+
+
+CTA = '''  <div class="page-cta">
+    <h2>Vérifiez votre niveau dans chaque discipline</h2>
+    <p>Le Quiz CRPE : un test de positionnement gratuit sur les 9 matières, puis plus de 9 000 questions corrigées et expliquées.</p>
+    <a href="/quizcrpe">Faire le test gratuit →</a>
+  </div>'''
+
+
+def sessions_dispo(data, id_):
+    return [a for a, _ in SESSIONS if analyse(id_, a) or data.get(a, {}).get(id_)]
+
+
+def page_hub(data):
+    url = f'{SITE}/{SLUG}/disciplines'
+    title = 'Rapports de jury du CRPE par discipline : les conseils des jurys'
+    desc = ("Choisissez une discipline du CRPE, à l'écrit (admissibilité) ou à l'oral (admission), et lisez ce que les jurys "
+            "ont valorisé et pénalisé, session par session.")
+    blocs = []
+    for ep, nom in EPREUVES.items():
+        cartes = []
+        for id_, e, label, ic in DISCIPLINES:
+            if e != ep:
+                continue
+            dispo = sessions_dispo(data, id_)
+            if dispo:
+                riche = any(analyse(id_, a) for a in dispo)
+                info = f'<span class="info ok">Analyse détaillée</span>' if riche else f'<span class="info">Sessions {" et ".join(dispo)}</span>'
+                cartes.append(f'      <a class="rd-disc" href="{url_disc(id_)}"><span class="ic" aria-hidden="true">{ic}</span><span class="t">{escape(label)}{info}</span></a>')
+            else:
+                cartes.append(f'      <span class="rd-disc"><span class="ic" aria-hidden="true">{ic}</span><span class="t">{escape(label)}<span class="info">À venir</span></span></span>')
+        blocs.append(f'  <section class="rd-epreuve">\n    <h2>{nom}</h2>\n    <div class="rd-grille">\n' + '\n'.join(cartes) + '\n    </div>\n  </section>')
+    body = f'''<main class="page-wrap rd-wrap">
+  <nav class="breadcrumb" aria-label="Fil d'Ariane">
+    <a href="/">Accueil</a><span>›</span><span>Rapports de jury</span><span>›</span><span aria-current="page">Analyse par discipline</span>
+  </nav>
+  <h1>Rapports de jury du CRPE par discipline</h1>
+  <p class="lead">Choisissez une discipline : vous lisez les conseils des jurys, ce qu'ils ont valorisé et ce qu'ils ont pénalisé, tirés des rapports officiels des académies pour les sessions 2026 et 2025.</p>
+{chr(10).join(blocs)}
+
+  <p style="margin-top:26px;font-size:14px;color:var(--gray-500);">Les conseils proviennent des rapports de jury officiels publiés par les académies. Pour lire un rapport complet, rendez-vous sur <a href="/{SLUG}/2026">la page de téléchargement des rapports</a>.</p>
+
+{CTA}
+</main>
+<script>
+// Anciennes adresses ?discipline=… : redirection vers la page de la discipline
+(function () {{
+  var d = new URLSearchParams(location.search).get('discipline');
+  if (d && /^[a-z-]+$/.test(d) && {json.dumps([i for i, *_ in DISCIPLINES if sessions_dispo(data, i)])}.indexOf(d) >= 0) location.replace('/{SLUG}/disciplines/' + d);
+}})();
+</script>
+'''
+    ld = fil(('Accueil', SITE + '/'), ('Rapports de jury par discipline', url))
+    return tete(title, desc, url, ld) + BODY_NAV + body + TAIL
+
+
+def sommaire(html):
+    titres = re.findall(r'<h2 id="([^"]+)">(.*?)</h2>', html)
+    if len(titres) < 3:
+        return ''
+    return ('<nav class="rj-sommaire" aria-label="Sommaire"><p>Sommaire</p><ol>'
+            + ''.join(f'<li><a href="#{i}">{t}</a></li>' for i, t in titres) + '</ol></nav>')
+
+
+def panneau(data, id_, label, ic, annee, actif, autres):
+    entete = f'<div class="rd-sur">{EPREUVES[dict((d[0], d[1]) for d in DISCIPLINES)[id_]]} · Session {annee}</div>'
+    riche = analyse(id_, annee)
+    blocs = data.get(annee, {}).get(id_)
+    if riche:
+        corps = (entete + f'<h2>{escape(label)} : l\'analyse des rapports {annee}</h2>'
+                 + '<p class="rd-source">Synthèse rédigée par PassCRPE à partir des rapports de jury officiels publiés par les académies.</p>'
+                 + riche.replace('</p>', '</p>' + sommaire(riche), 1))
+    elif blocs:
+        corps = (entete + f'<h2>{escape(label)}</h2>'
+                 + f'<p class="rd-source">Synthèse des rapports de jury officiels, extraite de notre article <a href="/blog/rapport-jury-crpe-{annee}-conseils">Rapport de jury CRPE {annee}</a>.</p>'
+                 + ''.join(f'<section class="rd-bloc"><h3>{escape(t)} <span class="rd-concours">{escape(c)}</span></h3>{h}</section>' for t, c, h in blocs))
+    else:
+        bouton = ''.join(f'<button type="button" class="rd-btn plein" data-session="{a}">Voir la session {a}</button>' for a in autres)
+        corps = (f'<div class="rd-vide"><div class="ic" aria-hidden="true">{ic}</div>{entete}<h2>{escape(label)} : rapport à venir</h2>'
+                 f'<p>Nous n\'avons pas encore de synthèse des jurys pour cette discipline en {annee}. Elle sera ajoutée ici dès que possible.</p>'
+                 f'{bouton}<a class="rd-btn" href="/{SLUG}/{annee}">Télécharger les rapports officiels {annee}</a></div>')
+    return (f'  <article class="rd-rapport" role="tabpanel" id="session-{annee}" aria-labelledby="onglet-{annee}"'
+            + ('' if actif else ' hidden') + f'>\n{corps}\n  </article>')
+
+
+def page_discipline(data, id_, ep, label, ic):
+    court = EPREUVE_COURT[ep]
+    url = SITE + url_disc(id_)
+    title, desc, h1, lead = SEO.get(id_, (
+        f'Rapport de jury CRPE {label} ({court}) 2026 et 2025 : les conseils des jurys',
+        f"Ce que les jurys du CRPE ont valorisé et pénalisé en {label.lower() if label[:3] != 'EMC' else label} à l'{court}, "
+        "sessions 2026 et 2025, d'après les rapports officiels des académies.",
+        f'Rapport de jury CRPE : {label} à l\'{court}',
+        f"Les conseils des jurys pour l'épreuve d'{EPREUVES[ep].split(' ')[0].lower()}, tirés des rapports officiels des académies."))
+    sessions = [a for a, _ in SESSIONS]
+    dispo = sessions_dispo(data, id_)
+    defaut = dispo[0]
+    onglets = ''.join(f'<button type="button" role="tab" id="onglet-{a}" aria-controls="session-{a}" aria-selected="{str(a == defaut).lower()}" data-session="{a}">Session {a}</button>' for a in sessions)
+    panneaux = '\n'.join(panneau(data, id_, label, ic, a, a == defaut, [x for x in dispo if x != a]) for a in sessions)
+    chips = ''.join(f'<a href="{url_disc(i)}"' + (' aria-current="page"' if i == id_ else '') + f'>{escape(l)}</a>'
+                    for i, e, l, _ in DISCIPLINES if e == ep and sessions_dispo(data, i))
+    body = f'''<main class="page-wrap rd-wrap">
+  <nav class="breadcrumb" aria-label="Fil d'Ariane">
+    <a href="/">Accueil</a><span>›</span><a href="/{SLUG}/disciplines">Analyse par discipline</a><span>›</span><span aria-current="page">{escape(label)} ({court})</span>
+  </nav>
+  <h1>{escape(h1)}</h1>
+  <p class="lead">{lead}</p>
+  <div class="rd-autres"><div class="rd-label">{EPREUVES[ep]} : autres disciplines</div><div class="rd-chips">{chips}</div></div>
+
+  <div class="rd-tabs" role="tablist" aria-label="Session">{onglets}</div>
+{panneaux}
+
+  <p style="margin-top:22px;font-size:14px;color:var(--gray-500);">Les rapports complets sont disponibles sur nos pages de téléchargement : <a href="/{SLUG}/2026">session 2026</a> et <a href="/{SLUG}/2025">session 2025</a>.</p>
+
+{CTA}
+</main>
+<script>
+(function () {{
+  var tabs = document.querySelector('.rd-tabs');
+  function montrer(s, defiler) {{
+    var p = document.getElementById('session-' + s); if (!p) return;
+    document.querySelectorAll('.rd-tabs [role="tab"]').forEach(function (b) {{ b.setAttribute('aria-selected', String(b.dataset.session === s)); }});
+    document.querySelectorAll('.rd-rapport[role="tabpanel"]').forEach(function (x) {{ x.hidden = x !== p; }});
+    history.replaceState(null, '', '#session-' + s);
+    if (defiler && tabs.getBoundingClientRect().top < 0) tabs.scrollIntoView({{ block: 'start' }});
+  }}
+  document.addEventListener('click', function (e) {{
+    var b = e.target.closest && e.target.closest('[data-session]'); if (b) montrer(b.dataset.session, true);
+  }});
+  var h = location.hash, m = h.match(/^#session-(\\d{{4}})$/);
+  if (m) montrer(m[1], false);
+  else if (h) {{
+    // Lien vers une section (#langue-2025…) : ouvrir l'onglet qui la contient
+    var cible = document.getElementById(h.slice(1)), panneau = cible && cible.closest('[role="tabpanel"]');
+    if (panneau && panneau.hidden) {{ montrer(panneau.id.replace('session-', ''), false); history.replaceState(null, '', h); cible.scrollIntoView(); }}
+  }}
+  document.querySelectorAll('.rj-sommaire a').forEach(function (a) {{
+    a.addEventListener('click', function () {{ setTimeout(function () {{ history.replaceState(null, '', a.getAttribute('href')); }}, 0); }});
+  }});
+}})();
+</script>
+'''
+    ld = fil(('Accueil', SITE + '/'), ('Rapports de jury par discipline', f'{SITE}/{SLUG}/disciplines'), (f'{label} ({court})', url))
+    return tete(title, desc, url, ld) + BODY_NAV + body + TAIL
+
+
+data = contenus()
 out = f'landing/{SLUG}-disciplines.html'
-open(os.path.join(ROOT, out), 'w', encoding='utf-8').write(page_disciplines())
+open(os.path.join(ROOT, out), 'w', encoding='utf-8').write(page_hub(data))
 print(out)
+os.makedirs(os.path.join(ROOT, 'landing', DOSSIER), exist_ok=True)
+for id_, ep, label, ic in DISCIPLINES:
+    if sessions_dispo(data, id_):
+        out = f'landing/{DOSSIER}/{id_}.html'
+        open(os.path.join(ROOT, out), 'w', encoding='utf-8').write(page_discipline(data, id_, ep, label, ic))
+        print(out)
