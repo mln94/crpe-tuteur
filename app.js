@@ -191,8 +191,7 @@ app.post('/api/webhook/paypal', async (req, res) => {
 });
 
 /* ── Klaviyo ── */
-// Essai du tuteur IA : propriété passcrpe_trial. L'ancienne propriété « trial » est encore écrite en double, tant que le flow
-// actif « Trial Non-Complété - 14j » (SsQhxw) teste trial (sa condition ne se modifie pas par l'API) : à retirer ensuite.
+// Essai du tuteur IA : propriété passcrpe_trial (l'ancienne propriété « trial » n'est plus écrite).
 const KLAVIYO_API_BASE      = 'https://a.klaviyo.com/api';
 const KLAVIYO_LIST_NEWSLETTER = 'U97rGQ';
 const KLAVIYO_LIST_SIGNUP     = 'SgJQyM';
@@ -325,7 +324,7 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   try {
     const phoneAttrs = telephone ? { phone_number: telephone } : {};
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP,
-      { email_verified: false, passcrpe_trial: true, trial: true, paid_user: false, paid_passcrpe: false, paid_quizcrpe: false, form_trial: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(req.body?.parcours) },
+      { email_verified: false, passcrpe_trial: true, paid_user: false, paid_passcrpe: false, paid_quizcrpe: false, form_trial: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(req.body?.parcours) },
       phoneAttrs, consent_conseils);
     // Newsletter : seuls les inscrits qui ont coché la case rejoignent la liste newsletter, et y sont abonnés
     // (consentement explicite exigé pour la prospection par e-mail)
@@ -488,7 +487,7 @@ app.post('/api/klaviyo/trial-ended', async (req, res) => {
         data: {
           type: 'profile',
           id: profileId,
-          attributes: { properties: { passcrpe_trial: false, trial: false, date_trial_ended: now } },
+          attributes: { properties: { passcrpe_trial: false, date_trial_ended: now } },
         },
       }),
     });
