@@ -304,7 +304,7 @@ def breadcrumb_ld(items):
 BANNER = '''<section class="cta-section" id="inscription">
   <div class="container">
     <h2>Commencez votre préparation aujourd'hui</h2>
-    <p>Rejoignez plus de 1 200 candidats qui se préparent intelligemment au CRPE. Accès immédiat.</p>
+    <p>Rejoignez les candidats qui se préparent intelligemment au CRPE. Accès immédiat.</p>
     <div class="cta-form">
       <button type="button" class="btn-white cta-commencer" onclick="openAuth('register')">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
