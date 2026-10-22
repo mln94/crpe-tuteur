@@ -966,6 +966,9 @@
     .nav-sub-toggle[aria-expanded="true"] + .nav-sub-menu { display: block; }
     .nav-links .nav-sub-menu a { display: block; padding: 8px 12px 8px 24px; border-radius: 8px; font-size: 14px; }
     .nav-links .nav-sub-menu a:hover { background: var(--gray-50, #f9fafb); color: var(--indigo-600); }
+    /* Troisième niveau (Rapports de jury › Télécharger les rapports › sessions) */
+    .nav-sub-menu .nav-sub-toggle { padding-left: 24px; font-weight: 500; }
+    .nav-links .nav-sub-menu .nav-sub-menu a { padding-left: 38px; }
     @media (max-width: 960px) { .nav-dropdown-toggle { font-size: 13px; } }
     @media (max-width: 1060px) {
       .site-nav.menu-open .nav-links li.nav-dropdown > .nav-dropdown-toggle { display: flex; width: 100%; justify-content: space-between; padding: 13px 4px; font-size: 16px; color: var(--gray-600); border-bottom: 1px solid var(--gray-100); }
@@ -973,6 +976,8 @@
       .site-nav.menu-open .nav-sub-toggle { padding: 12px 4px; font-size: 15px; }
       .site-nav.menu-open .nav-links .nav-dropdown-link { padding: 12px 4px; font-size: 15px; }
       .site-nav.menu-open .nav-links .nav-sub-menu a { padding: 10px 4px 10px 16px; font-size: 15px; }
+      .site-nav.menu-open .nav-sub-menu .nav-sub-toggle { padding-left: 16px; }
+      .site-nav.menu-open .nav-links .nav-sub-menu .nav-sub-menu a { padding-left: 30px; }
     }
   </style>
 <!-- Meta Pixel Code -->
@@ -1025,8 +1030,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </div>
           <button type="button" class="nav-sub-toggle" aria-expanded="false" onclick="toggleNavSub(this)">Rapports de jury <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="nav-sub-menu">
-            <a href="/rapports-jury-crpe/2026">Session 2026</a>
-            <a href="/rapports-jury-crpe/2025">Session 2025</a>
+            <button type="button" class="nav-sub-toggle" aria-expanded="false" onclick="toggleNavSub(this)">Télécharger les rapports <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+            <div class="nav-sub-menu">
+              <a href="/rapports-jury-crpe/2026">Session 2026</a>
+              <a href="/rapports-jury-crpe/2025">Session 2025</a>
+            </div>
           </div>
           <a class="nav-dropdown-link" href="/outils">Outils</a>
         </div>
