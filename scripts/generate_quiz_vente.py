@@ -348,6 +348,7 @@ def main():
 
     # En-tête : styles et suivi de l'accueil, titre et description propres à la page
     head = src[:src.index('</head>')]
+    head = re.sub(r'\s*<link rel="canonical"[^>]*/>', '', head)  # canonical de l'accueil remplacée par celle de la page
     head = re.sub(r'<title>.*?</title>', '<title>Quiz CRPE : arrivez au CRPE sans aucune notion incomprise</title>', head, flags=re.S)
     head = re.sub(r'<meta name="description"[^>]*/>',
                   '<meta name="description" content="Le Quiz CRPE : au moins 300 questions par matière sur le programme du cycle 4, '
