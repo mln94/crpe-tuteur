@@ -251,6 +251,10 @@
     .kpi-troisieme .kpi-value { color: #c2410c; }
     .kpi-interne { background: #f5f3ff; border-color: #ddd6fe; }
     .kpi-interne .kpi-value { color: #6d28d9; }
+    .concours-titre { margin-top: 64px !important; padding-top: 22px; border-top: 3px solid var(--indigo-600); }
+    .concours-titre.c-bac5 { border-top-color: #059669; }
+    .concours-titre.c-troisieme { border-top-color: #ea580c; }
+    .concours-titre.c-interne { border-top-color: #7c3aed; }
     .sommaire { font-size: 14.5px; color: var(--gray-500); margin: 14px 0 0; line-height: 1.9; }
     .sommaire a { color: var(--indigo-600); font-weight: 600; text-decoration: none; white-space: nowrap; }
     .sommaire a:hover { text-decoration: underline; }
@@ -462,7 +466,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <p class="sommaire">Sur cette page : <a href="#bac3">Bac+3</a> · <a href="#bac5">Bac+5</a> · <a href="#troisieme">Troisième concours</a> · <a href="#interne">Second concours interne</a> · <a href="#carte">Carte</a></p>
 
-  <p class="kpi-cap" id="bac3">Concours externe bac+3</p>
+  <h2 class="concours-titre" id="bac3">Concours externe bac+3 : résultats 2026 de l'académie de Nancy-Metz</h2>
   <section class="kpis" aria-label="Chiffres clés du concours bac+3">
     <div class="kpi"><span class="kpi-value">179</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">1 365</span><span class="kpi-label">inscrits</span></div>
@@ -473,7 +477,34 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="kpi"><span class="kpi-value">10</span><span class="kpi-label">inscrits sur liste complémentaire</span></div>
   </section>
 
-  <p class="kpi-cap" id="bac5">Concours externe bac+5 (master 2)</p>
+  <h3>Inscrits, résultats d'admissibilité et admis au CRPE (bac+3)</h3>
+  <p>Toutes les personnes inscrites ne se présentent pas le jour des épreuves. Dans l'académie de Nancy-Metz, <strong>63,22 %</strong> des inscrits étaient présents. Parmi les présents, <strong>41,48 %</strong> ont été admissibles (moyenne nationale : 38,21 %), et 20,86 % ont finalement été admis.</p>
+  <div class="funnel"><div class="funnel-row light"><span class="funnel-label">Inscrits</span><div class="funnel-track"><div class="funnel-bar" style="width:100.0%"></div><span class="funnel-val">1 365</span></div></div><div class="funnel-row light"><span class="funnel-label">Présents</span><div class="funnel-track"><div class="funnel-bar" style="width:63.2%"></div><span class="funnel-val">863</span></div></div><div class="funnel-row"><span class="funnel-label">Admissibles</span><div class="funnel-track"><div class="funnel-bar" style="width:26.2%"></div><span class="funnel-val">358</span></div></div><div class="funnel-row"><span class="funnel-label">Admis</span><div class="funnel-track"><div class="funnel-bar" style="width:13.2%"></div><span class="funnel-val">180</span></div></div></div>
+  <ul>
+    <li><strong>Candidats présents par poste :</strong> 4,8 présents pour 1 poste.</li>
+    <li><strong>Liste complémentaire :</strong> 10 candidats ont été inscrits sur la liste complémentaire. Ces candidats peuvent être appelés si des admis renoncent à leur poste.</li>
+  </ul>
+
+  <h3>Taux de réussite CRPE (bac+3) : les classements de l'académie de Nancy-Metz</h3>
+  <p>Comment l'académie de Nancy-Metz se situe-t-elle par rapport aux 29 autres académies ?</p>
+  <div class="rank-grid">
+    <div class="card"><h3>Nombre de postes</h3><div class="rank-big">11e <small>sur 30</small></div><p>179 postes offerts.</p></div>
+    <div class="card"><h3>Taux d'admissibilité</h3><div class="rank-big">11e <small>sur 30</small></div><p>41,48 % des présents admissibles.</p></div>
+    <div class="card"><h3>Taux de réussite</h3><div class="rank-big">7e <small>sur 30</small></div><p>20,86 % des présents admis.</p></div>
+  </div>
+  <p style="font-size:14px;color:var(--gray-500);margin-top:10px;">1re = le plus de postes, ou le taux le plus élevé.</p>
+
+  <h3>Sélectivité au concours bac+3 : peu sélective</h3>
+  <div class="callout">Avec un taux de réussite de <strong>20,86 %</strong>, l'académie de Nancy-Metz fait partie des académies <strong>peu sélectives</strong> du CRPE.</div>
+  <p>Pour classer les académies, nous avons calculé pour chacune le <strong>taux de réussite</strong> : le nombre d'admis divisé par le nombre de candidats présents aux épreuves. Les académies sont ensuite réparties en trois groupes :</p>
+  <ul>
+    <li><span class="sel sel-tres">Très sélective</span> : les 25 % d'académies au taux de réussite le plus bas ;</li>
+    <li><span class="sel sel-moyen">Moyennement sélective</span> : les 50 % du milieu ;</li>
+    <li><span class="sel sel-peu">Peu sélective</span> : les 25 % au taux de réussite le plus haut.</li>
+  </ul>
+
+
+  <h2 class="concours-titre c-bac5" id="bac5">Concours externe bac+5 (master 2) : résultats 2026 de l'académie de Nancy-Metz</h2>
   <section class="kpis" aria-label="Chiffres clés du concours bac+5">
     <div class="kpi"><span class="kpi-value">276</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">939</span><span class="kpi-label">inscrits</span></div>
@@ -485,34 +516,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </section>
   <p>Au concours bac+5, ouvert aux titulaires d'un master 2, l'académie de Nancy-Metz a admis <strong>277 candidats</strong> sur 551 présents, soit un taux de réussite de <strong>50,27 %</strong>, supérieur à la moyenne nationale du concours bac+5 (35,21 %). Elle se classe <strong>5e sur 29</strong> académies pour ce taux.</p>
 
-  <h2>Inscrits, résultats d'admissibilité et admis au CRPE (bac+3)</h2>
-  <p>Toutes les personnes inscrites ne se présentent pas le jour des épreuves. Dans l'académie de Nancy-Metz, <strong>63,22 %</strong> des inscrits étaient présents. Parmi les présents, <strong>41,48 %</strong> ont été admissibles (moyenne nationale : 38,21 %), et 20,86 % ont finalement été admis.</p>
-  <div class="funnel"><div class="funnel-row light"><span class="funnel-label">Inscrits</span><div class="funnel-track"><div class="funnel-bar" style="width:100.0%"></div><span class="funnel-val">1 365</span></div></div><div class="funnel-row light"><span class="funnel-label">Présents</span><div class="funnel-track"><div class="funnel-bar" style="width:63.2%"></div><span class="funnel-val">863</span></div></div><div class="funnel-row"><span class="funnel-label">Admissibles</span><div class="funnel-track"><div class="funnel-bar" style="width:26.2%"></div><span class="funnel-val">358</span></div></div><div class="funnel-row"><span class="funnel-label">Admis</span><div class="funnel-track"><div class="funnel-bar" style="width:13.2%"></div><span class="funnel-val">180</span></div></div></div>
-  <ul>
-    <li><strong>Candidats présents par poste :</strong> 4,8 présents pour 1 poste.</li>
-    <li><strong>Liste complémentaire :</strong> 10 candidats ont été inscrits sur la liste complémentaire. Ces candidats peuvent être appelés si des admis renoncent à leur poste.</li>
-  </ul>
 
-  <h2>Taux de réussite CRPE (bac+3) : les classements de l'académie de Nancy-Metz</h2>
-  <p>Comment l'académie de Nancy-Metz se situe-t-elle par rapport aux 29 autres académies ?</p>
-  <div class="rank-grid">
-    <div class="card"><h3>Nombre de postes</h3><div class="rank-big">11e <small>sur 30</small></div><p>179 postes offerts.</p></div>
-    <div class="card"><h3>Taux d'admissibilité</h3><div class="rank-big">11e <small>sur 30</small></div><p>41,48 % des présents admissibles.</p></div>
-    <div class="card"><h3>Taux de réussite</h3><div class="rank-big">7e <small>sur 30</small></div><p>20,86 % des présents admis.</p></div>
-  </div>
-  <p style="font-size:14px;color:var(--gray-500);margin-top:10px;">1re = le plus de postes, ou le taux le plus élevé.</p>
-
-  <h2>Sélectivité au concours bac+3 : peu sélective</h2>
-  <div class="callout">Avec un taux de réussite de <strong>20,86 %</strong>, l'académie de Nancy-Metz fait partie des académies <strong>peu sélectives</strong> du CRPE.</div>
-  <p>Pour classer les académies, nous avons calculé pour chacune le <strong>taux de réussite</strong> : le nombre d'admis divisé par le nombre de candidats présents aux épreuves. Les académies sont ensuite réparties en trois groupes :</p>
-  <ul>
-    <li><span class="sel sel-tres">Très sélective</span> : les 25 % d'académies au taux de réussite le plus bas ;</li>
-    <li><span class="sel sel-moyen">Moyennement sélective</span> : les 50 % du milieu ;</li>
-    <li><span class="sel sel-peu">Peu sélective</span> : les 25 % au taux de réussite le plus haut.</li>
-  </ul>
-
-
-  <h2>Inscrits, résultats d'admissibilité et admis au CRPE (bac+5, master 2)</h2>
+  <h3>Inscrits, résultats d'admissibilité et admis au CRPE (bac+5, master 2)</h3>
   <p>Au concours bac+5 de l'académie de Nancy-Metz, <strong>58,68 %</strong> des inscrits étaient présents aux épreuves écrites. Parmi les présents, <strong>69,15 %</strong> ont été admissibles (moyenne nationale : 59,33 %), et 50,27 % ont finalement été admis.</p>
   <div class="funnel"><div class="funnel-row light"><span class="funnel-label">Inscrits</span><div class="funnel-track"><div class="funnel-bar funnel-bar-master" style="width:100.0%"></div><span class="funnel-val">939</span></div></div><div class="funnel-row light"><span class="funnel-label">Présents</span><div class="funnel-track"><div class="funnel-bar funnel-bar-master" style="width:58.7%"></div><span class="funnel-val">551</span></div></div><div class="funnel-row"><span class="funnel-label">Admissibles</span><div class="funnel-track"><div class="funnel-bar funnel-bar-master" style="width:40.6%"></div><span class="funnel-val">381</span></div></div><div class="funnel-row"><span class="funnel-label">Admis</span><div class="funnel-track"><div class="funnel-bar funnel-bar-master" style="width:29.5%"></div><span class="funnel-val">277</span></div></div></div>
   <ul>
@@ -520,7 +525,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <li><strong>Liste complémentaire :</strong> 6 candidats ont été inscrits sur la liste complémentaire. Ces candidats peuvent être appelés si des admis renoncent à leur poste.</li>
   </ul>
 
-  <h2>Taux de réussite CRPE (bac+5) : les classements de l'académie de Nancy-Metz</h2>
+  <h3>Taux de réussite CRPE (bac+5) : les classements de l'académie de Nancy-Metz</h3>
   <p>Comment l'académie de Nancy-Metz se situe-t-elle par rapport aux 28 autres académies au concours bac+5 ?</p>
   <div class="rank-grid">
     <div class="card"><h3>Nombre de postes</h3><div class="rank-big">11e <small>sur 29</small></div><p>276 postes offerts.</p></div>
@@ -529,11 +534,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <p style="font-size:14px;color:var(--gray-500);margin-top:10px;">1re = le plus de postes, ou le taux le plus élevé. Classement sur les 29 académies qui publient leurs résultats bac+5.</p>
 
-  <h2>Sélectivité au concours bac+5 : peu sélective</h2>
+  <h3>Sélectivité au concours bac+5 : peu sélective</h3>
   <div class="callout">Avec un taux de réussite de <strong>50,27 %</strong> au concours bac+5, l'académie de Nancy-Metz fait partie des académies <strong>peu sélectives</strong> pour ce concours. La méthode est la même que pour le concours bac+3, appliquée aux 29 académies du concours bac+5.</div>
 
 
-  <h2 id="troisieme">Troisième concours CRPE 2026 : les résultats de l'académie de Nancy-Metz</h2>
+  <h2 class="concours-titre c-troisieme" id="troisieme">Troisième concours CRPE 2026 : les résultats de l'académie de Nancy-Metz</h2>
   <section class="kpis" aria-label="Chiffres clés du troisième concours">
     <div class="kpi"><span class="kpi-value">27</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">278</span><span class="kpi-label">inscrits</span></div>
@@ -545,7 +550,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </section>
   <p>Le troisième concours est ouvert aux candidats qui justifient d'une expérience professionnelle. Dans l'académie de Nancy-Metz, <strong>28 candidats</strong> ont été admis sur 109 présents aux épreuves écrites, soit un taux de réussite de <strong>25,69 %</strong>, supérieur à la moyenne nationale de ce concours (24,69 %). L'académie se classe <strong>11e sur 29</strong> académies pour ce taux. 6 candidats ont été inscrits sur la liste complémentaire.</p>
 
-  <h2 id="interne">Second concours interne CRPE 2026 : les résultats de l'académie de Nancy-Metz</h2>
+  <h2 class="concours-titre c-interne" id="interne">Second concours interne CRPE 2026 : les résultats de l'académie de Nancy-Metz</h2>
   <section class="kpis" aria-label="Chiffres clés du second concours interne">
     <div class="kpi"><span class="kpi-value">9</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">68</span><span class="kpi-label">inscrits</span></div>
