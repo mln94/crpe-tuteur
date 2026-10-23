@@ -75,7 +75,8 @@ JS = """<script>
       '<a class="esp-btn" href="/app">Ouvrir le tuteur IA →</a></div>' +
       '<div class="esp-card quiz"><div class="esp-head"><div class="esp-icon">🎯</div><h2>Quiz CRPE</h2></div>' + etatQ +
       '<p>9 415 questions dans les 9 matières du concours, en séries de 20, avec révisions espacées.</p>' +
-      '<a class="esp-btn" href="/quizapp">' + (!q || q.paid ? 'Ouvrir le quiz →' : q.positionnement ? 'Voir mon résultat →' : 'Passer mon test gratuit →') + '</a></div>' +
+      // « Voir mon résultat » : directement le rapport du test (onglet « Mon test ») ; /quizapp ouvre le menu des séries
+      '<a class="esp-btn" href="/quizapp' + (q && !q.paid && q.positionnement ? '?vue=test' : '') + '">' + (!q || q.paid ? 'Ouvrir le quiz →' : q.positionnement ? 'Voir mon résultat →' : 'Passer mon test gratuit →') + '</a></div>' +
       '</div>';
     var p = document.getElementById('esp-prenom'); if (p && d && d.prenom) p.textContent = 'Bonjour ' + d.prenom + ' !';
   }
