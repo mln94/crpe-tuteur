@@ -451,6 +451,10 @@ CSS = """
     .pf-titre { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
     .pf-titre h3 { font-size: 14px; font-weight: 600; color: var(--gray-800); }
     .pf-actions { display: flex; gap: 12px; }
+    .pf-deconnexion { display: block; width: 100%; padding: 13px 16px; border-radius: 14px; border: 1.5px solid #fecaca; background: #fff; font: inherit; font-size: 15px; font-weight: 700; color: #b91c1c; cursor: pointer; }
+    .pf-deconnexion:hover { background: #fef2f2; }
+    .pf-deconnexion:disabled { opacity: .6; cursor: default; }
+    .pf-note { font-size: 12.5px; color: var(--gray-500); text-align: center; margin-top: 8px; }
     .pf-lien { background: none; border: 0; font: inherit; font-size: 12px; font-weight: 600; color: #ea580c; cursor: pointer; padding: 0; }
     .pf-lien:hover { color: #c2410c; } .pf-lien.gris { color: var(--gray-400); font-weight: 500; } .pf-lien:disabled { opacity: .4; cursor: not-allowed; }
     .pf-ligne { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--gray-50); }
@@ -1016,7 +1020,10 @@ JS = """<script>
            '<div class="pf-champ"><span class="lbl">Concours</span><div class="pf-concours">' + CONCOURS.map(function (c, i) { return '<button type="button" data-concours="' + i + '"' + (c === e.concours ? ' class="on"' : '') + '>' + esc(c) + '</button>'; }).join('') + '</div></div>' +
            '<div class="pf-champ"><label for="pf-academie">Académie</label><select id="pf-academie"><option value="">Choisir une académie…</option>' + ACADEMIES.map(function (a) { return '<option' + (a === e.academie ? ' selected' : '') + '>' + esc(a) + '</option>'; }).join('') + '</select></div>'
          : '<div class="pf-ligne"><span>Prénom</span><b>' + esc(p.prenom) + '</b></div><div class="pf-ligne"><span>Concours</span><b>' + esc(p.concours) + '</b></div><div class="pf-ligne"><span>Académie</span><b>' + esc(p.academie || '—') + '</b></div>') +
-      '</div></div>';
+      '</div>' +
+      // Un seul compte pour QuizCRPE et PassCRPE : la déconnexion vaut pour les deux
+      '<button type="button" class="pf-deconnexion" data-act="pf-deconnexion">Se déconnecter</button>' +
+      '<p class="pf-note">Vous serez déconnecté de QuizCRPE et de PassCRPE.</p></div>';
     var ip = document.getElementById('pf-prenom'), sa = document.getElementById('pf-academie');
     if (ip) ip.addEventListener('input', function () { pfEdit.prenom = ip.value; majEnregistrer(); });
     if (sa) sa.addEventListener('change', function () { pfEdit.academie = sa.value; majEnregistrer(); });
@@ -1607,6 +1614,10 @@ JS = """<script>
       if (cible) window.scrollTo({ top: cible.getBoundingClientRect().top + window.scrollY - dessus - 12, behavior: 'smooth' });
     }
     else if (act === 'sp-autre') supportVue();
+    else if (act === 'pf-deconnexion') {
+      b.disabled = true;
+      SB.auth.signOut().catch(function () {}).then(function () { compte = null; location.href = '/quizcrpe'; });
+    }
     else if (act === 'pf-modifier') { var pp = lireProfil(); pfEdit = { prenom: pp.prenom, concours: pp.concours, academie: pp.academie }; afficherProfil(); }
     else if (act === 'pf-annuler') { pfEdit = null; afficherProfil(); }
     else if (act === 'pf-enregistrer') enregistrerProfil();

@@ -5580,7 +5580,16 @@ function ProfileView({ profile, authUser, onUpdateProfile }) {
         )}
       </div>
 
-      {/* Mes outils et déconnexion : dans le menu du compte de l'en-tête */}
+      {/* Un seul compte pour PassCRPE et QuizCRPE : la déconnexion vaut pour les deux.
+          Sans session, App renvoie vers l'accueil du site. */}
+      <button
+        type="button"
+        onClick={() => sbClient.auth.signOut()}
+        className="w-full py-3 rounded-2xl border border-red-200 bg-white text-sm font-semibold text-red-600 hover:bg-red-50 transition-colors"
+      >
+        Se déconnecter
+      </button>
+      <p className="text-xs text-gray-400 text-center mt-2">Vous serez déconnecté de PassCRPE et de QuizCRPE.</p>
     </div>
   );
 }
