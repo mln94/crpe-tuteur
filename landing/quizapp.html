@@ -1487,10 +1487,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     intro(false); // l'introduction du quiz est masquée sur le rapport
   }
   // Prochaine série d'essai non terminée : matière et niveau conseillés par le test
+  // Essai : ouverture du menu du quiz (pas de série lancée d'office), sur une matière commencée ou conseillée ;
+  // la personne choisit ensuite sa matière, ses thèmes et lance sa série
   function lancerEssai() {
     var e = essaiActif(), m = e && (e.matieres.filter(function (x) { return !x.termine && x.faites; })[0] || essaiConseillees(e).filter(function (x) { return !x.termine; })[0]);
-    if (!m) { accueil(); top(); return; }
-    choix.mat = m.matiere; choix.niveau = m.niveau; garderChoix(); demarrer(m.matiere, m.niveau); top();
+    if (m) { choix.mat = m.matiere; choix.niveau = m.niveau; garderChoix(); }
+    accueil(); top();
   }
   // Fin du test : proposition immédiate des 2 séries d'essai, dans les matières les plus fragiles
   // Juste après le test seulement : le rapport s'affiche d'abord seul, et l'offre d'essai s'ouvre une fois la moitié
@@ -1523,7 +1525,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<p class="pay-texte">Nous vous conseillons ces deux matières, les plus fragiles d’après votre test, au niveau qu’il suggère :</p><ul class="essai-liste">' +
       essaiConseillees(e).map(function (x) { return '<li><strong>' + esc(x.label) + '</strong> · niveau ' + NIVEAUX[x.niveau] + ' · ' + x.max + ' questions' + (x.termine ? ' ✓' : '') + '</li>'; }).join('') +
       '</ul><p class="pay-texte">Ce n’est qu’un conseil : si vous le souhaitez, vous pourrez choisir d’autres matières, ainsi que les thèmes de chaque série (bouton « Mes thèmes »), sur la page du quiz.</p>' +
-      '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-essai="go">Commencer ma première série →</button></div>' +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-essai="go">Choisir ma première série →</button></div>' +
       '<p class="pw-liens"><button type="button" class="quiz-link" data-essai="rapport">Continuer la lecture de mon rapport</button></p></div>';
     document.body.appendChild(m);
     document.body.style.overflow = 'hidden';
