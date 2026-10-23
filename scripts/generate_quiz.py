@@ -228,6 +228,9 @@ CSS = """
     .rp-notions li { font-size: 14px; line-height: 1.45; color: var(--gray-700); }
     .rp-notions .mat { display: block; font-size: 11.5px; font-weight: 800; color: #6366f1; text-transform: uppercase; letter-spacing: .03em; }
     .rp-telecharger { justify-content: center; margin: -4px 0 16px; }
+    .rp-pdf { width: 100%; max-width: none; padding: 0; }
+    .rp-pdf .rp-tete { box-shadow: none; }
+    .rp-pdf .qz-serie-voir { display: none; }
     @media print {
       .site-nav, .quiz-tabbar, .quiz-wrap > h1, .quiz-lead, .quiz-confirm, .no-print, .essai-carte, .essai-annonce, .quiz-actions { display: none !important; }
       body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -1170,7 +1173,9 @@ JS = """<script>
           }).join('') + '</div></details>';
       }).join('') + '</div>';
   }
+  var rapportAffiche = null; // rapport à l'écran, pour la date dans le nom du PDF
   function resultat(r, lecture) {
+    rapportAffiche = r;
     var pf = profil(r), tri = r.matieres.slice().sort(function (a, b) { return b.pct - a.pct; });
     // Note sur 20 : le niveau global, seul résultat assez précis avec 63 questions
     var note = r.n ? (Math.round(r.ok / r.n * 200) / 10).toLocaleString('fr-FR') : '0';
@@ -1294,6 +1299,37 @@ JS = """<script>
     paypal();
   }
   function fermerPaiement() { var m = document.getElementById('pay-modal'); if (m) m.hidden = true; document.body.style.overflow = ''; }
+  // Rapport téléchargé en fichier PDF (html2pdf.js, chargé au premier clic) : copie du rapport sans boutons ni offres,
+  // réponses du test dépliées. Si la bibliothèque ne se charge pas, la fenêtre d'impression prend le relais.
+  function chargerHtml2pdf() {
+    if (window.html2pdf) return Promise.resolve();
+    return new Promise(function (ok, ko) {
+      var s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+      s.onload = ok; s.onerror = ko; document.head.appendChild(s);
+    });
+  }
+  function telechargerRapport(btn) {
+    var texte = btn.textContent;
+    btn.disabled = true; btn.textContent = 'Préparation du PDF…';
+    var fin = function () { btn.disabled = false; btn.textContent = texte; };
+    chargerHtml2pdf().then(function () {
+      var copie = document.createElement('div');
+      copie.className = 'quiz-wrap rp-pdf';
+      copie.innerHTML = root.innerHTML;
+      copie.querySelectorAll('.no-print, .essai-carte, .essai-annonce, .quiz-actions').forEach(function (el) { el.remove(); });
+      copie.querySelectorAll('details').forEach(function (d) { d.open = true; });
+      var date = rapportAffiche && rapportAffiche.date ? new Date(rapportAffiche.date).toLocaleDateString('fr-CA') : ''; // AAAA-MM-JJ, jour local comme sur le rapport
+      return window.html2pdf().set({
+        margin: [10, 8, 10, 8],
+        filename: 'rapport-positionnement-quizcrpe' + (date ? '-' + date : '') + '.pdf',
+        image: { type: 'jpeg', quality: 0.9 },
+        html2canvas: { scale: 1.5, useCORS: true, backgroundColor: '#ffffff' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: 'css', avoid: ['.rp-mat', '.quiz-recap > div', '.qz-serie summary', 'h2', '.rp-tete'] }
+      }).from(copie).save();
+    }).then(fin, function () { fin(); window.print(); });
+  }
   function chargerPaypal() {
     if (window.paypal && window.paypal.Buttons) return Promise.resolve();
     if (!compte.paypal_client_id) return Promise.reject(new Error('id'));
@@ -1516,7 +1552,7 @@ JS = """<script>
       });
     }
     else if (act === 'voir-resultat') { resultat(compte.positionnement); top(); }
-    else if (act === 'rapport-pdf') window.print();
+    else if (act === 'rapport-pdf') telechargerRapport(e.target.closest('[data-act]'));
     else if (act === 'start') demarrer(choix.mat, choix.niveau);
     else if (act === 'prog-choix') { st = null; progression(choix.mat); }
     else if (act === 'again') { choix.mat = st.mat; choix.niveau = st.niveau; demarrer(st.mat, st.niveau); }
