@@ -1109,7 +1109,7 @@ JS = """<script>
   function testQuestion() {
     var q = tst.qs[tst.i], n = tst.qs.length, corps;
     tst.val = null;
-    if (q.type === 'numerique') corps = '<div class="quiz-num"><input type="text" inputmode="decimal" autocomplete="off" placeholder="Votre réponse (nombre)" aria-label="Votre réponse" id="t-num"></div>';
+    if (q.type === 'numerique') corps = '<div class="quiz-num"><input type="text" autocomplete="off" placeholder="Votre réponse" aria-label="Votre réponse" id="t-num"></div>';
     else if (q.type === 'cliquer_mot') { tst.val = []; corps = '<p class="quiz-hint">Cliquez sur le ou les mots.</p><div class="quiz-phrase">' + q.choix.map(function (t, k) {
         return /[\\wÀ-ÿ]/.test(t) ? '<button type="button" class="tok" data-ttok="' + k + '">' + esc(t) + '</button>' : '<span class="punct">' + esc(t) + '</span>'; }).join(' ') + '</div>'; }
     else corps = '<div class="quiz-choices">' + q.choix.map(function (c, k) { return '<button type="button" class="quiz-choice" data-tk="' + k + '">' + esc(c) + '</button>'; }).join('') + '</div>';
@@ -1441,7 +1441,7 @@ JS = """<script>
     var q = st.serie[st.i], corps = '';
     st.repondu = false; st.sel = [];
     if (q.type === 'numerique') {
-      corps = '<form class="quiz-num" data-form="num"><input type="text" inputmode="decimal" autocomplete="off" placeholder="Votre réponse (nombre)" aria-label="Votre réponse"><button type="submit" class="quiz-btn">Valider</button>' +
+      corps = '<form class="quiz-num" data-form="num"><input type="text" autocomplete="off" placeholder="Votre réponse" aria-label="Votre réponse"><button type="submit" class="quiz-btn">Valider</button>' +
         '<button type="button" class="quiz-btn ghost" data-act="nsp">Je ne sais pas</button></form>';
     } else if (q.type === 'cliquer_mot') {
       corps = '<p class="quiz-hint">Cliquez sur le ou les mots, puis validez.</p><div class="quiz-phrase">' + q.choix.map(function (t, k) {

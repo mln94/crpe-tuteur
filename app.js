@@ -767,7 +767,17 @@ function libelleTheme(q) {
   return t;
 }
 
-const nombre = v => Number(String(v ?? '').replace(/\s/g, '').replace(',', '.').replace('−', '-'));
+// Réponse numérique saisie en texte libre : espaces ignorés, virgule décimale, tous les signes moins (− – — －),
+// fraction « a/b » et unité finale (12 cm, 45°, 20 %, 3 €) acceptées ; vide ou illisible → NaN (jamais compté juste,
+// même si la réponse attendue est 0)
+const nombre = v => {
+  const t = String(v ?? '').replace(/[\s\u00a0\u202f]/g, '').replace(/[−–—‒﹣－]/g, '-').replace(',', '.')
+    .replace(/(\d)[a-zA-Zµ°%€²³]+\.?$/, '$1');
+  if (!t) return NaN;
+  const f = t.match(/^([+-]?\d+(?:\.\d+)?)\/([+-]?\d+(?:\.\d+)?)$/);
+  if (f) return Number(f[2]) ? Number(f[1]) / Number(f[2]) : NaN;
+  return Number(t);
+};
 const indices = v => String(v ?? '').split(',').map(x => x.trim()).filter(Boolean).map(Number).sort((a, b) => a - b).join(',');
 async function quizCorriger(id, reponse) {
   const { data, error } = await supabaseAdmin.from('quiz_questions')
