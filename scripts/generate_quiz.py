@@ -349,6 +349,13 @@ CSS = """
     .qz-case { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--gray-300); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 900; color: #fff; flex-shrink: 0; }
     .qz-dd-case[aria-checked="true"] .qz-case { background: #f97316; border-color: #f97316; }
     .qz-champ-themes { flex: 1 1 100%; }
+    .qz-champ-modes { flex: 1 1 100%; }
+    .qz-modes-ligne { display: flex; align-items: stretch; gap: 12px; }
+    .qz-modes-ligne .qz-modes { flex: 0 1 340px; }
+    .qz-lancer { margin-left: auto; display: flex; }
+    .qz-lancer:empty { display: none; }
+    .qz-lancer .quiz-btn { margin: 0; white-space: nowrap; }
+    @media (max-width: 600px) { .qz-modes-ligne { flex-wrap: wrap; } .qz-modes-ligne .qz-modes { flex: 1 1 100%; } .qz-lancer { flex: 1 1 100%; } .qz-lancer .quiz-btn { width: 100%; } }
     /* Liste déroulante native (Mes séries) au même style */
     .quiz-select { appearance: none; -webkit-appearance: none; padding-right: 40px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 18px; }
     .quiz-select:hover { border-color: #fb923c; }
@@ -661,10 +668,12 @@ JS = """<script>
         var off = fige || (e && n !== choix.niveau);
         return '<button type="button" class="quiz-niveau" data-niv="' + n + '" aria-pressed="' + (n === choix.niveau) + '"' + (off ? ' disabled' : '') +
           (e && n !== choix.niveau ? ' title="Disponible avec l’accès complet"' : '') + '>' + NIVEAUX[n] + (e && n !== choix.niveau ? ' 🔒' : '') + '</button>'; }).join('') + '</div></div>' +
-      '<div class="qz-barre-champ"><span class="lbl" id="quiz-th-lbl">Thèmes</span><div class="quiz-niveaux qz-modes" role="group" aria-labelledby="quiz-th-lbl">' +
+      '<div class="qz-barre-champ qz-champ-modes"><span class="lbl" id="quiz-th-lbl">Thèmes</span><div class="qz-modes-ligne"><div class="quiz-niveaux qz-modes" role="group" aria-labelledby="quiz-th-lbl">' +
       [['hasard', '🎲 Au hasard'], ['choix', '🎯 Mes thèmes']].map(function (m) {
         var on = (m[0] === 'choix') === !!themesChoisis(choix.mat);
-        return '<button type="button" class="quiz-niveau" data-mode="' + m[0] + '" aria-pressed="' + on + '"' + (enSerie ? ' disabled' : '') + '>' + m[1] + '</button>'; }).join('') + '</div></div>' +
+        return '<button type="button" class="quiz-niveau" data-mode="' + m[0] + '" aria-pressed="' + on + '"' + (enSerie ? ' disabled' : '') + '>' + m[1] + '</button>'; }).join('') + '</div>' +
+      // Bouton « Lancer une série », rempli par tableau() : toujours visible, la barre restant en haut de l'écran
+      (enSerie ? '' : '<div class="qz-lancer" id="qz-lancer"></div>') + '</div></div>' +
       (themesChoisis(choix.mat) && !enSerie ? (function () {
         var ouvert = ddOuvert === 'themes';
         return '<div class="qz-barre-champ qz-champ-themes"><div class="qz-dd' + (ouvert ? ' ouvert' : '') + '">' +
@@ -744,10 +753,11 @@ JS = """<script>
       var lib = document.getElementById('qz-themes-lib'); if (lib && ths) lib.textContent = libelleThemes(ths.length);
       tableau.ordre = ordre;
       var ex = essaiDe(mat), serie = Math.min(ex ? ex.max : SERIE, dispo);
+      var lancer = document.getElementById('qz-lancer');
+      if (lancer) lancer.innerHTML = ths && !ths.length ? '<button type="button" class="quiz-btn" disabled>Choisissez au moins un thème</button>'
+        : '<button type="button" class="quiz-btn" data-act="start"' + (serie ? '' : ' disabled') + '>Lancer une série de ' + serie + ' questions →</button>';
       el.innerHTML = '<div class="qz-tete"><div><h2>' + esc(label(mat)) + ' · ' + NIVEAUX[niveau] + '</h2>' +
-        '<p>' + total + ' questions dans ' + ordre.length + ' thème' + (ordre.length > 1 ? 's' : '') + ' du programme' + (ex ? ' · série d’essai offerte' : '') + '</p></div>' +
-        (ths && !ths.length ? '<button type="button" class="quiz-btn" disabled>Choisissez au moins un thème</button></div>'
-          : '<button type="button" class="quiz-btn" data-act="start"' + (serie ? '' : ' disabled') + '>Lancer une série de ' + serie + ' questions</button></div>') +
+        '<p>' + total + ' questions dans ' + ordre.length + ' thème' + (ordre.length > 1 ? 's' : '') + ' du programme' + (ex ? ' · série d’essai offerte' : '') + '</p></div></div>' +
         (ths && ths.length ? '<p class="qz-note qz-themes-choisis">Série sur ' + ths.length + ' thème' + (ths.length > 1 ? 's' : '') + ' choisi' + (ths.length > 1 ? 's' : '') + ' : ' + esc(ths.join(' · ')) + '</p>' : '') +
         '<div class="stats"><div class="stat"><b>' + reussies + ' / ' + total + '</b><span>questions réussies</span></div><div class="stat"><b>' + b.maitrisees + ' / ' + b.total + '</b><span>notions maîtrisées</span></div></div>' +
         '<h3 class="qz-sous-titre">Progression par thème</h3>' +
