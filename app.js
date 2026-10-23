@@ -313,6 +313,15 @@ app.post('/api/newsletter/subscribe', async (req, res) => {
   }
 });
 
+// Klaviyo : année où la personne passera le CRPE et nombre de fois où elle l'a déjà passé (0 = première fois, 3 = 3 fois ou plus),
+// tels que demandés à l'inscription ; une valeur absente ou invalide n'est pas envoyée
+function proprietesExamen(src) {
+  const annee = String(src?.annee_examen ?? '').trim().slice(0, 40);
+  const t = Number(src?.tentatives_crpe);
+  return { ...(annee ? { annee_examen: annee } : {}),
+    ...(src?.tentatives_crpe !== null && src?.tentatives_crpe !== '' && Number.isInteger(t) && t >= 0 && t <= 3 ? { tentatives_crpe: t } : {}) };
+}
+
 app.post('/api/klaviyo/signup', async (req, res) => {
   if (!klaviyoGuard(res)) return;
   const { prenom, nom, email, user_id, telephone } = req.body || {};
@@ -324,7 +333,8 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   try {
     const phoneAttrs = telephone ? { phone_number: telephone } : {};
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP,
-      { email_verified: false, passcrpe_trial: true, paid_user: false, paid_passcrpe: false, paid_quizcrpe: false, form_trial: false, test_positionnement_realise: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(req.body?.parcours) },
+      { email_verified: false, passcrpe_trial: true, paid_user: false, paid_passcrpe: false, paid_quizcrpe: false, form_trial: false, test_positionnement_realise: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(req.body?.parcours),
+        ...proprietesExamen(req.body) },
       phoneAttrs, consent_conseils);
     // Newsletter : seuls les inscrits qui ont coché la case rejoignent la liste newsletter, et y sont abonnés
     // (consentement explicite exigé pour la prospection par e-mail)
@@ -440,6 +450,12 @@ app.post('/api/klaviyo/email-verified', async (req, res) => {
     if (!email) return res.status(400).json({ error: 'Email introuvable dans le token.' });
     await klaviyoNewsletterDepuisInscription(data.user);
     await klaviyoSetEmailVerified(email);
+    // Inscriptions faites depuis les autres pages du site (sans appel à /api/klaviyo/signup) : année d'examen et tentatives
+    // reprises des métadonnées du compte, si le profil Klaviyo existe
+    const examen = proprietesExamen(data.user.user_metadata);
+    if (Object.keys(examen).length) {
+      try { await klaviyoSetProperties(email, examen); } catch (e) { console.error('[Klaviyo examen]', e.message); }
+    }
     res.json({ ok: true });
   } catch (err) {
     console.error('[Klaviyo email-verified]', err.message);

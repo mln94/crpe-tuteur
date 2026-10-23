@@ -1566,6 +1566,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           </select>
         </div>
         <div class="auth-field">
+          <label class="auth-label" for="authAnnee">Année où vous passerez le CRPE</label>
+          <select class="auth-input" id="authAnnee">
+            <option value="">Choisir une année…</option>
+            <option value="2027">2027</option>
+            <option value="2028">2028</option>
+            <option value="2029">2029</option>
+            <option value="Je ne sais pas encore">Je ne sais pas encore</option>
+          </select>
+        </div>
+        <div class="auth-field">
+          <label class="auth-label" for="authTentatives">Avez-vous déjà passé le CRPE ?</label>
+          <select class="auth-input" id="authTentatives">
+            <option value="">Choisir…</option>
+            <option value="0">Non, ce sera ma première fois</option>
+            <option value="1">Oui, 1 fois</option>
+            <option value="2">Oui, 2 fois</option>
+            <option value="3">Oui, 3 fois ou plus</option>
+          </select>
+        </div>
+        <div class="auth-field">
           <label class="auth-label" for="authPhone">Téléphone</label>
           <div class="auth-phone-row">
             <select class="auth-phone-select" id="authPhoneCode">
@@ -1940,13 +1960,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const nom      = document.getElementById('authNom').value.trim();
     const concours = authMode === 'register' ? (document.getElementById('authConcours')?.value || '') : '';
     const academie = authMode === 'register' ? (document.getElementById('authAcademie')?.value || '') : '';
+    const annee_examen = authMode === 'register' ? (document.getElementById('authAnnee')?.value || '') : '';
+    const tentatives = authMode === 'register' ? (document.getElementById('authTentatives')?.value || '') : '';
+    // Nombre de fois où le CRPE a déjà été passé : 0 = première fois, 3 = 3 fois ou plus
+    const tentatives_crpe = tentatives === '' ? null : Number(tentatives);
     const phoneCode   = document.getElementById('authPhoneCode')?.value || '+33';
     const phoneNumber = document.getElementById('authPhone')?.value.trim() || '';
     const telephone   = authMode === 'register' && phoneNumber ? `${phoneCode} ${phoneNumber}` : '';
     const btn      = document.getElementById('authSubmit');
 
     if (!email || !password) return;
-    if (authMode === 'register' && (!prenom || !concours || !academie || !phoneNumber)) {
+    if (authMode === 'register' && (!prenom || !concours || !academie || !annee_examen || tentatives === '' || !phoneNumber)) {
       showAuthMessage('Veuillez remplir tous les champs.', 'error');
       return;
     }
@@ -1976,7 +2000,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         email,
         password,
         options: {
-          data: { prenom, nom, concours, academie, telephone, consent_conseils, consent_partenaires, consent_version: '2026-10-12', consent_at: new Date().toISOString(), parcours: window.SIGNUP_PARCOURS || 'passcrpe' },
+          data: { prenom, nom, concours, academie, annee_examen, tentatives_crpe, telephone, consent_conseils, consent_partenaires, consent_version: '2026-10-12', consent_at: new Date().toISOString(), parcours: window.SIGNUP_PARCOURS || 'passcrpe' },
           // Lien de l'e-mail de confirmation : l'application du quiz pour les inscrits du quiz, sinon l'URL du site du projet
           ...(window.EMAIL_REDIRECT_URL ? { emailRedirectTo: window.EMAIL_REDIRECT_URL } : {})
         }
@@ -1991,7 +2015,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           // Parcours Klaviyo : « quizcrpe » sur la page de vente du quiz (window.SIGNUP_PARCOURS), sinon « passcrpe »
-          body: JSON.stringify({ prenom, nom, email, user_id: signUpData?.user?.id, telephone: telephone || undefined, consent_conseils, consent_partenaires, parcours: window.SIGNUP_PARCOURS || 'passcrpe' }),
+          body: JSON.stringify({ prenom, nom, email, annee_examen, tentatives_crpe, user_id: signUpData?.user?.id, telephone: telephone || undefined, consent_conseils, consent_partenaires, parcours: window.SIGNUP_PARCOURS || 'passcrpe' }),
         }).catch(() => {});
         _lastRegisteredEmail = email;
         document.getElementById('authForm').style.display = 'none';
