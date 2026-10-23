@@ -165,7 +165,7 @@ CSS = """
     .concours-titre.c-bac5 { border-top-color: #059669; }
     .concours-titre.c-troisieme { border-top-color: #ea580c; }
     .concours-titre.c-interne { border-top-color: #7c3aed; }
-    .sommaire { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 14px; padding: 16px 20px; margin: 18px 0 8px; font-size: 15px; line-height: 1.7; color: var(--gray-700); }
+    .sommaire { position: static; z-index: auto; backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 14px; padding: 16px 20px; margin: 18px 0 8px; font-size: 15px; line-height: 1.7; color: var(--gray-700); }
     .sommaire > p { font-weight: 800; color: var(--gray-900); margin: 0 0 6px; }
     .acad-wrap .sommaire ol { margin: 0 0 0 20px; padding: 0; list-style: decimal; }
     .acad-wrap .sommaire li { margin-bottom: 3px; }
