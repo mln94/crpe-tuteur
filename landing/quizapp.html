@@ -1279,12 +1279,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function aiguiller(c) {
     if (!c.positionnement) return introTest();
     if (c.paid) { fermerPaiement(); accueil(); return precharger(); }
-    // Pas encore payé : rapport d'abord, puis les 2 séries d'essai offertes, puis le paiement
+    // Pas encore payé : menu du quiz pour choisir ses 2 séries d'essai offertes (le rapport du test est dans « Mon test »,
+    // et s'affiche directement à la fin du test), puis le paiement
     var e = c.essai;
     if (e && e.termine) { accueil(); return ouvrirPaiement(); }
     precharger();
-    if (e && e.matieres.some(function (m) { return m.faites > 0; })) return accueil();
-    resultat(c.positionnement);
+    if (e && !e.matieres.some(function (m) { return m.faites > 0; })) {
+      // Aucune série d'essai commencée : première matière conseillée par le test présélectionnée
+      var m = essaiConseillees(e).filter(function (x) { return !x.termine; })[0];
+      if (m) { choix.mat = m.matiere; choix.niveau = m.niveau; garderChoix(); }
+    }
+    accueil();
   }
   function etatCompte(c) { return c ? [!!c.paid, !!c.positionnement, c.essai ? c.essai.matieres.map(function (m) { return m.faites + (m.termine ? 't' : ''); }).join() : ''].join('|') : ''; }
   // Compte déjà chargé (changement de menu) : écran affiché tout de suite, compte rafraîchi en arrière-plan.
