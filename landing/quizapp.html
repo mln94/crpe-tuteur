@@ -1502,10 +1502,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     m = document.createElement('div');
     m.id = 'essai-modal'; m.className = 'pay-overlay'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'essai-titre');
     m.innerHTML = '<div class="pay-card"><button type="button" class="pay-fermer" aria-label="Fermer">×</button>' +
-      '<div class="pay-badge">🎁 Offert</div><h2 id="essai-titre">Votre test est terminé : essayez 2 séries gratuites</h2>' +
-      '<p class="pay-texte">Commencez par vos deux matières les plus fragiles, au niveau conseillé par votre test :</p><ul class="essai-liste">' +
+      '<div class="pay-badge">🎁 Offert</div><h2 id="essai-titre">Nous vous proposons deux séries d’essai gratuites</h2>' +
+      '<p class="pay-texte">Merci d’avoir passé votre test de positionnement. Pour découvrir le Quiz CRPE, nous vous proposons de faire deux séries de questions, gratuitement.</p>' +
+      '<p class="pay-texte">Nous vous conseillons de commencer par ces deux matières, au niveau suggéré par votre test :</p><ul class="essai-liste">' +
       e.matieres.map(function (x) { return '<li><strong>' + esc(x.label) + '</strong> · niveau ' + NIVEAUX[x.niveau] + ' · ' + x.max + ' questions' + (x.termine ? ' ✓' : '') + '</li>'; }).join('') +
-      '</ul><div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-essai="go">Commencer ma première série →</button></div>' +
+      '</ul><p class="pay-texte">Si vous le souhaitez, vous pourrez choisir vous-même les thèmes de chaque série sur la page du quiz, avec le bouton « Mes thèmes ».</p>' +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-essai="go">Commencer ma première série →</button></div>' +
       '<p class="pw-liens"><button type="button" class="quiz-link" data-essai="rapport">Continuer la lecture de mon rapport</button></p></div>';
     document.body.appendChild(m);
     document.body.style.overflow = 'hidden';
