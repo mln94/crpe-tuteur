@@ -247,6 +247,14 @@
     .kpi-cap { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--indigo-600); margin: 24px 0 -14px; }
     .kpi-cap + .kpis { margin-top: 18px; }
     .kpi-master { background: #f0fdf4; border-color: #bbf7d0; }
+    .kpi-troisieme { background: #fff7ed; border-color: #fed7aa; }
+    .kpi-troisieme .kpi-value { color: #c2410c; }
+    .kpi-interne { background: #f5f3ff; border-color: #ddd6fe; }
+    .kpi-interne .kpi-value { color: #6d28d9; }
+    .sommaire { font-size: 14.5px; color: var(--gray-500); margin: 14px 0 0; line-height: 1.9; }
+    .sommaire a { color: var(--indigo-600); font-weight: 600; text-decoration: none; white-space: nowrap; }
+    .sommaire a:hover { text-decoration: underline; }
+    .acad-wrap [id] { scroll-margin-top: 84px; }
     .funnel-bar.funnel-bar-master { background: #10b981; }
     .funnel-row.light .funnel-bar.funnel-bar-master { background: #6ee7b7; }
     .kpi-master .kpi-value { color: #047857; }
@@ -450,9 +458,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   <span class="sel sel-moyen">Moyennement sélective</span>
   <h1>CRPE Toulouse : résultats 2026 de l'académie de Toulouse</h1>
-  <p class="lead">Voici les résultats du concours CRPE 2026 dans l'académie de Toulouse, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2). Au concours bac+3, l'académie de Toulouse offrait <strong>184 postes</strong>. Sur 2 780 inscrits, 1 596 candidats se sont présentés aux épreuves, 544 ont été admissibles et <strong>184 ont été admis</strong>, soit un taux de réussite de <strong>11,53 %</strong>, inférieur à la moyenne nationale (17,57 %).</p>
+  <p class="lead">Voici les résultats du concours CRPE 2026 dans l'académie de Toulouse, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2), ainsi que le troisième concours et le second concours interne. Au concours bac+3, l'académie de Toulouse offrait <strong>184 postes</strong>. Sur 2 780 inscrits, 1 596 candidats se sont présentés aux épreuves, 544 ont été admissibles et <strong>184 ont été admis</strong>, soit un taux de réussite de <strong>11,53 %</strong>, inférieur à la moyenne nationale (17,57 %).</p>
 
-  <p class="kpi-cap">Concours externe bac+3</p>
+  <p class="sommaire">Sur cette page : <a href="#bac3">Bac+3</a> · <a href="#bac5">Bac+5</a> · <a href="#troisieme">Troisième concours</a> · <a href="#interne">Second concours interne</a> · <a href="#carte">Carte</a></p>
+
+  <p class="kpi-cap" id="bac3">Concours externe bac+3</p>
   <section class="kpis" aria-label="Chiffres clés du concours bac+3">
     <div class="kpi"><span class="kpi-value">184</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">2 780</span><span class="kpi-label">inscrits</span></div>
@@ -463,7 +473,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="kpi"><span class="kpi-value">7</span><span class="kpi-label">inscrits sur liste complémentaire</span></div>
   </section>
 
-  <p class="kpi-cap">Concours externe bac+5 (master 2)</p>
+  <p class="kpi-cap" id="bac5">Concours externe bac+5 (master 2)</p>
   <section class="kpis" aria-label="Chiffres clés du concours bac+5">
     <div class="kpi"><span class="kpi-value">270</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">2 145</span><span class="kpi-label">inscrits</span></div>
@@ -522,7 +532,32 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <h2>Sélectivité au concours bac+5 : moyennement sélective</h2>
   <div class="callout">Avec un taux de réussite de <strong>25,74 %</strong> au concours bac+5, l'académie de Toulouse fait partie des académies <strong>moyennement sélectives</strong> pour ce concours. La méthode est la même que pour le concours bac+3, appliquée aux 29 académies du concours bac+5.</div>
 
-  <h2>Situer l'académie de Toulouse sur la carte</h2>
+
+  <h2 id="troisieme">Troisième concours CRPE 2026 : les résultats de l'académie de Toulouse</h2>
+  <section class="kpis" aria-label="Chiffres clés du troisième concours">
+    <div class="kpi"><span class="kpi-value">6</span><span class="kpi-label">postes offerts</span></div>
+    <div class="kpi"><span class="kpi-value">354</span><span class="kpi-label">inscrits</span></div>
+    <div class="kpi"><span class="kpi-value">124</span><span class="kpi-label">présents</span></div>
+    <div class="kpi"><span class="kpi-value">19</span><span class="kpi-label">admissibles</span></div>
+    <div class="kpi"><span class="kpi-value">9</span><span class="kpi-label">admis</span></div>
+    <div class="kpi kpi-troisieme"><span class="kpi-value">7,26 %</span><span class="kpi-label">taux de réussite (admis / présents)</span></div>
+    <div class="kpi"><span class="kpi-value">0</span><span class="kpi-label">inscrits sur liste complémentaire</span></div>
+  </section>
+  <p>Le troisième concours est ouvert aux candidats qui justifient d'une expérience professionnelle. Dans l'académie de Toulouse, <strong>9 candidats</strong> ont été admis sur 124 présents aux épreuves écrites, soit un taux de réussite de <strong>7,26 %</strong>, inférieur à la moyenne nationale de ce concours (24,69 %). L'académie se classe <strong>27e sur 29</strong> académies pour ce taux.</p>
+
+  <h2 id="interne">Second concours interne CRPE 2026 : les résultats de l'académie de Toulouse</h2>
+  <section class="kpis" aria-label="Chiffres clés du second concours interne">
+    <div class="kpi"><span class="kpi-value">4</span><span class="kpi-label">postes offerts</span></div>
+    <div class="kpi"><span class="kpi-value">155</span><span class="kpi-label">inscrits</span></div>
+    <div class="kpi"><span class="kpi-value">47</span><span class="kpi-label">présents</span></div>
+    <div class="kpi"><span class="kpi-value">11</span><span class="kpi-label">admissibles</span></div>
+    <div class="kpi"><span class="kpi-value">4</span><span class="kpi-label">admis</span></div>
+    <div class="kpi kpi-interne"><span class="kpi-value">8,51 %</span><span class="kpi-label">taux de réussite (admis / présents)</span></div>
+    <div class="kpi"><span class="kpi-value">0</span><span class="kpi-label">inscrits sur liste complémentaire</span></div>
+  </section>
+  <p>Le second concours interne est réservé aux fonctionnaires et agents publics. Dans l'académie de Toulouse, <strong>4 candidats</strong> ont été admis sur 47 présents aux épreuves écrites, soit un taux de réussite de <strong>8,51 %</strong>, inférieur à la moyenne nationale de ce concours (24,54 %). L'académie se classe <strong>22e sur 27</strong> académies pour ce taux.</p>
+
+  <h2 id="carte">Situer l'académie de Toulouse sur la carte</h2>
   <div class="map-card">
     <svg class="fr-map" viewBox="0 0 615 605" role="img" aria-label="Carte de France des académies du CRPE">
       <path class="land" d="M308.1,35.2 L315.0,33.0 L340.1,52.0 L376.7,77.2 L401.8,85.6 L403.7,105.2 L424.9,116.4 L444.2,122.0 L462.3,123.7 L486.6,141.6 L509.7,147.2 L532.8,151.7 L517.4,178.0 L507.8,228.4 L484.6,236.8 L465.4,264.8 L451.9,295.6 L478.9,295.6 L486.6,323.6 L478.9,334.8 L490.4,362.8 L473.1,374.0 L484.6,407.6 L505.8,424.4 L507.0,442.3 L497.0,446.8 L471.2,474.8 L444.2,480.4 L423.0,469.2 L401.8,463.6 L382.5,458.0 L355.5,469.2 L336.2,486.0 L338.9,517.4 L317.0,522.4 L282.3,514.0 L243.7,497.2 L205.2,497.2 L162.8,472.0 L148.1,465.3 L160.8,452.4 L168.6,402.0 L172.4,346.0 L170.5,329.2 L155.1,295.6 L135.8,273.2 L120.4,245.2 L101.1,234.0 L54.8,217.2 L35.6,206.0 L33.6,183.6 L51.0,169.6 L81.8,161.2 L108.8,175.2 L139.6,169.6 L158.9,170.2 L155.1,138.8 L145.4,110.8 L168.6,110.8 L172.4,130.4 L209.0,133.2 L224.4,124.8 L220.6,122.0 L239.9,102.4 L270.7,88.4 L278.4,71.6 L278.4,43.6 Z"/><path class="land" d="M579.1,486.0 L584.9,508.4 L582.9,542.0 L579.1,564.4 L571.4,577.3 L556.0,567.2 L548.3,547.6 L548.3,525.2 L552.1,508.4 L575.2,502.8 Z"/>
@@ -537,7 +572,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="voisins-grid"><a class="card" href="/crpe-par-academie/bordeaux"><h3>Académie de Bordeaux</h3><span class="sel sel-moyen">Moyennement sélective</span><p>200 postes · 12,71 % de réussite</p></a><a class="card" href="/crpe-par-academie/montpellier"><h3>Académie de Montpellier</h3><span class="sel sel-tres">Très sélective</span><p>153 postes · 10,49 % de réussite</p></a><a class="card" href="/crpe-par-academie/limoges"><h3>Académie de Limoges</h3><span class="sel sel-tres">Très sélective</span><p>33 postes · 9,73 % de réussite</p></a></div>
   <a class="back-hub" href="/crpe-par-academie">← Voir toutes les académies</a>
 
-  <p class="updated">Dernière mise à jour : 11 octobre 2026 · Données : résultats du CRPE, session 2026</p>
+  <p class="updated">Dernière mise à jour : 23 octobre 2026 · Données : résultats du CRPE, session 2026</p>
 
 
 </div>

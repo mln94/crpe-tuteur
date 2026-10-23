@@ -67,6 +67,24 @@ for i, a in enumerate(sorted(MASTERS, key=lambda x: x['master']['taux'])):
     p = i / (len(MASTERS) - 1)
     SELECTIVITE_MASTER[a['slug']] = 'tres' if p <= 0.25 else ('peu' if p >= 0.75 else 'moyen')
 
+# Troisième concours et second concours interne : chiffres nationaux et par académie (seules les académies qui l'ont organisé)
+AUTRES = [
+    {'cle': 'troisieme', 'titre': 'Troisième concours', 'nom': 'troisième concours', 'classe': 'kpi-troisieme',
+     'public': "ouvert aux candidats qui justifient d'une expérience professionnelle"},
+    {'cle': 'interne', 'titre': 'Second concours interne', 'nom': 'second concours interne', 'classe': 'kpi-interne',
+     'public': 'réservé aux fonctionnaires et agents publics'},
+]
+for c in AUTRES:
+    c['national'] = data[c['cle'] + '_national']
+    c['taux_national'] = c['national']['admis'] / c['national']['presents']
+    c['acads'] = [a for a in ACADS if a.get(c['cle'])]
+    for a in c['acads']:
+        x = a[c['cle']]
+        x['taux'] = x['admis'] / x['presents']
+        x['tauxAdmissibilite'] = x['admissibles'] / x['presents']
+    vals = sorted((a[c['cle']]['taux'] for a in c['acads']), reverse=True)
+    c['rang'] = {a['slug']: vals.index(a[c['cle']]['taux']) + 1 for a in c['acads']}
+
 TOT = {k: sum(a[k] for a in ACADS) for k in ('postes', 'inscrits', 'presents', 'admissibles', 'admis', 'inscritsLC')}
 TAUX_NATIONAL = TOT['admis'] / TOT['presents']
 TAUX_ADMISSIBILITE_NATIONAL = TOT['admissibles'] / TOT['presents']
@@ -139,6 +157,14 @@ CSS = """
     .kpi-cap { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--indigo-600); margin: 24px 0 -14px; }
     .kpi-cap + .kpis { margin-top: 18px; }
     .kpi-master { background: #f0fdf4; border-color: #bbf7d0; }
+    .kpi-troisieme { background: #fff7ed; border-color: #fed7aa; }
+    .kpi-troisieme .kpi-value { color: #c2410c; }
+    .kpi-interne { background: #f5f3ff; border-color: #ddd6fe; }
+    .kpi-interne .kpi-value { color: #6d28d9; }
+    .sommaire { font-size: 14.5px; color: var(--gray-500); margin: 14px 0 0; line-height: 1.9; }
+    .sommaire a { color: var(--indigo-600); font-weight: 600; text-decoration: none; white-space: nowrap; }
+    .sommaire a:hover { text-decoration: underline; }
+    .acad-wrap [id] { scroll-margin-top: 84px; }
     .funnel-bar.funnel-bar-master { background: #10b981; }
     .funnel-row.light .funnel-bar.funnel-bar-master { background: #6ee7b7; }
     .kpi-master .kpi-value { color: #047857; }
@@ -317,7 +343,7 @@ BANNER = '''<section class="cta-section" id="inscription">
 
 '''
 
-UPDATED = f'<p class="updated">Dernière mise à jour : 11 octobre 2026 · Données : résultats du CRPE, session {SESSION}</p>'
+UPDATED = f'<p class="updated">Dernière mise à jour : 23 octobre 2026 · Données : résultats du CRPE, session {SESSION}</p>'
 
 # ── Page académie ────────────────────────────────────────────────────────────
 def page_academie(a):
@@ -348,9 +374,11 @@ def page_academie(a):
 
   {sel_badge(a)}
   <h1>CRPE {escape(nom)} : résultats {SESSION} de l'académie {escape(de(nom))}</h1>
-  <p class="lead">Voici les résultats du concours CRPE {SESSION} dans l'académie {escape(de(nom))}, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2). Au concours bac+3, l'académie {escape(de(nom))} offrait <strong>{fint(a['postes'])} postes</strong>. Sur {fint(a['inscrits'])} inscrits, {fint(a['presents'])} candidats se sont présentés aux épreuves, {fint(a['admissibles'])} ont été admissibles et <strong>{fint(a['admis'])} ont été admis</strong>, soit un taux de réussite de <strong>{fpct(a['taux'])}</strong>, {compare} à la moyenne nationale ({fpct(TAUX_NATIONAL)}).</p>
+  <p class="lead">Voici les résultats du concours CRPE {SESSION} dans l'académie {escape(de(nom))}, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2){autres_lead(a)}. Au concours bac+3, l'académie {escape(de(nom))} offrait <strong>{fint(a['postes'])} postes</strong>. Sur {fint(a['inscrits'])} inscrits, {fint(a['presents'])} candidats se sont présentés aux épreuves, {fint(a['admissibles'])} ont été admissibles et <strong>{fint(a['admis'])} ont été admis</strong>, soit un taux de réussite de <strong>{fpct(a['taux'])}</strong>, {compare} à la moyenne nationale ({fpct(TAUX_NATIONAL)}).</p>
 
-  <p class="kpi-cap">Concours externe bac+3</p>
+  {sommaire(a)}
+
+  <p class="kpi-cap" id="bac3">Concours externe bac+3</p>
   <section class="kpis" aria-label="Chiffres clés du concours bac+3">
     <div class="kpi"><span class="kpi-value">{fint(a['postes'])}</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">{fint(a['inscrits'])}</span><span class="kpi-label">inscrits</span></div>
@@ -383,7 +411,8 @@ def page_academie(a):
   {METHODE}
 
 {master_details(a)}
-  <h2>Situer l'académie {escape(de(nom))} sur la carte</h2>
+{autres_html(a)}
+  <h2 id="carte">Situer l'académie {escape(de(nom))} sur la carte</h2>
   {carte(a)}
 
   <h2>Académies voisines</h2>
@@ -402,19 +431,63 @@ def page_academie(a):
                 breadcrumb_ld([('Accueil', '/'), ('CRPE par académie', HUB_URL), (f'Académie {de(nom)}', url(a))]),
                 body, f"CRPE {nom} : résultats {SESSION} de l'académie {de(nom)}")
 
+def autres_lead(a):
+    """Mention, dans l'introduction, des autres concours organisés par l'académie."""
+    noms = [c['nom'] for c in AUTRES if a.get(c['cle'])]
+    return f", ainsi que le {' et le '.join(noms)}" if noms else ''
+
+def sommaire(a):
+    """Liens vers les sections de la page académie, un par concours."""
+    liens = [('#bac3', 'Bac+3'), ('#bac5', 'Bac+5')] + [('#' + c['cle'], c['titre']) for c in AUTRES] + [('#carte', 'Carte')]
+    return '<p class="sommaire">Sur cette page : ' + ' · '.join(f'<a href="{h}">{l}</a>' for h, l in liens) + '</p>'
+
+def autres_html(a):
+    """Sections « troisième concours » et « second concours interne » d'une page académie."""
+    nom, html = a['nom'], ''
+    for c in AUTRES:
+        x = a.get(c['cle'])
+        titre = f"{c['titre']} CRPE {SESSION} : les résultats de l'académie {escape(de(nom))}"
+        if not x:
+            html += f"""
+  <h2 id="{c['cle']}">{titre}</h2>
+  <p>Le {c['nom']}, {c['public']}, n'a pas de résultats publiés pour l'académie {escape(de(nom))} en {SESSION}.</p>
+"""
+            continue
+        compare = 'supérieur' if x['taux'] > c['taux_national'] else 'inférieur'
+        vacants = (f" Tous les postes n'ont pas été pourvus : {fint(x['postes'] - x['admis'])} sur {fint(x['postes'])} restent vacants."
+                   if x['admis'] < x['postes'] else '')
+        lc = (f" {fint(x['inscritsLC'])} candidat{'s' if x['inscritsLC'] > 1 else ''} "
+              f"{'ont été inscrits' if x['inscritsLC'] > 1 else 'a été inscrit'} sur la liste complémentaire."
+              if x['inscritsLC'] else '')
+        admis = f"{fint(x['admis'])} candidat{'s' if x['admis'] > 1 else ''}</strong> {'ont été admis' if x['admis'] > 1 else 'a été admis'}"
+        html += f"""
+  <h2 id="{c['cle']}">{titre}</h2>
+  <section class="kpis" aria-label="Chiffres clés du {c['nom']}">
+    <div class="kpi"><span class="kpi-value">{fint(x['postes'])}</span><span class="kpi-label">postes offerts</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(x['inscrits'])}</span><span class="kpi-label">inscrits</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(x['presents'])}</span><span class="kpi-label">présents</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(x['admissibles'])}</span><span class="kpi-label">admissibles</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(x['admis'])}</span><span class="kpi-label">admis</span></div>
+    <div class="kpi {c['classe']}"><span class="kpi-value">{fpct(x['taux'])}</span><span class="kpi-label">taux de réussite (admis / présents)</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(x['inscritsLC'])}</span><span class="kpi-label">inscrits sur liste complémentaire</span></div>
+  </section>
+  <p>Le {c['nom']} est {c['public']}. Dans l'académie {escape(de(nom))}, <strong>{admis} sur {fint(x['presents'])} présents aux épreuves écrites, soit un taux de réussite de <strong>{fpct(x['taux'])}</strong>, {compare} à la moyenne nationale de ce concours ({fpct(c['taux_national'])}). L'académie se classe <strong>{rang(c['rang'][a['slug']])} sur {len(c['acads'])}</strong> académies pour ce taux.{vacants}{lc}</p>
+"""
+    return html
+
 def master_html(a):
     """Bloc « concours bac+5 (master 2) » d'une page académie."""
     m = a.get('master')
     nom = a['nom']
     if not m:
         return f'''
-  <p class="kpi-cap">Concours externe bac+5 (master 2)</p>
+  <p class="kpi-cap" id="bac5">Concours externe bac+5 (master 2)</p>
   <p>Les résultats du concours bac+5 ne sont pas publiés pour l'académie {escape(de(nom))}.</p>
 '''
     compare = 'supérieur' if m['taux'] > TAUX_MASTER_NATIONAL else 'inférieur'
     vacants = f" Tous les postes n'ont pas été pourvus : {fint(m['postes'] - m['admis'])} restent vacants." if m['admis'] < m['postes'] else ''
     return f'''
-  <p class="kpi-cap">Concours externe bac+5 (master 2)</p>
+  <p class="kpi-cap" id="bac5">Concours externe bac+5 (master 2)</p>
   <section class="kpis" aria-label="Chiffres clés du concours bac+5">
     <div class="kpi"><span class="kpi-value">{fint(m['postes'])}</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">{fint(m['inscrits'])}</span><span class="kpi-label">inscrits</span></div>
@@ -467,6 +540,55 @@ def master_details(a):
 '''
 
 # ── Page hub ─────────────────────────────────────────────────────────────────
+def autres_hub():
+    """Chiffres nationaux et tableau comparatif du troisième concours et du second concours interne."""
+    html = ''
+    for c in AUTRES:
+        n, k = c['national'], c['cle']
+        rows = ''.join(f"""
+        <tr>
+          <td data-v="{escape(a['nom'])}"><a href="{url(a)}#{k}">{escape(a['nom'])}</a></td>
+          <td class="num" data-v="{a[k]['postes']}">{fint(a[k]['postes'])}</td>
+          <td class="num" data-v="{a[k]['inscrits']}">{fint(a[k]['inscrits'])}</td>
+          <td class="num" data-v="{a[k]['presents']}">{fint(a[k]['presents'])}</td>
+          <td class="num" data-v="{a[k]['admissibles']}">{fint(a[k]['admissibles'])}</td>
+          <td class="num" data-v="{a[k]['admis']}">{fint(a[k]['admis'])}</td>
+          <td class="num" data-v="{a[k]['taux']:.6f}">{fpct(a[k]['taux'])}</td>
+          <td class="num" data-v="{a[k]['inscritsLC']}">{fint(a[k]['inscritsLC'])}</td>
+        </tr>""" for a in sorted(c['acads'], key=lambda a: a['nom']))
+        html += f"""
+  <h2 id="{k}">Résultats CRPE {SESSION} : {c['nom']}, le tableau comparatif des académies</h2>
+  <p>Le {c['nom']} est {c['public']}. En {SESSION}, {len(c['acads'])} académies l'ont organisé : au niveau national, <strong>{fint(n['admis'])} candidats</strong> ont été admis sur {fint(n['presents'])} présents aux épreuves écrites, soit <strong>{fpct(c['taux_national'])}</strong> de réussite.</p>
+  <section class="kpis" aria-label="Chiffres nationaux du {c['nom']}">
+    <div class="kpi"><span class="kpi-value">{fint(n['postes'])}</span><span class="kpi-label">postes offerts</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(n['inscrits'])}</span><span class="kpi-label">inscrits</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(n['presents'])}</span><span class="kpi-label">présents aux épreuves écrites</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(n['admissibles'])}</span><span class="kpi-label">candidats admissibles</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(n['admis'])}</span><span class="kpi-label">admis</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(n['inscritsLC'])}</span><span class="kpi-label">candidats inscrits sur liste complémentaire</span></div>
+    <div class="kpi {c['classe']}"><span class="kpi-value">{fpct(c['taux_national'])}</span><span class="kpi-label">taux de réussite national (admis / présents)</span></div>
+  </section>
+  <div class="table-wrap">
+    <table id="acadTable-{k}" class="sortable">
+      <thead>
+        <tr>
+          <th><button type="button" data-col="0" data-type="text">Académie</button></th>
+          <th class="num"><button type="button" data-col="1">Postes</button></th>
+          <th class="num"><button type="button" data-col="2">Inscrits</button></th>
+          <th class="num"><button type="button" data-col="3">Présents</button></th>
+          <th class="num"><button type="button" data-col="4">Admissibles</button></th>
+          <th class="num"><button type="button" data-col="5">Admis</button></th>
+          <th class="num"><button type="button" data-col="6">Taux de réussite</button></th>
+          <th class="num"><button type="button" data-col="7">Liste compl.</button></th>
+        </tr>
+      </thead>
+      <tbody>{rows}
+      </tbody>
+    </table>
+  </div>
+"""
+    return html
+
 def page_hub():
     regions = {}
     for a in ACADS:
@@ -577,6 +699,7 @@ def page_hub():
     </table>
   </div>
 
+{autres_hub()}
   <h2>Taux de réussite CRPE : comment est calculée la sélectivité ?</h2>
   {METHODE}
 

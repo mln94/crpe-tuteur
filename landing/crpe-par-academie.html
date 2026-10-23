@@ -247,6 +247,14 @@
     .kpi-cap { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .05em; color: var(--indigo-600); margin: 24px 0 -14px; }
     .kpi-cap + .kpis { margin-top: 18px; }
     .kpi-master { background: #f0fdf4; border-color: #bbf7d0; }
+    .kpi-troisieme { background: #fff7ed; border-color: #fed7aa; }
+    .kpi-troisieme .kpi-value { color: #c2410c; }
+    .kpi-interne { background: #f5f3ff; border-color: #ddd6fe; }
+    .kpi-interne .kpi-value { color: #6d28d9; }
+    .sommaire { font-size: 14.5px; color: var(--gray-500); margin: 14px 0 0; line-height: 1.9; }
+    .sommaire a { color: var(--indigo-600); font-weight: 600; text-decoration: none; white-space: nowrap; }
+    .sommaire a:hover { text-decoration: underline; }
+    .acad-wrap [id] { scroll-margin-top: 84px; }
     .funnel-bar.funnel-bar-master { background: #10b981; }
     .funnel-row.light .funnel-bar.funnel-bar-master { background: #6ee7b7; }
     .kpi-master .kpi-value { color: #047857; }
@@ -1116,6 +1124,627 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </table>
   </div>
 
+
+  <h2 id="troisieme">Résultats CRPE 2026 : troisième concours, le tableau comparatif des académies</h2>
+  <p>Le troisième concours est ouvert aux candidats qui justifient d'une expérience professionnelle. En 2026, 29 académies l'ont organisé : au niveau national, <strong>870 candidats</strong> ont été admis sur 3 524 présents aux épreuves écrites, soit <strong>24,69 %</strong> de réussite.</p>
+  <section class="kpis" aria-label="Chiffres nationaux du troisième concours">
+    <div class="kpi"><span class="kpi-value">1 043</span><span class="kpi-label">postes offerts</span></div>
+    <div class="kpi"><span class="kpi-value">10 159</span><span class="kpi-label">inscrits</span></div>
+    <div class="kpi"><span class="kpi-value">3 524</span><span class="kpi-label">présents aux épreuves écrites</span></div>
+    <div class="kpi"><span class="kpi-value">1 630</span><span class="kpi-label">candidats admissibles</span></div>
+    <div class="kpi"><span class="kpi-value">870</span><span class="kpi-label">admis</span></div>
+    <div class="kpi"><span class="kpi-value">23</span><span class="kpi-label">candidats inscrits sur liste complémentaire</span></div>
+    <div class="kpi kpi-troisieme"><span class="kpi-value">24,69 %</span><span class="kpi-label">taux de réussite national (admis / présents)</span></div>
+  </section>
+  <div class="table-wrap">
+    <table id="acadTable-troisieme" class="sortable">
+      <thead>
+        <tr>
+          <th><button type="button" data-col="0" data-type="text">Académie</button></th>
+          <th class="num"><button type="button" data-col="1">Postes</button></th>
+          <th class="num"><button type="button" data-col="2">Inscrits</button></th>
+          <th class="num"><button type="button" data-col="3">Présents</button></th>
+          <th class="num"><button type="button" data-col="4">Admissibles</button></th>
+          <th class="num"><button type="button" data-col="5">Admis</button></th>
+          <th class="num"><button type="button" data-col="6">Taux de réussite</button></th>
+          <th class="num"><button type="button" data-col="7">Liste compl.</button></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-v="Aix-Marseille"><a href="/crpe-par-academie/aix-marseille#troisieme">Aix-Marseille</a></td>
+          <td class="num" data-v="20">20</td>
+          <td class="num" data-v="605">605</td>
+          <td class="num" data-v="191">191</td>
+          <td class="num" data-v="36">36</td>
+          <td class="num" data-v="20">20</td>
+          <td class="num" data-v="0.104712">10,47 %</td>
+          <td class="num" data-v="1">1</td>
+        </tr>
+        <tr>
+          <td data-v="Amiens"><a href="/crpe-par-academie/amiens#troisieme">Amiens</a></td>
+          <td class="num" data-v="31">31</td>
+          <td class="num" data-v="260">260</td>
+          <td class="num" data-v="91">91</td>
+          <td class="num" data-v="45">45</td>
+          <td class="num" data-v="29">29</td>
+          <td class="num" data-v="0.318681">31,87 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Besançon"><a href="/crpe-par-academie/besancon#troisieme">Besançon</a></td>
+          <td class="num" data-v="6">6</td>
+          <td class="num" data-v="123">123</td>
+          <td class="num" data-v="52">52</td>
+          <td class="num" data-v="19">19</td>
+          <td class="num" data-v="6">6</td>
+          <td class="num" data-v="0.115385">11,54 %</td>
+          <td class="num" data-v="4">4</td>
+        </tr>
+        <tr>
+          <td data-v="Bordeaux"><a href="/crpe-par-academie/bordeaux#troisieme">Bordeaux</a></td>
+          <td class="num" data-v="34">34</td>
+          <td class="num" data-v="515">515</td>
+          <td class="num" data-v="189">189</td>
+          <td class="num" data-v="64">64</td>
+          <td class="num" data-v="28">28</td>
+          <td class="num" data-v="0.148148">14,81 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Clermont-Ferrand"><a href="/crpe-par-academie/clermont-ferrand#troisieme">Clermont-Ferrand</a></td>
+          <td class="num" data-v="8">8</td>
+          <td class="num" data-v="128">128</td>
+          <td class="num" data-v="31">31</td>
+          <td class="num" data-v="21">21</td>
+          <td class="num" data-v="8">8</td>
+          <td class="num" data-v="0.258065">25,81 %</td>
+          <td class="num" data-v="1">1</td>
+        </tr>
+        <tr>
+          <td data-v="Corse"><a href="/crpe-par-academie/corse#troisieme">Corse</a></td>
+          <td class="num" data-v="6">6</td>
+          <td class="num" data-v="72">72</td>
+          <td class="num" data-v="25">25</td>
+          <td class="num" data-v="15">15</td>
+          <td class="num" data-v="6">6</td>
+          <td class="num" data-v="0.240000">24,00 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Créteil"><a href="/crpe-par-academie/creteil#troisieme">Créteil</a></td>
+          <td class="num" data-v="238">238</td>
+          <td class="num" data-v="944">944</td>
+          <td class="num" data-v="349">349</td>
+          <td class="num" data-v="256">256</td>
+          <td class="num" data-v="168">168</td>
+          <td class="num" data-v="0.481375">48,14 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Dijon"><a href="/crpe-par-academie/dijon#troisieme">Dijon</a></td>
+          <td class="num" data-v="24">24</td>
+          <td class="num" data-v="184">184</td>
+          <td class="num" data-v="60">60</td>
+          <td class="num" data-v="36">36</td>
+          <td class="num" data-v="17">17</td>
+          <td class="num" data-v="0.283333">28,33 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Grenoble"><a href="/crpe-par-academie/grenoble#troisieme">Grenoble</a></td>
+          <td class="num" data-v="57">57</td>
+          <td class="num" data-v="415">415</td>
+          <td class="num" data-v="150">150</td>
+          <td class="num" data-v="91">91</td>
+          <td class="num" data-v="57">57</td>
+          <td class="num" data-v="0.380000">38,00 %</td>
+          <td class="num" data-v="5">5</td>
+        </tr>
+        <tr>
+          <td data-v="Guadeloupe"><a href="/crpe-par-academie/guadeloupe#troisieme">Guadeloupe</a></td>
+          <td class="num" data-v="4">4</td>
+          <td class="num" data-v="106">106</td>
+          <td class="num" data-v="31">31</td>
+          <td class="num" data-v="11">11</td>
+          <td class="num" data-v="3">3</td>
+          <td class="num" data-v="0.096774">9,68 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Guyane"><a href="/crpe-par-academie/guyane#troisieme">Guyane</a></td>
+          <td class="num" data-v="25">25</td>
+          <td class="num" data-v="107">107</td>
+          <td class="num" data-v="26">26</td>
+          <td class="num" data-v="5">5</td>
+          <td class="num" data-v="1">1</td>
+          <td class="num" data-v="0.038462">3,85 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="La Réunion"><a href="/crpe-par-academie/la-reunion#troisieme">La Réunion</a></td>
+          <td class="num" data-v="27">27</td>
+          <td class="num" data-v="712">712</td>
+          <td class="num" data-v="286">286</td>
+          <td class="num" data-v="93">93</td>
+          <td class="num" data-v="27">27</td>
+          <td class="num" data-v="0.094406">9,44 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Lille"><a href="/crpe-par-academie/lille#troisieme">Lille</a></td>
+          <td class="num" data-v="27">27</td>
+          <td class="num" data-v="725">725</td>
+          <td class="num" data-v="258">258</td>
+          <td class="num" data-v="58">58</td>
+          <td class="num" data-v="27">27</td>
+          <td class="num" data-v="0.104651">10,47 %</td>
+          <td class="num" data-v="6">6</td>
+        </tr>
+        <tr>
+          <td data-v="Limoges"><a href="/crpe-par-academie/limoges#troisieme">Limoges</a></td>
+          <td class="num" data-v="2">2</td>
+          <td class="num" data-v="61">61</td>
+          <td class="num" data-v="20">20</td>
+          <td class="num" data-v="3">3</td>
+          <td class="num" data-v="1">1</td>
+          <td class="num" data-v="0.050000">5,00 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Lyon"><a href="/crpe-par-academie/lyon#troisieme">Lyon</a></td>
+          <td class="num" data-v="43">43</td>
+          <td class="num" data-v="410">410</td>
+          <td class="num" data-v="132">132</td>
+          <td class="num" data-v="79">79</td>
+          <td class="num" data-v="43">43</td>
+          <td class="num" data-v="0.325758">32,58 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Martinique"><a href="/crpe-par-academie/martinique#troisieme">Martinique</a></td>
+          <td class="num" data-v="3">3</td>
+          <td class="num" data-v="88">88</td>
+          <td class="num" data-v="31">31</td>
+          <td class="num" data-v="10">10</td>
+          <td class="num" data-v="3">3</td>
+          <td class="num" data-v="0.096774">9,68 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Montpellier"><a href="/crpe-par-academie/montpellier#troisieme">Montpellier</a></td>
+          <td class="num" data-v="39">39</td>
+          <td class="num" data-v="528">528</td>
+          <td class="num" data-v="196">196</td>
+          <td class="num" data-v="79">79</td>
+          <td class="num" data-v="36">36</td>
+          <td class="num" data-v="0.183673">18,37 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Nancy-Metz"><a href="/crpe-par-academie/nancy-metz#troisieme">Nancy-Metz</a></td>
+          <td class="num" data-v="27">27</td>
+          <td class="num" data-v="278">278</td>
+          <td class="num" data-v="109">109</td>
+          <td class="num" data-v="60">60</td>
+          <td class="num" data-v="28">28</td>
+          <td class="num" data-v="0.256881">25,69 %</td>
+          <td class="num" data-v="6">6</td>
+        </tr>
+        <tr>
+          <td data-v="Nantes"><a href="/crpe-par-academie/nantes#troisieme">Nantes</a></td>
+          <td class="num" data-v="30">30</td>
+          <td class="num" data-v="396">396</td>
+          <td class="num" data-v="139">139</td>
+          <td class="num" data-v="54">54</td>
+          <td class="num" data-v="30">30</td>
+          <td class="num" data-v="0.215827">21,58 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Nice"><a href="/crpe-par-academie/nice#troisieme">Nice</a></td>
+          <td class="num" data-v="62">62</td>
+          <td class="num" data-v="542">542</td>
+          <td class="num" data-v="189">189</td>
+          <td class="num" data-v="105">105</td>
+          <td class="num" data-v="55">55</td>
+          <td class="num" data-v="0.291005">29,10 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Normandie"><a href="/crpe-par-academie/normandie#troisieme">Normandie</a></td>
+          <td class="num" data-v="18">18</td>
+          <td class="num" data-v="333">333</td>
+          <td class="num" data-v="111">111</td>
+          <td class="num" data-v="32">32</td>
+          <td class="num" data-v="14">14</td>
+          <td class="num" data-v="0.126126">12,61 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Orléans-Tours"><a href="/crpe-par-academie/orleans-tours#troisieme">Orléans-Tours</a></td>
+          <td class="num" data-v="29">29</td>
+          <td class="num" data-v="242">242</td>
+          <td class="num" data-v="80">80</td>
+          <td class="num" data-v="54">54</td>
+          <td class="num" data-v="29">29</td>
+          <td class="num" data-v="0.362500">36,25 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Paris"><a href="/crpe-par-academie/paris#troisieme">Paris</a></td>
+          <td class="num" data-v="18">18</td>
+          <td class="num" data-v="284">284</td>
+          <td class="num" data-v="59">59</td>
+          <td class="num" data-v="31">31</td>
+          <td class="num" data-v="14">14</td>
+          <td class="num" data-v="0.237288">23,73 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Poitiers"><a href="/crpe-par-academie/poitiers#troisieme">Poitiers</a></td>
+          <td class="num" data-v="18">18</td>
+          <td class="num" data-v="245">245</td>
+          <td class="num" data-v="89">89</td>
+          <td class="num" data-v="44">44</td>
+          <td class="num" data-v="18">18</td>
+          <td class="num" data-v="0.202247">20,22 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Reims"><a href="/crpe-par-academie/reims#troisieme">Reims</a></td>
+          <td class="num" data-v="15">15</td>
+          <td class="num" data-v="159">159</td>
+          <td class="num" data-v="64">64</td>
+          <td class="num" data-v="43">43</td>
+          <td class="num" data-v="15">15</td>
+          <td class="num" data-v="0.234375">23,44 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Rennes"><a href="/crpe-par-academie/rennes#troisieme">Rennes</a></td>
+          <td class="num" data-v="10">10</td>
+          <td class="num" data-v="311">311</td>
+          <td class="num" data-v="81">81</td>
+          <td class="num" data-v="20">20</td>
+          <td class="num" data-v="10">10</td>
+          <td class="num" data-v="0.123457">12,35 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Strasbourg"><a href="/crpe-par-academie/strasbourg#troisieme">Strasbourg</a></td>
+          <td class="num" data-v="48">48</td>
+          <td class="num" data-v="243">243</td>
+          <td class="num" data-v="102">102</td>
+          <td class="num" data-v="60">60</td>
+          <td class="num" data-v="36">36</td>
+          <td class="num" data-v="0.352941">35,29 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Toulouse"><a href="/crpe-par-academie/toulouse#troisieme">Toulouse</a></td>
+          <td class="num" data-v="6">6</td>
+          <td class="num" data-v="354">354</td>
+          <td class="num" data-v="124">124</td>
+          <td class="num" data-v="19">19</td>
+          <td class="num" data-v="9">9</td>
+          <td class="num" data-v="0.072581">7,26 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Versailles"><a href="/crpe-par-academie/versailles#troisieme">Versailles</a></td>
+          <td class="num" data-v="168">168</td>
+          <td class="num" data-v="789">789</td>
+          <td class="num" data-v="259">259</td>
+          <td class="num" data-v="187">187</td>
+          <td class="num" data-v="132">132</td>
+          <td class="num" data-v="0.509653">50,97 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 id="interne">Résultats CRPE 2026 : second concours interne, le tableau comparatif des académies</h2>
+  <p>Le second concours interne est réservé aux fonctionnaires et agents publics. En 2026, 27 académies l'ont organisé : au niveau national, <strong>317 candidats</strong> ont été admis sur 1 292 présents aux épreuves écrites, soit <strong>24,54 %</strong> de réussite.</p>
+  <section class="kpis" aria-label="Chiffres nationaux du second concours interne">
+    <div class="kpi"><span class="kpi-value">495</span><span class="kpi-label">postes offerts</span></div>
+    <div class="kpi"><span class="kpi-value">3 572</span><span class="kpi-label">inscrits</span></div>
+    <div class="kpi"><span class="kpi-value">1 292</span><span class="kpi-label">présents aux épreuves écrites</span></div>
+    <div class="kpi"><span class="kpi-value">578</span><span class="kpi-label">candidats admissibles</span></div>
+    <div class="kpi"><span class="kpi-value">317</span><span class="kpi-label">admis</span></div>
+    <div class="kpi"><span class="kpi-value">26</span><span class="kpi-label">candidats inscrits sur liste complémentaire</span></div>
+    <div class="kpi kpi-interne"><span class="kpi-value">24,54 %</span><span class="kpi-label">taux de réussite national (admis / présents)</span></div>
+  </section>
+  <div class="table-wrap">
+    <table id="acadTable-interne" class="sortable">
+      <thead>
+        <tr>
+          <th><button type="button" data-col="0" data-type="text">Académie</button></th>
+          <th class="num"><button type="button" data-col="1">Postes</button></th>
+          <th class="num"><button type="button" data-col="2">Inscrits</button></th>
+          <th class="num"><button type="button" data-col="3">Présents</button></th>
+          <th class="num"><button type="button" data-col="4">Admissibles</button></th>
+          <th class="num"><button type="button" data-col="5">Admis</button></th>
+          <th class="num"><button type="button" data-col="6">Taux de réussite</button></th>
+          <th class="num"><button type="button" data-col="7">Liste compl.</button></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-v="Amiens"><a href="/crpe-par-academie/amiens#interne">Amiens</a></td>
+          <td class="num" data-v="15">15</td>
+          <td class="num" data-v="120">120</td>
+          <td class="num" data-v="40">40</td>
+          <td class="num" data-v="24">24</td>
+          <td class="num" data-v="13">13</td>
+          <td class="num" data-v="0.325000">32,50 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Besançon"><a href="/crpe-par-academie/besancon#interne">Besançon</a></td>
+          <td class="num" data-v="4">4</td>
+          <td class="num" data-v="51">51</td>
+          <td class="num" data-v="19">19</td>
+          <td class="num" data-v="9">9</td>
+          <td class="num" data-v="2">2</td>
+          <td class="num" data-v="0.105263">10,53 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Bordeaux"><a href="/crpe-par-academie/bordeaux#interne">Bordeaux</a></td>
+          <td class="num" data-v="20">20</td>
+          <td class="num" data-v="185">185</td>
+          <td class="num" data-v="62">62</td>
+          <td class="num" data-v="29">29</td>
+          <td class="num" data-v="9">9</td>
+          <td class="num" data-v="0.145161">14,52 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Clermont-Ferrand"><a href="/crpe-par-academie/clermont-ferrand#interne">Clermont-Ferrand</a></td>
+          <td class="num" data-v="10">10</td>
+          <td class="num" data-v="96">96</td>
+          <td class="num" data-v="33">33</td>
+          <td class="num" data-v="15">15</td>
+          <td class="num" data-v="10">10</td>
+          <td class="num" data-v="0.303030">30,30 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Corse"><a href="/crpe-par-academie/corse#interne">Corse</a></td>
+          <td class="num" data-v="1">1</td>
+          <td class="num" data-v="19">19</td>
+          <td class="num" data-v="5">5</td>
+          <td class="num" data-v="2">2</td>
+          <td class="num" data-v="1">1</td>
+          <td class="num" data-v="0.200000">20,00 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Créteil"><a href="/crpe-par-academie/creteil#interne">Créteil</a></td>
+          <td class="num" data-v="93">93</td>
+          <td class="num" data-v="238">238</td>
+          <td class="num" data-v="78">78</td>
+          <td class="num" data-v="61">61</td>
+          <td class="num" data-v="45">45</td>
+          <td class="num" data-v="0.576923">57,69 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Dijon"><a href="/crpe-par-academie/dijon#interne">Dijon</a></td>
+          <td class="num" data-v="8">8</td>
+          <td class="num" data-v="64">64</td>
+          <td class="num" data-v="17">17</td>
+          <td class="num" data-v="12">12</td>
+          <td class="num" data-v="4">4</td>
+          <td class="num" data-v="0.235294">23,53 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Grenoble"><a href="/crpe-par-academie/grenoble#interne">Grenoble</a></td>
+          <td class="num" data-v="24">24</td>
+          <td class="num" data-v="138">138</td>
+          <td class="num" data-v="50">50</td>
+          <td class="num" data-v="37">37</td>
+          <td class="num" data-v="24">24</td>
+          <td class="num" data-v="0.480000">48,00 %</td>
+          <td class="num" data-v="1">1</td>
+        </tr>
+        <tr>
+          <td data-v="Guadeloupe"><a href="/crpe-par-academie/guadeloupe#interne">Guadeloupe</a></td>
+          <td class="num" data-v="2">2</td>
+          <td class="num" data-v="45">45</td>
+          <td class="num" data-v="12">12</td>
+          <td class="num" data-v="3">3</td>
+          <td class="num" data-v="0">0</td>
+          <td class="num" data-v="0.000000">0,00 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Guyane"><a href="/crpe-par-academie/guyane#interne">Guyane</a></td>
+          <td class="num" data-v="56">56</td>
+          <td class="num" data-v="124">124</td>
+          <td class="num" data-v="48">48</td>
+          <td class="num" data-v="5">5</td>
+          <td class="num" data-v="3">3</td>
+          <td class="num" data-v="0.062500">6,25 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="La Réunion"><a href="/crpe-par-academie/la-reunion#interne">La Réunion</a></td>
+          <td class="num" data-v="6">6</td>
+          <td class="num" data-v="256">256</td>
+          <td class="num" data-v="108">108</td>
+          <td class="num" data-v="20">20</td>
+          <td class="num" data-v="6">6</td>
+          <td class="num" data-v="0.055556">5,56 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Lille"><a href="/crpe-par-academie/lille#interne">Lille</a></td>
+          <td class="num" data-v="12">12</td>
+          <td class="num" data-v="341">341</td>
+          <td class="num" data-v="180">180</td>
+          <td class="num" data-v="28">28</td>
+          <td class="num" data-v="12">12</td>
+          <td class="num" data-v="0.066667">6,67 %</td>
+          <td class="num" data-v="3">3</td>
+        </tr>
+        <tr>
+          <td data-v="Limoges"><a href="/crpe-par-academie/limoges#interne">Limoges</a></td>
+          <td class="num" data-v="1">1</td>
+          <td class="num" data-v="39">39</td>
+          <td class="num" data-v="12">12</td>
+          <td class="num" data-v="2">2</td>
+          <td class="num" data-v="1">1</td>
+          <td class="num" data-v="0.083333">8,33 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Lyon"><a href="/crpe-par-academie/lyon#interne">Lyon</a></td>
+          <td class="num" data-v="12">12</td>
+          <td class="num" data-v="158">158</td>
+          <td class="num" data-v="55">55</td>
+          <td class="num" data-v="24">24</td>
+          <td class="num" data-v="11">11</td>
+          <td class="num" data-v="0.200000">20,00 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Martinique"><a href="/crpe-par-academie/martinique#interne">Martinique</a></td>
+          <td class="num" data-v="2">2</td>
+          <td class="num" data-v="54">54</td>
+          <td class="num" data-v="13">13</td>
+          <td class="num" data-v="4">4</td>
+          <td class="num" data-v="2">2</td>
+          <td class="num" data-v="0.153846">15,38 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Mayotte"><a href="/crpe-par-academie/mayotte#interne">Mayotte</a></td>
+          <td class="num" data-v="50">50</td>
+          <td class="num" data-v="146">146</td>
+          <td class="num" data-v="84">84</td>
+          <td class="num" data-v="75">75</td>
+          <td class="num" data-v="50">50</td>
+          <td class="num" data-v="0.595238">59,52 %</td>
+          <td class="num" data-v="20">20</td>
+        </tr>
+        <tr>
+          <td data-v="Montpellier"><a href="/crpe-par-academie/montpellier#interne">Montpellier</a></td>
+          <td class="num" data-v="14">14</td>
+          <td class="num" data-v="250">250</td>
+          <td class="num" data-v="80">80</td>
+          <td class="num" data-v="28">28</td>
+          <td class="num" data-v="13">13</td>
+          <td class="num" data-v="0.162500">16,25 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Nancy-Metz"><a href="/crpe-par-academie/nancy-metz#interne">Nancy-Metz</a></td>
+          <td class="num" data-v="9">9</td>
+          <td class="num" data-v="68">68</td>
+          <td class="num" data-v="23">23</td>
+          <td class="num" data-v="13">13</td>
+          <td class="num" data-v="8">8</td>
+          <td class="num" data-v="0.347826">34,78 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Nice"><a href="/crpe-par-academie/nice#interne">Nice</a></td>
+          <td class="num" data-v="22">22</td>
+          <td class="num" data-v="190">190</td>
+          <td class="num" data-v="70">70</td>
+          <td class="num" data-v="33">33</td>
+          <td class="num" data-v="18">18</td>
+          <td class="num" data-v="0.257143">25,71 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Normandie"><a href="/crpe-par-academie/normandie#interne">Normandie</a></td>
+          <td class="num" data-v="7">7</td>
+          <td class="num" data-v="154">154</td>
+          <td class="num" data-v="51">51</td>
+          <td class="num" data-v="14">14</td>
+          <td class="num" data-v="7">7</td>
+          <td class="num" data-v="0.137255">13,73 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Orléans-Tours"><a href="/crpe-par-academie/orleans-tours#interne">Orléans-Tours</a></td>
+          <td class="num" data-v="27">27</td>
+          <td class="num" data-v="101">101</td>
+          <td class="num" data-v="37">37</td>
+          <td class="num" data-v="27">27</td>
+          <td class="num" data-v="18">18</td>
+          <td class="num" data-v="0.486486">48,65 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Paris"><a href="/crpe-par-academie/paris#interne">Paris</a></td>
+          <td class="num" data-v="6">6</td>
+          <td class="num" data-v="83">83</td>
+          <td class="num" data-v="16">16</td>
+          <td class="num" data-v="8">8</td>
+          <td class="num" data-v="4">4</td>
+          <td class="num" data-v="0.250000">25,00 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Poitiers"><a href="/crpe-par-academie/poitiers#interne">Poitiers</a></td>
+          <td class="num" data-v="6">6</td>
+          <td class="num" data-v="92">92</td>
+          <td class="num" data-v="30">30</td>
+          <td class="num" data-v="17">17</td>
+          <td class="num" data-v="6">6</td>
+          <td class="num" data-v="0.200000">20,00 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Reims"><a href="/crpe-par-academie/reims#interne">Reims</a></td>
+          <td class="num" data-v="7">7</td>
+          <td class="num" data-v="73">73</td>
+          <td class="num" data-v="28">28</td>
+          <td class="num" data-v="22">22</td>
+          <td class="num" data-v="7">7</td>
+          <td class="num" data-v="0.250000">25,00 %</td>
+          <td class="num" data-v="2">2</td>
+        </tr>
+        <tr>
+          <td data-v="Rennes"><a href="/crpe-par-academie/rennes#interne">Rennes</a></td>
+          <td class="num" data-v="5">5</td>
+          <td class="num" data-v="141">141</td>
+          <td class="num" data-v="37">37</td>
+          <td class="num" data-v="10">10</td>
+          <td class="num" data-v="5">5</td>
+          <td class="num" data-v="0.135135">13,51 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Toulouse"><a href="/crpe-par-academie/toulouse#interne">Toulouse</a></td>
+          <td class="num" data-v="4">4</td>
+          <td class="num" data-v="155">155</td>
+          <td class="num" data-v="47">47</td>
+          <td class="num" data-v="11">11</td>
+          <td class="num" data-v="4">4</td>
+          <td class="num" data-v="0.085106">8,51 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+        <tr>
+          <td data-v="Versailles"><a href="/crpe-par-academie/versailles#interne">Versailles</a></td>
+          <td class="num" data-v="72">72</td>
+          <td class="num" data-v="191">191</td>
+          <td class="num" data-v="57">57</td>
+          <td class="num" data-v="45">45</td>
+          <td class="num" data-v="34">34</td>
+          <td class="num" data-v="0.596491">59,65 %</td>
+          <td class="num" data-v="0">0</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
   <h2>Taux de réussite CRPE : comment est calculée la sélectivité ?</h2>
   <p>Pour classer les académies, nous avons calculé pour chacune le <strong>taux de réussite</strong> : le nombre d'admis divisé par le nombre de candidats présents aux épreuves. Les académies sont ensuite réparties en trois groupes :</p>
   <ul>
@@ -1162,7 +1791,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </div>
 
-  <p class="updated">Dernière mise à jour : 11 octobre 2026 · Données : résultats du CRPE, session 2026</p>
+  <p class="updated">Dernière mise à jour : 23 octobre 2026 · Données : résultats du CRPE, session 2026</p>
 
 
 </div>

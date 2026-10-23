@@ -29,6 +29,14 @@
         "admissibles": 629,
         "admis": 363,
         "inscritsLC": 2
+      },
+      "troisieme": {
+        "postes": 20,
+        "inscrits": 605,
+        "presents": 191,
+        "admissibles": 36,
+        "admis": 20,
+        "inscritsLC": 1
       }
     },
     {
@@ -58,6 +66,22 @@
         "admissibles": 327,
         "admis": 240,
         "inscritsLC": 14
+      },
+      "troisieme": {
+        "postes": 31,
+        "inscrits": 260,
+        "presents": 91,
+        "admissibles": 45,
+        "admis": 29,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 15,
+        "inscrits": 120,
+        "presents": 40,
+        "admissibles": 24,
+        "admis": 13,
+        "inscritsLC": 0
       }
     },
     {
@@ -87,6 +111,22 @@
         "admissibles": 260,
         "admis": 141,
         "inscritsLC": 19
+      },
+      "troisieme": {
+        "postes": 6,
+        "inscrits": 123,
+        "presents": 52,
+        "admissibles": 19,
+        "admis": 6,
+        "inscritsLC": 4
+      },
+      "interne": {
+        "postes": 4,
+        "inscrits": 51,
+        "presents": 19,
+        "admissibles": 9,
+        "admis": 2,
+        "inscritsLC": 0
       }
     },
     {
@@ -115,6 +155,22 @@
         "admissibles": 520,
         "admis": 304,
         "inscritsLC": 28
+      },
+      "troisieme": {
+        "postes": 34,
+        "inscrits": 515,
+        "presents": 189,
+        "admissibles": 64,
+        "admis": 28,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 20,
+        "inscrits": 185,
+        "presents": 62,
+        "admissibles": 29,
+        "admis": 9,
+        "inscritsLC": 0
       }
     },
     {
@@ -144,6 +200,22 @@
         "admissibles": 204,
         "admis": 95,
         "inscritsLC": 4
+      },
+      "troisieme": {
+        "postes": 8,
+        "inscrits": 128,
+        "presents": 31,
+        "admissibles": 21,
+        "admis": 8,
+        "inscritsLC": 1
+      },
+      "interne": {
+        "postes": 10,
+        "inscrits": 96,
+        "presents": 33,
+        "admissibles": 15,
+        "admis": 10,
+        "inscritsLC": 0
       }
     },
     {
@@ -171,6 +243,22 @@
         "admissibles": 34,
         "admis": 14,
         "inscritsLC": 4
+      },
+      "troisieme": {
+        "postes": 6,
+        "inscrits": 72,
+        "presents": 25,
+        "admissibles": 15,
+        "admis": 6,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 1,
+        "inscrits": 19,
+        "presents": 5,
+        "admissibles": 2,
+        "admis": 1,
+        "inscritsLC": 0
       }
     },
     {
@@ -200,6 +288,22 @@
         "admissibles": 774,
         "admis": 571,
         "inscritsLC": 10
+      },
+      "troisieme": {
+        "postes": 238,
+        "inscrits": 944,
+        "presents": 349,
+        "admissibles": 256,
+        "admis": 168,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 93,
+        "inscrits": 238,
+        "presents": 78,
+        "admissibles": 61,
+        "admis": 45,
+        "inscritsLC": 0
       }
     },
     {
@@ -229,6 +333,22 @@
         "admissibles": 262,
         "admis": 162,
         "inscritsLC": 19
+      },
+      "troisieme": {
+        "postes": 24,
+        "inscrits": 184,
+        "presents": 60,
+        "admissibles": 36,
+        "admis": 17,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 8,
+        "inscrits": 64,
+        "presents": 17,
+        "admissibles": 12,
+        "admis": 4,
+        "inscritsLC": 0
       }
     },
     {
@@ -257,6 +377,22 @@
         "admissibles": 605,
         "admis": 403,
         "inscritsLC": 59
+      },
+      "troisieme": {
+        "postes": 57,
+        "inscrits": 415,
+        "presents": 150,
+        "admissibles": 91,
+        "admis": 57,
+        "inscritsLC": 5
+      },
+      "interne": {
+        "postes": 24,
+        "inscrits": 138,
+        "presents": 50,
+        "admissibles": 37,
+        "admis": 24,
+        "inscritsLC": 1
       }
     },
     {
@@ -284,6 +420,22 @@
         "admissibles": 65,
         "admis": 24,
         "inscritsLC": 0
+      },
+      "troisieme": {
+        "postes": 4,
+        "inscrits": 106,
+        "presents": 31,
+        "admissibles": 11,
+        "admis": 3,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 2,
+        "inscrits": 45,
+        "presents": 12,
+        "admissibles": 3,
+        "admis": 0,
+        "inscritsLC": 0
       }
     },
     {
@@ -310,6 +462,22 @@
         "presents": 134,
         "admissibles": 47,
         "admis": 38,
+        "inscritsLC": 0
+      },
+      "troisieme": {
+        "postes": 25,
+        "inscrits": 107,
+        "presents": 26,
+        "admissibles": 5,
+        "admis": 1,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 56,
+        "inscrits": 124,
+        "presents": 48,
+        "admissibles": 5,
+        "admis": 3,
         "inscritsLC": 0
       }
     },
@@ -339,6 +507,22 @@
         "admissibles": 587,
         "admis": 294,
         "inscritsLC": 21
+      },
+      "troisieme": {
+        "postes": 27,
+        "inscrits": 725,
+        "presents": 258,
+        "admissibles": 58,
+        "admis": 27,
+        "inscritsLC": 6
+      },
+      "interne": {
+        "postes": 12,
+        "inscrits": 341,
+        "presents": 180,
+        "admissibles": 28,
+        "admis": 12,
+        "inscritsLC": 3
       }
     },
     {
@@ -368,6 +552,22 @@
         "admissibles": 112,
         "admis": 60,
         "inscritsLC": 1
+      },
+      "troisieme": {
+        "postes": 2,
+        "inscrits": 61,
+        "presents": 20,
+        "admissibles": 3,
+        "admis": 1,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 1,
+        "inscrits": 39,
+        "presents": 12,
+        "admissibles": 2,
+        "admis": 1,
+        "inscritsLC": 0
       }
     },
     {
@@ -396,6 +596,22 @@
         "admissibles": 610,
         "admis": 306,
         "inscritsLC": 8
+      },
+      "troisieme": {
+        "postes": 43,
+        "inscrits": 410,
+        "presents": 132,
+        "admissibles": 79,
+        "admis": 43,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 12,
+        "inscrits": 158,
+        "presents": 55,
+        "admissibles": 24,
+        "admis": 11,
+        "inscritsLC": 0
       }
     },
     {
@@ -423,6 +639,22 @@
         "admissibles": 51,
         "admis": 13,
         "inscritsLC": 0
+      },
+      "troisieme": {
+        "postes": 3,
+        "inscrits": 88,
+        "presents": 31,
+        "admissibles": 10,
+        "admis": 3,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 2,
+        "inscrits": 54,
+        "presents": 13,
+        "admissibles": 4,
+        "admis": 2,
+        "inscritsLC": 0
       }
     },
     {
@@ -441,7 +673,15 @@
       "inscritsLC": 25,
       "voisins": [
         "la-reunion"
-      ]
+      ],
+      "interne": {
+        "postes": 50,
+        "inscrits": 146,
+        "presents": 84,
+        "admissibles": 75,
+        "admis": 50,
+        "inscritsLC": 20
+      }
     },
     {
       "nom": "Montpellier",
@@ -469,6 +709,22 @@
         "admissibles": 357,
         "admis": 218,
         "inscritsLC": 8
+      },
+      "troisieme": {
+        "postes": 39,
+        "inscrits": 528,
+        "presents": 196,
+        "admissibles": 79,
+        "admis": 36,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 14,
+        "inscrits": 250,
+        "presents": 80,
+        "admissibles": 28,
+        "admis": 13,
+        "inscritsLC": 0
       }
     },
     {
@@ -497,6 +753,22 @@
         "admissibles": 381,
         "admis": 277,
         "inscritsLC": 6
+      },
+      "troisieme": {
+        "postes": 27,
+        "inscrits": 278,
+        "presents": 109,
+        "admissibles": 60,
+        "admis": 28,
+        "inscritsLC": 6
+      },
+      "interne": {
+        "postes": 9,
+        "inscrits": 68,
+        "presents": 23,
+        "admissibles": 13,
+        "admis": 8,
+        "inscritsLC": 0
       }
     },
     {
@@ -525,6 +797,14 @@
         "admissibles": 397,
         "admis": 231,
         "inscritsLC": 10
+      },
+      "troisieme": {
+        "postes": 30,
+        "inscrits": 396,
+        "presents": 139,
+        "admissibles": 54,
+        "admis": 30,
+        "inscritsLC": 0
       }
     },
     {
@@ -553,6 +833,22 @@
         "admissibles": 418,
         "admis": 288,
         "inscritsLC": 16
+      },
+      "troisieme": {
+        "postes": 62,
+        "inscrits": 542,
+        "presents": 189,
+        "admissibles": 105,
+        "admis": 55,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 22,
+        "inscrits": 190,
+        "presents": 70,
+        "admissibles": 33,
+        "admis": 18,
+        "inscritsLC": 0
       }
     },
     {
@@ -582,6 +878,22 @@
         "admissibles": 687,
         "admis": 399,
         "inscritsLC": 12
+      },
+      "troisieme": {
+        "postes": 18,
+        "inscrits": 333,
+        "presents": 111,
+        "admissibles": 32,
+        "admis": 14,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 7,
+        "inscrits": 154,
+        "presents": 51,
+        "admissibles": 14,
+        "admis": 7,
+        "inscritsLC": 0
       }
     },
     {
@@ -611,6 +923,22 @@
         "admissibles": 484,
         "admis": 325,
         "inscritsLC": 0
+      },
+      "troisieme": {
+        "postes": 29,
+        "inscrits": 242,
+        "presents": 80,
+        "admissibles": 54,
+        "admis": 29,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 27,
+        "inscrits": 101,
+        "presents": 37,
+        "admissibles": 27,
+        "admis": 18,
+        "inscritsLC": 0
       }
     },
     {
@@ -638,6 +966,22 @@
         "admissibles": 366,
         "admis": 219,
         "inscritsLC": 15
+      },
+      "troisieme": {
+        "postes": 18,
+        "inscrits": 284,
+        "presents": 59,
+        "admissibles": 31,
+        "admis": 14,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 6,
+        "inscrits": 83,
+        "presents": 16,
+        "admissibles": 8,
+        "admis": 4,
+        "inscritsLC": 0
       }
     },
     {
@@ -667,6 +1011,22 @@
         "admissibles": 283,
         "admis": 111,
         "inscritsLC": 6
+      },
+      "troisieme": {
+        "postes": 18,
+        "inscrits": 245,
+        "presents": 89,
+        "admissibles": 44,
+        "admis": 18,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 6,
+        "inscrits": 92,
+        "presents": 30,
+        "admissibles": 17,
+        "admis": 6,
+        "inscritsLC": 0
       }
     },
     {
@@ -696,6 +1056,22 @@
         "admissibles": 266,
         "admis": 115,
         "inscritsLC": 3
+      },
+      "troisieme": {
+        "postes": 15,
+        "inscrits": 159,
+        "presents": 64,
+        "admissibles": 43,
+        "admis": 15,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 7,
+        "inscrits": 73,
+        "presents": 28,
+        "admissibles": 22,
+        "admis": 7,
+        "inscritsLC": 2
       }
     },
     {
@@ -723,6 +1099,22 @@
         "admissibles": 222,
         "admis": 115,
         "inscritsLC": 14
+      },
+      "troisieme": {
+        "postes": 10,
+        "inscrits": 311,
+        "presents": 81,
+        "admissibles": 20,
+        "admis": 10,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 5,
+        "inscrits": 141,
+        "presents": 37,
+        "admissibles": 10,
+        "admis": 5,
+        "inscritsLC": 0
       }
     },
     {
@@ -749,6 +1141,22 @@
         "admissibles": 273,
         "admis": 81,
         "inscritsLC": 4
+      },
+      "troisieme": {
+        "postes": 27,
+        "inscrits": 712,
+        "presents": 286,
+        "admissibles": 93,
+        "admis": 27,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 6,
+        "inscrits": 256,
+        "presents": 108,
+        "admissibles": 20,
+        "admis": 6,
+        "inscritsLC": 0
       }
     },
     {
@@ -775,6 +1183,14 @@
         "presents": 455,
         "admissibles": 321,
         "admis": 201,
+        "inscritsLC": 0
+      },
+      "troisieme": {
+        "postes": 48,
+        "inscrits": 243,
+        "presents": 102,
+        "admissibles": 60,
+        "admis": 36,
         "inscritsLC": 0
       }
     },
@@ -804,6 +1220,22 @@
         "admissibles": 690,
         "admis": 270,
         "inscritsLC": 5
+      },
+      "troisieme": {
+        "postes": 6,
+        "inscrits": 354,
+        "presents": 124,
+        "admissibles": 19,
+        "admis": 9,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 4,
+        "inscrits": 155,
+        "presents": 47,
+        "admissibles": 11,
+        "admis": 4,
+        "inscritsLC": 0
       }
     },
     {
@@ -833,6 +1265,22 @@
         "admissibles": 706,
         "admis": 613,
         "inscritsLC": 0
+      },
+      "troisieme": {
+        "postes": 168,
+        "inscrits": 789,
+        "presents": 259,
+        "admissibles": 187,
+        "admis": 132,
+        "inscritsLC": 0
+      },
+      "interne": {
+        "postes": 72,
+        "inscrits": 191,
+        "presents": 57,
+        "admissibles": 45,
+        "admis": 34,
+        "inscritsLC": 0
       }
     }
   ],
@@ -843,5 +1291,21 @@
     "admissibles": 10938,
     "admis": 6491,
     "inscritsLC": 288
+  },
+  "troisieme_national": {
+    "postes": 1043,
+    "inscrits": 10159,
+    "presents": 3524,
+    "admissibles": 1630,
+    "admis": 870,
+    "inscritsLC": 23
+  },
+  "interne_national": {
+    "postes": 495,
+    "inscrits": 3572,
+    "presents": 1292,
+    "admissibles": 578,
+    "admis": 317,
+    "inscritsLC": 26
   }
 }
