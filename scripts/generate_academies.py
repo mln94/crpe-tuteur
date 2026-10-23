@@ -165,9 +165,12 @@ CSS = """
     .concours-titre.c-bac5 { border-top-color: #059669; }
     .concours-titre.c-troisieme { border-top-color: #ea580c; }
     .concours-titre.c-interne { border-top-color: #7c3aed; }
-    .sommaire { font-size: 14.5px; color: var(--gray-500); margin: 14px 0 0; line-height: 1.9; }
-    .sommaire a { color: var(--indigo-600); font-weight: 600; text-decoration: none; white-space: nowrap; }
-    .sommaire a:hover { text-decoration: underline; }
+    .sommaire { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 14px; padding: 16px 20px; margin: 18px 0 8px; font-size: 15px; line-height: 1.7; color: var(--gray-700); }
+    .sommaire > p { font-weight: 800; color: var(--gray-900); margin: 0 0 6px; }
+    .acad-wrap .sommaire ol { margin: 0 0 0 20px; padding: 0; list-style: decimal; }
+    .acad-wrap .sommaire li { margin-bottom: 3px; }
+    .acad-wrap .sommaire ol ol { margin: 4px 0 6px 18px; list-style: lower-alpha; font-size: 14.5px; }
+    .sommaire a { color: var(--indigo-600); text-decoration: underline; }
     .acad-wrap [id] { scroll-margin-top: 84px; }
     .funnel-bar.funnel-bar-master { background: #10b981; }
     .funnel-row.light .funnel-bar.funnel-bar-master { background: #6ee7b7; }
@@ -393,7 +396,7 @@ def page_academie(a):
     <div class="kpi"><span class="kpi-value">{fint(a['inscritsLC'])}</span><span class="kpi-label">inscrits sur liste complémentaire</span></div>
   </section>
 
-  <h3>Inscrits, résultats d'admissibilité et admis au CRPE (bac+3)</h3>
+  <h3 id="bac3-inscrits">Inscrits, résultats d'admissibilité et admis au CRPE (bac+3)</h3>
   <p>Toutes les personnes inscrites ne se présentent pas le jour des épreuves. Dans l'académie {escape(de(nom))}, <strong>{fpct(a['presents'] / a['inscrits'])}</strong> des inscrits étaient présents. Parmi les présents, <strong>{fpct(a['tauxAdmissibilite'])}</strong> ont été admissibles (moyenne nationale : {fpct(TAUX_ADMISSIBILITE_NATIONAL)}), et {fpct(a['taux'])} ont finalement été admis.</p>
   <div class="funnel">{funnel}</div>
   <ul>
@@ -401,7 +404,7 @@ def page_academie(a):
     {''.join(remarques)}
   </ul>
 
-  <h3>Taux de réussite CRPE (bac+3) : les classements de l'académie {escape(de(nom))}</h3>
+  <h3 id="bac3-classements">Taux de réussite CRPE (bac+3) : les classements de l'académie {escape(de(nom))}</h3>
   <p>Comment l'académie {escape(de(nom))} se situe-t-elle par rapport aux {N - 1} autres académies ?</p>
   <div class="rank-grid">
     <div class="card"><h3>Nombre de postes</h3><div class="rank-big">{rang(RANK_POSTES[s])} <small>sur {N}</small></div><p>{fint(a['postes'])} postes offerts.</p></div>
@@ -410,7 +413,7 @@ def page_academie(a):
   </div>
   <p style="font-size:14px;color:var(--gray-500);margin-top:10px;">1re = le plus de postes, ou le taux le plus élevé.</p>
 
-  <h3>Sélectivité au concours bac+3 : {SEL_LABEL[sel].lower()}</h3>
+  <h3 id="bac3-selectivite">Sélectivité au concours bac+3 : {SEL_LABEL[sel].lower()}</h3>
   <div class="callout">Avec un taux de réussite de <strong>{fpct(a['taux'])}</strong>, l'académie {escape(de(nom))} fait partie des académies <strong>{SEL_LABEL[sel].lower()}s</strong> du CRPE.</div>
   {METHODE}
 
@@ -420,7 +423,7 @@ def page_academie(a):
   <h2 id="carte">Situer l'académie {escape(de(nom))} sur la carte</h2>
   {carte(a)}
 
-  <h2>Académies voisines</h2>
+  <h2 id="voisins">Académies voisines</h2>
   <p>Vous hésitez encore ? Comparez avec les académies proches :</p>
   <div class="voisins-grid">{voisins}</div>
   <a class="back-hub" href="{HUB_URL}">← Voir toutes les académies</a>
@@ -441,10 +444,24 @@ def autres_lead(a):
     noms = [c['nom'] for c in AUTRES if a.get(c['cle'])]
     return f", ainsi que le {' et le '.join(noms)}" if noms else ''
 
+def sommaire_html(items):
+    """Sommaire en encadré : liste numérotée, sous-parties en a, b, c."""
+    def li(ancre, lib, sous=()):
+        sl = ''.join(f'<li><a href="#{x}">{escape(y)}</a></li>' for x, y in sous)
+        return f'<li><a href="#{ancre}">{escape(lib)}</a>' + (f'<ol>{sl}</ol>' if sl else '') + '</li>'
+    return '<nav class="sommaire" aria-label="Sommaire"><p>Sommaire</p><ol>' + ''.join(li(*it) for it in items) + '</ol></nav>'
+
+def sous_parties(cle):
+    return [(f'{cle}-inscrits', 'Inscrits, admissibilité et admis'), (f'{cle}-classements', "Les classements de l'académie"),
+            (f'{cle}-selectivite', 'La sélectivité')]
+
 def sommaire(a):
-    """Liens vers les sections de la page académie, un par concours."""
-    liens = [('#bac3', 'Bac+3'), ('#bac5', 'Bac+5')] + [('#' + c['cle'], c['titre']) for c in AUTRES] + [('#carte', 'Carte')]
-    return '<p class="sommaire">Sur cette page : ' + ' · '.join(f'<a href="{h}">{l}</a>' for h, l in liens) + '</p>'
+    """Sommaire d'une page académie : un point par concours, détaillé pour le bac+3 et le bac+5."""
+    items = [('bac3', 'Concours externe bac+3', sous_parties('bac3')),
+             ('bac5', 'Concours externe bac+5 (master 2)', sous_parties('bac5') if a.get('master') else ())]
+    items += [(c['cle'], c['titre']) for c in AUTRES]
+    items += [('carte', "L'académie sur la carte"), ('voisins', 'Les académies voisines')]
+    return sommaire_html(items)
 
 def autres_html(a):
     """Sections « troisième concours » et « second concours interne » d'une page académie."""
@@ -523,7 +540,7 @@ def master_details(a):
         f'<div class="funnel-row{" light" if i < 2 else ""}"><span class="funnel-label">{lab}</span><div class="funnel-track"><div class="funnel-bar funnel-bar-master" style="width:{max(v / m["inscrits"] * 100, 1):.1f}%"></div><span class="funnel-val">{fint(v)}</span></div></div>'
         for i, (lab, v) in enumerate([('Inscrits', m['inscrits']), ('Présents', m['presents']), ('Admissibles', m['admissibles']), ('Admis', m['admis'])]))
     return f'''
-  <h3>Inscrits, résultats d'admissibilité et admis au CRPE (bac+5, master 2)</h3>
+  <h3 id="bac5-inscrits">Inscrits, résultats d'admissibilité et admis au CRPE (bac+5, master 2)</h3>
   <p>Au concours bac+5 de l'académie {escape(de(nom))}, <strong>{fpct(m['presents'] / m['inscrits'])}</strong> des inscrits étaient présents aux épreuves écrites. Parmi les présents, <strong>{fpct(m['tauxAdmissibilite'])}</strong> ont été admissibles (moyenne nationale : {fpct(TAUX_ADMISSIBILITE_MASTER_NATIONAL)}), et {fpct(m['taux'])} ont finalement été admis.</p>
   <div class="funnel">{funnel}</div>
   <ul>
@@ -531,7 +548,7 @@ def master_details(a):
     {''.join(remarques)}
   </ul>
 
-  <h3>Taux de réussite CRPE (bac+5) : les classements de l'académie {escape(de(nom))}</h3>
+  <h3 id="bac5-classements">Taux de réussite CRPE (bac+5) : les classements de l'académie {escape(de(nom))}</h3>
   <p>Comment l'académie {escape(de(nom))} se situe-t-elle par rapport aux {nm - 1} autres académies au concours bac+5 ?</p>
   <div class="rank-grid">
     <div class="card"><h3>Nombre de postes</h3><div class="rank-big">{rang(RANK_MASTER_POSTES[s])} <small>sur {nm}</small></div><p>{fint(m['postes'])} postes offerts.</p></div>
@@ -540,7 +557,7 @@ def master_details(a):
   </div>
   <p style="font-size:14px;color:var(--gray-500);margin-top:10px;">1re = le plus de postes, ou le taux le plus élevé. Classement sur les {nm} académies qui publient leurs résultats bac+5.</p>
 
-  <h3>Sélectivité au concours bac+5 : {SEL_LABEL[sel].lower()}</h3>
+  <h3 id="bac5-selectivite">Sélectivité au concours bac+5 : {SEL_LABEL[sel].lower()}</h3>
   <div class="callout">Avec un taux de réussite de <strong>{fpct(m['taux'])}</strong> au concours bac+5, l'académie {escape(de(nom))} fait partie des académies <strong>{SEL_LABEL[sel].lower()}s</strong> pour ce concours. La méthode est la même que pour le concours bac+3, appliquée aux {nm} académies du concours bac+5.</div>
 '''
 
@@ -637,7 +654,7 @@ def page_hub():
   <h1>Résultats du CRPE {SESSION} par académie : inscrits, admis et taux de réussite</h1>
   <p class="lead">On ne passe pas le concours du CRPE « en France », mais dans <strong>une académie</strong>. C'est elle qui organise le concours et, si vous êtes reçu, vous affecte dans l'une de ses écoles. Choisir son académie, c'est donc choisir à la fois ses chances de réussite et l'endroit où l'on va enseigner. Voici les résultats du CRPE {SESSION} académie par académie, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2), ainsi que le <strong>troisième concours</strong> et le <strong>second concours interne</strong>. Inscrits, résultats d'admissibilité, admis et taux de réussite. <strong>Cliquez sur une académie de la carte</strong> pour découvrir ses résultats détaillés.</p>
 
-  <p class="sommaire">Sur cette page : <a href="#bac3">Bac+3</a> · <a href="#bac5">Bac+5</a> · <a href="#troisieme">Troisième concours</a> · <a href="#interne">Second concours interne</a> · <a href="#carte">Carte</a> · <a href="#choisir">Choisir son académie</a></p>
+  {sommaire_html([('bac3', 'Concours externe bac+3'), ('bac5', 'Concours externe bac+5 (master 2)'), ('troisieme', 'Troisième concours'), ('interne', 'Second concours interne'), ('carte', 'La carte des académies'), ('methode', 'Comment est calculée la sélectivité ?'), ('regions', 'Les académies par région académique'), ('choisir', 'Comment choisir son académie ?')])}
 
   <h2 class="concours-titre" id="bac3">Concours externe bac+3 : les résultats {SESSION} par académie</h2>
   <section class="kpis" aria-label="Chiffres nationaux du concours bac+3">
@@ -708,10 +725,10 @@ def page_hub():
   <p>Chaque repère représente une académie, coloré selon sa sélectivité au concours bac+3. Cliquez dessus pour ouvrir la page de l'académie.</p>
   {carte()}
 
-  <h2>Taux de réussite CRPE : comment est calculée la sélectivité ?</h2>
+  <h2 id="methode">Taux de réussite CRPE : comment est calculée la sélectivité ?</h2>
   {METHODE}
 
-  <h2>Les académies CRPE par région académique</h2>
+  <h2 id="regions">Les académies CRPE par région académique</h2>
   <p>Les académies sont regroupées en <strong>régions académiques</strong>. L'Île-de-France, par exemple, compte trois académies : Paris, Créteil et Versailles. Si vous hésitez entre deux académies proches de chez vous, comparez d'abord celles de votre région.</p>
   <div class="region-grid">{region_cards}</div>
 

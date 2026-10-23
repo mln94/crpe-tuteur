@@ -255,9 +255,12 @@
     .concours-titre.c-bac5 { border-top-color: #059669; }
     .concours-titre.c-troisieme { border-top-color: #ea580c; }
     .concours-titre.c-interne { border-top-color: #7c3aed; }
-    .sommaire { font-size: 14.5px; color: var(--gray-500); margin: 14px 0 0; line-height: 1.9; }
-    .sommaire a { color: var(--indigo-600); font-weight: 600; text-decoration: none; white-space: nowrap; }
-    .sommaire a:hover { text-decoration: underline; }
+    .sommaire { background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 14px; padding: 16px 20px; margin: 18px 0 8px; font-size: 15px; line-height: 1.7; color: var(--gray-700); }
+    .sommaire > p { font-weight: 800; color: var(--gray-900); margin: 0 0 6px; }
+    .acad-wrap .sommaire ol { margin: 0 0 0 20px; padding: 0; list-style: decimal; }
+    .acad-wrap .sommaire li { margin-bottom: 3px; }
+    .acad-wrap .sommaire ol ol { margin: 4px 0 6px 18px; list-style: lower-alpha; font-size: 14.5px; }
+    .sommaire a { color: var(--indigo-600); text-decoration: underline; }
     .acad-wrap [id] { scroll-margin-top: 84px; }
     .funnel-bar.funnel-bar-master { background: #10b981; }
     .funnel-row.light .funnel-bar.funnel-bar-master { background: #6ee7b7; }
@@ -464,7 +467,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <h1>CRPE Créteil : résultats 2026 de l'académie de Créteil</h1>
   <p class="lead">Voici les résultats du concours CRPE 2026 dans l'académie de Créteil, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2), ainsi que le troisième concours et le second concours interne. Au concours bac+3, l'académie de Créteil offrait <strong>560 postes</strong>. Sur 2 530 inscrits, 1 137 candidats se sont présentés aux épreuves, 873 ont été admissibles et <strong>560 ont été admis</strong>, soit un taux de réussite de <strong>49,25 %</strong>, supérieur à la moyenne nationale (17,57 %).</p>
 
-  <p class="sommaire">Sur cette page : <a href="#bac3">Bac+3</a> · <a href="#bac5">Bac+5</a> · <a href="#troisieme">Troisième concours</a> · <a href="#interne">Second concours interne</a> · <a href="#carte">Carte</a></p>
+  <nav class="sommaire" aria-label="Sommaire"><p>Sommaire</p><ol><li><a href="#bac3">Concours externe bac+3</a><ol><li><a href="#bac3-inscrits">Inscrits, admissibilité et admis</a></li><li><a href="#bac3-classements">Les classements de l&#x27;académie</a></li><li><a href="#bac3-selectivite">La sélectivité</a></li></ol></li><li><a href="#bac5">Concours externe bac+5 (master 2)</a><ol><li><a href="#bac5-inscrits">Inscrits, admissibilité et admis</a></li><li><a href="#bac5-classements">Les classements de l&#x27;académie</a></li><li><a href="#bac5-selectivite">La sélectivité</a></li></ol></li><li><a href="#troisieme">Troisième concours</a></li><li><a href="#interne">Second concours interne</a></li><li><a href="#carte">L&#x27;académie sur la carte</a></li><li><a href="#voisins">Les académies voisines</a></li></ol></nav>
 
   <h2 class="concours-titre" id="bac3">Concours externe bac+3 : résultats 2026 de l'académie de Créteil</h2>
   <section class="kpis" aria-label="Chiffres clés du concours bac+3">
@@ -477,7 +480,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="kpi"><span class="kpi-value">42</span><span class="kpi-label">inscrits sur liste complémentaire</span></div>
   </section>
 
-  <h3>Inscrits, résultats d'admissibilité et admis au CRPE (bac+3)</h3>
+  <h3 id="bac3-inscrits">Inscrits, résultats d'admissibilité et admis au CRPE (bac+3)</h3>
   <p>Toutes les personnes inscrites ne se présentent pas le jour des épreuves. Dans l'académie de Créteil, <strong>44,94 %</strong> des inscrits étaient présents. Parmi les présents, <strong>76,78 %</strong> ont été admissibles (moyenne nationale : 38,21 %), et 49,25 % ont finalement été admis.</p>
   <div class="funnel"><div class="funnel-row light"><span class="funnel-label">Inscrits</span><div class="funnel-track"><div class="funnel-bar" style="width:100.0%"></div><span class="funnel-val">2 530</span></div></div><div class="funnel-row light"><span class="funnel-label">Présents</span><div class="funnel-track"><div class="funnel-bar" style="width:44.9%"></div><span class="funnel-val">1 137</span></div></div><div class="funnel-row"><span class="funnel-label">Admissibles</span><div class="funnel-track"><div class="funnel-bar" style="width:34.5%"></div><span class="funnel-val">873</span></div></div><div class="funnel-row"><span class="funnel-label">Admis</span><div class="funnel-track"><div class="funnel-bar" style="width:22.1%"></div><span class="funnel-val">560</span></div></div></div>
   <ul>
@@ -485,7 +488,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <li><strong>Liste complémentaire :</strong> 42 candidats ont été inscrits sur la liste complémentaire. Ces candidats peuvent être appelés si des admis renoncent à leur poste.</li>
   </ul>
 
-  <h3>Taux de réussite CRPE (bac+3) : les classements de l'académie de Créteil</h3>
+  <h3 id="bac3-classements">Taux de réussite CRPE (bac+3) : les classements de l'académie de Créteil</h3>
   <p>Comment l'académie de Créteil se situe-t-elle par rapport aux 29 autres académies ?</p>
   <div class="rank-grid">
     <div class="card"><h3>Nombre de postes</h3><div class="rank-big">2e <small>sur 30</small></div><p>560 postes offerts.</p></div>
@@ -494,7 +497,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <p style="font-size:14px;color:var(--gray-500);margin-top:10px;">1re = le plus de postes, ou le taux le plus élevé.</p>
 
-  <h3>Sélectivité au concours bac+3 : peu sélective</h3>
+  <h3 id="bac3-selectivite">Sélectivité au concours bac+3 : peu sélective</h3>
   <div class="callout">Avec un taux de réussite de <strong>49,25 %</strong>, l'académie de Créteil fait partie des académies <strong>peu sélectives</strong> du CRPE.</div>
   <p>Pour classer les académies, nous avons calculé pour chacune le <strong>taux de réussite</strong> : le nombre d'admis divisé par le nombre de candidats présents aux épreuves. Les académies sont ensuite réparties en trois groupes :</p>
   <ul>
@@ -517,7 +520,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <p>Au concours bac+5, ouvert aux titulaires d'un master 2, l'académie de Créteil a admis <strong>571 candidats</strong> sur 870 présents, soit un taux de réussite de <strong>65,63 %</strong>, supérieur à la moyenne nationale du concours bac+5 (35,21 %). Elle se classe <strong>2e sur 29</strong> académies pour ce taux.</p>
 
 
-  <h3>Inscrits, résultats d'admissibilité et admis au CRPE (bac+5, master 2)</h3>
+  <h3 id="bac5-inscrits">Inscrits, résultats d'admissibilité et admis au CRPE (bac+5, master 2)</h3>
   <p>Au concours bac+5 de l'académie de Créteil, <strong>43,09 %</strong> des inscrits étaient présents aux épreuves écrites. Parmi les présents, <strong>88,97 %</strong> ont été admissibles (moyenne nationale : 59,33 %), et 65,63 % ont finalement été admis.</p>
   <div class="funnel"><div class="funnel-row light"><span class="funnel-label">Inscrits</span><div class="funnel-track"><div class="funnel-bar funnel-bar-master" style="width:100.0%"></div><span class="funnel-val">2 019</span></div></div><div class="funnel-row light"><span class="funnel-label">Présents</span><div class="funnel-track"><div class="funnel-bar funnel-bar-master" style="width:43.1%"></div><span class="funnel-val">870</span></div></div><div class="funnel-row"><span class="funnel-label">Admissibles</span><div class="funnel-track"><div class="funnel-bar funnel-bar-master" style="width:38.3%"></div><span class="funnel-val">774</span></div></div><div class="funnel-row"><span class="funnel-label">Admis</span><div class="funnel-track"><div class="funnel-bar funnel-bar-master" style="width:28.3%"></div><span class="funnel-val">571</span></div></div></div>
   <ul>
@@ -525,7 +528,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <li><strong>Liste complémentaire :</strong> 10 candidats ont été inscrits sur la liste complémentaire. Ces candidats peuvent être appelés si des admis renoncent à leur poste.</li>
   </ul>
 
-  <h3>Taux de réussite CRPE (bac+5) : les classements de l'académie de Créteil</h3>
+  <h3 id="bac5-classements">Taux de réussite CRPE (bac+5) : les classements de l'académie de Créteil</h3>
   <p>Comment l'académie de Créteil se situe-t-elle par rapport aux 28 autres académies au concours bac+5 ?</p>
   <div class="rank-grid">
     <div class="card"><h3>Nombre de postes</h3><div class="rank-big">2e <small>sur 29</small></div><p>570 postes offerts.</p></div>
@@ -534,7 +537,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
   <p style="font-size:14px;color:var(--gray-500);margin-top:10px;">1re = le plus de postes, ou le taux le plus élevé. Classement sur les 29 académies qui publient leurs résultats bac+5.</p>
 
-  <h3>Sélectivité au concours bac+5 : peu sélective</h3>
+  <h3 id="bac5-selectivite">Sélectivité au concours bac+5 : peu sélective</h3>
   <div class="callout">Avec un taux de réussite de <strong>65,63 %</strong> au concours bac+5, l'académie de Créteil fait partie des académies <strong>peu sélectives</strong> pour ce concours. La méthode est la même que pour le concours bac+3, appliquée aux 29 académies du concours bac+5.</div>
 
 
@@ -572,7 +575,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <div class="legend"><span><span class="dot dot-tres"></span>Très sélective</span><span><span class="dot dot-moyen"></span>Moyennement sélective</span><span><span class="dot dot-peu"></span>Peu sélective</span></div>
   </div>
 
-  <h2>Académies voisines</h2>
+  <h2 id="voisins">Académies voisines</h2>
   <p>Vous hésitez encore ? Comparez avec les académies proches :</p>
   <div class="voisins-grid"><a class="card" href="/crpe-par-academie/paris"><h3>Académie de Paris</h3><span class="sel sel-peu">Peu sélective</span><p>131 postes · 30,11 % de réussite</p></a><a class="card" href="/crpe-par-academie/versailles"><h3>Académie de Versailles</h3><span class="sel sel-peu">Peu sélective</span><p>699 postes · 57,43 % de réussite</p></a><a class="card" href="/crpe-par-academie/reims"><h3>Académie de Reims</h3><span class="sel sel-moyen">Moyennement sélective</span><p>77 postes · 12,42 % de réussite</p></a><a class="card" href="/crpe-par-academie/orleans-tours"><h3>Académie d&#x27;Orléans-Tours</h3><span class="sel sel-peu">Peu sélective</span><p>202 postes · 27,33 % de réussite</p></a></div>
   <a class="back-hub" href="/crpe-par-academie">← Voir toutes les académies</a>
