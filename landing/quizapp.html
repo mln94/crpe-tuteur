@@ -1337,7 +1337,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       compte.positionnement = d.resultat; tst = null;
       // Compte rechargé : l'offre d'essai (2 matières les plus fragiles) est calculée par le serveur d'après le test
       return api('/api/quiz/compte').then(function (c) { compte = c; }).catch(function () {}).then(function () {
-        resultat(d.resultat); top(); proposerEssaiAuDefilement();
+        resultat(d.resultat); top();
       });
     }).catch(function () { tst.i--; garderTest(); erreur('Votre test n\'a pas pu être corrigé. Vos réponses sont gardées : réessayez.'); });
   }
@@ -1468,6 +1468,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
     root.innerHTML = html;
     intro(false); // l'introduction du quiz est masquée sur le rapport
+    proposerEssaiAuDefilement();
   }
   // Prochaine série d'essai non terminée : matière et niveau conseillés par le test
   function lancerEssai() {
@@ -1476,16 +1477,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     choix.mat = m.matiere; choix.niveau = m.niveau; garderChoix(); demarrer(m.matiere, m.niveau); top();
   }
   // Fin du test : proposition immédiate des 2 séries d'essai, dans les matières les plus fragiles
-  // Le rapport s'affiche d'abord seul : l'offre d'essai s'ouvre une fois la moitié du rapport parcourue (une seule fois)
-  var essaiAuDefilement = null;
+  // Le rapport s'affiche d'abord seul : l'offre d'essai s'ouvre une fois la moitié du rapport parcourue,
+  // à chaque affichage du rapport (fin du test, « Mon test », retour sur le site), une seule fois par visite
+  var essaiAuDefilement = null, essaiProposeCetteVisite = false;
   function proposerEssaiAuDefilement() {
     if (essaiAuDefilement) window.removeEventListener('scroll', essaiAuDefilement);
+    essaiAuDefilement = null;
+    var e = essaiActif();
+    if (essaiProposeCetteVisite || !e || e.termine) return;
     essaiAuDefilement = function () {
       if (!document.querySelector('.rp-tete')) { window.removeEventListener('scroll', essaiAuDefilement); essaiAuDefilement = null; return; } // rapport quitté
       var max = document.documentElement.scrollHeight - window.innerHeight;
       if (max <= 0 || window.scrollY / max < 0.5) return;
       window.removeEventListener('scroll', essaiAuDefilement); essaiAuDefilement = null;
-      proposerEssai();
+      essaiProposeCetteVisite = true; proposerEssai();
     };
     window.addEventListener('scroll', essaiAuDefilement, { passive: true });
   }
