@@ -726,9 +726,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   var root = document.getElementById('quiz-app');
   var catalogues = {}, st = null, choix = lireChoix();
 
-  // ── Progression (navigateur uniquement) ──
-  function lire() { try { return JSON.parse(localStorage.getItem(CLE)) || {}; } catch (e) { return {}; } }
-  function ecrire(p) { try { localStorage.setItem(CLE, JSON.stringify(p)); } catch (e) {} }
+  // ── Progression (navigateur uniquement), une par compte : plusieurs comptes sur le même navigateur ne la partagent pas ──
+  function cleProg() { return compte && compte.email ? CLE + ':' + String(compte.email).toLowerCase() : null; }
+  function lire() { var k = cleProg(); if (!k) return {}; try { return JSON.parse(localStorage.getItem(k)) || {}; } catch (e) { return {}; } }
+  function ecrire(p) { var k = cleProg(); if (!k) return; try { localStorage.setItem(k, JSON.stringify(p)); } catch (e) {} }
+  // Ancienne progression commune (avant la clé par compte) : reprise par le premier compte qui a déjà des séries
+  // enregistrées ; un compte sans série (nouveau compte, compte de test) ne la récupère pas
+  function adopterProgression() {
+    var k = cleProg(), ancienne = null;
+    try { if (!k || localStorage.getItem(k)) return Promise.resolve(); ancienne = localStorage.getItem(CLE); } catch (e) { return Promise.resolve(); }
+    if (!ancienne) return Promise.resolve();
+    return SB.from('quiz_series').select('id', { count: 'exact', head: true }).then(function (r) {
+      if (r && !r.error && r.count > 0) { try { localStorage.setItem(k, ancienne); localStorage.removeItem(CLE); } catch (e) {} }
+    }).catch(function () {});
+  }
   // Dernier choix de matière et de niveau, retrouvé à la prochaine visite
   function lireChoix() { var c = {}; try { c = JSON.parse(localStorage.getItem(CLE_CHOIX)) || {}; } catch (e) {}
     return { mat: MATIERES.some(function (m) { return m[0] === c.mat; }) ? c.mat : MATIERES[0][0], niveau: NIVEAUX[c.niveau] ? c.niveau : 'facile',
@@ -1282,7 +1293,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     st = null; tst = null;
     if (compte && forcer !== true) {
       var avant = etatCompte(compte);
-      aiguiller(compte);
+      adopterProgression().then(function () { aiguiller(compte); });
       api('/api/quiz/compte').then(function (c) {
         compte = c;
         // L'écran n'est redessiné que si le compte a changé et qu'aucune série ni test n'a commencé entre-temps
@@ -1293,7 +1304,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     root.innerHTML = '<div class="quiz-card"><p>Chargement…</p></div>';
     jeton().then(function (t) {
       if (!t) return connexion();
-      return api('/api/quiz/compte').then(function (c) { compte = c; aiguiller(c); });
+      return api('/api/quiz/compte').then(function (c) { compte = c; return adopterProgression().then(function () { aiguiller(c); }); });
     }).catch(function (e) { if (e.status === 401) return connexion(); erreur('Votre compte n\'a pas pu être chargé. Réessayez dans quelques instants.'); });
   }
   function connexion() {
