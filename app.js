@@ -324,7 +324,7 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   try {
     const phoneAttrs = telephone ? { phone_number: telephone } : {};
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP,
-      { email_verified: false, passcrpe_trial: true, paid_user: false, paid_passcrpe: false, paid_quizcrpe: false, form_trial: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(req.body?.parcours) },
+      { email_verified: false, passcrpe_trial: true, paid_user: false, paid_passcrpe: false, paid_quizcrpe: false, form_trial: false, test_positionnement_realise: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(req.body?.parcours) },
       phoneAttrs, consent_conseils);
     // Newsletter : seuls les inscrits qui ont coché la case rejoignent la liste newsletter, et y sont abonnés
     // (consentement explicite exigé pour la prospection par e-mail)
@@ -654,12 +654,13 @@ async function quizCompte(req, { frais = false } = {}) {
   if (error || !data?.user) return null;
   // Accès payé : profils_utilisateurs.quizcrpe_paye (source de vérité, modifiable à la main dans Supabase)
   const [{ data: ligne, error: e2 }, { data: profil, error: e3 }] = await Promise.all([
-    supabaseAdmin.from('quiz_comptes').select('positionnement, essai_reponses').eq('user_id', data.user.id).maybeSingle(),
+    supabaseAdmin.from('quiz_comptes').select('positionnement, essai_reponses, reponses_positionnement').eq('user_id', data.user.id).maybeSingle(),
     supabaseAdmin.from('profils_utilisateurs').select('quizcrpe_paye').eq('user_id', data.user.id).maybeSingle(),
   ]);
   if (e2 || e3) throw new Error((e2 || e3).message);
   const l = ligne || {};
-  const compte = { id: data.user.id, email: data.user.email, positionnement: l.positionnement || null, paid: profil?.quizcrpe_paye === true, essaiReponses: l.essai_reponses || {} };
+  const compte = { id: data.user.id, email: data.user.email, positionnement: l.positionnement || null, paid: profil?.quizcrpe_paye === true, essaiReponses: l.essai_reponses || {},
+    reponsesTest: l.reponses_positionnement || [] };
   quizSessions.set(token, { compte, until: Date.now() + 120000 });
   return compte;
 }
@@ -711,6 +712,20 @@ async function quizMatiereDe(id) {
   const cats = await Promise.all(QUIZ_MATIERES.map(quizCatalogue));
   for (const [i, cat] of cats.entries()) if (cat.some(q => q.id === id)) return QUIZ_MATIERES[i];
   return null;
+}
+
+// Réponses du test de positionnement, montrées à la fin du test : réponse donnée en clair (mots cliqués), réponse attendue, explication
+async function reponsesTestLisibles(detail) {
+  if (!Array.isArray(detail) || !detail.length) return [];
+  const { data, error } = await supabaseAdmin.from('quiz_questions').select('id, type, choix, explication').in('id', detail.map(d => d.id));
+  if (error) throw new Error(error.message);
+  const qs = new Map((data || []).map(q => [q.id, q]));
+  return detail.map(d => {
+    const q = qs.get(d.id) || {};
+    const reponse = d.reponse === '' ? '' : q.type === 'cliquer_mot'
+      ? String(d.reponse).split(',').map(i => (q.choix || [])[Number(i)]).filter(Boolean).join(' ') : String(d.reponse);
+    return { matiere: d.matiere, question: d.question, reponse, attendu: d.attendu, correct: d.correct, explication: q.explication || '' };
+  });
 }
 
 // Propriétés Klaviyo du test de positionnement
@@ -822,6 +837,7 @@ app.get('/api/quiz/compte', async (req, res) => {
     const compte = await quizCompte(req, { frais: true });
     if (!compte) return res.status(401).json({ error: 'Connexion requise.' });
     res.json({ email: compte.email, positionnement: compte.positionnement, paid: compte.paid,
+      reponses_test: compte.positionnement ? await reponsesTestLisibles(compte.reponsesTest) : [],
       essai: compte.paid ? null : await quizEssai(compte),
       paypal_client_id: process.env.VITE_PAYPAL_CLIENT_ID || process.env.PAYPAL_CLIENT_ID || null, prix: QUIZ_PRICE.value });
   } catch (err) {
@@ -985,12 +1001,13 @@ app.get('/api/quiz/rapport', async (req, res) => {
   const token = String(req.query.token || '');
   if (!/^[A-Za-z0-9_-]{20,80}$/.test(token)) return res.status(404).json({ error: 'Ce lien n\'existe pas ou a expiré.' });
   try {
-    const { data, error } = await supabaseAdmin.from('quiz_comptes').select('positionnement, rapport_expire_at, prenom')
+    const { data, error } = await supabaseAdmin.from('quiz_comptes').select('positionnement, reponses_positionnement, rapport_expire_at, prenom')
       .eq('rapport_token', token).maybeSingle();
     if (error) throw new Error(error.message);
     if (!data?.positionnement || !data.rapport_expire_at || Date.parse(data.rapport_expire_at) < Date.now())
       return res.status(404).json({ error: 'Ce lien n\'existe pas ou a expiré.' });
-    res.set('Cache-Control', 'no-store').json({ resultat: data.positionnement, expire: data.rapport_expire_at, prenom: data.prenom || '' });
+    res.set('Cache-Control', 'no-store').json({ resultat: data.positionnement, expire: data.rapport_expire_at, prenom: data.prenom || '',
+      reponses: await reponsesTestLisibles(data.reponses_positionnement) });
   } catch (err) { console.error('[quiz/rapport]', err.message); res.status(500).json({ error: 'Le rapport n\'a pas pu être chargé.' }); }
 });
 

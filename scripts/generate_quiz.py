@@ -227,6 +227,20 @@ CSS = """
     .rp-notions ul { list-style: none; display: grid; gap: 10px; }
     .rp-notions li { font-size: 14px; line-height: 1.45; color: var(--gray-700); }
     .rp-notions .mat { display: block; font-size: 11.5px; font-weight: 800; color: #6366f1; text-transform: uppercase; letter-spacing: .03em; }
+    .rp-telecharger { justify-content: center; margin: -4px 0 16px; }
+    @media print {
+      .site-nav, .quiz-tabbar, .quiz-wrap > h1, .quiz-lead, .quiz-confirm, .no-print, .essai-carte, .essai-annonce, .quiz-actions { display: none !important; }
+      body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .rp-tete { box-shadow: none; }
+      .rp-mat, .quiz-recap > div, .qz-serie summary { break-inside: avoid-page; }
+      .rp-reponses .qz-serie-voir { display: none; }
+    }
+    .test-info { margin: 0 0 16px; padding: 10px 14px; border-radius: 12px; background: #eef2ff; color: #3730a3; font-size: 13.5px; line-height: 1.5; }
+    .rp-reponses .qz-serie + .qz-serie { margin-top: 10px; }
+    .rp-reponses .rp-rep-q { display: block; font-weight: 600; color: var(--gray-900); }
+    .rp-reponses .rp-rep-d { display: block; margin-top: 3px; }
+    .rp-reponses .rp-rep-d.ok { color: #166534; } .rp-reponses .rp-rep-d.ko { color: #991b1b; }
+    .rp-reponses .rp-rep-x { display: block; margin-top: 6px; font-size: 13.5px; color: var(--gray-600); }
     @media (max-width: 600px) { .rp-ligne { grid-template-columns: 105px 1fr 42px; font-size: 13.5px; } .rp-listes { grid-template-columns: 1fr; } .rp-score { font-size: 52px; } }
     .paywall { margin: 0 0 16px; border: 2px solid #c7d2fe; background: linear-gradient(160deg, #eef2ff, #fff 60%); }
     .pw-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
@@ -789,7 +803,7 @@ JS = """<script>
     marquerOnglet('test');
     root.innerHTML = '<div class="quiz-card"><p>Chargement du rapport…</p></div>';
     fetch('/api/quiz/rapport?token=' + encodeURIComponent(token)).then(function (r) { return r.json().then(function (d) { if (!r.ok) throw d; return d; }); })
-      .then(function (d) { resultat(d.resultat, { expire: d.expire, prenom: d.prenom }); top(); })
+      .then(function (d) { resultat(d.resultat, { expire: d.expire, prenom: d.prenom, reponses: d.reponses }); top(); })
       .catch(function () {
         intro(false);
         root.innerHTML = '<div class="quiz-card"><h2>Ce lien a expiré</h2><p>Les liens vers un rapport de positionnement sont valables 7 jours. Connectez-vous pour retrouver votre rapport dans l’onglet « Mon test ».</p>' +
@@ -1035,7 +1049,7 @@ JS = """<script>
     if (!t && !testPret) testPret = api('/api/quiz/positionnement').catch(function (e) { testPret = null; throw e; });
     root.innerHTML = barreCompte() + '<div class="quiz-card"><h2>Votre test de positionnement</h2>' +
       '<p>Avant d\\'accéder au quiz, faites le point sur votre niveau. Le test est <strong>gratuit</strong> et dure environ <strong>20 minutes</strong> :</p>' +
-      '<ul class="quiz-points"><li>63 questions, 7 dans chacune des 9 matières ;</li><li>des questions faciles, intermédiaires et avancées ;</li><li>pas de correction pendant le test : à la fin, vous obtenez votre carte des forces et faiblesses, matière par matière.</li></ul>' +
+      '<ul class="quiz-points"><li>63 questions, 7 dans chacune des 9 matières ;</li><li>des questions faciles, intermédiaires et avancées ;</li><li><strong>pas de correction pendant le test</strong> : toutes les réponses, avec leurs explications, vous sont données à la fin, en même temps que votre carte des forces et faiblesses, matière par matière.</li></ul>' +
       '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="test-start">' + (t ? 'Reprendre mon test (question ' + (t.i + 1) + ' / ' + t.qs.length + ')' : 'Commencer mon test') + '</button></div></div>';
   }
   function lireTest() { try { var t = JSON.parse(localStorage.getItem(CLE_TEST)); return t && t.qs && t.qs.length && t.user === (compte && compte.email) ? t : null; } catch (e) { return null; } }
@@ -1059,6 +1073,7 @@ JS = """<script>
     else corps = '<div class="quiz-choices">' + q.choix.map(function (c, k) { return '<button type="button" class="quiz-choice" data-tk="' + k + '">' + esc(c) + '</button>'; }).join('') + '</div>';
     root.innerHTML = '<div class="quiz-card"><div class="quiz-top"><span class="mat">Test de positionnement · ' + esc(label(q.matiere)) + '</span><span>Question ' + (tst.i + 1) + ' / ' + n + '</span></div>' +
       '<div class="quiz-bar"><span style="width:' + Math.round(tst.i / n * 100) + '%"></span></div>' +
+      '<p class="test-info">🔒 Pas de correction pendant le test : vous découvrirez toutes les réponses à la fin.</p>' +
       '<p class="quiz-q">' + esc(q.question) + '</p>' + corps +
       '<p class="quiz-hint" id="t-aide">' + (q.type === 'qcm' ? 'Cliquez sur une réponse pour passer à la question suivante.' : 'Appuyez sur Entrée pour passer à la question suivante.') + '</p>' +
       '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="t-suivant">' + (tst.i === n - 1 ? 'Terminer le test' : 'Question suivante →') + '</button><button type="button" class="quiz-btn ghost" data-act="t-passer">Je ne sais pas</button></div></div>';
@@ -1131,6 +1146,30 @@ JS = """<script>
       return '<li><strong>Semaine ' + (k + 1) + '</strong> : ' + s.map(function (m) { return esc(m.label) + ' <span class="niv">' + NIVEAUX[niveauConseille(m)] + '</span>'; }).join(' · ') + '</li>';
     }).join('') + '<li><strong>Ensuite</strong> : consolidez vos matières fortes au niveau avancé, et laissez les révisions espacées faire revenir chaque notion.</li>';
   }
+  var fermeesAvantPdf = [];
+  window.addEventListener('beforeprint', function () {
+    // Ajoutées à la liste (et non remplacées) : certains navigateurs envoient beforeprint deux fois
+    [].slice.call(document.querySelectorAll('.rp-reponses details:not([open])')).forEach(function (d) { d.open = true; fermeesAvantPdf.push(d); });
+  });
+  window.addEventListener('afterprint', function () { fermeesAvantPdf.forEach(function (d) { d.open = false; }); fermeesAvantPdf = []; });
+  // Les réponses du test, promises pendant le test : une liste dépliable par matière (question, réponse donnée, bonne réponse, explication)
+  function reponsesTest(r, reps) {
+    if (!reps || !reps.length) return '';
+    return '<div class="quiz-card rp-bloc rp-reponses"><h2>Les réponses du test</h2>' +
+      '<p class="rp-avert">Pendant le test, aucune correction n’était donnée. Voici chaque question, votre réponse et la bonne réponse.</p>' +
+      r.matieres.map(function (m) {
+        var qs = reps.filter(function (x) { return x.matiere === m.matiere; });
+        if (!qs.length) return '';
+        var ok = qs.filter(function (x) { return x.correct; }).length;
+        return '<details class="qz-serie"><summary><span class="qz-serie-info"><b>' + esc(m.label) + '</b><span>' + ok + ' / ' + qs.length + ' bonnes réponses</span></span><span class="qz-serie-voir"></span></summary>' +
+          '<div class="quiz-recap">' + qs.map(function (x) {
+            return '<div class="' + (x.correct ? 'r-ok' : 'r-ko') + '"><span><span class="rp-rep-q">' + esc(x.question) + '</span>' +
+              '<span class="rp-rep-d ' + (x.correct ? 'ok' : 'ko') + '">Votre réponse : ' + (x.reponse ? esc(x.reponse) : '<em>Je ne sais pas</em>') + '</span>' +
+              (x.correct ? '' : '<span class="rp-rep-d ok">Bonne réponse : ' + esc(x.attendu) + '</span>') +
+              (x.explication ? '<span class="rp-rep-x">' + esc(x.explication) + '</span>' : '') + '</span></div>';
+          }).join('') + '</div></details>';
+      }).join('') + '</div>';
+  }
   function resultat(r, lecture) {
     var pf = profil(r), tri = r.matieres.slice().sort(function (a, b) { return b.pct - a.pct; });
     // Note sur 20 : le niveau global, seul résultat assez précis avec 63 questions
@@ -1146,6 +1185,7 @@ JS = """<script>
       '<div class="rp-score">' + note + '<span class="rp-sur20">/20</span></div><div class="rp-titre">' + pf.titre + '</div>' +
       '<div class="rp-sous">' + r.pct + ' % de bonnes réponses · ' + r.ok + ' sur ' + r.n + ' · 9 matières · 3 niveaux</div>' +
       '<div class="rp-depart">Un point de départ, pas un verdict : votre carte se précise à chaque série.</div></div>' +
+      '<div class="quiz-actions rp-telecharger no-print"><button type="button" class="quiz-btn ghost" data-act="rapport-pdf">📄 Télécharger mon rapport en PDF</button></div>' +
       '<!--PAIEMENT-->' +
       '<div class="quiz-card rp-bloc"><h2>Votre profil</h2><p>' + pf.texte + '</p></div>' +
       '<div class="quiz-card rp-bloc"><h2>Tendances par matière</h2>' +
@@ -1157,7 +1197,7 @@ JS = """<script>
       }).join('') + '</div>' +
       '<div class="quiz-card rp-bloc rp-notions"><h2>Les notions abordées pendant le test</h2>' +
       '<p class="rp-avert">Chaque notion n’a été testée que sur 1 à 3 questions : trop peu pour la juger. Vos séries diront lesquelles sont acquises et lesquelles revoir.</p>' +
-      '<ul>' + notions + '</ul></div>' +
+      '<ul>' + notions + '</ul></div>' + reponsesTest(r, lecture ? lecture.reponses : compte && compte.reponses_test) +
       '<div class="quiz-card rp-bloc"><h2>Votre plan de révision</h2><ol class="rp-plan">' + plan(r) + '</ol>' +
       '<p class="rp-note">Ce test repose sur 63 questions (7 par matière) : votre niveau global est fiable, le détail par matière donne des tendances. Vos séries d’entraînement affinent ce diagnostic jour après jour.</p></div>';
     // Lien provisoire (lecture seule, sans connexion) : ni essai ni paiement, date d'expiration et invitation à découvrir le quiz
@@ -1463,6 +1503,7 @@ JS = """<script>
       });
     }
     else if (act === 'voir-resultat') { resultat(compte.positionnement); top(); }
+    else if (act === 'rapport-pdf') window.print();
     else if (act === 'start') demarrer(choix.mat, choix.niveau);
     else if (act === 'prog-choix') { st = null; progression(choix.mat); }
     else if (act === 'again') { choix.mat = st.mat; choix.niveau = st.niveau; demarrer(st.mat, st.niveau); }
