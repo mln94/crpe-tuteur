@@ -353,6 +353,8 @@ CSS = """
     .qz-modes-ligne { display: flex; align-items: stretch; gap: 12px; }
     .qz-modes-ligne .qz-modes { flex: 0 1 340px; }
     .qz-lancer { margin-left: auto; display: flex; }
+    .qz-lbl-ligne { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+    .qz-voir-themes { white-space: nowrap; font-size: 13px; color: #ea580c; font-weight: 600; margin-bottom: 6px; }
     .qz-lancer:empty { display: none; }
     .qz-lancer .quiz-btn { margin: 0; white-space: nowrap; }
     @media (max-width: 600px) { .qz-modes-ligne { flex-wrap: wrap; } .qz-modes-ligne .qz-modes { flex: 1 1 100%; } .qz-lancer { flex: 1 1 100%; } .qz-lancer .quiz-btn { width: 100%; } }
@@ -668,7 +670,9 @@ JS = """<script>
         var off = fige || (e && n !== choix.niveau);
         return '<button type="button" class="quiz-niveau" data-niv="' + n + '" aria-pressed="' + (n === choix.niveau) + '"' + (off ? ' disabled' : '') +
           (e && n !== choix.niveau ? ' title="Disponible avec l’accès complet"' : '') + '>' + NIVEAUX[n] + (e && n !== choix.niveau ? ' 🔒' : '') + '</button>'; }).join('') + '</div></div>' +
-      '<div class="qz-barre-champ qz-champ-modes"><span class="lbl" id="quiz-th-lbl">Thèmes</span><div class="qz-modes-ligne"><div class="quiz-niveaux qz-modes" role="group" aria-labelledby="quiz-th-lbl">' +
+      '<div class="qz-barre-champ qz-champ-modes"><div class="qz-lbl-ligne"><span class="lbl" id="quiz-th-lbl">Thèmes</span>' +
+      (enSerie ? '' : '<button type="button" class="quiz-link qz-voir-themes" data-act="voir-themes">Voir le détail des thèmes ↓</button>') + '</div>' +
+      '<div class="qz-modes-ligne"><div class="quiz-niveaux qz-modes" role="group" aria-labelledby="quiz-th-lbl">' +
       [['hasard', '🎲 Au hasard'], ['choix', '🎯 Mes thèmes']].map(function (m) {
         var on = (m[0] === 'choix') === !!themesChoisis(choix.mat);
         return '<button type="button" class="quiz-niveau" data-mode="' + m[0] + '" aria-pressed="' + on + '"' + (enSerie ? ' disabled' : '') + '>' + m[1] + '</button>'; }).join('') + '</div>' +
@@ -760,7 +764,7 @@ JS = """<script>
         '<p>' + total + ' questions dans ' + ordre.length + ' thème' + (ordre.length > 1 ? 's' : '') + ' du programme' + (ex ? ' · série d’essai offerte' : '') + '</p></div></div>' +
         (ths && ths.length ? '<p class="qz-note qz-themes-choisis">Série sur ' + ths.length + ' thème' + (ths.length > 1 ? 's' : '') + ' choisi' + (ths.length > 1 ? 's' : '') + ' : ' + esc(ths.join(' · ')) + '</p>' : '') +
         '<div class="stats"><div class="stat"><b>' + reussies + ' / ' + total + '</b><span>questions réussies</span></div><div class="stat"><b>' + b.maitrisees + ' / ' + b.total + '</b><span>notions maîtrisées</span></div></div>' +
-        '<h3 class="qz-sous-titre">Progression par thème</h3>' +
+        '<h3 class="qz-sous-titre" id="qz-detail-themes">Progression par thème</h3>' +
         blocs(ordre).map(function (bl) {
           var ligne = function (t) {
             var x = themes[t], pc = x.n ? Math.round(x.ok / x.n * 100) : 0, gr = groupe(t);
@@ -1577,6 +1581,13 @@ JS = """<script>
     else if (act === 'again') { choix.mat = st.mat; choix.niveau = st.niveau; demarrer(st.mat, st.niveau); }
     else if (act === 'prog') progression(st.mat);
     else if (act === 'home') { accueil(); top(); }
+    else if (act === 'voir-themes') {
+      // Défilement jusqu'à « Progression par thème », sous la barre des filtres qui reste en haut de l'écran
+      // (hauteur de la barre une fois fixée en haut, et non à sa place de départ)
+      var cible = document.getElementById('qz-detail-themes'), barre = root.querySelector('.qz-barre');
+      var dessus = barre ? (parseFloat(getComputedStyle(barre).top) || 0) + barre.offsetHeight : 80;
+      if (cible) window.scrollTo({ top: cible.getBoundingClientRect().top + window.scrollY - dessus - 12, behavior: 'smooth' });
+    }
     else if (act === 'sp-autre') supportVue();
     else if (act === 'pf-modifier') { var pp = lireProfil(); pfEdit = { prenom: pp.prenom, concours: pp.concours, academie: pp.academie }; afficherProfil(); }
     else if (act === 'pf-annuler') { pfEdit = null; afficherProfil(); }
