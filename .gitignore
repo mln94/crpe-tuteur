@@ -10,3 +10,6 @@ assets-source
 # Documents de travail locaux (rapports de jury, programmes du concours… PDF volumineux)
 Ressources/
 Rapport jury CRPE/
+
+# Modèles d'e-mails Klaviyo (gardés en local)
+emails/

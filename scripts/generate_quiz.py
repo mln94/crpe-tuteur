@@ -1095,7 +1095,7 @@ JS = """<script>
       compte.positionnement = d.resultat; tst = null;
       // Compte rechargé : l'offre d'essai (2 matières les plus fragiles) est calculée par le serveur d'après le test
       return api('/api/quiz/compte').then(function (c) { compte = c; }).catch(function () {}).then(function () {
-        resultat(d.resultat); top(); proposerEssai();
+        resultat(d.resultat); top(); proposerEssaiAuDefilement();
       });
     }).catch(function () { tst.i--; garderTest(); erreur('Votre test n\\'a pas pu être corrigé. Vos réponses sont gardées : réessayez.'); });
   }
@@ -1232,6 +1232,19 @@ JS = """<script>
     choix.mat = m.matiere; choix.niveau = m.niveau; garderChoix(); demarrer(m.matiere, m.niveau); top();
   }
   // Fin du test : proposition immédiate des 2 séries d'essai, dans les matières les plus fragiles
+  // Le rapport s'affiche d'abord seul : l'offre d'essai s'ouvre une fois la moitié du rapport parcourue (une seule fois)
+  var essaiAuDefilement = null;
+  function proposerEssaiAuDefilement() {
+    if (essaiAuDefilement) window.removeEventListener('scroll', essaiAuDefilement);
+    essaiAuDefilement = function () {
+      if (!document.querySelector('.rp-tete')) { window.removeEventListener('scroll', essaiAuDefilement); essaiAuDefilement = null; return; } // rapport quitté
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      if (max <= 0 || window.scrollY / max < 0.5) return;
+      window.removeEventListener('scroll', essaiAuDefilement); essaiAuDefilement = null;
+      proposerEssai();
+    };
+    window.addEventListener('scroll', essaiAuDefilement, { passive: true });
+  }
   function proposerEssai() {
     var e = essaiActif();
     if (!e || e.termine) return;
@@ -1244,7 +1257,7 @@ JS = """<script>
       '<p class="pay-texte">Commencez par vos deux matières les plus fragiles, au niveau conseillé par votre test :</p><ul class="essai-liste">' +
       e.matieres.map(function (x) { return '<li><strong>' + esc(x.label) + '</strong> · niveau ' + NIVEAUX[x.niveau] + ' · ' + x.max + ' questions' + (x.termine ? ' ✓' : '') + '</li>'; }).join('') +
       '</ul><div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-essai="go">Commencer ma première série →</button></div>' +
-      '<p class="pw-liens"><button type="button" class="quiz-link" data-essai="rapport">Voir d’abord mon rapport</button></p></div>';
+      '<p class="pw-liens"><button type="button" class="quiz-link" data-essai="rapport">Continuer la lecture de mon rapport</button></p></div>';
     document.body.appendChild(m);
     document.body.style.overflow = 'hidden';
     var fermer = function () { m.remove(); document.body.style.overflow = ''; };
