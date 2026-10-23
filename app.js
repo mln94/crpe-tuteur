@@ -666,7 +666,8 @@ async function quizCompte(req, { frais = false } = {}) {
 }
 const quizOublier = userId => { for (const [t, c] of quizSessions) if (c.compte.id === userId) quizSessions.delete(t); };
 
-/* ── Essai gratuit après le test : une série dans chacune des 2 matières les moins réussies, au niveau conseillé ── */
+/* ── Essai gratuit après le test : 2 séries offertes, dans les 2 matières choisies par la personne, au niveau conseillé par le test.
+   Les 2 matières les moins réussies au test sont conseillées ; une matière est « choisie » dès sa première réponse d'essai. ── */
 const ESSAI_NB_MATIERES = 2;
 const niveauConseille = m => {
   const t = x => (x && x.n ? x.ok / x.n : null);
@@ -676,22 +677,29 @@ const niveauConseille = m => {
   if (i !== null && i < 1) return 'intermediaire';
   return 'difficile';
 };
-// Matières offertes (déduites du test, donc stables) et nombre de questions de chaque série d'essai
+// Matières ouvertes à l'essai (toutes tant que 2 matières n'ont pas été commencées, sinon les 2 commencées),
+// avec le niveau conseillé par le test et le nombre de questions de chaque série d'essai
 async function quizEssai(compte) {
   const r = compte.positionnement;
   if (!r || !Array.isArray(r.matieres)) return null;
   const ordre = m => QUIZ_MATIERES.indexOf(m.matiere);
-  const choisies = r.matieres.slice().sort((a, b) => a.pct - b.pct || ordre(a) - ordre(b)).slice(0, ESSAI_NB_MATIERES);
-  const matieres = await Promise.all(choisies.map(async m => {
+  const conseillees = r.matieres.slice().sort((a, b) => a.pct - b.pct || ordre(a) - ordre(b)).slice(0, ESSAI_NB_MATIERES).map(m => m.matiere);
+  const commencees = r.matieres.filter(m => (compte.essaiReponses[m.matiere] || []).length > 0).map(m => m.matiere);
+  const ouvertes = commencees.length >= ESSAI_NB_MATIERES ? commencees : r.matieres.map(m => m.matiere);
+  const liste = r.matieres.filter(m => ouvertes.includes(m.matiere))
+    .sort((a, b) => (conseillees.includes(b.matiere) - conseillees.includes(a.matiere)) || ordre(a) - ordre(b));
+  const matieres = await Promise.all(liste.map(async m => {
     const niveau = niveauConseille(m);
     const notions = new Set((await quizCatalogue(m.matiere)).filter(q => q.niveau === niveau).map(q => q.notion));
     const max = Math.min(20, notions.size), faites = (compte.essaiReponses[m.matiere] || []).length;
-    return { matiere: m.matiere, label: QUIZ_LABELS[m.matiere], niveau, max, faites: Math.min(faites, max), termine: faites >= max };
+    return { matiere: m.matiere, label: QUIZ_LABELS[m.matiere], niveau, max, faites: Math.min(faites, max), termine: faites >= max,
+      conseillee: conseillees.includes(m.matiere) };
   }));
-  return { matieres, termine: matieres.every(m => m.termine) };
+  const terminees = matieres.filter(m => m.termine).length;
+  return { matieres, nb: ESSAI_NB_MATIERES, terminees, termine: terminees >= ESSAI_NB_MATIERES };
 }
 
-// Accès au quiz : compte payé, ou essai gratuit dans une matière offerte (matiere = matière demandée)
+// Accès au quiz : compte payé, ou essai gratuit dans une matière ouverte à l'essai (matiere = matière demandée)
 async function quizAcces(req, res, matiere) {
   try {
     const compte = await quizCompte(req);
@@ -699,7 +707,7 @@ async function quizAcces(req, res, matiere) {
     if (compte.paid) return compte;
     const essai = compte.positionnement && matiere ? await quizEssai(compte) : null;
     const m = essai?.matieres.find(x => x.matiere === matiere);
-    if (m && !m.termine) { compte.essaiMatiere = m; return compte; } // matière offerte dont la série d'essai n'est pas finie
+    if (m && !m.termine && !essai.termine) { compte.essaiMatiere = m; return compte; } // matière ouverte dont la série d'essai n'est pas finie
     res.status(402).json({ error: 'Accès réservé aux comptes débloqués.', code: 'paiement' }); return null;
   } catch (err) {
     console.error('[quiz/acces]', err.message);

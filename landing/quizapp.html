@@ -800,7 +800,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
   // Préchargement en arrière-plan des matières utiles : celles de l'essai, ou celles déjà travaillées
   function precharger() {
-    var e = essaiActif(), pr = lire(), mats = e ? e.matieres.filter(function (m) { return !m.termine; }).map(function (m) { return m.matiere; })
+    var e = essaiActif(), pr = lire(), mats = e ? e.matieres.filter(function (m) { return !m.termine && (m.conseillee || m.faites); }).map(function (m) { return m.matiere; })
       : MATIERES.map(function (m) { return m[0]; }).filter(function (k) { return pr[k] && pr[k].series; });
     var suivante = function () {
       var k = mats.shift(); if (!k) return;
@@ -858,6 +858,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function intro(v) { var l = document.querySelector('.quiz-lead'), h = document.querySelector('.quiz-wrap > h1'); if (l) l.hidden = !v; if (h) h.hidden = !v; }
   // Essai gratuit en cours (compte non payé) : 2 matières offertes, chacune à son niveau conseillé
   function essaiActif() { return compte && !compte.paid && compte.essai ? compte.essai : null; }
+  function essaiConseillees(e) { var c = e.matieres.filter(function (m) { return m.conseillee; }); return c.length ? c : e.matieres; }
   function essaiDe(k) { var e = essaiActif(); return e ? e.matieres.filter(function (m) { return m.matiere === k; })[0] : null; }
 
   // Barre des filtres (matière, niveau), visible sur tous les écrans du quiz ; figée pendant une série
@@ -889,7 +890,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           '<button type="button" class="qz-dd-btn" data-dd-toggle="mat" aria-haspopup="listbox" aria-expanded="' + ouvert + '" aria-labelledby="quiz-mat-lbl"' + (fige ? ' disabled' : '') + '>' +
           '<span class="qz-dd-ico">' + mc[2] + '</span><span class="qz-dd-txt">' + esc(mc[1]) + '</span>' + CHEVRON + '</button>' +
           '<div class="qz-dd-menu" role="listbox" aria-labelledby="quiz-mat-lbl"' + (ouvert ? '' : ' hidden') + '>' + MATIERES.map(function (m) {
-            var x = essaiDe(m[0]), ok = !e || (x && !x.termine), info = e ? (x ? (x.termine ? 'essai terminé' : 'essai offert') : '🔒') : '', sel = m[0] === choix.mat;
+            var x = essaiDe(m[0]), ok = !e || (x && !x.termine), info = e ? (x ? (x.termine ? 'essai terminé' : x.conseillee ? 'conseillée' : 'essai offert') : '🔒') : '', sel = m[0] === choix.mat;
             return '<button type="button" class="qz-dd-opt" role="option" data-mat-opt="' + m[0] + '" aria-selected="' + sel + '"' + (ok ? '' : ' disabled') + '>' +
               '<span class="qz-dd-ico">' + m[2] + '</span><span class="qz-dd-txt">' + esc(m[1]) + '</span>' + (info ? '<small>' + info + '</small>' : '') + (sel ? '<span class="qz-dd-check">✓</span>' : '') + '</button>';
           }).join('') + '</div></div></div>';
@@ -926,9 +927,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz pour ' + PRIX + '</button></div></div></div>';
       return;
     }
-    var faites = e ? e.matieres.filter(function (m) { return m.termine; }).length : 0;
+    var faites = e ? e.terminees : 0;
     root.innerHTML = barreCompte() + barreFiltres(false) +
-      (e ? '<div class="essai-bandeau">🎁 <strong>Essai gratuit : ' + faites + ' / ' + e.matieres.length + ' séries faites.</strong> Les autres matières et niveaux se débloquent avec l’accès complet.</div>' : '') +
+      (e ? '<div class="essai-bandeau">🎁 <strong>Essai gratuit : ' + faites + ' / ' + e.nb + ' séries faites.</strong> ' +
+        (e.matieres.length > e.nb ? 'Choisissez les 2 matières de vos séries offertes ; les matières « conseillées » sont celles de votre test.' : 'Les autres matières et niveaux se débloquent avec l’accès complet.') + '</div>' : '') +
       (message ? '<div class="quiz-msg ok-msg">' + esc(message) + '</div>' : '') +
       '<div class="quiz-card" id="qz-bilan"><p>Chargement de votre bilan…</p></div>' +
       '<div class="quiz-card" id="qz-tableau"><p>Chargement de votre progression…</p></div>';
@@ -1337,7 +1339,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       compte.positionnement = d.resultat; tst = null;
       // Compte rechargé : l'offre d'essai (2 matières les plus fragiles) est calculée par le serveur d'après le test
       return api('/api/quiz/compte').then(function (c) { compte = c; }).catch(function () {}).then(function () {
-        resultat(d.resultat); top();
+        resultat(d.resultat); top(); proposerEssaiAuDefilement();
       });
     }).catch(function () { tst.i--; garderTest(); erreur('Votre test n\'a pas pu être corrigé. Vos réponses sont gardées : réessayez.'); });
   }
@@ -1458,9 +1460,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var e = compte && compte.essai;
       var offre = e && !e.termine
         ? '<div class="quiz-card essai-carte" id="essai"><div class="essai-cadeau">🎁</div><div><h2>Vos 2 séries d’essai offertes</h2>' +
-          '<p>Commencez gratuitement par vos deux matières les plus fragiles, au niveau conseillé par votre test :</p><ul class="essai-liste">' +
-          e.matieres.map(function (m) { return '<li><strong>' + esc(m.label) + '</strong> · niveau ' + NIVEAUX[m.niveau] + ' · ' + m.max + ' questions' + (m.termine ? ' ✓' : '') + '</li>'; }).join('') +
-          '</ul><div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="essai-go">Commencer mon essai gratuit →</button></div></div></div>'
+          '<p>Nous vous conseillons ces deux matières, les plus fragiles d’après votre test, au niveau qu’il suggère :</p><ul class="essai-liste">' +
+          essaiConseillees(e).map(function (m) { return '<li><strong>' + esc(m.label) + '</strong> · niveau ' + NIVEAUX[m.niveau] + ' · ' + m.max + ' questions' + (m.termine ? ' ✓' : '') + '</li>'; }).join('') +
+          '</ul><p>Vous pouvez aussi choisir d’autres matières et les thèmes de chaque série sur la page du quiz.</p>' +
+          '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="essai-go">Commencer mon essai gratuit →</button></div></div></div>'
         : '<div class="quiz-card essai-carte"><div class="essai-cadeau">🔓</div><div><h2>Votre essai est terminé</h2><p>Débloquez les 9 matières pour continuer votre préparation.</p>' +
           '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz</button></div></div></div>';
       var annonce = e && !e.termine ? '<div class="essai-annonce">🎁 Vous avez 2 séries d’essai offertes : le bouton pour les commencer est à la fin de votre rapport.</div>' : '';
@@ -1468,29 +1471,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
     root.innerHTML = html;
     intro(false); // l'introduction du quiz est masquée sur le rapport
-    proposerEssaiAuDefilement();
   }
   // Prochaine série d'essai non terminée : matière et niveau conseillés par le test
   function lancerEssai() {
-    var e = essaiActif(), m = e && e.matieres.filter(function (x) { return !x.termine; })[0];
+    var e = essaiActif(), m = e && (e.matieres.filter(function (x) { return !x.termine && x.faites; })[0] || essaiConseillees(e).filter(function (x) { return !x.termine; })[0]);
     if (!m) { accueil(); top(); return; }
     choix.mat = m.matiere; choix.niveau = m.niveau; garderChoix(); demarrer(m.matiere, m.niveau); top();
   }
   // Fin du test : proposition immédiate des 2 séries d'essai, dans les matières les plus fragiles
-  // Le rapport s'affiche d'abord seul : l'offre d'essai s'ouvre une fois la moitié du rapport parcourue,
-  // à chaque affichage du rapport (fin du test, « Mon test », retour sur le site), une seule fois par visite
-  var essaiAuDefilement = null, essaiProposeCetteVisite = false;
+  // Juste après le test seulement : le rapport s'affiche d'abord seul, et l'offre d'essai s'ouvre une fois la moitié
+  // du rapport parcourue. En revenant plus tard sur le rapport (« Mon test », retour sur le site), pas de fenêtre.
+  var essaiAuDefilement = null;
   function proposerEssaiAuDefilement() {
     if (essaiAuDefilement) window.removeEventListener('scroll', essaiAuDefilement);
     essaiAuDefilement = null;
     var e = essaiActif();
-    if (essaiProposeCetteVisite || !e || e.termine) return;
+    if (!e || e.termine) return;
     essaiAuDefilement = function () {
       if (!document.querySelector('.rp-tete')) { window.removeEventListener('scroll', essaiAuDefilement); essaiAuDefilement = null; return; } // rapport quitté
       var max = document.documentElement.scrollHeight - window.innerHeight;
       if (max <= 0 || window.scrollY / max < 0.5) return;
       window.removeEventListener('scroll', essaiAuDefilement); essaiAuDefilement = null;
-      essaiProposeCetteVisite = true; proposerEssai();
+      proposerEssai();
     };
     window.addEventListener('scroll', essaiAuDefilement, { passive: true });
   }
@@ -1504,9 +1506,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     m.innerHTML = '<div class="pay-card"><button type="button" class="pay-fermer" aria-label="Fermer">×</button>' +
       '<div class="pay-badge">🎁 Offert</div><h2 id="essai-titre">Nous vous proposons deux séries d’essai gratuites</h2>' +
       '<p class="pay-texte">Merci d’avoir passé votre test de positionnement. Pour découvrir le Quiz CRPE, nous vous proposons de faire deux séries de questions, gratuitement.</p>' +
-      '<p class="pay-texte">Nous vous conseillons de commencer par ces deux matières, au niveau suggéré par votre test :</p><ul class="essai-liste">' +
-      e.matieres.map(function (x) { return '<li><strong>' + esc(x.label) + '</strong> · niveau ' + NIVEAUX[x.niveau] + ' · ' + x.max + ' questions' + (x.termine ? ' ✓' : '') + '</li>'; }).join('') +
-      '</ul><p class="pay-texte">Si vous le souhaitez, vous pourrez choisir vous-même les thèmes de chaque série sur la page du quiz, avec le bouton « Mes thèmes ».</p>' +
+      '<p class="pay-texte">Nous vous conseillons ces deux matières, les plus fragiles d’après votre test, au niveau qu’il suggère :</p><ul class="essai-liste">' +
+      essaiConseillees(e).map(function (x) { return '<li><strong>' + esc(x.label) + '</strong> · niveau ' + NIVEAUX[x.niveau] + ' · ' + x.max + ' questions' + (x.termine ? ' ✓' : '') + '</li>'; }).join('') +
+      '</ul><p class="pay-texte">Ce n’est qu’un conseil : si vous le souhaitez, vous pourrez choisir d’autres matières, ainsi que les thèmes de chaque série (bouton « Mes thèmes »), sur la page du quiz.</p>' +
       '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-essai="go">Commencer ma première série →</button></div>' +
       '<p class="pw-liens"><button type="button" class="quiz-link" data-essai="rapport">Continuer la lecture de mon rapport</button></p></div>';
     document.body.appendChild(m);
