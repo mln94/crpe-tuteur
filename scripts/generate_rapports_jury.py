@@ -237,7 +237,7 @@ def page(annee, rows):
   <p class="lead">Chaque année, les jurys du CRPE publient un <strong>rapport de jury</strong> par académie : les correcteurs y expliquent ce qu'ils ont valorisé, ce qu'ils ont pénalisé et les erreurs qui reviennent d'une copie à l'autre. {INTRO[annee]}</p>
 
   <a class="analyse-cta" href="/{SLUG}/disciplines">
-    <span class="analyse-txt"><strong>L'analyse détaillée, discipline par discipline</strong>Nous avons lu ces rapports pour vous. Déjà disponible : l'écrit de français, avec les sujets officiels, les corrigés question par question, les erreurs fréquentes et les conseils des jurys. Les autres disciplines arrivent d'ici le 3 novembre.</span>
+    <span class="analyse-txt"><strong>L'analyse détaillée, discipline par discipline</strong>Nous avons lu ces rapports pour vous. Déjà disponibles : les écrits de français et de mathématiques, avec les sujets officiels, les corrigés question par question, les erreurs fréquentes et les conseils des jurys. Les autres disciplines arrivent d'ici le 3 novembre.</span>
     <span class="analyse-btn">Voir l'analyse par discipline →</span>
   </a>
   <p style="font-size:15px;">Pour un résumé rapide, lisez aussi notre article <a href="/blog/rapport-jury-crpe-{annee}-conseils" {lien}>Rapport de jury CRPE {annee} : les conseils des jurys</a>.</p>
@@ -447,6 +447,13 @@ SEO = {
         "Rapport de jury CRPE : l'écrit de français",
         "Question par question : l'énoncé officiel, le corrigé publié par le jury, les erreurs relevées académie par "
         "académie et ce qu'il faut travailler. Bac+3 et bac+5 en 2026, et session 2025."),
+    'admissibilite-mathematiques': (
+        'Rapport de jury CRPE mathématiques (écrit) 2026 et 2025 : sujets, corrigés et conseils',
+        "L'écrit de mathématiques du CRPE exercice par exercice : énoncés officiels, corrigés, taux de réussite et "
+        "erreurs fréquentes relevées par les jurys, pour le bac+3 et le bac+5 en 2026 et pour la session 2025.",
+        "Rapport de jury CRPE : l'écrit de mathématiques",
+        "Exercice par exercice : l'énoncé officiel, le corrigé, les taux de réussite et les erreurs relevées académie "
+        "par académie, et ce qu'il faut travailler. Bac+3 et bac+5 en 2026, et session 2025."),
 }
 
 
@@ -572,9 +579,9 @@ CTA = '''  <div class="page-cta">
 
 
 # Disciplines dont l'analyse est publiée ; les autres sont annoncées « À venir » avec leur date prévue.
-PUBLIEES = {'admissibilite-francais'}
+PUBLIEES = {'admissibilite-francais', 'admissibilite-mathematiques'}
 PREVUES = {  # deux disciplines tous les deux jours
-    'admissibilite-mathematiques': '24 octobre', 'admissibilite-histoire-geographie': '24 octobre',
+    'admissibilite-histoire-geographie': '24 octobre',
     'admissibilite-sciences-technologie': '26 octobre', 'admissibilite-emc': '26 octobre',
     'admissibilite-arts': '28 octobre', 'admissibilite-langue-vivante': '28 octobre',
     'admissibilite-langues-regionales': '30 octobre', 'admission-francais': '30 octobre',
