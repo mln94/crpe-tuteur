@@ -229,6 +229,12 @@ async function klaviyoSubscribePipeline(email, prenom, nom, listId, properties =
     }),
   });
   let profileId;
+  if (profileRes.status === 400 && extraAttrs.phone_number) {
+    // Numéro refusé par Klaviyo : le profil est créé sans phone_number plutôt que pas du tout
+    const { phone_number, ...sansTel } = extraAttrs;
+    console.warn(`[Klaviyo] numéro refusé pour ${email} (${phone_number}), profil créé sans téléphone`);
+    return klaviyoSubscribePipeline(email, prenom, nom, listId, properties, sansTel, subscribeMarketing);
+  }
   if (profileRes.status === 409) {
     const dup = await profileRes.json();
     profileId = dup.errors?.[0]?.meta?.duplicate_profile_id;
@@ -322,24 +328,41 @@ function proprietesExamen(src) {
     ...(src?.tentatives_crpe !== null && src?.tentatives_crpe !== '' && Number.isInteger(t) && t >= 0 && t <= 3 ? { tentatives_crpe: t } : {}) };
 }
 
+// Téléphone au format E.164 exigé par Klaviyo : « 06 10 … » → +33610…, « 0033… » → +33… ; sinon pas de numéro
+function telephoneE164(t) {
+  const s = String(t || '').replace(/[\s.\-()]/g, '');
+  if (/^\+\d{6,15}$/.test(s)) return s;
+  if (/^00\d{6,15}$/.test(s)) return '+' + s.slice(2);
+  if (/^0\d{9}$/.test(s)) return '+33' + s.slice(1);
+  return undefined;
+}
+
+// Inscription → Klaviyo (liste des inscrits, et newsletter si la case est cochée). signup_confirmed (et email_verified,
+// ancien nom encore utilisé par les flows) vaut false tant que l'e-mail n'est pas confirmé, true ensuite
+async function klaviyoInscription(src, confirmed = false) {
+  const { prenom = '', nom = '', email } = src;
+  // Cases facultatives de l'inscription : l'abonnement aux e-mails marketing n'est fait qu'avec le consentement « conseils »
+  const consent_conseils = src.consent_conseils === true;
+  const consent_partenaires = src.consent_partenaires === true;
+  const tel = telephoneE164(src.telephone);
+  const phoneAttrs = tel ? { phone_number: tel } : {};
+  await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP,
+    { signup_confirmed: confirmed, email_verified: confirmed, passcrpe_trial: true, paid_user: false, paid_passcrpe: false, paid_quizcrpe: false, form_trial: false, test_positionnement_realise: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(src.parcours),
+      ...proprietesExamen(src) },
+    phoneAttrs, consent_conseils);
+  // Newsletter : seuls les inscrits qui ont coché la case rejoignent la liste newsletter, et y sont abonnés
+  // (consentement explicite exigé pour la prospection par e-mail)
+  if (consent_conseils)
+    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours_newsletter: parcoursOf(src.parcours) }, phoneAttrs, true);
+}
+
 app.post('/api/klaviyo/signup', async (req, res) => {
   if (!klaviyoGuard(res)) return;
-  const { prenom, nom, email, user_id, telephone } = req.body || {};
-  // Cases facultatives de l'inscription : l'abonnement aux e-mails marketing n'est fait qu'avec le consentement « conseils »
-  const consent_conseils = req.body?.consent_conseils === true;
-  const consent_partenaires = req.body?.consent_partenaires === true;
+  const { prenom, nom, email, user_id } = req.body || {};
   if (!prenom || !nom || !email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
     return res.status(400).json({ error: 'Données invalides.' });
   try {
-    const phoneAttrs = telephone ? { phone_number: telephone } : {};
-    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP,
-      { email_verified: false, passcrpe_trial: true, paid_user: false, paid_passcrpe: false, paid_quizcrpe: false, form_trial: false, test_positionnement_realise: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(req.body?.parcours),
-        ...proprietesExamen(req.body) },
-      phoneAttrs, consent_conseils);
-    // Newsletter : seuls les inscrits qui ont coché la case rejoignent la liste newsletter, et y sont abonnés
-    // (consentement explicite exigé pour la prospection par e-mail)
-    if (consent_conseils)
-      await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours_newsletter: parcoursOf(req.body?.parcours) }, phoneAttrs, true);
+    await klaviyoInscription(req.body);
 
     // Créer la ligne profil Supabase avec passcrpe_trial = true (un seul compte pour le tuteur IA et le quiz)
     if (user_id) {
@@ -386,14 +409,14 @@ async function klaviyoSetEmailVerified(email) {
     method: 'PATCH',
     headers: klaviyoHeaders(),
     body: JSON.stringify({
-      data: { type: 'profile', id: profileId, attributes: { properties: { email_verified: true } } },
+      data: { type: 'profile', id: profileId, attributes: { properties: { email_verified: true, signup_confirmed: true } } },
     }),
   });
   if (!patchRes.ok) {
     const err = await patchRes.json();
     throw new Error(err.errors?.[0]?.detail || `Erreur PATCH profil: ${patchRes.status}`);
   }
-  console.log(`[Klaviyo] email_verified=true pour ${email}`);
+  console.log(`[Klaviyo] email_verified=true, signup_confirmed=true pour ${email}`);
 }
 
 /* ── Klaviyo : mettre à jour des propriétés d'un profil (recherché par e-mail) ── */
@@ -578,22 +601,38 @@ app.post('/api/feedback/trial', async (req, res) => {
   res.json({ ok: true });
 });
 
-/* ── Supabase Auth Webhook → Klaviyo email_verified ──────────────────────────
-   Dashboard → Database → Webhooks → New webhook
-     Table : auth.users   Events : UPDATE
-     URL   : https://www.passcrpe.fr/api/webhook/supabase-auth
+/* ── Supabase Auth → Klaviyo, quelle que soit la page d'inscription ──────────
+   Triggers sur auth.users (migration 20261025_klaviyo_inscription_webhook.sql), via pg_net :
+     INSERT                       → { type: 'INSERT', record: { id } } : profil Klaviyo créé, signup_confirmed = false
+     email_confirmed_at renseigné → { type: 'UPDATE', record: { id } } : signup_confirmed = true
+   Seul l'id est lu dans la requête : le compte est relu dans Supabase (clé service_role), donc un appel forgé
+   ne peut que resynchroniser des données exactes.
 ───────────────────────────────────────────────────────────────────────────── */
+async function klaviyoProfilExiste(email) {
+  const r = await fetch(`${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`, { headers: klaviyoHeaders() });
+  return !!(await r.json()).data?.[0]?.id;
+}
+
 app.post('/api/webhook/supabase-auth', async (req, res) => {
-  const { type, record, old_record } = req.body || {};
-  if (type !== 'UPDATE') return res.json({ ignored: true });
-  const wasVerified = !!old_record?.email_confirmed_at;
-  const isVerified  = !!record?.email_confirmed_at;
-  if (wasVerified || !isVerified) return res.json({ ignored: true });
-  const email = record?.email;
-  if (!email) return res.status(400).json({ error: 'Email manquant.' });
+  if (!klaviyoGuard(res)) return;
+  const { type, record } = req.body || {};
+  if (!['INSERT', 'UPDATE'].includes(type) || !record?.id) return res.json({ ignored: true });
   try {
-    await klaviyoSetEmailVerified(email);
-    res.json({ ok: true });
+    const { data, error } = await supabaseAdmin.auth.admin.getUserById(record.id);
+    if (error || !data?.user?.email) return res.status(404).json({ error: 'Compte introuvable.' });
+    const user = data.user;
+    const confirmed = !!user.email_confirmed_at;
+    const src = { ...(user.user_metadata || {}), email: user.email };
+    if (type === 'INSERT') {
+      await klaviyoInscription(src, confirmed);
+    } else {
+      if (!confirmed) return res.json({ ignored: true });
+      // Profil absent (inscription jamais arrivée dans Klaviyo) : créé maintenant, déjà confirmé
+      if (!(await klaviyoProfilExiste(user.email))) await klaviyoInscription(src, true);
+      await klaviyoSetEmailVerified(user.email);
+      await klaviyoNewsletterDepuisInscription(user);
+    }
+    res.json({ ok: true, signup_confirmed: confirmed });
   } catch (err) {
     console.error('[Klaviyo webhook]', err.message);
     res.status(500).json({ error: err.message });
