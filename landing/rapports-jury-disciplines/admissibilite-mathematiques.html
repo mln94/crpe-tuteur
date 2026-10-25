@@ -342,7 +342,10 @@
     .rj-figure figcaption { font-size: 12.5px; color: var(--gray-500); margin-top: 4px; }
     .rj-figure-large { overflow-x: auto; }
     .rj-figure-large img { min-width: 520px; }
-    .rj-sujet-lien { font-size: 13.5px; margin: 0 0 12px !important; }
+    .rj-sujet-lien { font-size: 14px; font-weight: 600; color: var(--gray-900); background: var(--indigo-50); border: 1.5px solid var(--indigo-100); border-radius: 12px; padding: 10px 14px; margin: 4px 0 14px !important; }
+    .rj-sujet-lien a { display: inline-flex; align-items: center; gap: 6px; margin: 2px 2px; padding: 5px 12px; border-radius: 8px; background: var(--indigo-600); color: #fff !important; font-weight: 800; text-decoration: none; }
+    .rj-sujet-lien a::before { content: ""; width: 14px; height: 14px; flex: none; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6M9 13h6M9 17h6'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6M9 13h6M9 17h6'/%3E%3C/svg%3E") center / contain no-repeat; }
+    .rj-sujet-lien a:hover { background: var(--indigo-700); }
     .rj-corrige-titre { font-size: 13px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #047857; margin: 10px 0 6px !important; }
     @media (max-width: 600px) {
       .rd-rapport { padding: 20px 16px; border-radius: 16px; }
@@ -525,7 +528,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <p class="rj-q-label">L'énoncé</p>
   <p class="rj-q-consigne">Dans une école de 300 élèves : 40 % des élèves pratiquent un sport ; 75 élèves pratiquent un instrument de musique ; parmi les élèves qui pratiquent un instrument, 60 % pratiquent aussi un sport.</p>
   <blockquote>1. Recopier et compléter le tableau à double entrée. 2. On choisit au hasard un élève. Calculer la probabilité qu'il pratique au moins l'une de ces deux activités. 3. On choisit au hasard un élève qui pratique un sport. Calculer la probabilité qu'il pratique aussi un instrument de musique (fraction irréductible).</blockquote>
-  <p class="rj-sujet-lien">Le tableau à double entrée à compléter : <a href="https://www.devenirenseignant.gouv.fr/media/20277/download" target="_blank" rel="noopener">sujet bac+3 2026, groupement 1 (PDF)</a>, page 7.</p>
+  <p class="rj-sujet-lien">Le tableau à double entrée à compléter : <a href="https://www.devenirenseignant.gouv.fr/media/20277/download" target="_blank" rel="noopener">Sujet bac+3 2026 (PDF), page 7</a></p>
 </div>
 <p class="rj-corrige-titre">Le corrigé</p>
 <div class="rj-table-wrap">
@@ -554,7 +557,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <p class="rj-q-label">L'énoncé</p>
   <p class="rj-q-consigne">Un motif de carreaux évolue : 1 carreau à l'étape 1, 4 à l'étape 2, 7 à l'étape 3, 10 à l'étape 4.</p>
   <blockquote>1. Décrire comment on passe du motif d'une étape au motif suivant. 2. Déterminer le nombre de carreaux à l'étape 5 et à l'étape 20. 3. Quelle formule, à étirer vers le bas, entrer en B3 pour automatiser le calcul (étapes en colonne A, nombres de carreaux en colonne B) ? 4. Exprimer en fonction de n le nombre de carreaux à l'étape n. 5. Le motif compte-t-il exactement 100 carreaux à l'une de ses étapes ? Exactement 2 000 ?</blockquote>
-  <p class="rj-sujet-lien">Les dessins des étapes 1 à 4 et la feuille de calcul : <a href="https://www.devenirenseignant.gouv.fr/media/20277/download" target="_blank" rel="noopener">sujet bac+3 2026, groupement 1 (PDF)</a>, page 7.</p>
+  <p class="rj-sujet-lien">Les dessins des étapes 1 à 4 et la feuille de calcul : <a href="https://www.devenirenseignant.gouv.fr/media/20277/download" target="_blank" rel="noopener">Sujet bac+3 2026 (PDF), page 7</a></p>
 </div>
 <p class="rj-corrige-titre">Le corrigé</p>
 <ul>
@@ -579,7 +582,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <p class="rj-q-label">L'énoncé</p>
   <p class="rj-q-consigne">1. Un pentagone régulier ABCDE de centre O est inscrit dans un cercle. a) Justifier que l'angle DOC mesure 72°. b) Indiquer la nature du triangle OCD. c) Déterminer la mesure de l'angle DCB. d) Déterminer la somme des angles de ce pentagone.</p>
   <blockquote>2. Pentagone JKLMN avec JK = KL = LM = MN = 10 cm, angles JKL et LMN droits. a) Donner la nature des triangles JKL et LMN. b) En déduire que JL = LN = √200 cm.</blockquote>
-  <p class="rj-sujet-lien">Les figures des deux pentagones (codages des longueurs et des angles) : <a href="https://www.devenirenseignant.gouv.fr/media/20277/download" target="_blank" rel="noopener">sujet bac+3 2026, groupement 1 (PDF)</a>, page 8.</p>
+  <p class="rj-sujet-lien">Les figures des deux pentagones (codages des longueurs et des angles) : <a href="https://www.devenirenseignant.gouv.fr/media/20277/download" target="_blank" rel="noopener">Sujet bac+3 2026 (PDF), page 8</a></p>
 </div>
 <p class="rj-corrige-titre">Le corrigé</p>
 <ul>
@@ -633,7 +636,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <p class="rj-q-label">L'énoncé</p>
   <p class="rj-q-consigne">Sur un axe gradué d'origine O, le point U a pour abscisse 1. Huit graduations séparent O de U ; A est à la 4e graduation et B à la 11e.</p>
   <blockquote>1. Déterminer les abscisses a et b des points A et B. 2. Déterminer l'abscisse du milieu de [OA], puis celle du milieu de [OB]. 3. Les points C et D ont pour abscisses c = 0,45 et d = 4/3. Pour chacun, proposer une démarche permettant de déterminer, sans calculatrice, s'il appartient au segment [AB].</blockquote>
-  <p class="rj-sujet-lien">L'axe gradué : <a href="https://www.devenirenseignant.gouv.fr/media/20277/download" target="_blank" rel="noopener">sujet bac+3 2026, groupement 1 (PDF)</a>, page 9.</p>
+  <p class="rj-sujet-lien">L'axe gradué : <a href="https://www.devenirenseignant.gouv.fr/media/20277/download" target="_blank" rel="noopener">Sujet bac+3 2026 (PDF), page 9</a></p>
 </div>
 <p class="rj-corrige-titre">Le corrigé</p>
 <p><strong>1.</strong> Une graduation vaut 1/8, donc a = 4/8 = 1/2 et b = 11/8. <strong>2.</strong> Milieu de [OA] : 1/4. Milieu de [OB] : 11/16. <strong>3.</strong> C n'appartient pas à [AB], car 0,45 &lt; 0,5 = a. Pour D, on met au même dénominateur : 1/2 = 12/24, 4/3 = 32/24 et 11/8 = 33/24. Comme 12/24 &lt; 32/24 &lt; 33/24, D appartient à [AB].</p>
@@ -720,7 +723,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <li><strong>Forfait journalier de mise à disposition du bus avec chauffeur :</strong> 150,00 €.</li>
   </ul>
   <blockquote>2. Calculer le coût total du transport pour ce voyage aller-retour, sachant que le carburant et les frais de péage sont à la charge du client.</blockquote>
-  <p class="rj-sujet-lien">Énoncé complet : <a href="https://www.devenirenseignant.gouv.fr/media/20154/download" target="_blank" rel="noopener">sujet bac+5 2026 (PDF)</a>, pages 2 et 3.</p>
+  <p class="rj-sujet-lien">Énoncé complet : <a href="https://www.devenirenseignant.gouv.fr/media/20154/download" target="_blank" rel="noopener">Sujet bac+5 2026 (PDF), pages 2 et 3</a></p>
 </div>
 <p class="rj-corrige-titre">Le corrigé</p>
 <ul>
@@ -784,7 +787,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <figcaption>Plan de la course (sujet officiel, page 4)</figcaption>
   </figure>
   <blockquote>1. Montrer que BC = 60 m. 2. Montrer que (BC) et (DE) sont parallèles. 3. Calculer la longueur du parcours EBCDE. 4. Un plot est formé d'un socle, un pavé de 245 mm × 245 mm × 35 mm, et d'un cône de 415 mm de haut et de 20 cm de diamètre. a. Vérifier que son volume est de 6,45 dm³. b. Avec une masse volumique de 1,6 t/m³, déterminer la masse de sable, en kg, arrondie au dixième.</blockquote>
-  <p class="rj-sujet-lien">Photos et cotes du plot, rappel de la formule du volume du cône : <a href="https://www.devenirenseignant.gouv.fr/media/20154/download" target="_blank" rel="noopener">sujet bac+5 2026 (PDF)</a>, page 4.</p>
+  <p class="rj-sujet-lien">Photos et cotes du plot, rappel de la formule du volume du cône : <a href="https://www.devenirenseignant.gouv.fr/media/20154/download" target="_blank" rel="noopener">Sujet bac+5 2026 (PDF), page 4</a></p>
 </div>
 <p class="rj-corrige-titre">Le corrigé</p>
 <ul>
@@ -841,7 +844,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <figcaption>Le motif à tracer (sujet officiel, page 5)</figcaption>
   </figure>
   <blockquote>1. Déterminer la mesure de l'angle α, l'angle du parallélogramme consécutif à l'angle de 30°. 2. Donner l'ordre des étiquettes et la valeur manquante de C. 3. Associer, sans justifier, deux programmes qui répètent 12 fois « Motif » et une rotation de 30° à deux des quatre figures proposées.</blockquote>
-  <p class="rj-sujet-lien">Les blocs Scratch, les programmes 1 et 2 et les figures A à D : <a href="https://www.devenirenseignant.gouv.fr/media/20154/download" target="_blank" rel="noopener">sujet bac+5 2026 (PDF)</a>, pages 5 et 6.</p>
+  <p class="rj-sujet-lien">Les blocs Scratch, les programmes 1 et 2 et les figures A à D : <a href="https://www.devenirenseignant.gouv.fr/media/20154/download" target="_blank" rel="noopener">Sujet bac+5 2026 (PDF), pages 5 et 6</a></p>
 </div>
 <p class="rj-corrige-titre">Le corrigé</p>
 <ul>
