@@ -541,7 +541,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </tbody>
 </table>
 </div>
-<p>On part des données : 40 % de 300 font 120 sportifs, et 60 % de 75 font 45 élèves qui ont les deux activités. <strong>2.</strong> Au moins une activité : 45 + 75 + 30 = 150 élèves, soit une probabilité de 150/300 = 1/2. On peut aussi passer par l'événement contraire : 1 − 150/300. <strong>3.</strong> On se restreint aux 120 sportifs : 45/120 = 3/8.</p>
+<ul>
+  <li><strong>1.</strong> On part des données : 40 % de 300 font 120 sportifs, et 60 % de 75 font 45 élèves qui ont les deux activités. Les autres cases se déduisent des totaux (tableau ci-dessus).</li>
+  <li><strong>2.</strong> Au moins une activité : 45 + 75 + 30 = 150 élèves, soit une probabilité de 150/300 = 1/2. On peut aussi passer par l'événement contraire : 1 − 150/300.</li>
+  <li><strong>3.</strong> On se restreint aux 120 sportifs : 45/120 = 3/8.</li>
+</ul>
 <p><strong>Les erreurs relevées :</strong> le tableau est bien réussi (Bordeaux, Reims), mais :</p>
 <ul>
   <li>Dans la question 2, l'intersection est comptée deux fois : 120 + 75 au lieu de 120 + 75 − 45 (Bordeaux, Versailles). « Au moins l'une » et « aussi » sont mal compris (Bordeaux).</li>
@@ -580,8 +584,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <h3 id="bac3-ex3-2026">Exercice 3 : pentagones et théorème de Pythagore (2,5 points)</h3>
 <div class="rj-question">
   <p class="rj-q-label">L'énoncé</p>
-  <p class="rj-q-consigne">1. Un pentagone régulier ABCDE de centre O est inscrit dans un cercle.<br>a) Justifier que l'angle DOC mesure 72°.<br>b) Indiquer la nature du triangle OCD.<br>c) Déterminer la mesure de l'angle DCB.<br>d) Déterminer la somme des angles de ce pentagone.</p>
-  <blockquote>2. Pentagone JKLMN avec JK = KL = LM = MN = 10 cm, angles JKL et LMN droits.<br>a) Donner la nature des triangles JKL et LMN.<br>b) En déduire que JL = LN = √200 cm.</blockquote>
+  <p class="rj-q-consigne">Des pentagones : un pentagone régulier ABCDE de centre O, inscrit dans un cercle, puis un pentagone JKLMN avec JK = KL = LM = MN = 10 cm et les angles JKL et LMN droits.</p>
+  <blockquote>1. Le pentagone régulier ABCDE.<br>a) Justifier que l'angle DOC mesure 72°.<br>b) Indiquer la nature du triangle OCD.<br>c) Déterminer la mesure de l'angle DCB.<br>d) Déterminer la somme des angles de ce pentagone.<br>2. Le pentagone JKLMN.<br>a) Donner la nature des triangles JKL et LMN.<br>b) En déduire que JL = LN = √200 cm.</blockquote>
   <p class="rj-sujet-lien">Les figures des deux pentagones (codages des longueurs et des angles) : <a href="https://www.devenirenseignant.gouv.fr/media/20277/download" target="_blank" rel="noopener">Sujet bac+3 2026 (PDF), page 8</a></p>
 </div>
 <p class="rj-corrige-titre">Le corrigé</p>
@@ -639,7 +643,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <p class="rj-sujet-lien">L'axe gradué : <a href="https://www.devenirenseignant.gouv.fr/media/20277/download" target="_blank" rel="noopener">Sujet bac+3 2026 (PDF), page 9</a></p>
 </div>
 <p class="rj-corrige-titre">Le corrigé</p>
-<p><strong>1.</strong> Une graduation vaut 1/8, donc a = 4/8 = 1/2 et b = 11/8. <strong>2.</strong> Milieu de [OA] : 1/4. Milieu de [OB] : 11/16. <strong>3.</strong> C n'appartient pas à [AB], car 0,45 &lt; 0,5 = a. Pour D, on met au même dénominateur : 1/2 = 12/24, 4/3 = 32/24 et 11/8 = 33/24. Comme 12/24 &lt; 32/24 &lt; 33/24, D appartient à [AB].</p>
+<ul>
+  <li><strong>1.</strong> Une graduation vaut 1/8, donc a = 4/8 = 1/2 et b = 11/8.</li>
+  <li><strong>2.a</strong> Milieu de [OA] : 1/4.</li>
+  <li><strong>2.b</strong> Milieu de [OB] : 11/16.</li>
+  <li><strong>3.</strong> C n'appartient pas à [AB], car 0,45 &lt; 0,5 = a. Pour D, on met au même dénominateur : 1/2 = 12/24, 4/3 = 32/24 et 11/8 = 33/24. Comme 12/24 &lt; 32/24 &lt; 33/24, D appartient à [AB].</li>
+</ul>
 <p><strong>Les erreurs relevées :</strong> les deux premières questions sont bien réussies (Bordeaux, Versailles, Reims). Ensuite :</p>
 <ul>
   <li>Un axe gradué en dixièmes au lieu de huitièmes (Versailles).</li>
@@ -727,7 +736,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 <p class="rj-corrige-titre">Le corrigé</p>
 <ul>
-  <li><strong>A.</strong> <code>=B2*C2</code> ; <code>=SOMME(D2:D7)</code> ; <code>=D8*0,85</code>. Le total est de 724 € avant réduction et de 615,40 € après.</li>
+  <li><strong>A.1</strong> <code>=B2*C2</code></li>
+  <li><strong>A.2</strong> <code>=SOMME(D2:D7)</code> : le total est de 724 € avant réduction.</li>
+  <li><strong>A.3</strong> <code>=D8*0,85</code> : 615,40 € après réduction.</li>
   <li><strong>B.1</strong> Le groupe compte au plus 45 personnes, moins de 50, donc il n'y a pas de réduction : C(n) = 8,5n + 64. Limoges regrette que cette condition soit rarement justifiée.</li>
   <li><strong>B.2</strong> 8,5n + 64 = 378,5 donne 8,5n = 314,5, soit n = 37 élèves.</li>
   <li><strong>C.1</strong> 1 h 10 = 7/6 h, et 85 ÷ 7/6 ≈ 72,9 : environ 73 km/h.</li>
@@ -764,7 +775,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 <p class="rj-corrige-titre">Le corrigé</p>
 <ul>
-  <li><strong>A.</strong> 2/500 = 1/250. Les lots de plus de 2 € sont au nombre de 1 + 2 + 5 + 20 = 28, d'où 28/500 = 7/125. Il y a 78 tickets gagnants, donc 422 perdants : 422/500 = 211/250.</li>
+  <li><strong>A.1</strong> Il y a 2 lots de 50 € : 2/500 = 1/250.</li>
+  <li><strong>A.2</strong> Les lots de plus de 2 € sont au nombre de 1 + 2 + 5 + 20 = 28, d'où 28/500 = 7/125.</li>
+  <li><strong>A.3</strong> Il y a 78 tickets gagnants, donc 422 perdants : 422/500 = 211/250.</li>
   <li><strong>B.1</strong> 51 élèves ont vendu 500 tickets : 500 ÷ 51 ≈ 9,8, soit environ 10 tickets par élève.</li>
   <li><strong>B.2.a</strong> Avec 51 valeurs, la médiane est la 26e. Les effectifs cumulés sont 10, 14, 22, 36 : la 26e valeur est 10. La médiane est donc 10 tickets.</li>
   <li><strong>B.2.b</strong> Au moins la moitié des élèves ont vendu 10 tickets ou moins, et au moins la moitié 10 tickets ou plus.</li>
