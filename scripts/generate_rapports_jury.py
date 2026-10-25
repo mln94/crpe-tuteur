@@ -16,50 +16,56 @@ TEMPLATE = os.path.join(ROOT, 'landing', 'crpe-bac3-structure-premiere-epreuve-a
 SITE = 'https://www.passcrpe.fr'
 SLUG = 'rapports-jury-crpe'
 
-# (académie, concours, lien officiel). Les académies absentes d'une session (liste : scripts/academies-data.json)
-# y sont ajoutées en « Non disponible ». Les liens « /download » ou « .pdf » mènent au PDF, les autres à une page.
+# (académie, concours, lien). Les académies absentes d'une session (liste : scripts/academies-data.json)
+# y sont ajoutées en « Non disponible ». Les rapports hébergés sur le site (landing/rapports-jury/, servis sous
+# /rapports-jury/) se téléchargent directement ; les autres liens sont ceux des académies (« /download » ou « .pdf » : PDF).
 SESSIONS = [
     ('2026', [
-        ('Bordeaux', 'Bac+5', 'https://www.ac-bordeaux.fr/media/81835/download'),
-        ('Bordeaux', 'Bac+3', 'https://www.ac-bordeaux.fr/media/81901/download'),
-        ('Créteil', 'Bac+5', 'https://siec.education.fr/candidats/docutheque/concours/50/rapports-du-jury-crpe-academie-de-creteil-session-2026'),
-        ('Créteil', 'Bac+3', 'https://siec.education.fr/candidats/docutheque/concours/50/crpe-rapports-du-jury-academie-de-creteil-session-l3-2026'),
-        ('Dijon', 'Bac+5', 'https://www.ac-dijon.fr/media/61058/download'),
-        ('Guyane', 'Bac+3 et bac+5', 'https://www.ac-guyane.fr/media/31052/download'),
+        ('Bordeaux', 'Bac+5', '/rapports-jury/rapport-jury-crpe-2026-bac5-bordeaux.pdf'),
+        ('Bordeaux', 'Bac+3', '/rapports-jury/rapport-jury-crpe-2026-bac3-bordeaux.pdf'),
+        ('Créteil', 'Bac+5, écrits (admissibilité)', '/rapports-jury/rapport-jury-crpe-2026-bac5-creteil-ecrits-admissibilite.pdf'),
+        ('Créteil', 'Bac+5, oraux (admission)', '/rapports-jury/rapport-jury-crpe-2026-bac5-creteil-oraux-admission.pdf'),
+        ('Créteil', 'Bac+3, écrits (admissibilité)', '/rapports-jury/rapport-jury-crpe-2026-bac3-creteil-ecrits-admissibilite.pdf'),
+        ('Créteil', 'Bac+3, oraux (admission)', '/rapports-jury/rapport-jury-crpe-2026-bac3-creteil-oraux-admission.pdf'),
+        ('Dijon', 'Bac+5', '/rapports-jury/rapport-jury-crpe-2026-bac5-dijon.pdf'),
+        ('Guyane', 'Bac+3 et bac+5', '/rapports-jury/rapport-jury-crpe-2026-guyane.pdf'),
         ('Lille', 'Bac+5', 'https://www1.ac-lille.fr/media/32120/download'),
         ('Lille', 'Bac+3', 'https://www1.ac-lille.fr/media/32121/download'),
-        ('Limoges', 'Bac+5', 'https://www.ac-limoges.fr/media/41976/download'),
-        ('Limoges', 'Bac+3', 'https://www.ac-limoges.fr/media/41978/download'),
+        ('Limoges', 'Bac+5', '/rapports-jury/rapport-jury-crpe-2026-bac5-limoges.pdf'),
+        ('Limoges', 'Bac+3', '/rapports-jury/rapport-jury-crpe-2026-bac3-limoges.pdf'),
+        ('Mayotte', 'Bac+3', '/rapports-jury/rapport-jury-crpe-2026-bac3-mayotte.pdf'),
         ('Montpellier', 'Bac+5', 'https://www.ac-montpellier.fr/media/43279/download'),
         ('Montpellier', 'Bac+3', 'https://www.ac-montpellier.fr/media/43280/download'),
-        ('Nantes', 'Bac+5', 'https://www.ac-nantes.fr/media/44054/download'),
-        ('Nantes', 'Bac+3', 'https://www.ac-nantes.fr/media/44055/download'),
-        ('Versailles', 'Bac+3', 'https://siec.education.fr/candidats/docutheque/concours/50/crpe-licence3-rapport-du-jury-academie-de-versailles-session-2026'),
+        ('Nantes', 'Bac+5', '/rapports-jury/rapport-jury-crpe-2026-bac5-nantes.pdf'),
+        ('Nantes', 'Bac+3', '/rapports-jury/rapport-jury-crpe-2026-bac3-nantes.pdf'),
+        ('Reims', 'Bac+5', '/rapports-jury/rapport-jury-crpe-2026-bac5-reims.pdf'),
+        ('Reims', 'Bac+3', '/rapports-jury/rapport-jury-crpe-2026-bac3-reims.pdf'),
+        ('Versailles', 'Bac+3', '/rapports-jury/rapport-jury-crpe-2026-bac3-versailles.pdf'),
     ]),
     ('2025', [
-        ('Aix-Marseille', 'Rapport de la session', 'https://www.ac-aix-marseille.fr/media/39070/download'),
-        ('Amiens', 'Rapport de la session', 'https://www.ac-amiens.fr/media/21609/download'),
-        ('Besançon', 'Rapport de la session', 'https://cloud-aca.ac-besancon.fr/public.php/dav/files/5RrMspZcfNmpocY/RAPPORTS%20DE%20JURY/Rapport%20du%20jury%20-%20Session%202025.pdf'),
-        ('Bordeaux', 'Rapport de la session', 'https://www.ac-bordeaux.fr/media/74034/download'),
-        ('Clermont-Ferrand', 'Rapport de la session', 'https://www.ac-clermont.fr/media/54624/download'),
-        ('Corse', 'Rapport de la session', 'https://www.ac-corse.fr/media/27828/download'),
+        ('Aix-Marseille', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-aix-marseille.pdf'),
+        ('Amiens', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-amiens.pdf'),
+        ('Besançon', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-besancon.pdf'),
+        ('Bordeaux', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-bordeaux.pdf'),
+        ('Clermont-Ferrand', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-clermont-ferrand.pdf'),
+        ('Corse', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-corse.pdf'),
         ('Créteil', 'Rapport de la session', 'https://siec.education.fr/candidats/docutheque/rapport-du-jury-crpe-academie-de-creteil-session-2025'),
-        ('Dijon', 'Rapport de la session', 'https://www.ac-dijon.fr/media/58299/download'),
-        ('Grenoble', 'Rapport de la session', 'https://www1.ac-grenoble.fr/media/43439/download'),
-        ('Lille', 'Rapport de la session', 'https://www1.ac-lille.fr/media/30452/download'),
-        ('Limoges', 'Rapport de la session', 'https://www.ac-limoges.fr/media/27284/download'),
-        ('Lyon', 'Rapport de la session', 'https://www.ac-lyon.fr/media/60789/download'),
+        ('Dijon', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-dijon.pdf'),
+        ('Grenoble', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-grenoble.pdf'),
+        ('Lille', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-lille.pdf'),
+        ('Limoges', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-limoges.pdf'),
+        ('Lyon', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-lyon.pdf'),
         ('Martinique', 'Rapport de la session', 'https://www.ac-martinique.fr/media/24434/download'),
-        ('Montpellier', 'Rapport de la session', 'https://www.ac-montpellier.fr/media/40858/download'),
-        ('Nantes', 'Rapport de la session', 'https://www.ac-nantes.fr/media/37930/download'),
-        ('Nice', 'Rapport de la session', 'https://www.ac-nice.fr/media/19693/download'),
-        ('Normandie', 'Rapport de la session', 'https://www.ac-normandie.fr/media/44909/download'),
-        ('Orléans-Tours', 'Rapport de la session', 'https://www.ac-orleans-tours.fr/media/32504/download'),
+        ('Montpellier', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-montpellier.pdf'),
+        ('Nantes', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-nantes.pdf'),
+        ('Nice', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-nice.pdf'),
+        ('Normandie', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-normandie.pdf'),
+        ('Orléans-Tours', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-orleans-tours.pdf'),
         ('Paris', 'Rapport de la session', 'https://siec.education.fr/candidats/docutheque/concours/50/rapport-du-jury-crpe-academie-de-paris-session-2025'),
         ('Polynésie française', 'Rapport de la session', 'https://www.ac-polynesie.pf/media/23255/download'),
-        ('Reims', 'Rapport de la session', 'https://www.ac-reims.fr/media/43031/download'),
-        ('Rennes', 'Rapport de la session', 'https://www.toutatice.fr/portail/share/va1L0l?l=wNsQIf'),
-        ('Toulouse', 'Rapport de la session', 'https://www.ac-toulouse.fr/media/82774/download'),
+        ('Reims', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-reims.pdf'),
+        ('Rennes', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-rennes.pdf'),
+        ('Toulouse', 'Rapport de la session', '/rapports-jury/rapport-jury-crpe-2025-toulouse.pdf'),
         ('Versailles', 'Premier concours interne', 'https://siec.education.fr/candidats/docutheque/concours/50/rapport-de-jury-1er-interne-academie-de-versailles-session-2025'),
         ('Versailles', 'Concours interne exceptionnel', 'https://siec.education.fr/candidats/docutheque/concours/50/rapport-de-jury-crpe-interne-exceptionnelle-academie-de-versailles-session-2025'),
     ]),
@@ -149,11 +155,13 @@ def table(rows, annee):
             continue
         pdf = '/download' in url or url.lower().endswith('.pdf')
         label = 'Télécharger' if pdf else 'Consulter'
+        local = url.startswith('/rapports-jury/')
+        cible = ' download' if local else ' target="_blank" rel="noopener"'
         titre = f'Rapport de jury CRPE {annee}, académie de {ac}, {concours.lower()}'
         out.append(
             f'      <tr><td class="ac">{escape(ac)}<small>{escape(concours)}</small></td>'
             f'<td class="col-concours">{escape(concours)}</td>'
-            f'<td class="dl"><a class="dl-link" href="{escape(url)}" target="_blank" rel="noopener" title="{escape(titre)}">'
+            f'<td class="dl"><a class="dl-link" href="{escape(url)}"{cible} title="{escape(titre)}">'
             f'{ICON_DL if pdf else ICON_OPEN}{label}</a></td></tr>')
     return ('    <table class="reports">\n'
             '      <thead><tr><th>Académie</th><th class="col-concours">Concours</th><th></th></tr></thead>\n'
@@ -213,7 +221,7 @@ def faq(annee, nb):
 def page(annee, rows):
     title = f'Télécharger les rapports de jury du CRPE {annee} par académie'
     desc = (f"Téléchargez les rapports de jury officiels du CRPE {annee}, académie par académie"
-            + (" (concours bac+3 et bac+5)" if annee == '2026' else ' (concours bac+5)') + ". Liens directs vers les sites des académies.")
+            + (" (concours bac+3 et bac+5)" if annee == '2026' else ' (concours bac+5)') + ". Téléchargement direct des PDF officiels.")
     url = f'{SITE}/{SLUG}/{annee}'
     ld = {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
         {'@type': 'ListItem', 'position': 1, 'name': 'Accueil', 'item': SITE + '/'},
@@ -246,7 +254,7 @@ def page(annee, rows):
   <p class="session-count">{len(dispo)} rapports, {nb} académies · {manquants} académies sans rapport en ligne pour l'instant</p>
 {table(rows, annee)}
 
-  <p style="margin-top:28px;font-size:14px;color:var(--gray-500);">Les liens mènent aux sites officiels des académies et du ministère : « Télécharger » ouvre directement le PDF, « Consulter » ouvre la page de l'académie où se trouve le rapport. « Non disponible » signifie qu'aucun rapport n'est publié en ligne pour l'instant : la liste sera complétée dès sa parution. D'autres rapports sont aussi rassemblés sur <a href="https://www.devenirenseignant.gouv.fr/les-sujets-des-epreuves-ecrites-et-rapports-des-jurys-des-concours-de-recrutement-de-professeurs-des-1163" target="_blank" rel="noopener">devenirenseignant.gouv.fr</a>.</p>
+  <p style="margin-top:28px;font-size:14px;color:var(--gray-500);">« Télécharger » enregistre le rapport officiel de l'académie, en PDF, directement depuis PassCRPE : nous en gardons une copie pour que le lien reste valable même si l'académie déplace son fichier. « Consulter » ouvre la page de l'académie où se trouve le rapport. « Non disponible » signifie qu'aucun rapport n'est publié en ligne pour l'instant : la liste sera complétée dès sa parution. D'autres rapports sont aussi rassemblés sur <a href="https://www.devenirenseignant.gouv.fr/les-sujets-des-epreuves-ecrites-et-rapports-des-jurys-des-concours-de-recrutement-de-professeurs-des-1163" target="_blank" rel="noopener">devenirenseignant.gouv.fr</a>.</p>
 
   <p class="autre-session">{autre_session}</p>
 
