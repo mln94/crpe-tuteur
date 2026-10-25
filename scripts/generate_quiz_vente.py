@@ -67,7 +67,10 @@ FAQ = [
 CSS = """
     /* ── PAGE DE VENTE QUIZ ── */
     .qz-hero { padding: 72px 24px 80px; background: radial-gradient(ellipse at top, #fff7ed 0%, #fff 60%); }
-    .qz-hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; }
+    .qz-hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr .9fr; grid-template-areas: "texte demo" "suite ."; column-gap: 48px; align-items: center; }
+    .qz-hero-texte { grid-area: texte; }
+    .qz-hero-suite { grid-area: suite; }
+    .qz-hero .qz-demo { grid-area: demo; }
     .qz-hero .hero-badge { margin-bottom: 20px; }
     .qz-hero h1 { font-size: clamp(32px, 5vw, 52px); font-weight: 900; letter-spacing: -1.5px; line-height: 1.08; color: var(--gray-900); margin-bottom: 20px; }
     .qz-hero h1 em { font-style: normal; color: #ea580c; }
@@ -146,6 +149,8 @@ CSS = """
 
     @media (max-width: 960px) {
       .qz-hero-inner, .qz-test { grid-template-columns: 1fr; gap: 36px; }
+      .qz-hero-inner { grid-template-areas: "texte" "suite" "demo"; row-gap: 0; }
+      .qz-hero .qz-demo { margin-top: 36px; }
       .qz-matieres, .qz-features { grid-template-columns: 1fr 1fr; }
     }
     @media (max-width: 640px) {
@@ -191,11 +196,13 @@ def contenu():
 <!-- ═══════════════════════════════ HERO ═══════════════════════════════ -->
 <header class="qz-hero">
   <div class="qz-hero-inner">
-    <div>
+    <div class="qz-hero-texte">
       <div class="hero-badge"><span></span>Nouveau · Quiz CRPE</div>
       <h1>Le jour du CRPE, vous ne tomberez sur <em>aucune notion que vous ne comprenez pas</em>.</h1>
       <p class="hero-sub" style="margin-bottom:14px">Nous avons recensé les notions des {len(MATIERES)} thèmes du concours, en nous basant sur le programme officiel de chacun d’eux. Nous en avons tiré {total_txt} questions. Chaque réponse est expliquée simplement, et chaque terme technique est défini.</p>
       <p class="hero-sub">Commencez par le test de positionnement. Il vous dira ce que vous maîtrisez ou pas encore.</p>
+    </div>
+    <div class="qz-hero-suite">
       <p class="qz-accroche">📚 Plus vous répondez, plus votre culture du programme s’élargit.</p>
       <div class="hero-actions">
         <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
@@ -365,7 +372,7 @@ def main():
     # En-tête : styles et suivi de l'accueil, titre et description propres à la page
     head = src[:src.index('</head>')]
     head = re.sub(r'\s*<link rel="canonical"[^>]*/>', '', head)  # canonical de l'accueil remplacée par celle de la page
-    head = re.sub(r'<title>.*?</title>', '<title>Quiz CRPE : arrivez au CRPE sans aucune notion incomprise</title>', head, flags=re.S)
+    head = re.sub(r'<title>.*?</title>', '<title>Quiz CRPE : aucune notion incomprise le jour du concours</title>', head, flags=re.S)
     head = re.sub(r'<meta name="description"[^>]*/>',
                   '<meta name="description" content="Le Quiz CRPE : au moins 300 questions par matière sur le programme du cycle 4, '
                   'des séries de 20 notées sur 20, l\'explication de chaque erreur et des révisions espacées. Test de positionnement gratuit." />\n'
