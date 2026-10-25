@@ -109,6 +109,21 @@ CSS = """
     .qz-feature h3 { font-size: 17px; font-weight: 800; color: var(--gray-900); margin-bottom: 8px; }
     .qz-feature p { font-size: 14px; color: var(--gray-600); line-height: 1.6; }
 
+    /* Fenêtres de connexion/inscription et de confirmation aux couleurs de QuizCRPE (orange au lieu de l'indigo de l'accueil) */
+    .auth-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
+    .auth-logo-name { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
+    .auth-logo-name small { font-size: 10.5px; font-weight: 700; color: var(--gray-500); letter-spacing: .02em; }
+    .auth-logo-name small b { font-weight: 800; color: var(--indigo-700); }
+    .auth-input:focus, .auth-phone-select:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249,115,22,0.15); }
+    .auth-submit, .confirm-btn { background: #ea580c; }
+    .auth-submit:hover, .confirm-btn:hover { background: #c2410c; }
+    .auth-submit:disabled { background: #fed7aa; }
+    .auth-footer-link button { color: #ea580c; }
+    .auth-radio-item:has(input:checked) { border-color: #f97316; background: #fff7ed; color: #9a3412; }
+    .auth-radio-item input[type="radio"], #authOverlay input[type="checkbox"] { accent-color: #ea580c !important; }
+    .confirm-bar { background: #f97316; }
+    #authOverlay a { color: #ea580c; }
+
     /* Logo QuizCRPE by PassCRPE */
     .logo-quiz .nav-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
     .logo-quiz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
@@ -387,6 +402,11 @@ def main():
 
     # Fenêtres de confirmation et de connexion/inscription, identiques à l'accueil
     modales = cut(src, '<!-- ═══════════════════════ CONFIRMATION POPUP', '<script>\n  /* ── FAQ accordion')
+    i = modales.index('<div class="auth-logo-icon">'); j = modales.index('</svg>', i) + len('</svg>')
+    modales = modales[:i] + '<div class="auth-logo-icon">\n        ' + ICONE_QUIZ.format(style='') + modales[j:]
+    a = '<span class="auth-logo-name">PassCRPE</span>'
+    assert modales.count(a) == 1
+    modales = modales.replace(a, '<span class="auth-logo-name">QuizCRPE<small>by <b>PassCRPE</b></small></span>')
 
     # Formulaire de newsletter de l'accueil, même liste Klaviyo (parcours_newsletter = quizcrpe, via window.nlParcours)
     newsletter = cut(src, '<!-- ═══════════════════════════════ NEWSLETTER', '<!-- ═══════════════════════════════ FOOTER')
