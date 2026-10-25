@@ -193,8 +193,9 @@ def contenu():
   <div class="qz-hero-inner">
     <div>
       <div class="hero-badge"><span></span>Nouveau · Quiz CRPE</div>
-      <h1>Arrivez au CRPE <em>sans aucune notion incomprise</em></h1>
-      <p class="hero-sub">Évaluez votre niveau, puis progressez par séries de 20 questions, du facile au difficile. Chaque erreur est expliquée, chaque notion revient jusqu’à être comprise. Plus de {total_txt} questions conformes aux programmes officiels, dans les {len(MATIERES)} matières du CRPE ({liste_matieres}) : rien ne vous échappe.</p>
+      <h1>Le jour du CRPE, vous ne tomberez sur <em>aucune notion que vous ne comprenez pas</em>.</h1>
+      <p class="hero-sub" style="margin-bottom:14px">Nous avons recensé les notions des {len(MATIERES)} thèmes du concours, en nous basant sur le programme officiel de chacun d’eux. Nous en avons tiré {total_txt} questions. Chaque réponse est expliquée simplement, et chaque terme technique est défini.</p>
+      <p class="hero-sub">Commencez par le test de positionnement. Il vous dira ce que vous maîtrisez ou pas encore.</p>
       <p class="qz-accroche">📚 Plus vous répondez, plus votre culture du programme s’élargit.</p>
       <div class="hero-actions">
         <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
