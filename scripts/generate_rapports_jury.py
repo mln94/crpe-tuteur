@@ -245,7 +245,7 @@ def page(annee, rows):
   <p class="lead">Chaque année, les jurys du CRPE publient un <strong>rapport de jury</strong> par académie : les correcteurs y expliquent ce qu'ils ont valorisé, ce qu'ils ont pénalisé et les erreurs qui reviennent d'une copie à l'autre. {INTRO[annee]}</p>
 
   <a class="analyse-cta" href="/{SLUG}/disciplines">
-    <span class="analyse-txt"><strong>L'analyse détaillée, discipline par discipline</strong>Nous avons lu ces rapports pour vous. Déjà disponibles : les écrits de français et de mathématiques, avec les sujets officiels, les corrigés question par question, les erreurs fréquentes et les conseils des jurys. Les autres disciplines arrivent d'ici le 3 novembre.</span>
+    <span class="analyse-txt"><strong>L'analyse détaillée, discipline par discipline</strong>Nous avons lu ces rapports pour vous. Déjà disponibles : les écrits de français, de mathématiques et d'histoire-géographie, avec les sujets officiels, les corrigés question par question, les erreurs fréquentes et les conseils des jurys. Les autres disciplines arrivent d'ici le 3 novembre.</span>
     <span class="analyse-btn">Voir l'analyse par discipline →</span>
   </a>
   <p style="font-size:15px;">Pour un résumé rapide, lisez aussi notre article <a href="/blog/rapport-jury-crpe-{annee}-conseils" {lien}>Rapport de jury CRPE {annee} : les conseils des jurys</a>.</p>
@@ -462,6 +462,13 @@ SEO = {
         "Rapport de jury CRPE : l'écrit de mathématiques",
         "Exercice par exercice : l'énoncé officiel, le corrigé, les taux de réussite et les erreurs relevées académie "
         "par académie, et ce qu'il faut travailler. Bac+3 et bac+5 en 2026, et session 2025."),
+    'admissibilite-histoire-geographie': (
+        'Rapport de jury CRPE histoire-géographie-EMC (écrit) 2026 et 2025 : sujets, attendus et conseils',
+        "L'écrit d'histoire-géographie et d'EMC du CRPE question par question : énoncés officiels, attendus des jurys, "
+        "corrigés et erreurs fréquentes, pour le bac+3 et le bac+5 en 2026 et pour la session 2025.",
+        "Rapport de jury CRPE : l'écrit d'histoire-géographie-EMC",
+        "Question par question : l'énoncé officiel, ce que le jury attendait, un corrigé, les erreurs relevées académie "
+        "par académie et ce qu'il faut travailler. Bac+3 et bac+5 en 2026, et session 2025."),
 }
 
 
@@ -599,9 +606,8 @@ CTA = '''  <div class="page-cta">
 
 
 # Disciplines dont l'analyse est publiée ; les autres sont annoncées « À venir » avec leur date prévue.
-PUBLIEES = {'admissibilite-francais', 'admissibilite-mathematiques'}
+PUBLIEES = {'admissibilite-francais', 'admissibilite-mathematiques', 'admissibilite-histoire-geographie'}
 PREVUES = {  # deux disciplines tous les deux jours
-    'admissibilite-histoire-geographie': '24 octobre',
     'admissibilite-sciences-technologie': '26 octobre', 'admissibilite-emc': '26 octobre',
     'admissibilite-arts': '28 octobre', 'admissibilite-langue-vivante': '28 octobre',
     'admissibilite-langues-regionales': '30 octobre', 'admission-francais': '30 octobre',
