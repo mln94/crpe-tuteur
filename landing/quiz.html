@@ -1934,6 +1934,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       ? 'Pas encore de compte ? <button onclick="switchTab(\'register\')">Créer un compte</button>'
       : 'Déjà un compte ? <button onclick="switchTab(\'login\')">Se connecter</button>';
     document.getElementById('authPassword').setAttribute('autocomplete', isLogin ? 'current-password' : 'new-password');
+    document.getElementById('resendBlock').style.display = 'none';
     clearAuthMessage();
   }
 
@@ -2031,7 +2032,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       }
     } else {
       const { data, error } = await sb.auth.signInWithPassword({ email, password });
-      if (error) {
+      if (error && /not confirmed/i.test(error.message)) {
+        // Compte non confirmé : bouton de renvoi de l'e-mail de confirmation
+        _lastRegisteredEmail = email;
+        showAuthMessage('Votre adresse e-mail n\'est pas encore confirmée. Cliquez sur le lien reçu par e-mail, ou demandez-en un nouveau ci-dessous.', 'error');
+        document.getElementById('resendBlock').style.display = 'block';
+      } else if (error) {
         showAuthMessage(translateSupabaseError(error.message), 'error');
       } else {
         showAuthMessage('✓ Connexion réussie ! Redirection…', 'success');

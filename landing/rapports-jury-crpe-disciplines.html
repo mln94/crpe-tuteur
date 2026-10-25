@@ -659,6 +659,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.getElementById('registerFields').style.display=isLogin?'none':'flex';
     document.getElementById('consentRow').style.display=isLogin?'none':'block';
     document.getElementById('authSubmit').textContent=isLogin?'Se connecter':'Créer mon compte';
+    document.getElementById('resendBlock').style.display='none';
     document.getElementById('authToggle').innerHTML=isLogin?'Pas encore de compte ? <button onclick="switchTab(\'register\')">Créer un compte</button>':'Déjà un compte ? <button onclick="switchTab(\'login\')">Se connecter</button>';
     clearAuthMessage();
   }
@@ -687,14 +688,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       else { window.dataLayer.push({event:'sign_up_'+(window.SIGNUP_PARCOURS||(location.pathname.indexOf('/quiz')===0?'quizcrpe':'passcrpe')),method:'email'}); _lastEmail=email; document.getElementById('authForm').style.display='none'; document.getElementById('authTabs').style.display='none'; document.getElementById('authToggle').style.display='none'; document.getElementById('resendBlock').style.display='block'; showAuthMessage('✓ E-mail de confirmation envoyé à '+email+'. Vérifiez vos spams.','success'); }
     } else {
       const {data,error}=await sb.auth.signInWithPassword({email,password});
-      if (error) { showAuthMessage(error.message,'error'); }
+      // Compte non confirmé : bouton de renvoi de l'e-mail de confirmation
+      if (error&&/not confirmed/i.test(error.message)) { _lastEmail=email; showAuthMessage('Votre adresse e-mail n\'est pas encore confirmée. Cliquez sur le lien reçu par e-mail, ou demandez-en un nouveau ci-dessous.','error'); document.getElementById('resendBlock').style.display='block'; }
+      else if (error) { showAuthMessage(error.message,'error'); }
       else { showAuthMessage('✓ Connexion réussie ! Redirection…','success'); setTimeout(()=>{ window.location.href=window.location.port==='3001'?'http://localhost:5173':'/app'; },800); }
     }
     btn.disabled=false; btn.textContent=authMode==='register'?'Créer mon compte':'Se connecter';
   }
   async function resendConfirmation() {
     const btn=document.getElementById('resendBtn'); btn.disabled=true; btn.textContent='Envoi…';
-    const {error}=await getSB().auth.resend({type:'signup',email:_lastEmail});
+    const {error}=await getSB().auth.resend({type:'signup',email:_lastEmail,...(window.EMAIL_REDIRECT_URL?{options:{emailRedirectTo:window.EMAIL_REDIRECT_URL}}:{})});
     btn.textContent=error?'Erreur, réessayez':'✓ E-mail renvoyé !';
     if (!error) setTimeout(()=>{ btn.textContent='Renvoyer l\'e-mail'; btn.disabled=false; },4000);
     else btn.disabled=false;
