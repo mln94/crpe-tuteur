@@ -550,6 +550,9 @@ CSS_DISC = """
     .rj-sujet-lien a { display: inline-flex; align-items: center; gap: 6px; margin: 2px 2px; padding: 5px 12px; border-radius: 8px; background: var(--indigo-600); color: #fff !important; font-weight: 800; text-decoration: none; }
     .rj-sujet-lien a::before { content: ""; width: 14px; height: 14px; flex: none; background: currentColor; -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6M9 13h6M9 17h6'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpath d='M14 2v6h6M9 13h6M9 17h6'/%3E%3C/svg%3E") center / contain no-repeat; }
     .rj-sujet-lien a:hover { background: var(--indigo-700); }
+    .rj-ligne { display: block; }
+    .rj-n1 { padding-left: 1.3em; }
+    .rj-n2 { padding-left: 2.6em; }
     .rj-corrige-titre { font-size: 13px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: #047857; margin: 10px 0 6px !important; }
     @media (max-width: 600px) {
       .rd-rapport { padding: 20px 16px; border-radius: 16px; }
