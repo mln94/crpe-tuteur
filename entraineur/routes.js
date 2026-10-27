@@ -365,10 +365,14 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       items.forEach((it, i) => { it.evaluation = evals[i].out; });
 
       const note = Math.round(items.reduce((n, it) => n + it.evaluation.note, 0) / items.length * 2) / 2;
-      const usage = [...evals, synth].reduce((u, e) => ({ input_tokens: u.input_tokens + e.usage.input_tokens, output_tokens: u.output_tokens + e.usage.output_tokens }), { input_tokens: 0, output_tokens: 0 });
+      // Tokens par modèle (synthèse / correction) : le coût exact est calculé en base avec le prix de chacun
+      const correction = evals.reduce((u, e) => ({ input_tokens: u.input_tokens + e.usage.input_tokens, output_tokens: u.output_tokens + e.usage.output_tokens }), { input_tokens: 0, output_tokens: 0 });
       const token = crypto.randomBytes(24).toString('base64url');
       const { data: rapport, error } = await supabaseAdmin.from('entraineur_rapports').insert({
-        token, lead_id: lead.id, matiere: set.m, questions: items, synthese: synth.out, note, model: modeles, ...usage,
+        token, lead_id: lead.id, matiere: set.m, questions: items, synthese: synth.out, note, model: modeles,
+        input_tokens: synth.usage.input_tokens + correction.input_tokens, output_tokens: synth.usage.output_tokens + correction.output_tokens,
+        model_synthese: model, synthese_input_tokens: synth.usage.input_tokens, synthese_output_tokens: synth.usage.output_tokens,
+        model_correction: modelCorrection, correction_input_tokens: correction.input_tokens, correction_output_tokens: correction.output_tokens,
       }).select('id').single();
       if (error) throw error;
 
