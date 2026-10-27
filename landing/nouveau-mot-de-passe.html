@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nouveau mot de passe | PassCRPE</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', system-ui, sans-serif; background: #f5f6ff; color: #0f172a; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px 16px; }
+    .card { background: #fff; width: 100%; max-width: 420px; border-radius: 20px; padding: 36px 32px; box-shadow: 0 10px 40px rgba(79,70,229,.10); border: 1px solid #eef0ff; }
+    .logo { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 24px; text-decoration: none; }
+    .logo-icon { width: 38px; height: 38px; border-radius: 10px; background: #4f46e5; color: #fff; display: flex; align-items: center; justify-content: center; }
+    .logo-icon svg { width: 20px; height: 20px; }
+    .logo-name { font-size: 18px; font-weight: 800; color: #0f172a; }
+    h1 { font-size: 21px; font-weight: 800; margin-bottom: 6px; text-align: center; }
+    .sub { font-size: 14px; color: #64748b; line-height: 1.55; text-align: center; margin-bottom: 22px; }
+    form { display: flex; flex-direction: column; gap: 14px; }
+    label { display: block; font-size: 13px; font-weight: 600; color: #334155; margin-bottom: 6px; }
+    input { width: 100%; padding: 12px 14px; border: 1.5px solid #e2e8f0; border-radius: 10px; font-family: inherit; font-size: 15px; outline: none; transition: border-color .15s; }
+    input:focus { border-color: #4f46e5; }
+    .hint { font-size: 12px; color: #94a3b8; margin-top: 5px; }
+    button { width: 100%; padding: 13px; border: none; border-radius: 10px; background: #4f46e5; color: #fff; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer; transition: background .15s; }
+    button:hover { background: #4338ca; }
+    button:disabled { opacity: .6; cursor: default; }
+    .msg { font-size: 13.5px; line-height: 1.5; padding: 11px 13px; border-radius: 10px; margin-top: 14px; display: none; }
+    .msg.error { display: block; background: #fef2f2; color: #b91c1c; }
+    .msg.success { display: block; background: #ecfdf5; color: #047857; }
+    .lien { display: block; text-align: center; margin-top: 18px; font-size: 13.5px; font-weight: 600; color: #4f46e5; text-decoration: none; }
+    .attente { text-align: center; color: #64748b; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <a class="logo" href="/">
+      <span class="logo-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
+      <span class="logo-name">PassCRPE</span>
+    </a>
+
+    <p class="attente" id="attente">Vérification du lien…</p>
+
+    <section id="formulaire" hidden>
+      <h1>Choisissez un nouveau mot de passe</h1>
+      <p class="sub" id="pourQui">Il remplacera votre ancien mot de passe.</p>
+      <form onsubmit="enregistrer(event)">
+        <div>
+          <label for="mdp">Nouveau mot de passe</label>
+          <input type="password" id="mdp" required minlength="8" autocomplete="new-password" placeholder="••••••••" />
+          <p class="hint">8 caractères minimum.</p>
+        </div>
+        <div>
+          <label for="mdp2">Confirmez le mot de passe</label>
+          <input type="password" id="mdp2" required minlength="8" autocomplete="new-password" placeholder="••••••••" />
+        </div>
+        <button type="submit" id="valider">Enregistrer le mot de passe</button>
+      </form>
+    </section>
+
+    <section id="invalide" hidden>
+      <h1>Ce lien n'est plus valable</h1>
+      <p class="sub">Le lien a expiré (il est valable 24 heures) ou il a déjà été utilisé. Demandez-en un nouveau : dans la fenêtre de connexion, cliquez sur « Mot de passe oublié ? ».</p>
+      <a class="lien" href="/?auth=login">Retour à la connexion →</a>
+    </section>
+
+    <div class="msg" id="msg"></div>
+  </main>
+
+  <script>
+    var sb = window.supabase.createClient('https://zqwcermgfvcusuwjfviz.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8');
+    function el(id) { return document.getElementById(id); }
+    function message(t, type) { var m = el('msg'); m.textContent = t; m.className = 'msg ' + type; }
+
+    // Le lien de l'e-mail ouvre une session de récupération (lue dans l'URL par Supabase)
+    var pret = false;
+    function afficher(session) {
+      if (pret || !session) return;
+      pret = true;
+      el('attente').hidden = true;
+      el('formulaire').hidden = false;
+      if (session.user && session.user.email) el('pourQui').textContent = 'Pour le compte ' + session.user.email + '.';
+      el('mdp').focus();
+    }
+    sb.auth.onAuthStateChange(function (event, session) { if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') afficher(session); });
+    sb.auth.getSession().then(function (r) { afficher(r.data.session); });
+    // Erreur renvoyée dans l'URL (lien expiré) ou aucune session au bout de quelques secondes
+    var erreurUrl = /error=|error_code=/.test(location.hash + location.search);
+    setTimeout(function () {
+      if (pret) return;
+      el('attente').hidden = true;
+      el('invalide').hidden = false;
+    }, erreurUrl ? 0 : 4000);
+
+    async function enregistrer(e) {
+      e.preventDefault();
+      var mdp = el('mdp').value, mdp2 = el('mdp2').value, btn = el('valider');
+      if (mdp.length < 8) { message('Le mot de passe doit faire au moins 8 caractères.', 'error'); return; }
+      if (mdp !== mdp2) { message('Les deux mots de passe ne sont pas identiques.', 'error'); return; }
+      btn.disabled = true; btn.textContent = 'Enregistrement…';
+      var res = await sb.auth.updateUser({ password: mdp });
+      if (res.error) {
+        btn.disabled = false; btn.textContent = 'Enregistrer le mot de passe';
+        if (/different from the old|same/i.test(res.error.message)) message('Choisissez un mot de passe différent de l\'ancien.', 'error');
+        else if (/weak|characters/i.test(res.error.message)) message('Ce mot de passe est trop simple. Choisissez-en un plus long ou plus varié.', 'error');
+        else message('Le mot de passe n\'a pas pu être enregistré. Demandez un nouveau lien et réessayez.', 'error');
+        return;
+      }
+      btn.textContent = '✓ Mot de passe enregistré';
+      message('✓ Votre mot de passe est modifié. Vous êtes connecté : redirection vers votre espace…', 'success');
+      setTimeout(function () { location.href = '/espace'; }, 1500);
+    }
+  </script>
+</body>
+</html>

@@ -29,6 +29,7 @@
     { "source": "/quizapp", "destination": "/quizapp.html" },
     { "source": "/quizcrpe", "destination": "/quiz.html" },
     { "source": "/espace", "destination": "/espace.html" },
+    { "source": "/nouveau-mot-de-passe", "destination": "/nouveau-mot-de-passe.html" },
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/outils", "destination": "/outils.html" },
     { "source": "/outils/entraineur-crpe", "destination": "/entraineur-crpe.html" },
