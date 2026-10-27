@@ -371,8 +371,8 @@ export function registerEntraineurRoutes(app, { supabaseAdmin, anthropic, model,
       const { data: rapport, error } = await supabaseAdmin.from('entraineur_rapports').insert({
         token, lead_id: lead.id, matiere: set.m, questions: items, synthese: synth.out, note, model: modeles,
         input_tokens: synth.usage.input_tokens + correction.input_tokens, output_tokens: synth.usage.output_tokens + correction.output_tokens,
-        model_synthese: model, synthese_input_tokens: synth.usage.input_tokens, synthese_output_tokens: synth.usage.output_tokens,
-        model_correction: modelCorrection, correction_input_tokens: correction.input_tokens, correction_output_tokens: correction.output_tokens,
+        model_sonnet: model, sonnet_input_tokens: synth.usage.input_tokens, sonnet_output_tokens: synth.usage.output_tokens,
+        model_haiku: modelCorrection, haiku_input_tokens: correction.input_tokens, haiku_output_tokens: correction.output_tokens,
       }).select('id').single();
       if (error) throw error;
 
