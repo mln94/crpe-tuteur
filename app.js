@@ -709,21 +709,25 @@ async function quizCompte(req, { frais = false } = {}) {
   if (error || !data?.user) return null;
   // Accès payé : profils_utilisateurs.quizcrpe_paye (source de vérité, modifiable à la main dans Supabase)
   const [{ data: ligne, error: e2 }, { data: profil, error: e3 }] = await Promise.all([
-    supabaseAdmin.from('quiz_comptes').select('positionnement, essai_reponses, reponses_positionnement').eq('user_id', data.user.id).maybeSingle(),
+    supabaseAdmin.from('quiz_comptes').select('positionnement, essai_jour, essai_jour_ids, reponses_positionnement').eq('user_id', data.user.id).maybeSingle(),
     supabaseAdmin.from('profils_utilisateurs').select('quizcrpe_paye').eq('user_id', data.user.id).maybeSingle(),
   ]);
   if (e2 || e3) throw new Error((e2 || e3).message);
   const l = ligne || {};
-  const compte = { id: data.user.id, email: data.user.email, positionnement: l.positionnement || null, paid: profil?.quizcrpe_paye === true, essaiReponses: l.essai_reponses || {},
-    reponsesTest: l.reponses_positionnement || [] };
+  const compte = { id: data.user.id, email: data.user.email, positionnement: l.positionnement || null, paid: profil?.quizcrpe_paye === true,
+    essaiJour: l.essai_jour || null, essaiJourIds: l.essai_jour_ids || [], reponsesTest: l.reponses_positionnement || [] };
   quizSessions.set(token, { compte, until: Date.now() + 120000 });
   return compte;
 }
 const quizOublier = userId => { for (const [t, c] of quizSessions) if (c.compte.id === userId) quizSessions.delete(t); };
 
-/* ── Essai gratuit après le test : 2 séries offertes, dans les 2 matières choisies par la personne, au niveau conseillé par le test.
-   Les 2 matières les moins réussies au test sont conseillées ; une matière est « choisie » dès sa première réponse d'essai. ── */
-const ESSAI_NB_MATIERES = 2;
+/* ── Essai gratuit après le test : 5 questions par jour (jour de Paris), dans toutes les matières et à tous les niveaux.
+   Les 2 matières les moins réussies au test sont conseillées, au niveau suggéré par le test. ── */
+const ESSAI_PAR_JOUR = 5;
+const ESSAI_NB_CONSEILLEES = 2;
+const jourParis = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Europe/Paris' }); // « 2026-10-28 »
+// Questions d'essai déjà répondues aujourd'hui (le compteur repart de 0 chaque jour)
+const essaiIdsDuJour = (jour, ids) => (jour === jourParis() && Array.isArray(ids) ? ids : []);
 const niveauConseille = m => {
   const t = x => (x && x.n ? x.ok / x.n : null);
   if (!m.niveaux) return m.pct >= 80 ? 'difficile' : m.pct >= 40 ? 'intermediaire' : 'facile';
@@ -732,37 +736,23 @@ const niveauConseille = m => {
   if (i !== null && i < 1) return 'intermediaire';
   return 'difficile';
 };
-// Matières ouvertes à l'essai (toutes tant que 2 matières n'ont pas été commencées, sinon les 2 commencées),
-// avec le niveau conseillé par le test et le nombre de questions de chaque série d'essai
-async function quizEssai(compte) {
+// État de l'essai : questions faites et restantes aujourd'hui, matières conseillées par le test (avec leur niveau)
+function quizEssai(compte) {
   const r = compte.positionnement;
   if (!r || !Array.isArray(r.matieres)) return null;
   const ordre = m => QUIZ_MATIERES.indexOf(m.matiere);
-  const conseillees = r.matieres.slice().sort((a, b) => a.pct - b.pct || ordre(a) - ordre(b)).slice(0, ESSAI_NB_MATIERES).map(m => m.matiere);
-  const commencees = r.matieres.filter(m => (compte.essaiReponses[m.matiere] || []).length > 0).map(m => m.matiere);
-  const ouvertes = commencees.length >= ESSAI_NB_MATIERES ? commencees : r.matieres.map(m => m.matiere);
-  const liste = r.matieres.filter(m => ouvertes.includes(m.matiere))
-    .sort((a, b) => (conseillees.includes(b.matiere) - conseillees.includes(a.matiere)) || ordre(a) - ordre(b));
-  const matieres = await Promise.all(liste.map(async m => {
-    const niveau = niveauConseille(m);
-    const notions = new Set((await quizCatalogue(m.matiere)).filter(q => q.niveau === niveau).map(q => q.notion));
-    const max = Math.min(20, notions.size), faites = (compte.essaiReponses[m.matiere] || []).length;
-    return { matiere: m.matiere, label: QUIZ_LABELS[m.matiere], niveau, max, faites: Math.min(faites, max), termine: faites >= max,
-      conseillee: conseillees.includes(m.matiere) };
-  }));
-  const terminees = matieres.filter(m => m.termine).length;
-  return { matieres, nb: ESSAI_NB_MATIERES, terminees, termine: terminees >= ESSAI_NB_MATIERES };
+  const conseillees = r.matieres.slice().sort((a, b) => a.pct - b.pct || ordre(a) - ordre(b)).slice(0, ESSAI_NB_CONSEILLEES)
+    .map(m => ({ matiere: m.matiere, label: QUIZ_LABELS[m.matiere], niveau: niveauConseille(m) }));
+  const faites = Math.min(essaiIdsDuJour(compte.essaiJour, compte.essaiJourIds).length, ESSAI_PAR_JOUR);
+  return { parJour: ESSAI_PAR_JOUR, faites, restantes: ESSAI_PAR_JOUR - faites, termine: faites >= ESSAI_PAR_JOUR, conseillees };
 }
 
-// Accès au quiz : compte payé, ou essai gratuit dans une matière ouverte à l'essai (matiere = matière demandée)
-async function quizAcces(req, res, matiere) {
+// Accès au quiz : compte payé, ou essai gratuit (test de positionnement fait) ; le nombre de questions du jour est vérifié à chaque réponse
+async function quizAcces(req, res) {
   try {
     const compte = await quizCompte(req);
     if (!compte) { res.status(401).json({ error: 'Connexion requise.', code: 'connexion' }); return null; }
-    if (compte.paid) return compte;
-    const essai = compte.positionnement && matiere ? await quizEssai(compte) : null;
-    const m = essai?.matieres.find(x => x.matiere === matiere);
-    if (m && !m.termine && !essai.termine) { compte.essaiMatiere = m; return compte; } // matière ouverte dont la série d'essai n'est pas finie
+    if (compte.paid || compte.positionnement) return compte;
     res.status(402).json({ error: 'Accès réservé aux comptes débloqués.', code: 'paiement' }); return null;
   } catch (err) {
     console.error('[quiz/acces]', err.message);
@@ -1026,7 +1016,7 @@ app.get('/api/quiz/totaux', async (req, res) => {
 app.get('/api/quiz/catalogue', async (req, res) => {
   const matiere = String(req.query.matiere || '');
   if (!QUIZ_MATIERES.includes(matiere)) return res.status(400).json({ error: 'Matière inconnue.' });
-  if (!(await quizAcces(req, res, matiere))) return;
+  if (!(await quizAcces(req, res))) return;
   try {
     const data = await quizCatalogue(matiere), version = quizVersion(matiere);
     if (req.query.version && req.query.version === version) return res.json({ version, inchange: true });
@@ -1040,33 +1030,27 @@ app.post('/api/quiz/reponse', async (req, res) => {
   if (!Number.isInteger(id)) return res.status(400).json({ error: 'Question inconnue.' });
   const matiere = await quizMatiereDe(id);
   if (!matiere) return res.status(404).json({ error: 'Question inconnue.' });
-  const compte = await quizAcces(req, res, matiere);
+  const compte = await quizAcces(req, res);
   if (!compte) return;
+  let essai = null;
   if (!compte.paid) {
-    // Essai : la question compte dans la série offerte de cette matière, jusqu'à « max » questions différentes
-    const deja = compte.essaiReponses[matiere] || [];
-    if (!deja.includes(id)) {
-      if (deja.length >= compte.essaiMatiere.max) return res.status(402).json({ error: "Votre série d'essai dans cette matière est terminée.", code: 'paiement' });
-      const essai = { ...compte.essaiReponses, [matiere]: [...deja, id] };
-      const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_reponses: essai, updated_at: new Date().toISOString() }).eq('user_id', compte.id);
+    // Essai : 5 questions différentes par jour. Compteur relu en base (le compte en mémoire peut dater d'avant d'autres réponses)
+    const { data: l, error: e1 } = await supabaseAdmin.from('quiz_comptes').select('essai_jour, essai_jour_ids').eq('user_id', compte.id).maybeSingle();
+    if (e1) { console.error('[quiz/essai]', e1.message); return res.status(500).json({ error: 'La correction n\'a pas pu être chargée.' }); }
+    let ids = essaiIdsDuJour(l?.essai_jour, l?.essai_jour_ids);
+    if (!ids.includes(id)) {
+      if (ids.length >= ESSAI_PAR_JOUR) return res.status(402).json({ error: `Vos ${ESSAI_PAR_JOUR} questions gratuites du jour sont faites. Revenez demain !`, code: 'quota' });
+      ids = [...ids, id];
+      const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_jour: jourParis(), essai_jour_ids: ids, updated_at: new Date().toISOString() }).eq('user_id', compte.id);
       if (error) { console.error('[quiz/essai]', error.message); return res.status(500).json({ error: 'La correction n\'a pas pu être chargée.' }); }
-      compte.essaiReponses = essai;
-      // Cette réponse termine la série d'essai de la matière : si les 2 séries sont faites, essai terminé :
-      // quizcrpe_trial passe à false (même logique que trial pour PassCRPE : true tant que l'essai est en cours)
-      if (deja.length + 1 >= compte.essaiMatiere.max) {
-        try {
-          const e = await quizEssai(compte);
-          if (e?.termine) {
-            await supabaseAdmin.from('profils_utilisateurs').update({ quizcrpe_trial: false }).eq('user_id', compte.id);
-            if (compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) await klaviyoSetProperties(compte.email, { quizcrpe_trial: false });
-          }
-        } catch (err) { console.error('[quiz/essai terminé]', err.message); }
-      }
     }
+    compte.essaiJour = jourParis(); compte.essaiJourIds = ids;
+    const { parJour, faites, restantes, termine } = quizEssai(compte);
+    essai = { parJour, faites, restantes, termine };
   }
   const c = await quizCorriger(id, reponse);
   if (!c) return res.status(404).json({ error: 'Question inconnue.' });
-  res.json(c);
+  res.json(essai ? { ...c, essai } : c);
 });
 
 // Rapport de positionnement par lien provisoire (sans connexion) : valable jusqu'à rapport_expire_at, ensuite introuvable

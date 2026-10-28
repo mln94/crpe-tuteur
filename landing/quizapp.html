@@ -386,6 +386,14 @@
     .essai-cadeau { font-size: 36px; line-height: 1; }
     .essai-liste { margin: 8px 0 4px 18px; font-size: 15px; line-height: 1.8; color: var(--gray-700); }
     .essai-bandeau { margin: 0 0 14px; padding: 12px 16px; border-radius: 14px; background: #eef2ff; color: #3730a3; font-size: 14px; line-height: 1.5; }
+    /* Compteur des questions gratuites du jour : une pastille par question */
+    .qz-essai-ligne { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; margin-bottom: 4px; }
+    .qz-compteur { display: inline-flex; align-items: center; gap: 5px; vertical-align: middle; }
+    .qz-compteur b { margin-left: 4px; font-size: 14px; color: #3730a3; }
+    .qz-pastille { width: 14px; height: 14px; border-radius: 50%; border: 2px solid #818cf8; background: #fff; }
+    .qz-pastille.faite { background: #4f46e5; border-color: #4f46e5; }
+    .qz-essai-serie { margin: 10px 0 0; padding: 8px 12px; border-radius: 12px; background: #eef2ff; color: #3730a3; font-size: 13.5px; font-weight: 600; }
+    .qz-essai-fin { margin: 16px 0 0; text-align: left; }
     .pay-overlay { position: fixed; inset: 0; z-index: 400; background: rgba(15,23,42,.6); display: flex; align-items: center; justify-content: center; padding: 16px; overflow-y: auto; }
     .pay-overlay[hidden] { display: none; }
     .pay-card { position: relative; width: 100%; max-width: 520px; max-height: calc(100dvh - 32px); overflow-y: auto; background: #fff; border-radius: 22px; padding: 28px 24px; box-shadow: 0 24px 60px rgba(0,0,0,.25); }
@@ -468,7 +476,7 @@
     .qz-voir-themes { white-space: nowrap; font-size: 13px; color: #ea580c; font-weight: 600; margin-bottom: 6px; }
     .qz-lancer:empty { display: none; }
     .qz-lancer .quiz-btn { margin: 0; white-space: nowrap; }
-    @media (max-width: 600px) { .qz-modes-ligne { flex-wrap: wrap; } .qz-modes-ligne .qz-modes { flex: 1 1 100%; } .qz-lancer { flex: 1 1 100%; } .qz-lancer .quiz-btn { width: 100%; } }
+    @media (max-width: 600px) { .qz-modes-ligne { flex-wrap: wrap; } .qz-modes-ligne .qz-modes { flex: 1 1 100%; } .qz-lancer { flex: 1 1 100%; } .qz-lancer .quiz-btn { width: 100%; white-space: normal; } }
     /* Liste déroulante native (Mes séries) au même style */
     .quiz-select { appearance: none; -webkit-appearance: none; padding-right: 40px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 18px; }
     .quiz-select:hover { border-color: #fb923c; }
@@ -822,10 +830,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     p.then(function () { delete enCours[mat]; }, function () { delete enCours[mat]; });
     return p;
   }
-  // Préchargement en arrière-plan des matières utiles : celles de l'essai, ou celles déjà travaillées
+  // Préchargement en arrière-plan des matières utiles : celles déjà travaillées, et pendant l'essai celles conseillées par le test
   function precharger() {
-    var e = essaiActif(), pr = lire(), mats = e ? e.matieres.filter(function (m) { return !m.termine && (m.conseillee || m.faites); }).map(function (m) { return m.matiere; })
-      : MATIERES.map(function (m) { return m[0]; }).filter(function (k) { return pr[k] && pr[k].series; });
+    var e = essaiActif(), pr = lire(), mats = MATIERES.map(function (m) { return m[0]; }).filter(function (k) { return pr[k] && pr[k].series; });
+    if (e) e.conseillees.forEach(function (m) { if (mats.indexOf(m.matiere) < 0) mats.unshift(m.matiere); });
     var suivante = function () {
       var k = mats.shift(); if (!k) return;
       (catalogues[k] ? Promise.resolve() : charger(k)).catch(function () {}).then(function () { setTimeout(suivante, 300); });
@@ -834,7 +842,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   // ── Composition d'une série du niveau choisi : révisions dues, puis nouvelles notions, puis révisions anticipées ──
-  function composer(cat, pm, niveau, themes) {
+  function composer(cat, pm, niveau, themes, taille) {
+    var n = taille || SERIE; // 20 questions, ou les questions d'essai restantes du jour
     var now = Date.now(), dues = [], neuves = [], attente = [], rang = { facile: 0, intermediaire: 1, difficile: 2 };
     cat.ordre.forEach(function (k) {
       if (niveau && cat.notions[k].niveau !== niveau) return;
@@ -848,7 +857,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     dues.sort(function (a, b) { return (pm.notions[a].due || 0) - (pm.notions[b].due || 0); });
     neuves = melange(neuves).sort(function (a, b) { return rang[cat.notions[a].niveau] - rang[cat.notions[b].niveau]; });
     attente.sort(function (a, b) { return pm.notions[a].due - pm.notions[b].due; });
-    var choisies = dues.concat(neuves, attente).slice(0, SERIE);
+    var choisies = dues.concat(neuves, attente).slice(0, n);
     var pris = {};
     var tirer = function (k) {
       var s = pm.notions[k] || { ok: [], vus: [] }, qs = cat.notions[k].questions.filter(function (q) { return !pris[q.id]; });
@@ -861,8 +870,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     };
     var serie = choisies.map(tirer);
     // Moins de 20 notions disponibles : on complète avec d'autres formes des mêmes notions, une par notion à chaque tour
-    for (var tour = 0; serie.length < SERIE && tour < 10; tour++) {
-      choisies.forEach(function (k) { if (serie.length < SERIE) { var q = tirer(k); if (q) serie.push(q); } });
+    for (var tour = 0; serie.length < n && tour < 10; tour++) {
+      choisies.forEach(function (k) { if (serie.length < n) { var q = tirer(k); if (q) serie.push(q); } });
     }
     return melange(serie);
   }
@@ -880,10 +889,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   // ── Écrans ──
   function intro(v) { var l = document.querySelector('.quiz-lead'), h = document.querySelector('.quiz-wrap > h1'); if (l) l.hidden = !v; if (h) h.hidden = !v; }
-  // Essai gratuit en cours (compte non payé) : 2 matières offertes, chacune à son niveau conseillé
+  // Essai gratuit en cours (compte non payé) : 5 questions par jour, toutes matières et tous niveaux ;
+  // les 2 matières les plus fragiles au test sont conseillées, au niveau qu'il suggère
   function essaiActif() { return compte && !compte.paid && compte.essai ? compte.essai : null; }
-  function essaiConseillees(e) { var c = e.matieres.filter(function (m) { return m.conseillee; }); return c.length ? c : e.matieres; }
-  function essaiDe(k) { var e = essaiActif(); return e ? e.matieres.filter(function (m) { return m.matiere === k; })[0] : null; }
+  function essaiConseillee(k) { var e = essaiActif(); return e ? e.conseillees.filter(function (m) { return m.matiere === k; })[0] : null; }
+  function pluriel(n, mot) { return n + ' ' + mot + (n > 1 ? 's' : ''); }
+  // Compteur des questions gratuites du jour : une pastille par question (pleine = faite)
+  function compteurEssai(e) {
+    var p = ''; for (var i = 0; i < e.parJour; i++) p += '<span class="qz-pastille' + (i < e.faites ? ' faite' : '') + '"></span>';
+    return '<span class="qz-compteur" role="img" aria-label="' + e.faites + ' questions gratuites sur ' + e.parJour + ' faites aujourd’hui">' + p +
+      '<b>' + e.faites + ' / ' + e.parJour + '</b></span>';
+  }
+  function essaiBandeau(e) {
+    if (e.termine) return '<div class="quiz-card essai-carte"><div class="essai-cadeau">⏳</div><div><h2>Vos ' + e.parJour + ' questions gratuites du jour sont faites</h2>' +
+      '<p>' + compteurEssai(e) + '</p><p>Revenez demain : ' + e.parJour + ' nouvelles questions vous attendent dès minuit. Pour continuer dès maintenant, sans limite, ' +
+      'débloquez l’accès complet au quiz.</p>' +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz pour ' + PRIX + '</button></div></div></div>';
+    return '<div class="essai-bandeau"><div class="qz-essai-ligne">🎁 <strong>Essai gratuit : ' + e.parJour + ' questions offertes chaque jour</strong>' + compteurEssai(e) + '</div>' +
+      'Il vous reste <strong>' + pluriel(e.restantes, 'question') + '</strong> aujourd’hui, dans la matière et au niveau de votre choix. ' +
+      'Les matières « conseillées » sont les plus fragiles d’après votre test. Le compteur repart à zéro chaque jour à minuit.</div>';
+  }
 
   // Barre des filtres (matière, niveau), visible sur tous les écrans du quiz ; figée pendant une série
   // Listes déroulantes de la barre (matière, thèmes) : une seule ouverte à la fois, gardée ouverte pendant le choix des thèmes
@@ -901,12 +926,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         (st.themes ? ' · ' + st.themes.length + ' thème' + (st.themes.length > 1 ? 's' : '') + ' choisi' + (st.themes.length > 1 ? 's' : '') : '') + '</span>' +
         '<button type="button" class="quiz-link qz-quitter" data-act="quitter">Quitter la série</button></div>';
     }
-    var e = essaiActif(), fige = enSerie || (e && e.termine);
-    if (e && !e.termine) {
-      var dispo = e.matieres.filter(function (m) { return !m.termine; }), cur = essaiDe(choix.mat);
-      if (!cur || cur.termine) cur = dispo[0];
-      if (cur && !enSerie) { choix.mat = cur.matiere; choix.niveau = cur.niveau; }
-    }
+    var e = essaiActif(), fige = enSerie;
     return '<div class="qz-barre' + (enSerie ? ' en-serie' : '') + '">' +
       (function () {
         var mc = MATIERES.filter(function (m) { return m[0] === choix.mat; })[0] || MATIERES[0], ouvert = ddOuvert === 'mat' && !fige;
@@ -914,16 +934,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           '<button type="button" class="qz-dd-btn" data-dd-toggle="mat" aria-haspopup="listbox" aria-expanded="' + ouvert + '" aria-labelledby="quiz-mat-lbl"' + (fige ? ' disabled' : '') + '>' +
           '<span class="qz-dd-ico">' + mc[2] + '</span><span class="qz-dd-txt">' + esc(mc[1]) + '</span>' + CHEVRON + '</button>' +
           '<div class="qz-dd-menu" role="listbox" aria-labelledby="quiz-mat-lbl"' + (ouvert ? '' : ' hidden') + '>' + MATIERES.map(function (m) {
-            var x = essaiDe(m[0]), ok = !e || (x && !x.termine), info = e ? (x ? (x.termine ? 'essai terminé' : x.conseillee ? 'conseillée' : 'essai offert') : '🔒') : '', sel = m[0] === choix.mat;
-            return '<button type="button" class="qz-dd-opt" role="option" data-mat-opt="' + m[0] + '" aria-selected="' + sel + '"' + (ok ? '' : ' disabled') + '>' +
+            var info = e && essaiConseillee(m[0]) ? 'conseillée' : '', sel = m[0] === choix.mat;
+            return '<button type="button" class="qz-dd-opt" role="option" data-mat-opt="' + m[0] + '" aria-selected="' + sel + '">' +
               '<span class="qz-dd-ico">' + m[2] + '</span><span class="qz-dd-txt">' + esc(m[1]) + '</span>' + (info ? '<small>' + info + '</small>' : '') + (sel ? '<span class="qz-dd-check">✓</span>' : '') + '</button>';
           }).join('') + '</div></div></div>';
       })() +
       '<div class="qz-barre-champ"><span class="lbl" id="quiz-niv-lbl">Niveau</span><div class="quiz-niveaux" role="group" aria-labelledby="quiz-niv-lbl">' +
       Object.keys(NIVEAUX).map(function (n) {
-        var off = fige || (e && n !== choix.niveau);
-        return '<button type="button" class="quiz-niveau" data-niv="' + n + '" aria-pressed="' + (n === choix.niveau) + '"' + (off ? ' disabled' : '') +
-          (e && n !== choix.niveau ? ' title="Disponible avec l’accès complet"' : '') + '>' + NIVEAUX[n] + (e && n !== choix.niveau ? ' 🔒' : '') + '</button>'; }).join('') + '</div></div>' +
+        return '<button type="button" class="quiz-niveau" data-niv="' + n + '" aria-pressed="' + (n === choix.niveau) + '"' + (fige ? ' disabled' : '') + '>' + NIVEAUX[n] + '</button>'; }).join('') + '</div></div>' +
       '<div class="qz-barre-champ qz-champ-modes"><div class="qz-lbl-ligne"><span class="lbl" id="quiz-th-lbl">Thèmes</span>' +
       (enSerie ? '' : '<button type="button" class="quiz-link qz-voir-themes" data-act="voir-themes">Voir le détail des thèmes ↓</button>') + '</div>' +
       '<div class="qz-modes-ligne"><div class="quiz-niveaux qz-modes" role="group" aria-labelledby="quiz-th-lbl">' +
@@ -949,16 +967,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (vue()) history.pushState(null, '', '/quizapp');
     marquerOnglet('');
     var e = essaiActif();
-    if (e && e.termine) {
-      root.innerHTML = barreCompte() + barreFiltres(false) + '<div class="quiz-card essai-carte"><div class="essai-cadeau">🔓</div><div><h2>Votre essai est terminé</h2>' +
-        '<p>Vous avez fait vos 2 séries offertes. Débloquez les 9 matières et les 3 niveaux pour continuer.</p>' +
-        '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz pour ' + PRIX + '</button></div></div></div>';
-      return;
-    }
-    var faites = e ? e.terminees : 0;
-    root.innerHTML = barreCompte() + barreFiltres(false) +
-      (e ? '<div class="essai-bandeau">🎁 <strong>Essai gratuit : ' + faites + ' / ' + e.nb + ' séries faites.</strong> ' +
-        (e.matieres.length > e.nb ? 'Choisissez les 2 matières de vos séries offertes ; les matières « conseillées » sont celles de votre test.' : 'Les autres matières et niveaux se débloquent avec l’accès complet.') + '</div>' : '') +
+    root.innerHTML = barreCompte() + barreFiltres(false) + (e ? essaiBandeau(e) : '') +
       (message ? '<div class="quiz-msg ok-msg">' + esc(message) + '</div>' : '') +
       '<div class="quiz-card" id="qz-bilan"><p>Chargement de votre bilan…</p></div>' +
       '<div class="quiz-card" id="qz-tableau"><p>Chargement de votre progression…</p></div>';
@@ -1010,12 +1019,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (zone) zone.innerHTML = blocs(ordre).map(function (bl) { return (bl.nom ? '<p class="qz-dd-groupe">' + esc(bl.nom) + '</p>' : '') + bl.themes.map(option).join(''); }).join('');
       var lib = document.getElementById('qz-themes-lib'); if (lib && ths) lib.textContent = libelleThemes(ths.length);
       tableau.ordre = ordre;
-      var ex = essaiDe(mat), serie = Math.min(ex ? ex.max : SERIE, dispo);
+      // Essai : la série compte les questions gratuites qui restent aujourd'hui
+      var ex = essaiActif(), serie = Math.min(ex ? ex.restantes : SERIE, dispo);
       var lancer = document.getElementById('qz-lancer');
       if (lancer) lancer.innerHTML = ths && !ths.length ? '<button type="button" class="quiz-btn" disabled>Choisissez au moins un thème</button>'
-        : '<button type="button" class="quiz-btn" data-act="start"' + (serie ? '' : ' disabled') + '>Lancer une série de ' + serie + ' questions →</button>';
+        : ex && ex.termine ? '<button type="button" class="quiz-btn" disabled>Revenez demain pour ' + ex.parJour + ' nouvelles questions</button>'
+        : '<button type="button" class="quiz-btn" data-act="start"' + (serie ? '' : ' disabled') + '>' +
+          (ex ? (serie > 1 ? 'Lancer mes ' + serie + ' questions gratuites →' : 'Lancer ma dernière question gratuite →') : 'Lancer une série de ' + serie + ' questions →') + '</button>';
       el.innerHTML = '<div class="qz-tete"><div><h2>' + esc(label(mat)) + ' · ' + NIVEAUX[niveau] + '</h2>' +
-        '<p>' + total + ' questions dans ' + ordre.length + ' thème' + (ordre.length > 1 ? 's' : '') + ' du programme' + (ex ? ' · série d’essai offerte' : '') + '</p></div></div>' +
+        '<p>' + total + ' questions dans ' + ordre.length + ' thème' + (ordre.length > 1 ? 's' : '') + ' du programme' + (ex && essaiConseillee(mat) ? ' · matière conseillée par votre test' : '') + '</p></div></div>' +
         (ths && ths.length ? '<p class="qz-note qz-themes-choisis">Série sur ' + ths.length + ' thème' + (ths.length > 1 ? 's' : '') + ' choisi' + (ths.length > 1 ? 's' : '') + ' : ' + esc(ths.join(' · ')) + '</p>' : '') +
         '<div class="stats"><div class="stat"><b>' + reussies + ' / ' + total + '</b><span>questions réussies</span></div><div class="stat"><b>' + b.maitrisees + ' / ' + b.total + '</b><span>notions maîtrisées</span></div></div>' +
         '<h3 class="qz-sous-titre" id="qz-detail-themes">Progression par thème</h3>' +
@@ -1286,19 +1298,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function aiguiller(c) {
     if (!c.positionnement) return introTest();
     if (c.paid) { fermerPaiement(); accueil(); return precharger(); }
-    // Pas encore payé : menu du quiz pour choisir ses 2 séries d'essai offertes (le rapport du test est dans « Mon test »,
-    // et s'affiche directement à la fin du test), puis le paiement
+    // Pas encore payé : menu du quiz avec les 5 questions gratuites du jour (le rapport du test est dans « Mon test »,
+    // et s'affiche directement à la fin du test) ; le paiement s'ouvre quand les questions du jour sont faites
     var e = c.essai;
-    if (e && e.termine) { accueil(); return ouvrirPaiement(); }
     precharger();
-    if (e && !e.matieres.some(function (m) { return m.faites > 0; })) {
-      // Aucune série d'essai commencée : première matière conseillée par le test présélectionnée
-      var m = essaiConseillees(e).filter(function (x) { return !x.termine; })[0];
+    var pr = lire();
+    if (e && !MATIERES.some(function (m) { return pr[m[0]] && pr[m[0]].series; })) {
+      // Aucune série faite : première matière conseillée par le test présélectionnée, à son niveau conseillé
+      var m = e.conseillees[0];
       if (m) { choix.mat = m.matiere; choix.niveau = m.niveau; garderChoix(); }
     }
     accueil();
   }
-  function etatCompte(c) { return c ? [!!c.paid, !!c.positionnement, c.essai ? c.essai.matieres.map(function (m) { return m.faites + (m.termine ? 't' : ''); }).join() : ''].join('|') : ''; }
+  function etatCompte(c) { return c ? [!!c.paid, !!c.positionnement, c.essai ? c.essai.faites : ''].join('|') : ''; }
   // Compte déjà chargé (changement de menu) : écran affiché tout de suite, compte rafraîchi en arrière-plan.
   // boot(true) force le rechargement (paiement, erreur d'accès, bouton « Réessayer »).
   function boot(forcer) {
@@ -1493,31 +1505,31 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
     if (compte && compte.paid) html = html.replace('<!--PAIEMENT-->', '') + '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Aller au quiz</button></div>';
     else {
-      // Pas de paiement sur le rapport : les 2 séries d'essai offertes, dans les matières les plus fragiles
+      // Pas de paiement sur le rapport : les 5 questions gratuites du jour, en commençant par les matières les plus fragiles
       var e = compte && compte.essai;
-      var offre = e && !e.termine
-        ? '<div class="quiz-card essai-carte" id="essai"><div class="essai-cadeau">🎁</div><div><h2>Vos 2 séries d’essai offertes</h2>' +
-          '<p>Nous vous conseillons ces deux matières, les plus fragiles d’après votre test, au niveau qu’il suggère :</p><ul class="essai-liste">' +
-          essaiConseillees(e).map(function (m) { return '<li><strong>' + esc(m.label) + '</strong> · niveau ' + NIVEAUX[m.niveau] + ' · ' + m.max + ' questions' + (m.termine ? ' ✓' : '') + '</li>'; }).join('') +
-          '</ul><p>Vous pouvez aussi choisir d’autres matières et les thèmes de chaque série sur la page du quiz.</p>' +
-          '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="essai-go">Commencer mon essai gratuit →</button></div></div></div>'
-        : '<div class="quiz-card essai-carte"><div class="essai-cadeau">🔓</div><div><h2>Votre essai est terminé</h2><p>Débloquez les 9 matières pour continuer votre préparation.</p>' +
+      var offre = !e ? '' : !e.termine
+        ? '<div class="quiz-card essai-carte" id="essai"><div class="essai-cadeau">🎁</div><div><h2>' + e.parJour + ' questions gratuites chaque jour</h2>' +
+          '<p>Chaque jour, vous avez droit à ' + e.parJour + ' questions gratuites, dans la matière et au niveau de votre choix. Aujourd’hui : ' + compteurEssai(e) + '</p>' +
+          '<p>Pour commencer, nous vous conseillons ces deux matières, les plus fragiles d’après votre test, au niveau qu’il suggère :</p><ul class="essai-liste">' +
+          e.conseillees.map(function (m) { return '<li><strong>' + esc(m.label) + '</strong> · niveau ' + NIVEAUX[m.niveau] + '</li>'; }).join('') +
+          '</ul><div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="essai-go">' + (e.faites ? 'Continuer mes questions du jour →' : 'Commencer mes ' + e.parJour + ' questions gratuites →') + '</button></div></div></div>'
+        : '<div class="quiz-card essai-carte"><div class="essai-cadeau">⏳</div><div><h2>Vos ' + e.parJour + ' questions gratuites du jour sont faites</h2>' +
+          '<p>Revenez demain pour ' + e.parJour + ' nouvelles questions, ou débloquez l’accès complet pour continuer sans limite.</p>' +
           '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz</button></div></div></div>';
-      var annonce = e && !e.termine ? '<div class="essai-annonce">🎁 Vous avez 2 séries d’essai offertes : le bouton pour les commencer est à la fin de votre rapport.</div>' : '';
+      var annonce = e && !e.termine ? '<div class="essai-annonce">🎁 ' + e.parJour + ' questions gratuites chaque jour : le bouton pour commencer est à la fin de votre rapport.</div>' : '';
       html = html.replace('<!--PAIEMENT-->', annonce) + offre;
     }
     root.innerHTML = html;
     intro(false); // l'introduction du quiz est masquée sur le rapport
   }
-  // Prochaine série d'essai non terminée : matière et niveau conseillés par le test
-  // Essai : ouverture du menu du quiz (pas de série lancée d'office), sur une matière commencée ou conseillée ;
-  // la personne choisit ensuite sa matière, ses thèmes et lance sa série
+  // Essai : ouverture du menu du quiz (pas de série lancée d'office), sur la première matière conseillée par le test
+  // si aucune série n'a encore été faite ; la personne choisit ensuite sa matière, ses thèmes et lance sa série
   function lancerEssai() {
-    var e = essaiActif(), m = e && (e.matieres.filter(function (x) { return !x.termine && x.faites; })[0] || essaiConseillees(e).filter(function (x) { return !x.termine; })[0]);
-    if (m) { choix.mat = m.matiere; choix.niveau = m.niveau; garderChoix(); }
+    var e = essaiActif(), pr = lire(), m = e && e.conseillees[0];
+    if (m && !MATIERES.some(function (x) { return pr[x[0]] && pr[x[0]].series; })) { choix.mat = m.matiere; choix.niveau = m.niveau; garderChoix(); }
     accueil(); top();
   }
-  // Fin du test : proposition immédiate des 2 séries d'essai, dans les matières les plus fragiles
+  // Fin du test : proposition immédiate des questions gratuites du jour, dans les matières les plus fragiles
   // Juste après le test seulement : le rapport s'affiche d'abord seul, et l'offre d'essai s'ouvre une fois la moitié
   // du rapport parcourue. En revenant plus tard sur le rapport (« Mon test », retour sur le site), pas de fenêtre.
   var essaiAuDefilement = null;
@@ -1543,12 +1555,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     m = document.createElement('div');
     m.id = 'essai-modal'; m.className = 'pay-overlay'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'essai-titre');
     m.innerHTML = '<div class="pay-card"><button type="button" class="pay-fermer" aria-label="Fermer">×</button>' +
-      '<div class="pay-badge">🎁 Offert</div><h2 id="essai-titre">Nous vous proposons deux séries d’essai gratuites</h2>' +
-      '<p class="pay-texte">Merci d’avoir passé votre test de positionnement. Pour découvrir le Quiz CRPE, nous vous proposons de faire deux séries de questions, gratuitement.</p>' +
-      '<p class="pay-texte">Nous vous conseillons ces deux matières, les plus fragiles d’après votre test, au niveau qu’il suggère :</p><ul class="essai-liste">' +
-      essaiConseillees(e).map(function (x) { return '<li><strong>' + esc(x.label) + '</strong> · niveau ' + NIVEAUX[x.niveau] + ' · ' + x.max + ' questions' + (x.termine ? ' ✓' : '') + '</li>'; }).join('') +
-      '</ul><p class="pay-texte">Ce n’est qu’un conseil : si vous le souhaitez, vous pourrez choisir d’autres matières, ainsi que les thèmes de chaque série (bouton « Mes thèmes »), sur la page du quiz.</p>' +
-      '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-essai="go">Choisir ma première série →</button></div>' +
+      '<div class="pay-badge">🎁 Offert</div><h2 id="essai-titre">' + e.parJour + ' questions gratuites chaque jour</h2>' +
+      '<p class="pay-texte">Merci d’avoir passé votre test de positionnement. Pour découvrir le Quiz CRPE, vous avez droit à <strong>' + e.parJour + ' questions gratuites par jour</strong>, ' +
+      'dans toutes les matières et à tous les niveaux. Un compteur vous indique combien il vous en reste ; il repart à zéro chaque jour à minuit.</p>' +
+      '<p class="pay-texte">Pour commencer, nous vous conseillons ces deux matières, les plus fragiles d’après votre test, au niveau qu’il suggère :</p><ul class="essai-liste">' +
+      e.conseillees.map(function (x) { return '<li><strong>' + esc(x.label) + '</strong> · niveau ' + NIVEAUX[x.niveau] + '</li>'; }).join('') +
+      '</ul><p class="pay-texte">Ce n’est qu’un conseil : vous pouvez choisir une autre matière, un autre niveau et vos thèmes (bouton « Mes thèmes ») sur la page du quiz.</p>' +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-essai="go">Commencer mes questions du jour →</button></div>' +
       '<p class="pw-liens"><button type="button" class="quiz-link" data-essai="rapport">Continuer la lecture de mon rapport</button></p></div>';
     document.body.appendChild(m);
     document.body.style.overflow = 'hidden';
@@ -1559,15 +1572,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
     document.addEventListener('keydown', function surEchap(ev) { if (ev.key === 'Escape') { fermer(); document.removeEventListener('keydown', surEchap); } });
   }
-  // Fenêtre de paiement, à la fin de l'essai : prix, prix par question, garantie, boutons PayPal
+  // Fenêtre de paiement : prix, prix par question, garantie, boutons PayPal. Ouverte d'office quand les questions
+  // gratuites du jour sont faites, ou par le bouton « Débloquer le quiz »
   function ouvrirPaiement() {
     var m = document.getElementById('pay-modal');
     if (!m) {
       m = document.createElement('div');
       m.id = 'pay-modal'; m.className = 'pay-overlay'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'pay-titre');
       m.innerHTML = '<div class="pay-card"><button type="button" class="pay-fermer" aria-label="Fermer">×</button>' +
-        '<div class="pay-badge">🎉 Essai terminé</div><h2 id="pay-titre">Continuez votre préparation sur les 9 matières</h2>' +
-        '<p class="pay-texte">Vous avez fait vos séries d’essai. Débloquez les 9 415 questions, en facile, intermédiaire et avancé, avec vos révisions espacées jusqu’au concours.</p>' +
+        '<div class="pay-badge" id="pay-badge"></div><h2 id="pay-titre">Continuez votre préparation sur les 9 matières</h2>' +
+        '<p class="pay-texte" id="pay-intro"></p>' +
         '<div class="pay-prix">' + PRIX + ' <span>TTC · pour 1 an d’accès, en une seule fois, sans abonnement</span></div>' +
         '<div class="pay-decoupe"><div><b>&lt; 1 centime</b><span>par question</span></div><div><b>&lt; 1,55 €</b><span>par semaine sur 1 an</span></div><div><b>9 415</b><span>questions corrigées</span></div></div>' +
         '<div class="garantie pay-garantie"><span class="sceau">🛡️</span><div><strong>Satisfait ou remboursé pendant 14 jours</strong>Pas convaincu ? Écrivez-nous dans les 14 jours suivant votre achat : nous vous remboursons intégralement, sans avoir à vous justifier.</div></div>' +
@@ -1581,6 +1595,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       });
       document.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') fermerPaiement(); });
     }
+    var e = essaiActif(), finJour = e && e.termine;
+    document.getElementById('pay-badge').textContent = finJour ? '⏳ Questions du jour faites' : '🔓 Accès complet';
+    document.getElementById('pay-intro').textContent = (finJour ? 'Vous avez fait vos ' + e.parJour + ' questions gratuites du jour : ' + e.parJour + ' nouvelles questions vous attendent demain. Pour continuer dès maintenant et sans limite, débloquez' : 'Débloquez') +
+      ' les 9 415 questions, en facile, intermédiaire et avancé, avec vos révisions espacées jusqu’au concours.';
     m.hidden = false; document.body.style.overflow = 'hidden';
     document.getElementById('pp-paypal').innerHTML = ''; document.getElementById('pp-carte').innerHTML = '';
     paypal();
@@ -1650,12 +1668,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   function demarrer(mat, niveau) {
+    // Essai : la série compte les questions gratuites qui restent aujourd'hui ; plus aucune, le paiement s'ouvre
+    var e = essaiActif();
+    if (e && e.termine) { accueil(); top(); return ouvrirPaiement(); }
     root.innerHTML = '<div class="quiz-card"><p>Chargement des questions…</p></div>';
     charger(mat).then(function (cat) {
       var ths = themesChoisis(mat);
       if (ths) ths = ths.filter(function (t) { return cat.ordre.some(function (k) { return cat.notions[k].niveau === niveau && (cat.notions[k].theme || 'Notions') === t; }); });
       // Choix des QCM mélangés à chaque série (la copie gardée dans le navigateur a un ordre fixe)
-      var serie = composer(cat, prog(mat), niveau, ths).map(function (q) { return q.type === 'qcm' ? Object.assign({}, q, { choix: melange(q.choix) }) : q; });
+      var serie = composer(cat, prog(mat), niveau, ths, e ? e.restantes : SERIE).map(function (q) { return q.type === 'qcm' ? Object.assign({}, q, { choix: melange(q.choix) }) : q; });
       if (!serie.length) return progression(mat, ths ? 'Toutes les notions de vos thèmes choisis sont maîtrisées à ce niveau. Bravo ! Ajoutez d’autres thèmes ou changez de niveau.'
         : 'Toutes les notions de niveau ' + NIVEAUX[niveau].toLowerCase() + ' sont maîtrisées dans cette matière. Bravo ! Essayez un autre niveau.');
       st = { mat: mat, niveau: niveau, themes: ths, cat: cat, serie: serie, i: 0, score: 0, recap: [], sel: [], repondu: false };
@@ -1668,7 +1689,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   function entete(q) {
     var n = st.serie.length;
+    var e = essaiActif();
     return '<div class="quiz-top"><span class="mat">' + esc(label(st.mat)) + ' · ' + NIVEAUX[st.niveau] + '</span><span>Question ' + (st.i + 1) + ' / ' + n + '</span></div>' +
+      (e ? '<div class="qz-essai-ligne qz-essai-serie" id="qz-compteur">🎁 Questions gratuites du jour' + compteurEssai(e) + '</div>' : '') +
       '<div class="quiz-bar"><span style="width:' + Math.round(st.i / n * 100) + '%"></span></div>' +
       '<div class="quiz-meta"><span class="chip ' + q.niveau + '">' + (NIVEAUX[q.niveau] || '') + '</span>' +
       (q.theme ? '<span class="chip theme" title="' + esc(q.theme + (q.sous_theme ? ' › ' + q.sous_theme : '')) + '">' + esc(groupe(q.theme) ? groupe(q.theme).court : q.theme) + '</span>' : '') +
@@ -1707,6 +1730,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     api('/api/quiz/reponse', { method: 'POST', body: JSON.stringify({ id: q.id, reponse: reponse }) })
       .then(function (d) {
         afficher(d);
+        // Essai : compteur des questions gratuites du jour mis à jour par le serveur
+        if (d.essai && essaiActif()) { Object.assign(compte.essai, d.essai); var cpt = document.getElementById('qz-compteur'); if (cpt) cpt.innerHTML = '🎁 Questions gratuites du jour' + compteurEssai(compte.essai); }
         var suite = enregistrer(q, d.correct);
         if (d.correct) st.score++;
         st.recap.push({ id: q.id, theme: q.theme, q: q.question, ok: d.correct, attendu: d.attendu });
@@ -1752,14 +1777,25 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<div class="big">' + String(note).replace('.', ',') + ' / 20</div><p>' + s + ' bonne' + (s > 1 ? 's' : '') + ' réponse' + (s > 1 ? 's' : '') + ' sur ' + n + '. ' + msg + '</p>' +
       '<div class="stats"><div class="stat"><b>' + b.maitrisees + '</b><span>notions maîtrisées</span></div><div class="stat"><b>' + b.encours + '</b><span>en cours</span></div><div class="stat"><b>' + (b.total - b.maitrisees - b.encours) + '</b><span>à découvrir</span></div></div>' +
       (b.prochaine && !b.dues ? '<p style="font-size:13px;color:var(--gray-500)">Prochaines révisions à partir du ' + dateFr(b.prochaine) + '.</p>' : '') +
-      (essaiActif() ? '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Continuer mon essai</button><a class="quiz-btn ghost" href="/quizapp?vue=series">Mes séries</a></div>'
+      (essaiActif() ? (function (e) {
+        return '<div class="essai-bandeau qz-essai-fin"><div class="qz-essai-ligne">🎁 <strong>Questions gratuites du jour</strong>' + compteurEssai(e) + '</div>' +
+          (e.termine ? 'Vos ' + e.parJour + ' questions gratuites du jour sont faites. Revenez demain pour ' + e.parJour + ' nouvelles questions, ou débloquez le quiz pour continuer sans limite.'
+            : 'Il vous reste <strong>' + pluriel(e.restantes, 'question') + '</strong> gratuite' + (e.restantes > 1 ? 's' : '') + ' aujourd’hui.') + '</div>' +
+          '<div class="quiz-actions">' + (e.termine ? '<button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz pour ' + PRIX + '</button>'
+            : '<button type="button" class="quiz-btn" data-act="again">' + (e.restantes > 1 ? 'Continuer : mes ' + e.restantes + ' dernières questions du jour' : 'Continuer : ma dernière question du jour') + '</button>' +
+              '<button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button>') +
+          '<a class="quiz-btn ghost" href="/quizapp?vue=series">Mes séries</a></div>';
+      })(essaiActif())
         : '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="again">Nouvelle série de ' + SERIE + '</button><button type="button" class="quiz-btn ghost" data-act="prog">Ma progression</button><a class="quiz-btn ghost" href="/quizapp?vue=series">Mes séries</a><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>') +
       '<div class="quiz-recap">' + st.recap.map(function (r) {
         return '<div class="' + (r.ok ? 'r-ok' : 'r-ko') + '">' + esc(r.q) + (r.ok ? '' : ' <em>Réponse : ' + esc(r.attendu) + '</em>') + '</div>';
       }).join('') + '</div></div>';
     top();
-    // Essai : on recharge le compte ; les 2 séries faites, le paiement s'ouvre
-    if (essaiActif()) api('/api/quiz/compte').then(function (c) { compte = c; if (essaiActif() && compte.essai.termine) setTimeout(ouvrirPaiement, 900); }).catch(function () {});
+    // Essai : questions gratuites du jour toutes faites, le paiement s'ouvre ; le compte est ensuite rechargé
+    if (essaiActif()) {
+      if (compte.essai.termine) setTimeout(ouvrirPaiement, 900);
+      api('/api/quiz/compte').then(function (c) { compte = c; }).catch(function () {});
+    }
   }
 
   // « Ma progression » : la progression est sur l'accueil, pour la matière et le niveau choisis
