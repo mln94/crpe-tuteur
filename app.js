@@ -1044,19 +1044,26 @@ app.post('/api/quiz/reponse', async (req, res) => {
   let essai = null;
   if (!compte.paid) {
     // Essai : 5 questions différentes par jour. Compteur relu en base (le compte en mémoire peut dater d'avant d'autres réponses)
-    const { data: l, error: e1 } = await supabaseAdmin.from('quiz_comptes').select('essai_jour, essai_jour_ids').eq('user_id', compte.id).maybeSingle();
+    const { data: l, error: e1 } = await supabaseAdmin.from('quiz_comptes').select('essai_jour, essai_jour_ids, essai_5_questions_premiere_fois_at, essai_nb_jours_5_questions').eq('user_id', compte.id).maybeSingle();
     if (e1) { console.error('[quiz/essai]', e1.message); return res.status(500).json({ error: 'La correction n\'a pas pu être chargée.' }); }
     let ids = essaiIdsDuJour(l?.essai_jour, l?.essai_jour_ids);
     if (!ids.includes(id)) {
       if (ids.length >= ESSAI_PAR_JOUR) return res.status(402).json({ error: `Vos ${ESSAI_PAR_JOUR} questions gratuites du jour sont faites. Revenez demain !`, code: 'quota' });
       ids = [...ids, id];
       const maintenant = new Date().toISOString();
-      const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_jour: jourParis(), essai_jour_ids: ids, essai_derniere_question_at: maintenant, updated_at: maintenant }).eq('user_id', compte.id);
+      // 5e question du jour validée : un jour de plus où les 5 questions gratuites ont été faites
+      const complet = ids.length === ESSAI_PAR_JOUR;
+      const nbJours = (l?.essai_nb_jours_5_questions || 0) + 1, premiereFois = l?.essai_5_questions_premiere_fois_at || maintenant;
+      const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_jour: jourParis(), essai_jour_ids: ids, essai_derniere_question_at: maintenant, updated_at: maintenant,
+        ...(complet ? { essai_nb_jours_5_questions: nbJours, essai_5_questions_premiere_fois_at: premiereFois } : {}) }).eq('user_id', compte.id);
       if (error) { console.error('[quiz/essai]', error.message); return res.status(500).json({ error: 'La correction n\'a pas pu être chargée.' }); }
       // Klaviyo : date du dernier jour d'essai, envoyée à la première question gratuite du jour (attendue : sur Vercel,
       // un envoi lancé après la réponse peut être perdu ; un échec n'empêche pas la correction)
-      if (ids.length === 1 && compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) {
-        try { await klaviyoSetProperties(compte.email, { date_dernier_essai_quizcrpe: dateKlaviyo(maintenant) }); }
+      // et, à la 5e question du jour, les jours où les 5 questions ont été faites
+      if ((ids.length === 1 || complet) && compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) {
+        const props = { date_dernier_essai_quizcrpe: dateKlaviyo(maintenant),
+          ...(complet ? { essai_5_questions_atteint: true, essai_nb_jours_5_questions: nbJours, date_premier_essai_complet_quizcrpe: dateKlaviyo(premiereFois) } : {}) };
+        try { await klaviyoSetProperties(compte.email, props); }
         catch (e) { console.error('[Klaviyo essai]', e.message); }
       }
     }
