@@ -1041,7 +1041,8 @@ app.post('/api/quiz/reponse', async (req, res) => {
     if (!ids.includes(id)) {
       if (ids.length >= ESSAI_PAR_JOUR) return res.status(402).json({ error: `Vos ${ESSAI_PAR_JOUR} questions gratuites du jour sont faites. Revenez demain !`, code: 'quota' });
       ids = [...ids, id];
-      const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_jour: jourParis(), essai_jour_ids: ids, updated_at: new Date().toISOString() }).eq('user_id', compte.id);
+      const maintenant = new Date().toISOString();
+      const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_jour: jourParis(), essai_jour_ids: ids, essai_derniere_question_at: maintenant, updated_at: maintenant }).eq('user_id', compte.id);
       if (error) { console.error('[quiz/essai]', error.message); return res.status(500).json({ error: 'La correction n\'a pas pu être chargée.' }); }
     }
     compte.essaiJour = jourParis(); compte.essaiJourIds = ids;
