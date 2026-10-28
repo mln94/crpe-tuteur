@@ -605,9 +605,15 @@ app.post('/api/feedback/trial', async (req, res) => {
    Triggers sur auth.users (migration 20261025_klaviyo_inscription_webhook.sql), via pg_net :
      INSERT                       → { type: 'INSERT', record: { id } } : profil Klaviyo créé, signup_confirmed = false
      email_confirmed_at renseigné → { type: 'UPDATE', record: { id } } : signup_confirmed = true
+     last_sign_in_at modifié      → { type: 'SIGNIN', record: { id } } : date_dernier_signin (migration 20261028_klaviyo_dates_compte.sql)
+   date_creation_compte et date_dernier_signin sont envoyées à chaque appel.
    Seul l'id est lu dans la requête : le compte est relu dans Supabase (clé service_role), donc un appel forgé
    ne peut que resynchroniser des données exactes.
 ───────────────────────────────────────────────────────────────────────────── */
+// Dates du compte dans Klaviyo : création du compte et dernière connexion (auth.users.created_at, last_sign_in_at)
+const proprietesDatesCompte = user => ({ date_creation_compte: user.created_at,
+  ...(user.last_sign_in_at ? { date_dernier_signin: user.last_sign_in_at } : {}) });
+
 async function klaviyoProfilExiste(email) {
   const r = await fetch(`${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`, { headers: klaviyoHeaders() });
   return !!(await r.json()).data?.[0]?.id;
@@ -616,20 +622,27 @@ async function klaviyoProfilExiste(email) {
 app.post('/api/webhook/supabase-auth', async (req, res) => {
   if (!klaviyoGuard(res)) return;
   const { type, record } = req.body || {};
-  if (!['INSERT', 'UPDATE'].includes(type) || !record?.id) return res.json({ ignored: true });
+  if (!['INSERT', 'UPDATE', 'SIGNIN'].includes(type) || !record?.id) return res.json({ ignored: true });
   try {
     const { data, error } = await supabaseAdmin.auth.admin.getUserById(record.id);
     if (error || !data?.user?.email) return res.status(404).json({ error: 'Compte introuvable.' });
     const user = data.user;
     const confirmed = !!user.email_confirmed_at;
     const src = { ...(user.user_metadata || {}), email: user.email };
+    if (type === 'SIGNIN') {
+      // Connexion : seulement les dates (profil absent de Klaviyo : rien à mettre à jour)
+      await klaviyoSetProperties(user.email, proprietesDatesCompte(user));
+      return res.json({ ok: true });
+    }
     if (type === 'INSERT') {
       await klaviyoInscription(src, confirmed);
+      await klaviyoSetProperties(user.email, proprietesDatesCompte(user));
     } else {
       if (!confirmed) return res.json({ ignored: true });
       // Profil absent (inscription jamais arrivée dans Klaviyo) : créé maintenant, déjà confirmé
       if (!(await klaviyoProfilExiste(user.email))) await klaviyoInscription(src, true);
       await klaviyoSetEmailVerified(user.email);
+      await klaviyoSetProperties(user.email, proprietesDatesCompte(user));
       await klaviyoNewsletterDepuisInscription(user);
     }
     res.json({ ok: true, signup_confirmed: confirmed });
