@@ -1062,7 +1062,7 @@ app.post('/api/quiz/reponse', async (req, res) => {
       // et, à la 5e question du jour, les jours où les 5 questions ont été faites
       if ((ids.length === 1 || complet) && compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) {
         const props = { date_dernier_essai_quizcrpe: dateKlaviyo(maintenant),
-          ...(complet ? { essai_5_questions_atteint: true, essai_nb_jours_5_questions: nbJours, date_premier_essai_complet_quizcrpe: dateKlaviyo(premiereFois) } : {}) };
+          ...(complet ? { essai_nb_jours_5_questions: nbJours, date_premier_essai_complet_quizcrpe: dateKlaviyo(premiereFois) } : {}) };
         try { await klaviyoSetProperties(compte.email, props); }
         catch (e) { console.error('[Klaviyo essai]', e.message); }
       }
