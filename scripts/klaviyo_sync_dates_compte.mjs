@@ -1,6 +1,7 @@
-// Klaviyo : date_creation_compte et date_dernier_signin pour tous les comptes déjà dans Klaviyo.
-// Source : auth.users.created_at et last_sign_in_at. Les comptes absents de Klaviyo sont laissés de côté.
-// Ensuite, le serveur tient ces dates à jour (POST /api/webhook/supabase-auth : INSERT et SIGNIN).
+// Klaviyo : date_creation_compte (date d'inscription) et date_dernier_essai_quizcrpe (dernière question gratuite du quiz)
+// pour tous les comptes déjà dans Klaviyo. Sources : auth.users.created_at, quiz_comptes.essai_derniere_question_at.
+// Les comptes absents de Klaviyo sont laissés de côté. Retire aussi date_dernier_signin (propriété abandonnée).
+// Ensuite, le serveur tient ces dates à jour (inscription : POST /api/webhook/supabase-auth ; essai : POST /api/quiz/reponse).
 // Usage : node scripts/klaviyo_sync_dates_compte.mjs          (simulation)
 //         node scripts/klaviyo_sync_dates_compte.mjs --apply  (écriture dans Klaviyo)
 import 'dotenv/config';
@@ -20,20 +21,25 @@ for (let page = 1; ; page++) {
   if (data.users.length < 1000) break;
 }
 
+const { data: quiz, error: eq } = await sb.from('quiz_comptes').select('user_id, essai_derniere_question_at');
+if (eq) throw eq;
+const essai = new Map(quiz.filter(q => q.essai_derniere_question_at).map(q => [q.user_id, q.essai_derniere_question_at]));
+
 const bilan = { maj: 0, aJour: 0, absent: 0, sansEmail: 0, echec: 0 };
 for (const u of users) {
   if (!u.email) { bilan.sansEmail++; continue; }
-  const dates = { date_creation_compte: u.created_at, ...(u.last_sign_in_at ? { date_dernier_signin: u.last_sign_in_at } : {}) };
+  const dates = { date_creation_compte: u.created_at, ...(essai.has(u.id) ? { date_dernier_essai_quizcrpe: essai.get(u.id) } : {}) };
   const r = await fetch(`https://a.klaviyo.com/api/profiles/?filter=equals(email,"${encodeURIComponent(u.email)}")`, { headers });
   const p = (await r.json()).data?.[0];
   if (!p) { bilan.absent++; continue; }
   const props = p.attributes?.properties || {};
-  if (Object.entries(dates).every(([k, v]) => props[k] && Date.parse(props[k]) === Date.parse(v))) { bilan.aJour++; continue; }
-  console.log(`${u.email.padEnd(45)} création ${u.created_at.slice(0, 10)}  dernière connexion ${(u.last_sign_in_at || '—').slice(0, 10)}`);
+  if (!('date_dernier_signin' in props) && Object.entries(dates).every(([k, v]) => props[k] && Date.parse(props[k]) === Date.parse(v))) { bilan.aJour++; continue; }
+  console.log(`${u.email.padEnd(45)} inscription ${u.created_at.slice(0, 10)}  dernier essai ${(essai.get(u.id) || '—').slice(0, 10)}`);
   bilan.maj++;
   if (APPLY) {
     const m = await fetch(`https://a.klaviyo.com/api/profiles/${p.id}/`, { method: 'PATCH', headers,
-      body: JSON.stringify({ data: { type: 'profile', id: p.id, attributes: { properties: dates } } }) });
+      body: JSON.stringify({ data: { type: 'profile', id: p.id, attributes: { properties: dates },
+        meta: { patch_properties: { unset: ['date_dernier_signin'] } } } }) });
     if (!m.ok) { bilan.echec++; console.error(`  échec ${m.status} : ${await m.text()}`); }
   }
 }

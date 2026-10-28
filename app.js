@@ -605,14 +605,12 @@ app.post('/api/feedback/trial', async (req, res) => {
    Triggers sur auth.users (migration 20261025_klaviyo_inscription_webhook.sql), via pg_net :
      INSERT                       → { type: 'INSERT', record: { id } } : profil Klaviyo créé, signup_confirmed = false
      email_confirmed_at renseigné → { type: 'UPDATE', record: { id } } : signup_confirmed = true
-     last_sign_in_at modifié      → { type: 'SIGNIN', record: { id } } : date_dernier_signin (migration 20261028_klaviyo_dates_compte.sql)
-   date_creation_compte et date_dernier_signin sont envoyées à chaque appel.
+   date_creation_compte (date d'inscription) est envoyée à la création du compte et à la confirmation de l'e-mail.
    Seul l'id est lu dans la requête : le compte est relu dans Supabase (clé service_role), donc un appel forgé
    ne peut que resynchroniser des données exactes.
 ───────────────────────────────────────────────────────────────────────────── */
-// Dates du compte dans Klaviyo : création du compte et dernière connexion (auth.users.created_at, last_sign_in_at)
-const proprietesDatesCompte = user => ({ date_creation_compte: user.created_at,
-  ...(user.last_sign_in_at ? { date_dernier_signin: user.last_sign_in_at } : {}) });
+// Klaviyo : date d'inscription (auth.users.created_at)
+const proprietesDatesCompte = user => ({ date_creation_compte: user.created_at });
 
 async function klaviyoProfilExiste(email) {
   const r = await fetch(`${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`, { headers: klaviyoHeaders() });
@@ -622,18 +620,13 @@ async function klaviyoProfilExiste(email) {
 app.post('/api/webhook/supabase-auth', async (req, res) => {
   if (!klaviyoGuard(res)) return;
   const { type, record } = req.body || {};
-  if (!['INSERT', 'UPDATE', 'SIGNIN'].includes(type) || !record?.id) return res.json({ ignored: true });
+  if (!['INSERT', 'UPDATE'].includes(type) || !record?.id) return res.json({ ignored: true });
   try {
     const { data, error } = await supabaseAdmin.auth.admin.getUserById(record.id);
     if (error || !data?.user?.email) return res.status(404).json({ error: 'Compte introuvable.' });
     const user = data.user;
     const confirmed = !!user.email_confirmed_at;
     const src = { ...(user.user_metadata || {}), email: user.email };
-    if (type === 'SIGNIN') {
-      // Connexion : seulement les dates (profil absent de Klaviyo : rien à mettre à jour)
-      await klaviyoSetProperties(user.email, proprietesDatesCompte(user));
-      return res.json({ ok: true });
-    }
     if (type === 'INSERT') {
       await klaviyoInscription(src, confirmed);
       await klaviyoSetProperties(user.email, proprietesDatesCompte(user));
@@ -1057,6 +1050,12 @@ app.post('/api/quiz/reponse', async (req, res) => {
       const maintenant = new Date().toISOString();
       const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_jour: jourParis(), essai_jour_ids: ids, essai_derniere_question_at: maintenant, updated_at: maintenant }).eq('user_id', compte.id);
       if (error) { console.error('[quiz/essai]', error.message); return res.status(500).json({ error: 'La correction n\'a pas pu être chargée.' }); }
+      // Klaviyo : date du dernier jour d'essai, envoyée à la première question gratuite du jour (attendue : sur Vercel,
+      // un envoi lancé après la réponse peut être perdu ; un échec n'empêche pas la correction)
+      if (ids.length === 1 && compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) {
+        try { await klaviyoSetProperties(compte.email, { date_dernier_essai_quizcrpe: maintenant }); }
+        catch (e) { console.error('[Klaviyo essai]', e.message); }
+      }
     }
     compte.essaiJour = jourParis(); compte.essaiJourIds = ids;
     const { parJour, faites, restantes, termine } = quizEssai(compte);
