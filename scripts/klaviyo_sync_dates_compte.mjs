@@ -25,15 +25,18 @@ const { data: quiz, error: eq } = await sb.from('quiz_comptes').select('user_id,
 if (eq) throw eq;
 const essai = new Map(quiz.filter(q => q.essai_derniere_question_at).map(q => [q.user_id, q.essai_derniere_question_at]));
 
+// Format « 2026-10-27T13:08:26Z » (ISO 8601 sans fractions de seconde), reconnu comme date par Klaviyo
+const dateKlaviyo = d => new Date(d).toISOString().slice(0, 19) + 'Z';
+
 const bilan = { maj: 0, aJour: 0, absent: 0, sansEmail: 0, echec: 0 };
 for (const u of users) {
   if (!u.email) { bilan.sansEmail++; continue; }
-  const dates = { date_creation_compte: u.created_at, ...(essai.has(u.id) ? { date_dernier_essai_quizcrpe: essai.get(u.id) } : {}) };
+  const dates = { date_creation_compte: dateKlaviyo(u.created_at), ...(essai.has(u.id) ? { date_dernier_essai_quizcrpe: dateKlaviyo(essai.get(u.id)) } : {}) };
   const r = await fetch(`https://a.klaviyo.com/api/profiles/?filter=equals(email,"${encodeURIComponent(u.email)}")`, { headers });
   const p = (await r.json()).data?.[0];
   if (!p) { bilan.absent++; continue; }
   const props = p.attributes?.properties || {};
-  if (!('date_dernier_signin' in props) && Object.entries(dates).every(([k, v]) => props[k] && Date.parse(props[k]) === Date.parse(v))) { bilan.aJour++; continue; }
+  if (!('date_dernier_signin' in props) && Object.entries(dates).every(([k, v]) => props[k] === v)) { bilan.aJour++; continue; }
   console.log(`${u.email.padEnd(45)} inscription ${u.created_at.slice(0, 10)}  dernier essai ${(essai.get(u.id) || '—').slice(0, 10)}`);
   bilan.maj++;
   if (APPLY) {

@@ -609,8 +609,11 @@ app.post('/api/feedback/trial', async (req, res) => {
    Seul l'id est lu dans la requête : le compte est relu dans Supabase (clé service_role), donc un appel forgé
    ne peut que resynchroniser des données exactes.
 ───────────────────────────────────────────────────────────────────────────── */
+// Dates envoyées à Klaviyo au format « 2026-10-27T13:08:26Z » (ISO 8601 sans fractions de seconde), reconnu comme date
+// pour les flows ; Supabase renvoie des microsecondes (« …26.126101Z »)
+const dateKlaviyo = d => new Date(d).toISOString().slice(0, 19) + 'Z';
 // Klaviyo : date d'inscription (auth.users.created_at)
-const proprietesDatesCompte = user => ({ date_creation_compte: user.created_at });
+const proprietesDatesCompte = user => ({ date_creation_compte: dateKlaviyo(user.created_at) });
 
 async function klaviyoProfilExiste(email) {
   const r = await fetch(`${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`, { headers: klaviyoHeaders() });
@@ -1053,7 +1056,7 @@ app.post('/api/quiz/reponse', async (req, res) => {
       // Klaviyo : date du dernier jour d'essai, envoyée à la première question gratuite du jour (attendue : sur Vercel,
       // un envoi lancé après la réponse peut être perdu ; un échec n'empêche pas la correction)
       if (ids.length === 1 && compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) {
-        try { await klaviyoSetProperties(compte.email, { date_dernier_essai_quizcrpe: maintenant }); }
+        try { await klaviyoSetProperties(compte.email, { date_dernier_essai_quizcrpe: dateKlaviyo(maintenant) }); }
         catch (e) { console.error('[Klaviyo essai]', e.message); }
       }
     }
