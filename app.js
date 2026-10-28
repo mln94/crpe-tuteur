@@ -74,7 +74,7 @@ async function markQuizPaid(userId, ref, email) {
     let e = email;
     if (!e) e = avant?.email;
     if (!e) { const { data } = await supabaseAdmin.auth.admin.getUserById(userId); e = data?.user?.email; }
-    if (e) await klaviyoSetProperties(e, { quiz_paid: true, paid_quizcrpe: true, quiz_date_paid: new Date().toISOString() });
+    if (e) await klaviyoSetProperties(e, { quiz_paid: true, paid_quizcrpe: true, quiz_date_paid: dateKlaviyo(Date.now()) });
   } catch (err) {
     console.error('[markQuizPaid] Klaviyo sync échouée (accès débloqué quand même) :', err.message);
   }
@@ -420,6 +420,9 @@ async function klaviyoSetEmailVerified(email) {
 }
 
 /* ── Klaviyo : mettre à jour des propriétés d'un profil (recherché par e-mail) ── */
+// Dates envoyées à Klaviyo au format « 2026-10-27T13:08:26Z » (ISO 8601 sans fractions de seconde), reconnu comme date
+// pour les flows ; Supabase renvoie des microsecondes (« …26.126101Z »)
+const dateKlaviyo = d => new Date(d).toISOString().slice(0, 19) + 'Z';
 async function klaviyoSetProperties(email, properties) {
   const searchRes = await fetch(`${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`, { headers: klaviyoHeaders() });
   const profileId = (await searchRes.json()).data?.[0]?.id;
@@ -449,7 +452,7 @@ async function klaviyoSetPaidUser(email) {
     method: 'PATCH',
     headers: klaviyoHeaders(),
     body: JSON.stringify({
-      data: { type: 'profile', id: profileId, attributes: { properties: { paid_user: true, paid_passcrpe: true, date_paid: new Date().toISOString() } } },
+      data: { type: 'profile', id: profileId, attributes: { properties: { paid_user: true, paid_passcrpe: true, date_paid: dateKlaviyo(Date.now()) } } },
     }),
   });
   if (!patchRes.ok) {
@@ -526,7 +529,7 @@ app.post('/api/klaviyo/trial-ended', async (req, res) => {
         data: {
           type: 'profile',
           id: profileId,
-          attributes: { properties: { passcrpe_trial: false, date_trial_ended: now } },
+          attributes: { properties: { passcrpe_trial: false, date_trial_ended: dateKlaviyo(now) } },
         },
       }),
     });
@@ -609,9 +612,6 @@ app.post('/api/feedback/trial', async (req, res) => {
    Seul l'id est lu dans la requête : le compte est relu dans Supabase (clé service_role), donc un appel forgé
    ne peut que resynchroniser des données exactes.
 ───────────────────────────────────────────────────────────────────────────── */
-// Dates envoyées à Klaviyo au format « 2026-10-27T13:08:26Z » (ISO 8601 sans fractions de seconde), reconnu comme date
-// pour les flows ; Supabase renvoie des microsecondes (« …26.126101Z »)
-const dateKlaviyo = d => new Date(d).toISOString().slice(0, 19) + 'Z';
 // Klaviyo : date d'inscription (auth.users.created_at)
 const proprietesDatesCompte = user => ({ date_creation_compte: dateKlaviyo(user.created_at) });
 
@@ -791,8 +791,8 @@ async function reponsesTestLisibles(detail) {
 }
 
 // Propriétés Klaviyo du test de positionnement
-const proprietesTest = (r, lien) => ({ test_positionnement_realise: true, test_positionnement_date: r.date, test_positionnement_score: r.pct,
-  quizcrpe_trial: true, ...(lien ? { quiz_rapport_url: lien.url, quiz_rapport_expire: lien.expire } : {}) });
+const proprietesTest = (r, lien) => ({ test_positionnement_realise: true, test_positionnement_date: dateKlaviyo(r.date), test_positionnement_score: r.pct,
+  quizcrpe_trial: true, ...(lien ? { quiz_rapport_url: lien.url, quiz_rapport_expire: dateKlaviyo(lien.expire) } : {}) });
 // Lien provisoire du rapport de positionnement : jeton aléatoire, valable 7 jours (effacé ensuite par une tâche planifiée Supabase)
 const RAPPORT_JOURS = 7;
 const lienRapport = token => `https://www.passcrpe.fr/quizapp?rapport=${token}`;
@@ -869,7 +869,7 @@ app.post('/api/contact', async (req, res) => {
     // Klaviyo : liste « contact » avec prénom, nom et raison (sans consentement marketing). Attendu avant de répondre
     // (sur Vercel, un envoi lancé après la réponse peut être perdu) ; un échec n'empêche pas l'envoi du message
     if (process.env.KLAVIYO_PRIVATE_API_KEY) {
-      const proprietes = { contact_raison: raison, contact_date: new Date().toISOString() };
+      const proprietes = { contact_raison: raison, contact_date: dateKlaviyo(Date.now()) };
       try {
         await klaviyoSubscribePipeline(user?.email || mail, p, n, KLAVIYO_LIST_CONTACT, proprietes, {}, false);
         // profil déjà existant : le pipeline ne met à jour que les propriétés de parcours, on ajoute donc la raison explicitement
