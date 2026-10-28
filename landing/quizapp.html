@@ -889,7 +889,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   // ── Écrans ──
   function intro(v) { var l = document.querySelector('.quiz-lead'), h = document.querySelector('.quiz-wrap > h1'); if (l) l.hidden = !v; if (h) h.hidden = !v; }
-  // Essai gratuit en cours (compte non payé) : 5 questions par jour, toutes matières et tous niveaux ;
+  // Essai gratuit en cours (compte non payé) : 10 questions par jour (nombre donné par le serveur), toutes matières et tous niveaux ;
   // les 2 matières les plus fragiles au test sont conseillées, au niveau qu'il suggère
   function essaiActif() { return compte && !compte.paid && compte.essai ? compte.essai : null; }
   function essaiConseillee(k) { var e = essaiActif(); return e ? e.conseillees.filter(function (m) { return m.matiere === k; })[0] : null; }
@@ -1298,7 +1298,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function aiguiller(c) {
     if (!c.positionnement) return introTest();
     if (c.paid) { fermerPaiement(); accueil(); return precharger(); }
-    // Pas encore payé : menu du quiz avec les 5 questions gratuites du jour (le rapport du test est dans « Mon test »,
+    // Pas encore payé : menu du quiz avec les 10 questions gratuites du jour (le rapport du test est dans « Mon test »,
     // et s'affiche directement à la fin du test) ; le paiement s'ouvre quand les questions du jour sont faites
     var e = c.essai;
     precharger();
@@ -1505,7 +1505,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }
     if (compte && compte.paid) html = html.replace('<!--PAIEMENT-->', '') + '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Aller au quiz</button></div>';
     else {
-      // Pas de paiement sur le rapport : les 5 questions gratuites du jour, en commençant par les matières les plus fragiles
+      // Pas de paiement sur le rapport : les 10 questions gratuites du jour, en commençant par les matières les plus fragiles
       var e = compte && compte.essai;
       var offre = !e ? '' : !e.termine
         ? '<div class="quiz-card essai-carte" id="essai"><div class="essai-cadeau">🎁</div><div><h2>' + e.parJour + ' questions gratuites chaque jour</h2>' +
