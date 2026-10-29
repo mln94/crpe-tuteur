@@ -4335,6 +4335,12 @@ function normalizeSvg(svg) {
   });
 }
 
+// Plusieurs questions numérotées « 1) … 2) … » : chacune sur sa propre ligne, sous « Question : »
+function formatSousQuestions(q) {
+  const t = (q || '').replace(/([.?!:])\s+(\d+\)\s)/g, '$1\n$2').replace(/\n\s*(\d+\)\s)/g, '\n$1');
+  return /^\s*1\)\s/.test(t) && /\n\d+\)\s/.test(t) ? `\n${t.trim()}` : t;
+}
+
 function buildMathQuestionMessage(ex, num) {
   const s = ex.synthese_cours        ? '**[S]**' : '';
   const d = ex.definition_mots_cles ? '**[D]**' : '';
@@ -4345,7 +4351,7 @@ function buildMathQuestionMessage(ex, num) {
     `Sous-catégorie : ${ex.sous_categorie}`,
     `Objectif : ${ex.objectif_apprentissage}`,
     ex.enonce ? `\n${ex.enonce}` : '',
-    `\nQuestion : ${ex.question}`,
+    `\nQuestion : ${formatSousQuestions(ex.question)}`,
     '',
     opts,
   ].filter(l => l !== undefined).join('\n').trim();
@@ -6869,6 +6875,16 @@ function AdminQuestionBrowser({ onLogout }) {
                     <NumberLineAnswer onInsert={setDemoInsert} />
                     {demoInsert && (
                       <p className="text-xs text-gray-400 italic mb-3 px-1">
+                        Texte qui serait inséré dans la réponse : « {demoInsert} »
+                      </p>
+                    )}
+                  </>
+                )}
+                {i === 0 && matiere === 'maths' && Array.isArray(selected.outil_reponse) && selected.outil_reponse.length > 0 && (
+                  <>
+                    <OutilsReponse key={selected.id} outils={selected.outil_reponse} onInsert={setDemoInsert} />
+                    {demoInsert && (
+                      <p className="text-xs text-gray-400 italic mb-3 px-1 whitespace-pre-line">
                         Texte qui serait inséré dans la réponse : « {demoInsert} »
                       </p>
                     )}
