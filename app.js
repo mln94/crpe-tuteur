@@ -1060,16 +1060,17 @@ app.post('/api/quiz/reponse', async (req, res) => {
       // Dernière question gratuite du jour validée (la 10e) : un jour de plus où l'essai du jour a été fait en entier
       const complet = ids.length === ESSAI_PAR_JOUR;
       const nbJours = (l?.essai_nb_jours_complets || 0) + 1, premiereFois = l?.essai_complet_premiere_fois_at || maintenant;
-      // Toute première question de l'essai : essai_fait passe à true
+      // Toute première question de l'essai : essai_fait passe à true, une seule fois (Supabase et Klaviyo)
       const premierEssai = !l?.essai_fait;
-      const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_jour: jourParis(), essai_jour_ids: ids, essai_derniere_question_at: maintenant, essai_fait: true, updated_at: maintenant,
+      const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_jour: jourParis(), essai_jour_ids: ids, essai_derniere_question_at: maintenant, updated_at: maintenant,
+        ...(premierEssai ? { essai_fait: true } : {}),
         ...(complet ? { essai_nb_jours_complets: nbJours, essai_complet_premiere_fois_at: premiereFois } : {}) }).eq('user_id', compte.id);
       if (error) { console.error('[quiz/essai]', error.message); return res.status(500).json({ error: 'La correction n\'a pas pu être chargée.' }); }
       // Klaviyo : date du dernier jour d'essai, envoyée à la première question gratuite du jour (attendue : sur Vercel,
       // un envoi lancé après la réponse peut être perdu ; un échec n'empêche pas la correction)
       // et, à la dernière question gratuite du jour, les jours où l'essai a été fait en entier
       if ((ids.length === 1 || complet || premierEssai) && compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) {
-        const props = { date_dernier_essai_quizcrpe: dateKlaviyo(maintenant), essai_fait_quizcrpe: true,
+        const props = { date_dernier_essai_quizcrpe: dateKlaviyo(maintenant), ...(premierEssai ? { essai_fait_quizcrpe: true } : {}),
           ...(complet ? { essai_nb_jours_complets_quizcrpe: nbJours, date_premier_essai_complet_quizcrpe: dateKlaviyo(premiereFois) } : {}) };
         try { await klaviyoSetProperties(compte.email, props); }
         catch (e) { console.error('[Klaviyo essai]', e.message); }
