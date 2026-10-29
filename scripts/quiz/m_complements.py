@@ -11,7 +11,7 @@ notion('M43', 0, F, 'm-info-sequence', [
 ]),
 notion('M43', 1, F, 'm-info-entrees-sorties', [
   Q("Dans un programme qui demande l'âge de l'utilisateur puis affiche « Vous êtes majeur » ou « Vous êtes mineur », l'âge saisi est…", ["une sortie", "une entrée", "une boucle", "une variable cachée"], "une entrée", "Une entrée est une donnée fournie au programme ; ce qu'il affiche est une sortie."),
-  Q("Dans le même programme, le message affiché est…", ["une entrée", "une sortie", "une condition", "un capteur"], "une sortie", "Le programme produit une sortie à partir des entrées."),
+  Q("Un programme demande l'âge de l'utilisateur puis affiche « Vous êtes majeur » ou « Vous êtes mineur ». Le message affiché est…", ["une entrée", "une sortie", "une condition", "un capteur"], "une sortie", "Le programme produit une sortie à partir des entrées."),
   Q("Dans Scratch, quel bloc permet de récupérer une entrée de l'utilisateur ?", ["« demander … et attendre »", "« avancer de 10 »", "« dire Bonjour »", "« répéter 10 fois »"], "« demander … et attendre »", "La réponse est ensuite stockée dans la variable « réponse »."),
 ]),
 notion('M43', 3, F, 'm-info-calcul-blocs', [
@@ -21,7 +21,7 @@ notion('M43', 3, F, 'm-info-calcul-blocs', [
 ]),
 notion('M43', 5, F, 'm-info-parametres', [
   Q("Pour qu'un programme trace un carré plus grand, que faut-il modifier dans « répéter 4 fois : avancer de 50, tourner de 90° » ?", ["Le nombre de répétitions", "La longueur « 50 »", "L'angle « 90 »", "Rien"], "La longueur « 50 »", "La longueur fixe la taille du côté ; l'angle et le nombre de répétitions fixent la forme."),
-  Q("Pour transformer ce programme afin qu'il trace un hexagone régulier, que faut-il changer ?", ["Répéter 6 fois et tourner de 60°", "Répéter 4 fois et tourner de 60°", "Répéter 6 fois et tourner de 90°", "Avancer de 60"], "Répéter 6 fois et tourner de 60°", "Pour un polygone régulier à n côtés, on tourne de 360° ÷ n."),
+  Q("Un programme Scratch trace un carré : « répéter 4 fois : avancer de 50, tourner de 90° ». Pour qu'il trace un hexagone régulier, que faut-il changer ?", ["Répéter 6 fois et tourner de 60°", "Répéter 4 fois et tourner de 60°", "Répéter 6 fois et tourner de 90°", "Avancer de 60"], "Répéter 6 fois et tourner de 60°", "Pour un polygone régulier à n côtés, on tourne de 360° ÷ n."),
   N("De combien de degrés le lutin doit-il tourner à chaque fois pour tracer un pentagone régulier ?", 72, "360° ÷ 5 = 72°."),
 ]),
 notion('M44', 0, I, 'm-info-condition-simple', [
