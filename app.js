@@ -25,7 +25,11 @@ if (!APP_ANTHROPIC_KEY) console.error('[config] ANTHROPIC_API_KEY_CRPE_APP manqu
 // Empreinte d'une clé pour les logs (début, fin, longueur) : jamais la clé entière
 const keyFingerprint = k => (k ? `${k.slice(0, 14)}…${k.slice(-4)} (${k.length} caractères)` : 'absente');
 console.log('[config] clé application :', keyFingerprint(APP_ANTHROPIC_KEY));
-const client = new Anthropic({ apiKey: APP_ANTHROPIC_KEY });
+const client = new Anthropic({
+  apiKey: APP_ANTHROPIC_KEY,
+  // Une clé utilisateur (sk-ant-usr-…) non rattachée à un espace de travail doit préciser lequel facturer
+  ...(cleanKey(process.env.ANTHROPIC_WORKSPACE_ID_CRPE_APP) ? { defaultHeaders: { 'anthropic-workspace-id': cleanKey(process.env.ANTHROPIC_WORKSPACE_ID_CRPE_APP) } } : {}),
+});
 
 /* ── Supabase (service role — bypasses RLS, server-side only) ── */
 const supabaseAdmin = createClient(
