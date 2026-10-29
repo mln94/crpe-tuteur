@@ -649,7 +649,7 @@ app.post('/api/webhook/supabase-auth', async (req, res) => {
 });
 
 /* ── API ── */
-async function logConsommation({ meta, model, usage, dureeMs, success }) {
+async function logConsommation({ meta, model, usage, dureeMs, success, erreur }) {
   if (!meta?.user_id) return;
   try {
     await supabaseAdmin.from('consommation_utilisateurs').insert({
@@ -665,6 +665,7 @@ async function logConsommation({ meta, model, usage, dureeMs, success }) {
       cache_creation_input_tokens: usage?.cache_creation_input_tokens || 0,
       duree_ms: dureeMs,
       success,
+      erreur: erreur ? String(erreur).slice(0, 1000) : null,
     });
   } catch (e) {
     console.warn('[consommation] insert échouée', e.message);
@@ -1173,7 +1174,7 @@ app.post('/api/chat', async (req, res) => {
     res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
     res.write('data: [DONE]\n\n');
     res.end();
-    logConsommation({ meta, model: CHAT_MODEL, usage: null, dureeMs: Date.now() - startedAt, success: false });
+    logConsommation({ meta, model: CHAT_MODEL, usage: null, dureeMs: Date.now() - startedAt, success: false, erreur: `${err.status || ''} ${err.message}`.trim() });
   }
 });
 
