@@ -3858,11 +3858,14 @@ ${tentative === 1
         },
       );
     } catch {
+      // Correction impossible : la question reste ouverte (champ, droite graduée et autres outils réaffichés)
+      // et la réponse est remise dans le champ pour être renvoyée telle quelle
       setStreamingText('');
-      const errMsg = 'Erreur lors de la correction. Veuillez réessayer.\n\n**[O]**';
+      const errMsg = 'La correction n\'a pas pu être faite. Votre réponse est remise dans le champ : renvoyez-la pour réessayer.\n\n**[O]**';
       setMessages(prev => [...prev, { role: 'assistant', content: errMsg }]);
       setOptions(extractOptions(errMsg));
-      setPhase('answered');
+      setInput(content);
+      setPhase('question');
     }
     setLoading(false);
     setTimeout(() => inputRef.current?.focus(), 100);
@@ -4750,12 +4753,15 @@ ${tentative === 1
         },
         { user_id: userIdRef.current, session_id: dbSessionIdRef.current, type_evenement: 'banque_correction', matiere: 'francais', thematique: q?.thematique || topic || null }
       );
-    } catch (_) {
+    } catch {
+      // Correction impossible : la question reste ouverte (champ, droite graduée et autres outils réaffichés)
+      // et la réponse est remise dans le champ pour être renvoyée telle quelle
       setStreamingText('');
-      const errMsg = 'Erreur lors de la correction. Veuillez réessayer.\n\n**[O]**';
+      const errMsg = 'La correction n\'a pas pu être faite. Votre réponse est remise dans le champ : renvoyez-la pour réessayer.\n\n**[O]**';
       setMessages(prev => [...prev, { role: 'assistant', content: errMsg }]);
       setOptions(extractOptions(errMsg));
-      setPhase('answered');
+      setInput(content);
+      setPhase('question');
     }
     setLoading(false);
     setTimeout(() => inputRef.current?.focus(), 100);
