@@ -570,7 +570,8 @@
     .nt-statut.maitrisee { background: #dcfce7; color: #15803d; }
     .nt-points { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 800; color: var(--gray-700); white-space: nowrap; }
     .nt-points i { width: 11px; height: 11px; border-radius: 50%; background: var(--gray-200); }
-    .nt-points.maitrisee i.on { background: #16a34a; } .nt-points.en_cours i.on { background: #2563eb; } .nt-points.a_revoir i { background: #fed7aa; } .nt-points.a_revoir i.on { background: #ea580c; }
+    /* Un rond par question faite : bleu si la réponse est juste, orange si elle est fausse (vert quand la notion est maîtrisée) */
+    .nt-points i.ok { background: #2563eb; } .nt-points i.ko { background: #ea580c; } .nt-points.maitrisee i.ok { background: #16a34a; }
     .nt-points b { margin-left: 4px; font-size: 13px; }
     .nt-btn { min-height: 44px; min-width: 104px; padding: 0 16px; border-radius: 10px; border: 1.5px solid #fdba74; background: #fff; font: inherit; font-size: 14px; font-weight: 800; color: #c2410c; cursor: pointer; }
     .nt-btn:hover { background: #fff7ed; border-color: #f97316; }
@@ -1325,13 +1326,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var f = nt.filtre ? l.filter(function (x) { return x.statut === nt.filtre; }) : l;
     if (!f.length) return '<p class="nt-vide">Aucune notion « ' + esc(FILTRES_NT.filter(function (x) { return x[0] === nt.filtre; })[0][1].toLowerCase()) + ' » dans ce thème.</p>';
     return f.map(function (x) {
-      var b = Math.min(x.bonnes, MAITRISE), pts = '';
-      for (var k = 0; k < MAITRISE; k++) pts += '<i' + (k < b ? ' class="on"' : '') + '></i>';
+      // Questions faites : d'abord les réussies (bleu), puis les ratées (orange), le reste en gris
+      var b = Math.min(x.bonnes, MAITRISE), v = Math.max(b, Math.min(x.vues || 0, MAITRISE)), pts = '';
+      for (var k = 0; k < MAITRISE; k++) pts += '<i' + (k < b ? ' class="ok"' : k < v ? ' class="ko"' : '') + '></i>';
       var q = ilya(x.derniere_at), meta = [x.classe ? 'Programme de ' + x.classe : 'Cycle 4', NIVEAUX[x.niveau] || ''];
       if (q) meta.push((x.derniere_ok === false ? 'erreur ' : 'revue ') + q);
       return '<div class="nt-ligne"><span class="nt-statut ' + x.statut + '">' + STATUTS_NT[x.statut] + '</span>' +
         '<div>' + intituleNt(x) + '<small>' + esc(meta.filter(Boolean).join(' · ')) + '</small></div>' +
-        '<span class="nt-points ' + x.statut + '" role="img" aria-label="' + b + ' bonne' + (b > 1 ? 's' : '') + ' réponse' + (b > 1 ? 's' : '') + ' sur ' + MAITRISE + '">' + pts + '<b>' + b + '/' + MAITRISE + '</b></span>' +
+        '<span class="nt-points ' + x.statut + '" role="img" aria-label="' + pluriel(v, 'question') + ' faite' + (v > 1 ? 's' : '') + ', ' + b + ' bonne' + (b > 1 ? 's' : '') + ' réponse' + (b > 1 ? 's' : '') + ' sur ' + MAITRISE + '">' + pts + '<b>' + b + '/' + MAITRISE + '</b></span>' +
         '<button type="button" class="nt-btn" data-nt-notion="' + esc(x.notion) + '">' + BOUTONS_NT[x.statut] + '</button></div>';
     }).join('');
   }
