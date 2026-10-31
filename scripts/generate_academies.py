@@ -393,12 +393,12 @@ def page_academie(a):
   </nav>
 
   {sel_badge(a)}
-  <h1>CRPE {escape(nom)} : résultats {SESSION} de l'académie {escape(de(nom))}</h1>
-  <p class="lead">Voici les résultats du concours CRPE {SESSION} dans l'académie {escape(de(nom))}, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2){autres_lead(a)}. Au concours bac+3, l'académie {escape(de(nom))} offrait <strong>{fint(a['postes'])} postes</strong>. Sur {fint(a['inscrits'])} inscrits, {fint(a['presents'])} candidats se sont présentés aux épreuves, {fint(a['admissibles'])} ont été admissibles et <strong>{fint(a['admis'])} ont été admis</strong>, soit un taux de réussite de <strong>{fpct(a['taux'])}</strong>, {compare} à la moyenne nationale ({fpct(TAUX_NATIONAL)}).</p>
+  <h1>Résultats CRPE {escape(nom)} : résultats {SESSION} de l'académie {escape(de(nom))}</h1>
+  <p class="lead">Voici les <strong>résultats CRPE {escape(nom)}</strong> de la session {SESSION}, c'est-à-dire les résultats du concours dans l'académie {escape(de(nom))}, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2){autres_lead(a)}. Au concours bac+3, l'académie {escape(de(nom))} offrait <strong>{fint(a['postes'])} postes</strong>. Sur {fint(a['inscrits'])} inscrits, {fint(a['presents'])} candidats se sont présentés aux épreuves, {fint(a['admissibles'])} ont été admissibles et <strong>{fint(a['admis'])} ont été admis</strong>, soit un taux de réussite de <strong>{fpct(a['taux'])}</strong>, {compare} à la moyenne nationale ({fpct(TAUX_NATIONAL)}).</p>
 
   {sommaire(a)}
 
-  <h2 class="concours-titre" id="bac3">Concours externe bac+3 : résultats {SESSION} de l'académie {escape(de(nom))}</h2>
+  <h2 class="concours-titre" id="bac3">Concours externe bac+3 : résultats CRPE {escape(nom)} {SESSION}</h2>
   <section class="kpis" aria-label="Chiffres clés du concours bac+3">
     <div class="kpi"><span class="kpi-value">{fint(a['postes'])}</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">{fint(a['inscrits'])}</span><span class="kpi-label">inscrits</span></div>
@@ -437,7 +437,7 @@ def page_academie(a):
   {carte(a)}
 
   <h2 id="voisins">Académies voisines</h2>
-  <p>Vous hésitez encore ? Comparez avec les académies proches :</p>
+  <p>Vous hésitez encore ? Comparez les résultats CRPE {escape(nom)} avec ceux des académies proches :</p>
   <div class="voisins-grid">{voisins}</div>
   <a class="back-hub" href="{HUB_URL}">← Voir toutes les académies</a>
 
@@ -445,12 +445,12 @@ def page_academie(a):
 
 
 </div>'''
-    title = f'CRPE {nom} {SESSION} : résultats, admis et taux de réussite | PassCRPE'
-    desc = (f"Résultats du CRPE {SESSION} dans l'académie {de(nom)} : {fint(a['postes'])} postes, {fint(a['inscrits'])} inscrits, "
+    title = f'Résultats CRPE {nom} {SESSION} : admis et taux de réussite | PassCRPE'
+    desc = (f"Résultats CRPE {nom} {SESSION} : dans l'académie {de(nom)}, {fint(a['postes'])} postes, {fint(a['inscrits'])} inscrits, "
             f"{fint(a['admis'])} admis, {fpct(a['taux'])} de réussite. Classements, sélectivité et académies voisines.").replace(' ', ' ').replace(' ', ' ')
     return page(title, desc, url(a),
                 breadcrumb_ld([('Accueil', '/'), ('CRPE par académie', HUB_URL), (f'Académie {de(nom)}', url(a))]),
-                body, f"CRPE {nom} : résultats {SESSION} de l'académie {de(nom)}")
+                body, f"Résultats CRPE {nom} : résultats {SESSION} de l'académie {de(nom)}")
 
 def autres_lead(a):
     """Mention, dans l'introduction, des autres concours organisés par l'académie."""
@@ -693,7 +693,7 @@ def page_hub():
   </nav>
 
   <h1>Résultats du CRPE {SESSION} par académie : inscrits, admis et taux de réussite</h1>
-  <p class="lead">On ne passe pas le concours du CRPE « en France », mais dans <strong>une académie</strong>. C'est elle qui organise le concours et, si vous êtes reçu, vous affecte dans l'une de ses écoles. Choisir son académie, c'est donc choisir à la fois ses chances de réussite et l'endroit où l'on va enseigner. Voici les résultats du CRPE {SESSION} académie par académie, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2), ainsi que le <strong>troisième concours</strong> et le <strong>second concours interne</strong>. Inscrits, résultats d'admissibilité, admis et taux de réussite. <strong>Cliquez sur une académie de la carte</strong> pour découvrir ses résultats détaillés.</p>
+  <p class="lead">On ne passe pas le concours du CRPE « en France », mais dans <strong>une académie</strong>. C'est elle qui organise le concours et, si vous êtes reçu, vous affecte dans l'une de ses écoles. Choisir son académie, c'est donc choisir à la fois ses chances de réussite et l'endroit où l'on va enseigner. Voici le <strong>résultat du concours de professeur des écoles</strong> {SESSION} académie par académie, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2), ainsi que le <strong>troisième concours</strong> et le <strong>second concours interne</strong>. Inscrits, résultats d'admissibilité, admis et taux de réussite. <strong>Cliquez sur une académie de la carte</strong> pour découvrir ses résultats détaillés.</p>
 
   {sommaire_html([('bac3', 'Concours externe bac+3'), ('bac5', 'Concours externe bac+5 (master 2)'), ('troisieme', 'Troisième concours'), ('interne', 'Second concours interne'), ('carte', 'La carte des académies'), ('methode', 'Comment est calculée la sélectivité ?'), ('regions', 'Les académies par région académique'), ('choisir', 'Comment choisir son académie ?')])}
 
@@ -763,7 +763,7 @@ def page_hub():
 
 {autres_hub()}
   <h2 id="carte">La carte des académies CRPE</h2>
-  <p>Chaque repère représente une académie, coloré selon sa sélectivité au concours bac+3. Cliquez dessus pour ouvrir la page de l'académie.</p>
+  <p>Chaque repère représente une académie, coloré selon sa sélectivité au concours bac+3, d'après le résultat du concours de professeur des écoles {SESSION}. Cliquez dessus pour ouvrir la page de l'académie.</p>
   {carte()}
 
   <h2 id="methode">Taux de réussite CRPE : comment est calculée la sélectivité ?</h2>
@@ -775,7 +775,7 @@ def page_hub():
 
   <h2 id="choisir">Comment choisir son académie pour le concours CRPE ?</h2>
   <ul>
-    <li><strong>Vos chances de réussite :</strong> regardez le taux de réussite et le nombre de candidats présents par poste. Une académie avec beaucoup de postes et peu de candidats est en général plus accessible.</li>
+    <li><strong>Vos chances de réussite :</strong> dans le résultat du concours de professeur des écoles de chaque académie, regardez le taux de réussite et le nombre de candidats présents par poste. Une académie avec beaucoup de postes et peu de candidats est en général plus accessible.</li>
     <li><strong>Votre lieu de vie :</strong> si vous êtes reçu, vous serez affecté dans une école de cette académie. Une académie plus accessible mais loin de chez vous implique un déménagement, et un coût de la vie parfois plus élevé.</li>
     <li><strong>Votre affectation probable :</strong> dans une grande académie, l'école où vous serez affecté peut être loin de la ville principale. Renseignez-vous sur les départements qui la composent.</li>
   </ul>
@@ -834,7 +834,7 @@ def page_hub():
   }});
 </script>'''
     return page(f'Résultats CRPE {SESSION} par académie : admis, inscrits et taux de réussite | PassCRPE',
-                f"Résultats du concours CRPE {SESSION} par académie : carte de France et comparatif des {N} académies CRPE, avec postes, inscrits, admis, résultats d'admissibilité et taux de réussite.",
+                f"Résultats du concours CRPE {SESSION} par académie (résultat du concours de professeur des écoles) : carte de France et comparatif des {N} académies CRPE, avec postes, inscrits, admis, résultats d'admissibilité et taux de réussite.",
                 HUB_URL, breadcrumb_ld([('Accueil', '/'), ('CRPE par académie', HUB_URL)]), body,
                 f'Résultats du CRPE {SESSION} par académie : inscrits, admis et taux de réussite')
 
