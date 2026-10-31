@@ -467,6 +467,9 @@ CSS = """
     .nt-btn { min-height: 44px; min-width: 104px; padding: 0 16px; border-radius: 10px; border: 1.5px solid #fdba74; background: #fff; font: inherit; font-size: 14px; font-weight: 800; color: #c2410c; cursor: pointer; }
     .nt-btn:hover { background: #fff7ed; border-color: #f97316; }
     .nt-vide { padding: 16px 18px; font-size: 14px; color: var(--gray-500); }
+    .nt-quota { margin: 0 0 16px; }
+    .nt-ligne + .nt-quota { margin: 0; border-radius: 0; }
+    .nt-quota .quiz-actions { margin-top: 12px; }
     @media (max-width: 720px) {
       .nt-mats { grid-template-columns: 1fr 1fr; gap: 10px 16px; }
       .nt-mat-l { font-size: 13px; }
@@ -1001,7 +1004,8 @@ JS = """<script>
     root.innerHTML = '<div class="quiz-card"><p>Chargement de vos notions…</p></div>';
     SB.auth.getSession().then(function (r) {
       if (!r.data.session) return connexion();
-      return (compte ? Promise.resolve(compte) : api('/api/quiz/compte').then(function (c) { compte = c; return adopterProgression(); })).then(function () {
+      // Compte relu à chaque ouverture : compteur des questions gratuites du jour à jour (essai)
+      return api('/api/quiz/compte').then(function (c) { var premier = !compte; compte = c; return premier ? adopterProgression() : null; }).then(function () {
         return synchroniser();
       }).then(function () {
         if (!nt.mat) nt.mat = choix.mat || MATIERES[0][0];
@@ -1096,9 +1100,10 @@ JS = """<script>
     }).join('');
   }
   // Série ciblée : quelques questions sur les notions choisies (une notion : toutes ses formulations ; plusieurs : 2 par notion)
-  function demarrerNotions(cibles) {
+  // pres : élément cliqué ; le message des questions gratuites épuisées s'affiche juste en dessous
+  function demarrerNotions(cibles, pres) {
     var e = essaiActif();
-    if (e && e.termine) return ouvrirPaiement();
+    if (e && e.termine) return quotaJour(pres);
     var mats = []; cibles.forEach(function (c) { if (mats.indexOf(c.matiere) < 0) mats.push(c.matiere); });
     root.innerHTML = '<div class="quiz-card"><p>Chargement des questions…</p></div>'; top();
     Promise.all(mats.map(charger)).then(function (cats) {
@@ -1114,6 +1119,16 @@ JS = """<script>
       st = { mat: mats[0], niveau: serie[0].niveau, cible: cibles.length, themes: null, cat: cats[0], serie: serie, i: 0, score: 0, recap: [], sel: [], repondu: false };
       question();
     }).catch(function (x) { if (x && (x.status === 401 || x.status === 402)) return boot(true); erreur('Les questions n’ont pas pu être chargées. Réessayez dans quelques instants.'); });
+  }
+  // Essai : questions gratuites du jour toutes faites, message dans « Mes notions » (revenir demain ou débloquer le quiz)
+  function quotaJour(pres) {
+    var e = compte.essai, html = '<div class="essai-bandeau nt-quota" id="nt-quota" role="status"><div class="qz-essai-ligne">🎁 <strong>Vos ' + e.parJour + ' questions gratuites du jour sont faites</strong>' + compteurEssai(e) + '</div>' +
+      'Revenez demain pour ' + e.parJour + ' nouvelles questions gratuites, ou débloquez le quiz pour réviser sans limite, dans toutes les matières.' +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz pour ' + PRIX + '</button></div></div>';
+    var el = document.getElementById('nt-quota'), apres = pres && (pres.closest('.nt-ligne') || pres.closest('.nt-revoir'));
+    if (el) el.remove();
+    if (apres) apres.insertAdjacentHTML('afterend', html); else root.insertAdjacentHTML('afterbegin', html);
+    document.getElementById('nt-quota').scrollIntoView({ behavior: 'smooth', block: 'center' });
   }
   function finCible() {
     var n = st.serie.length, s = st.score, note = Math.round(s / n * 20 * 2) / 2;
@@ -1932,8 +1947,8 @@ JS = """<script>
       if (ouv) { corps.innerHTML = lignesTheme(th); if (!nt.listes[nt.mat + '|' + th.theme]) chargerListe(th, +b.dataset.ntTheme); }
       return;
     }
-    if (b.dataset.ntNotion) { demarrerNotions([{ matiere: nt.mat, notion: b.dataset.ntNotion }]); return; }
-    if (act === 'nt-revoir') { demarrerNotions(nt.revoir.map(function (x) { return { matiere: x.matiere, notion: x.notion }; })); return; }
+    if (b.dataset.ntNotion) { demarrerNotions([{ matiere: nt.mat, notion: b.dataset.ntNotion }], b); return; }
+    if (act === 'nt-revoir') { demarrerNotions(nt.revoir.map(function (x) { return { matiere: x.matiere, notion: x.notion }; }), b); return; }
     if (act === 'valider' && st && !st.repondu) {
       var toks = root.querySelectorAll('.tok'); toks.forEach(function (x) { x.disabled = true; }); b.disabled = true;
       envoyer(st.sel.slice().sort(function (x, y) { return x - y; }).join(','), function (d) {
