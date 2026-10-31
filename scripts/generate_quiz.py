@@ -462,7 +462,7 @@ CSS = """
     .nt-statut.maitrisee { background: #dcfce7; color: #15803d; }
     .nt-points { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 800; color: var(--gray-700); white-space: nowrap; }
     .nt-points i { width: 11px; height: 11px; border-radius: 50%; background: var(--gray-200); }
-    .nt-points.maitrisee i.on { background: #16a34a; } .nt-points.en_cours i.on { background: #2563eb; } .nt-points.a_revoir i.on { background: #ea580c; }
+    .nt-points.maitrisee i.on { background: #16a34a; } .nt-points.en_cours i.on { background: #2563eb; } .nt-points.a_revoir i { background: #fed7aa; } .nt-points.a_revoir i.on { background: #ea580c; }
     .nt-points b { margin-left: 4px; font-size: 13px; }
     .nt-btn { min-height: 44px; min-width: 104px; padding: 0 16px; border-radius: 10px; border: 1.5px solid #fdba74; background: #fff; font: inherit; font-size: 14px; font-weight: 800; color: #c2410c; cursor: pointer; }
     .nt-btn:hover { background: #fff7ed; border-color: #f97316; }
