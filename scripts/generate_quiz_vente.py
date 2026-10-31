@@ -51,8 +51,8 @@ FAQ = [
      "Des QCM, des réponses numériques à saisir (calculs en mathématiques ou en physique-chimie) et des questions où l'on "
      "clique sur le bon mot d'une phrase, par exemple le complément d'objet ou le verbe conjugué."),
     ("Combien coûte le quiz ?",
-     f"Le Quiz CRPE coûte {PRIX_QUIZ} TTC pour 1 an d'accès, payés en une seule fois, après un test de positionnement gratuit. "
-     "Il est satisfait ou remboursé pendant 14 jours."),
+     "Après le test de positionnement gratuit, vous avez droit à 10 questions gratuites par jour, dans toutes les matières et à tous les niveaux. "
+     f"Pour un accès complet, le Quiz CRPE coûte {PRIX_QUIZ} TTC pour 1 an, payés en une seule fois. Il est satisfait ou remboursé pendant 14 jours."),
     ("Le test de positionnement est-il vraiment gratuit ?",
      "Oui. Après votre inscription, vous passez un test de 63 questions (environ 20 minutes) et obtenez gratuitement votre "
      "carte des forces et faiblesses dans les 9 matières. Vous décidez ensuite de débloquer le quiz complet, sans engagement."),
@@ -204,9 +204,9 @@ def contenu():
   <div class="qz-hero-inner">
     <div class="qz-hero-texte">
       <div class="hero-badge"><span></span>Nouveau · Quiz CRPE</div>
-      <h1>Le jour du CRPE, vous ne tomberez sur <em>aucune notion que vous ne comprenez pas</em>.</h1>
-      <p class="hero-sub" style="margin-bottom:14px">Nous avons recensé les notions des {len(MATIERES)} thèmes du concours, en nous basant sur le programme officiel de chacun d’eux. Nous en avons tiré {total_txt} questions. Chaque réponse est expliquée simplement, et chaque terme technique est défini.</p>
-      <p class="hero-sub">Commencez par le test de positionnement. Il vous dira ce que vous maîtrisez ou pas encore.</p>
+      <h1>Arrêtez de réviser au hasard. <em>Reprenez le contrôle</em> de votre préparation au CRPE.</h1>
+      <p class="hero-sub" style="margin-bottom:14px">Vous savez à chaque instant où vous en êtes, notion par notion, dans les {len(MATIERES)} matières du concours. Plus de {total_txt} questions tirées du programme officiel, chaque réponse expliquée simplement, chaque terme technique défini. Le jour du CRPE, vous ne tomberez sur aucune notion que vous ne comprenez pas.</p>
+      <p class="hero-sub">Commencez par le test de positionnement : il vous dit ce que vous maîtrisez ou pas encore.</p>
     </div>
     <div class="qz-hero-suite">
       <p class="qz-accroche">📚 Plus vous répondez, plus votre culture du programme s’élargit.</p>
@@ -325,7 +325,7 @@ def contenu():
     <h2 class="section-title">Un prix simple, sans abonnement caché</h2>
     <div class="qz-prix" style="text-align:left">
       <div class="offre-card offre-quiz fade-up">
-        <span class="offre-badge">Test de positionnement gratuit</span>
+        <span class="offre-badge">Test gratuit + 10 questions par jour</span>
         <div class="offre-head">
           <div class="offre-icon">🎯</div>
           <div><h3>Quiz CRPE</h3><p class="offre-tagline">Réviser vite, dans toutes les matières</p></div>
@@ -333,6 +333,7 @@ def contenu():
         <div class="offre-price"><strong>{PRIX_QUIZ}</strong><span>TTC</span><span>pour 1 an d’accès, en une seule fois</span></div>
         <ul class="offre-list">
           <li>Test de positionnement gratuit : votre carte des forces et faiblesses</li>
+          <li>Ensuite, 10 questions gratuites par jour, dans toutes les matières</li>
           <li>Plus de {total_txt} questions dans {len(MATIERES)} matières</li>
           <li>Séries de 20 questions notées sur 20</li>
           <li>Explication de chaque erreur et révision espacée</li>
@@ -341,7 +342,7 @@ def contenu():
         <div class="offre-cta">
           <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">Vérifiez votre niveau gratuitement</a>
           <div class="qz-garantie"><span>🛡️</span><div><strong>Satisfait ou remboursé 14 jours</strong>Pas convaincu ? Un e-mail suffit : remboursement intégral, sans justification.</div></div>
-          <p class="offre-note">Paiement unique via PayPal après votre test gratuit, pour 1 an d’accès.</p>
+          <p class="offre-note">Gratuit sans limite de durée à 10 questions par jour. Paiement unique via PayPal quand vous voulez passer à l’accès complet, pour 1 an.</p>
         </div>
       </div>
     </div>
@@ -367,7 +368,7 @@ def contenu():
     <div class="cta-form">
       <button type="button" class="btn-white cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</button>
     </div>
-    <p class="cta-note">Test de positionnement gratuit · Quiz CRPE {PRIX_QUIZ} TTC pour 1 an d’accès · 🛡️ Satisfait ou remboursé 14 jours</p>
+    <p class="cta-note">Test gratuit + 10 questions gratuites par jour · Accès complet {PRIX_QUIZ} TTC pour 1 an · 🛡️ Satisfait ou remboursé 14 jours</p>
   </div>
 </section>
 '''
@@ -394,7 +395,7 @@ def main():
     # En-tête : styles et suivi de l'accueil, titre et description propres à la page
     head = src[:src.index('</head>')]
     head = re.sub(r'\s*<link rel="canonical"[^>]*/>', '', head)  # canonical de l'accueil remplacée par celle de la page
-    head = re.sub(r'<title>.*?</title>', '<title>Quiz CRPE : aucune notion incomprise le jour du concours</title>', head, flags=re.S)
+    head = re.sub(r'<title>.*?</title>', '<title>Quiz CRPE : reprenez le contrôle de vos révisions</title>', head, flags=re.S)
     head = re.sub(r'<meta name="description"[^>]*/>',
                   '<meta name="description" content="Le Quiz CRPE : au moins 300 questions par matière sur le programme du cycle 4, '
                   'des séries de 20 notées sur 20, l\'explication de chaque erreur et des révisions espacées. Test de positionnement gratuit." />\n'
