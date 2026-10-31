@@ -112,6 +112,12 @@ CSS = """
     .qz-feature h3 { font-size: 17px; font-weight: 800; color: var(--gray-900); margin-bottom: 8px; }
     .qz-feature p { font-size: 14px; color: var(--gray-600); line-height: 1.6; }
 
+    /* « Vous vous reconnaissez ? » : les mots des candidats, et la réponse du quiz */
+    .qz-mots { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin: 44px 0 36px; text-align: left; }
+    .qz-mot { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 18px; padding: 24px; }
+    .qz-mot h3 { font-size: 19px; font-weight: 800; color: #c2410c; margin-bottom: 8px; }
+    .qz-mot p { font-size: 14.5px; color: var(--gray-600); line-height: 1.6; }
+
     /* Fenêtres de connexion/inscription et de confirmation aux couleurs de QuizCRPE (orange au lieu de l'indigo de l'accueil) */
     .auth-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
     .auth-logo-name { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
@@ -156,7 +162,7 @@ CSS = """
     @media (max-width: 640px) {
       .qz-hero { padding: 48px 16px 56px; }
       .qz-hero .hero-actions { justify-content: stretch; }
-      .qz-matieres, .qz-features, .qz-prix { grid-template-columns: 1fr; }
+      .qz-matieres, .qz-features, .qz-prix, .qz-mots { grid-template-columns: 1fr; }
       .qz-stats { gap: 20px; }
       section { padding-left: 16px; padding-right: 16px; }
     }
@@ -208,7 +214,7 @@ def contenu():
         <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
         <a href="#fonctionnement" class="btn-secondary">Voir comment ça marche</a>
       </div>
-      <p class="qz-hero-price"><strong>Test de positionnement gratuit</strong> (20 min) · puis <strong>{PRIX_QUIZ} TTC</strong> pour 1 an d’accès, en une seule fois</p>
+      <p class="qz-hero-price"><strong>Test de positionnement gratuit</strong> (20 min), puis <strong>10 questions gratuites par jour</strong> · ou <strong>{PRIX_QUIZ} TTC</strong> pour 1 an d’accès complet, en une seule fois</p>
       <p class="qz-garantie-ligne">🛡️ <strong>Satisfait ou remboursé pendant 14 jours</strong></p>
       <div class="qz-stats">
         <div class="qz-stat"><strong>+ de {total_txt}</strong><span>questions</span></div>
@@ -231,6 +237,22 @@ def contenu():
     </div>
   </div>
 </header>
+
+<!-- ═══════════════════════════════ VOUS VOUS RECONNAISSEZ ? ═══════════════════════════════ -->
+<section id="reconnaissez" style="background:var(--gray-50)">
+  <div class="container qz-center">
+    <div class="section-eyebrow">Vous vous reconnaissez ?</div>
+    <h2 class="section-title">« Je ne sais même pas par où commencer. »</h2>
+    <p class="section-sub">Ces phrases, ce sont celles que nous entendons le plus souvent chez les candidats au CRPE. Le QuizCRPE a été conçu pour y répondre, une par une.</p>
+    <div class="qz-mots">
+      <div class="qz-mot fade-up"><h3>« Je ne sais pas où j’en suis. »</h3><p>Le test de positionnement gratuit (20 min, 63 questions) vous donne votre carte des forces et faiblesses, matière par matière, dès le premier jour.</p></div>
+      <div class="qz-mot fade-up"><h3>« Je révise au hasard. »</h3><p>Fini les fiches relues sans savoir pourquoi. Chaque question est rattachée au programme officiel, et le quiz vous repose les notions à revoir au bon moment.</p></div>
+      <div class="qz-mot fade-up"><h3>« Je suis en retard. »</h3><p>Pas besoin de longues séances : une série de 20 questions se fait en quelques minutes. Vous commencez directement par ce que vous ne maîtrisez pas.</p></div>
+      <div class="qz-mot fade-up"><h3>« Je ne serai jamais prête. »</h3><p>Une notion n’est validée qu’après 3 bonnes réponses à 3 questions différentes. Vous voyez vos barres de progression monter, et vous savez quand vous êtes prête.</p></div>
+    </div>
+    <a href="#" class="btn-primary cta-commencer-quizcrpe" onclick="openAuth(event,'register')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>Savoir où j’en suis, gratuitement</a>
+  </div>
+</section>
 
 <!-- ═══════════════════════════════ TEST DE POSITIONNEMENT ═══════════════════════════════ -->
 <section id="positionnement">
