@@ -17,4 +17,6 @@ python3 scripts/quiz/construire.py svt > lignes.json   # plusieurs matières pos
 node scripts/quiz/inserer.mjs lignes.json
 ```
 
+`inserer.mjs` remet aussi à jour la table `quiz_notions` (liste des notions de l'écran « Mes notions », fonction SQL `quiz_notions_sync`, qui garde les intitulés « Je sais… » déjà écrits).
+
 `construire.py` vérifie les comptes et rattache chaque question à son objectif. Pour le français et les maths, il faut définir `PROGRAMME_JSON` (export des tables de programme). `inserer.mjs` lit `VITE_SUPABASE_URL` et `SUPABASE_SERVICE_ROLE_KEY` dans `.env`. Il ignore une matière qui a déjà des questions avec notion et désactive (`actif = false`) les anciennes questions sans notion.

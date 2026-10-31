@@ -19,3 +19,7 @@ for (const matiere of [...new Set(rows.map(r => r.matiere))]) {
   const { count: n } = await sb.from('quiz_questions').update({ actif: false }, { count: 'exact' }).eq('matiere', matiere).is('notion', null);
   console.log(matiere, ':', lot.length, 'questions insérées ;', n, 'anciennes désactivées');
 }
+// Liste des notions de « Mes notions » (table quiz_notions) remise à jour, intitulés déjà écrits gardés
+const { data: nbNotions, error: eSync } = await sb.rpc('quiz_notions_sync');
+if (eSync) { console.error('quiz_notions_sync', eSync); process.exit(1); }
+console.log(nbNotions, 'notions dans quiz_notions');

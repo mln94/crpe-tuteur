@@ -87,15 +87,18 @@ ICONES = {
     'accueil': '<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/>',
     'support': '<circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/>',
     'series': '<path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>',
+    'notions': '<path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/>',
     'test': '<rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/>',
     'profil': '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
 }
-# Barre d'onglets en bas : Accueil, Mes séries, Mon test (positionnement), Support et Profil, tous des écrans de /quizapp
+# Barre d'onglets en bas : Accueil, Mes séries, Mes notions, Mon test (positionnement), Support et Profil, tous des écrans de /quizapp
+# (libellés courts « Séries » et « Notions » sur petit écran)
 TABBAR = '<nav class="quiz-tabbar" aria-label="Navigation du quiz">' + ''.join(
     f'<a href="{href}"{cls}{vue}><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{ICONES[k]}</svg>{extra}</span>{lib}</a>'
     for k, lib, href, cls, extra, vue in [
         ('accueil', 'Accueil', '/quizapp', ' class="actif" aria-current="page"', '', ' data-vue=""'),
-        ('series', 'Mes séries', '/quizapp?vue=series', '', '', ' data-vue="series"'),
+        ('series', '<span class="tb-l">Mes séries</span><span class="tb-c">Séries</span>', '/quizapp?vue=series', '', '', ' data-vue="series"'),
+        ('notions', '<span class="tb-l">Mes notions</span><span class="tb-c">Notions</span>', '/quizapp?vue=notions', '', '', ' data-vue="notions"'),
         ('test', 'Mon test', '/quizapp?vue=test', '', '', ' data-vue="test"'),
         ('support', 'Support', '/quizapp?vue=support', ' id="tab-support"', '<span class="pastille" hidden></span>', ' data-vue="support"'),
         ('profil', 'Profil', '/quizapp?vue=profil', '', '', ' data-vue="profil"'),
@@ -404,6 +407,82 @@ CSS = """
     .qz-serie .quiz-recap { margin: 0; padding: 12px 16px 16px; }
     .qz-serie .quiz-recap > div { display: grid; grid-template-columns: 20px 1fr; align-items: start; }
     .qz-recap-theme { display: block; font-size: 11px; font-weight: 800; color: #7c3aed; text-transform: uppercase; letter-spacing: .03em; }
+    .quiz-tabbar .tb-c { display: none; }
+    @media (max-width: 480px) { .quiz-tabbar .tb-l { display: none; } .quiz-tabbar .tb-c { display: inline; } .quiz-tabbar a { font-size: 11.5px; } }
+    /* Mes notions */
+    .nt-carte { margin-bottom: 16px; }
+    .nt-carte h2 { font-size: 20px; font-weight: 900; color: var(--gray-900); margin-bottom: 4px; }
+    .nt-stats { margin: 12px 0 16px; }
+    .nt-stats .stat b small { font-size: 14px; font-weight: 700; color: var(--gray-400); }
+    .nt-stats .s-m span { color: #15803d; font-weight: 700; } .nt-stats .s-c span { color: #1d4ed8; font-weight: 700; } .nt-stats .s-r span { color: #c2410c; font-weight: 700; }
+    .nt-mats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px 24px; }
+    .nt-mat-l { display: flex; justify-content: space-between; gap: 8px; font-size: 14px; font-weight: 800; color: var(--gray-900); margin-bottom: 6px; }
+    .nt-mat-l span { color: #3730a3; white-space: nowrap; }
+    .nt-barre { height: 8px; border-radius: 8px; background: #eef2ff; overflow: hidden; }
+    .nt-barre span { display: block; height: 100%; border-radius: 8px; background: #3730a3; min-width: 0; }
+    .nt-barre.vert { background: var(--gray-100); } .nt-barre.vert span { background: #16a34a; }
+    .nt-total { display: flex; justify-content: space-between; font-size: 13.5px; font-weight: 800; color: var(--gray-900); margin: 0 0 6px; }
+    .nt-total span { color: #3730a3; }
+    .nt-revoir { background: #fff7ed; border-color: #fed7aa; }
+    .nt-revoir-tete { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+    .nt-revoir-tete > div { flex: 1 1 320px; }
+    .nt-revoir-tete p { font-size: 14px; color: var(--gray-600); }
+    .nt-revoir-liste { display: grid; gap: 8px; margin-top: 14px; }
+    .nt-revoir-l { display: grid; grid-template-columns: 130px 1fr auto; gap: 12px; align-items: center; background: #fff; border-radius: 12px; padding: 12px 14px; font-size: 14.5px; font-weight: 700; color: var(--gray-900); }
+    .nt-revoir-l .m { font-size: 12.5px; font-weight: 800; color: #c2410c; }
+    .nt-revoir-l .d { font-size: 12.5px; font-weight: 500; color: var(--gray-500); white-space: nowrap; }
+    .nt-bravo { margin-top: 10px; font-size: 15px; font-weight: 600; color: #166534; }
+    .nt-section { font-size: 20px; font-weight: 900; color: var(--gray-900); margin: 26px 0 12px; }
+    .nt-pills { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 8px; scrollbar-width: thin; }
+    .nt-pill { flex-shrink: 0; min-height: 44px; padding: 0 16px; border-radius: 100px; border: 1.5px solid var(--gray-200); background: #fff; font: inherit; font-size: 14px; font-weight: 700; color: var(--gray-700); cursor: pointer; white-space: nowrap; }
+    .nt-pill:hover { border-color: #fb923c; }
+    .nt-pill[aria-pressed="true"] { border-color: #f97316; background: #fff7ed; color: #c2410c; }
+    .nt-filtres { display: flex; align-items: center; gap: 10px; }
+    .nt-filtres .lbl { font-size: 12px; font-weight: 800; color: var(--gray-500); text-transform: uppercase; letter-spacing: .04em; flex-shrink: 0; }
+    .nt-mat-select { display: none; margin-bottom: 12px; }
+    .nt-mat-select label { display: block; font-size: 12px; font-weight: 800; color: var(--gray-500); text-transform: uppercase; letter-spacing: .04em; margin-bottom: 6px; }
+    .nt-themes { display: grid; gap: 12px; margin-top: 8px; }
+    .nt-theme { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 16px; overflow: hidden; }
+    .nt-theme-btn { width: 100%; min-height: 44px; display: grid; grid-template-columns: 1fr 200px 24px; gap: 16px; align-items: center; padding: 14px 18px; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; }
+    .nt-theme-btn:hover { background: var(--gray-50); }
+    .nt-theme-btn b { display: block; font-size: 16px; font-weight: 800; color: var(--gray-900); line-height: 1.3; }
+    .nt-theme-btn small { display: block; font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+    .nt-chev { width: 20px; height: 20px; color: var(--gray-500); transition: transform .15s; }
+    .nt-theme.ouvert .nt-chev { transform: rotate(180deg); }
+    .nt-theme.ouvert .nt-theme-btn { border-bottom: 1px solid var(--gray-100); }
+    .nt-ligne { display: grid; grid-template-columns: 120px 1fr auto auto; gap: 16px; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--gray-100); }
+    .nt-ligne:last-child { border-bottom: 0; }
+    .nt-ligne b { display: block; font-size: 15px; font-weight: 800; color: var(--gray-900); line-height: 1.35; }
+    .nt-ligne b.ex { font-weight: 700; font-style: italic; color: var(--gray-700); }
+    .nt-ligne small { display: block; font-size: 12.5px; color: var(--gray-500); margin-top: 3px; }
+    .nt-statut { justify-self: start; font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 100px; white-space: nowrap; }
+    .nt-statut.pas_vue { background: var(--gray-100); color: var(--gray-600); }
+    .nt-statut.a_revoir { background: #ffedd5; color: #c2410c; }
+    .nt-statut.en_cours { background: #dbeafe; color: #1d4ed8; }
+    .nt-statut.maitrisee { background: #dcfce7; color: #15803d; }
+    .nt-points { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; font-weight: 800; color: var(--gray-700); white-space: nowrap; }
+    .nt-points i { width: 11px; height: 11px; border-radius: 50%; background: var(--gray-200); }
+    .nt-points.maitrisee i.on { background: #16a34a; } .nt-points.en_cours i.on { background: #2563eb; } .nt-points.a_revoir i.on { background: #ea580c; }
+    .nt-points b { margin-left: 4px; font-size: 13px; }
+    .nt-btn { min-height: 44px; min-width: 104px; padding: 0 16px; border-radius: 10px; border: 1.5px solid #fdba74; background: #fff; font: inherit; font-size: 14px; font-weight: 800; color: #c2410c; cursor: pointer; }
+    .nt-btn:hover { background: #fff7ed; border-color: #f97316; }
+    .nt-vide { padding: 16px 18px; font-size: 14px; color: var(--gray-500); }
+    @media (max-width: 720px) {
+      .nt-mats { grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+      .nt-mat-l { font-size: 13px; }
+      .nt-revoir-l { grid-template-columns: 1fr; gap: 2px; }
+      .nt-revoir-tete .quiz-btn { width: 100%; }
+      .nt-mat-pills { display: none; }
+      .nt-mat-select { display: block; }
+      .nt-filtres .lbl { display: none; }
+      .nt-theme-btn { grid-template-columns: 1fr 24px; gap: 8px; padding: 14px 16px; }
+      .nt-theme-btn .nt-barre { grid-column: 1; grid-row: 2; }
+      .nt-ligne { grid-template-columns: 1fr auto; gap: 8px 12px; padding: 14px 16px; }
+      .nt-ligne .nt-statut { grid-column: 1; grid-row: 1; }
+      .nt-ligne .nt-points { grid-column: 2; grid-row: 1; }
+      .nt-ligne > div { grid-column: 1 / -1; }
+      .nt-ligne .nt-btn { grid-column: 1; justify-self: start; }
+    }
     /* Support QuizCRPE : même format que le support du tuteur IA (colonne de 512 px), couleurs orange */
     .sp { max-width: 512px; margin: 0 auto; }
     .sp-tete { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
@@ -576,7 +655,7 @@ JS = """<script>
   function charger(mat) {
     if (catalogues[mat]) return Promise.resolve(catalogues[mat]);
     if (enCours[mat]) return enCours[mat];
-    var p = enCours[mat] = Promise.all([idbLire(mat), proprietaire()]).then(function (x) {
+    var p = enCours[mat] = Promise.all([idbLire(mat), proprietaire(), tirerServeur(mat)]).then(function (x) {
       var copie = x[0], uid = x[1];
       if (copie && copie.uid === uid && copie.questions && copie.questions.length) {
         catalogues[mat] = grouper(copie.questions);
@@ -609,10 +688,11 @@ JS = """<script>
   }
 
   // ── Composition d'une série du niveau choisi : révisions dues, puis nouvelles notions, puis révisions anticipées ──
-  function composer(cat, pm, niveau, themes, taille) {
+  // cles : série ciblée sur ces notions (écran « Mes notions »), maîtrisées comprises, dans cet ordre
+  function composer(cat, pm, niveau, themes, taille, cles) {
     var n = taille || SERIE; // 20 questions, ou les questions d'essai restantes du jour
     var now = Date.now(), dues = [], neuves = [], attente = [], rang = { facile: 0, intermediaire: 1, difficile: 2 };
-    cat.ordre.forEach(function (k) {
+    if (!cles) cat.ordre.forEach(function (k) {
       if (niveau && cat.notions[k].niveau !== niveau) return;
       if (themes && themes.indexOf(cat.notions[k].theme || 'Notions') < 0) return;
       var s = pm.notions[k];
@@ -624,7 +704,7 @@ JS = """<script>
     dues.sort(function (a, b) { return (pm.notions[a].due || 0) - (pm.notions[b].due || 0); });
     neuves = melange(neuves).sort(function (a, b) { return rang[cat.notions[a].niveau] - rang[cat.notions[b].niveau]; });
     attente.sort(function (a, b) { return pm.notions[a].due - pm.notions[b].due; });
-    var choisies = dues.concat(neuves, attente).slice(0, n);
+    var choisies = cles ? cles.filter(function (k) { return cat.notions[k]; }) : dues.concat(neuves, attente).slice(0, n);
     var pris = {};
     var tirer = function (k) {
       var s = pm.notions[k] || { ok: [], vus: [] }, qs = cat.notions[k].questions.filter(function (q) { return !pris[q.id]; });
@@ -687,6 +767,10 @@ JS = """<script>
   }
   function libelleThemes(n) { return n ? n + ' thème' + (n > 1 ? 's' : '') + ' choisi' + (n > 1 ? 's' : '') : 'Choisir mes thèmes'; }
   function barreFiltres(enSerie) {
+    if (enSerie && st && st.cible) {
+      return '<div class="qz-barre en-serie"><span class="qz-bandeau"><span class="qz-dd-ico">🎯</span><b>Révision ciblée</b> · ' + pluriel(st.cible, 'notion') + '</span>' +
+        '<button type="button" class="quiz-link qz-quitter" data-act="quitter">Quitter la série</button></div>';
+    }
     if (enSerie && st) {
       var ms = MATIERES.filter(function (m) { return m[0] === st.mat; })[0] || MATIERES[0];
       return '<div class="qz-barre en-serie"><span class="qz-bandeau"><span class="qz-dd-ico">' + ms[2] + '</span><b>' + esc(ms[1]) + '</b> · ' + NIVEAUX[st.niveau] +
@@ -867,6 +951,7 @@ JS = """<script>
     if (jr) return rapportPartage(jr);
     var v = vue();
     if (v === 'series') return mesSeries();
+    if (v === 'notions') return mesNotions();
     if (v === 'support') return supportVue();
     if (v === 'test') return monTest();
     if (v === 'profil') return profilVue();
@@ -892,6 +977,165 @@ JS = """<script>
       if (!c.positionnement) return introTest();
       resultat(c.positionnement); top();
     }).catch(function (e) { if (e.status === 401) return connexion(); erreur('Votre test n’a pas pu être chargé. Réessayez dans quelques instants.'); });
+  }
+
+  // ── Mes notions : progression notion par notion, totaux calculés en base (quiz_notions_resume / _themes / _liste) ──
+  var STATUTS_NT = { pas_vue: 'Pas encore vue', a_revoir: 'À revoir', en_cours: 'En cours', maitrisee: 'Maîtrisée' };
+  var FILTRES_NT = [['', 'Toutes'], ['a_revoir', 'À revoir'], ['en_cours', 'En cours'], ['maitrisee', 'Maîtrisées'], ['pas_vue', 'Pas encore vues']];
+  var BOUTONS_NT = { pas_vue: 'Découvrir', a_revoir: 'Réviser', en_cours: 'Continuer', maitrisee: 'Revoir' };
+  var nt = { mat: '', filtre: '', themes: null, ouverts: {}, listes: {}, revoir: [] };
+  var CHEV = '<svg class="nt-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>';
+  function nf(n) { return Number(n || 0).toLocaleString('fr-FR'); }
+  // Noms courts des matières (barres, listes), comme sur /quizcrpe
+  function court(k) { return { emc: 'EMC', svt: 'SVT' }[k] || label(k); }
+  // « aujourd'hui », « hier », « il y a 3 jours » (jours du calendrier)
+  function ilya(iso) {
+    if (!iso) return '';
+    var a = new Date(iso), b = new Date(); a.setHours(0, 0, 0, 0); b.setHours(0, 0, 0, 0);
+    var j = Math.round((b - a) / 86400000);
+    return j <= 0 ? 'aujourd’hui' : j === 1 ? 'hier' : 'il y a ' + j + ' jours';
+  }
+  function intituleNt(x) { return x.intitule ? '<b>' + esc(x.intitule) + '</b>' : '<b class="ex">« ' + esc(x.exemple || '') + ' »</b>'; }
+  function mesNotions() {
+    st = null; tst = null; intro(false); marquerOnglet('notions');
+    root.innerHTML = '<div class="quiz-card"><p>Chargement de vos notions…</p></div>';
+    SB.auth.getSession().then(function (r) {
+      if (!r.data.session) return connexion();
+      return (compte ? Promise.resolve(compte) : api('/api/quiz/compte').then(function (c) { compte = c; return adopterProgression(); })).then(function () {
+        return synchroniser();
+      }).then(function () {
+        if (!nt.mat) nt.mat = choix.mat || MATIERES[0][0];
+        nt.themes = null; nt.listes = {};
+        return SB.rpc('quiz_notions_resume').then(function (x) { if (x.error) throw x.error; afficherNotions(x.data || {}); chargerThemes(); });
+      });
+    }).catch(function (e) { if (e && e.status === 401) return connexion(); erreur('Vos notions n’ont pas pu être chargées. Réessayez dans quelques instants.'); });
+  }
+  function afficherNotions(d) {
+    var mats = {}, tot = { total: 0, maitrisees: 0, en_cours: 0, a_revoir: 0 };
+    (d.matieres || []).forEach(function (m) { mats[m.matiere] = m; ['total', 'maitrisees', 'en_cours', 'a_revoir'].forEach(function (k) { tot[k] += m[k] || 0; }); });
+    nt.revoir = d.revoir || [];
+    var pct = function (m) { return m && m.total ? Math.round(m.maitrisees / m.total * 100) : 0; };
+    var parMat = MATIERES.slice().sort(function (a, b) { return pct(mats[b[0]]) - pct(mats[a[0]]); }).map(function (m) {
+      var x = mats[m[0]], p = pct(x);
+      return '<div><div class="nt-mat-l">' + esc(court(m[0])) + '<span>' + p + ' %</span></div><div class="nt-barre" role="img" aria-label="' + esc(label(m[0])) + ' : ' + (x ? x.maitrisees : 0) + ' notions maîtrisées sur ' + (x ? x.total : 0) + '"><span style="width:' + p + '%"></span></div></div>';
+    }).join('');
+    var n = nt.revoir.length;
+    var revoir = '<section class="quiz-card nt-carte nt-revoir" aria-labelledby="nt-revoir-t"><div class="nt-revoir-tete"><div><h2 id="nt-revoir-t">À revoir en priorité</h2>' +
+      '<p>' + (n ? 'Les notions où vous vous êtes trompé récemment, toutes matières confondues.' : tot.maitrisees + tot.en_cours ? 'Aucune notion à revoir pour le moment.'
+        : 'Vous n’avez encore répondu à aucune question : vos erreurs apparaîtront ici, pour les retravailler en priorité.') + '</p></div>' +
+      (n ? '<button type="button" class="quiz-btn" data-act="nt-revoir">Réviser ' + (n > 1 ? 'ces ' + n + ' notions' : 'cette notion') + '</button>' : '') + '</div>' +
+      (n ? '<div class="nt-revoir-liste">' + nt.revoir.map(function (x) {
+        var q = ilya(x.derniere_at);
+        return '<div class="nt-revoir-l"><span class="m">' + esc(court(x.matiere)) + '</span>' + intituleNt(x) + '<span class="d">' + (q ? (q === 'hier' || q === 'aujourd’hui' ? 'Erreur ' + q : q.charAt(0).toUpperCase() + q.slice(1)) : '') + '</span></div>';
+      }).join('') + '</div>' : tot.maitrisees + tot.en_cours ? '<p class="nt-bravo">🎉 Bravo : toutes les notions que vous avez travaillées sont en cours ou maîtrisées. Continuez vos séries pour en découvrir de nouvelles.</p>'
+        : '<div class="quiz-actions"><a class="quiz-btn" href="/quizapp">Lancer ma première série</a></div>') + '</section>';
+    root.innerHTML = '<div class="qz-page-tete"><h1>Mes notions</h1><p>Suivez votre progression notion par notion. Une notion est maîtrisée quand vous y avez répondu juste 3 fois, avec 3 questions différentes. Tant qu’elle n’est pas maîtrisée, une erreur la fait passer en « À revoir » : elle revient dans vos prochaines séries.</p></div>' +
+      '<section class="quiz-card nt-carte" aria-labelledby="nt-glob-t"><h2 id="nt-glob-t">Ma progression globale</h2>' +
+      '<div class="stats nt-stats"><div class="stat s-m"><b>' + nf(tot.maitrisees) + ' <small>/ ' + nf(tot.total) + '</small></b><span>' + (tot.maitrisees > 1 ? 'notions maîtrisées' : 'notion maîtrisée') + '</span></div>' +
+      '<div class="stat s-c"><b>' + nf(tot.en_cours) + '</b><span>' + (tot.en_cours > 1 ? 'notions' : 'notion') + ' en cours</span></div><div class="stat s-r"><b>' + nf(tot.a_revoir) + '</b><span>' + (tot.a_revoir > 1 ? 'notions' : 'notion') + ' à revoir</span></div></div>' +
+      '<div class="nt-mats">' + parMat + '</div></section>' + revoir +
+      '<h2 class="nt-section">Détail par matière</h2>' +
+      '<div class="nt-mat-select"><label for="nt-mat">Matière</label><select id="nt-mat" class="quiz-select">' + MATIERES.map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === nt.mat ? ' selected' : '') + '>' + esc(m[1]) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="nt-pills nt-mat-pills" role="group" aria-label="Matière">' + MATIERES.map(function (m) { return '<button type="button" class="nt-pill" data-nt-mat="' + m[0] + '" aria-pressed="' + (m[0] === nt.mat) + '">' + esc(court(m[0])) + '</button>'; }).join('') + '</div>' +
+      '<div class="nt-filtres"><span class="lbl">Afficher</span><div class="nt-pills" role="group" aria-label="Afficher">' + FILTRES_NT.map(function (f) { return '<button type="button" class="nt-pill" data-nt-filtre="' + f[0] + '" aria-pressed="' + (f[0] === nt.filtre) + '">' + f[1] + '</button>'; }).join('') + '</div></div>' +
+      '<div class="nt-themes" id="nt-themes"><div class="quiz-card"><p>Chargement des thèmes…</p></div></div>';
+    var sel = document.getElementById('nt-mat');
+    sel.addEventListener('change', function () { choisirMatNt(sel.value); });
+  }
+  function choisirMatNt(m) {
+    nt.mat = m; nt.ouverts = {}; nt.themes = null;
+    root.querySelectorAll('[data-nt-mat]').forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.ntMat === m)); });
+    var sel = document.getElementById('nt-mat'); if (sel) sel.value = m;
+    chargerThemes();
+  }
+  function chargerThemes() {
+    var m = nt.mat, el = document.getElementById('nt-themes'); if (!el) return;
+    SB.rpc('quiz_notions_themes', { p_matiere: m }).then(function (x) {
+      if (x.error) throw x.error;
+      if (m !== nt.mat) return;
+      nt.themes = x.data || [];
+      // Premier thème ouvert par défaut
+      if (nt.themes.length && !Object.keys(nt.ouverts).length) nt.ouverts[nt.themes[0].theme] = true;
+      dessinerThemes();
+    }).catch(function () { el.innerHTML = '<div class="quiz-msg">Les thèmes n’ont pas pu être chargés. Réessayez.</div>'; });
+  }
+  function nomTheme(t) { var g = groupe(t); return g ? g.court : t; }
+  function dessinerThemes() {
+    var el = document.getElementById('nt-themes'); if (!el || !nt.themes) return;
+    el.innerHTML = nt.themes.map(function (t, i) {
+      var p = t.total ? Math.round(t.maitrisees / t.total * 100) : 0, ouvert = !!nt.ouverts[t.theme];
+      return '<div class="nt-theme' + (ouvert ? ' ouvert' : '') + '"><button type="button" class="nt-theme-btn" data-nt-theme="' + i + '" aria-expanded="' + ouvert + '" aria-controls="nt-th-' + i + '">' +
+        '<span><b>' + esc(nomTheme(t.theme)) + '</b><small>' + t.maitrisees + ' / ' + t.total + ' notion' + (t.total > 1 ? 's' : '') + ' maîtrisée' + (t.maitrisees > 1 ? 's' : '') + '</small></span>' +
+        '<span class="nt-barre vert" aria-hidden="true"><span style="width:' + p + '%"></span></span>' + CHEV + '</button>' +
+        '<div id="nt-th-' + i + '"' + (ouvert ? '' : ' hidden') + '>' + (ouvert ? lignesTheme(t) : '') + '</div></div>';
+    }).join('') || '<div class="quiz-card"><p>Aucune notion dans cette matière.</p></div>';
+    nt.themes.forEach(function (t, i) { if (nt.ouverts[t.theme] && !nt.listes[nt.mat + '|' + t.theme]) chargerListe(t, i); });
+  }
+  function chargerListe(t, i) {
+    var cle = nt.mat + '|' + t.theme, m = nt.mat;
+    SB.rpc('quiz_notions_liste', { p_matiere: m, p_theme: t.theme }).then(function (x) {
+      if (x.error) throw x.error;
+      nt.listes[cle] = x.data || [];
+      var bloc = document.getElementById('nt-th-' + i); if (bloc && m === nt.mat) bloc.innerHTML = lignesTheme(t);
+    }).catch(function () { var bloc = document.getElementById('nt-th-' + i); if (bloc) bloc.innerHTML = '<p class="nt-vide">Ces notions n’ont pas pu être chargées. Réessayez.</p>'; });
+  }
+  function lignesTheme(t) {
+    var l = nt.listes[nt.mat + '|' + t.theme];
+    if (!l) return '<p class="nt-vide">Chargement…</p>';
+    var f = nt.filtre ? l.filter(function (x) { return x.statut === nt.filtre; }) : l;
+    if (!f.length) return '<p class="nt-vide">Aucune notion « ' + esc(FILTRES_NT.filter(function (x) { return x[0] === nt.filtre; })[0][1].toLowerCase()) + ' » dans ce thème.</p>';
+    return f.map(function (x) {
+      var b = Math.min(x.bonnes, MAITRISE), pts = '';
+      for (var k = 0; k < MAITRISE; k++) pts += '<i' + (k < b ? ' class="on"' : '') + '></i>';
+      var q = ilya(x.derniere_at), meta = [x.classe ? 'Programme de ' + x.classe : 'Cycle 4', NIVEAUX[x.niveau] || ''];
+      if (q) meta.push((x.derniere_ok === false ? 'erreur ' : 'revue ') + q);
+      return '<div class="nt-ligne"><span class="nt-statut ' + x.statut + '">' + STATUTS_NT[x.statut] + '</span>' +
+        '<div>' + intituleNt(x) + '<small>' + esc(meta.filter(Boolean).join(' · ')) + '</small></div>' +
+        '<span class="nt-points ' + x.statut + '" role="img" aria-label="' + b + ' bonne' + (b > 1 ? 's' : '') + ' réponse' + (b > 1 ? 's' : '') + ' sur ' + MAITRISE + '">' + pts + '<b>' + b + '/' + MAITRISE + '</b></span>' +
+        '<button type="button" class="nt-btn" data-nt-notion="' + esc(x.notion) + '">' + BOUTONS_NT[x.statut] + '</button></div>';
+    }).join('');
+  }
+  // Série ciblée : quelques questions sur les notions choisies (une notion : toutes ses formulations ; plusieurs : 2 par notion)
+  function demarrerNotions(cibles) {
+    var e = essaiActif();
+    if (e && e.termine) return ouvrirPaiement();
+    var mats = []; cibles.forEach(function (c) { if (mats.indexOf(c.matiere) < 0) mats.push(c.matiere); });
+    root.innerHTML = '<div class="quiz-card"><p>Chargement des questions…</p></div>'; top();
+    Promise.all(mats.map(charger)).then(function (cats) {
+      var serie = [];
+      mats.forEach(function (m, i) {
+        var cat = cats[i], cles = cibles.filter(function (c) { return c.matiere === m; }).map(function (c) { return c.notion; });
+        var taille = cibles.length === 1 && cat.notions[cles[0]] ? cat.notions[cles[0]].questions.length : cles.length * 2;
+        composer(cat, prog(m), null, null, taille, cles).forEach(function (q) { serie.push(Object.assign({}, q, { mat: m, choix: q.type === 'qcm' ? melange(q.choix) : q.choix })); });
+      });
+      serie = melange(serie);
+      if (e) serie = serie.slice(0, e.restantes);
+      if (!serie.length) return erreur('Ces notions n’ont pas pu être chargées. Réessayez dans quelques instants.');
+      st = { mat: mats[0], niveau: serie[0].niveau, cible: cibles.length, themes: null, cat: cats[0], serie: serie, i: 0, score: 0, recap: [], sel: [], repondu: false };
+      question();
+    }).catch(function (x) { if (x && (x.status === 401 || x.status === 402)) return boot(true); erreur('Les questions n’ont pas pu être chargées. Réessayez dans quelques instants.'); });
+  }
+  function finCible() {
+    var n = st.serie.length, s = st.score, note = Math.round(s / n * 20 * 2) / 2;
+    st.fini = true;
+    // Historique (Mes séries) : une série par matière, au niveau le plus fréquent de ses questions
+    var parMat = {};
+    st.recap.forEach(function (r) { (parMat[r.mat] = parMat[r.mat] || []).push(r); });
+    Object.keys(parMat).forEach(function (m) {
+      var rs = parMat[m], cpt = {}, niv = rs[0].niveau || 'facile';
+      rs.forEach(function (r) { cpt[r.niveau] = (cpt[r.niveau] || 0) + 1; if (cpt[r.niveau] > (cpt[niv] || 0)) niv = r.niveau; });
+      garderSerie(m, niv || 'facile', rs.filter(function (r) { return r.ok; }).length, rs.length, !!essaiActif(), rs);
+    });
+    root.innerHTML = barreFiltres(false) + '<div class="quiz-card quiz-score">' +
+      '<div class="quiz-top" style="justify-content:center"><span class="mat">Révision ciblée · ' + pluriel(st.cible, 'notion') + '</span></div>' +
+      '<div class="big">' + String(note).replace('.', ',') + ' / 20</div><p>' + s + ' bonne' + (s > 1 ? 's' : '') + ' réponse' + (s > 1 ? 's' : '') + ' sur ' + n + '.</p>' +
+      (essaiActif() ? '<div class="essai-bandeau qz-essai-fin"><div class="qz-essai-ligne">🎁 <strong>Questions gratuites du jour</strong>' + compteurEssai(compte.essai) + '</div></div>' : '') +
+      '<div class="quiz-actions"><a class="quiz-btn" href="/quizapp?vue=notions">Retour à Mes notions</a><a class="quiz-btn ghost" href="/quizapp">Lancer une série</a></div>' +
+      '<div class="quiz-recap">' + st.recap.map(function (r) {
+        return '<div class="' + (r.ok ? 'r-ok' : 'r-ko') + '">' + esc(r.q) + (r.ok ? '' : ' <em>Réponse : ' + esc(r.attendu) + '</em>') + '</div>';
+      }).join('') + '</div></div>';
+    top();
+    if (essaiActif()) api('/api/quiz/compte').then(function (c) { compte = c; }).catch(function () {});
   }
 
   // ── Mes séries : historique des séries terminées (table quiz_series) ──
@@ -1084,7 +1328,7 @@ JS = """<script>
     st = null; tst = null;
     if (compte && forcer !== true) {
       var avant = etatCompte(compte);
-      adopterProgression().then(function () { aiguiller(compte); });
+      adopterProgression().then(function () { synchroniser(); aiguiller(compte); });
       api('/api/quiz/compte').then(function (c) {
         compte = c;
         // L'écran n'est redessiné que si le compte a changé et qu'aucune série ni test n'a commencé entre-temps
@@ -1095,7 +1339,7 @@ JS = """<script>
     root.innerHTML = '<div class="quiz-card"><p>Chargement…</p></div>';
     jeton().then(function (t) {
       if (!t) return connexion();
-      return api('/api/quiz/compte').then(function (c) { compte = c; return adopterProgression().then(function () { aiguiller(c); }); });
+      return api('/api/quiz/compte').then(function (c) { compte = c; return adopterProgression().then(function () { synchroniser(); aiguiller(c); }); });
     }).catch(function (e) { if (e.status === 401) return connexion(); erreur('Votre compte n\\'a pas pu être chargé. Réessayez dans quelques instants.'); });
   }
   function connexion() {
@@ -1457,7 +1701,7 @@ JS = """<script>
   function entete(q) {
     var n = st.serie.length;
     var e = essaiActif();
-    return '<div class="quiz-top"><span class="mat">' + esc(label(st.mat)) + ' · ' + NIVEAUX[st.niveau] + '</span><span>Question ' + (st.i + 1) + ' / ' + n + '</span></div>' +
+    return '<div class="quiz-top"><span class="mat">' + esc(label(q.mat || st.mat)) + ' · ' + (st.cible ? 'Révision ciblée' : NIVEAUX[st.niveau]) + '</span><span>Question ' + (st.i + 1) + ' / ' + n + '</span></div>' +
       (e ? '<div class="qz-essai-ligne qz-essai-serie" id="qz-compteur">🎁 Questions gratuites du jour' + compteurEssai(e) + '</div>' : '') +
       '<div class="quiz-bar"><span style="width:' + Math.round(st.i / n * 100) + '%"></span></div>' +
       '<div class="quiz-meta"><span class="chip ' + q.niveau + '">' + (NIVEAUX[q.niveau] || '') + '</span>' +
@@ -1469,7 +1713,7 @@ JS = """<script>
   // Notion déjà vue ou nouvelle, et nombre de fois où elle a été posée (progression de ce navigateur)
   function fois(s) { return s ? (s.fois || s.ok.length + (s.erreurs || 0)) : 0; }
   function chipNotion(q) {
-    var s = prog(st.mat).notions[q.notion], n = fois(s);
+    var s = prog(q.mat || st.mat).notions[q.notion], n = fois(s);
     if (!n) return '<span class="chip neuve">🆕 Nouvelle notion</span>';
     return '<span class="chip vue" title="' + s.ok.length + ' / ' + MAITRISE + ' bonnes réponses pour cette notion">🔁 Notion déjà vue ' + (n > 1 ? n + ' fois' : '1 fois') + (s.maitrise ? ' · maîtrisée' : '') + '</span>';
   }
@@ -1509,7 +1753,7 @@ JS = """<script>
         if (d.essai && essaiActif()) { Object.assign(compte.essai, d.essai); var cpt = document.getElementById('qz-compteur'); if (cpt) cpt.innerHTML = '🎁 Questions gratuites du jour' + compteurEssai(compte.essai); }
         var suite = enregistrer(q, d.correct);
         if (d.correct) st.score++;
-        st.recap.push({ id: q.id, theme: q.theme, q: q.question, ok: d.correct, attendu: d.attendu });
+        st.recap.push({ id: q.id, theme: q.theme, q: q.question, ok: d.correct, attendu: d.attendu, mat: q.mat || st.mat, niveau: q.niveau });
         var last = st.i === st.serie.length - 1;
         document.getElementById('quiz-fb').innerHTML =
           '<div class="quiz-feedback ' + (d.correct ? 'ok' : 'ko') + '"><strong>' + (d.correct ? 'Bonne réponse !' : 'Ce n\\'est pas la bonne réponse. Réponse attendue : ' + esc(d.attendu)) + '</strong>' + esc(d.explication) +
@@ -1526,9 +1770,9 @@ JS = """<script>
 
   // Révision espacée : met à jour la notion et renvoie le message affiché sous l'explication
   function enregistrer(q, correct) {
-    var pm = prog(st.mat), s = pm.notions[q.notion] || { ok: [], vus: [], erreurs: 0, due: 0, maitrise: false };
+    var mat = q.mat || st.mat, pm = prog(mat), s = pm.notions[q.notion] || { ok: [], vus: [], erreurs: 0, due: 0, maitrise: false };
     var now = Date.now(), msg;
-    s.fois = fois(s) + 1;
+    s.fois = fois(s) + 1; s.derniere_ok = !!correct; s.derniere_at = new Date(now).toISOString();
     if (s.vus.indexOf(q.id) < 0) s.vus.push(q.id);
     if (correct) {
       if (s.ok.indexOf(q.id) < 0) s.ok.push(q.id);
@@ -1538,11 +1782,60 @@ JS = """<script>
       s.erreurs = (s.erreurs || 0) + 1; s.due = now + APRES_ERREUR * JOUR;
       msg = 'Une question similaire vous sera reposée ' + jours(APRES_ERREUR) + ', pour ancrer la notion.';
     }
-    pm.notions[q.notion] = s; sauver(st.mat, pm);
+    pm.notions[q.notion] = s; sauver(mat, pm);
+    pousser([ligneProg(mat, q.notion, s)]);
     return msg;
   }
 
+  // ── Progression gardée aussi en base (quiz_progres_notions) : écran « Mes notions » et autres appareils ──
+  // Le serveur fusionne (questions réussies réunies, dernière réponse la plus récente) : la règle de maîtrise reste celle d'enregistrer().
+  var envois = Promise.resolve(), tires = {};
+  function ligneProg(mat, k, s) {
+    return { matiere: mat, notion: k, ok: s.ok || [], vus: s.vus || [], erreurs: s.erreurs || 0, fois: fois(s), due: s.due || 0,
+      maitrise: !!s.maitrise, derniere_ok: s.derniere_ok == null ? null : s.derniere_ok, derniere_at: s.derniere_at || null };
+  }
+  function pousser(lignes) {
+    if (!lignes.length) return envois;
+    envois = envois.then(function () { return SB.rpc('quiz_progres_fusion', { p_lignes: lignes }).then(function (r) { if (r.error) throw r.error; }); }).catch(function () {});
+    return envois;
+  }
+  // Une fois par compte et par navigateur : toute la progression locale est envoyée au serveur
+  function synchroniser() {
+    var cle = cleProg(); if (!cle) return envois;
+    try { if (localStorage.getItem(cle + ':sync')) return envois; } catch (e) { return envois; }
+    var p = lire(), lignes = [];
+    Object.keys(p).forEach(function (m) { var ns = (p[m] && p[m].notions) || {}; Object.keys(ns).forEach(function (k) { lignes.push(ligneProg(m, k, ns[k])); }); });
+    var lots = []; for (var i = 0; i < lignes.length; i += 1000) lots.push(lignes.slice(i, i + 1000));
+    envois = envois.then(function () {
+      return lots.reduce(function (pr, lot) { return pr.then(function () { return SB.rpc('quiz_progres_fusion', { p_lignes: lot }).then(function (r) { if (r.error) throw r.error; }); }); }, Promise.resolve())
+        .then(function () { try { localStorage.setItem(cle + ':sync', '1'); } catch (e) {} });
+    }).catch(function () {});
+    return envois;
+  }
+  // Progression d'une matière relue en base et fusionnée avec celle du navigateur (une fois par visite)
+  function tirerServeur(mat) {
+    if (tires[mat] || !cleProg()) return Promise.resolve();
+    tires[mat] = true;
+    return envois.then(function () {
+      return SB.from('quiz_progres_notions').select('notion, ok, vus, erreurs, fois, due, maitrise, derniere_ok, derniere_at').eq('matiere', mat);
+    }).then(function (r) {
+      if (r.error || !r.data || !r.data.length) return;
+      var pm = prog(mat);
+      r.data.forEach(function (x) {
+        var s = pm.notions[x.notion] || { ok: [], vus: [], erreurs: 0, due: 0, maitrise: false };
+        var union = function (a, b) { var o = (a || []).slice(); (b || []).forEach(function (v) { v = +v; if (o.indexOf(v) < 0) o.push(v); }); return o; };
+        var recent = x.derniere_at && (!s.derniere_at || x.derniere_at > s.derniere_at);
+        s.ok = union(s.ok, x.ok); s.vus = union(s.vus, x.vus); s.erreurs = Math.max(s.erreurs || 0, x.erreurs || 0);
+        s.fois = Math.max(fois(s), x.fois || 0); s.maitrise = !!(s.maitrise || x.maitrise);
+        if (recent) { s.due = +x.due || 0; s.derniere_ok = x.derniere_ok; s.derniere_at = x.derniere_at; }
+        pm.notions[x.notion] = s;
+      });
+      sauver(mat, pm);
+    }).catch(function () { tires[mat] = false; });
+  }
+
   function fin() {
+    if (st.cible) return finCible();
     var pm = prog(st.mat); pm.series = (pm.series || 0) + 1; sauver(st.mat, pm);
     var n = st.serie.length, s = st.score, b = bilan(st.mat, st.cat, st.niveau);
     st.fini = true; garderSerie(st.mat, st.niveau, s, n, !!essaiActif(), st.recap);
@@ -1626,6 +1919,21 @@ JS = """<script>
       return;
     }
     var act = b.dataset.act;
+    if (b.dataset.ntMat) { choisirMatNt(b.dataset.ntMat); return; }
+    if (b.dataset.ntFiltre !== undefined) {
+      nt.filtre = b.dataset.ntFiltre;
+      root.querySelectorAll('[data-nt-filtre]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      dessinerThemes(); return;
+    }
+    if (b.dataset.ntTheme !== undefined) {
+      var th = nt.themes[+b.dataset.ntTheme]; nt.ouverts[th.theme] = !nt.ouverts[th.theme];
+      var bloc = b.closest('.nt-theme'), corps = bloc.querySelector('[id^="nt-th-"]'), ouv = nt.ouverts[th.theme];
+      bloc.classList.toggle('ouvert', ouv); b.setAttribute('aria-expanded', String(ouv)); corps.hidden = !ouv;
+      if (ouv) { corps.innerHTML = lignesTheme(th); if (!nt.listes[nt.mat + '|' + th.theme]) chargerListe(th, +b.dataset.ntTheme); }
+      return;
+    }
+    if (b.dataset.ntNotion) { demarrerNotions([{ matiere: nt.mat, notion: b.dataset.ntNotion }]); return; }
+    if (act === 'nt-revoir') { demarrerNotions(nt.revoir.map(function (x) { return { matiere: x.matiere, notion: x.notion }; })); return; }
     if (act === 'valider' && st && !st.repondu) {
       var toks = root.querySelectorAll('.tok'); toks.forEach(function (x) { x.disabled = true; }); b.disabled = true;
       envoyer(st.sel.slice().sort(function (x, y) { return x - y; }).join(','), function (d) {
@@ -1672,7 +1980,7 @@ JS = """<script>
     else if (act === 'pf-modifier') { var pp = lireProfil(); pfEdit = { prenom: pp.prenom, concours: pp.concours, academie: pp.academie }; afficherProfil(); }
     else if (act === 'pf-annuler') { pfEdit = null; afficherProfil(); }
     else if (act === 'pf-enregistrer') enregistrerProfil();
-    else if (act === 'quitter' && confirm('Quitter la série en cours ? Vos réponses déjà données sont enregistrées.')) { accueil(); top(); }
+    else if (act === 'quitter' && confirm('Quitter la série en cours ? Vos réponses déjà données sont enregistrées.')) { if (st && st.cible && vue() === 'notions') { mesNotions(); top(); } else { accueil(); top(); } }
     else if (act === 'reset' && confirm('Effacer votre progression dans cette matière ?')) { var p = lire(); delete p[choix.mat]; ecrire(p); accueil(); }
   });
   // Clic en dehors d'une liste ouverte, ou Échap : la liste se ferme
