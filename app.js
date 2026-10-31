@@ -342,7 +342,8 @@ function telephoneE164(t) {
 }
 
 // Inscription → Klaviyo (liste des inscrits, et newsletter si la case est cochée). signup_confirmed (et email_verified,
-// ancien nom encore utilisé par les flows) vaut false tant que l'e-mail n'est pas confirmé, true ensuite
+// ancien nom encore utilisé par les flows) vaut false tant que l'e-mail n'est pas confirmé, true ensuite.
+// essai_fait_quizcrpe vaut false dès l'inscription (true à la première question d'essai du quiz)
 async function klaviyoInscription(src, confirmed = false) {
   const { prenom = '', nom = '', email } = src;
   // Cases facultatives de l'inscription : l'abonnement aux e-mails marketing n'est fait qu'avec le consentement « conseils »
@@ -351,7 +352,7 @@ async function klaviyoInscription(src, confirmed = false) {
   const tel = telephoneE164(src.telephone);
   const phoneAttrs = tel ? { phone_number: tel } : {};
   await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_SIGNUP,
-    { signup_confirmed: confirmed, email_verified: confirmed, passcrpe_trial: true, paid_user: false, paid_passcrpe: false, paid_quizcrpe: false, form_trial: false, test_positionnement_realise: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(src.parcours),
+    { signup_confirmed: confirmed, email_verified: confirmed, passcrpe_trial: true, paid_user: false, paid_passcrpe: false, paid_quizcrpe: false, form_trial: false, test_positionnement_realise: false, essai_fait_quizcrpe: false, consent_conseils, consent_partenaires, parcours_signup: parcoursOf(src.parcours),
       ...proprietesExamen(src) },
     phoneAttrs, consent_conseils);
   // Newsletter : seuls les inscrits qui ont coché la case rejoignent la liste newsletter, et y sont abonnés
