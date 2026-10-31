@@ -123,6 +123,8 @@ CSS = """
     .chip.intermediaire { background: #fef3c7; color: #92400e; }
     .chip.difficile { background: #fee2e2; color: #991b1b; }
     .chip.theme { background: #ede9fe; color: #5b21b6; }
+    .chip.neuve { background: #e0f2fe; color: #075985; }
+    .chip.vue { background: #fff7ed; color: #9a3412; }
     .quiz-objectif { font-size: 12.5px; color: var(--gray-500); line-height: 1.5; margin-bottom: 18px; }
     .quiz-objectif strong { color: var(--gray-600); }
     .quiz-q { font-size: 19px; font-weight: 800; color: var(--gray-900); line-height: 1.45; margin-bottom: 18px; }
@@ -1460,8 +1462,16 @@ JS = """<script>
       '<div class="quiz-bar"><span style="width:' + Math.round(st.i / n * 100) + '%"></span></div>' +
       '<div class="quiz-meta"><span class="chip ' + q.niveau + '">' + (NIVEAUX[q.niveau] || '') + '</span>' +
       (q.theme ? '<span class="chip theme" title="' + esc(q.theme + (q.sous_theme ? ' › ' + q.sous_theme : '')) + '">' + esc(groupe(q.theme) ? groupe(q.theme).court : q.theme) + '</span>' : '') +
-      (q.classe ? '<span class="chip">Programme de ' + esc(q.classe) + '</span>' : '') + '</div>' +
+      (q.classe ? '<span class="chip">Programme de ' + esc(q.classe) + '</span>' : '') + chipNotion(q) + '</div>' +
       (q.objectif && q.objectif !== q.sous_theme ? '<p class="quiz-objectif"><strong>Objectif du programme :</strong> ' + esc(q.objectif) + '</p>' : '');
+  }
+
+  // Notion déjà vue ou nouvelle, et nombre de fois où elle a été posée (progression de ce navigateur)
+  function fois(s) { return s ? (s.fois || s.ok.length + (s.erreurs || 0)) : 0; }
+  function chipNotion(q) {
+    var s = prog(st.mat).notions[q.notion], n = fois(s);
+    if (!n) return '<span class="chip neuve">🆕 Nouvelle notion</span>';
+    return '<span class="chip vue" title="' + s.ok.length + ' / ' + MAITRISE + ' bonnes réponses pour cette notion">🔁 Notion déjà vue ' + (n > 1 ? n + ' fois' : '1 fois') + (s.maitrise ? ' · maîtrisée' : '') + '</span>';
   }
 
   function question() {
@@ -1518,6 +1528,7 @@ JS = """<script>
   function enregistrer(q, correct) {
     var pm = prog(st.mat), s = pm.notions[q.notion] || { ok: [], vus: [], erreurs: 0, due: 0, maitrise: false };
     var now = Date.now(), msg;
+    s.fois = fois(s) + 1;
     if (s.vus.indexOf(q.id) < 0) s.vus.push(q.id);
     if (correct) {
       if (s.ok.indexOf(q.id) < 0) s.ok.push(q.id);
