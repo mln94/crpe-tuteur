@@ -544,13 +544,13 @@ def master_html(a):
     nom = a['nom']
     if not m:
         return f'''
-  <h2 class="concours-titre c-bac5" id="bac5">Concours externe bac+5 (master 2) : résultats {SESSION} de l'académie {escape(de(nom))}</h2>
+  <h2 class="concours-titre c-bac5" id="bac5">Concours externe bac+5 (master 2) : résultats CRPE {escape(nom)} {SESSION}</h2>
   <p>Les résultats du concours bac+5 ne sont pas publiés pour l'académie {escape(de(nom))}.</p>
 '''
     compare = 'supérieur' if m['taux'] > TAUX_MASTER_NATIONAL else 'inférieur'
     vacants = f" Tous les postes n'ont pas été pourvus : {fint(m['postes'] - m['admis'])} restent vacants." if m['admis'] < m['postes'] else ''
     return f'''
-  <h2 class="concours-titre c-bac5" id="bac5">Concours externe bac+5 (master 2) : résultats {SESSION} de l'académie {escape(de(nom))}</h2>
+  <h2 class="concours-titre c-bac5" id="bac5">Concours externe bac+5 (master 2) : résultats CRPE {escape(nom)} {SESSION}</h2>
   <section class="kpis" aria-label="Chiffres clés du concours bac+5">
     <div class="kpi"><span class="kpi-value">{fint(m['postes'])}</span><span class="kpi-label">postes offerts</span></div>
     <div class="kpi"><span class="kpi-value">{fint(m['inscrits'])}</span><span class="kpi-label">inscrits</span></div>
