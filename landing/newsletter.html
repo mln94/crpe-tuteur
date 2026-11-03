@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-TMLHJT3Q');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-P4BXMJXQT5"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-P4BXMJXQT5');
+  </script>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Newsletter PassCRPE</title>
+  <!-- Page non référencée : accessible uniquement par lien direct (emails), absente du sitemap -->
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --indigo-50:  #eef2ff;
+      --indigo-100: #e0e7ff;
+      --indigo-200: #c7d2fe;
+      --indigo-500: #6366f1;
+      --indigo-600: #4f46e5;
+      --indigo-700: #4338ca;
+      --gray-400:   #9ca3af;
+      --gray-500:   #6b7280;
+      --gray-600:   #4b5563;
+      --gray-800:   #1f2937;
+      --gray-900:   #111827;
+    }
+
+    html, body { min-height: 100%; }
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      color: var(--gray-800);
+      background: var(--indigo-50);
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* ── EN-TÊTE ── */
+    .top {
+      display: flex; justify-content: center;
+      padding: 28px 24px 0;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 8px; text-decoration: none; }
+    .nav-logo-icon {
+      width: 34px; height: 34px;
+      background: var(--indigo-600); border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-text { font-size: 17px; font-weight: 800; color: var(--indigo-700); }
+
+    /* ── NEWSLETTER (identique à la section de l'accueil) ── */
+    .nl-section { flex: 1; display: flex; align-items: center; padding: 40px 24px 56px; }
+    .nl-inner {
+      width: 100%;
+      max-width: 540px;
+      margin: 0 auto;
+      text-align: center;
+      background: #fff;
+      border-radius: 20px;
+      padding: 40px 36px 32px;
+      box-shadow: 0 8px 32px rgba(79,70,229,0.10);
+    }
+    .section-eyebrow {
+      display: inline-block;
+      font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      color: var(--indigo-600); background: var(--indigo-100);
+      border-radius: 100px; padding: 5px 12px;
+      margin-bottom: 14px;
+    }
+    .section-title {
+      font-size: 26px; font-weight: 800; line-height: 1.25; color: var(--gray-900);
+      margin-bottom: 12px;
+    }
+    .section-sub {
+      font-size: 15px; line-height: 1.65; color: var(--gray-600);
+      margin: 0 auto 22px; max-width: 440px;
+    }
+    .nl-points {
+      list-style: none; text-align: left;
+      margin: 0 auto 26px; max-width: 420px;
+    }
+    .nl-points li {
+      display: flex; gap: 10px; align-items: flex-start;
+      font-size: 14px; line-height: 1.55; color: var(--gray-600);
+      margin-bottom: 9px;
+    }
+    .nl-points li span { flex-shrink: 0; }
+    .nl-points strong { color: var(--gray-900); font-weight: 600; }
+
+    .nl-form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .nl-field { display: flex; flex-direction: column; gap: 4px; text-align: left; }
+    .nl-field label { font-size: 12px; font-weight: 600; color: var(--gray-600); }
+    .nl-field input {
+      padding: 11px 14px;
+      border: 1.5px solid var(--indigo-200);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--gray-900);
+      background: #fff;
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .nl-field input:focus {
+      border-color: var(--indigo-500);
+      box-shadow: 0 0 0 3px rgba(99,102,241,0.12);
+    }
+    .nl-field input::placeholder { color: var(--gray-400); }
+    .nl-field.full { grid-column: 1 / -1; }
+    .nl-submit {
+      width: 100%;
+      padding: 13px;
+      margin-top: 6px;
+      background: var(--indigo-600);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background .2s, transform .15s;
+      box-shadow: 0 4px 16px rgba(99,102,241,0.28);
+    }
+    .nl-submit:hover { background: var(--indigo-700); transform: translateY(-1px); }
+    .nl-submit:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+    .nl-consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-top: 14px;
+      text-align: left;
+    }
+    .nl-consent input[type="checkbox"] {
+      flex-shrink: 0;
+      width: 16px; height: 16px;
+      margin-top: 2px;
+      accent-color: var(--indigo-600);
+      cursor: pointer;
+    }
+    .nl-consent label {
+      font-size: 12px;
+      color: var(--gray-600);
+      line-height: 1.5;
+      cursor: pointer;
+    }
+    .nl-consent a { color: var(--indigo-600); }
+    .nl-privacy {
+      font-size: 11px;
+      color: var(--gray-400);
+      margin-top: 12px;
+    }
+    .nl-alert {
+      border-radius: 10px;
+      padding: 11px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      margin-top: 12px;
+      text-align: left;
+      display: none;
+    }
+    .nl-alert.success { background: #ecfdf5; color: #059669; display: block; }
+    .nl-alert.error   { background: #fef2f2; color: #dc2626; display: block; }
+
+    .foot {
+      text-align: center; font-size: 11px; color: var(--gray-400);
+      padding: 0 24px 28px;
+    }
+    .foot a { color: var(--gray-500); text-decoration: none; }
+
+    @media (max-width: 480px) {
+      .nl-form-row { grid-template-columns: 1fr; }
+      .nl-inner { padding: 30px 20px 26px; }
+      .section-title { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TMLHJT3Q" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+  <header class="top">
+    <a class="nav-logo" href="/">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:19px;height:19px;color:#fff">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+        </svg>
+      </div>
+      <span class="nav-logo-text">PassCRPE</span>
+    </a>
+  </header>
+
+  <main class="nl-section" id="newsletter">
+    <div class="nl-inner">
+      <div class="section-eyebrow">Newsletter</div>
+      <h1 class="section-title">Restez informé(e) pour réussir le CRPE</h1>
+      <p class="section-sub">Recevez toutes les deux semaines les mises à jour de l'application et les informations importantes sur le concours.</p>
+
+      <ul class="nl-points">
+        <li><span>📅</span><div><strong>L'actu du concours</strong> : dates, calendrier des épreuves, réforme.</div></li>
+        <li><span>🧭</span><div><strong>Des conseils de préparation</strong> tirés des rapports de jury.</div></li>
+        <li><span>📱</span><div><strong>Les nouveautés de l'application</strong> et nos nouveaux outils, en avant-première.</div></li>
+      </ul>
+
+      <form id="nl-form" novalidate>
+        <div class="nl-form-row">
+          <div class="nl-field">
+            <label for="nl-prenom">Prénom</label>
+            <input type="text" id="nl-prenom" placeholder="Marie" autocomplete="given-name" required />
+          </div>
+          <div class="nl-field">
+            <label for="nl-nom">Nom</label>
+            <input type="text" id="nl-nom" placeholder="Dupont" autocomplete="family-name" required />
+          </div>
+        </div>
+        <div class="nl-form-row">
+          <div class="nl-field full">
+            <label for="nl-email">Adresse e-mail</label>
+            <input type="email" id="nl-email" placeholder="marie.dupont@email.fr" autocomplete="email" required />
+          </div>
+        </div>
+        <div class="nl-consent">
+          <input type="checkbox" id="nl-consent" />
+          <label for="nl-consent">J'accepte de recevoir la newsletter de PassCRPE par e-mail. Je peux me désinscrire à tout moment (<a href="/politique-de-confidentialite" target="_blank" rel="noopener">politique de confidentialité</a>).</label>
+        </div>
+        <button type="submit" class="nl-submit" id="nl-submit">Rester informé des nouveautés PassCRPE</button>
+        <div class="nl-alert" id="nl-alert"></div>
+      </form>
+      <p class="nl-privacy">Désabonnement en un clic à tout moment. Vos données ne sont jamais revendues.</p>
+    </div>
+  </main>
+
+  <footer class="foot">
+    &copy; 2026 PassCRPE &middot; <a href="/">Accueil</a> &middot; <a href="/politique-de-confidentialite">Politique de confidentialité</a>
+  </footer>
+
+<script>
+  /* ── Formulaire newsletter (même logique que l'accueil) ── */
+  document.getElementById('nl-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    const btn   = document.getElementById('nl-submit');
+    const alert = document.getElementById('nl-alert');
+    alert.className = 'nl-alert';
+    alert.textContent = '';
+
+    const prenom = document.getElementById('nl-prenom').value.trim();
+    const nom    = document.getElementById('nl-nom').value.trim();
+    const email  = document.getElementById('nl-email').value.trim();
+
+    if (!prenom || !nom || !email) {
+      alert.className = 'nl-alert error';
+      alert.textContent = 'Veuillez remplir tous les champs.';
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      alert.className = 'nl-alert error';
+      alert.textContent = 'Adresse e-mail invalide.';
+      return;
+    }
+    if (!document.getElementById('nl-consent').checked) {
+      alert.className = 'nl-alert error';
+      alert.textContent = 'Veuillez cocher la case de consentement pour continuer.';
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'Inscription en cours…';
+
+    try {
+      const res = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        // Parcours : « quizcrpe » avec le lien ?parcours=quizcrpe, sinon « passcrpe »
+        body: JSON.stringify({ prenom, nom, email, parcours: new URLSearchParams(location.search).get('parcours') === 'quizcrpe' ? 'quizcrpe' : 'passcrpe' }),
+      });
+      const json = await res.json();
+      if (res.ok && json.ok) {
+        alert.className = 'nl-alert success';
+        alert.textContent = '✓ Inscription confirmée ! Vous recevrez bientôt nos premiers conseils CRPE.';
+        e.target.reset();
+      } else {
+        throw new Error(json.error || `Erreur ${res.status}`);
+      }
+    } catch {
+      alert.className = 'nl-alert error';
+      alert.textContent = 'Une erreur est survenue. Veuillez réessayer.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Rester informé des nouveautés PassCRPE';
+    }
+  });
+</script>
+</body>
+</html>

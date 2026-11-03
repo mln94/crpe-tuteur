@@ -31,12 +31,16 @@
     { "source": "/espace", "destination": "/espace.html" },
     { "source": "/nouveau-mot-de-passe", "destination": "/nouveau-mot-de-passe.html" },
     { "source": "/contact", "destination": "/contact.html" },
+    { "source": "/newsletter", "destination": "/newsletter.html" },
     { "source": "/outils", "destination": "/outils.html" },
     { "source": "/outils/entraineur-crpe", "destination": "/entraineur-crpe.html" },
     { "source": "/outils/entraineur-crpe/rapport/:token", "destination": "/entraineur-rapport.html" },
     { "source": "/politique-de-confidentialite", "destination": "/politique-de-confidentialite.html" },
     { "source": "/admin-support", "destination": "/admin-support.html" },
     { "source": "/admin", "destination": "/app/index.html" }
+  ],
+  "headers": [
+    { "source": "/newsletter(.html)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }
   ],
   "functions": {
     "api/index.js": {
