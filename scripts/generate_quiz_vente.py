@@ -207,7 +207,7 @@ def contenu():
     <div class="qz-hero-texte">
       <div class="hero-badge"><span></span>Nouveau · Quiz CRPE</div>
       <h1>Maîtrisez chaque notion. <em>Arrivez au CRPE sans lacune.</em></h1>
-      <p class="hero-sub" style="margin-bottom:14px">Le Quiz CRPE repère ce que vous ne maîtrisez pas encore et vous le fait travailler jusqu’à ce que ce soit acquis : une notion n’est validée qu’après 3 bonnes réponses à 3 questions différentes. Plus de {total_txt} questions sur le programme officiel des {len(MATIERES)} matières, et près de 500 questions tirées des sujets officiels 2025 et 2026.</p>
+      <p class="hero-sub" style="margin-bottom:14px">Le Quiz CRPE repère ce que vous ne maîtrisez pas encore et vous le fait travailler jusqu’à ce que ce soit acquis : une notion n’est validée qu’après 3 bonnes réponses à 3 questions différentes. Plus de {total_txt} questions sur le programme officiel des {len(MATIERES)} matières, et plus de 800 questions tirées des sujets officiels 2025 et 2026.</p>
       <p class="hero-sub">Commencez par le test de positionnement gratuit : il vous montre vos lacunes, matière par matière.</p>
     </div>
     <div class="qz-hero-suite">
@@ -400,15 +400,15 @@ PARTAGE = (
     f'  <meta property="og:url" content="{SITE}/quizcrpe" />\n'
     f'  <meta property="og:title" content="Le Quiz CRPE by PassCRPE : testez votre niveau gratuitement" />\n'
     f'  <meta property="og:description" content="Test de positionnement gratuit, puis plus de 9 000 questions corrigées et expliquées dans les 9 matières du CRPE." />\n'
-    f'  <meta property="og:image" content="{SITE}/images/partage-quizcrpe.jpg" />\n'
+    f'  <meta property="og:image" content="{SITE}/images/partage-quizcrpe.jpg?v=2" />\n'
     f'  <meta property="og:image:type" content="image/jpeg" />\n'
     f'  <meta property="og:image:width" content="1200" />\n'
     f'  <meta property="og:image:height" content="630" />\n'
-    f'  <meta property="og:image:alt" content="Le Quiz CRPE by PassCRPE : une question de mathématiques du quiz" />\n'
+    f'  <meta property="og:image:alt" content="Le Quiz CRPE by PassCRPE : maîtrisez chaque notion, arrivez au CRPE sans lacune" />\n'
     f'  <meta name="twitter:card" content="summary_large_image" />\n'
     f'  <meta name="twitter:title" content="Le Quiz CRPE by PassCRPE : testez votre niveau gratuitement" />\n'
     f'  <meta name="twitter:description" content="Test de positionnement gratuit, puis plus de 9 000 questions corrigées et expliquées dans les 9 matières du CRPE." />\n'
-    f'  <meta name="twitter:image" content="{SITE}/images/partage-quizcrpe.jpg" />\n'
+    f'  <meta name="twitter:image" content="{SITE}/images/partage-quizcrpe.jpg?v=2" />\n'
     f'  <!-- /Partage -->\n'
 )
 
