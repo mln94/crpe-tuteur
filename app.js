@@ -924,31 +924,59 @@ app.get('/api/quiz/compte', async (req, res) => {
   }
 });
 
-// Test de positionnement : 7 questions par matière (2 faciles, 3 intermédiaires, 2 avancées), sur des thèmes variés
+// Test de positionnement adaptatif : 7 questions par matière. Chaque matière commence au niveau intermédiaire ;
+// bonne réponse → niveau au-dessus, erreur ou « Je ne sais pas » → niveau en dessous (le navigateur choisit la question suivante).
+// Le serveur envoie, pour chaque matière et chaque niveau, une réserve de 7 questions (une par notion, thèmes variés).
+const POSITIONNEMENT_QUESTIONS = 7;
+const POSITIONNEMENT_DEPART = 'intermediaire';
 app.get('/api/quiz/positionnement', async (req, res) => {
   try {
     const compte = await quizCompte(req);
     if (!compte) return res.status(401).json({ error: 'Connexion requise.' });
-    const questions = [];
     // Les 9 matières sont chargées en parallèle (puis gardées 10 minutes en mémoire)
     const catalogues = await Promise.all(QUIZ_MATIERES.map(quizCatalogue));
-    for (const [im, matiere] of QUIZ_MATIERES.entries()) {
-      const cat = catalogues[im];
-      const themesVus = new Set();
-      for (const [niveau, n] of Object.entries(POSITIONNEMENT_PAR_MATIERE)) {
-        // une question par notion, en privilégiant les thèmes pas encore posés
+    const matieres = QUIZ_MATIERES.map((matiere, im) => {
+      const niveaux = {};
+      for (const niveau of Object.keys(POSITIONNEMENT_PAR_MATIERE)) {
+        // une question par notion ; notions regroupées par thème puis prises à tour de rôle (thèmes variés)
         const notions = {};
-        cat.filter(q => q.niveau === niveau).forEach(q => { (notions[q.notion] ||= []).push(q); });
-        const choix = melanger(Object.values(notions)).sort((a, b) => themesVus.has(a[0].theme) - themesVus.has(b[0].theme)).slice(0, n);
-        choix.forEach(qs => { const q = qs[Math.floor(Math.random() * qs.length)]; themesVus.add(q.theme); questions.push({ ...q, matiere, choix: q.type === 'qcm' ? melanger(q.choix) : q.choix }); });
+        catalogues[im].filter(q => q.niveau === niveau).forEach(q => { (notions[q.notion] ||= []).push(q); });
+        const parTheme = {};
+        melanger(Object.values(notions)).forEach(qs => { (parTheme[qs[0].theme || ''] ||= []).push(qs); });
+        const files = melanger(Object.values(parTheme)), choix = [];
+        while (choix.length < POSITIONNEMENT_QUESTIONS && files.some(f => f.length)) files.forEach(f => { if (f.length && choix.length < POSITIONNEMENT_QUESTIONS) choix.push(f.shift()); });
+        niveaux[niveau] = choix.map(qs => { const q = qs[Math.floor(Math.random() * qs.length)]; return { ...q, matiere, choix: q.type === 'qcm' ? melanger(q.choix) : q.choix }; });
       }
-    }
-    res.json({ questions, deja: compte.positionnement || null });
+      return { matiere, niveaux };
+    });
+    res.json({ adaptatif: true, parMatiere: POSITIONNEMENT_QUESTIONS, depart: POSITIONNEMENT_DEPART, matieres, deja: compte.positionnement || null });
   } catch (err) {
     console.error('[quiz/positionnement]', err.message);
     res.status(500).json({ error: 'Le test n\'a pas pu être chargé.' });
   }
 });
+
+// Test adaptatif : juste ou faux pour une réponse du test (sans l'explication, donnée à la fin), pour choisir le niveau suivant
+app.post('/api/quiz/positionnement/verifier', async (req, res) => {
+  try {
+    const compte = await quizCompte(req);
+    if (!compte) return res.status(401).json({ error: 'Connexion requise.' });
+    const id = Number(req.body?.id);
+    if (!Number.isInteger(id)) return res.status(400).json({ error: 'Question inconnue.' });
+    const c = await quizCorriger(id, req.body?.reponse ?? '');
+    if (!c) return res.status(404).json({ error: 'Question inconnue.' });
+    res.json({ correct: c.correct });
+  } catch (err) {
+    console.error('[quiz/positionnement verifier]', err.message);
+    res.status(500).json({ error: 'La réponse n\'a pas pu être vérifiée.' });
+  }
+});
+
+// Score d'un test adaptatif, sur 100 : une bonne réponse vaut le niveau de la question (facile 1, intermédiaire 2, avancé 3),
+// une erreur le niveau en dessous (0, 1, 2) ; moyenne divisée par 3. Tout juste en avancé = 100, tout faux en facile = 0,
+// alterner « juste en intermédiaire / faux en avancé » = 67 (niveau intermédiaire acquis).
+const POIDS_NIVEAU = { facile: 1, intermediaire: 2, difficile: 3 };
+const scoreNiveau = rep => rep.length ? Math.round(rep.reduce((s, r) => s + (POIDS_NIVEAU[r.niveau] || 1) - (r.correct ? 0 : 1), 0) / rep.length / 3 * 100) : 0;
 
 // Correction du test et carte des forces et faiblesses (par matière et par thème)
 app.post('/api/quiz/positionnement', async (req, res) => {
@@ -964,18 +992,22 @@ app.post('/api/quiz/positionnement', async (req, res) => {
     const parMatiere = {};
     reponses.forEach((r, i) => {
       const q = index[Number(r.id)], c = corrections[i]; if (!q || !c) return;
-      const m = parMatiere[q.matiere] ||= { matiere: q.matiere, label: QUIZ_LABELS[q.matiere], ok: 0, n: 0, themes: {}, niveaux: {} };
+      const m = parMatiere[q.matiere] ||= { matiere: q.matiere, label: QUIZ_LABELS[q.matiere], ok: 0, n: 0, themes: {}, niveaux: {}, rep: [] };
       const lib = libelleTheme(q);
       const t = m.themes[lib] ||= { theme: lib, domaine: q.theme || '', ok: 0, n: 0 };
       const nv = m.niveaux[q.niveau] ||= { ok: 0, n: 0 };
       m.n++; t.n++; nv.n++; if (c.correct) { m.ok++; t.ok++; nv.ok++; }
+      m.rep.push({ niveau: q.niveau, correct: c.correct });
     });
+    // pct : score de niveau (pondéré par la difficulté des questions), et non plus le simple pourcentage de bonnes réponses,
+    // qui tend vers 50 % dans un test adaptatif quel que soit le niveau
     const matieres = QUIZ_MATIERES.filter(m => parMatiere[m]).map(m => {
       const x = parMatiere[m];
-      return { matiere: m, label: x.label, ok: x.ok, n: x.n, pct: Math.round(x.ok / x.n * 100), themes: Object.values(x.themes), niveaux: x.niveaux };
+      return { matiere: m, label: x.label, ok: x.ok, n: x.n, pct: scoreNiveau(x.rep), themes: Object.values(x.themes), niveaux: x.niveaux };
     });
     const ok = matieres.reduce((s, m) => s + m.ok, 0), n = matieres.reduce((s, m) => s + m.n, 0);
-    const resultat = { date: new Date().toISOString(), ok, n, pct: n ? Math.round(ok / n * 100) : 0, matieres };
+    const pct = matieres.length ? Math.round(matieres.reduce((s, m) => s + m.pct, 0) / matieres.length) : 0;
+    const resultat = { date: new Date().toISOString(), adaptatif: true, ok, n, pct, matieres };
     // Détail des réponses données, conservé dans quiz_comptes.reponses_positionnement
     const detail = reponses.map((r, i) => {
       const q = index[Number(r.id)], c = corrections[i]; if (!q || !c) return null;

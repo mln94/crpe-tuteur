@@ -7,7 +7,7 @@ Données : table Supabase quiz_questions, servie par /api/quiz/catalogue et /api
 Usage   : python3 scripts/generate_quiz.py
 
 Accès : compte PassCRPE (projet Supabase « crpe », le même que le tuteur IA), créé sur /quizcrpe ou sur l'accueil. Test de positionnement gratuit et obligatoire
-(63 questions, carte des forces et faiblesses), puis paiement PayPal (79 € TTC pour 1 an d'accès) pour débloquer le quiz. Le serveur
+(63 questions, adaptatif : chaque matière commence en intermédiaire, puis monte ou descend d'un niveau selon la réponse ; carte des forces et faiblesses), puis paiement PayPal (79 € TTC pour 1 an d'accès) pour débloquer le quiz. Le serveur
 (app.js) vérifie le paiement avant de servir les questions.
 
 Fonctionnement du quiz :
@@ -244,6 +244,8 @@ CSS = """
       .rp-reponses .qz-serie-voir { display: none; }
     }
     .test-info { margin: 0 0 16px; padding: 10px 14px; border-radius: 12px; background: #eef2ff; color: #3730a3; font-size: 13.5px; line-height: 1.5; }
+    .test-info.ok { background: #ecfdf5; color: #065f46; }
+    .test-niv { font-weight: 600; color: #6b7280; }
     .rp-reponses .qz-serie + .qz-serie { margin-top: 10px; }
     .rp-reponses .rp-rep-q { display: block; font-weight: 600; color: var(--gray-900); }
     .rp-reponses .rp-rep-d { display: block; margin-top: 3px; }
@@ -1370,8 +1372,10 @@ JS = """<script>
     if (!t && !testPret) testPret = api('/api/quiz/positionnement').catch(function (e) { testPret = null; throw e; });
     root.innerHTML = barreCompte() + '<div class="quiz-card"><h2>Votre test de positionnement</h2>' +
       '<p>Avant d\\'accéder au quiz, faites le point sur votre niveau. Le test est <strong>gratuit</strong> et dure environ <strong>20 minutes</strong> :</p>' +
-      '<ul class="quiz-points"><li>63 questions, 7 dans chacune des 9 matières ;</li><li>des questions faciles, intermédiaires et avancées ;</li><li><strong>pas de correction pendant le test</strong> : toutes les réponses, avec leurs explications, vous sont données à la fin, en même temps que votre carte des forces et faiblesses, matière par matière.</li></ul>' +
-      '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="test-start">' + (t ? 'Reprendre mon test (question ' + (t.i + 1) + ' / ' + t.qs.length + ')' : 'Commencer mon test') + '</button></div></div>';
+      '<ul class="quiz-points"><li>63 questions, 7 dans chacune des 9 matières ;</li>' +
+      '<li><strong>un test qui s’adapte à vous</strong> : chaque matière commence par une question de niveau intermédiaire. Vous répondez juste ? La question suivante est plus difficile. Vous vous trompez ? Elle est plus accessible. En 7 questions, le test trouve ainsi votre vrai niveau dans chaque matière ;</li>' +
+      '<li>après chaque réponse, vous savez si elle est juste. Les corrections détaillées et leurs explications vous sont données à la fin, avec votre carte des forces et faiblesses, matière par matière.</li></ul>' +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="test-start">' + (t ? 'Reprendre mon test (question ' + (t.i + 1) + ' / ' + (t.total || t.qs.length) + ')' : 'Commencer mon test') + '</button></div></div>';
   }
   function lireTest() { try { var t = JSON.parse(localStorage.getItem(CLE_TEST)); return t && t.qs && t.qs.length && t.user === (compte && compte.email) ? t : null; } catch (e) { return null; } }
   function garderTest() { try { localStorage.setItem(CLE_TEST, JSON.stringify(tst)); } catch (e) {} }
@@ -1382,19 +1386,44 @@ JS = """<script>
     (testPret || api('/api/quiz/positionnement')).then(function (d) {
       testPret = null;
       if (d.deja) { compte.positionnement = d.deja; return resultat(d.deja); }
-      tst = { user: compte.email, qs: d.questions, i: 0, rep: [] }; garderTest(); testQuestion(); top();
+      // Test adaptatif : les questions sont choisies une à une dans la réserve de chaque matière, selon les réponses
+      if (d.adaptatif) { tst = { user: compte.email, adaptatif: true, pool: d.matieres, par: d.parMatiere, depart: d.depart, total: d.matieres.length * d.parMatiere, niv: d.depart, qs: [], i: 0, rep: [], msg: null }; testChoisir(); }
+      else tst = { user: compte.email, qs: d.questions, i: 0, rep: [] };
+      garderTest(); testQuestion(); top();
     }).catch(function () { testPret = null; erreur('Le test n\\'a pas pu être chargé. Réessayez dans quelques instants.'); });
   }
+  // Test adaptatif : question suivante prise dans la réserve de la matière en cours, au niveau tst.niv
+  // (si ce niveau est épuisé, le niveau le plus proche qui a encore des questions)
+  var NIV_ORDRE = ['facile', 'intermediaire', 'difficile'];
+  function testChoisir() {
+    var m = tst.pool[Math.floor(tst.i / tst.par)], vus = tst.qs.map(function (q) { return q.id; });
+    var essais = [tst.niv].concat(NIV_ORDRE.slice().sort(function (a, b) {
+      return Math.abs(NIV_ORDRE.indexOf(a) - NIV_ORDRE.indexOf(tst.niv)) - Math.abs(NIV_ORDRE.indexOf(b) - NIV_ORDRE.indexOf(tst.niv)); }));
+    for (var k = 0; k < essais.length; k++) {
+      var q = (m.niveaux[essais[k]] || []).filter(function (x) { return vus.indexOf(x.id) < 0; })[0];
+      if (q) { tst.qs[tst.i] = q; return; }
+    }
+  }
+  // Message affiché au-dessus de la question suivante, d'après la réponse précédente
+  function testMessage(correct, passer, ancien, nouveau, nouvelleMatiere) {
+    var debut = correct ? '✅ Bonne réponse !' : passer ? 'Pas de souci.' : 'Pas tout à fait.';
+    if (nouvelleMatiere) return { ok: correct, txt: debut + ' Place à ' + label(nouvelleMatiere) + ' : on commence par une question de niveau intermédiaire.' };
+    if (correct) return { ok: true, txt: nouveau !== ancien ? debut + ' On corse un peu les choses : voici une question plus difficile.' : debut + ' Vous êtes au niveau avancé : on reste sur ce niveau.' };
+    return { ok: false, txt: nouveau !== ancien ? debut + ' On passe à une question un peu plus accessible.' : debut + ' On reste sur une question de niveau facile.' };
+  }
   function testQuestion() {
-    var q = tst.qs[tst.i], n = tst.qs.length, corps;
+    var q = tst.qs[tst.i], n = tst.total || tst.qs.length, corps;
     tst.val = null;
     if (q.type === 'numerique') corps = '<div class="quiz-num"><input type="text" autocomplete="off" placeholder="Votre réponse" aria-label="Votre réponse" id="t-num"></div>';
     else if (q.type === 'cliquer_mot') { tst.val = []; corps = '<p class="quiz-hint">Cliquez sur le ou les mots.</p><div class="quiz-phrase">' + q.choix.map(function (t, k) {
         return /[\\wÀ-ÿ]/.test(t) ? '<button type="button" class="tok" data-ttok="' + k + '">' + esc(t) + '</button>' : '<span class="punct">' + esc(t) + '</span>'; }).join(' ') + '</div>'; }
     else corps = '<div class="quiz-choices">' + q.choix.map(function (c, k) { return '<button type="button" class="quiz-choice" data-tk="' + k + '">' + esc(c) + '</button>'; }).join('') + '</div>';
-    root.innerHTML = '<div class="quiz-card"><div class="quiz-top"><span class="mat">Test de positionnement · ' + esc(label(q.matiere)) + '</span><span>Question ' + (tst.i + 1) + ' / ' + n + '</span></div>' +
-      '<div class="quiz-bar"><span style="width:' + Math.round(tst.i / n * 100) + '%"></span></div>' +
-      '<p class="test-info">🔒 Pas de correction pendant le test : vous découvrirez toutes les réponses à la fin.</p>' +
+    var info = !tst.adaptatif ? '<p class="test-info">🔒 Pas de correction pendant le test : vous découvrirez toutes les réponses à la fin.</p>'
+      : tst.msg ? '<p class="test-info' + (tst.msg.ok ? ' ok' : '') + '">' + esc(tst.msg.txt) + '</p>'
+      : '<p class="test-info">Première question en ' + esc(label(q.matiere)) + ', de niveau intermédiaire. Les explications détaillées vous attendent à la fin du test.</p>';
+    root.innerHTML = '<div class="quiz-card"><div class="quiz-top"><span class="mat">Test de positionnement · ' + esc(label(q.matiere)) +
+      (tst.adaptatif ? ' <span class="test-niv">· ' + esc(NIVEAUX[q.niveau] || '') + '</span>' : '') + '</span><span>Question ' + (tst.i + 1) + ' / ' + n + '</span></div>' +
+      '<div class="quiz-bar"><span style="width:' + Math.round(tst.i / n * 100) + '%"></span></div>' + info +
       '<p class="quiz-q">' + esc(q.question) + '</p>' + corps +
       '<p class="quiz-hint" id="t-aide">' + (q.type === 'qcm' ? 'Cliquez sur une réponse pour passer à la question suivante.' : 'Appuyez sur Entrée pour passer à la question suivante.') + '</p>' +
       '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="t-suivant">' + (tst.i === n - 1 ? 'Terminer le test' : 'Question suivante →') + '</button><button type="button" class="quiz-btn ghost" data-act="t-passer">Je ne sais pas</button></div></div>';
@@ -1408,8 +1437,28 @@ JS = """<script>
       else v = tst.val == null ? '' : q.choix[tst.val];
       if (v === '') { var aide = document.getElementById('t-aide'); if (aide) { aide.textContent = 'Choisissez une réponse, ou cliquez sur « Je ne sais pas ».'; aide.style.color = '#b91c1c'; } return; }
     }
-    tst.rep[tst.i] = { id: q.id, reponse: v }; tst.i++; garderTest();
-    if (tst.i < tst.qs.length) { testQuestion(); return; }
+    if (tst.attente) return;
+    tst.rep[tst.i] = { id: q.id, reponse: v };
+    // Test adaptatif : la réponse est vérifiée pour choisir le niveau de la question suivante (sauf après la dernière)
+    if (tst.adaptatif && tst.i + 1 < tst.total) {
+      tst.attente = true;
+      root.querySelectorAll('.quiz-card button, .quiz-card input').forEach(function (x) { x.disabled = true; });
+      var verif = passer ? Promise.resolve({ correct: false }) : api('/api/quiz/positionnement/verifier', { method: 'POST', body: JSON.stringify({ id: q.id, reponse: v }) });
+      verif.then(function (d) {
+        tst.attente = false;
+        var ancien = tst.niv, k = NIV_ORDRE.indexOf(ancien), suivante = tst.i + 1;
+        var change = Math.floor(suivante / tst.par) !== Math.floor(tst.i / tst.par);
+        var nouveau = change ? tst.depart : NIV_ORDRE[Math.max(0, Math.min(2, k + (d.correct ? 1 : -1)))];
+        tst.msg = testMessage(d.correct, passer, ancien, nouveau, change ? tst.pool[Math.floor(suivante / tst.par)].matiere : null);
+        tst.niv = nouveau; tst.i = suivante; testChoisir(); garderTest(); testQuestion();
+      }).catch(function () {
+        tst.attente = false;
+        erreur('Votre réponse n\\'a pas pu être vérifiée. Vos réponses sont gardées : rechargez la page pour reprendre le test.');
+      });
+      return;
+    }
+    tst.i++; garderTest();
+    if (tst.i < (tst.total || tst.qs.length)) { testQuestion(); return; }
     root.innerHTML = '<div class="quiz-card"><p>Correction de votre test…</p></div>';
     api('/api/quiz/positionnement', { method: 'POST', body: JSON.stringify({ reponses: tst.rep }) }).then(function (d) {
       try { localStorage.removeItem(CLE_TEST); } catch (e) {}
@@ -1506,7 +1555,7 @@ JS = """<script>
       '<div class="rp-tete"><div class="rp-sur">Rapport de positionnement' + (date ? ' · ' + date : '') + '</div>' +
       '<div class="rp-niveau">Votre niveau global</div>' +
       '<div class="rp-score">' + note + '<span class="rp-sur20">/20</span></div><div class="rp-titre">' + pf.titre + '</div>' +
-      '<div class="rp-sous">' + r.pct + ' % de bonnes réponses · ' + r.ok + ' sur ' + r.n + ' · 9 matières · 3 niveaux</div>' +
+      '<div class="rp-sous">' + (r.adaptatif ? 'Score de niveau : ' + r.pct + ' / 100 · ' + r.ok + ' bonnes réponses sur ' + r.n + ' · test adaptatif · 9 matières' : r.pct + ' % de bonnes réponses · ' + r.ok + ' sur ' + r.n + ' · 9 matières · 3 niveaux') + '</div>' +
       '<div class="rp-depart">Un point de départ, pas un verdict : votre carte se précise à chaque série.</div></div>' +
       '<div class="quiz-actions rp-telecharger no-print"><button type="button" class="quiz-btn ghost" data-act="rapport-pdf">📄 Télécharger mon rapport en PDF</button></div>' +
       '<!--PAIEMENT-->' +
