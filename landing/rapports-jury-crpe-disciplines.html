@@ -488,8 +488,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <section class="rd-epreuve">
     <h2>Admission (oraux)</h2>
     <div class="rd-grille">
-      <span class="rd-disc"><span class="ic" aria-hidden="true">✍️</span><span class="t">Français<span class="info">À venir · <span style="white-space:nowrap">prévu le 30 octobre</span></span></span></span>
-      <span class="rd-disc"><span class="ic" aria-hidden="true">🔢</span><span class="t">Mathématiques<span class="info">À venir · <span style="white-space:nowrap">prévu le 1er novembre</span></span></span></span>
+      <a class="rd-disc" href="/rapports-jury-crpe/disciplines/admission-francais"><span class="ic" aria-hidden="true">✍️</span><span class="t">Français<span class="info ok">Analyse détaillée</span></span></a>
+      <a class="rd-disc" href="/rapports-jury-crpe/disciplines/admission-mathematiques"><span class="ic" aria-hidden="true">🔢</span><span class="t">Mathématiques<span class="info ok">Analyse détaillée</span></span></a>
       <span class="rd-disc"><span class="ic" aria-hidden="true">🏃</span><span class="t">EPS<span class="info">À venir · <span style="white-space:nowrap">prévu le 1er novembre</span></span></span></span>
       <span class="rd-disc"><span class="ic" aria-hidden="true">🗣️</span><span class="t">Entretien avec le jury<span class="info">À venir · <span style="white-space:nowrap">prévu le 3 novembre</span></span></span></span>
       <span class="rd-disc"><span class="ic" aria-hidden="true">🗺️</span><span class="t">Langue régionale<span class="info">À venir · <span style="white-space:nowrap">prévu le 3 novembre</span></span></span></span>
@@ -508,7 +508,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 // Anciennes adresses ?discipline=… : redirection vers la page de la discipline
 (function () {
   var d = new URLSearchParams(location.search).get('discipline');
-  if (d && /^[a-z-]+$/.test(d) && ["admissibilite-francais", "admissibilite-mathematiques", "admissibilite-histoire-geographie", "admissibilite-sciences-technologie", "admissibilite-emc"].indexOf(d) >= 0) location.replace('/rapports-jury-crpe/disciplines/' + d);
+  if (d && /^[a-z-]+$/.test(d) && ["admissibilite-francais", "admissibilite-mathematiques", "admissibilite-histoire-geographie", "admissibilite-sciences-technologie", "admissibilite-emc", "admission-francais", "admission-mathematiques"].indexOf(d) >= 0) location.replace('/rapports-jury-crpe/disciplines/' + d);
 })();
 </script>
 <footer>
@@ -707,6 +707,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (authMode==='register') {
       const {data,error}=await sb.auth.signUp({email,password,options:{data:{prenom,nom,concours,academie,annee_examen,tentatives_crpe:tentatives===''?null:Number(tentatives),telephone,consent_conseils:document.getElementById('authConsentConseils').checked,consent_partenaires:document.getElementById('authConsentPartenaires').checked,consent_version:'2026-10-12',consent_at:new Date().toISOString(),parcours:(window.SIGNUP_PARCOURS||(location.pathname.indexOf('/quiz')===0?'quizcrpe':'passcrpe'))}}});
       if (error) { window.dataLayer.push({event:'sign_up_error',error_reason:error.message}); showAuthMessage(error.message,'error'); }
+      else if (data?.user&&Array.isArray(data.user.identities)&&data.user.identities.length===0) { window.dataLayer.push({event:'sign_up_error',error_reason:'compte_existant'}); showAuthMessage('Un compte existe déjà avec cette adresse e-mail. Connectez-vous avec votre mot de passe, ou cliquez sur « Mot de passe oublié ».','error'); }
       else { window.dataLayer.push({event:'sign_up_'+(window.SIGNUP_PARCOURS||(location.pathname.indexOf('/quiz')===0?'quizcrpe':'passcrpe')),method:'email'}); _lastEmail=email; document.getElementById('authForm').style.display='none'; document.getElementById('authTabs').style.display='none'; document.getElementById('authToggle').style.display='none'; document.getElementById('resendBlock').style.display='block'; showAuthMessage('✓ E-mail de confirmation envoyé à '+email+'. Vérifiez vos spams.','success'); }
     } else {
       const {data,error}=await sb.auth.signInWithPassword({email,password});

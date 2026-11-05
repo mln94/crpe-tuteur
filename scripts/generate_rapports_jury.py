@@ -245,7 +245,7 @@ def page(annee, rows):
   <p class="lead">Chaque année, les jurys du CRPE publient un <strong>rapport de jury</strong> par académie : les correcteurs y expliquent ce qu'ils ont valorisé, ce qu'ils ont pénalisé et les erreurs qui reviennent d'une copie à l'autre. {INTRO[annee]}</p>
 
   <a class="analyse-cta" href="/{SLUG}/disciplines">
-    <span class="analyse-txt"><strong>L'analyse détaillée, discipline par discipline</strong>Nous avons lu ces rapports pour vous. Déjà disponibles : les écrits de français, de mathématiques, d'histoire-géographie et d'EMC, avec les sujets officiels, les corrigés question par question, les erreurs fréquentes et les conseils des jurys. Les autres disciplines arrivent d'ici le 3 novembre.</span>
+    <span class="analyse-txt"><strong>L'analyse détaillée, discipline par discipline</strong>Nous avons lu ces rapports pour vous. Déjà disponibles : les écrits de français, de mathématiques, d'histoire-géographie, de sciences et d'EMC, avec les sujets officiels, les corrigés question par question, les erreurs fréquentes et les conseils des jurys, ainsi que les oraux de français et de mathématiques. Les autres disciplines arrivent d'ici le 3 novembre.</span>
     <span class="analyse-btn">Voir l'analyse par discipline →</span>
   </a>
   <p style="font-size:15px;">Pour un résumé rapide, lisez aussi notre article <a href="/blog/rapport-jury-crpe-{annee}-conseils" {lien}>Rapport de jury CRPE {annee} : les conseils des jurys</a>.</p>
@@ -483,6 +483,20 @@ SEO = {
         "Rapport de jury CRPE : l'EMC à l'écrit",
         "Question par question : l'énoncé officiel, ce que le jury attendait, un corrigé, les erreurs relevées académie "
         "par académie et ce qu'il faut travailler. Bac+3 et bac+5 en 2026, et session 2025."),
+    'admission-francais': (
+        'Rapport de jury CRPE français (oral) 2026 et 2025 : exposé, leçon et conseils',
+        "L'oral de français du CRPE d'après les rapports de jury : l'exposé disciplinaire du bac+3, la leçon du bac+5, "
+        "les sujets donnés, les erreurs relevées et les conseils des jurys, sessions 2026 et 2025.",
+        "Rapport de jury CRPE : l'oral de français",
+        "Le format de l'épreuve, les sujets donnés, les erreurs relevées académie par académie et ce qu'il faut travailler. "
+        "Exposé disciplinaire du bac+3 et leçon du bac+5 en 2026, leçon de la session 2025."),
+    'admission-mathematiques': (
+        'Rapport de jury CRPE mathématiques (oral) 2026 et 2025 : exposé, leçon et conseils',
+        "L'oral de mathématiques du CRPE d'après les rapports de jury : l'exposé disciplinaire du bac+3, la leçon du bac+5, "
+        "les sujets donnés, les erreurs relevées et les conseils des jurys, sessions 2026 et 2025.",
+        "Rapport de jury CRPE : l'oral de mathématiques",
+        "Le format de l'épreuve, les sujets donnés, les erreurs relevées académie par académie et ce qu'il faut travailler. "
+        "Exposé disciplinaire du bac+3 et leçon du bac+5 en 2026, leçon de la session 2025."),
 }
 
 
@@ -621,11 +635,11 @@ CTA = '''  <div class="page-cta">
 
 # Disciplines dont l'analyse est publiée ; les autres sont annoncées « À venir » avec leur date prévue.
 PUBLIEES = {'admissibilite-francais', 'admissibilite-mathematiques', 'admissibilite-histoire-geographie', 'admissibilite-emc',
-            'admissibilite-sciences-technologie'}
+            'admissibilite-sciences-technologie', 'admission-francais', 'admission-mathematiques'}
 PREVUES = {  # deux disciplines tous les deux jours
     'admissibilite-arts': '28 octobre', 'admissibilite-langue-vivante': '28 octobre',
-    'admissibilite-langues-regionales': '30 octobre', 'admission-francais': '30 octobre',
-    'admission-mathematiques': '1er novembre', 'admission-eps': '1er novembre',
+    'admissibilite-langues-regionales': '30 octobre',
+    'admission-eps': '1er novembre',
     'admission-entretien': '3 novembre', 'admission-langue-regionale': '3 novembre',
 }
 assert set(PREVUES) | PUBLIEES == {d[0] for d in DISCIPLINES} and not set(PREVUES) & PUBLIEES
