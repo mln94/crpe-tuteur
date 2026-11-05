@@ -391,6 +391,28 @@ def logo_quiz(html):
     return html.replace('<span class="nav-logo-text">PassCRPE</span>', '<span class="nav-logo-text">Le Quiz CRPE<small>by <b>PassCRPE</b></small></span>', 1)
 
 
+# Balises de partage de /quizcrpe (image : public/images/partage-quizcrpe.jpg, 1200 × 630)
+PARTAGE = (
+    f'  <!-- Partage : aperçu des liens (WhatsApp, Facebook, LinkedIn, X…) -->\n'
+    f'  <meta property="og:type" content="website" />\n'
+    f'  <meta property="og:site_name" content="PassCRPE" />\n'
+    f'  <meta property="og:locale" content="fr_FR" />\n'
+    f'  <meta property="og:url" content="{SITE}/quizcrpe" />\n'
+    f'  <meta property="og:title" content="Le Quiz CRPE by PassCRPE : testez votre niveau gratuitement" />\n'
+    f'  <meta property="og:description" content="Test de positionnement gratuit, puis plus de 9 000 questions corrigées et expliquées dans les 9 matières du CRPE." />\n'
+    f'  <meta property="og:image" content="{SITE}/images/partage-quizcrpe.jpg" />\n'
+    f'  <meta property="og:image:type" content="image/jpeg" />\n'
+    f'  <meta property="og:image:width" content="1200" />\n'
+    f'  <meta property="og:image:height" content="630" />\n'
+    f'  <meta property="og:image:alt" content="Le Quiz CRPE by PassCRPE : une question de mathématiques du quiz" />\n'
+    f'  <meta name="twitter:card" content="summary_large_image" />\n'
+    f'  <meta name="twitter:title" content="Le Quiz CRPE by PassCRPE : testez votre niveau gratuitement" />\n'
+    f'  <meta name="twitter:description" content="Test de positionnement gratuit, puis plus de 9 000 questions corrigées et expliquées dans les 9 matières du CRPE." />\n'
+    f'  <meta name="twitter:image" content="{SITE}/images/partage-quizcrpe.jpg" />\n'
+    f'  <!-- /Partage -->\n'
+)
+
+
 def main():
     src = open(SRC, encoding='utf-8').read()
 
@@ -403,6 +425,11 @@ def main():
                   'des séries de 20 notées sur 20, l\'explication de chaque erreur et des révisions espacées. Test de positionnement gratuit." />\n'
                   f'  <link rel="canonical" href="{SITE}/quizcrpe" />', head)
     head = head.replace('href="favicon.svg"', 'href="/favicon.svg"')
+    # Partage (aperçu des liens) : celui de l'accueil remplacé par celui du quiz
+    head = re.sub(r'\s*<!-- Partage :.*?<!-- /Partage -->', '', head, flags=re.S)
+    head = head.replace(f'  <link rel="canonical" href="{SITE}/quizcrpe" />',
+                        f'  <link rel="canonical" href="{SITE}/quizcrpe" />\n' + PARTAGE.rstrip('\n'), 1)
+    assert 'partage-quizcrpe.jpg' in head and 'partage-passcrpe.jpg' not in head
     head = head.replace('  </style>', CSS + '  </style>', 1)
     assert CSS in head
 
