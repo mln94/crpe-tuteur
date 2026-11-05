@@ -80,7 +80,7 @@ _nav = BODY_NAV[BODY_NAV.index('<nav class="site-nav">'):BODY_NAV.index('</nav>'
 # Logo QuizCRPE (cible orange, « by PassCRPE ») ; le support est dans la barre d'onglets, pas dans l'en-tête
 _nav_quiz = nav_compte.nav_application(_nav, None)
 assert _nav_quiz.count('<a href="/" class="nav-logo">') == 1
-_nav_quiz = logo_quiz(_nav_quiz.replace('<a href="/" class="nav-logo">', '<a href="/quizapp" class="nav-logo logo-quiz" aria-label="QuizCRPE by PassCRPE">'))
+_nav_quiz = logo_quiz(_nav_quiz.replace('<a href="/" class="nav-logo">', '<a href="/quizapp" class="nav-logo logo-quiz" aria-label="Le Quiz CRPE by PassCRPE">'))
 BODY_NAV = BODY_NAV.replace(_nav, _nav_quiz)
 TAIL = TAIL[:TAIL.index('<footer>')] + TAIL[TAIL.index('</footer>') + len('</footer>'):]
 ICONES = {
@@ -378,7 +378,8 @@ CSS = """
     .quiz-select:hover { border-color: #fb923c; }
     /* Logo QuizCRPE by PassCRPE (comme sur /quizcrpe) */
     .logo-quiz .nav-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
-    .logo-quiz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
+    .logo-quiz { flex-shrink: 0; }
+    .logo-quiz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; white-space: nowrap; }
     .logo-quiz .nav-logo-text small { font-size: 10.5px; font-weight: 700; color: var(--gray-500); letter-spacing: .02em; }
     .logo-quiz .nav-logo-text small b { font-weight: 800; color: var(--indigo-700); }
     .quiz-tabbar a.actif { color: #ea580c; }
@@ -949,7 +950,7 @@ JS = """<script>
       .catch(function () {
         intro(false);
         root.innerHTML = '<div class="quiz-card"><h2>Ce lien a expiré</h2><p>Les liens vers un rapport de positionnement sont valables 7 jours. Connectez-vous pour retrouver votre rapport dans l’onglet « Mon test ».</p>' +
-          '<div class="quiz-actions"><a class="quiz-btn" href="/quizapp?vue=test">Voir mon rapport</a><a class="quiz-btn ghost" href="/quizcrpe">Découvrir <span class="marque-q">QuizCRPE <span class="by">by</span> <b>PassCRPE</b></span></a></div></div>';
+          '<div class="quiz-actions"><a class="quiz-btn" href="/quizapp?vue=test">Voir mon rapport</a><a class="quiz-btn ghost" href="/quizcrpe">Découvrir le <span class="marque-q">Quiz CRPE <span class="by">by</span> <b>PassCRPE</b></span></a></div></div>';
       });
   }
   function route() {
@@ -1226,7 +1227,7 @@ JS = """<script>
     var pre = new URLSearchParams(location.search).get('categorie');
     SB.auth.getSession().then(function (r) {
       var s = r.data.session; if (!s) return connexion();
-      root.innerHTML = '<div class="sp"><div class="sp-tete"><div class="sp-ico">' + ICO.aide + '</div><div><h1>Support</h1><p>Une question sur QuizCRPE ? On vous répond.</p></div></div>' +
+      root.innerHTML = '<div class="sp"><div class="sp-tete"><div class="sp-ico">' + ICO.aide + '</div><div><h1>Support</h1><p>Une question sur le Quiz CRPE ? On vous répond.</p></div></div>' +
         '<div class="sp-carte"><h2>Envoyer un message</h2>' + (envoye
           ? '<div class="sp-envoye"><span class="sp-envoye-ico">' + ICO.ok + '</span><p class="t">Message envoyé !</p><p>Nous vous répondrons ici, dans « Vos messages », sous 24–48h.</p>' +
             '<button type="button" class="sp-lien" data-act="sp-autre">Envoyer un autre message</button></div>'
@@ -1266,9 +1267,9 @@ JS = """<script>
     var h = '<div class="qz-ticket"><div class="qz-ticket-tete"><span>' + esc(t.category) + '</span><span class="qz-statut ' + s[1] + '">' + s[0] + '</span></div>' +
       '<p class="qz-ticket-msg">' + esc(t.message) + '</p><p class="qz-ticket-date">' + new Date(t.created_at).toLocaleDateString('fr-FR') + '</p>' +
       msgs.map(function (m) {
-        return '<div class="qz-ticket-rep ' + (m.author === 'admin' ? 'admin' : 'moi') + '"><b>' + (m.author === 'admin' ? 'Réponse QuizCRPE' : 'Vous') + '</b><p>' + esc(m.body) + '</p><span>' + new Date(m.created_at).toLocaleDateString('fr-FR') + '</span></div>';
+        return '<div class="qz-ticket-rep ' + (m.author === 'admin' ? 'admin' : 'moi') + '"><b>' + (m.author === 'admin' ? 'Réponse du Quiz CRPE' : 'Vous') + '</b><p>' + esc(m.body) + '</p><span>' + new Date(m.created_at).toLocaleDateString('fr-FR') + '</span></div>';
       }).join('');
-    if (!ferme) h += '<form class="qz-ticket-form" data-repondre="' + t.id + '"><textarea rows="2" placeholder="' + (aReponse ? 'Répondre à QuizCRPE…' : 'Ajouter une précision…') + '"></textarea>' +
+    if (!ferme) h += '<form class="qz-ticket-form" data-repondre="' + t.id + '"><textarea rows="2" placeholder="' + (aReponse ? 'Répondre au Quiz CRPE…' : 'Ajouter une précision…') + '"></textarea>' +
       '<div class="qz-ticket-actions"><button type="submit" class="sp-petit plein">' + ICO.envoi + 'Répondre</button>' + (aReponse ? '<button type="button" class="sp-petit" data-resolu="' + t.id + '">' + ICO.ok + 'Ma question est résolue</button>' : '') + '</div></form>';
     if (aReponse && !t.satisfaction) h += '<div class="qz-satisf" data-noter="' + t.id + '"' + (ferme ? '' : ' hidden') + '><p>' + (ferme ? 'Cette demande est clôturée. Êtes-vous satisfait de la réponse ?' : 'Avant de clôturer, êtes-vous satisfait de la réponse ?') + '</p>' +
       '<div class="qz-emojis">' + EMOJIS.map(function (e, k) { return '<button type="button" data-note="' + (k + 1) + '" aria-label="Note ' + (k + 1) + ' sur 5">' + e + '</button>'; }).join('') + '</div></div>';
@@ -1304,7 +1305,7 @@ JS = """<script>
       '</div>' +
       // Un seul compte pour QuizCRPE et PassCRPE : la déconnexion vaut pour les deux
       '<button type="button" class="pf-deconnexion" data-act="pf-deconnexion">Se déconnecter</button>' +
-      '<p class="pf-note">Vous serez déconnecté de QuizCRPE et de PassCRPE.</p></div>';
+      '<p class="pf-note">Vous serez déconnecté du Quiz CRPE et de PassCRPE.</p></div>';
     var ip = document.getElementById('pf-prenom'), sa = document.getElementById('pf-academie');
     if (ip) ip.addEventListener('input', function () { pfEdit.prenom = ip.value; majEnregistrer(); });
     if (sa) sa.addEventListener('change', function () { pfEdit.academie = sa.value; majEnregistrer(); });
@@ -1362,7 +1363,7 @@ JS = """<script>
     }).catch(function (e) { if (e.status === 401) return connexion(); erreur('Votre compte n\\'a pas pu être chargé. Réessayez dans quelques instants.'); });
   }
   function connexion() {
-    root.innerHTML = '<div class="quiz-card"><h2>Connectez-vous pour accéder à <span class="marque-q">QuizCRPE <span class="by">by</span> <b>PassCRPE</b></span></h2>' +
+    root.innerHTML = '<div class="quiz-card"><h2>Connectez-vous pour accéder au <span class="marque-q">Quiz CRPE <span class="by">by</span> <b>PassCRPE</b></span></h2>' +
       '<p>Créez votre compte gratuitement : vous commencez par un <strong>test de positionnement d’environ 30 minutes</strong> qui vous donne la carte de vos forces et faiblesses dans les 9 matières.</p>' +
       '<div class="quiz-actions"><a class="quiz-btn" href="/quizcrpe?auth=register">Créer mon compte gratuitement</a><a class="quiz-btn ghost" href="/quizcrpe?auth=login">J\\'ai déjà un compte PassCRPE</a></div></div>';
   }
@@ -1576,8 +1577,8 @@ JS = """<script>
     if (lecture) {
       var fin = new Date(lecture.expire).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
       root.innerHTML = html.replace('<!--PAIEMENT-->', '<div class="essai-annonce">🔗 Rapport partagé' + (lecture.prenom ? ' de ' + esc(lecture.prenom) : '') + ' · lien valable jusqu’au ' + fin + '</div>') +
-        '<div class="quiz-card rp-bloc"><h2>Préparez le CRPE avec <span class="marque-q">QuizCRPE <span class="by">by</span> <b>PassCRPE</b></span></h2><p>Plus de 9 000 questions corrigées et expliquées dans les 9 matières, avec un test de positionnement gratuit.</p>' +
-        '<div class="quiz-actions"><a class="quiz-btn" href="/quizcrpe">Découvrir QuizCRPE by PassCRPE</a></div></div>';
+        '<div class="quiz-card rp-bloc"><h2>Préparez le CRPE avec le <span class="marque-q">Quiz CRPE <span class="by">by</span> <b>PassCRPE</b></span></h2><p>Plus de 9 000 questions corrigées et expliquées dans les 9 matières, avec un test de positionnement gratuit.</p>' +
+        '<div class="quiz-actions"><a class="quiz-btn" href="/quizcrpe">Découvrir le Quiz CRPE by PassCRPE</a></div></div>';
       intro(false); return;
     }
     if (compte && compte.paid) html = html.replace('<!--PAIEMENT-->', '') + '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="home">Aller au quiz</button></div>';
@@ -1633,7 +1634,7 @@ JS = """<script>
     m.id = 'essai-modal'; m.className = 'pay-overlay'; m.setAttribute('role', 'dialog'); m.setAttribute('aria-modal', 'true'); m.setAttribute('aria-labelledby', 'essai-titre');
     m.innerHTML = '<div class="pay-card"><button type="button" class="pay-fermer" aria-label="Fermer">×</button>' +
       '<div class="pay-badge">🎁 Offert</div><h2 id="essai-titre">' + e.parJour + ' questions gratuites chaque jour</h2>' +
-      '<p class="pay-texte">Merci d’avoir passé votre test de positionnement. Pour découvrir <span class="marque-q">QuizCRPE <span class="by">by</span> <b>PassCRPE</b></span>, vous avez droit à <strong>' + e.parJour + ' questions gratuites par jour</strong>, ' +
+      '<p class="pay-texte">Merci d’avoir passé votre test de positionnement. Pour découvrir le <span class="marque-q">Quiz CRPE <span class="by">by</span> <b>PassCRPE</b></span>, vous avez droit à <strong>' + e.parJour + ' questions gratuites par jour</strong>, ' +
       'dans toutes les matières et à tous les niveaux. Un compteur vous indique combien il vous en reste ; il repart à zéro chaque jour à minuit.</p>' +
       '<p class="pay-texte">Pour commencer, nous vous conseillons ces deux matières, les plus fragiles d’après votre test, au niveau qu’il suggère :</p><ul class="essai-liste">' +
       e.conseillees.map(function (x) { return '<li><strong>' + esc(x.label) + '</strong> · niveau ' + NIVEAUX[x.niveau] + '</li>'; }).join('') +
@@ -2099,16 +2100,16 @@ JS = """<script>
 
 def page():
     title = 'Testez vos connaissances'
-    desc = "QuizCRPE by PassCRPE : séries de 20 questions en français, mathématiques, histoire-géographie, EMC, sciences, arts et anglais, corrigées, expliquées et rattachées au programme."
+    desc = "Le Quiz CRPE by PassCRPE : séries de 20 questions en français, mathématiques, histoire-géographie, EMC, sciences, arts et anglais, corrigées, expliquées et rattachées au programme."
     body = f'''<main class="quiz-wrap">
-  <h1><span class="marque-q">QuizCRPE <span class="by">by</span> <b>PassCRPE</b></span></h1>
-  <p class="quiz-confirm" id="quiz-confirm" hidden>✓ Votre adresse e-mail est confirmée : bienvenue sur <span class="marque-q">QuizCRPE <span class="by">by</span> <b>PassCRPE</b></span> !</p>
+  <h1><span class="marque-q">Le Quiz CRPE <span class="by">by</span> <b>PassCRPE</b></span></h1>
+  <p class="quiz-confirm" id="quiz-confirm" hidden>✓ Votre adresse e-mail est confirmée : bienvenue sur le <span class="marque-q">Quiz CRPE <span class="by">by</span> <b>PassCRPE</b></span> !</p>
   <p class="quiz-lead">Lancez des séries de {TAILLE_SERIE} questions rattachées au programme du concours, par matière et par niveau. Chaque notion est posée sous plusieurs formes : avec {BONNES_POUR_MAITRISER} bonnes réponses, elle est maîtrisée. En cas d'erreur, vous voyez l'explication et une question similaire revient plus tard.</p>
   <div id="quiz-app"></div>
 </main>
 '''
     head = (HEAD_START
-            + f'  <title>{title} | QuizCRPE by PassCRPE</title>\n'
+            + f'  <title>{title} | Le Quiz CRPE by PassCRPE</title>\n'
             + f'  <meta name="description" content="{desc}" />\n'
             + '  <meta name="robots" content="noindex, nofollow" />\n'
             + f'  <link rel="canonical" href="{SITE}/quizapp" />\n'

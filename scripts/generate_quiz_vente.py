@@ -120,7 +120,7 @@ CSS = """
 
     /* Fenêtres de connexion/inscription et de confirmation aux couleurs de QuizCRPE (orange au lieu de l'indigo de l'accueil) */
     .auth-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
-    .auth-logo-name { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
+    .auth-logo-name { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; white-space: nowrap; }
     .auth-logo-name small { font-size: 10.5px; font-weight: 700; color: var(--gray-500); letter-spacing: .02em; }
     .auth-logo-name small b { font-weight: 800; color: var(--indigo-700); }
     .auth-input:focus, .auth-phone-select:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249,115,22,0.15); }
@@ -135,7 +135,9 @@ CSS = """
 
     /* Logo QuizCRPE by PassCRPE */
     .logo-quiz .nav-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
-    .logo-quiz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
+    .logo-quiz { flex-shrink: 0; }
+    @media (max-width: 1160px) { .nav-links { gap: 12px; } }
+    .logo-quiz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; white-space: nowrap; }
     .logo-quiz .nav-logo-text small { font-size: 10.5px; font-weight: 700; color: var(--gray-500); letter-spacing: .02em; }
     .footer-brand .logo-quiz .nav-logo-text { color: #fb923c; }
     .footer-brand .logo-quiz .nav-logo-text small { font-size: 12px; color: #9ca3af; }
@@ -243,7 +245,7 @@ def contenu():
   <div class="container qz-center">
     <div class="section-eyebrow">Vous vous reconnaissez ?</div>
     <h2 class="section-title">« Je ne sais même pas par où commencer. »</h2>
-    <p class="section-sub">Ces phrases, ce sont celles que nous entendons le plus souvent chez les candidats au CRPE. Le QuizCRPE a été conçu pour y répondre, une par une.</p>
+    <p class="section-sub">Ces phrases, ce sont celles que nous entendons le plus souvent chez les candidats au CRPE. Le Quiz CRPE a été conçu pour y répondre, une par une.</p>
     <div class="qz-mots">
       <div class="qz-mot fade-up"><h3>« Je ne sais pas où j’en suis. »</h3><p>Le test de positionnement gratuit (30 min, 90 questions) vous donne votre carte des forces et faiblesses, matière par matière, dès le premier jour.</p></div>
       <div class="qz-mot fade-up"><h3>« Je révise au hasard. »</h3><p>Fini les fiches relues sans savoir pourquoi. Chaque question est rattachée au programme officiel, et le quiz vous repose les notions à revoir au bon moment.</p></div>
@@ -386,7 +388,7 @@ def logo_quiz(html):
     j = html.index('</svg>', i) + len('</svg>')
     style = ' style="width:20px;height:20px;color:#fff"' if 'style="width:20px' in html[i:j] else ''
     html = html[:i] + '<div class="nav-logo-icon">\n            ' + ICONE_QUIZ.format(style=style) + html[j:]
-    return html.replace('<span class="nav-logo-text">PassCRPE</span>', '<span class="nav-logo-text">QuizCRPE<small>by <b>PassCRPE</b></small></span>', 1)
+    return html.replace('<span class="nav-logo-text">PassCRPE</span>', '<span class="nav-logo-text">Le Quiz CRPE<small>by <b>PassCRPE</b></small></span>', 1)
 
 
 def main():
@@ -415,7 +417,7 @@ def main():
                       '      <li><a href="#matieres">Matières</a></li>\n'
                       '      <li><a href="#tarif">Tarif</a></li>\n')
     # Logo de la page : « QuizCRPE by PassCRPE », en orange (marque du quiz)
-    nav = nav.replace('<a href="#" class="nav-logo">', '<a href="/quizcrpe" class="nav-logo logo-quiz" aria-label="QuizCRPE by PassCRPE">')
+    nav = nav.replace('<a href="#" class="nav-logo">', '<a href="/quizcrpe" class="nav-logo logo-quiz" aria-label="Le Quiz CRPE by PassCRPE">')
     nav = logo_quiz(nav)
     # Bouton de l'en-tête : le test de positionnement gratuit plutôt qu'une simple inscription
     nav = nav.replace('Commencer<span class="nav-cta-long"> gratuitement</span> →', 'Vérifier mon niveau<span class="nav-cta-long"> gratuitement</span> →')
@@ -437,7 +439,7 @@ def main():
     modales = modales[:i] + '<div class="auth-logo-icon">\n        ' + ICONE_QUIZ.format(style='') + modales[j:]
     a = '<span class="auth-logo-name">PassCRPE</span>'
     assert modales.count(a) == 1
-    modales = modales.replace(a, '<span class="auth-logo-name">QuizCRPE<small>by <b>PassCRPE</b></small></span>')
+    modales = modales.replace(a, '<span class="auth-logo-name">Le Quiz CRPE<small>by <b>PassCRPE</b></small></span>')
 
     # Formulaire de newsletter de l'accueil, même liste Klaviyo (parcours_newsletter = quizcrpe, via window.nlParcours)
     newsletter = cut(src, '<!-- ═══════════════════════════════ NEWSLETTER', '<!-- ═══════════════════════════════ FOOTER')
@@ -449,7 +451,7 @@ def main():
 
     page = (head + '</head>\n' + body_pre + nav + '\n' + contenu() + '\n' + newsletter + footer + '\n\n' + modales
             + "<script>\n  // Parcours Klaviyo des inscriptions faites sur cette page\n  window.SIGNUP_PARCOURS = 'quizcrpe';\n  // Parcours Klaviyo des abonnements à la newsletter faits sur cette page\n  window.nlParcours = 'quizcrpe';\n  // Après la connexion : page « Mes outils » (tuteur IA ou quiz)\n  window.AFTER_LOGIN_URL = '/espace';\n"
-            + "  window.SIGNUP_SUCCESS_MESSAGE = '✓ Compte créé ! Confirmez votre adresse en cliquant sur le lien envoyé à {email} (pensez aux spams) : il vous ramènera ici, sur QuizCRPE.';\n"
+            + "  window.SIGNUP_SUCCESS_MESSAGE = '✓ Compte créé ! Confirmez votre adresse en cliquant sur le lien envoyé à {email} (pensez aux spams) : il vous ramènera ici, sur le Quiz CRPE.';\n"
             + f"  // Lien de l'e-mail de confirmation : retour sur cette page, avec la même fenêtre de confirmation que l'accueil\n"
             + f"  window.EMAIL_REDIRECT_URL = '{SITE}/quizcrpe';\n</script>\n"
             + scripts + '</body>\n</html>\n')

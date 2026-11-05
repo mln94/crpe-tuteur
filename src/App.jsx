@@ -5601,7 +5601,7 @@ function ProfileView({ profile, authUser, onUpdateProfile }) {
       >
         Se déconnecter
       </button>
-      <p className="text-xs text-gray-400 text-center mt-2">Vous serez déconnecté de PassCRPE et de QuizCRPE.</p>
+      <p className="text-xs text-gray-400 text-center mt-2">Vous serez déconnecté de PassCRPE et du Quiz CRPE.</p>
     </div>
   );
 }
@@ -5994,7 +5994,7 @@ function SiteHeader({ authUser, profile, onSupport }) {
     const el = document.createElement('div');
     el.className = 'nav-compte';
     el.innerHTML = `<button type="button" class="nav-compte-btn" aria-haspopup="true" aria-expanded="false"><span class="av">${escHtml((nom[0] || '?').toUpperCase())}</span><span class="nom">${escHtml(nom)}</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>`
-      + '<div class="nav-compte-menu" role="menu"><a href="/espace" role="menuitem">🏠 Mon espace</a><a href="/app" role="menuitem">🤖 PassCRPE</a><a href="/quizapp" role="menuitem">🎯 QuizCRPE</a></div>';
+      + '<div class="nav-compte-menu" role="menu"><a href="/espace" role="menuitem">🏠 Mon espace</a><a href="/app" role="menuitem">🤖 PassCRPE</a><a href="/quizapp" role="menuitem">🎯 Le Quiz CRPE</a></div>';
     actions.insertBefore(el, actions.querySelector('.nav-burger'));
     nav.classList.add('connecte');
     const btn = el.querySelector('.nav-compte-btn');

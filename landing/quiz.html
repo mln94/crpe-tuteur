@@ -1036,7 +1036,7 @@
 
     /* Fenêtres de connexion/inscription et de confirmation aux couleurs de QuizCRPE (orange au lieu de l'indigo de l'accueil) */
     .auth-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
-    .auth-logo-name { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
+    .auth-logo-name { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; white-space: nowrap; }
     .auth-logo-name small { font-size: 10.5px; font-weight: 700; color: var(--gray-500); letter-spacing: .02em; }
     .auth-logo-name small b { font-weight: 800; color: var(--indigo-700); }
     .auth-input:focus, .auth-phone-select:focus { border-color: #f97316; box-shadow: 0 0 0 3px rgba(249,115,22,0.15); }
@@ -1051,7 +1051,9 @@
 
     /* Logo QuizCRPE by PassCRPE */
     .logo-quiz .nav-logo-icon { background: linear-gradient(135deg, #fb923c, #ea580c); }
-    .logo-quiz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; }
+    .logo-quiz { flex-shrink: 0; }
+    @media (max-width: 1160px) { .nav-links { gap: 12px; } }
+    .logo-quiz .nav-logo-text { color: #ea580c; display: flex; flex-direction: column; line-height: 1.05; white-space: nowrap; }
     .logo-quiz .nav-logo-text small { font-size: 10.5px; font-weight: 700; color: var(--gray-500); letter-spacing: .02em; }
     .footer-brand .logo-quiz .nav-logo-text { color: #fb923c; }
     .footer-brand .logo-quiz .nav-logo-text small { font-size: 12px; color: #9ca3af; }
@@ -1111,11 +1113,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
 <nav class="site-nav">
   <div class="nav-inner">
-    <a href="/quizcrpe" class="nav-logo logo-quiz" aria-label="QuizCRPE by PassCRPE">
+    <a href="/quizcrpe" class="nav-logo logo-quiz" aria-label="Le Quiz CRPE by PassCRPE">
       <div class="nav-logo-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>
       </div>
-      <span class="nav-logo-text">QuizCRPE<small>by <b>PassCRPE</b></small></span>
+      <span class="nav-logo-text">Le Quiz CRPE<small>by <b>PassCRPE</b></small></span>
     </a>
     <ul class="nav-links">
       <li><a href="/">Tuteur IA</a></li>
@@ -1201,7 +1203,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <div class="container qz-center">
     <div class="section-eyebrow">Vous vous reconnaissez ?</div>
     <h2 class="section-title">« Je ne sais même pas par où commencer. »</h2>
-    <p class="section-sub">Ces phrases, ce sont celles que nous entendons le plus souvent chez les candidats au CRPE. Le QuizCRPE a été conçu pour y répondre, une par une.</p>
+    <p class="section-sub">Ces phrases, ce sont celles que nous entendons le plus souvent chez les candidats au CRPE. Le Quiz CRPE a été conçu pour y répondre, une par une.</p>
     <div class="qz-mots">
       <div class="qz-mot fade-up"><h3>« Je ne sais pas où j’en suis. »</h3><p>Le test de positionnement gratuit (30 min, 90 questions) vous donne votre carte des forces et faiblesses, matière par matière, dès le premier jour.</p></div>
       <div class="qz-mot fade-up"><h3>« Je révise au hasard. »</h3><p>Fini les fiches relues sans savoir pourquoi. Chaque question est rattachée au programme officiel, et le quiz vous repose les notions à revoir au bon moment.</p></div>
@@ -1471,7 +1473,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="nav-logo-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;color:#fff"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>
           </div>
-          <span class="nav-logo-text">QuizCRPE<small>by <b>PassCRPE</b></small></span>
+          <span class="nav-logo-text">Le Quiz CRPE<small>by <b>PassCRPE</b></small></span>
         </div>
         <p>Préparez le CRPE 2027 avec PassCRPE : des milliers d'exercices en français et mathématiques adaptés à votre niveau, des corrections selon les exigences du jury et des conseils personnalisés pour progresser.</p>
       </div>
@@ -1537,7 +1539,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <div class="auth-logo-icon">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg>
       </div>
-      <span class="auth-logo-name">QuizCRPE<small>by <b>PassCRPE</b></small></span>
+      <span class="auth-logo-name">Le Quiz CRPE<small>by <b>PassCRPE</b></small></span>
     </div>
 
     <div class="auth-tabs" id="authTabs">
@@ -1890,7 +1892,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   window.nlParcours = 'quizcrpe';
   // Après la connexion : page « Mes outils » (tuteur IA ou quiz)
   window.AFTER_LOGIN_URL = '/espace';
-  window.SIGNUP_SUCCESS_MESSAGE = '✓ Compte créé ! Confirmez votre adresse en cliquant sur le lien envoyé à {email} (pensez aux spams) : il vous ramènera ici, sur QuizCRPE.';
+  window.SIGNUP_SUCCESS_MESSAGE = '✓ Compte créé ! Confirmez votre adresse en cliquant sur le lien envoyé à {email} (pensez aux spams) : il vous ramènera ici, sur le Quiz CRPE.';
   // Lien de l'e-mail de confirmation : retour sur cette page, avec la même fenêtre de confirmation que l'accueil
   window.EMAIL_REDIRECT_URL = 'https://www.passcrpe.fr/quizcrpe';
 </script>
