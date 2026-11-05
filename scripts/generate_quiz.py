@@ -188,7 +188,7 @@ CSS = """
     .prog-legend { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--gray-500); margin-top: 14px; }
     .prog-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
     /* Choix de l'épreuve (écrit / oral), avant le quiz et après le test de positionnement */
-    .ep-choix { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 18px; }
+    .ep-choix { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 18px; }
     .ep-carte { position: relative; display: flex; flex-direction: column; gap: 6px; text-align: left; padding: 20px; border: 2px solid var(--gray-200); border-radius: 16px; background: #fff; font: inherit; color: inherit; }
     button.ep-carte { cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .15s; }
     button.ep-carte:hover, button.ep-carte:focus-visible { border-color: #f97316; box-shadow: 0 8px 24px rgba(234,88,12,.15); transform: translateY(-2px); outline: none; }
@@ -204,7 +204,31 @@ CSS = """
     .ep-actuelle { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
     .ep-oral { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border: 1.5px dashed var(--gray-300, #d1d5db); border-radius: 10px; background: var(--gray-100, #f3f4f6); color: var(--gray-500); font: inherit; font-weight: 700; cursor: not-allowed; }
     .ep-oral-badge { font-size: 11.5px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #fff; border: 1px solid var(--gray-200); color: var(--gray-500); text-transform: uppercase; letter-spacing: .03em; }
-    @media (max-width: 560px) { .ep-choix { grid-template-columns: 1fr; } }
+    @media (max-width: 760px) { .ep-choix { grid-template-columns: 1fr; } }
+    .ep-carte .ep-badge.neuf { background: #ffedd5; color: #9a3412; }
+    /* Type de quiz : Quiz, Quiz sujets, Oral (à venir) */
+    .ep-switch { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
+    .ep-sw { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 12px; border: 2px solid var(--gray-200); background: #fff; font: inherit; font-size: 14px; font-weight: 700; color: var(--gray-600); cursor: pointer; }
+    .ep-sw:hover { border-color: #fdba74; }
+    .ep-sw[aria-pressed="true"] { border-color: #f97316; background: #fff7ed; color: #c2410c; }
+    .ep-sw.ep-oral, .ep-sw.ep-oral:hover { border: 1.5px dashed var(--gray-300, #d1d5db); }
+    /* Quiz sujets */
+    .sj-intro { font-size: 14.5px; line-height: 1.55; color: var(--gray-600); margin: 6px 0 16px; }
+    .sj-chiffres { font-size: 13.5px; font-weight: 700; color: #9a3412; background: #fff7ed; border-radius: 10px; padding: 8px 12px; display: inline-block; margin-bottom: 12px; }
+    .sj-grille { display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; margin-top: 14px; }
+    .sj-mat { display: flex; flex-direction: column; gap: 3px; text-align: left; padding: 13px 14px; border: 2px solid var(--gray-200); border-radius: 14px; background: #fff; font: inherit; color: inherit; cursor: pointer; transition: border-color .15s, transform .15s; }
+    .sj-mat:hover:not(:disabled) { border-color: #f97316; transform: translateY(-1px); }
+    .sj-mat .ic { font-size: 20px; }
+    .sj-mat b { font-size: 15px; color: var(--gray-900); }
+    .sj-mat small { font-size: 12.5px; color: var(--gray-500); line-height: 1.4; }
+    .sj-mat.tout { border-color: #fdba74; background: #fffbf5; }
+    .sj-mat:disabled { opacity: .55; cursor: not-allowed; background: #f9fafb; }
+    .sj-barre { height: 6px; background: var(--gray-100); border-radius: 6px; overflow: hidden; margin-top: 6px; }
+    .sj-barre span { display: block; height: 100%; background: #22c55e; }
+    .sj-contexte { background: #f8fafc; border-left: 4px solid #fb923c; border-radius: 0 12px 12px 0; padding: 11px 14px; font-size: 14.5px; line-height: 1.55; color: var(--gray-700); margin: 0 0 14px; }
+    .chip.sujet { background: #fff7ed; color: #9a3412; }
+    .sj-source { display: block; margin-top: 8px; font-size: 13px; color: var(--gray-500); }
+    .sj-source a { color: #ea580c; font-weight: 700; }
     .quiz-msg { padding: 14px 16px; border-radius: 12px; background: #fef2f2; color: #7f1d1d; font-size: 15px; }
     .quiz-link { background: none; border: 0; font: inherit; font-size: 13px; color: var(--gray-500); text-decoration: underline; cursor: pointer; padding: 0; }
     @media (max-width: 600px) { .quiz-card { padding: 20px 16px; } .quiz-q { font-size: 17px; } .quiz-phrase { font-size: 17px; } .stat b { font-size: 19px; } }
@@ -792,6 +816,10 @@ JS = """<script>
   }
   function libelleThemes(n) { return n ? n + ' thème' + (n > 1 ? 's' : '') + ' choisi' + (n > 1 ? 's' : '') : 'Choisir mes thèmes'; }
   function barreFiltres(enSerie) {
+    if (enSerie && st && st.sj) {
+      return '<div class="qz-barre en-serie"><span class="qz-bandeau"><span class="qz-dd-ico">📄</span><b>Quiz sujets</b> · ' + SJ_CONCOURS[st.concours] + ' · ' +
+        (st.mat === 'tout' ? 'Toutes les matières' : esc(label(st.mat))) + '</span><button type="button" class="quiz-link qz-quitter" data-act="quitter">Quitter la série</button></div>';
+    }
     if (enSerie && st && st.cible) {
       return '<div class="qz-barre en-serie"><span class="qz-bandeau"><span class="qz-dd-ico">🎯</span><b>Révision ciblée</b> · ' + pluriel(st.cible, 'notion') + '</span>' +
         '<button type="button" class="quiz-link qz-quitter" data-act="quitter">Quitter la série</button></div>';
@@ -849,9 +877,12 @@ JS = """<script>
     root.innerHTML = '<div class="quiz-card"><h2>Quelle épreuve voulez-vous préparer ?</h2>' +
       '<p>Choisissez l’épreuve sur laquelle vous voulez vous entraîner. Vous pourrez en changer à tout moment.</p>' +
       '<div class="ep-choix">' +
-      '<button type="button" class="ep-carte" data-epreuve="ecrit"><span class="ep-ico">✍️</span><b>Écrit</b>' +
-      '<span class="ep-txt">Les épreuves écrites d’admissibilité : séries de 20 questions dans les 9 matières du concours, avec correction et explication.</span>' +
-      '<span class="ep-badge ok">Disponible</span><span class="ep-go">Commencer l’écrit →</span></button>' +
+      '<button type="button" class="ep-carte" data-epreuve="ecrit"><span class="ep-ico">✍️</span><b>Quiz</b>' +
+      '<span class="ep-txt">Les notions du programme de l’écrit : séries de 20 questions dans les 9 matières du concours, par niveau, avec correction et explication.</span>' +
+      '<span class="ep-badge ok">Disponible</span><span class="ep-go">Commencer le quiz →</span></button>' +
+      '<button type="button" class="ep-carte" data-epreuve="sujets"><span class="ep-ico">📄</span><b>Quiz sujets</b>' +
+      '<span class="ep-txt">Uniquement des questions tirées des sujets officiels 2025 et 2026, au bac+3 ou au bac+5, dans les 9 matières. La banque s’enrichit à chaque session.</span>' +
+      '<span class="ep-badge neuf">Nouveau</span><span class="ep-go">Commencer le quiz sujets →</span></button>' +
       '<div class="ep-carte off" aria-disabled="true"><span class="ep-ico">🎤</span><b>Oral</b>' +
       '<span class="ep-txt">Les épreuves orales d’admission : entraînement à l’entretien et aux mises en situation.</span>' +
       '<span class="ep-badge">À venir</span></div>' +
@@ -861,13 +892,14 @@ JS = """<script>
   function accueil(message) {
     // Avant le premier quiz (après le test de positionnement) : choix de l'épreuve
     if (!epreuve()) return choixEpreuve();
+    if (epreuve() === 'sujets') return sjAccueil(message);
     st = null; intro(true);
     if (vue()) history.pushState(null, '', '/quizapp');
     marquerOnglet('');
     var e = essaiActif();
     root.innerHTML = barreCompte() + barreFiltres(false) + (e ? essaiBandeau(e) : '') +
       (message ? '<div class="quiz-msg ok-msg">' + esc(message) + '</div>' : '') +
-      '<p class="ep-actuelle">Épreuve : <b>Écrit</b> <button type="button" class="ep-oral" disabled aria-disabled="true" title="L’entraînement à l’oral arrive bientôt">🎤 Passer à l’oral <span class="ep-oral-badge">À venir</span></button></p>' +
+      barreEpreuve('ecrit') +
       '<div class="quiz-card" id="qz-bilan"><p>Chargement de votre bilan…</p></div>' +
       '<div class="quiz-card" id="qz-tableau"><p>Chargement de votre progression…</p></div>';
     bilanGlobal();
@@ -1807,6 +1839,7 @@ JS = """<script>
   }
 
   function entete(q) {
+    if (st.sj) return sjEntete(q);
     var n = st.serie.length;
     var e = essaiActif();
     return '<div class="quiz-top"><span class="mat">' + esc(label(q.mat || st.mat)) + ' · ' + (st.cible ? 'Révision ciblée' : NIVEAUX[st.niveau]) + '</span><span>Question ' + (st.i + 1) + ' / ' + n + '</span></div>' +
@@ -1841,7 +1874,7 @@ JS = """<script>
       corps = '<div class="quiz-choices">' + q.choix.map(function (c, k) { return '<button type="button" class="quiz-choice" data-k="' + k + '">' + esc(c) + '</button>'; }).join('') + '</div>';
     }
     intro(false);
-    root.innerHTML = barreFiltres(true) + '<div class="quiz-card qz-question">' + entete(q) + '<p class="quiz-q">' + esc(q.question) + '</p>' + corps + '<div id="quiz-fb"></div></div>';
+    root.innerHTML = barreFiltres(true) + '<div class="quiz-card qz-question">' + entete(q) + (q.contexte ? '<div class="sj-contexte">' + esc(q.contexte) + '</div>' : '') + '<p class="quiz-q">' + esc(q.question) + '</p>' + corps + '<div id="quiz-fb"></div></div>';
     versQuestion();
     var inp = root.querySelector('.quiz-num input'); if (inp) inp.focus({ preventScroll: true });
   }
@@ -1854,12 +1887,12 @@ JS = """<script>
   function envoyer(reponse, afficher) {
     if (st.repondu) return; st.repondu = true;
     var q = st.serie[st.i];
-    api('/api/quiz/reponse', { method: 'POST', body: JSON.stringify({ id: q.id, reponse: reponse }) })
+    api(st.sj ? '/api/quiz/sujets/reponse' : '/api/quiz/reponse', { method: 'POST', body: JSON.stringify({ id: q.id, reponse: reponse }) })
       .then(function (d) {
         afficher(d);
         // Essai : compteur des questions gratuites du jour mis à jour par le serveur
         if (d.essai && essaiActif()) { Object.assign(compte.essai, d.essai); var cpt = document.getElementById('qz-compteur'); if (cpt) cpt.innerHTML = '🎁 Questions gratuites du jour' + compteurEssai(compte.essai); }
-        var suite = enregistrer(q, d.correct);
+        var suite = st.sj ? sjEnregistrer(q, d.correct) : enregistrer(q, d.correct);
         if (d.correct) st.score++;
         st.recap.push({ id: q.id, theme: q.theme, q: q.question, ok: d.correct, attendu: d.attendu, mat: q.mat || st.mat, niveau: q.niveau });
         var last = st.i === st.serie.length - 1;
@@ -1943,6 +1976,7 @@ JS = """<script>
   }
 
   function fin() {
+    if (st.sj) return sjFin();
     if (st.cible) return finCible();
     var pm = prog(st.mat); pm.series = (pm.series || 0) + 1; sauver(st.mat, pm);
     var n = st.serie.length, s = st.score, b = bilan(st.mat, st.cat, st.niveau);
@@ -1977,6 +2011,125 @@ JS = """<script>
 
   // « Ma progression » : la progression est sur l'accueil, pour la matière et le niveau choisis
   function progression(mat, message) { choix.mat = mat; garderChoix(); accueil(message); top(); }
+
+  // ── Type de quiz : Quiz (notions du programme), Quiz sujets (sujets officiels), Oral (à venir) ──
+  function barreEpreuve(actif) {
+    return '<div class="ep-switch" role="group" aria-label="Type de quiz">' +
+      [['ecrit', '✍️', 'Quiz'], ['sujets', '📄', 'Quiz sujets']].map(function (m) {
+        return '<button type="button" class="ep-sw" data-ep-mode="' + m[0] + '" aria-pressed="' + (m[0] === actif) + '">' + m[1] + ' ' + m[2] + '</button>';
+      }).join('') +
+      '<button type="button" class="ep-sw ep-oral" disabled aria-disabled="true" title="L’entraînement à l’oral arrive bientôt">🎤 Oral <span class="ep-oral-badge">À venir</span></button></div>';
+  }
+
+  // ── Quiz sujets : questions tirées uniquement des sujets officiels (sessions 2025 et 2026), au bac+3 ou au bac+5.
+  // Catalogue servi par /api/quiz/sujets (sans les réponses), correction par /api/quiz/sujets/reponse.
+  // Progression gardée dans ce navigateur : { concours, q: { id: { ok: dernière réponse juste, n: fois posée } } } ──
+  var SJ_CONCOURS = { bac3: 'Bac+3', bac5: 'Bac+5' }, sjCats = {};
+  function cleSj() { return 'passcrpe-quiz-sujets:' + String((compte && compte.email) || '').toLowerCase(); }
+  function sjLire() { try { return JSON.parse(localStorage.getItem(cleSj())) || {}; } catch (e) { return {}; } }
+  function sjEcrire(p) { try { localStorage.setItem(cleSj(), JSON.stringify(p)); } catch (e) {} }
+  // Concours choisi, sinon celui du profil (bac+3 ou bac+5)
+  function sjConcours() {
+    var p = sjLire(); if (SJ_CONCOURS[p.concours]) return p.concours;
+    return /bac\\s*\\+\\s*3/i.test(lireProfil().concours || '') ? 'bac3' : 'bac5';
+  }
+  function sjCharger(c) {
+    if (sjCats[c]) return Promise.resolve(sjCats[c]);
+    return api('/api/quiz/sujets?concours=' + c).then(function (d) { sjCats[c] = d.questions || []; return sjCats[c]; });
+  }
+  function sjNomSujet(q) { return SJ_CONCOURS[q.concours] + ' ' + q.session + ' · ' + q.sujet; }
+  function sjAccueil(message) {
+    st = null; intro(true);
+    if (vue()) history.pushState(null, '', '/quizapp');
+    marquerOnglet('');
+    var c = sjConcours(), e = essaiActif();
+    root.innerHTML = barreEpreuve('sujets') + (e ? essaiBandeau(e) : '') +
+      (message ? '<div class="quiz-msg ok-msg">' + esc(message) + '</div>' : '') +
+      '<div class="quiz-card"><h2>Quiz sujets</h2>' +
+      '<p class="sj-intro">Toutes les questions viennent des <strong>sujets officiels du CRPE</strong> (sessions 2025 et 2026) : les mêmes textes, les mêmes exercices, les mêmes documents. Chaque question indique le sujet d’où elle vient, avec un lien vers le PDF officiel. <strong>La banque s’enrichit au fur et à mesure</strong>, à chaque nouvelle session.</p>' +
+      '<div class="qz-barre-champ"><span class="lbl" id="sj-c-lbl">Concours</span><div class="quiz-niveaux" role="group" aria-labelledby="sj-c-lbl">' +
+      Object.keys(SJ_CONCOURS).map(function (k) { return '<button type="button" class="quiz-niveau" data-sj-concours="' + k + '" aria-pressed="' + (k === c) + '">' + SJ_CONCOURS[k] + '</button>'; }).join('') +
+      '</div></div><div id="sj-mats"><p style="margin-top:14px">Chargement des questions…</p></div></div>';
+    sjCharger(c).then(function (qs) {
+      var el = document.getElementById('sj-mats'); if (!el) return;
+      var vus = sjLire().q || {}, sujets = {};
+      qs.forEach(function (q) { sujets[q.session + q.sujet + q.epreuve] = 1; });
+      var carte = function (k, ic, nom, liste, vide) {
+        var faites = liste.filter(function (q) { return vus[q.id]; }).length, ok = liste.filter(function (q) { return vus[q.id] && vus[q.id].ok; }).length;
+        if (!liste.length) return '<button type="button" class="sj-mat" disabled><span class="ic">' + ic + '</span><b>' + esc(nom) + '</b><small>' + vide + '</small></button>';
+        return '<button type="button" class="sj-mat' + (k === 'tout' ? ' tout' : '') + '" data-sj-mat="' + k + '"><span class="ic">' + ic + '</span><b>' + esc(nom) + '</b>' +
+          '<small>' + nf(liste.length) + ' question' + (liste.length > 1 ? 's' : '') + ' · ' + nf(faites) + ' faite' + (faites > 1 ? 's' : '') + ' · ' + nf(ok) + ' réussie' + (ok > 1 ? 's' : '') + '</small>' +
+          '<span class="sj-barre"><span style="width:' + Math.round(ok / liste.length * 100) + '%"></span></span></button>';
+      };
+      el.innerHTML = '<p class="sj-chiffres" style="margin-top:14px">' + nf(qs.length) + ' questions tirées de ' + nf(Object.keys(sujets).length) + ' épreuves officielles · ' + SJ_CONCOURS[c] + '</p>' +
+        '<p style="font-size:14px;color:var(--gray-500)">Choisissez une matière pour lancer une série de ' + SERIE + ' questions : d’abord celles que vous n’avez jamais vues, puis celles que vous avez ratées.</p>' +
+        '<div class="sj-grille">' + carte('tout', '🎲', 'Toutes les matières', qs, '') +
+        MATIERES.map(function (m) {
+          var vide = m[0] === 'anglais' && c === 'bac5' ? 'Pas d’épreuve écrite d’anglais au bac+5' : 'Questions à venir';
+          return carte(m[0], m[2], m[1], qs.filter(function (q) { return q.matiere === m[0]; }), vide);
+        }).join('') + '</div>';
+    }).catch(function (err) {
+      if (err && (err.status === 401 || err.status === 402)) return boot(true);
+      var el = document.getElementById('sj-mats'); if (el) el.innerHTML = '<div class="quiz-msg" style="margin-top:14px">Les questions n’ont pas pu être chargées. Réessayez dans quelques instants.</div>';
+    });
+  }
+  function sjDemarrer(mat) {
+    // Essai : la série compte les questions gratuites qui restent aujourd'hui ; plus aucune, le paiement s'ouvre
+    var e = essaiActif();
+    if (e && e.termine) { accueil(); top(); return ouvrirPaiement(); }
+    var c = sjConcours();
+    root.innerHTML = '<div class="quiz-card"><p>Chargement des questions…</p></div>';
+    sjCharger(c).then(function (qs) {
+      var vus = sjLire().q || {}, pool = qs.filter(function (q) { return mat === 'tout' || q.matiere === mat; });
+      var jamais = melange(pool.filter(function (q) { return !vus[q.id]; })), ratees = melange(pool.filter(function (q) { return vus[q.id] && !vus[q.id].ok; }));
+      var reussies = melange(pool.filter(function (q) { return vus[q.id] && vus[q.id].ok; }));
+      var serie = jamais.concat(ratees, reussies).slice(0, e ? e.restantes : SERIE).map(function (q) {
+        return Object.assign({}, q, { mat: q.matiere }, q.type === 'qcm' ? { choix: melange(q.choix) } : {});
+      });
+      if (!serie.length) return sjAccueil('Aucune question disponible pour cette matière.');
+      st = { sj: true, concours: c, mat: mat, serie: serie, i: 0, score: 0, recap: [], sel: [], repondu: false };
+      question();
+    }).catch(function (err) {
+      if (err && (err.status === 401 || err.status === 402)) return boot(true);
+      root.innerHTML = '<div class="quiz-msg">Les questions n’ont pas pu être chargées. Réessayez dans quelques instants.</div><div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-act="home">Retour</button></div>';
+    });
+  }
+  function sjEntete(q) {
+    var n = st.serie.length, e = essaiActif();
+    return '<div class="quiz-top"><span class="mat">' + esc(label(q.matiere)) + ' · Quiz sujets ' + SJ_CONCOURS[st.concours] + '</span><span>Question ' + (st.i + 1) + ' / ' + n + '</span></div>' +
+      (e ? '<div class="qz-essai-ligne qz-essai-serie" id="qz-compteur">🎁 Questions gratuites du jour' + compteurEssai(e) + '</div>' : '') +
+      '<div class="quiz-bar"><span style="width:' + Math.round(st.i / n * 100) + '%"></span></div>' +
+      '<div class="quiz-meta"><span class="chip sujet" title="' + esc(q.epreuve) + '">📄 Sujet ' + esc(sjNomSujet(q)) + '</span><span class="chip theme">' + esc(q.partie) + '</span></div>';
+  }
+  // Enregistre la réponse et renvoie la ligne affichée sous l'explication : d'où vient la question, lien vers le sujet
+  function sjEnregistrer(q, correct) {
+    var p = sjLire(); p.q = p.q || {};
+    var s = p.q[q.id] || { n: 0 }; s.n++; s.ok = !!correct; p.q[q.id] = s; sjEcrire(p);
+    return (correct ? '' : 'Cette question reviendra dans une prochaine série. ') +
+      '<span class="sj-source">📄 Sujet ' + esc(sjNomSujet(q)) + ' · ' + esc(q.epreuve) + ' · <a href="' + esc(q.pdf) + '" target="_blank" rel="noopener">Voir le sujet officiel (PDF)</a></span>';
+  }
+  function sjFin() {
+    var n = st.serie.length, s = st.score, e = essaiActif();
+    var note = Math.round(s / n * 20 * 2) / 2;
+    var msg = note >= 16 ? 'Excellent : vous êtes prêt pour ce type de sujet.' : note >= 12 ? 'Bon travail, continuez comme ça.' : note >= 8 ? 'C’est un début : les questions ratées reviendront dans vos prochaines séries.' : 'Ces questions sont à retravailler : elles reviendront dans vos prochaines séries.';
+    st.fini = true;
+    root.innerHTML = barreEpreuve('sujets') + '<div class="quiz-card quiz-score">' +
+      '<div class="quiz-top" style="justify-content:center"><span class="mat">Quiz sujets · ' + SJ_CONCOURS[st.concours] + ' · ' + (st.mat === 'tout' ? 'Toutes les matières' : esc(label(st.mat))) + '</span></div>' +
+      '<div class="big">' + String(note).replace('.', ',') + ' / 20</div><p>' + s + ' bonne' + (s > 1 ? 's' : '') + ' réponse' + (s > 1 ? 's' : '') + ' sur ' + n + '. ' + msg + '</p>' +
+      (e ? '<div class="essai-bandeau qz-essai-fin"><div class="qz-essai-ligne">🎁 <strong>Questions gratuites du jour</strong>' + compteurEssai(e) + '</div>' +
+          (e.termine ? 'Vos ' + e.parJour + ' questions gratuites du jour sont faites. Revenez demain, ou débloquez le quiz pour continuer sans limite.' : 'Il vous reste <strong>' + pluriel(e.restantes, 'question') + '</strong> gratuite' + (e.restantes > 1 ? 's' : '') + ' aujourd’hui.') + '</div>' : '') +
+      '<div class="quiz-actions">' + (e && e.termine ? '<button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz pour ' + PRIX + '</button>'
+        : '<button type="button" class="quiz-btn" data-act="again">Nouvelle série</button>') +
+      '<button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de concours</button></div>' +
+      '<div class="quiz-recap">' + st.recap.map(function (r) {
+        return '<div class="' + (r.ok ? 'r-ok' : 'r-ko') + '">' + esc(r.q) + (r.ok ? '' : ' <em>Réponse : ' + esc(r.attendu) + '</em>') + '</div>';
+      }).join('') + '</div></div>';
+    top();
+    if (e) {
+      if (compte.essai.termine) setTimeout(ouvrirPaiement, 900);
+      api('/api/quiz/compte').then(function (x) { compte = x; }).catch(function () {});
+    }
+  }
 
   // ── Interactions ──
   root.addEventListener('click', function (e) {
@@ -2028,6 +2181,9 @@ JS = """<script>
     }
     var act = b.dataset.act;
     if (b.dataset.epreuve) { choisirEpreuve(b.dataset.epreuve); accueil(); top(); return; }
+    if (b.dataset.epMode) { if (b.dataset.epMode !== epreuve()) { choisirEpreuve(b.dataset.epMode); accueil(); } return; }
+    if (b.dataset.sjConcours) { var sp = sjLire(); sp.concours = b.dataset.sjConcours; sjEcrire(sp); sjAccueil(); return; }
+    if (b.dataset.sjMat) { sjDemarrer(b.dataset.sjMat); return; }
     if (act === 'changer-epreuve') { choixEpreuve(); return; }
     if (b.dataset.ntMat) { choisirMatNt(b.dataset.ntMat); return; }
     if (b.dataset.ntFiltre !== undefined) {
@@ -2072,7 +2228,7 @@ JS = """<script>
     else if (act === 'rapport-pdf') telechargerRapport(e.target.closest('[data-act]'));
     else if (act === 'start') demarrer(choix.mat, choix.niveau);
     else if (act === 'prog-choix') { st = null; progression(choix.mat); }
-    else if (act === 'again') { choix.mat = st.mat; choix.niveau = st.niveau; demarrer(st.mat, st.niveau); }
+    else if (act === 'again') { if (st.sj) sjDemarrer(st.mat); else { choix.mat = st.mat; choix.niveau = st.niveau; demarrer(st.mat, st.niveau); } }
     else if (act === 'prog') progression(st.mat);
     else if (act === 'home') { accueil(); top(); }
     else if (act === 'voir-themes') {

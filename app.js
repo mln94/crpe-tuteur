@@ -7,6 +7,7 @@ import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
 import { createHash, randomBytes } from 'crypto';
 import { registerEntraineurRoutes } from './entraineur/routes.js';
+import QUIZ_SUJETS from './data/quiz-sujets.js';
 
 config();
 
@@ -827,6 +828,10 @@ async function quizCorriger(id, reponse) {
   const { data, error } = await supabaseAdmin.from('quiz_questions')
     .select('type, choix, reponse, explication, tolerance').eq('id', id).eq('actif', true).maybeSingle();
   if (error || !data) return null;
+  return corrigerQuestion(data, reponse);
+}
+// Correction d'une question (quiz normal et quiz sujets) : type, choix, réponse attendue, explication, tolérance
+function corrigerQuestion(data, reponse) {
   let correct;
   if (data.type === 'numerique') {
     const n = nombre(reponse);
@@ -1072,6 +1077,41 @@ app.get('/api/quiz/catalogue', async (req, res) => {
   } catch (err) { console.error('[quiz/catalogue]', err.message); res.status(500).json({ error: 'Le quiz n\'a pas pu être chargé.' }); }
 });
 
+// Essai gratuit : compte la question parmi les questions du jour (quiz normal et quiz sujets, identifiants différents).
+// Renvoie { essai } ou une erreur { status, body } (quota atteint, base indisponible).
+async function quizEssaiCompter(compte, id) {
+  // Essai : 10 questions différentes par jour. Compteur relu en base (le compte en mémoire peut dater d'avant d'autres réponses)
+  const { data: l, error: e1 } = await supabaseAdmin.from('quiz_comptes').select('essai_jour, essai_jour_ids, essai_complet_premiere_fois_at, essai_nb_jours_complets, essai_fait').eq('user_id', compte.id).maybeSingle();
+  if (e1) { console.error('[quiz/essai]', e1.message); return { status: 500, body: { error: 'La correction n\'a pas pu être chargée.' } }; }
+  let ids = essaiIdsDuJour(l?.essai_jour, l?.essai_jour_ids);
+  if (!ids.includes(id)) {
+    if (ids.length >= ESSAI_PAR_JOUR) return { status: 402, body: { error: `Vos ${ESSAI_PAR_JOUR} questions gratuites du jour sont faites. Revenez demain !`, code: 'quota' } };
+    ids = [...ids, id];
+    const maintenant = new Date().toISOString();
+    // Dernière question gratuite du jour validée (la 10e) : un jour de plus où l'essai du jour a été fait en entier
+    const complet = ids.length === ESSAI_PAR_JOUR;
+    const nbJours = (l?.essai_nb_jours_complets || 0) + 1, premiereFois = l?.essai_complet_premiere_fois_at || maintenant;
+    // Toute première question de l'essai : essai_fait passe à true, une seule fois (Supabase et Klaviyo)
+    const premierEssai = !l?.essai_fait;
+    const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_jour: jourParis(), essai_jour_ids: ids, essai_derniere_question_at: maintenant, updated_at: maintenant,
+      ...(premierEssai ? { essai_fait: true } : {}),
+      ...(complet ? { essai_nb_jours_complets: nbJours, essai_complet_premiere_fois_at: premiereFois } : {}) }).eq('user_id', compte.id);
+    if (error) { console.error('[quiz/essai]', error.message); return { status: 500, body: { error: 'La correction n\'a pas pu être chargée.' } }; }
+    // Klaviyo : date du dernier jour d'essai, envoyée à la première question gratuite du jour (attendue : sur Vercel,
+    // un envoi lancé après la réponse peut être perdu ; un échec n'empêche pas la correction)
+    // et, à la dernière question gratuite du jour, les jours où l'essai a été fait en entier
+    if ((ids.length === 1 || complet || premierEssai) && compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) {
+      const props = { date_dernier_essai_quizcrpe: dateKlaviyo(maintenant), ...(premierEssai ? { essai_fait_quizcrpe: true } : {}),
+        ...(complet ? { essai_nb_jours_complets_quizcrpe: nbJours, date_premier_essai_complet_quizcrpe: dateKlaviyo(premiereFois) } : {}) };
+      try { await klaviyoSetProperties(compte.email, props); }
+      catch (e) { console.error('[Klaviyo essai]', e.message); }
+    }
+  }
+  compte.essaiJour = jourParis(); compte.essaiJourIds = ids;
+  const { parJour, faites, restantes, termine } = quizEssai(compte);
+  return { essai: { parJour, faites, restantes, termine } };
+}
+
 app.post('/api/quiz/reponse', async (req, res) => {
   const id = Number(req.body?.id);
   const reponse = req.body?.reponse ?? req.body?.choix ?? '';
@@ -1082,39 +1122,42 @@ app.post('/api/quiz/reponse', async (req, res) => {
   if (!compte) return;
   let essai = null;
   if (!compte.paid) {
-    // Essai : 10 questions différentes par jour. Compteur relu en base (le compte en mémoire peut dater d'avant d'autres réponses)
-    const { data: l, error: e1 } = await supabaseAdmin.from('quiz_comptes').select('essai_jour, essai_jour_ids, essai_complet_premiere_fois_at, essai_nb_jours_complets, essai_fait').eq('user_id', compte.id).maybeSingle();
-    if (e1) { console.error('[quiz/essai]', e1.message); return res.status(500).json({ error: 'La correction n\'a pas pu être chargée.' }); }
-    let ids = essaiIdsDuJour(l?.essai_jour, l?.essai_jour_ids);
-    if (!ids.includes(id)) {
-      if (ids.length >= ESSAI_PAR_JOUR) return res.status(402).json({ error: `Vos ${ESSAI_PAR_JOUR} questions gratuites du jour sont faites. Revenez demain !`, code: 'quota' });
-      ids = [...ids, id];
-      const maintenant = new Date().toISOString();
-      // Dernière question gratuite du jour validée (la 10e) : un jour de plus où l'essai du jour a été fait en entier
-      const complet = ids.length === ESSAI_PAR_JOUR;
-      const nbJours = (l?.essai_nb_jours_complets || 0) + 1, premiereFois = l?.essai_complet_premiere_fois_at || maintenant;
-      // Toute première question de l'essai : essai_fait passe à true, une seule fois (Supabase et Klaviyo)
-      const premierEssai = !l?.essai_fait;
-      const { error } = await supabaseAdmin.from('quiz_comptes').update({ essai_jour: jourParis(), essai_jour_ids: ids, essai_derniere_question_at: maintenant, updated_at: maintenant,
-        ...(premierEssai ? { essai_fait: true } : {}),
-        ...(complet ? { essai_nb_jours_complets: nbJours, essai_complet_premiere_fois_at: premiereFois } : {}) }).eq('user_id', compte.id);
-      if (error) { console.error('[quiz/essai]', error.message); return res.status(500).json({ error: 'La correction n\'a pas pu être chargée.' }); }
-      // Klaviyo : date du dernier jour d'essai, envoyée à la première question gratuite du jour (attendue : sur Vercel,
-      // un envoi lancé après la réponse peut être perdu ; un échec n'empêche pas la correction)
-      // et, à la dernière question gratuite du jour, les jours où l'essai a été fait en entier
-      if ((ids.length === 1 || complet || premierEssai) && compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) {
-        const props = { date_dernier_essai_quizcrpe: dateKlaviyo(maintenant), ...(premierEssai ? { essai_fait_quizcrpe: true } : {}),
-          ...(complet ? { essai_nb_jours_complets_quizcrpe: nbJours, date_premier_essai_complet_quizcrpe: dateKlaviyo(premiereFois) } : {}) };
-        try { await klaviyoSetProperties(compte.email, props); }
-        catch (e) { console.error('[Klaviyo essai]', e.message); }
-      }
-    }
-    compte.essaiJour = jourParis(); compte.essaiJourIds = ids;
-    const { parJour, faites, restantes, termine } = quizEssai(compte);
-    essai = { parJour, faites, restantes, termine };
+    const r = await quizEssaiCompter(compte, id);
+    if (r.status) return res.status(r.status).json(r.body);
+    essai = r.essai;
   }
   const c = await quizCorriger(id, reponse);
   if (!c) return res.status(404).json({ error: 'Question inconnue.' });
+  res.json(essai ? { ...c, essai } : c);
+});
+
+/* ── Quiz sujets : questions tirées des sujets officiels du CRPE (2025, 2026), bac+3 et bac+5.
+   Données : data/quiz-sujets.js, généré par scripts/quiz_sujets/construire.py. Accès et essai gratuit identiques au quiz. ── */
+const QUIZ_SUJETS_PAR_ID = new Map(QUIZ_SUJETS.map(q => [q.id, q]));
+const QUIZ_SUJETS_PUBLIC = {};
+for (const c of ['bac3', 'bac5']) {
+  const questions = QUIZ_SUJETS.filter(q => q.concours === c).map(({ reponse, explication, tolerance, ...q }) => q);
+  QUIZ_SUJETS_PUBLIC[c] = { version: createHash('sha1').update(JSON.stringify(questions)).digest('hex').slice(0, 16), questions };
+}
+// Catalogue d'un concours, sans les réponses
+app.get('/api/quiz/sujets', async (req, res) => {
+  const cat = QUIZ_SUJETS_PUBLIC[String(req.query.concours || '')];
+  if (!cat) return res.status(400).json({ error: 'Concours inconnu.' });
+  if (!(await quizAcces(req, res))) return;
+  res.json(cat);
+});
+app.post('/api/quiz/sujets/reponse', async (req, res) => {
+  const id = String(req.body?.id || ''), q = QUIZ_SUJETS_PAR_ID.get(id);
+  if (!q) return res.status(404).json({ error: 'Question inconnue.' });
+  const compte = await quizAcces(req, res);
+  if (!compte) return;
+  let essai = null;
+  if (!compte.paid) {
+    const r = await quizEssaiCompter(compte, 'sujet:' + id);
+    if (r.status) return res.status(r.status).json(r.body);
+    essai = r.essai;
+  }
+  const c = corrigerQuestion(q, req.body?.reponse ?? '');
   res.json(essai ? { ...c, essai } : c);
 });
 
