@@ -784,7 +784,13 @@ JS = """<script>
   }
 
   // ── Écrans ──
-  function intro(v) { var l = document.querySelector('.quiz-lead'), h = document.querySelector('.quiz-wrap > h1'); if (l) l.hidden = !v; if (h) h.hidden = !v; }
+  // Titre et texte d'introduction ; le texte change avec le type de quiz (quiz normal ou Quiz sujets)
+  var LEAD_SUJETS = 'Entraînez-vous sur les vrais sujets du concours : chaque question est tirée d’un sujet officiel du CRPE (sessions 2025 et 2026), au bac+3 ou au bac+5. Après chaque réponse, vous avez la correction expliquée et le lien vers le sujet d’origine.';
+  function intro(v, mode) {
+    var l = document.querySelector('.quiz-lead'), h = document.querySelector('.quiz-wrap > h1');
+    if (l) { if (l.dataset.ecrit === undefined) l.dataset.ecrit = l.innerHTML; l.innerHTML = mode === 'sujets' ? LEAD_SUJETS : l.dataset.ecrit; l.hidden = !v; }
+    if (h) h.hidden = !v;
+  }
   // Essai gratuit en cours (compte non payé) : 10 questions par jour (nombre donné par le serveur), toutes matières et tous niveaux ;
   // les 2 matières les plus fragiles au test sont conseillées, au niveau qu'il suggère
   function essaiActif() { return compte && !compte.paid && compte.essai ? compte.essai : null; }
@@ -897,9 +903,8 @@ JS = """<script>
     if (vue()) history.pushState(null, '', '/quizapp');
     marquerOnglet('');
     var e = essaiActif();
-    root.innerHTML = barreCompte() + barreFiltres(false) + (e ? essaiBandeau(e) : '') +
+    root.innerHTML = barreCompte() + barreEpreuve('ecrit') + barreFiltres(false) + (e ? essaiBandeau(e) : '') +
       (message ? '<div class="quiz-msg ok-msg">' + esc(message) + '</div>' : '') +
-      barreEpreuve('ecrit') +
       '<div class="quiz-card" id="qz-bilan"><p>Chargement de votre bilan…</p></div>' +
       '<div class="quiz-card" id="qz-tableau"><p>Chargement de votre progression…</p></div>';
     bilanGlobal();
@@ -1983,7 +1988,7 @@ JS = """<script>
     st.fini = true; garderSerie(st.mat, st.niveau, s, n, !!essaiActif(), st.recap);
     var note = Math.round(s / n * 20 * 2) / 2;
     var msg = note >= 16 ? 'Excellent travail !' : note >= 12 ? 'Bon travail, continuez comme ça.' : note >= 8 ? 'C\\'est un début : les notions ratées reviendront pour être retravaillées.' : 'Ces notions sont à retravailler : elles reviendront dans vos prochaines séries.';
-    root.innerHTML = barreFiltres(false) + '<div class="quiz-card quiz-score">' +
+    root.innerHTML = barreEpreuve('ecrit') + barreFiltres(false) + '<div class="quiz-card quiz-score">' +
       '<div class="quiz-top" style="justify-content:center"><span class="mat">' + esc(label(st.mat)) + ' · ' + NIVEAUX[st.niveau] + ' · série ' + pm.series + '</span></div>' +
       '<div class="big">' + String(note).replace('.', ',') + ' / 20</div><p>' + s + ' bonne' + (s > 1 ? 's' : '') + ' réponse' + (s > 1 ? 's' : '') + ' sur ' + n + '. ' + msg + '</p>' +
       '<div class="stats"><div class="stat"><b>' + b.maitrisees + '</b><span>notions maîtrisées</span></div><div class="stat"><b>' + b.encours + '</b><span>en cours</span></div><div class="stat"><b>' + (b.total - b.maitrisees - b.encours) + '</b><span>à découvrir</span></div></div>' +
@@ -2043,6 +2048,7 @@ JS = """<script>
     if (vue()) history.pushState(null, '', '/quizapp');
     marquerOnglet('');
     var c = sjConcours(), e = essaiActif();
+    intro(true, 'sujets');
     root.innerHTML = barreEpreuve('sujets') + (e ? essaiBandeau(e) : '') +
       (message ? '<div class="quiz-msg ok-msg">' + esc(message) + '</div>' : '') +
       '<div class="quiz-card"><h2>Quiz sujets</h2>' +
