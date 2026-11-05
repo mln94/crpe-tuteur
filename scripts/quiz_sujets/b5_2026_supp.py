@@ -202,4 +202,143 @@ QUESTIONS = [
             "Un poème japonais très bref, traditionnellement de trois vers (5, 7, 5 syllabes)",
             "Le dossier proposait un haïku de Santoka Taneda (1880-1940), poète qui pratiquait un haïku libre. Le haïku saisit un instant, souvent lié à la nature et aux saisons."), None),
     ]),
+    # ── Ajout : questions complémentaires tirées du même sujet ──
+    epreuve('Épreuve écrite disciplinaire de français', 20151, [
+        S('francais', 'Étude de la langue · propositions', Q(
+            "« Lorsque huit heures sonnèrent à l'horloge fulminante de la grande salle, Barbicane se redressa subitement. » Nature de « Lorsque huit heures sonnèrent… » ?",
+            ["Subordonnée conjonctive circonstancielle de temps", "Subordonnée relative", "Proposition principale", "Subordonnée complétive"], "Subordonnée conjonctive circonstancielle de temps",
+            "« Lorsque » introduit une circonstance de temps. La principale est « Barbicane se redressa subitement »."), VERNE),
+        S('francais', 'Étude de la langue · nature et fonction', Q(
+            "« … toute guerre qui nous remettrait les armes à la main serait bienvenue. » Fonction de « bienvenue » ?",
+            ["Attribut du sujet « toute guerre… »", "Épithète de « guerre »", "COD", "Complément circonstanciel de manière"], "Attribut du sujet « toute guerre… »",
+            "Relié au sujet par le verbe d'état « être » (serait), l'adjectif est attribut du sujet."), VERNE),
+        S('francais', 'Étude de la langue · temps, mode et voix', Q(
+            "« Ne vous étonnez pas si je viens vous entretenir ici de l'astre des nuits. » Mode et voix de « étonnez » ?",
+            ["Impératif présent, voix pronominale", "Indicatif présent, voix active", "Subjonctif présent, voix passive", "Impératif présent, voix passive"], "Impératif présent, voix pronominale",
+            "Le verbe « s'étonner » est pronominal ; à l'impératif négatif, le pronom reste devant le verbe : « ne vous étonnez pas »."), VERNE),
+        S('francais', 'Étude de la langue · temps, mode et voix', Q(
+            "« Il nous est peut-être réservé d'être les Colombs de ce monde inconnu. » Voix de « est réservé » ?",
+            ["Voix passive (tournure impersonnelle)", "Voix active", "Voix pronominale", "Ce n'est pas un verbe"], "Voix passive (tournure impersonnelle)",
+            "Auxiliaire être au présent + participe passé, avec le sujet impersonnel « il » : passif impersonnel, au présent de l'indicatif."), VERNE),
+        S('francais', 'Lexique · sens en contexte', Q(
+            "Que veut dire Barbicane par « être les Colombs de ce monde inconnu » ?",
+            ["Être les premiers à découvrir et explorer la Lune, comme Christophe Colomb l'Amérique", "Être des colons de la Lune", "Être des pigeons voyageurs", "Être des marins de la Méditerranée"],
+            "Être les premiers à découvrir et explorer la Lune, comme Christophe Colomb l'Amérique",
+            "C'est une antonomase : le nom propre « Colomb » devient un nom commun désignant un découvreur."), VERNE),
+        S('francais', 'Lexique · notes du texte', Q(
+            "Que sont des « cartes sélénographiques » ?",
+            ["Des cartes de la Lune", "Des cartes du ciel étoilé", "Des cartes marines", "Des cartes du Soleil"], "Des cartes de la Lune",
+            "Séléné est le nom grec de la Lune ; -graphie, la description."), VERNE),
+        S('francais', 'Culture littéraire · Jules Verne', Q(
+            "À quel genre appartient « De la Terre à la Lune » (1865) ?",
+            ["Le roman d'anticipation, ou d'aventure scientifique", "La tragédie classique", "Le roman épistolaire", "La fable"], "Le roman d'anticipation, ou d'aventure scientifique",
+            "Jules Verne imagine un voyage vers la Lune un siècle avant Apollo 11 (1969), en s'appuyant sur les sciences de son temps."), None),
+    ]),
+    epreuve('Épreuve écrite disciplinaire de mathématiques', 20163, [
+        S('mathematiques', 'Exercice 1 · TVA', N(
+            "Une compagnie facture 585 € HT avec une TVA de 10 %. Quel est le prix TTC, en euros ?", 643.5,
+            "Ajouter 10 %, c'est multiplier par 1,10 : 585 × 1,10 = 643,50 €."), SORTIE),
+        S('mathematiques', 'Exercice 1 · tarifs', N(
+            "Combien coûte la compagnie B (290 € + 2,45 €/km) pour 150 km, en euros ?", 657.5,
+            "290 + 2,45 × 150 = 290 + 367,50 = 657,50 €."), SORTIE),
+        S('mathematiques', 'Exercice 3 · périmètre', N(
+            "Quelle est la longueur de la palissade circulaire de rayon 2,5 km, en km, arrondie au dixième ?", 15.7,
+            "2 × π × 2,5 = 5π ≈ 15,7 km.", tol=0.05), ALESIA),
+        S('mathematiques', 'Exercice 3 · diviseurs', Q(
+            "Quels sont les diviseurs communs à 62 426 = 2 × 7⁴ × 13 et 8 086 = 2 × 13 × 311 ?",
+            ["1, 2, 13 et 26", "2 et 13 seulement", "1, 2, 7 et 13", "1 et 26 seulement"], "1, 2, 13 et 26",
+            "Les facteurs premiers communs sont 2 et 13 : les diviseurs communs sont 1, 2, 13 et 2 × 13 = 26."), None),
+        S('mathematiques', 'Exercice 4 · probabilités', Q(
+            "Quelles sommes Soan peut-il obtenir avec deux dés à six faces ?",
+            ["Tous les entiers de 2 à 12", "Tous les entiers de 1 à 12", "Tous les entiers de 2 à 6", "Seulement les nombres pairs"], "Tous les entiers de 2 à 12",
+            "De 1 + 1 = 2 à 6 + 6 = 12, soit 11 sommes, qui ne sont pas équiprobables (7 est la plus fréquente)."), DES),
+        S('mathematiques', 'Exercice 5 · motif évolutif', N(
+            "Combien de cubes faut-il à l'étape 4 du motif (2, 5, 10…) ?", 17,
+            "Le motif suit n² + 1 : 4² + 1 = 17 cubes."), CUBES),
+        S('mathematiques', 'Exercice 5 · volumes', Q(
+            "Un cube a un volume d'un litre. Quelle est la longueur de son arête ?",
+            ["10 cm", "1 cm", "100 cm", "1 mm"], "10 cm",
+            "1 L = 1 dm³ : un cube de 1 dm, soit 10 cm, d'arête."), None),
+    ]),
+    epreuve("Épreuve écrite d'application (sciences, histoire-géographie-EMC ou arts)", 20175, [
+        S('svt', 'Sciences · la germination', Q(
+            "De quoi une graine de blé a-t-elle besoin pour germer ?",
+            ["D'eau, d'une température suffisante et d'air ; la lumière n'est pas nécessaire", "De lumière seulement", "De terre et d'engrais", "De sels minéraux uniquement"],
+            "D'eau, d'une température suffisante et d'air ; la lumière n'est pas nécessaire",
+            "La graine contient ses réserves : la lumière devient nécessaire ensuite, pour la photosynthèse de la jeune plante."), BLE),
+        S('svt', 'Sciences · le cycle de vie', Q(
+            "Un élève représente la vie du blé par une ligne : graine → plante → fleur → épi. Que lui manque-t-il pour représenter un cycle ?",
+            ["Le retour à la graine : l'épi produit de nouvelles graines qui redonneront une plante", "La racine", "Le soleil", "L'agriculteur"],
+            "Le retour à la graine : l'épi produit de nouvelles graines qui redonneront une plante",
+            "Un cycle de vie se referme : c'est la reproduction qui assure la continuité de l'espèce."), BLE),
+        S('svt', 'Sciences · les rendements agricoles', Q(
+            "Comment rendre la comparaison des rendements de deux cultures accessible à des CE1 ?",
+            ["Comparer des quantités concrètes (par exemple le nombre de sacs de grains récoltés sur une même surface) avec un graphique simple", "Utiliser des tonnes par hectare et des pourcentages", "Faire calculer une moyenne", "Lire un rapport agricole"],
+            "Comparer des quantités concrètes (par exemple le nombre de sacs de grains récoltés sur une même surface) avec un graphique simple",
+            "Au cycle 2, on part de quantités manipulables et de représentations simples (pictogrammes, diagrammes en barres)."), BLE),
+        S('physique_chimie', 'Sciences · grandeurs et mesures', Q(
+            "Dans une recette de pain, quelle unité convient pour la quantité d'eau ?",
+            ["Le millilitre (mL), unité de volume", "Le gramme (g), unité de longueur", "Le degré Celsius (°C), unité de masse", "La minute, unité de volume"], "Le millilitre (mL), unité de volume",
+            "Masse en grammes (g), volume en millilitres (mL), durée en minutes (min), température en degrés Celsius (°C)."), BLE),
+        S('physique_chimie', 'Sciences · grandeurs et mesures', Q(
+            "Pour peser précisément la farine avec une balance numérique, que faut-il faire ?",
+            ["Poser la balance à plat, faire la tare avec le récipient vide, verser jusqu'à la masse voulue et lire l'affichage", "Peser la farine dans la main", "Ajouter la masse du récipient à la lecture", "Agiter la balance"],
+            "Poser la balance à plat, faire la tare avec le récipient vide, verser jusqu'à la masse voulue et lire l'affichage",
+            "Ce sont des critères de réussite à donner aux élèves pour une mesure fiable."), BLE),
+        S('physique_chimie', 'Sciences · la fermentation', Q(
+            "Équation : C₆H₁₂O₆ → 2 C₂H₅OH + 2 CO₂. Pourquoi est-elle ajustée ?",
+            ["Il y a de chaque côté 6 atomes de carbone, 12 d'hydrogène et 6 d'oxygène", "Il y a autant de molécules de chaque côté", "Le glucose disparaît", "Il y a deux produits"], "Il y a de chaque côté 6 atomes de carbone, 12 d'hydrogène et 6 d'oxygène",
+            "À droite : 2 × C₂H₅OH (4 C, 12 H, 2 O) + 2 × CO₂ (2 C, 4 O) = 6 C, 12 H, 6 O. Les atomes se conservent."), BLE),
+        S('physique_chimie', 'Sciences · la levée de la pâte', Q(
+            "Trois pâtons identiques sont placés au réfrigérateur, à température ambiante et près d'un radiateur. Lequel lève le plus ?",
+            ["Celui près du radiateur (chaleur douce), car les levures sont plus actives", "Celui du réfrigérateur", "Ils lèvent tous pareil", "Aucun ne lève"],
+            "Celui près du radiateur (chaleur douce), car les levures sont plus actives",
+            "Seule la température change entre les trois pâtons : on peut conclure sur son influence. Une chaleur trop forte tuerait cependant les levures."), BLE),
+        S('technologie', "Sciences · l'agriculture de précision", Q(
+            "Comment des satellites aident-ils les agriculteurs ?",
+            ["Ils fournissent des images et des positions (GPS) pour cibler l'arrosage et les apports là où c'est utile", "Ils arrosent les champs", "Ils récoltent le blé", "Ils remplacent la pluie"],
+            "Ils fournissent des images et des positions (GPS) pour cibler l'arrosage et les apports là où c'est utile",
+            "On économise l'eau et les engrais : c'est l'un des objectifs de développement durable du sujet."), BLE),
+        S('technologie', 'Sciences · programmer un robot', Q(
+            "Un programme de robot doit tourner à droite d'un quart de tour. De combien de degrés le robot tourne-t-il ?",
+            ["90°", "45°", "180°", "360°"], "90°",
+            "Un tour complet fait 360° ; un quart de tour, 90°. Erreur fréquente des élèves : confondre l'angle à tourner et la direction."), BLE),
+        S('histoire_geographie', "Histoire · Henri IV et l'édit de Nantes", Q(
+            "Pourquoi Henri IV se convertit-il au catholicisme en 1593 ?",
+            ["Pour être accepté comme roi par le royaume, très majoritairement catholique", "Parce qu'il était athée", "Pour faire la guerre aux catholiques", "Parce que le pape l'y obligeait par la force"],
+            "Pour être accepté comme roi par le royaume, très majoritairement catholique",
+            "Protestant, il abjure à Saint-Denis en 1593 (tableau du dossier), entre à Paris en 1594, puis signe l'édit de Nantes en 1598."), EDIT),
+        S('histoire_geographie', "Histoire · Henri IV et l'édit de Nantes", Q(
+            "Qu'appelle-t-on les guerres de Religion ?",
+            ["Les guerres entre catholiques et protestants en France, de 1562 à 1598", "Les croisades en Terre sainte", "La guerre de Cent Ans", "Les guerres de Louis XIV"], "Les guerres entre catholiques et protestants en France, de 1562 à 1598",
+            "Huit guerres en trente-six ans, marquées par le massacre de la Saint-Barthélemy (1572). L'édit de Nantes y met fin."), EDIT),
+        S('histoire_geographie', "Histoire · Henri IV et l'édit de Nantes", Q(
+            "Quel roi révoque l'édit de Nantes, en 1685 ?",
+            ["Louis XIV", "Louis XIII", "François Ier", "Louis XVI"], "Louis XIV",
+            "Par l'édit de Fontainebleau : le protestantisme est interdit et de nombreux protestants quittent la France."), None),
+        S('emc', 'EMC · la fraternité', Q(
+            "En 2018, à quoi le Conseil constitutionnel a-t-il reconnu une valeur constitutionnelle, au nom de la fraternité ?",
+            ["La liberté d'aider autrui dans un but humanitaire", "Le droit de vote dès 16 ans", "L'obligation d'avoir des frères et sœurs", "La gratuité des transports"],
+            "La liberté d'aider autrui dans un but humanitaire",
+            "La fraternité est devenue un principe juridique, et non plus seulement un idéal de la devise."), None),
+        S('emc', 'EMC · la fraternité', Q(
+            "Selon le Conseil des sages de la laïcité, que permet une « école de la fraternité » ?",
+            ["Apprendre à reconnaître l'autre comme un semblable, à coopérer et à s'entraider", "Supprimer les règles de vie", "Former des équipes sportives", "Choisir ses amis en classe"],
+            "Apprendre à reconnaître l'autre comme un semblable, à coopérer et à s'entraider",
+            "Le document 2 du dossier, « Vers une école de la fraternité » (2025), propose une « fleur de la fraternité » pour les élèves."), EDIT),
+        S('arts', 'Histoire des arts · le japonisme', Q(
+            "Quelle sculptrice française a réalisé « La Vague » (vers 1897-1903, onyx et bronze), inspirée d'Hokusai ?",
+            ["Camille Claudel", "Niki de Saint Phalle", "Louise Bourgeois", "Berthe Morisot"], "Camille Claudel",
+            "Trois baigneuses sous une immense vague d'onyx vert : l'œuvre montre l'influence du japonisme sur les artistes européens."), None),
+        S('arts', 'Histoire des arts · le japonisme', Q(
+            "Pourquoi rapprocher la « Grande Vague » d'Hokusai d'une planche du manga One Piece ?",
+            ["Pour montrer la permanence d'un motif et d'un style japonais, de l'estampe au manga actuel", "Parce qu'ils ont le même auteur", "Parce qu'ils datent de la même époque", "Pour comparer leurs prix"],
+            "Pour montrer la permanence d'un motif et d'un style japonais, de l'estampe au manga actuel",
+            "L'histoire des arts au cycle 3 invite à relier des œuvres d'époques différentes et à situer une œuvre dans son contexte."), None),
+        S('arts', 'Histoire des arts · le japonisme', Q(
+            "Selon le texte de Louis Laloy (1904), qu'apporte Debussy de neuf en musique ?",
+            ["Une volonté de dépouillement et de simplicité, qui renonce à l'emphase", "Une musique toujours très forte et grandiose", "Le retour au style baroque", "L'usage exclusif de l'orgue"],
+            "Une volonté de dépouillement et de simplicité, qui renonce à l'emphase",
+            "Debussy, sensible au japonisme, cherche des couleurs sonores nouvelles plutôt que de grands effets."), None),
+    ]),
 ]

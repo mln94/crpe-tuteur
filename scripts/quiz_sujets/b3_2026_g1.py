@@ -346,4 +346,152 @@ QUESTIONS = [
             "Le dessin fait sur un petit écran d'iPad est agrandi à l'échelle d'une paroi : le changement d'échelle fait partie des choix qui transforment le rapport au réel."),
           "Œuvre du sujet : David Hockney, « 27th March 2020, No. 1 », 364 × 521 cm, cinq panneaux."),
     ]),
+    # ── Ajout : questions complémentaires tirées du même sujet ──
+    epreuve('Première épreuve écrite (français et mathématiques)', 20277, [
+        S('francais', 'Étude de la langue · voix passive', Q(
+            "« Les jugements d'expropriation étaient rendus. » À quelle voix est le verbe ?",
+            ["Voix passive", "Voix active", "Voix pronominale", "Forme impersonnelle"], "Voix passive",
+            "Auxiliaire être (ici à l'imparfait) + participe passé : voix passive. Le sujet « les jugements » subit l'action ; l'agent (les tribunaux) n'est pas exprimé."), ZOLA),
+        S('francais', 'Étude de la langue · temps et modes', Q(
+            "« À mesure que le Bonheur des Dames s'élargissait, il semblait que le Vieil Elbeuf diminuât. » Temps et mode de « diminuât » ?",
+            ["Imparfait du subjonctif", "Passé simple de l'indicatif", "Imparfait de l'indicatif", "Conditionnel présent"], "Imparfait du subjonctif",
+            "Après « il semblait que », le subjonctif est requis ; la concordance des temps de la langue littéraire impose l'imparfait du subjonctif (-ât) après un verbe au passé."), ZOLA),
+        S('francais', 'Étude de la langue · type de phrase', Q(
+            "« Prenez garde ! ils vous passeraient sur le corps. » À quel mode est « Prenez » ?",
+            ["Impératif présent", "Indicatif présent", "Subjonctif présent", "Infinitif"], "Impératif présent",
+            "L'impératif, sans sujet exprimé, donne un ordre ou un conseil : la première phrase est injonctive (et exclamative par sa ponctuation)."), ZOLA),
+        S('francais', 'Étude de la langue · nature des mots', Q(
+            "« Deux bandes de démolisseurs attaquaient déjà la trouée. » Nature de « déjà » ?",
+            ["Adverbe", "Adjectif", "Préposition", "Conjonction"], "Adverbe",
+            "Invariable, il modifie le sens du verbe en le situant dans le temps : adverbe de temps."), ZOLA),
+        S('francais', 'Étude de la langue · pluriels', Q(
+            "Une note du sujet rappelle que « baux » est le pluriel de « bail ». Lequel de ces noms en -ail fait aussi son pluriel en -aux ?",
+            ["Travail", "Détail", "Rail", "Éventail"], "Travail",
+            "Seuls quelques noms en -ail font -aux : bail, corail, émail, soupirail, travail, vantail, vitrail. Les autres prennent un -s : détails, rails, éventails."), ZOLA),
+        S('francais', 'Lexique · sens en contexte', Q(
+            "« Debout sur le seuil de sa boutique, l'oncle regardait, d'un œil morne. » Que signifie « morne » ?",
+            ["Triste et sans éclat", "Joyeux", "Curieux", "Menaçant"], "Triste et sans éclat",
+            "Le regard de Baudu dit son abattement devant les travaux du grand magasin qui condamnent son petit commerce."), ZOLA),
+        S('francais', 'Lexique · images', Q(
+            "Zola décrit les vitrines du Vieil Elbeuf « écrasées sous l'entresol bas, aux baies rondes de prison ». Que suggère cette image ?",
+            ["La boutique est comme enfermée, étouffée, condamnée", "La boutique est un lieu de fête", "La boutique est très moderne", "La boutique va s'agrandir"],
+            "La boutique est comme enfermée, étouffée, condamnée",
+            "L'image de la prison s'ajoute à la « détresse » de la façade : tout dit le déclin du petit commerce face au grand magasin."), ZOLA),
+        S('francais', 'Lexique · formation des mots', Q(
+            "Comment est formé l'adverbe « obstinément » (ligne 15) ?",
+            ["Adjectif « obstiné » + suffixe -ment", "Nom « obstination » + suffixe -ment", "Préfixe ob- + base « stinément »", "Verbe « obstiner » + suffixe -ément"],
+            "Adjectif « obstiné » + suffixe -ment",
+            "Le suffixe -ment forme des adverbes de manière à partir d'adjectifs. Après un adjectif en -é, on ajoute directement -ment (aisément, obstinément)."), ZOLA),
+        S('francais', 'Culture littéraire · Zola', Q(
+            "À quel mouvement littéraire Émile Zola est-il rattaché ?",
+            ["Le naturalisme", "Le romantisme", "Le classicisme", "Le surréalisme"], "Le naturalisme",
+            "Au Bonheur des Dames (1883) appartient au cycle des Rougon-Macquart, « histoire naturelle et sociale d'une famille sous le Second Empire »."), ZOLA),
+        S('francais', 'Culture littéraire · Zola', Q(
+            "Les grands travaux évoqués dans le texte renvoient aux transformations de Paris menées par :",
+            ["Le baron Haussmann, sous le Second Empire", "Louis XIV", "Napoléon Ier", "Le général de Gaulle"], "Le baron Haussmann, sous le Second Empire",
+            "La note du sujet précise de ne pas le confondre avec le baron Hartmann, personnage inventé par Zola."), ZOLA),
+        S('mathematiques', 'Exercice 1 · tableau et probabilités', N(
+            "Combien d'élèves ne pratiquent ni sport ni instrument ?", 150,
+            "300 − (120 + 75 − 45) = 300 − 150 = 150 élèves."), EX1),
+        S('mathematiques', 'Exercice 1 · tableau et probabilités', N(
+            "Combien d'élèves pratiquent un instrument mais pas de sport ?", 30,
+            "75 musiciens − 45 qui font aussi du sport = 30."), EX1),
+        S('mathematiques', 'Exercice 2 · motif évolutif', N(
+            "Combien de carreaux le motif compte-t-il à l'étape 5 ?", 13,
+            "On ajoute 3 carreaux à chaque étape : 10 + 3 = 13."), EX2),
+        S('mathematiques', 'Exercice 3 · pentagones', N(
+            "Quelle est la somme des angles d'un pentagone, en degrés ?", 540,
+            "5 × 108° = 540°. On peut aussi découper le pentagone en 3 triangles : 3 × 180° = 540°."), EX3),
+        S('mathematiques', 'Exercice 5 · axe gradué', N(
+            "Quelle est l'abscisse du milieu du segment [OA], avec a = 1/2 ? (Réponse décimale ou fraction.)", 0.25,
+            "a ÷ 2 = 1/4 = 0,25."), EX5),
+        S('mathematiques', 'Exercice 5 · axe gradué', Q(
+            "Le point C d'abscisse 0,45 appartient-il au segment [AB], avec a = 0,5 et b = 1,375 ?",
+            ["Non : 0,45 < 0,5", "Oui : 0,45 est entre 0 et 1", "Oui : 0,45 < 1,375", "On ne peut pas savoir sans calculatrice"], "Non : 0,45 < 0,5",
+            "Pour appartenir à [AB], il faut a ≤ c ≤ b. 0,45 est plus petit que 0,5 : C est à gauche de A."), EX5),
+    ]),
+    epreuve('Seconde épreuve écrite (domaines au choix)', 20268, [
+        S('histoire_geographie', 'Histoire · le régime de Vichy', Q(
+            "Qu'est-ce que le Service du travail obligatoire (STO), créé en 1943 ?",
+            ["L'envoi forcé de jeunes Français travailler en Allemagne", "Un service militaire dans l'armée française", "Un travail bénévole dans les campagnes", "La création des syndicats"],
+            "L'envoi forcé de jeunes Français travailler en Allemagne",
+            "Le STO montre la collaboration économique de Vichy ; beaucoup de réfractaires rejoignent alors les maquis de la Résistance."), "Question du sujet : « Quelles sont les caractéristiques du régime de Vichy ? »"),
+        S('histoire_geographie', 'Histoire · le régime de Vichy', Q(
+            "Quel organisme paramilitaire, créé par Vichy en 1943, traque les résistants ?",
+            ["La Milice", "Les FFI", "La Gestapo", "Le Conseil national de la Résistance"], "La Milice",
+            "La Milice française est une police politique de Vichy. La Gestapo est la police allemande ; les FFI et le CNR appartiennent à la Résistance."), None),
+        S('histoire_geographie', 'Histoire · le régime de Vichy', Q(
+            "Que se passe-t-il en novembre 1942 ?",
+            ["Les Allemands envahissent la zone sud (« zone libre »)", "Pétain obtient les pleins pouvoirs", "Paris est libéré", "L'armistice est signé"], "Les Allemands envahissent la zone sud (« zone libre »)",
+            "Après le débarquement allié en Afrique du Nord, toute la France est occupée. Il ne faut pas confondre la zone libre avec la France libre du général de Gaulle."), None),
+        S('histoire_geographie', 'Histoire · le régime de Vichy', Q(
+            "Comment qualifier le régime de Vichy ?",
+            ["Un régime autoritaire, en rupture avec la République", "Une démocratie parlementaire", "Une monarchie constitutionnelle", "La IVe République"], "Un régime autoritaire, en rupture avec la République",
+            "Pas d'élections, pas de partis, presse censurée, culte du chef : Vichy n'est pas une République. Versailles conseille de distinguer régime autoritaire, totalitaire et dictature."), None),
+        S('histoire_geographie', 'Géographie · la répartition de la population', Q(
+            "Quelle région française est la plus peuplée et la plus densément peuplée ?",
+            ["L'Île-de-France", "La Bretagne", "L'Auvergne", "La Corse"], "L'Île-de-France",
+            "Avec plus de 12 millions d'habitants, l'Île-de-France concentre près d'un Français sur cinq ; c'est le cœur des fortes densités sur un croquis."), None),
+        S('histoire_geographie', 'Géographie · la répartition de la population', Q(
+            "Sur un croquis, comment représenter des densités de population différentes ?",
+            ["Par des plages de couleur graduées, du plus foncé (fortes densités) au plus clair", "Par des flèches", "Par des points de toutes les couleurs au hasard", "En entourant chaque ville"],
+            "Par des plages de couleur graduées, du plus foncé (fortes densités) au plus clair",
+            "Erreur relevée : entourer les métropoles au lieu de délimiter des zones de densité (Bordeaux, Nantes, Limoges). Titre et légende s'écrivent en noir."), None),
+        S('emc', "EMC · l'égalité à l'école", Q(
+            "Que proclame l'article 1er de la Constitution de 1958 ?",
+            ["La France est une République indivisible, laïque, démocratique et sociale, qui assure l'égalité de tous les citoyens devant la loi", "La France est une monarchie", "Le français est la langue de la République", "L'école est obligatoire de 3 à 16 ans"],
+            "La France est une République indivisible, laïque, démocratique et sociale, qui assure l'égalité de tous les citoyens devant la loi",
+            "« … sans distinction d'origine, de race ou de religion. » C'est un texte fondateur de l'égalité à citer dans la question 1 du sujet."), None),
+        S('emc', "EMC · l'égalité à l'école", Q(
+            "Que sont les AESH ?",
+            ["Des accompagnants des élèves en situation de handicap", "Des inspecteurs de l'Éducation nationale", "Des assistants de langue", "Des animateurs du périscolaire"], "Des accompagnants des élèves en situation de handicap",
+            "Ils participent à l'école inclusive, avec les ULIS et les plans personnalisés (PPS, PAP)."), None),
+        S('emc', "EMC · l'égalité à l'école", Q(
+            "Le document 3 est une affiche d'élèves de CE2 sur l'égalité filles-garçons. Quel thème de l'EMC illustre-t-elle ?",
+            ["La lutte contre les stéréotypes et les discriminations", "La laïcité", "Les institutions européennes", "La sécurité routière"], "La lutte contre les stéréotypes et les discriminations",
+            "L'égalité filles-garçons a été « quasiment ignorée » dans les copies (Nantes), alors que l'affiche du dossier y invitait."), None),
+        S('physique_chimie', "Sciences · le mouvement de l'ISS", Q(
+            "Selon le document 2, sur quel type d'orbite se trouvent les satellites GPS et Galileo ?",
+            ["L'orbite moyenne (MEO), entre 2 000 et 35 000 km", "L'orbite basse (LEO)", "L'orbite géostationnaire (GEO)", "À la surface de la Terre"], "L'orbite moyenne (MEO), entre 2 000 et 35 000 km",
+            "LEO : 160 à 2 000 km (Hubble, ISS, Starlink) ; MEO : 2 000 à 35 000 km (GPS, Galileo) ; GEO : environ 35 786 km (Meteosat)."), ISS),
+        S('physique_chimie', "Sciences · la régulation thermique de l'ISS", Q(
+            "À quoi sert l'isolation multicouche (MLI) qui recouvre l'ISS ?",
+            ["À limiter les échanges thermiques entre la station et l'espace", "À produire de l'électricité", "À propulser la station", "À protéger des météorites seulement"], "À limiter les échanges thermiques entre la station et l'espace",
+            "Dans l'espace, il n'y a pas d'air pour isoler : la MLI protège les modules habités des écarts de température."), ISS),
+        S('technologie', "Sciences · l'énergie à bord de l'ISS", Q(
+            "Pourquoi les panneaux solaires de l'ISS sont-ils orientables ?",
+            ["Pour rester face au Soleil et recevoir le maximum de lumière", "Pour se protéger du froid", "Pour communiquer avec la Terre", "Pour freiner la station"], "Pour rester face au Soleil et recevoir le maximum de lumière",
+            "L'ISS fait un tour de Terre en 1 h 30 : l'orientation automatique des panneaux maximise l'énergie lumineuse convertie en électricité."), ISS),
+        S('svt', 'Sciences · la photosynthèse', Q(
+            "Quel pigment vert permet la photosynthèse dans les feuilles ?",
+            ["La chlorophylle", "L'amidon", "Le glucose", "La sève"], "La chlorophylle",
+            "La chlorophylle capte l'énergie lumineuse. Les zones blanches d'une feuille panachée n'en ont pas et ne produisent pas d'amidon."), ISS),
+        S('svt', 'Sciences · la circulation de l\'eau dans la plante', Q(
+            "Quel trajet suit l'eau dans une plante qui la puise dans le sol ?",
+            ["Racines → tige → feuilles", "Feuilles → tige → racines", "Fleurs → feuilles → racines", "Elle reste dans les racines"], "Racines → tige → feuilles",
+            "L'eau et les sels minéraux (la sève brute) montent des racines jusqu'aux feuilles, où se fait la photosynthèse."), ISS),
+        S('arts', 'Éducation musicale · le romantisme', Q(
+            "Lequel de ces compositeurs n'est pas romantique ?",
+            ["Jean-Sébastien Bach", "Franz Schubert", "Frédéric Chopin", "Robert Schumann"], "Jean-Sébastien Bach",
+            "Bach (1685-1750) est un compositeur baroque. Schubert, Chopin, Schumann, Liszt, Berlioz appartiennent au XIXe siècle romantique."), None),
+        S('arts', 'Arts plastiques · questionner la ressemblance', Q(
+            "David Hockney, auteur de l'œuvre du sujet, est un peintre :",
+            ["Britannique, né en 1937, figure du pop art", "Français de la Renaissance", "Italien baroque", "Espagnol cubiste"], "Britannique, né en 1937, figure du pop art",
+            "Installé en Normandie pendant le confinement de 2020, il y a peint l'arrivée du printemps sur iPad, d'où le titre daté « 27th March 2020 »."), None),
+        S('anglais', 'Anglais · lexique', Q(
+            "What is a labradoodle?", ["A cross between a labrador and a poodle", "A kind of cat", "A toy", "A school subject"], "A cross between a labrador and a poodle",
+            "Scooby est un chien croisé labrador et caniche (poodle)."), SCOOBY),
+        S('anglais', 'Anglais · lexique', Q(
+            "“Our attendance has vastly improved.” What does “attendance” mean?",
+            ["The fact of being present at school", "The pupils' marks", "The school timetable", "The teachers' salaries"], "The fact of being present at school",
+            "Attendance = l'assiduité, la présence. « Vastly » = considérablement."), SCOOBY),
+        S('anglais', 'Anglais · lexique', Q(
+            "What is a “morning assembly” in a British school?",
+            ["A gathering of pupils and staff at the start of the day", "A maths lesson", "A meeting of parents", "A break time"], "A gathering of pupils and staff at the start of the day",
+            "C'est lors de l'assemblée du matin que les élèves chantent la chanson écrite pour Scooby."), SCOOBY),
+        S('anglais', 'Anglais · compréhension', Q(
+            "Jolene McCaul is Scooby's “foster mum”. What does it mean?",
+            ["She looks after him and takes him home every day", "She is his vet", "She sold him to the school", "She is his trainer at Assistance Dogs NI"], "She looks after him and takes him home every day",
+            "Foster = d'accueil : elle s'occupe du chien et le ramène chez elle chaque soir."), SCOOBY),
+    ]),
 ]

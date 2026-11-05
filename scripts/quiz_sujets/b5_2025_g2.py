@@ -167,4 +167,130 @@ QUESTIONS = [
             "Répéter fidèlement une suite de durées (frappée, parlée ou chantée) proposée par un modèle",
             "Le sujet demandait une analyse critique d'une séance de 30 minutes sur les compétences « chanter et interpréter » et « écouter, comparer et commenter »."), None),
     ]),
+    # ── Ajout : questions complémentaires tirées du même sujet ──
+    epreuve('Épreuve écrite disciplinaire de français', 16573, [
+        S('francais', 'Étude de la langue · temps et modes', Q(
+            "« Des gens l'escaladent, pour mieux voir et entendre. » Temps et mode de « escaladent » ?",
+            ["Présent de l'indicatif", "Présent du subjonctif", "Imparfait de l'indicatif", "Impératif présent"], "Présent de l'indicatif",
+            "Présent de narration, qui rend la scène vivante. Au subjonctif, ce serait aussi « escaladent » : seul le contexte (aucune subordination) tranche."), COLETTE),
+        S('francais', 'Étude de la langue · temps et modes', Q(
+            "« Dans quelques jours, qui saura si ceci est tien ou mien ? » Temps et mode de « saura » ?",
+            ["Futur simple de l'indicatif", "Conditionnel présent", "Passé simple", "Présent du subjonctif"], "Futur simple de l'indicatif",
+            "Verbe savoir au futur : je saurai, il saura. Le conditionnel serait « saurait »."), COLETTE),
+        S('francais', 'Étude de la langue · type de phrase', Q(
+            "« Dans quelques jours, qui saura si ceci est tien ou mien ? » Quel est le type de cette phrase ?",
+            ["Interrogative (question rhétorique)", "Déclarative", "Injonctive", "Exclamative"], "Interrogative (question rhétorique)",
+            "Le pronom interrogatif « qui » et le point d'interrogation en font une phrase interrogative ; elle n'attend pas de réponse et exprime l'inquiétude devant la guerre."), COLETTE),
+        S('francais', 'Étude de la langue · nature des mots', Q(
+            "« C'était pourtant la guerre, cette Cancalaise dure… » Nature de « pourtant » ?",
+            ["Adverbe (de liaison, à valeur d'opposition)", "Conjonction de coordination", "Préposition", "Adjectif"], "Adverbe (de liaison, à valeur d'opposition)",
+            "« Pourtant » est un adverbe connecteur d'opposition ; il n'appartient pas à la liste des conjonctions de coordination (mais, ou, et, donc, or, ni, car)."), COLETTE),
+        S('francais', 'Lexique · sens en contexte', Q(
+            "Dans « les journaux assoupis de l'été », que signifie « assoupis » ?",
+            ["Calmes, sans grandes nouvelles, comme endormis", "Imprimés la nuit", "Mouillés par la pluie", "Interdits par la censure"], "Calmes, sans grandes nouvelles, comme endormis",
+            "C'est une personnification : avant la mobilisation d'août 1914, l'actualité estivale semble dormir."), COLETTE),
+        S('francais', 'Lexique · champ lexical des émotions', Q(
+            "À l'annonce de la mobilisation générale, quelles émotions le texte prête-t-il à la population ?",
+            ["Stupeur, angoisse et gravité (des adolescents pâlissent, regardent « en somnambules »)", "Joie et enthousiasme", "Indifférence totale", "Colère contre le maire"],
+            "Stupeur, angoisse et gravité (des adolescents pâlissent, regardent « en somnambules »)",
+            "Le sujet demandait d'identifier ces émotions à partir du lexique : pâlir, somnambules, les détails « pénibles »…"), COLETTE),
+        S('francais', 'Culture littéraire · Colette', Q(
+            "En quelle année a lieu la mobilisation générale décrite par Colette dans « Les Heures longues » ?",
+            ["1914", "1939", "1870", "1918"], "1914",
+            "Le 1er août 1914, l'ordre de mobilisation générale annonce l'entrée de la France dans la Première Guerre mondiale."), None),
+    ]),
+    epreuve('Épreuve écrite disciplinaire de mathématiques', 16576, [
+        S('mathematiques', 'Exercice 1 · vrai ou faux', Q(
+            "Affirmation : « 22,9 est un nombre rationnel. » Vrai ou faux ?",
+            ["Vrai : 22,9 = 229/10", "Faux : c'est un décimal", "Faux : il a une virgule", "Vrai seulement s'il est entier"], "Vrai : 22,9 = 229/10",
+            "Tout décimal est rationnel : il s'écrit comme quotient de deux entiers. Les ensembles sont emboîtés : entiers ⊂ décimaux ⊂ rationnels."), None),
+        S('mathematiques', 'Exercice 2 · volumes', N(
+            "Quel est le volume d'une plaquette de beurre de 10 cm × 6,5 cm × 3,5 cm, en cm³ ?", 227.5,
+            "Volume d'un pavé : longueur × largeur × hauteur = 10 × 6,5 × 3,5 = 227,5 cm³."), None),
+        S('mathematiques', 'Exercice 2 · masse volumique', Q(
+            "Une plaquette de 250 g a un volume de 227,5 cm³. Comparez la masse volumique du beurre à celle du lait (1,03 kg/L).",
+            ["Le beurre est plus dense : environ 1,10 kg/L", "Le beurre est moins dense : environ 0,91 kg/L", "Ils ont la même masse volumique", "On ne peut pas comparer"], "Le beurre est plus dense : environ 1,10 kg/L",
+            "250 ÷ 227,5 ≈ 1,10 g/cm³, soit 1,10 kg/L, plus que 1,03 kg/L."), None),
+        S('mathematiques', 'Exercice 2 · pourcentages', Q(
+            "L'aire de la plaquette (245,5 cm²) représente-t-elle au moins 60 % de la feuille de 23 cm × 20 cm ?",
+            ["Non : environ 53 %", "Oui : environ 65 %", "Oui : exactement 60 %", "Non : environ 10 %"], "Non : environ 53 %",
+            "Feuille : 23 × 20 = 460 cm². 245,5 ÷ 460 ≈ 0,534, soit environ 53 %."), None),
+        S('mathematiques', 'Exercice 3 · probabilités', Q(
+            "Quelle est la probabilité que l'athlète « morde » au premier saut et réussisse le second ?",
+            ["2/9", "1/9", "4/9", "1/3"], "2/9",
+            "Mordre (toucher ou dépasser) : 2/3. Réussir : 1/3. Sauts indépendants : 2/3 × 1/3 = 2/9."), SAUT),
+        S('mathematiques', 'Exercice 3 · probabilités', Q(
+            "Quelle est la probabilité qu'il « morde » exactement une fois sur les deux sauts ?",
+            ["4/9", "2/9", "8/9", "1/3"], "4/9",
+            "Mordre puis réussir (2/9) ou réussir puis mordre (2/9) : 4/9."), SAUT),
+    ]),
+    epreuve("Épreuve écrite d'application (sciences, histoire-géographie-EMC ou arts)", 16570, [
+        S('svt', 'Sciences · la classification', Q(
+            "Quel mode de classification scientifique est travaillé en classe avec des groupes emboîtés ?",
+            ["La classification phylogénétique, fondée sur les attributs partagés", "La classification alphabétique", "Le classement par milieu de vie", "Le classement par taille"],
+            "La classification phylogénétique, fondée sur les attributs partagés",
+            "Elle reflète les liens de parenté entre espèces. Elle peut aussi se représenter par un arbre (arbre phylogénétique)."), OCEAN),
+        S('svt', 'Sciences · la classification', Q(
+            "Quel autre mode de représentation utilise-t-on en classification, à côté des groupes emboîtés ?",
+            ["L'arbre phylogénétique", "La frise chronologique", "Le diagramme circulaire", "La carte de géographie"], "L'arbre phylogénétique",
+            "Les deux représentations disent la même chose : quels êtres vivants partagent quels attributs."), OCEAN),
+        S('physique_chimie', "Sciences · l'acidification de l'océan", Q(
+            "Pourquoi réaliser en même temps une expérience et une expérience témoin pour étudier l'acidification ?",
+            ["Pour comparer et montrer que seul le facteur étudié (le CO₂) explique la différence", "Pour gagner du temps", "Pour avoir deux résultats identiques", "Pour décorer la classe"],
+            "Pour comparer et montrer que seul le facteur étudié (le CO₂) explique la différence",
+            "Le témoin est identique en tout sauf sur le facteur testé : sans lui, on ne peut pas conclure."), OCEAN),
+        S('physique_chimie', "Sciences · l'acidification de l'océan", Q(
+            "Quelle consigne de protection donner aux élèves pour une expérience avec du vinaigre ou de l'eau gazeuse et des coquillages ?",
+            ["Porter des lunettes de protection et ne rien goûter", "Aucune", "Chauffer le mélange", "Mélanger avec les doigts"], "Porter des lunettes de protection et ne rien goûter",
+            "Même avec des produits courants, on apprend les gestes de sécurité du laboratoire."), OCEAN),
+        S('technologie', 'Sciences · une bouée communicante', Q(
+            "Une bouée communicante est alimentée par un panneau solaire et une batterie. Quelle est la fonction de la batterie ?",
+            ["Stocker l'énergie pour fonctionner la nuit ou par mauvais temps", "Mesurer la température", "Émettre les données", "Faire flotter la bouée"], "Stocker l'énergie pour fonctionner la nuit ou par mauvais temps",
+            "Chaîne d'énergie : alimenter (panneau solaire), stocker (batterie), distribuer, convertir."), OCEAN),
+        S('technologie', 'Sciences · programmer un système', Q(
+            "Un programme doit envoyer une alerte si la température de l'eau dépasse un seuil. Quelle structure faut-il ?",
+            ["Une boucle qui répète la mesure, avec une condition « si température > seuil alors envoyer une alerte »", "Une seule mesure au démarrage", "Une boucle sans condition", "Une condition sans mesure"],
+            "Une boucle qui répète la mesure, avec une condition « si température > seuil alors envoyer une alerte »",
+            "Les erreurs d'élèves analysées dans le sujet portaient sur ce type de programme."), OCEAN),
+        S('histoire_geographie', 'Histoire · François Ier', Q(
+            "Que dit l'article 111 de l'ordonnance de Villers-Cotterêts ?",
+            ["Que les actes de justice soient rédigés « en langage maternel françois et non autrement », et non plus en latin", "Que le roi soit élu", "Que l'école soit obligatoire", "Que le latin devienne la seule langue du royaume"],
+            "Que les actes de justice soient rédigés « en langage maternel françois et non autrement », et non plus en latin",
+            "L'article 110 veut des actes clairs, sans ambiguïté : le français doit rendre la justice compréhensible par tous."), "Document 4 : ordonnance de Villers-Cotterêts, 25 août 1539, articles 110 et 111."),
+        S('histoire_geographie', 'Histoire · François Ier', Q(
+            "Comment les historiens qualifient-ils les règnes de François Ier et d'Henri II ?",
+            ["Le « premier absolutisme »", "La monarchie parlementaire", "La féodalité", "La République"], "Le « premier absolutisme »",
+            "« La volonté du roi est tout désormais », écrit un ambassadeur vénitien en 1546 (document 2). Mais l'application concrète de cette volonté reste limitée."), "Document 2 : Joël Cornette, L'affirmation de l'État absolu 1515-1652."),
+        S('histoire_geographie', 'Histoire · François Ier', Q(
+            "Quel artiste italien, accueilli par François Ier, aurait inspiré le célèbre escalier à double révolution de Chambord ?",
+            ["Léonard de Vinci", "Michel-Ange", "Raphaël", "Botticelli"], "Léonard de Vinci",
+            "Chambord associe idées italiennes de la Renaissance et formes françaises « gothiques » : c'est le premier « château absolu » (document 6)."), "Document 6 : Joël Cornette, « Chambord, le premier château absolu »."),
+        S('histoire_geographie', 'Histoire · François Ier', Q(
+            "Qui a peint le portrait officiel de François Ier conservé au Louvre (vers 1525-1527) ?",
+            ["Jean Clouet", "Léonard de Vinci", "Jacques-Louis David", "Hyacinthe Rigaud"], "Jean Clouet",
+            "Le portrait montre la majesté du roi : un document à analyser comme une image du pouvoir. Rigaud a peint Louis XIV, David Napoléon."), "Document 3 : Jean Clouet, François Ier, roi de France, vers 1525-1527."),
+        S('emc', "EMC · l'empathie", Q(
+            "Selon le « kit empathie » (2024), qu'est-ce que la reformulation empathique ?",
+            ["Mettre en mots ce que l'autre est en train de vivre et de nous dire", "Répéter mot pour mot ce que dit l'autre", "Donner son avis immédiatement", "Corriger les fautes de l'autre"],
+            "Mettre en mots ce que l'autre est en train de vivre et de nous dire",
+            "La communication empathique comprend aussi la compréhension empathique, l'écoute silencieuse et l'écoute active (questions ouvertes)."), "Document 9 : Éduscol, kit empathie, volume 1, janvier 2024."),
+        S('emc', "EMC · l'empathie", Q(
+            "Selon le kit empathie, quel besoin psychologique la communication empathique satisfait-elle ?",
+            ["Le besoin de reconnaissance et d'acceptation de soi", "Le besoin de manger", "Le besoin de gagner", "Le besoin de silence"], "Le besoin de reconnaissance et d'acceptation de soi",
+            "Se sentir compris renforce l'estime de soi ; reconnaître la détresse de l'autre encourage l'altruisme et la coopération."), "Document 9 : Éduscol, kit empathie."),
+        S('emc', "EMC · l'empathie", Q(
+            "Qu'est-ce que l'écoute active ?",
+            ["Écouter en reformulant et en posant des questions ouvertes", "Écouter en faisant autre chose", "Écouter sans jamais répondre", "Parler en même temps que l'autre"], "Écouter en reformulant et en posant des questions ouvertes",
+            "C'est l'un des savoir-faire de la communication empathique à travailler en CM1."), None),
+        S('arts', 'Arts plastiques · expression des émotions', Q(
+            "En arts plastiques au cycle 2, comment faire exprimer une émotion ?",
+            ["En jouant sur les couleurs, les matériaux, les gestes et la composition", "En écrivant le nom de l'émotion", "En recopiant un tableau", "En utilisant une seule couleur imposée"],
+            "En jouant sur les couleurs, les matériaux, les gestes et la composition",
+            "Point de programme du sujet : « Expérimenter les effets des couleurs, des matériaux, des supports… en explorant l'organisation et la composition plastiques »."), None),
+        S('arts', 'Éducation musicale · écouter, comparer', Q(
+            "Que signifie « décrire et comparer des éléments sonores issus de contextes variés » ?",
+            ["Repérer et nommer des caractéristiques (timbre, tempo, nuances) de sons ou d'œuvres différentes, avec un vocabulaire précis", "Classer les chansons par date", "Chanter plus fort que les autres", "Apprendre le nom des compositeurs"],
+            "Repérer et nommer des caractéristiques (timbre, tempo, nuances) de sons ou d'œuvres différentes, avec un vocabulaire précis",
+            "C'est l'une des compétences du cycle 3 citées par le sujet pour l'analyse de la séance."), None),
+    ]),
 ]

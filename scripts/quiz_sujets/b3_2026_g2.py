@@ -303,4 +303,128 @@ QUESTIONS = [
             ["Au parc de la Villette, à Paris", "Au musée du Louvre", "Devant le Centre Pompidou-Metz", "Au jardin des Tuileries"], "Au parc de la Villette, à Paris",
             "L'œuvre est installée en plein air depuis 1990 : l'espace public fait partie de l'œuvre, que l'on parcourt comme un paysage."), None),
     ]),
+    # ── Ajout : questions complémentaires tirées du même sujet ──
+    epreuve('Première épreuve écrite (français et mathématiques)', 20280, [
+        S('francais', 'Étude de la langue · conjugaison', Q(
+            "Transposez « Les photos la montrent » à l'imparfait.",
+            ["Les photos la montraient", "Les photos la montrèrent", "Les photos la montreront", "Les photos l'avaient montrée"], "Les photos la montraient",
+            "Imparfait : radical + -aient à la 3e personne du pluriel."), JAB),
+        S('francais', 'Étude de la langue · conjugaison', Q(
+            "Transposez « Les photos la montrent » au plus-que-parfait.",
+            ["Les photos l'avaient montrée", "Les photos l'avaient montré", "Les photos l'eurent montrée", "Les photos l'auraient montrée"], "Les photos l'avaient montrée",
+            "Auxiliaire avoir à l'imparfait + participe passé, accordé avec le COD « la » (féminin) placé avant."), JAB),
+        S('francais', 'Étude de la langue · conjugaison', Q(
+            "Transposez « Les photos la montrent » au futur simple.",
+            ["Les photos la montreront", "Les photos la montrerons", "Les photos la montreraient", "Les photos la montrèrent"], "Les photos la montreront",
+            "Futur : infinitif + -ont à la 3e personne du pluriel. « Montreraient » est un conditionnel."), JAB),
+        S('francais', 'Étude de la langue · nature et fonction', Q(
+            "« Ma mère est la plus élégante du groupe. » Fonction de « la plus élégante du groupe » ?",
+            ["Attribut du sujet « ma mère »", "COD du verbe être", "Épithète du nom « mère »", "Complément circonstanciel"], "Attribut du sujet « ma mère »",
+            "Relié au sujet par le verbe d'état « être », le groupe adjectival est attribut du sujet."), JAB),
+        S('francais', 'Étude de la langue · nature et fonction', Q(
+            "« Elle préfère lire à l'ombre. » Fonction de « lire à l'ombre » ?",
+            ["COD du verbe « préférer »", "Sujet", "Complément circonstanciel de lieu", "Attribut du sujet"], "COD du verbe « préférer »",
+            "Elle préfère quoi ? lire à l'ombre : groupe infinitif COD. « À l'ombre » est, lui, complément du verbe « lire »."), JAB),
+        S('francais', 'Lexique · sens en contexte', Q(
+            "Le texte dit que la mère du narrateur est « associée à l'exigence culturelle ». Qu'est-ce que cela signifie ?",
+            ["Elle transmet à son fils le goût de la culture et des visites savantes", "Elle refuse toute culture", "Elle exige des cadeaux", "Elle n'aime que la plage"],
+            "Elle transmet à son fils le goût de la culture et des visites savantes",
+            "Professeure de lettres classiques, elle lui fait visiter temples, agoras et amphithéâtres : le monde grec « se met à exister »."), JAB),
+        S('francais', 'Lexique · notes du texte', Q(
+            "Selon les notes du sujet, qu'est-ce qu'un kouros ?",
+            ["Une statue de jeune homme dans l'art grec antique", "Une place publique grecque", "Une monnaie grecque", "Un temple consacré à Zeus"], "Une statue de jeune homme dans l'art grec antique",
+            "Le kouros de Paros, conservé au Louvre, ornait le billet d'entrée de l'Acropole. L'agora est la place publique ; la drachme, l'ancienne monnaie grecque."), JAB),
+        S('mathematiques', 'Exercice 1 · probabilités', N(
+            "Combien de sommes différentes peut-on obtenir avec deux dés à quatre faces ?", 7,
+            "De 1 + 1 = 2 à 4 + 4 = 8 : 2, 3, 4, 5, 6, 7, 8, soit 7 sommes."), DES),
+        S('mathematiques', 'Exercice 2 · programmes de calcul', Q(
+            "Programme B : « choisir un nombre, le multiplier par −4, ajouter 5 ». Quelle expression donne le résultat pour x ?",
+            ["−4x + 5", "−4(x + 5)", "4x − 5", "x − 4 + 5"], "−4x + 5",
+            "On multiplie d'abord par −4, puis on ajoute 5 : g(x) = −4x + 5, une fonction affine."), PROG),
+        S('mathematiques', 'Exercice 2 · fonctions', Q(
+            "Que représente graphiquement la fonction f(x) = 3x + 1 ?",
+            ["Une droite qui coupe l'axe des ordonnées en 1, de coefficient directeur 3", "Une parabole", "Une droite qui passe par l'origine", "Une droite horizontale"], "Une droite qui coupe l'axe des ordonnées en 1, de coefficient directeur 3",
+            "Une fonction affine ax + b est représentée par une droite ; b est l'ordonnée à l'origine, a le coefficient directeur."), PROG),
+        S('mathematiques', 'Exercice 4 · Scratch', N(
+            "Combien de fois faut-il répéter « avancer de 50 pas, tourner de 60° » pour tracer un hexagone régulier ?", 6,
+            "Un hexagone a 6 côtés ; 6 × 60° = 360° : le lutin fait exactement un tour complet."), None),
+        S('mathematiques', 'Exercice 5 · vrai ou faux', Q(
+            "Affirmation : « Il existe un entier dont le chiffre des unités est au moins 4, le chiffre des dizaines au moins 3, et dont le produit de ces deux chiffres est égal à son nombre de centaines. » Vrai ou faux ?",
+            ["Vrai : 1 234 convient (4 × 3 = 12 centaines)", "Faux", "Vrai : 34 convient", "Faux : le produit dépasse toujours 9"], "Vrai : 1 234 convient (4 × 3 = 12 centaines)",
+            "Le nombre de centaines de 1 234 est 12 (et non le chiffre 2) : 3 × 4 = 12. Un seul exemple suffit pour prouver qu'un tel nombre existe."), None),
+    ]),
+    epreuve('Seconde épreuve écrite (domaines au choix)', 20271, [
+        S('histoire_geographie', "Histoire · l'Église dans l'Occident médiéval", Q(
+            "Quel est le cadre religieux de base dans lequel vivent les fidèles au Moyen Âge ?",
+            ["La paroisse, autour de son église et de son curé", "Le département", "La commune républicaine", "Le diocèse protestant"], "La paroisse, autour de son église et de son curé",
+            "La paroisse regroupe les fidèles d'un village ; plusieurs paroisses forment un diocèse, dirigé par un évêque."), "Question du sujet : « Comment l'Église encadre-t-elle la société dans l'Occident médiéval ? »"),
+        S('histoire_geographie', "Histoire · l'Église dans l'Occident médiéval", Q(
+            "Dans la société médiévale, que fait l'Église pour les pauvres et les malades ?",
+            ["Elle accueille et soigne dans les hôtels-Dieu et distribue des aumônes", "Rien", "Elle les expulse des villes", "Elle les fait travailler dans les mines"], "Elle accueille et soigne dans les hôtels-Dieu et distribue des aumônes",
+            "L'Église encadre aussi l'enseignement (écoles, universités) et la charité : elle est présente dans tous les aspects de la vie."), None),
+        S('histoire_geographie', "Histoire · l'Église dans l'Occident médiéval", Q(
+            "Quelles sont les trois catégories de la société médiévale selon les clercs ?",
+            ["Ceux qui prient, ceux qui combattent, ceux qui travaillent", "Les rois, les bourgeois, les ouvriers", "Les citoyens, les étrangers, les esclaves", "Les nobles, les marchands, les savants"], "Ceux qui prient, ceux qui combattent, ceux qui travaillent",
+            "Le clergé (oratores), la noblesse (bellatores) et les paysans (laboratores) : ce schéma justifie la place éminente de l'Église."), None),
+        S('histoire_geographie', 'Géographie · les littoraux méditerranéens', Q(
+            "Qu'est-ce que l'artificialisation d'un littoral ?",
+            ["Le remplacement des espaces naturels par des constructions, routes et aménagements", "La plantation d'arbres", "La création de réserves naturelles", "La baisse du niveau de la mer"],
+            "Le remplacement des espaces naturels par des constructions, routes et aménagements",
+            "Le document 3 parle d'une urbanisation balnéaire qui « a pris le pas sur les villages de pêcheurs et les zones humides »."), "Document 3 : « Un littoral méditerranéen sous pression climatique et touristique »."),
+        S('histoire_geographie', 'Géographie · les littoraux méditerranéens', Q(
+            "Sur un croquis de paysage, que doit-on toujours faire figurer ?",
+            ["Un titre, une légende organisée et les grands ensembles du paysage (premier plan, arrière-plan)", "Des personnages", "Les couleurs exactes de la photographie", "Le nom du photographe"],
+            "Un titre, une légende organisée et les grands ensembles du paysage (premier plan, arrière-plan)",
+            "Le croquis simplifie : à Menton, la mer et le littoral, la vieille ville, le front de mer aménagé, les reliefs en arrière-plan."), None),
+        S('emc', 'EMC · laïcité et discriminations', Q(
+            "Selon la Charte de la laïcité à l'École, que garantit la laïcité aux élèves ?",
+            ["La liberté de conscience et l'égalité, en les protégeant de tout prosélytisme et de toute pression", "L'obligation de pratiquer une religion", "Le droit de refuser certains cours pour raison religieuse", "L'interdiction de parler des religions à l'école"],
+            "La liberté de conscience et l'égalité, en les protégeant de tout prosélytisme et de toute pression",
+            "Aucun élève ne peut invoquer ses convictions pour contester un enseignement (article 12). Enseigner le fait religieux reste possible."), None),
+        S('emc', 'EMC · laïcité et discriminations', Q(
+            "Qui doit respecter la neutralité religieuse à l'école publique ?",
+            ["Les personnels, agents du service public", "Les parents qui viennent chercher leurs enfants", "Tous les visiteurs dans la rue", "Personne"], "Les personnels, agents du service public",
+            "La neutralité s'impose aux agents publics. Les élèves, eux, sont soumis à la loi de 2004 sur les signes religieux ostensibles."), None),
+        S('physique_chimie', "Sciences · les états de l'eau", Q(
+            "Pendant l'expérience de classe, de la buée se forme sur un couvercle froid au-dessus d'une casserole d'eau chaude. Pourquoi ?",
+            ["La vapeur d'eau se refroidit au contact du couvercle et se liquéfie en gouttelettes", "Le couvercle produit de l'eau", "L'eau chaude traverse le couvercle", "La buée est de la fumée"],
+            "La vapeur d'eau se refroidit au contact du couvercle et se liquéfie en gouttelettes",
+            "La vapeur d'eau est invisible ; la buée est faite de gouttelettes d'eau liquide."), NINO),
+        S('physique_chimie', "Sciences · l'anémomètre", N(
+            "Une coupelle tourne sur un cercle de rayon 5 cm. Quelle distance parcourt-elle en un tour, en m ? (π ≈ 3)", 0.3,
+            "Périmètre : 2 × π × r = 2 × 3 × 0,05 m = 0,3 m."), NINO),
+        S('technologie', 'Sciences · la station météorologique', Q(
+            "Dans la maquette, quel élément traite les informations des capteurs ?",
+            ["La carte microcontrôleur Arduino", "Le buzzer", "L'anémomètre", "Le voyant lumineux"], "La carte microcontrôleur Arduino",
+            "Elle exécute le programme : elle lit les capteurs et commande le buzzer et le voyant."), NINO),
+        S('svt', 'Sciences · El Niño', Q(
+            "Que sont les alizés ?",
+            ["Des vents réguliers qui soufflent d'est en ouest dans la zone tropicale", "Des courants marins froids", "Des tempêtes de neige", "Des marées"], "Des vents réguliers qui soufflent d'est en ouest dans la zone tropicale",
+            "Ils poussent les eaux chaudes du Pacifique vers l'ouest. Quand ils faiblissent, c'est El Niño."), NINO),
+        S('svt', 'Sciences · réseaux alimentaires', Q(
+            "Dans une chaîne alimentaire, que signifie la flèche « phytoplancton → zooplancton » ?",
+            ["Le phytoplancton est mangé par le zooplancton", "Le phytoplancton mange le zooplancton", "Ils vivent séparément", "Le zooplancton se transforme en phytoplancton"], "Le phytoplancton est mangé par le zooplancton",
+            "Par convention, la flèche va du mangé vers le mangeur : elle montre le sens du transfert de matière."), NINO),
+        S('arts', 'Éducation musicale · la virtuosité romantique', Q(
+            "Que désigne un « virtuose » en musique ?",
+            ["Un interprète à la technique exceptionnelle", "Un compositeur qui n'interprète jamais", "Un chef de chœur", "Un luthier"], "Un interprète à la technique exceptionnelle",
+            "Le texte de Léo-Pol Morin le décrit comme « à la fois un monstre et un dieu » : admiré pour ses prouesses, à part de la société."), None),
+        S('arts', 'Arts plastiques · questionner la ressemblance', Q(
+            "Dans « Bicyclette ensevelie », pourquoi ne voit-on que des fragments du vélo (roue, guidon, selle, pédale) ?",
+            ["Pour faire imaginer au spectateur le reste du vélo enfoui sous terre", "Parce que l'œuvre est inachevée", "Parce que les autres pièces ont été volées", "Pour respecter les dimensions réelles d'un vélo"],
+            "Pour faire imaginer au spectateur le reste du vélo enfoui sous terre",
+            "L'œuvre joue sur l'échelle et la fragmentation : l'objet familier devient étrange et monumental."), None),
+        S('anglais', 'Anglais · lexique', Q(
+            "In the article, what is a “headteacher”?", ["The head of a school", "A teacher of the year 2 class", "A school inspector", "A pupil"], "The head of a school",
+            "Headteacher (britannique) = le chef d'établissement, le directeur ou la directrice."), GUARDIAN),
+        S('anglais', 'Anglais · compréhension', Q(
+            "What is play-based learning, according to the article?",
+            ["Letting children move around, interact, make up games and explore within loosely guided activities", "Playing video games in class", "Doing sport all day", "Reading and writing at desks"],
+            "Letting children move around, interact, make up games and explore within loosely guided activities",
+            "C'est la définition donnée dans le texte, par opposition aux leçons « desk-based »."), GUARDIAN),
+        S('anglais', 'Anglais · compréhension', Q(
+            "Why does Tina Farr think the system should change?",
+            ["Because neuroscience shows that children learn through play", "Because parents complain", "Because pupils are too old", "Because the school has no desks"], "Because neuroscience shows that children learn through play",
+            "« We have the neuroscience to know children learn through play. »"), GUARDIAN),
+    ]),
 ]

@@ -185,4 +185,129 @@ QUESTIONS = [
             "La voix de l'enseignant sert de modèle ; le chant s'apprend par fragments, avec une mise en voix préalable (échauffement corporel et vocal)."),
           "Dossier d'éducation musicale (CE2) : la chanson « Le troupeau » de Morgan Jourdain (2021) et la ressource Éduscol « Le chant, principes de mise en œuvre »."),
     ]),
+    # ── Ajout : questions complémentaires tirées du même sujet ──
+    epreuve('Épreuve écrite disciplinaire de français', 20148, [
+        S('francais', 'Étude de la langue · accords', Q(
+            "« Continuez d'être clair, simple et froid. » Pourquoi ces adjectifs sont-ils au masculin singulier ?",
+            ["Ils sont attributs du sujet sous-entendu, le maître (« vous » de politesse) à qui Rousseau s'adresse", "Ils sont invariables", "Ils s'accordent avec « être »", "Ils qualifient l'enfant"],
+            "Ils sont attributs du sujet sous-entendu, le maître (« vous » de politesse) à qui Rousseau s'adresse",
+            "Avec un « vous » de politesse désignant un seul homme, l'attribut reste au masculin singulier."), ROUSSEAU),
+        S('francais', 'Étude de la langue · nature et fonction', Q(
+            "« Pour nourrir sa curiosité, ne vous pressez jamais de la satisfaire. » Nature et fonction de « la » ?",
+            ["Pronom personnel, COD de « satisfaire » (il reprend « sa curiosité »)", "Article défini", "Pronom personnel, sujet", "Pronom relatif"], "Pronom personnel, COD de « satisfaire » (il reprend « sa curiosité »)",
+            "Satisfaire quoi ? la curiosité. Le pronom est placé devant l'infinitif dont il est complément."), ROUSSEAU),
+        S('francais', 'Étude de la langue · type et forme', Q(
+            "« C'est dans le cœur de l'homme qu'est la vie du spectacle de la nature. » Type et forme ?",
+            ["Déclarative ; forme emphatique", "Interrogative ; forme négative", "Injonctive ; forme emphatique", "Exclamative ; forme passive"], "Déclarative ; forme emphatique",
+            "« C'est… que » met en relief le complément « dans le cœur de l'homme »."), ROUSSEAU),
+        S('francais', 'Étude de la langue · réécriture', Q(
+            "Réécrivez avec « ils » : « Si jamais vous substituez dans son esprit l'autorité à la raison, il ne raisonnera plus. »",
+            ["Si jamais vous substituez dans leur esprit l'autorité à la raison, ils ne raisonneront plus.", "Si jamais vous substituez dans leurs esprit l'autorité à la raison, ils ne raisonnera plus.", "Si jamais vous substituez dans son esprit l'autorité à la raison, ils ne raisonneront plus.", "Si jamais vous substituez dans leur esprits l'autorité à la raison, ils ne raisonnerons plus."],
+            "Si jamais vous substituez dans leur esprit l'autorité à la raison, ils ne raisonneront plus.",
+            "Logique distributive : chacun a un esprit, d'où « leur esprit » au singulier (« leurs esprits » serait aussi possible). Le verbe s'accorde : ils raisonneront."), ROUSSEAU),
+        S('francais', 'Lexique · formation des mots', Q(
+            "Lequel de ces mots est formé avec l'élément « -graphie » (écrire) ?",
+            ["Orthographe", "Géologie", "Géomètre", "Géode"], "Orthographe",
+            "Ortho- (droit) + -graphe : écrire correctement. Géologie et géomètre sont formés avec géo- (la terre)."), ROUSSEAU),
+        S('francais', 'Culture littéraire · Rousseau', Q(
+            "À quel siècle et à quel mouvement appartient Rousseau, auteur d'« Émile ou de l'Éducation » (1762) ?",
+            ["Au XVIIIe siècle, au temps des Lumières", "Au XVIIe siècle classique", "Au XIXe siècle romantique", "Au XVIe siècle humaniste"], "Au XVIIIe siècle, au temps des Lumières",
+            "Avec Voltaire, Diderot ou Montesquieu, Rousseau appartient aux Lumières, qui défendent la raison et l'esprit critique, au cœur du sujet de réflexion."), ROUSSEAU),
+        S('francais', 'Compréhension · l\'éducation selon Rousseau', Q(
+            "Pour enseigner la géographie, que conseille Rousseau ?",
+            ["Montrer d'abord l'objet même, dans la nature, plutôt que des globes et des cartes", "Commencer par apprendre les cartes par cœur", "Lire des récits de voyage", "Faire dessiner des globes"],
+            "Montrer d'abord l'objet même, dans la nature, plutôt que des globes et des cartes",
+            "« Pourquoi toutes ces représentations ? Que ne commencez-vous par lui montrer l'objet même ! » : l'expérience avant le discours."), ROUSSEAU),
+    ]),
+    epreuve('Épreuve écrite disciplinaire de mathématiques', 20160, [
+        S('mathematiques', 'Exercice 2 · heures et durées', Q(
+            "Le bateau B avance à 14,04 km/h sur 96 km et part à 8 h 30. À quelle heure arrive-t-il, à la minute près ?",
+            ["15 h 20", "14 h 54", "15 h 10", "14 h 20"], "15 h 20",
+            "96 ÷ 14,04 ≈ 6,838 h, soit 6 h 50 min (0,838 × 60 ≈ 50). 8 h 30 + 6 h 50 = 15 h 20."), REGATE),
+        S('mathematiques', 'Exercice 2 · classement', Q(
+            "Bateau A : 15 km/h ; bateau B : 3,9 m/s ; bateau C : 14,5 km/h. Quel est le classement ?",
+            ["A, puis C, puis B", "B, puis A, puis C", "C, puis A, puis B", "A, puis B, puis C"], "A, puis C, puis B",
+            "3,9 m/s = 14,04 km/h. Il faut comparer des vitesses dans la même unité."), REGATE),
+        S('mathematiques', 'Exercice 4 · statistiques', N(
+            "Rallye : 9 km (126 élèves), 11 km (120), 12 km (140), 15 km (34). Quelle est la distance moyenne, en km, arrondie au centième ?", 11.06,
+            "4 644 km ÷ 420 élèves ≈ 11,06 km.", tol=0.005), RALLYE),
+        S('mathematiques', 'Exercice 4 · aires', N(
+            "Un quart de disque a un rayon de 0,6 m. Quelle est son aire, en m², arrondie au centième ?", 0.28,
+            "π × 0,6² ÷ 4 = π × 0,36 ÷ 4 ≈ 0,28 m².", tol=0.005), None),
+        S('mathematiques', 'Exercice 3 · fonctions', Q(
+            "f(x) = −2x + … et g(x) = 7x sont des fonctions dont les droites se coupent en A. Comment trouver l'abscisse de A ?",
+            ["Résoudre l'équation f(x) = g(x)", "Calculer f(0)", "Calculer g(0)", "Additionner f(x) et g(x)"], "Résoudre l'équation f(x) = g(x)",
+            "Le point d'intersection a la même image par les deux fonctions. On reporte ensuite l'abscisse trouvée dans g pour obtenir l'ordonnée."), None),
+    ]),
+    epreuve("Épreuve écrite d'application (sciences, histoire-géographie-EMC ou arts)", 20172, [
+        S('physique_chimie', 'Sciences · la formation de la banquise', Q(
+            "Quelle différence voit-on entre la courbe de solidification de l'eau déminéralisée et celle de l'eau salée ?",
+            ["L'eau pure a un palier à 0 °C ; l'eau salée n'a pas de palier net et se solidifie en dessous de 0 °C", "Elles sont identiques", "L'eau salée gèle au-dessus de 0 °C", "L'eau pure ne gèle pas"],
+            "L'eau pure a un palier à 0 °C ; l'eau salée n'a pas de palier net et se solidifie en dessous de 0 °C",
+            "Un corps pur change d'état à température constante ; un mélange, non. C'est pourquoi l'eau de mer gèle vers −1,8 °C."), ARCTIQUE),
+        S('physique_chimie', "Sciences · l'effet d'albédo", Q(
+            "Qu'est-ce que l'albédo ?",
+            ["La part du rayonnement solaire renvoyée par une surface", "La température de l'océan", "La masse de la banquise", "Un gaz à effet de serre"], "La part du rayonnement solaire renvoyée par une surface",
+            "La neige et la glace ont un fort albédo (elles renvoient beaucoup de lumière) ; l'océan sombre, un faible albédo. La fonte de la banquise accélère donc le réchauffement."), ARCTIQUE),
+        S('physique_chimie', "Sciences · l'effet d'albédo", Q(
+            "Dans l'expérience des récipients noir et blanc, quel est le seul paramètre qui doit varier ?",
+            ["La couleur de la surface", "La quantité d'eau", "La durée d'exposition", "La température de départ"], "La couleur de la surface",
+            "Même quantité d'eau, même température initiale, même éclairage, même durée : on ne change qu'un facteur pour pouvoir conclure."), ARCTIQUE),
+        S('svt', "Sciences · le réseau trophique arctique", Q(
+            "Dans l'Arctique, quels êtres vivants sont à la base du réseau trophique ?",
+            ["Les algues microscopiques (dont celles de la glace de mer)", "Les ours polaires", "Les baleines", "Les phoques"], "Les algues microscopiques (dont celles de la glace de mer)",
+            "Producteurs primaires, elles fabriquent leur matière par photosynthèse. L'ours polaire est un superprédateur, au sommet."), ARCTIQUE),
+        S('svt', "Sciences · la classification", Q(
+            "Un élève dit que l'ours polaire est plus proche de la morue que du macareux parce qu'ils vivent tous deux dans l'eau. Quelle est l'erreur ?",
+            ["Il classe selon le milieu de vie, et non selon les attributs partagés", "Il a raison", "Il confond l'ours et le phoque", "Il oublie que la morue est un mammifère"],
+            "Il classe selon le milieu de vie, et non selon les attributs partagés",
+            "L'ours et le macareux partagent par exemple des poumons et des membres : ils sont plus proches entre eux que de la morue. Un document organisé par milieux peut induire cette erreur."), ARCTIQUE),
+        S('svt', "Sciences · actions humaines", Q(
+            "Pourquoi des polluants peuvent-ils se retrouver en forte concentration chez les ours polaires et les populations qui mangent des animaux marins ?",
+            ["Ils s'accumulent le long des chaînes alimentaires (bioaccumulation)", "Ils sont produits par les ours", "Ils viennent de la glace pure", "Ils disparaissent dans l'eau"],
+            "Ils s'accumulent le long des chaînes alimentaires (bioaccumulation)",
+            "Chaque prédateur concentre les polluants de ses proies : les espèces au sommet en contiennent le plus."), ARCTIQUE),
+        S('technologie', 'Sciences · la base scientifique Tara Polar', Q(
+            "Dans la propulsion « moteur, réducteur, axe, hélice », quel élément transforme la rotation en poussée dans l'eau ?",
+            ["L'hélice", "Le moteur", "Le réducteur", "L'axe"], "L'hélice",
+            "Le moteur produit la rotation, le réducteur adapte la vitesse, l'axe transmet le mouvement, l'hélice pousse l'eau et fait avancer le bateau."), ARCTIQUE),
+        S('technologie', 'Sciences · la démarche technologique', Q(
+            "Dans quel ordre se déroule la démarche technologique en classe ?",
+            ["Identifier le besoin, imaginer des solutions, réaliser un prototype, le tester, l'améliorer", "Tester, puis imaginer, puis identifier le besoin", "Réaliser sans réfléchir, puis tester", "Lire une notice et la recopier"],
+            "Identifier le besoin, imaginer des solutions, réaliser un prototype, le tester, l'améliorer",
+            "Pour le défi « un bateau qui avance tout seul », les élèves comparent ensuite leurs prototypes selon un critère mesurable."), ARCTIQUE),
+        S('histoire_geographie', "Histoire · de 1789 à l'exécution du roi", Q(
+            "Quel texte, adopté le 26 août 1789, proclame que « les hommes naissent et demeurent libres et égaux en droits » ?",
+            ["La Déclaration des droits de l'homme et du citoyen", "La Constitution de 1958", "Le serment du Jeu de paume", "Le Code civil"], "La Déclaration des droits de l'homme et du citoyen",
+            "Elle pose les grands principes de la Révolution : liberté, égalité devant la loi, souveraineté de la nation."), REVOLUTION),
+        S('histoire_geographie', "Histoire · de 1789 à l'exécution du roi", Q(
+            "Pourquoi la Révolution est-elle une rupture avec l'ordre monarchique ?",
+            ["Le pouvoir ne vient plus de Dieu et du roi, mais de la nation, et les privilèges sont abolis", "Le roi garde tous ses pouvoirs", "La noblesse devient plus puissante", "L'Église gouverne le pays"],
+            "Le pouvoir ne vient plus de Dieu et du roi, mais de la nation, et les privilèges sont abolis",
+            "De la monarchie absolue de droit divin à la République : c'est l'enjeu du repère de CM1 « De l'année 1789 à l'exécution du roi »."), REVOLUTION),
+        S('histoire_geographie', "Histoire · de 1789 à l'exécution du roi", Q(
+            "Que se passe-t-il le 20 juin 1789 dans la salle du Jeu de paume ?",
+            ["Les députés du tiers état jurent de ne pas se séparer avant d'avoir donné une Constitution à la France", "Le roi est arrêté", "La Bastille est prise", "La République est proclamée"],
+            "Les députés du tiers état jurent de ne pas se séparer avant d'avoir donné une Constitution à la France",
+            "C'est le serment du Jeu de paume, peu après la transformation des États généraux en Assemblée nationale."), None),
+        S('emc', 'EMC · La Marseillaise', Q(
+            "Sous quel titre La Marseillaise a-t-elle d'abord été composée, en 1792 ?",
+            ["Chant de guerre pour l'armée du Rhin", "Hymne à la joie", "Le Chant du départ", "La Carmagnole"], "Chant de guerre pour l'armée du Rhin",
+            "Elle doit son nom aux volontaires marseillais qui la chantèrent en montant à Paris. Elle devient hymne national en 1795."), REVOLUTION),
+        S('emc', 'EMC · La Marseillaise', Q(
+            "Avec des élèves de CP, comment aborder La Marseillaise ?",
+            ["L'écouter, en apprendre le premier couplet et le refrain, comprendre qu'elle est un symbole de la République et l'attitude à avoir quand on l'entend", "Analyser toutes les paroles mot à mot", "La faire recopier", "Ne pas en parler"],
+            "L'écouter, en apprendre le premier couplet et le refrain, comprendre qu'elle est un symbole de la République et l'attitude à avoir quand on l'entend",
+            "Au CP, on part de situations vécues (une cérémonie, un match) et l'on relie l'hymne aux autres symboles : drapeau, devise, Marianne."), REVOLUTION),
+        S('arts', 'Arts du visuel · cycle 1', Q(
+            "Selon le programme de maternelle, qu'attend-on d'une activité d'arts du visuel en petite ou moyenne section ?",
+            ["Que les enfants explorent librement outils, matériaux et gestes, et découvrent des œuvres", "Qu'ils reproduisent exactement une œuvre", "Qu'ils apprennent l'histoire de l'art", "Qu'ils colorient sans dépasser"],
+            "Que les enfants explorent librement outils, matériaux et gestes, et découvrent des œuvres",
+            "La référence à une artiste comme Yayoi Kusama nourrit l'imaginaire ; elle ne doit pas devenir un modèle à copier."), None),
+        S('arts', 'Éducation musicale · le chant', Q(
+            "Pourquoi commencer une séance de chant par une mise en voix ?",
+            ["Pour préparer le corps et la voix : posture, respiration, échauffement vocal", "Pour occuper le temps", "Pour évaluer les élèves", "Pour choisir un soliste"],
+            "Pour préparer le corps et la voix : posture, respiration, échauffement vocal",
+            "C'est une étape recommandée par les ressources « Le chant, principes de mise en œuvre » citées dans le dossier."), None),
+    ]),
 ]

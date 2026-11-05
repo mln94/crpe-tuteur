@@ -186,4 +186,132 @@ QUESTIONS = [
             ["Concertos pour violon", "Symphonies", "Opéras", "Lieder"], "Concertos pour violon",
             "Chaque saison est un concerto en trois mouvements (vif, lent, vif) pour violon soliste et orchestre à cordes, accompagné d'un sonnet qui décrit la scène."), None),
     ]),
+    # ── Ajout : questions complémentaires tirées du même sujet ──
+    epreuve('Épreuve écrite disciplinaire de français', 20145, [
+        S('francais', 'Étude de la langue · temps et voix', Q(
+            "« Devenue diplomate, elle commença à voyager. » Temps, voix et infinitif de « commença » ?",
+            ["Passé simple, voix active, commencer", "Imparfait, voix active, commencer", "Passé simple, voix passive, commencer", "Passé composé, voix active, commencer"], "Passé simple, voix active, commencer",
+            "Le c prend une cédille devant a pour garder le son [s] : commença."), BONNEFOY),
+        S('francais', 'Étude de la langue · temps et voix', Q(
+            "« … la même tâche qu'avaient accomplie les chroniqueurs. » Temps et voix de « avaient accomplie » ?",
+            ["Plus-que-parfait, voix active", "Plus-que-parfait, voix passive", "Passé antérieur, voix active", "Imparfait, voix passive"], "Plus-que-parfait, voix active",
+            "Auxiliaire avoir à l'imparfait + participe passé : plus-que-parfait. L'auxiliaire avoir indique ici un temps composé de la voix active, pas une voix passive."), BONNEFOY),
+        S('francais', 'Étude de la langue · nature des mots', Q(
+            "« … représentant sa patrie à l'étranger, effectuant la même tâche… » Nature de « représentant » ?",
+            ["Participe présent", "Nom commun", "Adjectif verbal", "Gérondif"], "Participe présent",
+            "Il exprime une action et a un complément (« sa patrie ») : participe présent, invariable. Sans « en », ce n'est pas un gérondif ; le nom « représentant » existe aussi, mais pas ici."), BONNEFOY),
+        S('francais', 'Étude de la langue · liens logiques', Q(
+            "Remplacez « or » par une conjonction de subordination : « Les villes changeaient, […] or les livres, eux, ne changeaient pas. »",
+            ["Les villes changeaient, alors que les livres, eux, ne changeaient pas.", "Les villes changeaient, donc les livres ne changeaient pas.", "Les villes changeaient, car les livres ne changeaient pas.", "Les villes changeaient, et les livres ne changeaient pas."],
+            "Les villes changeaient, alors que les livres, eux, ne changeaient pas.",
+            "« Alors que » ou « tandis que » expriment l'opposition. « Donc » et « car » sont des conjonctions de coordination (conséquence, cause)."), BONNEFOY),
+        S('francais', 'Lexique · sens en contexte', Q(
+            "« Cristóbal s'attelait à ces royaumes pétrifiés. » Que désignent ces « royaumes pétrifiés » ?",
+            ["Les livres, immobiles et immuables comme la pierre", "Des pays visités", "Des villes en ruines", "Des statues de musée"], "Les livres, immobiles et immuables comme la pierre",
+            "« Les pages ont l'immobilité du métal et de l'agate » : pour l'enfant toujours en voyage, les livres sont ce qui ne change pas."), BONNEFOY),
+        S('francais', 'Lexique · sens en contexte', Q(
+            "Pourquoi Cristóbal pense-t-il que « lire, ce n'est pas voyager », contrairement à sa mère ?",
+            ["Parce que, pour un enfant qui déménage sans cesse, lire c'est au contraire rester, retrouver quelque chose de stable", "Parce qu'il n'aime pas lire", "Parce que les livres parlent de voyages imaginaires", "Parce qu'il a peur de l'avion"],
+            "Parce que, pour un enfant qui déménage sans cesse, lire c'est au contraire rester, retrouver quelque chose de stable",
+            "Le texte renverse la formule de Venezuela : « pour Cristóbal, dont l'enfance n'avait été que voyages, lire c'était rester »."), BONNEFOY),
+        S('francais', 'Culture · notes du texte', Q(
+            "Qui était Fernand de Magellan, cité dans le texte ?",
+            ["Un navigateur portugais qui découvrit le détroit entre l'Atlantique et le Pacifique", "Un conquistador qui soumit l'Empire inca", "Un roi d'Espagne", "Un écrivain vénézuélien"], "Un navigateur portugais qui découvrit le détroit entre l'Atlantique et le Pacifique",
+            "Pizarro est le conquistador qui soumit l'Empire inca. Les deux noms nourrissent l'imaginaire de l'enfant lecteur."), BONNEFOY),
+    ]),
+    epreuve('Épreuve écrite disciplinaire de mathématiques', 20157, [
+        S('mathematiques', 'Exercice 1 · pourcentages', N(
+            "Un plant à 1,20 € augmente de 2 %, puis de 3 %. Quel est son nouveau prix, arrondi au centime, en euros ?", 1.26,
+            "1,20 × 1,02 × 1,03 = 1,26072 ≈ 1,26 €."), None),
+        S('mathematiques', 'Exercice 1 · fractions', N(
+            "3 kg de fraises, soit 2/9 de la récolte, servent à la confiture. Quelle est la masse de la récolte, en kg ?", 13.5,
+            "Récolte = 3 ÷ 2/9 = 3 × 9/2 = 13,5 kg."), None),
+        S('mathematiques', 'Exercice 1 · Thalès', N(
+            "Bassine : grand cône de rayon 42 cm ; OC = 22 cm ; CA = 18,9 cm ; (AC) // (OB). Combien mesure OS, en cm ?", 40,
+            "Thalès : SC/SO = CA/OB = 18,9/42 = 0,45. SC = SO − 22, donc SO − 22 = 0,45 SO, soit 0,55 SO = 22 et SO = 40 cm."), None),
+        S('mathematiques', 'Exercice 1 · volumes', N(
+            "Le volume de la bassine (grand cône moins petit cône) vaut environ 67 157 cm³. Combien cela fait-il de litres, arrondi au centilitre ?", 67.16,
+            "1 L = 1 000 cm³ : 67 157 cm³ ≈ 67,16 L."), None),
+        S('mathematiques', 'Exercice 1 · dénombrement', N(
+            "Sur la longueur de 444 cm, avec un écart de 37 cm entre deux fraisiers, combien de plants (extrémités comprises) ?", 13,
+            "444 ÷ 37 = 12 intervalles, donc 13 plants."), FRAISES),
+        S('mathematiques', 'Exercice 2 · statistiques', N(
+            "Vitesses (m/s) et effectifs : 2,35 (2) ; 2,4 (5) ; 2,43 (8) ; 2,5 (12) ; 2,54 (13) ; 2,67 (10) ; 2,78 (7) ; 2,9 (3). Vitesse moyenne, arrondie au centième ?", 2.57,
+            "Somme des produits : 154,02 ; effectif total : 60. 154,02 ÷ 60 ≈ 2,57 m/s.", tol=0.005), None),
+        S('mathematiques', 'Exercice 3 · probabilités', Q(
+            "On multiplie les résultats d'un dé à 6 faces et d'un dé à 4 faces. Lequel de ces événements est impossible ?",
+            ["Obtenir 25", "Obtenir 24", "Obtenir 1", "Obtenir 12"], "Obtenir 25",
+            "Le produit maximal est 6 × 4 = 24. 25 = 5 × 5 est impossible, puisque le dé à 4 faces ne donne jamais 5."), DES),
+    ]),
+    epreuve("Épreuve écrite d'application (sciences, histoire-géographie-EMC ou arts)", 20169, [
+        S('physique_chimie', 'Sciences · la distance Terre-Lune', N(
+            "Une impulsion laser fait l'aller-retour Terre-Lune (384 000 km) à 3,00 × 10⁸ m/s. Combien de temps dure l'aller-retour, en secondes ?", 2.56,
+            "Distance aller-retour : 2 × 3,84 × 10⁸ m = 7,68 × 10⁸ m. t = d ÷ v = 7,68 × 10⁸ ÷ 3 × 10⁸ = 2,56 s."), NUIT),
+        S('physique_chimie', 'Sciences · les phases de la Lune', Q(
+            "Pourquoi n'observe-t-on pas toujours le même aspect de la Lune ?",
+            ["La Lune tourne autour de la Terre : on voit plus ou moins sa face éclairée par le Soleil", "L'ombre de la Terre cache chaque soir une partie de la Lune", "La Lune change de forme", "Les nuages la cachent"],
+            "La Lune tourne autour de la Terre : on voit plus ou moins sa face éclairée par le Soleil",
+            "L'ombre de la Terre n'explique que les éclipses, pas les phases : c'est une conception erronée fréquente. La modélisation Soleil-Terre-Lune permet de la dépasser."), NUIT),
+        S('physique_chimie', 'Sciences · les phases de la Lune', Q(
+            "Comment expliquer à un élève de CM1 ce que signifie « modéliser » ?",
+            ["Représenter, avec des objets ou un schéma, un phénomène trop grand ou trop lointain pour être observé directement", "Copier un modèle de dessin", "Fabriquer un objet décoratif", "Apprendre une leçon par cœur"],
+            "Représenter, avec des objets ou un schéma, un phénomène trop grand ou trop lointain pour être observé directement",
+            "Par exemple, une lampe (le Soleil), un ballon (la Terre) et une balle (la Lune) pour comprendre les phases."), NUIT),
+        S('svt', 'Sciences · les pelotes de réjection', Q(
+            "Pourquoi étudier en classe des pelotes de réjection ramassées dans la nature peut-il poser problème ?",
+            ["Pour des raisons d'hygiène : il faut des pelotes stérilisées, achetées chez un fournisseur, et des gants", "Parce qu'elles sont trop chères", "Parce que les élèves ne savent pas ce qu'est un hibou", "Parce qu'elles sentent bon"],
+            "Pour des raisons d'hygiène : il faut des pelotes stérilisées, achetées chez un fournisseur, et des gants",
+            "Une pelote ramassée peut contenir des germes ; on peut aussi utiliser des photographies ou des vidéos de dissection."), NUIT),
+        S('svt', 'Sciences · les pelotes de réjection', Q(
+            "Que contient une pelote de réjection de hibou ?",
+            ["Les restes non digérés de ses proies : os, poils, plumes", "Des œufs", "Des graines", "Des excréments liquides"], "Les restes non digérés de ses proies : os, poils, plumes",
+            "Le rapace la régurgite : l'analyse des os permet d'identifier ses proies et donc son régime alimentaire."), NUIT),
+        S('svt', 'Sciences · la biodiversité nocturne', Q(
+            "Comment modéliser l'interdépendance des espèces avec des pelotes de laine et des cartes d'espèces ?",
+            ["Chaque élève tient une carte d'espèce ; on relie par la laine celui qui mange à celui qui est mangé ; si les chenilles disparaissent, on lâche leurs fils et on observe qui est touché", "On fait un dessin libre", "On classe les cartes par couleur", "On lit les cartes à voix haute"],
+            "Chaque élève tient une carte d'espèce ; on relie par la laine celui qui mange à celui qui est mangé ; si les chenilles disparaissent, on lâche leurs fils et on observe qui est touché",
+            "Le jeu de rôle rend visible le réseau alimentaire et l'effet en cascade de la disparition d'une espèce."), NUIT),
+        S('svt', 'Sciences · les sciences participatives', Q(
+            "En quoi un programme de sciences participatives comme Vigie-Nature École aide-t-il à « pratiquer des démarches scientifiques » ?",
+            ["Les élèves suivent un protocole rigoureux, collectent de vraies données utilisées par des chercheurs et les interprètent", "Ils regardent un film documentaire", "Ils apprennent une liste d'espèces", "Ils dessinent librement"],
+            "Les élèves suivent un protocole rigoureux, collectent de vraies données utilisées par des chercheurs et les interprètent",
+            "Lancé en 2010, Vigie-Nature École permet aux classes de participer à de vrais programmes de recherche sur la biodiversité ordinaire."), NUIT),
+        S('technologie', 'Sciences · un lampadaire intelligent', Q(
+            "Dans le lampadaire micro:bit, il fait nuit quand la valeur du capteur de luminosité est inférieure à 100. Quelle condition allume les DEL ?",
+            ["Luminosité < 100 ET présence détectée", "Luminosité > 100 OU présence détectée", "Luminosité < 100 seulement", "Présence détectée seulement"], "Luminosité < 100 ET présence détectée",
+            "Les deux conditions doivent être vraies : la nuit, et quelqu'un passe. C'est ce qui permet d'économiser l'énergie."), NUIT),
+        S('histoire_geographie', 'Histoire · les traces des guerres mondiales', Q(
+            "Une carte postale envoyée par un soldat en 1917, « en franchise », est :",
+            ["Une source historique écrite, trace directe de la Grande Guerre", "Un manuel d'histoire", "Un témoignage inventé", "Un document du XXIe siècle"], "Une source historique écrite, trace directe de la Grande Guerre",
+            "La franchise permettait aux soldats d'écrire gratuitement. Ces correspondances sont des traces proches des élèves (archives familiales)."), GUERRES),
+        S('histoire_geographie', 'Histoire · les traces des guerres mondiales', Q(
+            "Dans « Un sac de billes » (Joseph Joffo), pourquoi les deux frères doivent-ils fuir en 1943 ?",
+            ["Parce qu'ils sont juifs et persécutés sous l'Occupation", "Parce qu'ils ont volé des billes", "Parce qu'ils partent en vacances", "Parce qu'ils sont recherchés par la police pour un crime"],
+            "Parce qu'ils sont juifs et persécutés sous l'Occupation",
+            "Ce récit autobiographique permet d'aborder avec des CM2 la persécution des Juifs pendant la Seconde Guerre mondiale."), GUERRES),
+        S('histoire_geographie', 'Histoire · les traces des guerres mondiales', Q(
+            "Pourquoi s'appuyer sur le monument aux morts de la commune avec des CM2 ?",
+            ["C'est une trace proche, que l'on peut observer, et qui montre l'ampleur des pertes dans chaque village", "Parce que c'est le seul document disponible", "Pour apprendre l'architecture", "Pour connaître les noms de rues"],
+            "C'est une trace proche, que l'on peut observer, et qui montre l'ampleur des pertes dans chaque village",
+            "Le programme invite à partir « des traces de ces conflits dans l'environnement des élèves ». Le dossier en montrait un à Saint-Louis, en Guadeloupe."), GUERRES),
+        S('emc', 'EMC · les commémorations', Q(
+            "Que commémore-t-on le 11 novembre ?",
+            ["L'armistice de 1918, qui met fin aux combats de la Première Guerre mondiale", "La fin de la Seconde Guerre mondiale", "La prise de la Bastille", "L'appel du 18 juin"], "L'armistice de 1918, qui met fin aux combats de la Première Guerre mondiale",
+            "Depuis 2012, le 11 novembre rend aussi hommage à tous les morts pour la France."), GUERRES),
+        S('emc', 'EMC · les commémorations', Q(
+            "Comment préparer des élèves à participer à une cérémonie du 8 mai ?",
+            ["Expliquer le sens de l'événement, préparer la lecture de noms ou un chant, et l'attitude attendue pendant la cérémonie", "Les emmener sans préparation", "Leur faire apprendre la date par cœur seulement", "Organiser une fête"],
+            "Expliquer le sens de l'événement, préparer la lecture de noms ou un chant, et l'attitude attendue pendant la cérémonie",
+            "La cérémonie devient une expérience civique : les élèves comprennent la signification du 8 mai et le rôle du monument aux morts."), GUERRES),
+        S('arts', 'Éducation musicale · les univers sonores', Q(
+            "En grande section, comment faire écouter « L'été » de Vivaldi à de jeunes élèves ?",
+            ["Par des écoutes courtes et répétées, avec le corps et le geste, en lien avec ce que la musique évoque (l'orage)", "Par une écoute de 30 minutes en silence", "En lisant la partition", "En leur faisant écrire leurs impressions"],
+            "Par des écoutes courtes et répétées, avec le corps et le geste, en lien avec ce que la musique évoque (l'orage)",
+            "Au cycle 1, l'attention est brève et l'écoute passe par le mouvement et l'expression orale."), None),
+        S('arts', 'Arts plastiques · le collage', Q(
+            "Quelle compétence de cycle 3 un travail de collage permet-il de développer ?",
+            ["Expérimenter, produire, créer en associant des matériaux et des images hétérogènes", "Recopier une œuvre au crayon", "Apprendre une date", "Mesurer des longueurs"],
+            "Expérimenter, produire, créer en associant des matériaux et des images hétérogènes",
+            "Le collage fait naître du sens par la rencontre d'éléments différents ; le document du dossier parle d'une « pensée divergente »."), None),
+    ]),
 ]

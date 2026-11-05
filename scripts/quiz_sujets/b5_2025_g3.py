@@ -149,4 +149,106 @@ QUESTIONS = [
             "Organiser des sons choisis (voix, objets, corps) selon un ordre, des durées et des nuances, pour créer une courte pièce",
             "La démarche de création sonore (ressources Éduscol) : explorer, choisir, organiser, interpréter, puis écouter et améliorer."), None),
     ]),
+    # ── Ajout : questions complémentaires tirées du même sujet (regroupement 3, Polynésie française) ──
+    epreuve('Épreuve écrite disciplinaire de français', 16582, [
+        S('francais', 'Étude de la langue · temps et modes', Q(
+            "« … tout ce que j'allais trouver serait une réponse dont je m'accommoderais. » Temps et mode de « serait » ?",
+            ["Conditionnel présent", "Futur simple", "Imparfait de l'indicatif", "Présent du subjonctif"], "Conditionnel présent",
+            "Il exprime ici un futur dans le passé, après « j'allais trouver ». « M'accommoderais » est aussi au conditionnel présent."), JARRY),
+        S('francais', 'Étude de la langue · nature et fonction', Q(
+            "« … je ne disposais d'aucun indice. » Fonction de « d'aucun indice » ?",
+            ["COI du verbe « disposer »", "COD", "Complément du nom", "Complément circonstanciel de manière"], "COI du verbe « disposer »",
+            "On dispose de quelque chose : le complément est introduit par la préposition « de », c'est un COI."), JARRY),
+        S('francais', 'Étude de la langue · nature et fonction', Q(
+            "« … la magie du lieu qui se livrerait à moi docilement. » Nature de « docilement » ?",
+            ["Adverbe de manière", "Adjectif", "Nom", "Préposition"], "Adverbe de manière",
+            "Formé de l'adjectif « docile » + -ment, il modifie le verbe « se livrer »."), JARRY),
+        S('francais', 'Étude de la langue · voix active et passive', Q(
+            "« Le secret avait été instauré […] par mon grand-père. » Comment appelle-t-on « par mon grand-père » ?",
+            ["Le complément d'agent", "Le COD", "Le sujet", "Le complément du nom"], "Le complément d'agent",
+            "À la voix passive, celui qui fait l'action est le complément d'agent ; à la voix active, il devient sujet."), JARRY),
+        S('francais', 'Lexique · sens en contexte', Q(
+            "Que veut dire la narratrice par « m'enfoncer dans les eaux vertes et troubles » ?",
+            ["Se lancer dans une recherche incertaine, obscure, sur un passé familial mystérieux", "Se baigner dans un lac", "Tomber malade", "Peindre un paysage"],
+            "Se lancer dans une recherche incertaine, obscure, sur un passé familial mystérieux",
+            "C'est une métaphore : l'eau trouble dit l'incertitude de son enquête au Japon, sans indice ni réponse."), JARRY),
+    ]),
+    epreuve('Épreuve écrite disciplinaire de mathématiques', 16567, [
+        S('mathematiques', 'Exercice 4 · probabilités', Q(
+            "Dés à 6 et à 10 faces : pourquoi la probabilité d'obtenir le produit 35 vaut-elle 1/60 ?",
+            ["Seul le couple (5 ; 7) donne 35, sur 60 issues équiprobables", "Il y a 35 issues", "35 est divisible par 5", "Le produit maximal est 60"], "Seul le couple (5 ; 7) donne 35, sur 60 issues équiprobables",
+            "35 = 5 × 7 = 7 × 5, mais le dé à six faces ne peut pas donner 7. Il reste (5 ; 7)."), DES),
+        S('mathematiques', 'Exercice 4 · probabilités', Q(
+            "Numérateur au dé à dix faces, dénominateur au dé à six faces. Quelle est la probabilité que la fraction soit un entier ?",
+            ["23/60", "1/6", "1/4", "1/2"], "23/60",
+            "Le dénominateur doit diviser le numérateur : 10 cas pour 1, 5 pour 2, 3 pour 3, 2 pour 4, 2 pour 5, 1 pour 6, soit 23 sur 60."), DES),
+        S('mathematiques', 'Exercice 3 · pourcentages', N(
+            "Un lotissement produit 5 280 kg de déchets verts ; le compost représente 55 % de cette masse. Combien de kg de compost ?", 2904,
+            "5 280 × 0,55 = 2 904 kg."), None),
+        S('histoire_geographie', 'Géographie · Bora-Bora, un espace touristique', Q(
+            "Pourquoi Bora-Bora est-elle la « vitrine touristique » de la Polynésie française ?",
+            ["Elle concentre de nombreux hôtels de luxe de chaînes internationales, beaucoup de vols et la majorité des touristes internationaux", "Elle est la capitale de la Polynésie", "Elle n'a aucun hôtel", "C'est l'île la plus grande"],
+            "Elle concentre de nombreux hôtels de luxe de chaînes internationales, beaucoup de vols et la majorité des touristes internationaux",
+            "Elle reçoit les trois cinquièmes des touristes internationaux et la majorité des hôtels 5 étoiles du territoire (document 3)."), "Sujet de géographie (Polynésie française, CM1) : le tourisme à Bora-Bora, avec un texte de la géographe Caroline Blondy, des photographies et des images satellites."),
+        S('histoire_geographie', 'Géographie · Bora-Bora, un espace touristique', Q(
+            "Quel type d'hébergement caractérise le paysage touristique de Bora-Bora ?",
+            ["Les bungalows sur pilotis au-dessus du lagon", "Les gratte-ciel", "Les campings de montagne", "Les chalets de ski"], "Les bungalows sur pilotis au-dessus du lagon",
+            "En 2012, l'île comptait 12 hôtels et 833 unités, dont près de la moitié de bungalows sur pilotis (document 3)."), "Document 3 : C. Blondy, « Le tourisme, un facteur de développement durable des territoires insulaires tropicaux ? »."),
+        S('histoire_geographie', 'Géographie · Bora-Bora, un espace touristique', Q(
+            "Que désigne le mot « motu », utilisé à Bora-Bora ?",
+            ["Un petit îlot de sable et de corail autour du lagon", "Un hôtel de luxe", "Une montagne volcanique", "Un bateau de pêche"], "Un petit îlot de sable et de corail autour du lagon",
+            "Les hôtels se sont implantés au sud de l'île et sur les motu périphériques, ce qui a transformé ces paysages."), None),
+        S('histoire_geographie', 'Géographie · Bora-Bora, un espace touristique', Q(
+            "Selon le document 3, le tourisme a-t-il seulement des effets négatifs à Bora-Bora ?",
+            ["Non : il transforme les paysages et pèse sur les ressources, mais crée des emplois, freine l'émigration et a amélioré la gestion des déchets et de l'eau", "Oui, uniquement négatifs", "Il n'a aucun effet", "Il a seulement fait baisser la population"],
+            "Non : il transforme les paysages et pèse sur les ressources, mais crée des emplois, freine l'émigration et a amélioré la gestion des déchets et de l'eau",
+            "« L'opposition entre tourisme et environnement est loin d'être aussi simple qu'elle n'y paraît » : une approche nuancée, attendue en géographie."), "Document 3 : C. Blondy, 2016."),
+        S('histoire_geographie', 'Géographie · le paysage', Q(
+            "Selon le glossaire Géoconfluences (document 2), le paysage est :",
+            ["L'ensemble des éléments observables depuis un lieu, à la fois objectif et perçu par chacun selon sa sensibilité", "Uniquement un espace naturel", "Une carte vue du dessus", "Un tableau de peintre"],
+            "L'ensemble des éléments observables depuis un lieu, à la fois objectif et perçu par chacun selon sa sensibilité",
+            "Le paysage n'est pas réservé aux espaces « naturels » : les espaces urbains et industriels ont aussi des paysages à analyser."), "Document 2 : glossaire Géoconfluences, « paysage » et « organisation de l'espace »."),
+        S('histoire_geographie', 'Géographie · lire une image', Q(
+            "Quelle différence y a-t-il entre une vue aérienne oblique et une image satellite verticale ?",
+            ["La vue oblique montre le paysage en perspective, proche de ce que l'on voit ; la vue verticale (zénithale) se rapproche d'une carte", "Il n'y en a aucune", "La vue verticale est toujours en noir et blanc", "La vue oblique est un dessin"],
+            "La vue oblique montre le paysage en perspective, proche de ce que l'on voit ; la vue verticale (zénithale) se rapproche d'une carte",
+            "Le dossier proposait les deux (photographie aérienne d'un hôtel, image du satellite Pléiades) : les croiser aide les élèves à passer du paysage à la carte."), None),
+        S('emc', 'EMC · une action de développement durable', Q(
+            "Qu'est-ce qu'une « clean walk », comme celle organisée sur le littoral de Bora-Bora ?",
+            ["Une marche collective pour ramasser les déchets", "Une course à pied", "Une visite guidée d'hôtel", "Un nettoyage des bateaux"], "Une marche collective pour ramasser les déchets",
+            "Le document 8 la présente comme un succès inspirant : une action concrète que peut mener une classe pendant la semaine du développement durable."), "Document 8 : « Bora-Bora nettoie son littoral : le succès d'un clean walk », 2024."),
+        S('emc', 'EMC · une action de développement durable', Q(
+            "Pourquoi une action collective comme le ramassage de déchets relève-t-elle de l'EMC ?",
+            ["Elle développe la responsabilité envers les autres et l'environnement, et l'engagement dans un projet commun", "Elle remplace les cours de sciences", "Elle sert seulement à nettoyer", "Elle n'a aucun lien avec l'EMC"],
+            "Elle développe la responsabilité envers les autres et l'environnement, et l'engagement dans un projet commun",
+            "L'EMC vise une culture de l'engagement ; l'éducation au développement durable (document 10) s'appuie sur des actions concrètes dans l'école et autour d'elle."), None),
+        S('svt', "Sciences · de la poule à l'œuf", Q(
+            "À quelle espèce appartiennent toutes les races de poules domestiques ?",
+            ["Une seule et même espèce, Gallus gallus (sous-espèce domesticus)", "Une espèce différente par race", "Aux canards", "Aux faisans"], "Une seule et même espèce, Gallus gallus (sous-espèce domesticus)",
+            "Les races sont interfécondes et leurs descendants sont fertiles : c'est le critère de l'espèce."), OEUF),
+        S('svt', "Sciences · l'œuf", Q(
+            "Un œuf de poule acheté au supermarché peut-il donner un poussin ?",
+            ["Non, en général : il n'a pas été fécondé, faute de coq", "Oui, toujours", "Oui, si on le met au réfrigérateur", "Oui, si on le fait cuire"], "Non, en général : il n'a pas été fécondé, faute de coq",
+            "Une poule pond même sans coq ; seul un œuf fécondé et couvé (environ 21 jours) peut se développer en poussin."), OEUF),
+        S('physique_chimie', "Sciences · l'œuf", Q(
+            "Un œuf coule dans l'eau douce et flotte dans l'eau très salée. Pourquoi ?",
+            ["L'eau salée est plus dense : la poussée d'Archimède augmente et compense le poids", "Le sel rend l'œuf plus léger", "L'œuf absorbe le sel", "L'eau salée est plus chaude"],
+            "L'eau salée est plus dense : la poussée d'Archimède augmente et compense le poids",
+            "La poussée d'Archimède dépend de la masse volumique du liquide déplacé."), OEUF),
+        S('technologie', 'Sciences · le poulailler automatisé', Q(
+            "Que sont les capteurs de fin de course d'une porte automatique ?",
+            ["Des capteurs qui détectent que la porte est complètement ouverte ou fermée, pour arrêter le moteur", "Des capteurs de température", "Des capteurs de lumière", "Des capteurs de poids des poules"],
+            "Des capteurs qui détectent que la porte est complètement ouverte ou fermée, pour arrêter le moteur",
+            "Sans eux, le moteur continuerait de tourner et pourrait abîmer le système."), OEUF),
+        S('arts', 'Arts plastiques · la ressemblance', Q(
+            "Au programme du cycle 3, que signifie « la valeur expressive de l'écart dans la représentation » ?",
+            ["S'éloigner volontairement de la ressemblance (déformation, couleurs, matière) peut renforcer l'expression", "Toujours copier le réel le plus fidèlement possible", "Mesurer l'écart entre deux objets", "Représenter seulement des paysages"],
+            "S'éloigner volontairement de la ressemblance (déformation, couleurs, matière) peut renforcer l'expression",
+            "Le sujet demandait d'analyser une fiche de préparation sur ce point, avec Camille Claudel et Auguste Chabaud."), None),
+        S('arts', 'Éducation musicale · cycle 2', Q(
+            "Que signifie « interpréter un chant avec expressivité » ?",
+            ["Chanter en jouant sur les nuances, le tempo et l'intention pour transmettre une émotion", "Chanter le plus vite possible", "Chanter seul sans écouter les autres", "Réciter les paroles"],
+            "Chanter en jouant sur les nuances, le tempo et l'intention pour transmettre une émotion",
+            "C'est l'un des points du programme de cycle 2 sur lesquels le sujet demandait une fiche de préparation."), None),
+    ]),
 ]

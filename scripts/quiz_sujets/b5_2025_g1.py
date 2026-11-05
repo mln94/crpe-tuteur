@@ -198,4 +198,144 @@ QUESTIONS = [
             "À cet âge, l'attention est brève et l'enfant apprend en bougeant et en imitant. Le programme de maternelle demande d'abord d'explorer sa voix et de chanter avec les autres."),
           "Dossier « univers sonores » (cycle 1) : une fiche de préparation à analyser et le document « La danse chez les petits et tout-petits »."),
     ]),
+    # ── Ajout : questions complémentaires tirées du même sujet ──
+    epreuve('Épreuve écrite disciplinaire de français', 16561, [
+        S('francais', 'Étude de la langue · temps et modes', Q(
+            "« … reprit l'Empereur en penchant son cou grêle vers le vieil homme qui l'écoutait. » Temps et mode de « reprit » ?",
+            ["Passé simple de l'indicatif", "Présent de l'indicatif", "Imparfait de l'indicatif", "Passé composé"], "Passé simple de l'indicatif",
+            "Infinitif : reprendre. « Reprit » a parfois été pris pour un présent (Lyon, Besançon)."), YOURCENAR),
+        S('francais', 'Étude de la langue · temps et modes', Q(
+            "Dans la même phrase, temps et mode de « écoutait » ?",
+            ["Imparfait de l'indicatif", "Passé simple", "Conditionnel présent", "Présent du subjonctif"], "Imparfait de l'indicatif",
+            "Terminaison -ait : imparfait, temps de l'arrière-plan du récit."), YOURCENAR),
+        S('francais', 'Étude de la langue · nature et fonction', Q(
+            "« … secoué sur des routes dont je ne prévoyais ni la boue ni les pierres… » Fonction de « dont » ?",
+            ["Complément des noms « la boue » et « les pierres »", "COD de « prévoyais »", "Sujet", "Complément circonstanciel de lieu"], "Complément des noms « la boue » et « les pierres »",
+            "Test : « je ne prévoyais ni la boue ni les pierres de la route ». « De la route » complète les noms (Bordeaux)."), YOURCENAR),
+        S('francais', 'Étude de la langue · nature et fonction', Q(
+            "« J'ai parcouru les provinces de l'Empire. » Fonction de « de l'Empire » ?",
+            ["Complément du nom « provinces »", "Complément circonstanciel de lieu", "COI", "Attribut du COD"], "Complément du nom « provinces »",
+            "Le groupe prépositionnel précise de quelles provinces il s'agit : il complète le nom."), YOURCENAR),
+        S('francais', 'Étude de la langue · propositions', Q(
+            "« … je suis monté sur la terrasse du palais pour regarder les nuages, mais ils étaient moins beaux que ceux de tes crépuscules. » Nature de « que ceux de tes crépuscules » ?",
+            ["Subordonnée circonstancielle de comparaison (elliptique du verbe)", "Subordonnée relative", "Subordonnée complétive", "Groupe nominal COD"], "Subordonnée circonstancielle de comparaison (elliptique du verbe)",
+            "Il faut comprendre « que ceux de tes crépuscules [ne l'étaient] » : le verbe est sous-entendu."), YOURCENAR),
+        S('francais', 'Étude de la langue · propositions', Q(
+            "« Pour regarder les nuages » est-il une proposition subordonnée infinitive ?",
+            ["Non : l'infinitif n'a pas de sujet propre, c'est un groupe infinitif complément circonstanciel de but", "Oui", "Oui, une subordonnée relative", "Non, c'est une proposition principale"],
+            "Non : l'infinitif n'a pas de sujet propre, c'est un groupe infinitif complément circonstanciel de but",
+            "C'est le sujet du verbe principal qui regarde. Toulouse, Nantes et Besançon relèvent cette confusion."), YOURCENAR),
+        S('francais', 'Lexique · étymologie', Q(
+            "L'adjectif « grêle » (« son cou grêle ») vient du latin gracilis. Quel mot français a la même origine ?",
+            ["Gracieux", "Grêlon", "Grenier", "Graisse"], "Gracieux",
+            "Le nom « la grêle » (phénomène météorologique) a une autre origine. Confondre les deux a produit des contresens (Toulouse, Nantes)."), YOURCENAR),
+        S('francais', 'Culture littéraire · Yourcenar', Q(
+            "Marguerite Yourcenar a été la première femme élue :",
+            ["À l'Académie française, en 1980", "Présidente de la République", "Au Collège de France", "Prix Nobel de physique"], "À l'Académie française, en 1980",
+            "Les Nouvelles orientales (1938, revues en 1963) s'inspirent de légendes d'Asie ; « Comment Wang-Fô fut sauvé » raconte le pouvoir de l'art sur le réel."), None),
+    ]),
+    epreuve('Épreuve écrite disciplinaire de mathématiques', 16564, [
+        S('mathematiques', 'Exercice 1 · équation', N(
+            "Avec l'organisme A (1 500 € + 100 € par élève), combien d'élèves pour un voyage de 4 300 € ?", 28,
+            "1 500 + 100x = 4 300 donne 100x = 2 800, x = 28."), VOYAGE),
+        S('mathematiques', 'Exercice 1 · fractions', N(
+            "Avec l'organisme B, 44 élèves coûtent 5 740 €. La coopérative en paie 3/10. Combien cela fait-il par élève, en euros, à l'unité près ?", 39,
+            "3/10 × 5 740 = 1 722 € ; 1 722 ÷ 44 ≈ 39 € par élève."), VOYAGE),
+        S('mathematiques', 'Exercice 3 · volumes', N(
+            "Avec des bennes de 30 m³, combien en faut-il au minimum pour 1 687,5 m³ de terre ?", 57,
+            "1 687,5 ÷ 30 = 56,25 : 56 bennes ne suffisent pas, il en faut 57."), PISCINE),
+        S('mathematiques', 'Exercice 3 · pourcentages', N(
+            "562 100 L d'eau à 12 °C deviennent 564 000 L à 25 °C. De quel pourcentage le volume augmente-t-il, arrondi au centième ?", 0.34,
+            "564 000 ÷ 562 100 ≈ 1,00338, soit une augmentation d'environ 0,34 %.", tol=0.005), None),
+        S('mathematiques', 'Exercice 3 · vitesse', N(
+            "Un élève nage 10 min à 0,6 m/s dans un bassin de 25 m. Combien de longueurs complètes fait-il ?", 14,
+            "0,6 m/s = 36 m/min ; 360 m en 10 min, soit 14,4 longueurs : 14 longueurs complètes."), None),
+        S('mathematiques', 'Exercice 3 · moyenne', N(
+            "Neuf élèves totalisent 116 longueurs. Combien de longueurs doit faire un dixième élève pour que la moyenne soit de 13 ?", 14,
+            "(116 + n) ÷ 10 = 13 donne n = 14."), None),
+        S('mathematiques', 'Exercice 4 · nature des nombres', Q(
+            "Pour quelle valeur de d le quotient 45/d est-il un décimal non entier ?",
+            ["d = 2", "d = 3", "d = 5", "d = 9"], "d = 2",
+            "45/2 = 22,5 (ou 45/10 = 4,5). 45/3, 45/5 et 45/9 sont entiers."), None),
+        S('mathematiques', 'Exercice 6 · Scratch', N(
+            "Dans le script, 1 cm vaut 20 pas. Combien de pas représentent les 4 cm d'un côté de la base ?", 80,
+            "4 × 20 = 80 pas."), None),
+        S('mathematiques', 'Exercice 6 · patrons', Q(
+            "Une figure formée d'un carré et de quatre triangles est-elle toujours un patron de la pyramide SABCD ?",
+            ["Non : il faut que les triangles soient équilatéraux et ne se superposent pas au pliage", "Oui, toujours", "Non, un patron n'a jamais de carré", "Oui, si les triangles sont isocèles"],
+            "Non : il faut que les triangles soient équilatéraux et ne se superposent pas au pliage",
+            "Dans le sujet, une figure avait deux triangles qui se superposaient, une autre des triangles isocèles et non équilatéraux."), None),
+    ]),
+    epreuve("Épreuve écrite d'application (sciences, histoire-géographie-EMC ou arts)", 16558, [
+        S('technologie', 'Sciences · le Polar POD', Q(
+            "Quel est le rôle des ballasts pendant la mise en place du Polar POD ?",
+            ["En se remplissant d'eau, ils font basculer la plateforme de l'horizontale à la verticale", "Ils produisent l'électricité", "Ils servent de logement", "Ils mesurent la température de l'eau"],
+            "En se remplissant d'eau, ils font basculer la plateforme de l'horizontale à la verticale",
+            "Le flotteur, lui, assure la flottaison de l'ensemble (Bordeaux)."), POD),
+        S('technologie', "Sciences · l'énergie du Polar POD", Q(
+            "Dans la chaîne d'énergie du Polar POD, à quoi servent les batteries ?",
+            ["À stocker l'énergie électrique produite par les éoliennes pour les équipements informatiques", "À produire du vent", "À propulser la plateforme", "À chauffer l'eau de mer"],
+            "À stocker l'énergie électrique produite par les éoliennes pour les équipements informatiques",
+            "Ordre du schéma : le vent, les éoliennes, les batteries, les équipements informatiques (Bordeaux, Paris)."), POD),
+        S('physique_chimie', "Sciences · le dessalement solaire", Q(
+            "Dans un distillateur solaire, pourquoi l'eau recueillie est-elle douce ?",
+            ["L'eau s'évapore sous l'effet du soleil et le sel reste ; la vapeur se condense sur le film plastique", "Le soleil détruit le sel", "Le plastique filtre le sel", "La glace fond et donne de l'eau douce"],
+            "L'eau s'évapore sous l'effet du soleil et le sel reste ; la vapeur se condense sur le film plastique",
+            "Le bloc de froid peut faire croire que l'eau douce vient de la glace fondue : c'est un obstacle à anticiper (Bordeaux)."), POD),
+        S('physique_chimie', "Sciences · l'atome", Q(
+            "Combien d'électrons a l'ion oxyde O²⁻, sachant que l'atome d'oxygène en a 8 ?",
+            ["10", "6", "8", "16"], "10",
+            "La charge 2− signifie 2 électrons de plus que l'atome neutre. Protons et neutrons ne changent pas."), POD),
+        S('svt', 'Sciences · croire et savoir', Q(
+            "En sciences, quelle différence y a-t-il entre croire et savoir ?",
+            ["Croire, c'est tenir pour vrai sans preuve ; savoir, c'est s'appuyer sur des faits établis par une méthode rigoureuse", "Ce sont des synonymes", "Savoir, c'est avoir une opinion", "Croire, c'est avoir fait une expérience"],
+            "Croire, c'est tenir pour vrai sans preuve ; savoir, c'est s'appuyer sur des faits établis par une méthode rigoureuse",
+            "En classe : confronter l'affirmation d'un élève à des relevés météorologiques et à des données sur le climat (Bordeaux)."), POD),
+        S('svt', 'Sciences · lire un graphique', Q(
+            "Un élève relie les points des températures de décembre sans suivre l'ordre des jours. Quelle remédiation proposer ?",
+            ["Passer par un tableau des relevés, puis placer les points dans l'ordre des jours (ou tracer un diagramme en bâtons)", "Lui faire recopier le graphique", "Supprimer le graphique", "Lui donner la réponse"],
+            "Passer par un tableau des relevés, puis placer les points dans l'ordre des jours (ou tracer un diagramme en bâtons)",
+            "Tracer une ligne horizontale à 5 °C l'aide aussi à compter les jours sous ce seuil (Bordeaux)."), POD),
+        S('svt', "Sciences · l'élevage en classe", Q(
+            "Quelle précaution faut-il prévoir pour un élevage d'animaux en classe ?",
+            ["Hygiène et sécurité (allergies, lavage des mains), soin des animaux pendant les vacances, respect de la réglementation", "Aucune", "Laisser les élèves les emporter chez eux sans organisation", "Les nourrir avec le goûter des élèves"],
+            "Hygiène et sécurité (allergies, lavage des mains), soin des animaux pendant les vacances, respect de la réglementation",
+            "C'était la réponse attendue à la question 24 (Bordeaux)."), POD),
+        S('histoire_geographie', "Histoire · l'école de Jules Ferry", Q(
+            "Quelle loi de 1881 rend l'école primaire publique gratuite ?",
+            ["La loi du 16 juin 1881 (loi Ferry)", "La loi Falloux", "La loi Guizot", "La loi de 1905"], "La loi du 16 juin 1881 (loi Ferry)",
+            "Gratuité (1881), puis obligation et laïcité de l'enseignement (1882), puis laïcisation du personnel (loi Goblet, 1886)."), FERRY),
+        S('histoire_geographie', "Histoire · l'école de Jules Ferry", Q(
+            "Pourquoi les républicains des années 1880 veulent-ils une école laïque ?",
+            ["Pour former des citoyens attachés à la République et limiter l'influence de l'Église sur l'enseignement", "Pour supprimer la religion en France", "Pour former des soldats", "Pour enseigner le latin à tous"],
+            "Pour former des citoyens attachés à la République et limiter l'influence de l'Église sur l'enseignement",
+            "La IIIe République, fragile face aux monarchistes, s'enracine par l'école, où l'on apprend aussi les symboles républicains."), FERRY),
+        S('histoire_geographie', "Histoire · l'école de Jules Ferry", Q(
+            "En quelle année le 14 juillet devient-il la fête nationale ?",
+            ["1880", "1789", "1905", "1945"], "1880",
+            "C'est aussi à partir de 1880 que la devise « Liberté, Égalité, Fraternité » s'inscrit sur les frontons des édifices publics."), None),
+        S('histoire_geographie', "Histoire · l'école de Jules Ferry", Q(
+            "Que montre une photographie de classe de 1909 comparée à une classe d'aujourd'hui ?",
+            ["Des rites scolaires différents : classes non mixtes, pupitres en rangées, discipline stricte", "Rien de différent", "Des tablettes numériques", "Des élèves sans enseignant"],
+            "Des rites scolaires différents : classes non mixtes, pupitres en rangées, discipline stricte",
+            "Comparer hier et aujourd'hui est une démarche suggérée par les ressources d'accompagnement (Aix-Marseille, Toulouse)."), FERRY),
+        S('emc', 'EMC · la laïcité', Q(
+            "Laquelle de ces définitions de la laïcité, pour des CM2, est complète ?",
+            ["La laïcité sépare les religions et l'État ; l'école est neutre ; chacun est libre de croire ou de ne pas croire et tous sont égaux", "La laïcité, c'est ne pas croire en Dieu", "La laïcité interdit les religions", "La laïcité, c'est la liberté de croire, et c'est tout"],
+            "La laïcité sépare les religions et l'État ; l'école est neutre ; chacun est libre de croire ou de ne pas croire et tous sont égaux",
+            "Une définition pour des élèves reste exacte : courte, mais complète (Orléans-Tours, Toulouse)."), FERRY),
+        S('emc', 'EMC · valeurs et principes', Q(
+            "La laïcité est-elle une valeur ou un principe ?",
+            ["Un principe d'organisation de la République", "Une règle de vie de la classe", "Une émotion", "Une opinion personnelle"], "Un principe d'organisation de la République",
+            "Le programme parle des « valeurs et principes » : liberté, égalité, fraternité (valeurs) et laïcité (principe). La confusion est fréquente (Bordeaux, Orléans-Tours)."), None),
+        S('arts', "Arts plastiques · l'écrit dans l'art", Q(
+            "Pierre Alechinsky, présent dans le dossier, a peint « Sorti de la poche » (1992) sur :",
+            ["Un papier ancien couvert d'écritures (vergé du XVIIe siècle)", "Une toile vierge", "Un mur de rue", "Une plaque de métal"], "Un papier ancien couvert d'écritures (vergé du XVIIe siècle)",
+            "Encre de Chine et aquarelle sur un document ancien avec écritures et essais de plume : l'écrit devient support et matière."), None),
+        S('arts', "Arts plastiques · l'écrit dans l'art", Q(
+            "Quels matériaux du dossier permettent une « exploration plastique de l'écrit » en cycle 2 ?",
+            ["Journaux, lettres découpées de tailles et polices différentes, tampons encreurs, papier calque", "Uniquement des crayons de couleur", "De la pâte à modeler", "Des instruments de musique"],
+            "Journaux, lettres découpées de tailles et polices différentes, tampons encreurs, papier calque",
+            "Les élèves jouent sur la forme, la taille, la couleur et la place des lettres, comme Villeglé avec ses affiches lacérées."), None),
+    ]),
 ]

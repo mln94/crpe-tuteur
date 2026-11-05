@@ -299,4 +299,128 @@ QUESTIONS = [
             ["Le Roi des aulnes (Erlkönig)", "Le Bateau ivre", "Les Fleurs du mal", "Le Lac"], "Le Roi des aulnes (Erlkönig)",
             "Dans Le Roi des aulnes (1815), le piano imite le galop du cheval tandis qu'un seul chanteur fait entendre le père, l'enfant et le roi des aulnes."), None),
     ]),
+    # ── Ajout : questions complémentaires tirées du même sujet ──
+    epreuve('Première épreuve écrite (français et mathématiques)', 20283, [
+        S('francais', 'Étude de la langue · conjugaison', Q(
+            "Conjuguez « emprunter » à la 1re personne du singulier du passé composé.",
+            ["J'ai emprunté", "J'avais emprunté", "J'empruntai", "J'aurais emprunté"], "J'ai emprunté",
+            "Auxiliaire avoir au présent + participe passé. « J'aurais emprunté » est le conditionnel passé du texte."), DES),
+        S('francais', 'Étude de la langue · conjugaison', Q(
+            "Conjuguez « emprunter » à la 1re personne du singulier du futur.",
+            ["J'emprunterai", "J'emprunterais", "J'empruntai", "J'empruntais"], "J'emprunterai",
+            "Futur : -ai ; conditionnel : -ais. Le futur et le conditionnel ne diffèrent à la 1re personne que par le -s final."), DES),
+        S('francais', 'Étude de la langue · fonctions', Q(
+            "« J'étais riche de mes seuls yeux intranquilles, en proie au doute et désœuvré. » Fonction de « intranquilles » ?",
+            ["Épithète du nom « yeux »", "Attribut du sujet", "Complément du nom", "COD"], "Épithète du nom « yeux »",
+            "L'adjectif est placé directement à côté du nom qu'il qualifie, sans verbe : il est épithète."), DES),
+        S('francais', 'Étude de la langue · nature des mots', Q(
+            "« Je lisais Katmandou et je me figurais des drapeaux à prières. » Nature de « me » ?",
+            ["Pronom personnel réfléchi", "Déterminant possessif", "Pronom relatif", "Article"], "Pronom personnel réfléchi",
+            "« Se figurer » est un verbe pronominal : « me » renvoie au même être que le sujet « je »."), DES),
+        S('francais', 'Lexique · sens en contexte', Q(
+            "« L'imaginaire hissait la grand-voile. » Quelle figure de style est employée ?",
+            ["Une métaphore : l'imagination de l'enfant part en voyage comme un bateau", "Une comparaison avec « comme »", "Une antithèse", "Une énumération"],
+            "Une métaphore : l'imagination de l'enfant part en voyage comme un bateau",
+            "Le vocabulaire de la navigation (grand-voile, rose des vents) traduit l'élan du rêve devant la carte du monde."), DES),
+        S('francais', 'Culture littéraire · le récit de voyage', Q(
+            "Le texte cite des écrivains voyageurs. Qui a écrit « Voyage avec un âne dans les Cévennes » ?",
+            ["Robert Louis Stevenson", "Chateaubriand", "Rimbaud", "Nicolas Bouvier"], "Robert Louis Stevenson",
+            "La note du sujet le rappelle (1879). Chateaubriand a écrit l'Itinéraire de Paris à Jérusalem ; Nicolas Bouvier, L'Usage du monde."), DES),
+        S('mathematiques', 'Exercice 2 · proportionnalité', N(
+            "Combien de lait faut-il pour 6 personnes, en cl ?", 90,
+            "60 cl pour 4 personnes : 60 × 1,5 = 90 cl."), CREPES),
+        S('mathematiques', 'Exercice 2 · proportionnalité', N(
+            "Combien de beurre faut-il pour 6 personnes, en grammes ?", 37.5,
+            "25 × 1,5 = 37,5 g."), CREPES),
+        S('mathematiques', 'Exercice 3 · aires', N(
+            "Quelle est l'aire totale du parterre rectangulaire de 8 m sur 6 m, en m² ?", 48,
+            "Aire d'un rectangle : longueur × largeur = 8 × 6 = 48 m²."), PARTERRE),
+        S('mathematiques', 'Exercice 3 · aires', N(
+            "Quelle est l'aire du bassin circulaire de 3 m de diamètre, en m², arrondie au centième ?", 7.07,
+            "Rayon 1,5 m : π × 1,5² ≈ 7,07 m². Erreur classique : utiliser le diamètre comme rayon.", tol=0.01), PARTERRE),
+        S('mathematiques', 'Exercice 4 · statistiques', Q(
+            "Quelle part des élèves vient à l'école en voiture ?",
+            ["50 %", "120 %", "25 %", "40 %"], "50 %",
+            "120 élèves sur 240 : la moitié, soit 50 %. Dans un diagramme circulaire, le secteur « voiture » mesure 180°."), TRANSPORT),
+        S('mathematiques', 'Exercice 5 · programmes de calcul', Q(
+            "Programme A : choisir un nombre, lui soustraire 2, élever au carré, multiplier par le nombre de départ. Quel résultat pour 1/3 ?",
+            ["25/27", "25/9", "5/9", "−5/9"], "25/27",
+            "1/3 − 2 = −5/3 ; (−5/3)² = 25/9 ; 25/9 × 1/3 = 25/27. Le carré d'un nombre négatif est positif."), None),
+        S('mathematiques', 'Exercice 5 · programmes de calcul', Q(
+            "Programme B : choisir un nombre, le multiplier par 3, soustraire 4. Quelle expression donne f(x) ?",
+            ["3x − 4", "3(x − 4)", "4 − 3x", "3x + 4"], "3x − 4",
+            "On multiplie d'abord par 3, puis on soustrait 4 : f(x) = 3x − 4."), None),
+    ]),
+    epreuve('Seconde épreuve écrite (domaines au choix)', 20274, [
+        S('histoire_geographie', 'Géographie · espace rural et espace urbain', Q(
+            "Lequel de ces critères caractérise plutôt un espace rural ?",
+            ["Une faible densité de population et une place importante de l'agriculture et des espaces naturels", "Une forte densité et un bâti continu", "La présence de nombreux immeubles de bureaux", "Un réseau de métro"],
+            "Une faible densité de population et une place importante de l'agriculture et des espaces naturels",
+            "Mais les espaces ruraux ne sont plus seulement agricoles : résidences, tourisme, artisanat, services."), None),
+        S('histoire_geographie', 'Géographie · espace rural et espace urbain', Q(
+            "Comment appelle-t-on l'extension de la ville vers les espaces ruraux voisins, où s'installent des citadins ?",
+            ["La périurbanisation", "L'exode rural", "La désindustrialisation", "La littoralisation"], "La périurbanisation",
+            "Les communes périurbaines restent d'apparence rurale mais vivent au rythme de la ville (navettes domicile-travail)."), None),
+        S('histoire_geographie', "Histoire · l'industrialisation de la France", Q(
+            "Quel moyen de transport, développé à partir des années 1840, accompagne l'industrialisation ?",
+            ["Le chemin de fer", "L'avion", "L'automobile", "Le TGV"], "Le chemin de fer",
+            "Le rail transporte charbon, minerais et marchandises, et relie les régions industrielles aux villes."), None),
+        S('histoire_geographie', 'Histoire · la condition féminine', Q(
+            "D'après Lucie Baud, comment évoluent les salaires avec chaque perfectionnement des machines ?",
+            ["Ils baissent", "Ils augmentent fortement", "Ils restent identiques", "Ils sont remplacés par des primes"], "Ils baissent",
+            "« Avec chaque perfectionnement du matériel, c'était une nouvelle diminution des salaires » ; les ouvrières doivent conduire deux métiers à la fois."), "Document 2 : témoignage de Lucie Baud, ouvrière de la soie à Vizille (1908)."),
+        S('histoire_geographie', 'Histoire · la condition féminine', Q(
+            "Comment les grévistes tiennent-elles pendant des mois, d'après le témoignage ?",
+            ["Grâce à des « soupes communistes » et à la solidarité d'amis de Grenoble et de Lyon", "Grâce à l'aide du patron", "Grâce à l'État", "Elles n'ont tenu qu'une journée"],
+            "Grâce à des « soupes communistes » et à la solidarité d'amis de Grenoble et de Lyon",
+            "La grève dure plus de trois mois en 1905 ; elle échoue quand dix-neuf ouvrières reprennent le travail."), "Document 2 : témoignage de Lucie Baud."),
+        S('emc', "EMC · l'empathie", Q(
+            "Quelle différence y a-t-il entre l'empathie et la sympathie ?",
+            ["L'empathie, c'est comprendre ce que ressent l'autre ; la sympathie, c'est partager ses sentiments ou avoir de l'affection pour lui", "Ce sont des synonymes", "L'empathie est une forme d'antipathie", "La sympathie est une compétence scolaire, pas l'empathie"],
+            "L'empathie, c'est comprendre ce que ressent l'autre ; la sympathie, c'est partager ses sentiments ou avoir de l'affection pour lui",
+            "On peut faire preuve d'empathie envers quelqu'un qu'on ne connaît pas ou avec qui on n'est pas d'accord."), None),
+        S('emc', "EMC · l'empathie", Q(
+            "Que sont les compétences psychosociales, que l'école développe ?",
+            ["Des capacités à gérer ses émotions, à communiquer et à vivre avec les autres", "Des connaissances en psychologie", "Des compétences sportives", "Des notes de comportement"], "Des capacités à gérer ses émotions, à communiquer et à vivre avec les autres",
+            "Connaissance de soi, gestion des émotions, empathie, résolution de conflits : elles favorisent le bien-être et les apprentissages."), None),
+        S('physique_chimie', "Sciences · l'aquaponie", Q(
+            "Combien de fois par heure les 3 000 L d'eau du bac doivent-ils au moins circuler ?",
+            ["3 fois", "1 fois", "10 fois", "30 fois"], "3 fois",
+            "Cela impose un débit minimal de 9 m³/h, d'où le choix des pompes C ou D."), AQUA),
+        S('physique_chimie', 'Sciences · la nitrification', Q(
+            "Dans l'équation NH₄⁺ + 2 O₂ → NO₃⁻ + 2 H⁺ + H₂O, que signifie le nombre 2 devant O₂ ?",
+            ["Deux molécules de dioxygène sont consommées", "La molécule contient 2 atomes", "Le dioxygène est produit deux fois", "Il faut 2 litres de dioxygène"], "Deux molécules de dioxygène sont consommées",
+            "Le nombre placé devant une formule (coefficient) donne le nombre d'entités ; l'indice dans la formule (O₂) donne le nombre d'atomes dans la molécule."), AQUA),
+        S('technologie', 'Sciences · la régulation de la serre', Q(
+            "Dans la serre, quel est l'actionneur commandé par la carte Micro:bit ?",
+            ["Le ventilateur", "Le capteur de température", "La carte elle-même", "La pompe à eau"], "Le ventilateur",
+            "Le programme lit la température et commande le ventilateur : il le met en marche au-dessus d'un seuil et l'arrête en dessous."), AQUA),
+        S('svt', 'Sciences · la reproduction des plantes', Q(
+            "Dans une fleur de tomate, en quoi se transforment les ovules après la fécondation ?",
+            ["En graines", "En pétales", "En racines", "En feuilles"], "En graines",
+            "L'ovaire devient le fruit (la tomate), les ovules deviennent les graines."), AQUA),
+        S('arts', 'Arts plastiques · questionner la ressemblance', Q(
+            "Lucio Fontana a représenté un crocodile en vert, rouge et jaune. Que montre ce choix de couleurs ?",
+            ["La couleur sert l'expression plus que l'imitation du réel", "Les crocodiles sont réellement de ces couleurs", "Fontana n'avait pas d'autre peinture", "L'œuvre est une photographie colorisée"],
+            "La couleur sert l'expression plus que l'imitation du réel",
+            "Matière modelée, geste visible, couleurs non naturalistes : l'œuvre va « au-delà du réel », comme le demandait le sujet."), None),
+        S('arts', 'Éducation musicale · le lied romantique', Q(
+            "Qui a écrit les poèmes du « Voyage d'hiver » mis en musique par Schubert ?",
+            ["Wilhelm Müller", "Goethe", "Victor Hugo", "Heinrich Heine"], "Wilhelm Müller",
+            "Müller a aussi écrit les poèmes de « La Belle Meunière », l'autre grand cycle de lieder de Schubert."), None),
+        S('anglais', 'Anglais · compréhension', N(
+            "How many children took part in the Born in Bradford study?", 2568,
+            "« The lifestyles of 2,568 children in the city aged between 7 and 12. »"), BRADFORD),
+        S('anglais', 'Anglais · compréhension', Q(
+            "What proportion of children stay indoors at weekends?", ["20% (one in five)", "34%", "50%", "10%"], "20% (one in five)",
+            "« 34% of children did not play outdoors on school days, while 20% stayed indoors on weekends. »"), BRADFORD),
+        S('anglais', 'Anglais · compréhension', Q(
+            "Why was the data published at that moment?",
+            ["Ahead of the Bradford Science Festival, during the school half-term", "For the Christmas holidays", "For the Olympic Games", "For the end of the school year"],
+            "Ahead of the Bradford Science Festival, during the school half-term",
+            "« The data has been unveiled ahead of the Bradford Science Festival […] from 25 October to 2 November. »"), BRADFORD),
+        S('anglais', 'Anglais · lexique', Q(
+            "“Outdoor play” is the opposite of:", ["Indoor play", "Outside play", "Playground", "Playtime"], "Indoor play",
+            "Outdoor = dehors, en plein air ; indoor = à l'intérieur."), BRADFORD),
+    ]),
 ]

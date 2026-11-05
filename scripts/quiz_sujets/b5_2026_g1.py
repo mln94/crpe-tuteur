@@ -219,4 +219,162 @@ QUESTIONS = [
             "Les ressources Éduscol sur l'écoute recommandent une première écoute globale, sans consigne écrite, puis des écoutes ciblées. Le sujet demandait une analyse critique de la fiche."),
           "Document 2 : fiche de préparation d'une séance d'éducation musicale en CM1-CM2."),
     ]),
+    # ── Ajout : questions complémentaires tirées du même sujet ──
+    epreuve('Épreuve écrite disciplinaire de français', 20142, [
+        S('francais', 'Étude de la langue · temps et modes', Q(
+            "« Que ce cahier survive ou qu'il brûle, j'écrirai. » Temps et mode de « écrirai » ?",
+            ["Futur simple de l'indicatif", "Conditionnel présent", "Passé simple", "Présent du subjonctif"], "Futur simple de l'indicatif",
+            "Terminaison -ai sur le radical écrir- : futur. Le conditionnel serait « écrirais ». Reims relève des confusions entre futur et conditionnel."), MAALOUF),
+        S('francais', 'Étude de la langue · nature et fonction', Q(
+            "« … dont je noircis en cet instant, non sans volupté, la toute première page. » Fonction de « en cet instant » ?",
+            ["Complément circonstanciel de temps", "COD du verbe noircir", "Complément du nom « page »", "Attribut du sujet"], "Complément circonstanciel de temps",
+            "Groupe prépositionnel déplaçable et supprimable, qui situe l'action dans le temps. Il faut préciser « de temps » (Nantes)."), MAALOUF),
+        S('francais', 'Étude de la langue · propositions', Q(
+            "« Le premier cahier, qui racontait le commencement de mon périple, s'est perdu… » Nature de « qui racontait le commencement de mon périple » ?",
+            ["Subordonnée relative", "Subordonnée complétive", "Subordonnée circonstancielle de cause", "Proposition indépendante"], "Subordonnée relative",
+            "Introduite par le pronom relatif « qui », elle complète l'antécédent « le premier cahier ». « Proposition relative » sans « subordonnée » a été relevé comme imprécis (Nantes)."), MAALOUF),
+        S('francais', 'Étude de la langue · accords', Q(
+            "« … de vieux livres pourrissants. » Pourquoi « pourrissants » s'accorde-t-il ?",
+            ["C'est un adjectif verbal, qui s'accorde comme un adjectif", "C'est un participe présent, toujours variable", "C'est un gérondif", "Il s'accorde avec le sujet du verbe"], "C'est un adjectif verbal, qui s'accorde comme un adjectif",
+            "Le participe présent (action, invariable) se distingue de l'adjectif verbal (qualité, variable). Ici, « pourrissants » décrit l'état des livres."), MAALOUF),
+        S('francais', 'Lexique · sens en contexte', Q(
+            "Que désigne « mortel oublieux de la mort » ?",
+            ["L'homme qui se sait mortel mais agit et crée comme s'il était immortel", "Un livre oublié", "Un soldat mort", "Un médecin"], "L'homme qui se sait mortel mais agit et crée comme s'il était immortel",
+            "C'est une alliance de mots, un paradoxe. L'expression a souvent été rattachée à tort au carnet ou aux livres (Dijon, Nantes, Limoges)."), MAALOUF),
+        S('francais', 'Lexique · figures de style', Q(
+            "Comment s'appelle la figure de « non sans volupté », qui dit moins pour suggérer plus ?",
+            ["Une litote", "Une hyperbole", "Une métaphore", "Une antithèse"], "Une litote",
+            "La double négation atténue l'expression pour mieux suggérer un vif plaisir. Nommer la litote a été valorisé, à condition de l'expliquer (Dijon)."), MAALOUF),
+        S('francais', 'Lexique · familles de mots', Q(
+            "Quelle est la différence entre une famille de mots et un champ lexical ?",
+            ["Une famille partage un même radical ; un champ lexical réunit des mots d'un même thème", "Ce sont deux synonymes", "Un champ lexical partage un même radical", "Une famille réunit des mots de même nature"],
+            "Une famille partage un même radical ; un champ lexical réunit des mots d'un même thème",
+            "Erreur relevée : donner des synonymes (« colère » pour « furie ») au lieu de mots de la famille (Bordeaux, Créteil, Limoges). C'est une notion enseignée dès le cycle 2."), None),
+        S('francais', 'Réflexion · écrire sa vie', Q(
+            "Le sujet de réflexion portait sur l'intérêt de mettre par écrit ses expériences vécues. Laquelle de ces œuvres relève de l'écriture de soi ?",
+            ["Les Confessions de Rousseau", "Les Misérables de Hugo", "L'Odyssée d'Homère", "Les Fables de La Fontaine"], "Les Confessions de Rousseau",
+            "Autres références proposées : Sarraute (Enfance), Sartre (Les Mots), le Journal d'Anne Frank, Primo Levi. Reims a jugé L'Odyssée et Les Misérables non pertinents."), None),
+    ]),
+    epreuve('Épreuve écrite disciplinaire de mathématiques', 20154, [
+        S('mathematiques', 'Exercice 1 · tableur', Q(
+            "Quelle formule saisir en D8 pour additionner les montants de D2 à D7 ?",
+            ["=SOMME(D2:D7)", "=D2+D7", "SOMME(D2;D7)", "=SOMME(D2-D7)"], "=SOMME(D2:D7)",
+            "Le deux-points désigne une plage de cellules ; le point-virgule séparerait deux cellules seulement (D2 et D7)."), MUSEE),
+        S('mathematiques', 'Exercice 1 · coût du transport', N(
+            "Aller-retour de 170 km, consommation 30 L/100 km, gazole à 1,60 €/L, péage 13,90 € par trajet, forfait de 150 €. Coût total, en euros ?", 259.4,
+            "Carburant : 51 L × 1,60 = 81,60 €. Péages : 2 × 13,90 = 27,80 €. Total : 81,60 + 27,80 + 150 = 259,40 €."), None),
+        S('mathematiques', 'Exercice 1 · conversions', Q(
+            "Combien vaut 1 h 10 min en heures ?",
+            ["7/6 h (environ 1,17 h)", "1,10 h", "1,1 h", "1,6 h"], "7/6 h (environ 1,17 h)",
+            "10 min = 10/60 h = 1/6 h. Écrire 1,10 h est une erreur classique : les durées ne sont pas décimales."), None),
+        S('mathematiques', 'Exercice 2 · moyenne', N(
+            "51 élèves ont vendu 500 tickets. Combien de tickets un élève a-t-il vendus en moyenne, arrondi à l'unité ?", 10,
+            "500 ÷ 51 ≈ 9,8, soit environ 10 tickets."), None),
+        S('mathematiques', 'Exercice 2 · médiane', Q(
+            "La médiane du nombre de tickets vendus est 10. Comment l'interpréter ?",
+            ["Au moins la moitié des élèves ont vendu 10 tickets ou moins, et au moins la moitié 10 ou plus", "Tous les élèves ont vendu 10 tickets", "La moyenne est 10", "10 élèves ont vendu des tickets"],
+            "Au moins la moitié des élèves ont vendu 10 tickets ou moins, et au moins la moitié 10 ou plus",
+            "L'interprétation de la médiane n'est réussie que par 25 % des candidats à Nantes : il faut employer « au moins la moitié »."), None),
+        S('mathematiques', 'Exercice 3 · Thalès', N(
+            "Avec (BC) // (DE), BC = 60 m et AD/AC = 0,6, combien mesure DE, en m ?", 36,
+            "DE = 0,6 × 60 = 36 m. Créteil relève que les triangles sont dans le rapport 5/12/13, un triplet pythagoricien."), CROSS),
+        S('mathematiques', 'Exercice 3 · volumes', N(
+            "Le socle d'un plot est un pavé de 24,5 cm × 24,5 cm × 3,5 cm. Quel est son volume, en cm³, arrondi à l'unité ?", 2101,
+            "24,5 × 24,5 × 3,5 ≈ 2 100,9 cm³, soit environ 2 101 cm³.", tol=1), None),
+        S('mathematiques', 'Exercice 4 · vrai ou faux', Q(
+            "Affirmation : « Pour tout réel x, 24x² − 9 = (3x + 1)(8x − 5) − (−7x + 4). » Vrai ou faux ?",
+            ["Vrai", "Faux"], "Vrai",
+            "(3x + 1)(8x − 5) = 24x² − 15x + 8x − 5 = 24x² − 7x − 5. On retire (−7x + 4) : 24x² − 7x − 5 + 7x − 4 = 24x² − 9."), None),
+        S('mathematiques', 'Exercice 5 · Scratch', N(
+            "Pour dessiner avec Scratch un angle de 30° dans un parallélogramme, de combien de degrés le lutin doit-il tourner ?", 150,
+            "Le lutin tourne de 180° − α. Pour un angle de 30°, il tourne de 150° ; pour un angle de 150°, de 30° (Créteil)."), None),
+    ]),
+    epreuve("Épreuve écrite d'application (sciences, histoire-géographie-EMC ou arts)", 20166, [
+        S('svt', "Sciences · la démarche d'investigation", Q(
+            "Quelles étapes manquent souvent dans une séquence pour travailler la démarche d'investigation ?",
+            ["La formulation d'un problème, l'émission d'hypothèses et la confrontation des résultats aux hypothèses", "La copie de la leçon", "La dictée de vocabulaire", "La lecture d'un manuel"],
+            "La formulation d'un problème, l'émission d'hypothèses et la confrontation des résultats aux hypothèses",
+            "C'était la réponse attendue à la question 2 (Bordeaux), sur la séquence de CM1 « l'eau dans tous ses états »."), EAU),
+        S('physique_chimie', "Sciences · obstacle didactique", Q(
+            "Pourquoi le passage de l'eau liquide à l'état gazeux est-il un obstacle pour les élèves de cycle 2 ?",
+            ["La vapeur d'eau est invisible : l'élève voit l'eau « disparaître » et la confond avec la buée ou le brouillard", "Les élèves ne savent pas ce qu'est l'eau", "L'expérience est trop dangereuse", "L'eau ne s'évapore pas en classe"],
+            "La vapeur d'eau est invisible : l'élève voit l'eau « disparaître » et la confond avec la buée ou le brouillard",
+            "Buée, brouillard et nuages sont des gouttelettes d'eau liquide. Le passage à l'état gazeux demande une abstraction difficile au cycle 2 (Bordeaux)."), EAU),
+        S('svt', "Sciences · le développement des êtres vivants", Q(
+            "Quelle question permet de lancer l'élevage de larves prélevées dans une rivière ?",
+            ["« Les petits vers rouges trouvés dans la rivière deviennent-ils des adultes qui leur ressemblent ? »", "« Combien pèse une rivière ? »", "« Pourquoi l'eau est-elle mouillée ? »", "« Quelle est la couleur préférée des larves ? »"],
+            "« Les petits vers rouges trouvés dans la rivière deviennent-ils des adultes qui leur ressemblent ? »",
+            "Un élevage permet d'observer le développement et la métamorphose : c'est une question qui se vérifie par l'observation (Bordeaux)."), EAU),
+        S('physique_chimie', "Sciences · séparer les constituants", Q(
+            "Pour rendre limpide une eau trouble, quelles propositions d'élèves sont des techniques de séparation ?",
+            ["Le filtre à café (filtration), l'éponge (rétention) et laisser reposer (décantation)", "Ajouter du savon", "Mélanger plus fort", "Ajouter du sucre"],
+            "Le filtre à café (filtration), l'éponge (rétention) et laisser reposer (décantation)",
+            "Ajouter du savon ne sépare rien. Le faire tester par l'élève lui-même fait émerger l'erreur sans le disqualifier (Bordeaux)."), EAU),
+        S('physique_chimie', "Sciences · séparer les constituants", Q(
+            "Pourquoi la distillation n'est-elle pas une méthode adaptée ici ?",
+            ["Ce n'est réaliste ni en classe ni pour l'épuration de l'eau d'une ville", "Elle ne sépare rien", "Elle est interdite par la loi", "Elle ne fonctionne qu'avec du sel"],
+            "Ce n'est réaliste ni en classe ni pour l'épuration de l'eau d'une ville",
+            "Reims relève aussi des confusions entre distillation, vaporisation et évaporation."), EAU),
+        S('technologie', "Sciences · la distribution de l'eau", Q(
+            "Un algorigramme doit gérer un château d'eau quand le niveau est très bas. Que doit-il faire ?",
+            ["Allumer le voyant rouge et mettre en marche la motopompe auxiliaire, puis tout arrêter quand le niveau redevient suffisant", "Éteindre toutes les pompes", "Vider le réservoir", "Allumer seulement le voyant"],
+            "Allumer le voyant rouge et mettre en marche la motopompe auxiliaire, puis tout arrêter quand le niveau redevient suffisant",
+            "La justification doit aussi dire pourquoi l'autre algorigramme est faux (Bordeaux)."), EAU),
+        S('technologie', "Sciences · réaliser un objet technique", Q(
+            "Quelle compétence du cycle 3 travaillent des élèves qui fabriquent et testent un récupérateur d'eau de pluie ?",
+            ["Réaliser une maquette ou un prototype pour matérialiser une solution, puis la tester pour la valider", "Lire une carte de géographie", "Calculer une moyenne", "Apprendre une poésie"],
+            "Réaliser une maquette ou un prototype pour matérialiser une solution, puis la tester pour la valider",
+            "C'était la réponse attendue à la question 22 (Bordeaux). Les notions de fonction et de solution technique « ne sont pas maîtrisées » par beaucoup de candidats (Reims)."), EAU),
+        S('technologie', "Sciences · réaliser un objet technique", Q(
+            "Lequel de ces savoirs est un prérequis pour comprendre le récupérateur à flotteur et contrepoids ?",
+            ["Savoir pourquoi un objet flotte", "Connaître les capitales européennes", "Savoir conjuguer au passé simple", "Connaître les tables de 9"], "Savoir pourquoi un objet flotte",
+            "Autres prérequis : le principe du contrepoids, le rôle d'un capteur et d'un actionneur, la programmation de la micro:bit. Reims relève que les candidats confondent prérequis et consignes de sécurité."), EAU),
+        S('histoire_geographie', 'Géographie · les paysages de montagne', Q(
+            "Que montrent les dessins d'élèves de la montagne (document 10) ?",
+            ["Des représentations stéréotypées : sommets pointus et enneigés, sapins, montagne inhabitée", "Des représentations scientifiques exactes", "Des cartes topographiques", "Des stations de ski détaillées"],
+            "Des représentations stéréotypées : sommets pointus et enneigés, sapins, montagne inhabitée",
+            "Ils servent d'évaluation diagnostique : on part de cet archétype pour aller vers une montagne habitée et aménagée (Dijon). La consigne était de dessiner « un beau paysage » (Limoges)."), MONTAGNE),
+        S('histoire_geographie', 'Géographie · les paysages de montagne', Q(
+            "Comment appelle-t-on les pentes d'une montagne, de part et d'autre d'une vallée ?",
+            ["Les versants", "Les plaines", "Les plateaux", "Les deltas"], "Les versants",
+            "Sommet, versant, vallée, altitude : le vocabulaire attendu pour décrire un paysage de montagne au CE2."), MONTAGNE),
+        S('histoire_geographie', 'Géographie · les paysages de montagne', Q(
+            "Quelle est la différence entre la météo et le climat, confondus par certains candidats ?",
+            ["La météo est le temps qu'il fait à un moment ; le climat, les conditions moyennes sur une longue période", "Ce sont des synonymes", "Le climat change chaque jour", "La météo décrit 30 ans de données"],
+            "La météo est le temps qu'il fait à un moment ; le climat, les conditions moyennes sur une longue période",
+            "Dijon, Limoges et Nantes relèvent la confusion entre météo et climat, et entre montagne et relief."), None),
+        S('histoire_geographie', 'Géographie · les paysages de montagne', Q(
+            "Quelle démarche convient pour une séquence sur les paysages de montagne au CE2 ?",
+            ["Recueillir les représentations, décrire une photographie, localiser les massifs sur une carte, comparer des paysages d'hier et d'aujourd'hui", "Faire recopier une définition", "Lire un texte scientifique d'adulte", "Dessiner une montagne sans document"],
+            "Recueillir les représentations, décrire une photographie, localiser les massifs sur une carte, comparer des paysages d'hier et d'aujourd'hui",
+            "La carte en relief (document 3) a presque jamais été utilisée et la localisation des massifs rarement travaillée (Nantes, Dijon)."), MONTAGNE),
+        S('emc', 'EMC · le bien commun', Q(
+            "Lequel de ces exemples est un bien commun à l'échelle de l'école ?",
+            ["La cour de récréation et les livres de la bibliothèque", "Le cartable d'un élève", "Le goûter d'un camarade", "La trousse de l'enseignant"], "La cour de récréation et les livres de la bibliothèque",
+            "Ce qui appartient à tous et dont chacun profite : chacun en est responsable, pour soi et pour les autres."), MONTAGNE),
+        S('emc', 'EMC · le bien commun', Q(
+            "Le programme d'EMC de 2024 parle de construire une « culture de l'engagement ». Qu'est-ce que cela signifie au CE2 ?",
+            ["Agir concrètement pour la classe et l'école : prendre des responsabilités, participer à un projet collectif", "Apprendre la liste des ministres", "S'inscrire à un parti politique", "Voter aux élections"],
+            "Agir concrètement pour la classe et l'école : prendre des responsabilités, participer à un projet collectif",
+            "Le jury valorisait les situations où l'intérêt particulier entre en tension avec l'intérêt général (Dijon)."), None),
+        S('emc', 'EMC · le bien commun', Q(
+            "Qu'est-ce qui distingue un vrai débat réglé d'un simple échange d'opinions ?",
+            ["Un cadre (règles de parole, rôles), une question précise et un objectif d'apprentissage", "Le fait que tout le monde parle en même temps", "L'absence de l'enseignant", "Le vote final obligatoire"],
+            "Un cadre (règles de parole, rôles), une question précise et un objectif d'apprentissage",
+            "Reims relève des « débats » sans cadre ni objectif, qui ne sont que des échanges d'opinions."), None),
+        S('arts', 'Arts plastiques · le dessin', Q(
+            "Vincent Van Gogh a dessiné « Bateaux de pêche aux Saintes-Maries-de-la-Mer » (1888) avec :",
+            ["De l'encre et du crayon sur papier", "Du stylo bille", "De la peinture acrylique", "Des pastels gras"], "De l'encre et du crayon sur papier",
+            "Chaque outil (stylo bille, plume, encre, crayon) produit des traits différents : c'est l'« incidence des outils » à faire expérimenter."), None),
+        S('arts', 'Arts plastiques · le dessin', Q(
+            "Selon le programme de cycle 2, quelle compétence travaille une séance sur les outils du dessin ?",
+            ["Observer les effets produits par ses gestes et par les outils utilisés", "Reproduire exactement une œuvre", "Apprendre une technique unique imposée", "Colorier sans dépasser"],
+            "Observer les effets produits par ses gestes et par les outils utilisés",
+            "C'est une compétence de « Expérimenter, produire, créer » citée dans le document 4 du dossier."), None),
+        S('arts', 'Éducation musicale · écouter, comparer', Q(
+            "Que demande la compétence « Échanger, partager et argumenter » en éducation musicale au cycle 3 ?",
+            ["Exprimer ses goûts et ses émotions en les justifiant, et écouter ceux des autres", "Chanter seul devant la classe", "Recopier les paroles", "Jouer d'un instrument"],
+            "Exprimer ses goûts et ses émotions en les justifiant, et écouter ceux des autres",
+            "La fiche analysée visait à « exprimer son ressenti tout en respectant celui des autres » avec un vocabulaire adapté."), None),
+    ]),
 ]
