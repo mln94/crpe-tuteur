@@ -1599,7 +1599,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
   function connexion() {
     root.innerHTML = '<div class="quiz-card"><h2>Connectez-vous pour accéder à <span class="marque-q">QuizCRPE <span class="by">by</span> <b>PassCRPE</b></span></h2>' +
-      '<p>Créez votre compte gratuitement : vous commencez par un <strong>test de positionnement de 20 minutes</strong> qui vous donne la carte de vos forces et faiblesses dans les 9 matières.</p>' +
+      '<p>Créez votre compte gratuitement : vous commencez par un <strong>test de positionnement d’environ 30 minutes</strong> qui vous donne la carte de vos forces et faiblesses dans les 9 matières.</p>' +
       '<div class="quiz-actions"><a class="quiz-btn" href="/quizcrpe?auth=register">Créer mon compte gratuitement</a><a class="quiz-btn ghost" href="/quizcrpe?auth=login">J\'ai déjà un compte PassCRPE</a></div></div>';
   }
   function introTest() {
@@ -1607,9 +1607,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     // Le test est préparé en arrière-plan pendant la lecture de l'introduction : « Commencer » est immédiat
     if (!t && !testPret) testPret = api('/api/quiz/positionnement').catch(function (e) { testPret = null; throw e; });
     root.innerHTML = barreCompte() + '<div class="quiz-card"><h2>Votre test de positionnement</h2>' +
-      '<p>Avant d\'accéder au quiz, faites le point sur votre niveau. Le test est <strong>gratuit</strong> et dure environ <strong>20 minutes</strong> :</p>' +
-      '<ul class="quiz-points"><li>63 questions, 7 dans chacune des 9 matières ;</li>' +
-      '<li><strong>un test qui s’adapte à vous</strong> : chaque matière commence par une question de niveau intermédiaire. Vous répondez juste ? La question suivante est plus difficile. Vous vous trompez ? Elle est plus accessible. En 7 questions, le test trouve ainsi votre vrai niveau dans chaque matière ;</li>' +
+      '<p>Avant d\'accéder au quiz, faites le point sur votre niveau. Le test est <strong>gratuit</strong> et dure environ <strong>30 minutes</strong> :</p>' +
+      '<ul class="quiz-points"><li>90 questions, 10 dans chacune des 9 matières ;</li>' +
+      '<li><strong>un test qui s’adapte à vous</strong> : chaque matière commence par une question de niveau intermédiaire. Vous répondez juste ? La question suivante est plus difficile. Vous vous trompez ? Elle est plus accessible. En 10 questions, le test trouve ainsi votre vrai niveau dans chaque matière ;</li>' +
       '<li>après chaque réponse, vous savez si elle est juste. Les corrections détaillées et leurs explications vous sont données à la fin, avec votre carte des forces et faiblesses, matière par matière.</li></ul>' +
       '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="test-start">' + (t ? 'Reprendre mon test (question ' + (t.i + 1) + ' / ' + (t.total || t.qs.length) + ')' : 'Commencer mon test') + '</button></div></div>';
   }
@@ -1780,8 +1780,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function resultat(r, lecture) {
     rapportAffiche = r;
     var pf = profil(r), tri = r.matieres.slice().sort(function (a, b) { return b.pct - a.pct; });
-    // Note sur 20 : le niveau global, seul résultat assez précis avec 63 questions
-    var note = r.n ? (Math.round(r.ok / r.n * 200) / 10).toLocaleString('fr-FR') : '0';
+    // Note sur 20 : le niveau global. Test adaptatif : score de niveau ramené sur 20 (le % de bonnes réponses y tourne autour de 50 % quel que soit le niveau)
+    var note = r.adaptatif ? (Math.round(r.pct / 5 * 10) / 10).toLocaleString('fr-FR') : r.n ? (Math.round(r.ok / r.n * 200) / 10).toLocaleString('fr-FR') : '0';
     // Notions vues pendant le test, sans les classer en forces ou faiblesses (1 à 3 questions par thème : trop peu pour juger)
     var notions = r.matieres.map(function (m) {
       return '<li><span class="mat">' + esc(m.label) + '</span>' + m.themes.map(function (t) { return esc(t.theme); }).join(' · ') + '</li>';
@@ -1797,7 +1797,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<!--PAIEMENT-->' +
       '<div class="quiz-card rp-bloc"><h2>Votre profil</h2><p>' + pf.texte + '</p></div>' +
       '<div class="quiz-card rp-bloc"><h2>Tendances par matière</h2>' +
-      '<p class="rp-avert">7 questions par matière : ce sont des tendances, à confirmer avec vos séries. Une seule réponse fait varier le score d’une matière de 14 points.</p>' +
+      '<p class="rp-avert">' + (r.adaptatif ? '10 questions par matière, adaptées à vos réponses : c’est une bonne première estimation, à confirmer avec vos séries.' : '7 questions par matière : ce sont des tendances, à confirmer avec vos séries. Une seule réponse fait varier le score d’une matière de 14 points.') + '</p>' +
       tri.map(function (m) {
         var c = categorie(m.pct), nv = m.niveaux, det = nv ? ['facile', 'intermediaire', 'difficile'].filter(function (k) { return nv[k]; }).map(function (k) { return NIVEAUX[k].toLowerCase() + ' ' + nv[k].ok + '/' + nv[k].n; }).join(' · ') : '';
         return '<div class="rp-mat"><div class="rp-ligne"><span class="nom">' + esc(m.label) + '</span><div class="barre"><span class="' + c.cle + '" style="width:' + Math.max(m.pct, 4) + '%"></span></div><span class="pct">' + m.pct + ' %</span></div>' +
@@ -1807,7 +1807,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<p class="rp-avert">Chaque notion n’a été testée que sur 1 à 3 questions : trop peu pour la juger. Vos séries diront lesquelles sont acquises et lesquelles revoir.</p>' +
       '<ul>' + notions + '</ul></div>' + reponsesTest(r, lecture ? lecture.reponses : compte && compte.reponses_test) +
       '<div class="quiz-card rp-bloc"><h2>Votre plan de révision</h2><ol class="rp-plan">' + plan(r) + '</ol>' +
-      '<p class="rp-note">Ce test repose sur 63 questions (7 par matière) : votre niveau global est fiable, le détail par matière donne des tendances. Vos séries d’entraînement affinent ce diagnostic jour après jour.</p></div>';
+      '<p class="rp-note">Ce test repose sur ' + (r.adaptatif ? r.n + ' questions adaptées à votre niveau' : '63 questions (7 par matière)') + ' : votre niveau global est fiable, le détail par matière donne des tendances. Vos séries d’entraînement affinent ce diagnostic jour après jour.</p></div>';
     // Lien provisoire (lecture seule, sans connexion) : ni essai ni paiement, date d'expiration et invitation à découvrir le quiz
     if (lecture) {
       var fin = new Date(lecture.expire).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });

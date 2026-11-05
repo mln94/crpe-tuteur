@@ -686,7 +686,7 @@ const CHAT_MODEL = 'claude-sonnet-5-5';
 const QUIZ_MATIERES = ['francais', 'mathematiques', 'histoire_geographie', 'emc', 'svt', 'physique_chimie', 'technologie', 'arts', 'anglais'];
 const QUIZ_LABELS = { francais: 'Français', mathematiques: 'Mathématiques', histoire_geographie: 'Histoire-géographie', emc: 'EMC', svt: 'SVT', physique_chimie: 'Physique-chimie', technologie: 'Technologie', arts: 'Arts', anglais: 'Anglais' };
 const QUIZ_PRICE = { currency_code: 'EUR', value: '79.00' }; // 79 € TTC pour 1 an d'accès, en une seule fois, aligné avec la page /quizcrpe
-const POSITIONNEMENT_PAR_MATIERE = { facile: 2, intermediaire: 3, difficile: 2 }; // 7 questions × 9 matières = 63 questions
+const POSITIONNEMENT_PAR_MATIERE = { facile: 2, intermediaire: 3, difficile: 2 }; // niveaux du test (le test adaptatif pose 10 questions par matière, 90 en tout)
 const melanger = a => { const t = [...a]; for (let i = t.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [t[i], t[j]] = [t[j], t[i]]; } return t; };
 
 // Catalogue d'une matière (sans réponses), gardé 10 minutes en mémoire
@@ -924,10 +924,10 @@ app.get('/api/quiz/compte', async (req, res) => {
   }
 });
 
-// Test de positionnement adaptatif : 7 questions par matière. Chaque matière commence au niveau intermédiaire ;
+// Test de positionnement adaptatif : 10 questions par matière (90 en tout). Chaque matière commence au niveau intermédiaire ;
 // bonne réponse → niveau au-dessus, erreur ou « Je ne sais pas » → niveau en dessous (le navigateur choisit la question suivante).
-// Le serveur envoie, pour chaque matière et chaque niveau, une réserve de 7 questions (une par notion, thèmes variés).
-const POSITIONNEMENT_QUESTIONS = 7;
+// Le serveur envoie, pour chaque matière et chaque niveau, une réserve de 10 questions (une par notion, thèmes variés).
+const POSITIONNEMENT_QUESTIONS = 10;
 const POSITIONNEMENT_DEPART = 'intermediaire';
 app.get('/api/quiz/positionnement', async (req, res) => {
   try {
@@ -984,7 +984,7 @@ app.post('/api/quiz/positionnement', async (req, res) => {
     const compte = await quizCompte(req, { frais: true });
     if (!compte) return res.status(401).json({ error: 'Connexion requise.' });
     if (compte.positionnement) return res.json({ resultat: compte.positionnement });
-    const reponses = Array.isArray(req.body?.reponses) ? req.body.reponses.slice(0, 80) : [];
+    const reponses = Array.isArray(req.body?.reponses) ? req.body.reponses.slice(0, 120) : [];
     if (reponses.length < 9) return res.status(400).json({ error: 'Test incomplet.' });
     const index = {};
     (await Promise.all(QUIZ_MATIERES.map(quizCatalogue))).forEach((cat, im) => cat.forEach(q => { index[q.id] = { ...q, matiere: QUIZ_MATIERES[im] }; }));

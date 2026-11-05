@@ -54,7 +54,7 @@ FAQ = [
      "Après le test de positionnement gratuit, vous avez droit à 10 questions gratuites par jour, dans toutes les matières et à tous les niveaux. "
      f"Pour un accès complet, le Quiz CRPE coûte {PRIX_QUIZ} TTC pour 1 an, payés en une seule fois. Il est satisfait ou remboursé pendant 14 jours."),
     ("Le test de positionnement est-il vraiment gratuit ?",
-     "Oui. Après votre inscription, vous passez un test de 63 questions (environ 20 minutes) et obtenez gratuitement votre "
+     "Oui. Après votre inscription, vous passez un test de 90 questions (environ 30 minutes) et obtenez gratuitement votre "
      "carte des forces et faiblesses dans les 9 matières. Vous décidez ensuite de débloquer le quiz complet, sans engagement."),
     ("Et si le quiz ne me convient pas ?",
      "Vous êtes remboursé. Le Quiz CRPE est satisfait ou remboursé pendant 14 jours : écrivez-nous à contact@passcrpe.fr "
@@ -245,7 +245,7 @@ def contenu():
     <h2 class="section-title">« Je ne sais même pas par où commencer. »</h2>
     <p class="section-sub">Ces phrases, ce sont celles que nous entendons le plus souvent chez les candidats au CRPE. Le QuizCRPE a été conçu pour y répondre, une par une.</p>
     <div class="qz-mots">
-      <div class="qz-mot fade-up"><h3>« Je ne sais pas où j’en suis. »</h3><p>Le test de positionnement gratuit (20 min, 63 questions) vous donne votre carte des forces et faiblesses, matière par matière, dès le premier jour.</p></div>
+      <div class="qz-mot fade-up"><h3>« Je ne sais pas où j’en suis. »</h3><p>Le test de positionnement gratuit (30 min, 90 questions) vous donne votre carte des forces et faiblesses, matière par matière, dès le premier jour.</p></div>
       <div class="qz-mot fade-up"><h3>« Je révise au hasard. »</h3><p>Fini les fiches relues sans savoir pourquoi. Chaque question est rattachée au programme officiel, et le quiz vous repose les notions à revoir au bon moment.</p></div>
       <div class="qz-mot fade-up"><h3>« Je suis en retard. »</h3><p>Pas besoin de longues séances : une série de 20 questions se fait en quelques minutes. Vous commencez directement par ce que vous ne maîtrisez pas.</p></div>
       <div class="qz-mot fade-up"><h3>« Je ne serai jamais prête. »</h3><p>Une notion n’est validée qu’après 3 bonnes réponses à 3 questions différentes. Vous voyez vos barres de progression monter, et vous savez quand vous êtes prête.</p></div>
@@ -259,9 +259,9 @@ def contenu():
   <div class="container">
     <div class="qz-test">
       <div>
-        <div class="section-eyebrow">Gratuit · 20 minutes</div>
+        <div class="section-eyebrow">Gratuit · 30 minutes</div>
         <h2 class="section-title">Votre carte des forces et faiblesses dès le premier jour</h2>
-        <p class="section-sub">Juste après votre inscription, un test de positionnement de 63 questions (7 par matière, sur les trois niveaux) vous montre où vous en êtes. Vous savez immédiatement par où commencer.</p>
+        <p class="section-sub">Juste après votre inscription, un test de positionnement adaptatif de 90 questions (10 par matière, qui s’ajustent à votre niveau) vous montre où vous en êtes. Vous savez immédiatement par où commencer.</p>
         <div class="hero-actions" style="justify-content:flex-start;margin-top:24px">
           <a href="#" class="btn-primary cta-commencer" onclick="openAuth(event,'register')">{ARROW}Vérifiez votre niveau gratuitement</a>
         </div>
