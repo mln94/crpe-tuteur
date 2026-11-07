@@ -4,64 +4,90 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <!-- Page interne (suivi des publications Meta) : lisible par Google, mais non indexée. Absente du sitemap, et pas bloquée
-     dans robots.txt (sinon Google ne lirait pas la consigne noindex). Aussi envoyé en en-tête X-Robots-Tag (vercel.json). -->
+     dans robots.txt (sinon Google ne lirait pas la consigne noindex). Aussi envoyé en en-tête X-Robots-Tag (vercel.json).
+     Données : tables Supabase meta_campagnes et meta_publications, réservées au compte administrateur (RLS). -->
 <meta name="robots" content="noindex, follow">
 <meta name="googlebot" content="noindex, follow">
 <title>Suivi des publications Meta | PassCRPE</title>
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <style>
 :root{
   --bg:#f5f6ff; --surface:#ffffff; --fg:#1a1a2e; --muted:#6b7280; --line:#e0e3ff;
   --indigo:#4f46e5; --indigo-fonce:#3730a3; --indigo-clair:#eef0ff; --violet:#6366f1;
-  --ok:#059669; --ok-soft:#ecfdf5;
+  --ok:#059669; --ok-soft:#ecfdf5; --rouge:#b91c1c;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--fg);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
   padding:28px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
 [hidden]{display:none!important}
-.wrap{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
-.tete{background:linear-gradient(135deg,var(--indigo) 0%,var(--violet) 100%);color:#fff;border-radius:20px;padding:26px 28px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;margin-bottom:14px}
+.wrap{max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.tete{background:linear-gradient(135deg,var(--indigo) 0%,var(--violet) 100%);color:#fff;border-radius:20px;padding:24px 28px;position:relative}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;margin-bottom:12px}
 .logo-ic{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center}
 .logo-ic svg{width:20px;height:20px}
 .logo b span{color:#c7d2fe}
 h1{font-weight:900;font-size:clamp(24px,5vw,32px);line-height:1.15;letter-spacing:-.5px;margin:0}
-.lede{color:#e0e7ff;margin:8px 0 0;max-width:64ch}
+h2{font-size:19px;font-weight:800;margin:0 0 12px}
+.lede{color:#e0e7ff;margin:8px 0 0;max-width:66ch}
+.deco{position:absolute;top:20px;right:22px;background:rgba(255,255,255,.16);color:#fff;border:0}
 .carte{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:18px}
-.settings{display:grid;grid-template-columns:2fr 1fr;gap:14px}
-@media (max-width:620px){.settings{grid-template-columns:1fr}}
 label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
-input[type=text],input[type=url],input[type=date]{font:500 15px 'Inter',sans-serif;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
+input[type=text],input[type=url],input[type=date],input[type=email],input[type=password]{font:500 15px 'Inter',sans-serif;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
 input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
-.params{grid-column:1/-1;margin:0;font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);overflow-wrap:anywhere}
-.bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between}
-.progress{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums;font-weight:800;color:var(--indigo-fonce)}
-.meter{width:170px;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+button{font:700 13px 'Inter',sans-serif;border-radius:10px;padding:9px 13px;cursor:pointer;border:1.5px solid var(--indigo);background:#fff;color:var(--indigo);white-space:nowrap}
+button.primary{background:var(--indigo);color:#fff}
+button:hover{filter:brightness(1.08)}
+button:disabled{opacity:.6;cursor:default}
+.err{color:var(--rouge);font-size:14px;margin:0;min-height:1em}
+.auth{width:100%;max-width:420px;margin:40px auto 0;display:flex;flex-direction:column;gap:14px}
+/* Toutes les campagnes */
+.camps{width:100%;border-collapse:collapse}
+.camps th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);text-align:left;padding:8px 10px;border-bottom:1.5px solid var(--line)}
+.camps td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.camps tr.sel td{background:var(--indigo-clair)}
+.camps tr{cursor:pointer}
+.camps tr:hover td{background:#f8f9ff}
+.camps .nom{font-weight:800;color:var(--indigo-fonce)}
+.mini{display:flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+.meter{width:120px;height:8px;border-radius:99px;background:var(--line);overflow:hidden;display:inline-block}
 .meter i{display:block;height:100%;background:var(--indigo);width:0;transition:width .3s}
+@media (max-width:640px){.camps th:nth-child(4),.camps td:nth-child(4){display:none}.meter{width:60px}}
+.vide{color:var(--muted);margin:0}
+.entete-camps{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
+.entete-camps h2{margin:0}
+.nouvelle{display:grid;grid-template-columns:1fr 2fr auto;gap:12px;align-items:end;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+@media (max-width:700px){.nouvelle{grid-template-columns:1fr}}
+.import{background:#fffbeb;border:1.5px solid #fde68a;border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:14px}
+/* Campagne choisie */
+.resume{display:flex;flex-wrap:wrap;gap:10px 22px;color:var(--muted);font-size:14px}
+.resume b{color:var(--fg)}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;margin:14px 0 12px}
+.progress{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums;font-weight:800;color:var(--indigo-fonce)}
+.progress .meter{width:170px}
 .toggle{display:flex;align-items:center;gap:8px;font-size:14px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--fg);flex-direction:row;cursor:pointer}
 .toggle input{accent-color:var(--indigo)}
-ol{list-style:none;margin:0;padding:0;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;overflow:hidden}
-li{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:start;padding:14px 16px;border-top:1px solid var(--line)}
+ol{list-style:none;margin:0;padding:0;border:1.5px solid var(--line);border-radius:14px;overflow:hidden}
+li{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:start;padding:14px 16px;border-top:1px solid var(--line);background:#fff}
 li:first-child{border-top:0}
 li.done{background:var(--ok-soft)}
 li input[type=checkbox]{width:20px;height:20px;margin-top:2px;accent-color:var(--ok);cursor:pointer}
 .info{min-width:0;display:flex;flex-direction:column;gap:6px}
-.name{font-weight:700;color:var(--fg);text-decoration:none}
-.name:hover{color:var(--indigo)}
+.gname{font-weight:700;color:var(--fg);text-decoration:none}
+.gname:hover{color:var(--indigo)}
 .url{font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);overflow-wrap:anywhere}
 .url b{color:var(--indigo);font-weight:500}
+.dates{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;font-size:13px;font-weight:600;color:var(--muted)}
+.dates .copie.oui{color:var(--indigo-fonce)}
 .date{display:flex;align-items:center;gap:8px;flex-direction:row;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--muted)}
-.date input{width:auto;padding:6px 10px;font-size:14px}
+.date input{width:auto;padding:5px 9px;font-size:14px}
 li.done .date{color:var(--ok)}
 .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-button{font:700 13px 'Inter',sans-serif;border-radius:10px;padding:9px 13px;cursor:pointer;border:1.5px solid var(--indigo);background:#fff;color:var(--indigo);white-space:nowrap}
-button.primary{background:var(--indigo);color:#fff}
-button:hover{filter:brightness(1.08)}
 @media (max-width:560px){li{grid-template-columns:28px 1fr}.actions{grid-column:2;justify-content:flex-start}}
-.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--indigo-fonce);color:#fff;padding:10px 18px;border-radius:99px;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(55,48,163,.3)}
-.foot{color:var(--muted);font-size:13.5px;max-width:70ch;margin:0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--indigo-fonce);color:#fff;padding:10px 18px;border-radius:99px;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(55,48,163,.3);z-index:9}
+.foot{color:var(--muted);font-size:13.5px;max-width:72ch;margin:0}
 @media (prefers-reduced-motion:reduce){.meter i{transition:none}}
 </style>
 </head>
@@ -70,31 +96,60 @@ button:hover{filter:brightness(1.08)}
   <header class="tete">
     <div class="logo"><span class="logo-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><b>Pass<span>CRPE</span></b></div>
     <h1>Suivi des publications Meta</h1>
-    <p class="lede">Un lien suivi par groupe Facebook. Copiez le post ou le lien, publiez, puis cochez le groupe : la date du jour est notée, et vous pouvez la modifier. Dans les statistiques, chaque visite est rattachée au groupe d'où elle vient.</p>
+    <p class="lede">Chaque campagne génère un lien suivi par groupe Facebook. La page note quand les liens ont été générés, quand chaque lien a été copié, et la date de publication quand vous cochez le groupe.</p>
+    <button type="button" class="deco" id="deco" hidden>Se déconnecter</button>
   </header>
 
-  <section class="carte settings">
-    <label for="base">Adresse de destination
-      <input id="base" type="url" autocomplete="off">
-    </label>
-    <label for="camp">Nom de campagne
-      <input id="camp" type="text" autocomplete="off">
-    </label>
-    <p class="params" id="params"></p>
+  <!-- Connexion (compte administrateur) -->
+  <section class="carte auth" id="auth" hidden>
+    <h2>Connexion</h2>
+    <label for="email">E-mail<input id="email" type="email" autocomplete="username"></label>
+    <label for="mdp">Mot de passe<input id="mdp" type="password" autocomplete="current-password"></label>
+    <button type="button" class="primary" id="connexion">Se connecter</button>
+    <p class="err" id="authErr"></p>
   </section>
 
-  <div class="bar">
-    <div class="progress"><span id="count">0 / 0 publiés</span><span class="meter"><i id="meterFill"></i></span></div>
-    <label class="toggle" for="hide"><input id="hide" type="checkbox"> Masquer les groupes déjà publiés</label>
+  <div id="app" hidden>
+    <div class="import" id="import" hidden>
+      <span>Ce navigateur contient un suivi enregistré avant le passage à cette version (campagne « <b id="importNom"></b> »).</span>
+      <button type="button" class="primary" id="importer">Importer ce suivi</button>
+    </div>
+
+    <!-- Toutes les campagnes -->
+    <section class="carte">
+      <div class="entete-camps"><h2>Toutes les campagnes</h2><button type="button" id="ouvrirNouvelle">＋ Nouvelle campagne</button></div>
+      <table class="camps" id="camps"></table>
+      <p class="vide" id="aucune" hidden>Aucune campagne pour l'instant : créez-en une pour générer les liens.</p>
+      <div class="nouvelle" id="nouvelle" hidden>
+        <label for="nvNom">Nom de campagne<input id="nvNom" type="text" placeholder="ex. testeurs_crpe2027" autocomplete="off"></label>
+        <label for="nvBase">Adresse de destination<input id="nvBase" type="url" autocomplete="off"></label>
+        <button type="button" class="primary" id="generer">Générer les liens</button>
+        <p class="err" id="nvErr" style="grid-column:1/-1"></p>
+      </div>
+    </section>
+
+    <!-- Campagne choisie -->
+    <section class="carte" id="detail" hidden>
+      <h2 id="dNom"></h2>
+      <div class="resume" id="dResume"></div>
+      <div class="bar">
+        <div class="progress"><span id="count"></span><span class="meter"><i id="meterFill"></i></span></div>
+        <label class="toggle" for="hide"><input id="hide" type="checkbox"> Masquer les groupes déjà publiés</label>
+      </div>
+      <ol id="list"></ol>
+    </section>
+
+    <p class="foot">Paramètres des liens : utm_source=facebook, utm_medium=groupe, utm_campaign = le nom de campagne, utm_content = le groupe. Les données sont enregistrées dans Supabase : vous retrouvez votre suivi sur tous vos appareils.</p>
   </div>
-
-  <ol id="list"></ol>
-
-  <p class="foot">Paramètres : utm_source=facebook, utm_medium=groupe, utm_campaign = le nom de campagne, utm_content = le groupe. Les cases cochées, les dates et l'adresse sont gardées dans ce navigateur uniquement.</p>
 </div>
 <div class="toast" id="toast" hidden></div>
 
 <script>
+const SB = window.supabase.createClient('https://zqwcermgfvcusuwjfviz.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8');
+const ADMIN_EMAIL = 'mohamed.necib94310@gmail.com';
+const BASE_DEFAUT = 'https://www.passcrpe.fr/quizcrpe';
+
+// Groupes utilisés pour les nouvelles campagnes (chaque campagne garde sa propre liste une fois créée)
 const GROUPS=[
 ["CRPE 2027 / Académie LYON","1787775028622922","lyon-crpe2027"],
 ["CRPE 2027 Académie d'Aix-Marseille","crpeaixmarseilleunsa","aix-marseille"],
@@ -131,6 +186,7 @@ const GROUPS=[
 ["CRPE 2026/2027- Région Occitanie entraide, conseils, h.s,...","996537315159701","occitanie"],
 ["CRPE 2027 et 2028","3079298832293667","crpe-2027-2028"]
 ];
+const GROUP_ID = Object.fromEntries(GROUPS.map(g => [g[2], g[1]]));
 
 const POST=`Je vous partage un projet qui nous tient vraiment à cœur 💙
 
@@ -159,71 +215,157 @@ Et si vous connaissez quelqu'un qui prépare le CRPE 2027, partagez-lui ce post,
 
 Bon courage à toutes et à tous ✨`;
 
-const BASE_DEFAUT="https://www.passcrpe.fr/quizcrpe", CAMP_DEFAUT="testeurs_crpe2027";
-const $=id=>document.getElementById(id);
-const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
-let done=new Set(store.get("utm_done",[]));
-let dates=store.get("utm_dates",{});
-$("base").value=store.get("utm_base","")||BASE_DEFAUT;
-$("camp").value=store.get("utm_camp",CAMP_DEFAUT);
-$("hide").checked=store.get("utm_hide",false);
-
-const aujourdhui=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
-const clean=s=>s.trim().toLowerCase().replace(/\s+/g,"_").replace(/[^a-z0-9_\-]/g,"");
-function base(){return $("base").value.trim()||BASE_DEFAUT}
-function link(slug){
-  const p={utm_source:"facebook",utm_medium:"groupe",utm_campaign:clean($("camp").value)||CAMP_DEFAUT,utm_content:slug};
-  try{const u=new URL(base());for(const k in p)u.searchParams.set(k,p[k]);return u.toString()}
-  catch(e){return base()+(base().includes("?")?"&":"?")+new URLSearchParams(p).toString()}
+const $ = id => document.getElementById(id);
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+                set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+const aujourdhui = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+const dateHeure = x => x ? new Date(x).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+const dateJour = x => x ? new Date(x + 'T12:00:00').toLocaleDateString('fr-FR', { dateStyle: 'medium' }) : '';
+const clean = s => s.trim().toLowerCase().replace(/\s+/g, '_').replace(/[^a-z0-9_\-]/g, '');
+function lien(base, camp, slug) {
+  const p = { utm_source: 'facebook', utm_medium: 'groupe', utm_campaign: camp, utm_content: slug };
+  const u = new URL(base); for (const k in p) u.searchParams.set(k, p[k]); return u.toString();
 }
-function render(){
-  $("params").textContent="Exemple : "+link("nom-du-groupe");
-  const list=$("list");list.innerHTML="";
-  GROUPS.forEach(([name,id,slug])=>{
-    const isDone=done.has(slug);
-    if($("hide").checked&&isDone)return;
-    const li=document.createElement("li");if(isDone)li.className="done";
-    const url=link(slug), i=url.indexOf("?");
-    li.innerHTML=`<input type="checkbox" aria-label="Publié dans ${name.replace(/"/g,"&quot;")}" ${isDone?"checked":""}>
-      <div class="info"><a class="name" href="https://www.facebook.com/groups/${id}/" target="_blank" rel="noopener"></a>
-      <span class="url"></span>
-      <label class="date">Publié le <input type="date"></label></div>
-      <div class="actions"><button class="primary" data-a="post">Copier le post</button><button data-a="link">Copier le lien</button></div>`;
-    li.querySelector(".name").textContent=name;
-    const u=li.querySelector(".url");
-    u.append(document.createTextNode(i<0?url:url.slice(0,i)));
-    if(i>=0){const b=document.createElement("b");b.textContent=url.slice(i);u.append(b)}
-    const champ=li.querySelector('input[type=date]');
-    champ.value=dates[slug]||"";
-    champ.setAttribute("aria-label","Date de publication dans "+name);
-    // Date modifiée à la main : le groupe est coché ; date effacée : le groupe est décoché
-    champ.addEventListener("change",e=>{
-      if(e.target.value){dates[slug]=e.target.value;done.add(slug)}else{delete dates[slug];done.delete(slug)}
-      store.set("utm_dates",dates);store.set("utm_done",[...done]);render()});
-    // Case cochée : date du jour si aucune date n'est notée
-    li.querySelector('input[type=checkbox]').addEventListener("change",e=>{
-      if(e.target.checked){done.add(slug);if(!dates[slug])dates[slug]=aujourdhui()}else done.delete(slug);
-      store.set("utm_done",[...done]);store.set("utm_dates",dates);render()});
-    li.querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>{
-      const txt=btn.dataset.a==="post"?POST.replace("{LIEN}",url):url;
-      copy(txt,btn.dataset.a==="post"?"Post copié avec le lien du groupe":"Lien copié");
+
+let campagnes = [], pubs = [], choisie = store.get('meta_campagne', null);
+
+// ── Connexion ──
+async function demarrer() {
+  const { data } = await SB.auth.getSession();
+  if (data.session?.user?.email === ADMIN_EMAIL) return ouvrir();
+  $('auth').hidden = false; $('app').hidden = true; $('deco').hidden = true;
+  $('email').value = ADMIN_EMAIL;
+}
+$('connexion').addEventListener('click', async () => {
+  const email = $('email').value.trim(), password = $('mdp').value;
+  if (email !== ADMIN_EMAIL) { $('authErr').textContent = 'Accès non autorisé.'; return; }
+  $('connexion').disabled = true; $('authErr').textContent = '';
+  const { error } = await SB.auth.signInWithPassword({ email, password });
+  $('connexion').disabled = false;
+  if (error) { $('authErr').textContent = error.message; return; }
+  ouvrir();
+});
+$('mdp').addEventListener('keydown', e => { if (e.key === 'Enter') $('connexion').click(); });
+$('deco').addEventListener('click', async () => { await SB.auth.signOut(); demarrer(); });
+
+async function ouvrir() {
+  $('auth').hidden = true; $('app').hidden = false; $('deco').hidden = false;
+  $('nvBase').value = BASE_DEFAUT;
+  await charger();
+}
+async function charger() {
+  const [c, p] = await Promise.all([
+    SB.from('meta_campagnes').select('*').order('liens_generes_at', { ascending: false }),
+    SB.from('meta_publications').select('*'),
+  ]);
+  if (c.error || p.error) { toast('Chargement impossible : ' + (c.error || p.error).message); return; }
+  campagnes = c.data; pubs = p.data;
+  if (!campagnes.some(x => x.id === choisie)) choisie = campagnes[0]?.id || null;
+  proposerImport(); rendre();
+}
+
+// ── Import du suivi gardé dans ce navigateur (version précédente de la page) ──
+function ancienSuivi() {
+  const done = store.get('utm_done', []), dates = store.get('utm_dates', {});
+  if (!done.length && !Object.keys(dates).length) return null;
+  return { nom: clean(store.get('utm_camp', 'testeurs_crpe2027')) || 'testeurs_crpe2027', base: store.get('utm_base', '') || BASE_DEFAUT, done, dates };
+}
+function proposerImport() {
+  const a = ancienSuivi();
+  $('import').hidden = !a || store.get('utm_importe', false) || campagnes.some(c => c.nom === a.nom);
+  if (a) $('importNom').textContent = a.nom;
+}
+$('importer').addEventListener('click', async () => {
+  const a = ancienSuivi(); if (!a) return;
+  const c = await creer(a.nom, a.base, slug => a.done.includes(slug) ? (a.dates[slug] || aujourdhui()) : null);
+  if (c) { store.set('utm_importe', true); toast('Suivi importé'); }
+});
+
+// ── Nouvelle campagne : génère un lien par groupe ──
+$('ouvrirNouvelle').addEventListener('click', () => { $('nouvelle').hidden = !$('nouvelle').hidden; if (!$('nouvelle').hidden) $('nvNom').focus(); });
+$('generer').addEventListener('click', async () => {
+  const nom = clean($('nvNom').value), base = $('nvBase').value.trim();
+  $('nvErr').textContent = '';
+  if (!nom) { $('nvErr').textContent = 'Donnez un nom à la campagne.'; return; }
+  try { new URL(base); } catch (e) { $('nvErr').textContent = 'Adresse de destination invalide.'; return; }
+  if (campagnes.some(c => c.nom === nom)) { $('nvErr').textContent = 'Une campagne porte déjà ce nom.'; return; }
+  const c = await creer(nom, base, () => null);
+  if (c) { $('nouvelle').hidden = true; $('nvNom').value = ''; toast('Liens générés pour ' + GROUPS.length + ' groupes'); }
+});
+async function creer(nom, base, publie) {
+  $('generer').disabled = true;
+  const { data: c, error } = await SB.from('meta_campagnes').insert({ nom, base_url: base }).select().single();
+  if (error) { $('generer').disabled = false; $('nvErr').textContent = error.message; return null; }
+  const lignes = GROUPS.map(([gnom, , slug]) => ({ campagne_id: c.id, groupe_slug: slug, groupe_nom: gnom, lien: lien(base, nom, slug), publie_le: publie(slug) }));
+  const { error: e2 } = await SB.from('meta_publications').insert(lignes);
+  $('generer').disabled = false;
+  if (e2) { toast('Liens non enregistrés : ' + e2.message); return null; }
+  choisie = c.id; store.set('meta_campagne', choisie);
+  await charger(); return c;
+}
+
+// ── Affichage ──
+function rendre() {
+  const t = $('camps');
+  $('aucune').hidden = campagnes.length > 0;
+  t.innerHTML = campagnes.length ? '<tr><th>Campagne</th><th>Liens générés le</th><th>Publiés</th><th>Dernière publication</th></tr>' +
+    campagnes.map(c => {
+      const ps = pubs.filter(p => p.campagne_id === c.id), n = ps.filter(p => p.publie_le).length;
+      const der = ps.map(p => p.publie_le).filter(Boolean).sort().pop();
+      return '<tr data-id="' + c.id + '"' + (c.id === choisie ? ' class="sel"' : '') + '><td class="nom">' + esc(c.nom) + '</td><td>' + esc(dateHeure(c.liens_generes_at)) + '</td>' +
+        '<td><span class="mini">' + n + ' / ' + ps.length + ' <span class="meter"><i style="width:' + (ps.length ? n / ps.length * 100 : 0) + '%"></i></span></span></td>' +
+        '<td>' + (der ? esc(dateJour(der)) : '–') + '</td></tr>';
+    }).join('') : '';
+  t.querySelectorAll('tr[data-id]').forEach(tr => tr.addEventListener('click', () => { choisie = tr.dataset.id; store.set('meta_campagne', choisie); rendre(); }));
+  rendreDetail();
+}
+function rendreDetail() {
+  const c = campagnes.find(x => x.id === choisie);
+  $('detail').hidden = !c; if (!c) return;
+  const ps = pubs.filter(p => p.campagne_id === c.id), n = ps.filter(p => p.publie_le).length, copies = ps.filter(p => p.lien_copie_at).length;
+  $('dNom').textContent = c.nom;
+  $('dResume').innerHTML = '<span>Liens générés le <b>' + esc(dateHeure(c.liens_generes_at)) + '</b></span><span>Destination : <b>' + esc(c.base_url) + '</b></span><span>Liens copiés : <b>' + copies + ' / ' + ps.length + '</b></span>';
+  $('count').textContent = n + ' / ' + ps.length + ' publiés';
+  $('meterFill').style.width = (ps.length ? n / ps.length * 100 : 0) + '%';
+  $('hide').checked = store.get('utm_hide', false);
+  const list = $('list'); list.innerHTML = '';
+  ps.slice().sort((a, b) => GROUPS.findIndex(g => g[2] === a.groupe_slug) - GROUPS.findIndex(g => g[2] === b.groupe_slug)).forEach(p => {
+    if ($('hide').checked && p.publie_le) return;
+    const li = document.createElement('li'); if (p.publie_le) li.className = 'done';
+    const i = p.lien.indexOf('?'), gid = GROUP_ID[p.groupe_slug];
+    li.innerHTML = '<input type="checkbox" aria-label="Publié dans ' + esc(p.groupe_nom) + '"' + (p.publie_le ? ' checked' : '') + '>' +
+      '<div class="info">' + (gid ? '<a class="gname" href="https://www.facebook.com/groups/' + esc(gid) + '/" target="_blank" rel="noopener">' + esc(p.groupe_nom) + '</a>' : '<span class="gname">' + esc(p.groupe_nom) + '</span>') +
+      '<span class="url">' + esc(i < 0 ? p.lien : p.lien.slice(0, i)) + (i < 0 ? '' : '<b>' + esc(p.lien.slice(i)) + '</b>') + '</span>' +
+      '<div class="dates"><span class="copie' + (p.lien_copie_at ? ' oui' : '') + '">' + (p.lien_copie_at ? '📋 Lien copié le ' + esc(dateHeure(p.lien_copie_at)) : 'Lien pas encore copié') + '</span>' +
+      '<label class="date">Publié le <input type="date" value="' + esc(p.publie_le || '') + '" aria-label="Date de publication dans ' + esc(p.groupe_nom) + '"></label></div></div>' +
+      '<div class="actions"><button class="primary" data-a="post">Copier le post</button><button data-a="link">Copier le lien</button></div>';
+    li.querySelector('input[type=checkbox]').addEventListener('change', e => maj(p, { publie_le: e.target.checked ? (p.publie_le || aujourdhui()) : null }));
+    li.querySelector('input[type=date]').addEventListener('change', e => maj(p, { publie_le: e.target.value || null }));
+    li.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
+      const post = btn.dataset.a === 'post';
+      copier(post ? POST.replace('{LIEN}', p.lien) : p.lien, post ? 'Post copié avec le lien du groupe' : 'Lien copié');
+      if (!p.lien_copie_at) maj(p, { lien_copie_at: new Date().toISOString() });
     }));
     list.append(li);
   });
-  const n=GROUPS.filter(g=>done.has(g[2])).length;
-  $("count").textContent=`${n} / ${GROUPS.length} publiés`;
-  $("meterFill").style.width=(n/GROUPS.length*100)+"%";
 }
-function copy(txt,msg){
-  const fallback=()=>{const t=document.createElement("textarea");t.value=txt;document.body.append(t);t.select();
-    try{document.execCommand("copy");toast(msg)}catch(e){toast("Copie impossible : sélectionnez le texte à la main")}t.remove()};
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(()=>toast(msg),fallback)}else fallback();
+async function maj(p, champs) {
+  const avant = { ...p }; Object.assign(p, champs); rendre();
+  const { error } = await SB.from('meta_publications').update({ ...champs, updated_at: new Date().toISOString() })
+    .eq('campagne_id', p.campagne_id).eq('groupe_slug', p.groupe_slug);
+  if (error) { Object.assign(p, avant); rendre(); toast('Non enregistré : ' + error.message); }
 }
-let tt;function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,1800)}
-$("base").addEventListener("input",()=>{store.set("utm_base",$("base").value);render()});
-$("camp").addEventListener("input",()=>{store.set("utm_camp",$("camp").value);render()});
-$("hide").addEventListener("change",()=>{store.set("utm_hide",$("hide").checked);render()});
-render();
+$('hide').addEventListener('change', () => { store.set('utm_hide', $('hide').checked); rendreDetail(); });
+
+function copier(txt, msg) {
+  const fallback = () => { const t = document.createElement('textarea'); t.value = txt; document.body.append(t); t.select();
+    try { document.execCommand('copy'); toast(msg); } catch (e) { toast('Copie impossible : sélectionnez le texte à la main'); } t.remove(); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(() => toast(msg), fallback); else fallback();
+}
+let tt; function toast(m) { const t = $('toast'); t.textContent = m; t.hidden = false; clearTimeout(tt); tt = setTimeout(() => t.hidden = true, 2200); }
+
+demarrer();
 </script>
 </body>
 </html>
