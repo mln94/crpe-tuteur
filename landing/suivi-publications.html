@@ -74,6 +74,15 @@ button.danger.plein{background:var(--rouge);color:#fff}
 .panneau .ligne{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .panneau .note{grid-column:1/-1;margin:0;font-size:13.5px;color:var(--muted)}
 .panneau.suppr{grid-template-columns:1fr;background:#fef2f2;border-color:#fecaca}
+.message{margin:14px 0 4px;border:1.5px solid var(--line);border-radius:12px;padding:14px;background:#fafaff}
+.message summary{cursor:pointer;font-weight:800;color:var(--indigo-fonce);list-style:none;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.message summary::-webkit-details-marker{display:none}
+.message summary span::before{content:'▶';font-size:11px;margin-right:8px;color:var(--indigo)}
+.message[open] summary span::before{content:'▼'}
+.message summary small{font-weight:600;color:var(--muted)}
+.message textarea{display:block;width:100%;min-height:220px;margin-top:12px;font:15px/1.55 'Inter',sans-serif;color:var(--fg);background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:12px;resize:vertical}
+.message .ligne{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
+.message .etat{font-size:13px;color:var(--muted)}
 @media (max-width:700px){.panneau{grid-template-columns:1fr}}
 .resume b{color:var(--fg)}
 .bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;margin:14px 0 12px}
@@ -164,6 +173,11 @@ li.done .date{color:var(--ok)}
         <div class="ligne"><button type="button" class="danger plein" id="sOui">Oui, supprimer définitivement</button><button type="button" id="sNon">Annuler</button></div>
       </div>
       <div class="resume" id="dResume"></div>
+      <details class="message" id="dMessage">
+        <summary><span>✉️ Message de la campagne</span><small id="msgEtat"></small></summary>
+        <textarea id="msgTexte" placeholder="Le texte du post, enregistré une fois pour toute la campagne. Astuce : écrivez {LIEN} à l'endroit du lien, il sera remplacé par le lien du groupe quand vous copierez le message depuis un groupe."></textarea>
+        <div class="ligne"><button type="button" class="primary" id="msgEnregistrer">Enregistrer le message</button><button type="button" id="msgCopier">Copier le message</button><span class="etat" id="msgNonSauve" hidden>Modifications non enregistrées</span></div>
+      </details>
       <div class="bar">
         <div class="progress"><span id="count"></span><span class="meter"><i id="meterFill"></i></span></div>
         <label class="toggle" for="hide"><input id="hide" type="checkbox"> Masquer les groupes déjà publiés ou bloqués</label>
@@ -365,7 +379,11 @@ function rendreDetail() {
   const n = ps.filter(p => p.publie_le).length, copies = ps.filter(p => p.lien_copie_at).length;
   const attente = ps.filter(p => p.validation_requise && !p.valide_le).length;
   $('dNom').textContent = c.nom;
-  if (rendreDetail.pour !== c.id) { $('pModif').hidden = true; $('pSuppr').hidden = true; rendreDetail.pour = c.id; }
+  if (rendreDetail.pour !== c.id) {
+    $('pModif').hidden = true; $('pSuppr').hidden = true; rendreDetail.pour = c.id;
+    $('msgTexte').value = c.message || ''; $('msgNonSauve').hidden = true; $('dMessage').open = !c.message;
+  }
+  $('msgEtat').textContent = c.message ? 'Enregistré le ' + dateHeure(c.message_maj_at) : 'Aucun message enregistré';
   $('dResume').innerHTML = '<span>Liens générés le <b>' + esc(dateHeure(c.liens_generes_at)) + '</b></span><span>Destination : <b>' + esc(c.base_url) + '</b></span><span>Liens copiés : <b>' + copies + ' / ' + ps.length + '</b></span>' +
     (attente ? '<span>⏳ En attente de validation : <b>' + attente + '</b></span>' : '') +
     (bloques ? '<span>🚫 Groupes bloqués : <b>' + bloques + '</b> (hors compteur)</span>' : '');
@@ -394,8 +412,12 @@ function rendreDetail() {
     if (cv) cv.addEventListener('change', e => maj(p, { valide_le: e.target.checked ? aujourdhui() : null }));
     li.querySelector('.cb-bloque').addEventListener('change', e => maj(p, { bloque_le: e.target.checked ? aujourdhui() : null }));
     li.querySelector('input[type=date]').addEventListener('change', e => maj(p, { publie_le: e.target.value || null }));
+    if (c.message) li.querySelector('.actions').insertAdjacentHTML('afterbegin', '<button data-a="msg">Copier le message</button>');
     li.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
-      copier(p.lien, 'Lien copié');
+      if (btn.dataset.a === 'msg') {
+        const avecLien = c.message.includes('{LIEN}');
+        copier(avecLien ? c.message.split('{LIEN}').join(p.lien) : c.message, avecLien ? 'Message copié avec le lien du groupe' : 'Message copié');
+      } else copier(p.lien, 'Lien copié');
       if (!p.lien_copie_at) maj(p, { lien_copie_at: new Date().toISOString() });
     }));
     list.append(li);
@@ -446,6 +468,25 @@ $('sOui').addEventListener('click', async () => {
   if (error) { toast('Suppression impossible : ' + error.message); return; }
   $('pSuppr').hidden = true; choisie = null; store.set('meta_campagne', null); toast('Campagne « ' + c.nom + ' » supprimée'); await charger();
 });
+// ── Message de la campagne : enregistré une fois pour toute la campagne ──
+$('msgTexte').addEventListener('input', () => {
+  const c = campagnes.find(x => x.id === choisie);
+  $('msgNonSauve').hidden = !c || ($('msgTexte').value === (c.message || ''));
+});
+$('msgEnregistrer').addEventListener('click', async () => {
+  const c = campagnes.find(x => x.id === choisie); if (!c) return;
+  const message = $('msgTexte').value.trim() || null, maj = new Date().toISOString();
+  $('msgEnregistrer').disabled = true;
+  const { error } = await SB.from('meta_campagnes').update({ message, message_maj_at: message ? maj : null }).eq('id', c.id);
+  $('msgEnregistrer').disabled = false;
+  if (error) { toast('Message non enregistré : ' + error.message); return; }
+  c.message = message; c.message_maj_at = message ? maj : null; $('msgNonSauve').hidden = true; toast('Message enregistré'); rendre();
+});
+$('msgCopier').addEventListener('click', () => {
+  const t = $('msgTexte').value.trim(); if (!t) { toast('Aucun message à copier'); return; }
+  copier(t, 'Message copié');
+});
+window.addEventListener('beforeunload', e => { if (!$('msgNonSauve').hidden) { e.preventDefault(); e.returnValue = ''; } });
 $('reduire').addEventListener('click', () => { ouverte = false; store.set('meta_ouverte', false); rendre(); $('camps').scrollIntoView({ behavior: 'smooth', block: 'center' }); });
 $('hide').addEventListener('change', () => { store.set('utm_hide', $('hide').checked); rendreDetail(); });
 
