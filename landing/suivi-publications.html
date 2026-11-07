@@ -96,7 +96,7 @@ li.done .date{color:var(--ok)}
   <header class="tete">
     <div class="logo"><span class="logo-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><b>Pass<span>CRPE</span></b></div>
     <h1>Suivi des publications Meta</h1>
-    <p class="lede">Chaque campagne génère un lien suivi par groupe Facebook. La page note quand les liens ont été générés, quand chaque lien a été copié, et la date de publication quand vous cochez le groupe.</p>
+    <p class="lede">Chaque campagne génère un lien suivi par groupe Facebook. Copiez le lien du groupe, publiez, puis cochez : la page note quand les liens ont été générés, quand chaque lien a été copié, et la date de publication.</p>
     <button type="button" class="deco" id="deco" hidden>Se déconnecter</button>
   </header>
 
@@ -194,32 +194,6 @@ const GROUPS=[
 ];
 const GROUP_ID = Object.fromEntries(GROUPS.map(g => [g[2], g[1]]));
 
-const POST=`Je vous partage un projet qui nous tient vraiment à cœur 💙
-
-Mon épouse est professeure des écoles au Bourget. Un soir, elle m'a parlé du CRPE : la quantité de choses à réviser, le stress, et la difficulté pour les candidats de savoir où ils en sont vraiment. Ce soir-là, on s'est dit qu'on pouvait peut-être aider.
-
-Elle connaît le terrain et les attentes du concours 🍎 Moi, je sais coder 💻 Alors on s'y est mis, tous les deux. Pendant de longs mois, on a épluché les sujets, rédigé et vérifié chaque question une par une, testé, corrigé, recommencé. Il y en a aujourd'hui plus de 900.
-
-De ce projet sont nées deux applis, QuizCRPE et PassCRPE. Aujourd'hui, j'ai envie de vous présenter la première 👇
-
-✅ Un quiz général pour balayer tout le programme
-✅ Des quiz construits à partir des vrais sujets : 2025 et 2026 pour le Master 2, 2026 pour le nouveau CRPE bac+3
-🔜 Bientôt : un quiz de didactique et un autre pour préparer les oraux
-
-On a voulu que ce soit simple :
-1️⃣ Vous vous inscrivez
-2️⃣ Vous faites le test de positionnement pour savoir où vous en êtes
-3️⃣ Vous choisissez votre parcours
-
-🎁 Le test est gratuit, tout comme une série de questions chaque jour.
-
-👉 {LIEN}
-
-Aujourd'hui, ce qu'on cherche avant tout, ce sont des personnes qui préparent le concours et qui acceptent de tester l'appli, puis de nous dire franchement ce qu'elles en pensent 💬 Les questions sont-elles pertinentes ? Est-ce simple à utiliser ? Qu'est-ce qui manque ? Même (et surtout) les critiques nous aideront 🙏 Vous pouvez nous répondre en commentaire ou en message privé.
-
-Et si vous connaissez quelqu'un qui prépare le CRPE 2027, partagez-lui ce post, ça compterait beaucoup pour nous 💙
-
-Bon courage à toutes et à tous ✨`;
 
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -355,12 +329,11 @@ function rendreDetail() {
       '<span class="url">' + esc(i < 0 ? p.lien : p.lien.slice(0, i)) + (i < 0 ? '' : '<b>' + esc(p.lien.slice(i)) + '</b>') + '</span>' +
       '<div class="dates"><span class="copie' + (p.lien_copie_at ? ' oui' : '') + '">' + (p.lien_copie_at ? '📋 Lien copié le ' + esc(dateHeure(p.lien_copie_at)) : 'Lien pas encore copié') + '</span>' +
       '<label class="date">Publié le <input type="date" value="' + esc(p.publie_le || '') + '" aria-label="Date de publication dans ' + esc(p.groupe_nom) + '"></label></div></div>' +
-      '<div class="actions"><button class="primary" data-a="post">Copier le post</button><button data-a="link">Copier le lien</button></div>';
+      '<div class="actions"><button class="primary" data-a="link">Copier le lien</button></div>';
     li.querySelector('input[type=checkbox]').addEventListener('change', e => maj(p, { publie_le: e.target.checked ? (p.publie_le || aujourdhui()) : null }));
     li.querySelector('input[type=date]').addEventListener('change', e => maj(p, { publie_le: e.target.value || null }));
     li.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
-      const post = btn.dataset.a === 'post';
-      copier(post ? POST.replace('{LIEN}', p.lien) : p.lien, post ? 'Post copié avec le lien du groupe' : 'Lien copié');
+      copier(p.lien, 'Lien copié');
       if (!p.lien_copie_at) maj(p, { lien_copie_at: new Date().toISOString() });
     }));
     list.append(li);
