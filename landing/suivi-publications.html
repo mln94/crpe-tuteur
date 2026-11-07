@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- Page interne (suivi des publications Meta) : lisible par Google, mais non indexée. Absente du sitemap, et pas bloquée
+     dans robots.txt (sinon Google ne lirait pas la consigne noindex). Aussi envoyé en en-tête X-Robots-Tag (vercel.json). -->
+<meta name="robots" content="noindex, follow">
+<meta name="googlebot" content="noindex, follow">
+<title>Suivi des publications Meta | PassCRPE</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<style>
+:root{
+  --bg:#f5f6ff; --surface:#ffffff; --fg:#1a1a2e; --muted:#6b7280; --line:#e0e3ff;
+  --indigo:#4f46e5; --indigo-fonce:#3730a3; --indigo-clair:#eef0ff; --violet:#6366f1;
+  --ok:#059669; --ok-soft:#ecfdf5;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  padding:28px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+[hidden]{display:none!important}
+.wrap{max-width:920px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.tete{background:linear-gradient(135deg,var(--indigo) 0%,var(--violet) 100%);color:#fff;border-radius:20px;padding:26px 28px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;margin-bottom:14px}
+.logo-ic{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center}
+.logo-ic svg{width:20px;height:20px}
+.logo b span{color:#c7d2fe}
+h1{font-weight:900;font-size:clamp(24px,5vw,32px);line-height:1.15;letter-spacing:-.5px;margin:0}
+.lede{color:#e0e7ff;margin:8px 0 0;max-width:64ch}
+.carte{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:18px}
+.settings{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+@media (max-width:620px){.settings{grid-template-columns:1fr}}
+label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+input[type=text],input[type=url],input[type=date]{font:500 15px 'Inter',sans-serif;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
+.params{grid-column:1/-1;margin:0;font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);overflow-wrap:anywhere}
+.bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between}
+.progress{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums;font-weight:800;color:var(--indigo-fonce)}
+.meter{width:170px;height:8px;border-radius:99px;background:var(--line);overflow:hidden}
+.meter i{display:block;height:100%;background:var(--indigo);width:0;transition:width .3s}
+.toggle{display:flex;align-items:center;gap:8px;font-size:14px;text-transform:none;letter-spacing:0;font-weight:500;color:var(--fg);flex-direction:row;cursor:pointer}
+.toggle input{accent-color:var(--indigo)}
+ol{list-style:none;margin:0;padding:0;background:var(--surface);border:1.5px solid var(--line);border-radius:16px;overflow:hidden}
+li{display:grid;grid-template-columns:28px 1fr auto;gap:12px;align-items:start;padding:14px 16px;border-top:1px solid var(--line)}
+li:first-child{border-top:0}
+li.done{background:var(--ok-soft)}
+li input[type=checkbox]{width:20px;height:20px;margin-top:2px;accent-color:var(--ok);cursor:pointer}
+.info{min-width:0;display:flex;flex-direction:column;gap:6px}
+.name{font-weight:700;color:var(--fg);text-decoration:none}
+.name:hover{color:var(--indigo)}
+.url{font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--muted);overflow-wrap:anywhere}
+.url b{color:var(--indigo);font-weight:500}
+.date{display:flex;align-items:center;gap:8px;flex-direction:row;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--muted)}
+.date input{width:auto;padding:6px 10px;font-size:14px}
+li.done .date{color:var(--ok)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+button{font:700 13px 'Inter',sans-serif;border-radius:10px;padding:9px 13px;cursor:pointer;border:1.5px solid var(--indigo);background:#fff;color:var(--indigo);white-space:nowrap}
+button.primary{background:var(--indigo);color:#fff}
+button:hover{filter:brightness(1.08)}
+@media (max-width:560px){li{grid-template-columns:28px 1fr}.actions{grid-column:2;justify-content:flex-start}}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--indigo-fonce);color:#fff;padding:10px 18px;border-radius:99px;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(55,48,163,.3)}
+.foot{color:var(--muted);font-size:13.5px;max-width:70ch;margin:0}
+@media (prefers-reduced-motion:reduce){.meter i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tete">
+    <div class="logo"><span class="logo-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><b>Pass<span>CRPE</span></b></div>
+    <h1>Suivi des publications Meta</h1>
+    <p class="lede">Un lien suivi par groupe Facebook. Copiez le post ou le lien, publiez, puis cochez le groupe : la date du jour est notée, et vous pouvez la modifier. Dans les statistiques, chaque visite est rattachée au groupe d'où elle vient.</p>
+  </header>
+
+  <section class="carte settings">
+    <label for="base">Adresse de destination
+      <input id="base" type="url" autocomplete="off">
+    </label>
+    <label for="camp">Nom de campagne
+      <input id="camp" type="text" autocomplete="off">
+    </label>
+    <p class="params" id="params"></p>
+  </section>
+
+  <div class="bar">
+    <div class="progress"><span id="count">0 / 0 publiés</span><span class="meter"><i id="meterFill"></i></span></div>
+    <label class="toggle" for="hide"><input id="hide" type="checkbox"> Masquer les groupes déjà publiés</label>
+  </div>
+
+  <ol id="list"></ol>
+
+  <p class="foot">Paramètres : utm_source=facebook, utm_medium=groupe, utm_campaign = le nom de campagne, utm_content = le groupe. Les cases cochées, les dates et l'adresse sont gardées dans ce navigateur uniquement.</p>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const GROUPS=[
+["CRPE 2027 / Académie LYON","1787775028622922","lyon-crpe2027"],
+["CRPE 2027 Académie d'Aix-Marseille","crpeaixmarseilleunsa","aix-marseille"],
+["Prépa CRPE 2027 en mathématiques","404204808005606","prepa-maths"],
+["CRPE, PES, T1 et plus ... Académie de Lyon","347381582051277","lyon-pes-t1"],
+["CRPE Académie d'Amiens","240936981774437","amiens"],
+["Les mamans passent le CRPE, Entraide","680310660650926","mamans-crpe"],
+["CRPE L3 FRANÇAIS","852258547521103","l3-francais"],
+["CRPE 2027","1841164822789622","crpe2027-1841"],
+["CRPE Poitiers : entraide, conseils, travail","crpepoitiers","poitiers"],
+["CRPE 2025","508806490159480","crpe2025"],
+["Méthode CRPE","crpeenpoche","methode-crpe"],
+["CRPE 2027","888234574600822","crpe2027-8882"],
+["CRPE 2026 Créteil (77-93-94)","1993677620802779","creteil-77-93-94"],
+["CRPE 2026-2027 Académie GRENOBLE","1012712780671412","grenoble"],
+["CRPE 2027 Niveau L3: Infos Réforme, Entraide, Partage","1298272574178509","l3-reforme"],
+["CRPE 2027","1269086756575079","crpe2027-1269"],
+["CRPE 2027 aide et conseils","316157512223824","aide-conseils"],
+["CRPE Académie LILLE 2027","626983840273898","lille"],
+["CRPE 2026-2027 Académie de Versailles","crpeversailles","versailles"],
+["CRPE 2027 L3 + M2 - Académie de LYON","8847979701941190","lyon-l3-m2"],
+["CRPE Créteil : groupe d'entraide","511999535835088","creteil-entraide"],
+["CRPE Normandie 2027","1290641375199676","normandie-1290"],
+["Préparer le CRPE 2027 avec méthode - Écrits et oraux","1406751040730786","methode-ecrits-oraux"],
+["CRPE","crpe.concours","crpe-concours"],
+["CRPE 2027/2028 - Informations et entraide","1079630959162568","infos-2027-2028"],
+["CRPE Troisième concours","299221060184503","troisieme-concours"],
+["CRPE 2026 NIVEAU L3 - Groupe d'entraide et de conseils","696144599563607","l3-entraide"],
+["CRPE 2024 - Révisons Ensemble","3110386809050152","revisons-ensemble"],
+["CRPE 2027 & 2028 Mayotte","665529682227543","mayotte"],
+["CRPE 2027 Acad Nice","378617281865080","nice"],
+["CRPE 2027 Normandie","1248304849126545","normandie-1248"],
+["CRPE 2027 – Révisions et Méthodes","932636706111901","revisions-methodes"],
+["CRPE 2026/2027- Région Occitanie entraide, conseils, h.s,...","996537315159701","occitanie"],
+["CRPE 2027 et 2028","3079298832293667","crpe-2027-2028"]
+];
+
+const POST=`Je vous partage un projet qui nous tient vraiment à cœur 💙
+
+Mon épouse est professeure des écoles au Bourget. Un soir, elle m'a parlé du CRPE : la quantité de choses à réviser, le stress, et la difficulté pour les candidats de savoir où ils en sont vraiment. Ce soir-là, on s'est dit qu'on pouvait peut-être aider.
+
+Elle connaît le terrain et les attentes du concours 🍎 Moi, je sais coder 💻 Alors on s'y est mis, tous les deux. Pendant de longs mois, on a épluché les sujets, rédigé et vérifié chaque question une par une, testé, corrigé, recommencé. Il y en a aujourd'hui plus de 900.
+
+De ce projet sont nées deux applis, QuizCRPE et PassCRPE. Aujourd'hui, j'ai envie de vous présenter la première 👇
+
+✅ Un quiz général pour balayer tout le programme
+✅ Des quiz construits à partir des vrais sujets : 2025 et 2026 pour le Master 2, 2026 pour le nouveau CRPE bac+3
+🔜 Bientôt : un quiz de didactique et un autre pour préparer les oraux
+
+On a voulu que ce soit simple :
+1️⃣ Vous vous inscrivez
+2️⃣ Vous faites le test de positionnement pour savoir où vous en êtes
+3️⃣ Vous choisissez votre parcours
+
+🎁 Le test est gratuit, tout comme une série de questions chaque jour.
+
+👉 {LIEN}
+
+Aujourd'hui, ce qu'on cherche avant tout, ce sont des personnes qui préparent le concours et qui acceptent de tester l'appli, puis de nous dire franchement ce qu'elles en pensent 💬 Les questions sont-elles pertinentes ? Est-ce simple à utiliser ? Qu'est-ce qui manque ? Même (et surtout) les critiques nous aideront 🙏 Vous pouvez nous répondre en commentaire ou en message privé.
+
+Et si vous connaissez quelqu'un qui prépare le CRPE 2027, partagez-lui ce post, ça compterait beaucoup pour nous 💙
+
+Bon courage à toutes et à tous ✨`;
+
+const BASE_DEFAUT="https://www.passcrpe.fr/quizcrpe", CAMP_DEFAUT="testeurs_crpe2027";
+const $=id=>document.getElementById(id);
+const store={get(k,d){try{const v=localStorage.getItem(k);return v===null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+let done=new Set(store.get("utm_done",[]));
+let dates=store.get("utm_dates",{});
+$("base").value=store.get("utm_base","")||BASE_DEFAUT;
+$("camp").value=store.get("utm_camp",CAMP_DEFAUT);
+$("hide").checked=store.get("utm_hide",false);
+
+const aujourdhui=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const clean=s=>s.trim().toLowerCase().replace(/\s+/g,"_").replace(/[^a-z0-9_\-]/g,"");
+function base(){return $("base").value.trim()||BASE_DEFAUT}
+function link(slug){
+  const p={utm_source:"facebook",utm_medium:"groupe",utm_campaign:clean($("camp").value)||CAMP_DEFAUT,utm_content:slug};
+  try{const u=new URL(base());for(const k in p)u.searchParams.set(k,p[k]);return u.toString()}
+  catch(e){return base()+(base().includes("?")?"&":"?")+new URLSearchParams(p).toString()}
+}
+function render(){
+  $("params").textContent="Exemple : "+link("nom-du-groupe");
+  const list=$("list");list.innerHTML="";
+  GROUPS.forEach(([name,id,slug])=>{
+    const isDone=done.has(slug);
+    if($("hide").checked&&isDone)return;
+    const li=document.createElement("li");if(isDone)li.className="done";
+    const url=link(slug), i=url.indexOf("?");
+    li.innerHTML=`<input type="checkbox" aria-label="Publié dans ${name.replace(/"/g,"&quot;")}" ${isDone?"checked":""}>
+      <div class="info"><a class="name" href="https://www.facebook.com/groups/${id}/" target="_blank" rel="noopener"></a>
+      <span class="url"></span>
+      <label class="date">Publié le <input type="date"></label></div>
+      <div class="actions"><button class="primary" data-a="post">Copier le post</button><button data-a="link">Copier le lien</button></div>`;
+    li.querySelector(".name").textContent=name;
+    const u=li.querySelector(".url");
+    u.append(document.createTextNode(i<0?url:url.slice(0,i)));
+    if(i>=0){const b=document.createElement("b");b.textContent=url.slice(i);u.append(b)}
+    const champ=li.querySelector('input[type=date]');
+    champ.value=dates[slug]||"";
+    champ.setAttribute("aria-label","Date de publication dans "+name);
+    // Date modifiée à la main : le groupe est coché ; date effacée : le groupe est décoché
+    champ.addEventListener("change",e=>{
+      if(e.target.value){dates[slug]=e.target.value;done.add(slug)}else{delete dates[slug];done.delete(slug)}
+      store.set("utm_dates",dates);store.set("utm_done",[...done]);render()});
+    // Case cochée : date du jour si aucune date n'est notée
+    li.querySelector('input[type=checkbox]').addEventListener("change",e=>{
+      if(e.target.checked){done.add(slug);if(!dates[slug])dates[slug]=aujourdhui()}else done.delete(slug);
+      store.set("utm_done",[...done]);store.set("utm_dates",dates);render()});
+    li.querySelectorAll("button").forEach(btn=>btn.addEventListener("click",()=>{
+      const txt=btn.dataset.a==="post"?POST.replace("{LIEN}",url):url;
+      copy(txt,btn.dataset.a==="post"?"Post copié avec le lien du groupe":"Lien copié");
+    }));
+    list.append(li);
+  });
+  const n=GROUPS.filter(g=>done.has(g[2])).length;
+  $("count").textContent=`${n} / ${GROUPS.length} publiés`;
+  $("meterFill").style.width=(n/GROUPS.length*100)+"%";
+}
+function copy(txt,msg){
+  const fallback=()=>{const t=document.createElement("textarea");t.value=txt;document.body.append(t);t.select();
+    try{document.execCommand("copy");toast(msg)}catch(e){toast("Copie impossible : sélectionnez le texte à la main")}t.remove()};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(()=>toast(msg),fallback)}else fallback();
+}
+let tt;function toast(m){const t=$("toast");t.textContent=m;t.hidden=false;clearTimeout(tt);tt=setTimeout(()=>t.hidden=true,1800)}
+$("base").addEventListener("input",()=>{store.set("utm_base",$("base").value);render()});
+$("camp").addEventListener("input",()=>{store.set("utm_camp",$("camp").value);render()});
+$("hide").addEventListener("change",()=>{store.set("utm_hide",$("hide").checked);render()});
+render();
+</script>
+</body>
+</html>

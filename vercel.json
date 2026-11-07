@@ -32,6 +32,7 @@
     { "source": "/nouveau-mot-de-passe", "destination": "/nouveau-mot-de-passe.html" },
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/newsletter", "destination": "/newsletter.html" },
+    { "source": "/suivi-publications", "destination": "/suivi-publications.html" },
     { "source": "/outils", "destination": "/outils.html" },
     { "source": "/outils/entraineur-crpe", "destination": "/entraineur-crpe.html" },
     { "source": "/outils/entraineur-crpe/rapport/:token", "destination": "/entraineur-rapport.html" },
@@ -40,7 +41,8 @@
     { "source": "/admin", "destination": "/app/index.html" }
   ],
   "headers": [
-    { "source": "/newsletter(.html)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }
+    { "source": "/newsletter(.html)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
+    { "source": "/suivi-publications(.html)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }] }
   ],
   "functions": {
     "api/index.js": {
