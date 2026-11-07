@@ -63,6 +63,16 @@ button:disabled{opacity:.6;cursor:default}
 .import{background:#fffbeb;border:1.5px solid #fde68a;border-radius:12px;padding:12px 14px;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:14px}
 /* Campagne choisie */
 .resume{display:flex;flex-wrap:wrap;gap:10px 22px;color:var(--muted);font-size:14px}
+.d-tete{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.d-tete h2{margin:0}
+.d-btns{display:flex;gap:8px}
+button.danger{border-color:var(--rouge);color:var(--rouge)}
+button.danger.plein{background:var(--rouge);color:#fff}
+.panneau{border:1.5px solid var(--line);border-radius:12px;padding:14px;margin:12px 0;display:grid;grid-template-columns:1fr 2fr;gap:12px;align-items:end}
+.panneau .ligne{grid-column:1/-1;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.panneau .note{grid-column:1/-1;margin:0;font-size:13.5px;color:var(--muted)}
+.panneau.suppr{grid-template-columns:1fr;background:#fef2f2;border-color:#fecaca}
+@media (max-width:700px){.panneau{grid-template-columns:1fr}}
 .resume b{color:var(--fg)}
 .bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;margin:14px 0 12px}
 .progress{display:flex;align-items:center;gap:10px;font-variant-numeric:tabular-nums;font-weight:800;color:var(--indigo-fonce)}
@@ -130,7 +140,17 @@ li.done .date{color:var(--ok)}
 
     <!-- Campagne choisie -->
     <section class="carte" id="detail" hidden>
-      <h2 id="dNom"></h2>
+      <div class="d-tete"><h2 id="dNom"></h2><div class="d-btns"><button type="button" id="modifier">✏️ Modifier</button><button type="button" class="danger" id="supprimer">🗑 Supprimer</button></div></div>
+      <div class="panneau" id="pModif" hidden>
+        <label for="mNom">Nom de campagne<input id="mNom" type="text" autocomplete="off"></label>
+        <label for="mBase">Adresse de destination<input id="mBase" type="url" autocomplete="off"></label>
+        <p class="note">Les liens de tous les groupes sont recalculés avec le nouveau nom et la nouvelle adresse. Les dates de copie et de publication sont gardées. Les liens déjà publiés sur Facebook, eux, ne changent pas : leurs visites resteront sous l'ancien nom de campagne.</p>
+        <div class="ligne"><button type="button" class="primary" id="mEnregistrer">Enregistrer</button><button type="button" id="mAnnuler">Annuler</button><span class="err" id="mErr"></span></div>
+      </div>
+      <div class="panneau suppr" id="pSuppr" hidden>
+        <p class="note" id="sTexte" style="color:var(--fg)"></p>
+        <div class="ligne"><button type="button" class="danger plein" id="sOui">Oui, supprimer définitivement</button><button type="button" id="sNon">Annuler</button></div>
+      </div>
       <div class="resume" id="dResume"></div>
       <div class="bar">
         <div class="progress"><span id="count"></span><span class="meter"><i id="meterFill"></i></span></div>
@@ -315,6 +335,7 @@ function rendreDetail() {
   $('detail').hidden = !c; if (!c) return;
   const ps = pubs.filter(p => p.campagne_id === c.id), n = ps.filter(p => p.publie_le).length, copies = ps.filter(p => p.lien_copie_at).length;
   $('dNom').textContent = c.nom;
+  if (rendreDetail.pour !== c.id) { $('pModif').hidden = true; $('pSuppr').hidden = true; rendreDetail.pour = c.id; }
   $('dResume').innerHTML = '<span>Liens générés le <b>' + esc(dateHeure(c.liens_generes_at)) + '</b></span><span>Destination : <b>' + esc(c.base_url) + '</b></span><span>Liens copiés : <b>' + copies + ' / ' + ps.length + '</b></span>';
   $('count').textContent = n + ' / ' + ps.length + ' publiés';
   $('meterFill').style.width = (ps.length ? n / ps.length * 100 : 0) + '%';
@@ -345,6 +366,45 @@ async function maj(p, champs) {
     .eq('campagne_id', p.campagne_id).eq('groupe_slug', p.groupe_slug);
   if (error) { Object.assign(p, avant); rendre(); toast('Non enregistré : ' + error.message); }
 }
+// ── Modifier une campagne : nom et adresse, liens recalculés pour tous les groupes ──
+$('modifier').addEventListener('click', () => {
+  const c = campagnes.find(x => x.id === choisie); if (!c) return;
+  $('pSuppr').hidden = true; $('pModif').hidden = !$('pModif').hidden;
+  $('mNom').value = c.nom; $('mBase').value = c.base_url; $('mErr').textContent = '';
+});
+$('mAnnuler').addEventListener('click', () => { $('pModif').hidden = true; });
+$('mEnregistrer').addEventListener('click', async () => {
+  const c = campagnes.find(x => x.id === choisie); if (!c) return;
+  const nom = clean($('mNom').value), base = $('mBase').value.trim();
+  $('mErr').textContent = '';
+  if (!nom) { $('mErr').textContent = 'Donnez un nom à la campagne.'; return; }
+  try { new URL(base); } catch (e) { $('mErr').textContent = 'Adresse de destination invalide.'; return; }
+  if (campagnes.some(x => x.nom === nom && x.id !== c.id)) { $('mErr').textContent = 'Une autre campagne porte déjà ce nom.'; return; }
+  $('mEnregistrer').disabled = true;
+  const { error } = await SB.from('meta_campagnes').update({ nom, base_url: base }).eq('id', c.id);
+  if (error) { $('mEnregistrer').disabled = false; $('mErr').textContent = error.message; return; }
+  const lignes = pubs.filter(p => p.campagne_id === c.id).map(p => ({ ...p, lien: lien(base, nom, p.groupe_slug), updated_at: new Date().toISOString() }));
+  const { error: e2 } = await SB.from('meta_publications').upsert(lignes, { onConflict: 'campagne_id,groupe_slug' });
+  $('mEnregistrer').disabled = false;
+  if (e2) { $('mErr').textContent = 'Campagne renommée, mais liens non recalculés : ' + e2.message; await charger(); return; }
+  $('pModif').hidden = true; toast('Campagne mise à jour'); await charger();
+});
+// ── Supprimer une campagne (et tout son suivi), après confirmation ──
+$('supprimer').addEventListener('click', () => {
+  const c = campagnes.find(x => x.id === choisie); if (!c) return;
+  $('pModif').hidden = true; $('pSuppr').hidden = !$('pSuppr').hidden;
+  const n = pubs.filter(p => p.campagne_id === c.id && p.publie_le).length;
+  $('sTexte').innerHTML = 'Supprimer la campagne <b>' + esc(c.nom) + '</b> et tout son suivi (' + n + ' publication' + (n > 1 ? 's' : '') + ' notée' + (n > 1 ? 's' : '') + ') ? Cette action est définitive.';
+});
+$('sNon').addEventListener('click', () => { $('pSuppr').hidden = true; });
+$('sOui').addEventListener('click', async () => {
+  const c = campagnes.find(x => x.id === choisie); if (!c) return;
+  $('sOui').disabled = true;
+  const { error } = await SB.from('meta_campagnes').delete().eq('id', c.id);
+  $('sOui').disabled = false;
+  if (error) { toast('Suppression impossible : ' + error.message); return; }
+  $('pSuppr').hidden = true; choisie = null; store.set('meta_campagne', null); toast('Campagne « ' + c.nom + ' » supprimée'); await charger();
+});
 $('hide').addEventListener('change', () => { store.set('utm_hide', $('hide').checked); rendreDetail(); });
 
 function copier(txt, msg) {
