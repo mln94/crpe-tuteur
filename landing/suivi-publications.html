@@ -184,7 +184,13 @@ const GROUPS=[
 ["CRPE 2027 Normandie","1248304849126545","normandie-1248"],
 ["CRPE 2027 – Révisions et Méthodes","932636706111901","revisions-methodes"],
 ["CRPE 2026/2027- Région Occitanie entraide, conseils, h.s,...","996537315159701","occitanie"],
-["CRPE 2027 et 2028","3079298832293667","crpe-2027-2028"]
+["CRPE 2027 et 2028","3079298832293667","crpe-2027-2028"],
+// Groupes ajoutés le 07/11/2026 (identifiant Facebook à compléter : en attendant, le nom ouvre une recherche Facebook)
+["CRPE 2026 / Vidéos, Conseils, Aides, Partages / La Marelle Du CRPE","","marelle-crpe"],
+["CRPE 2027 – S’entraider et se motiver !","","entraide-motivation"],
+["CRPE Académie de Rennes 2027","","rennes"],
+["Les Oraux du CRPE 2027","","oraux-crpe2027"],
+["CRPE 2027 Niveau M2","","crpe2027-m2"]
 ];
 const GROUP_ID = Object.fromEntries(GROUPS.map(g => [g[2], g[1]]));
 
@@ -261,6 +267,16 @@ async function charger() {
   ]);
   if (c.error || p.error) { toast('Chargement impossible : ' + (c.error || p.error).message); return; }
   campagnes = c.data; pubs = p.data;
+  // Groupes ajoutés à la liste après la création d'une campagne : leurs liens sont générés pour cette campagne aussi
+  const manquants = [];
+  for (const c of campagnes) {
+    const deja = new Set(pubs.filter(x => x.campagne_id === c.id).map(x => x.groupe_slug));
+    GROUPS.forEach(([gnom, , slug]) => { if (!deja.has(slug)) manquants.push({ campagne_id: c.id, groupe_slug: slug, groupe_nom: gnom, lien: lien(c.base_url, c.nom, slug) }); });
+  }
+  if (manquants.length) {
+    const { data: ajout, error: e3 } = await SB.from('meta_publications').insert(manquants).select();
+    if (e3) toast('Nouveaux groupes non ajoutés : ' + e3.message); else pubs = pubs.concat(ajout);
+  }
   if (!campagnes.some(x => x.id === choisie)) choisie = campagnes[0]?.id || null;
   proposerImport(); rendre();
 }
@@ -335,7 +351,7 @@ function rendreDetail() {
     const li = document.createElement('li'); if (p.publie_le) li.className = 'done';
     const i = p.lien.indexOf('?'), gid = GROUP_ID[p.groupe_slug];
     li.innerHTML = '<input type="checkbox" aria-label="Publié dans ' + esc(p.groupe_nom) + '"' + (p.publie_le ? ' checked' : '') + '>' +
-      '<div class="info">' + (gid ? '<a class="gname" href="https://www.facebook.com/groups/' + esc(gid) + '/" target="_blank" rel="noopener">' + esc(p.groupe_nom) + '</a>' : '<span class="gname">' + esc(p.groupe_nom) + '</span>') +
+      '<div class="info">' + '<a class="gname" href="' + (gid ? 'https://www.facebook.com/groups/' + encodeURIComponent(gid) + '/' : 'https://www.facebook.com/search/groups/?q=' + encodeURIComponent(p.groupe_nom)) + '" target="_blank" rel="noopener">' + esc(p.groupe_nom) + '</a>' +
       '<span class="url">' + esc(i < 0 ? p.lien : p.lien.slice(0, i)) + (i < 0 ? '' : '<b>' + esc(p.lien.slice(i)) + '</b>') + '</span>' +
       '<div class="dates"><span class="copie' + (p.lien_copie_at ? ' oui' : '') + '">' + (p.lien_copie_at ? '📋 Lien copié le ' + esc(dateHeure(p.lien_copie_at)) : 'Lien pas encore copié') + '</span>' +
       '<label class="date">Publié le <input type="date" value="' + esc(p.publie_le || '') + '" aria-label="Date de publication dans ' + esc(p.groupe_nom) + '"></label></div></div>' +
