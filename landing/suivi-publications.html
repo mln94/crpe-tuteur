@@ -101,6 +101,10 @@ li input[type=checkbox]{width:20px;height:20px;margin-top:2px;accent-color:var(-
 .badge{padding:3px 10px;border-radius:99px;font-weight:700;font-size:12.5px}
 .badge.att{background:#fef3c7;color:#92400e}
 .badge.ok{background:#dcfce7;color:#166534}
+.badge.bloc{background:#fee2e2;color:#991b1b}
+li.bloque{background:#f9fafb}
+li.bloque .gname,li.bloque .url{opacity:.55}
+li.bloque .gname{text-decoration:line-through}
 li.done .date{color:var(--ok)}
 .actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 @media (max-width:560px){li{grid-template-columns:28px 1fr}.actions{grid-column:2;justify-content:flex-start}}
@@ -162,7 +166,7 @@ li.done .date{color:var(--ok)}
       <div class="resume" id="dResume"></div>
       <div class="bar">
         <div class="progress"><span id="count"></span><span class="meter"><i id="meterFill"></i></span></div>
-        <label class="toggle" for="hide"><input id="hide" type="checkbox"> Masquer les groupes déjà publiés</label>
+        <label class="toggle" for="hide"><input id="hide" type="checkbox"> Masquer les groupes déjà publiés ou bloqués</label>
       </div>
       <ol id="list"></ol>
     </section>
@@ -226,6 +230,11 @@ function validationRequise(slug) {
   const l = pubs.filter(x => x.groupe_slug === slug).sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)))[0];
   return !!(l && l.validation_requise);
 }
+// « Groupe bloqué » aussi : reprise de la date de blocage notée pour ce groupe
+function blocage(slug) {
+  const l = pubs.filter(x => x.groupe_slug === slug).sort((a, b) => String(b.updated_at).localeCompare(String(a.updated_at)))[0];
+  return (l && l.bloque_le) || null;
+}
 
 
 const $ = id => document.getElementById(id);
@@ -278,7 +287,7 @@ async function charger() {
   const manquants = [];
   for (const c of campagnes) {
     const deja = new Set(pubs.filter(x => x.campagne_id === c.id).map(x => x.groupe_slug));
-    GROUPS.forEach(([gnom, , slug]) => { if (!deja.has(slug)) manquants.push({ campagne_id: c.id, groupe_slug: slug, groupe_nom: gnom, lien: lien(c.base_url, c.nom, slug), validation_requise: validationRequise(slug) }); });
+    GROUPS.forEach(([gnom, , slug]) => { if (!deja.has(slug)) manquants.push({ campagne_id: c.id, groupe_slug: slug, groupe_nom: gnom, lien: lien(c.base_url, c.nom, slug), validation_requise: validationRequise(slug), bloque_le: blocage(slug) }); });
   }
   if (manquants.length) {
     const { data: ajout, error: e3 } = await SB.from('meta_publications').insert(manquants).select();
@@ -320,7 +329,7 @@ async function creer(nom, base, publie) {
   $('generer').disabled = true;
   const { data: c, error } = await SB.from('meta_campagnes').insert({ nom, base_url: base }).select().single();
   if (error) { $('generer').disabled = false; $('nvErr').textContent = error.message; return null; }
-  const lignes = GROUPS.map(([gnom, , slug]) => ({ campagne_id: c.id, groupe_slug: slug, groupe_nom: gnom, lien: lien(base, nom, slug), publie_le: publie(slug), validation_requise: validationRequise(slug) }));
+  const lignes = GROUPS.map(([gnom, , slug]) => ({ campagne_id: c.id, groupe_slug: slug, groupe_nom: gnom, lien: lien(base, nom, slug), publie_le: publie(slug), validation_requise: validationRequise(slug), bloque_le: blocage(slug) }));
   const { error: e2 } = await SB.from('meta_publications').insert(lignes);
   $('generer').disabled = false;
   if (e2) { toast('Liens non enregistrés : ' + e2.message); return null; }
@@ -334,7 +343,7 @@ function rendre() {
   $('aucune').hidden = campagnes.length > 0;
   t.innerHTML = campagnes.length ? '<tr><th></th><th>Campagne</th><th>Liens générés le</th><th>Publiés</th><th>Dernière publication</th></tr>' +
     campagnes.map(c => {
-      const ps = pubs.filter(p => p.campagne_id === c.id), n = ps.filter(p => p.publie_le).length;
+      const ps = pubs.filter(p => p.campagne_id === c.id && !p.bloque_le), n = ps.filter(p => p.publie_le).length;
       const der = ps.map(p => p.publie_le).filter(Boolean).sort().pop();
       const att = ps.filter(p => p.validation_requise && !p.valide_le).length;
       return '<tr data-id="' + c.id + '"' + (c.id === choisie && ouverte ? ' class="sel"' : '') + ' title="' + (c.id === choisie && ouverte ? 'Réduire' : 'Ouvrir') + ' la campagne"><td class="chev">' + (c.id === choisie && ouverte ? '▼' : '▶') + '</td><td class="nom">' + esc(c.nom) + '</td><td>' + esc(dateHeure(c.liens_generes_at)) + '</td>' +
@@ -352,19 +361,21 @@ function rendre() {
 function rendreDetail() {
   const c = campagnes.find(x => x.id === choisie);
   $('detail').hidden = !c || !ouverte; if (!c || !ouverte) return;
-  const ps = pubs.filter(p => p.campagne_id === c.id), n = ps.filter(p => p.publie_le).length, copies = ps.filter(p => p.lien_copie_at).length;
+  const tous = pubs.filter(p => p.campagne_id === c.id), ps = tous.filter(p => !p.bloque_le), bloques = tous.length - ps.length;
+  const n = ps.filter(p => p.publie_le).length, copies = ps.filter(p => p.lien_copie_at).length;
   const attente = ps.filter(p => p.validation_requise && !p.valide_le).length;
   $('dNom').textContent = c.nom;
   if (rendreDetail.pour !== c.id) { $('pModif').hidden = true; $('pSuppr').hidden = true; rendreDetail.pour = c.id; }
   $('dResume').innerHTML = '<span>Liens générés le <b>' + esc(dateHeure(c.liens_generes_at)) + '</b></span><span>Destination : <b>' + esc(c.base_url) + '</b></span><span>Liens copiés : <b>' + copies + ' / ' + ps.length + '</b></span>' +
-    (attente ? '<span>⏳ En attente de validation : <b>' + attente + '</b></span>' : '');
+    (attente ? '<span>⏳ En attente de validation : <b>' + attente + '</b></span>' : '') +
+    (bloques ? '<span>🚫 Groupes bloqués : <b>' + bloques + '</b> (hors compteur)</span>' : '');
   $('count').textContent = n + ' / ' + ps.length + ' publiés';
   $('meterFill').style.width = (ps.length ? n / ps.length * 100 : 0) + '%';
   $('hide').checked = store.get('utm_hide', false);
   const list = $('list'); list.innerHTML = '';
-  ps.slice().sort((a, b) => GROUPS.findIndex(g => g[2] === a.groupe_slug) - GROUPS.findIndex(g => g[2] === b.groupe_slug)).forEach(p => {
-    if ($('hide').checked && p.publie_le) return;
-    const li = document.createElement('li'); if (p.publie_le) li.className = 'done';
+  tous.slice().sort((a, b) => (!!a.bloque_le - !!b.bloque_le) || GROUPS.findIndex(g => g[2] === a.groupe_slug) - GROUPS.findIndex(g => g[2] === b.groupe_slug)).forEach(p => {
+    if ($('hide').checked && (p.publie_le || p.bloque_le)) return;
+    const li = document.createElement('li'); li.className = p.bloque_le ? 'bloque' : p.publie_le ? 'done' : '';
     const i = p.lien.indexOf('?'), gid = GROUP_ID[p.groupe_slug];
     li.innerHTML = '<input type="checkbox" class="cb-publie" aria-label="Publié dans ' + esc(p.groupe_nom) + '"' + (p.publie_le ? ' checked' : '') + '>' +
       '<div class="info">' + '<a class="gname" href="' + (gid ? 'https://www.facebook.com/groups/' + encodeURIComponent(gid) + '/' : 'https://www.facebook.com/search/groups/?q=' + encodeURIComponent(p.groupe_nom)) + '" target="_blank" rel="noopener">' + esc(p.groupe_nom) + '</a>' +
@@ -373,12 +384,15 @@ function rendreDetail() {
       '<label class="date">Publié le <input type="date" value="' + esc(p.publie_le || '') + '" aria-label="Date de publication dans ' + esc(p.groupe_nom) + '"></label></div>' +
       '<div class="valid"><label class="opt"><input type="checkbox" class="cb-vreq"' + (p.validation_requise ? ' checked' : '') + '> Nécessite une validation</label>' +
       (p.validation_requise ? (p.valide_le ? '<span class="badge ok">✅ Validée le ' + esc(dateJour(p.valide_le)) + '</span>' : '<span class="badge att">⏳ En attente de validation</span>') +
-        '<label class="opt"><input type="checkbox" class="cb-valide"' + (p.valide_le ? ' checked' : '') + '> Validée</label>' : '') + '</div></div>' +
+        '<label class="opt"><input type="checkbox" class="cb-valide"' + (p.valide_le ? ' checked' : '') + '> Validée</label>' : '') +
+      '<label class="opt"><input type="checkbox" class="cb-bloque"' + (p.bloque_le ? ' checked' : '') + '> 🚫 Groupe bloqué</label>' +
+      (p.bloque_le ? '<span class="badge bloc">Bloqué depuis le ' + esc(dateJour(p.bloque_le)) + '</span>' : '') + '</div></div>' +
       '<div class="actions"><button class="primary" data-a="link">Copier le lien</button></div>';
     li.querySelector('.cb-publie').addEventListener('change', e => maj(p, { publie_le: e.target.checked ? (p.publie_le || aujourdhui()) : null }));
     li.querySelector('.cb-vreq').addEventListener('change', e => maj(p, { validation_requise: e.target.checked, valide_le: e.target.checked ? p.valide_le : null }));
     const cv = li.querySelector('.cb-valide');
     if (cv) cv.addEventListener('change', e => maj(p, { valide_le: e.target.checked ? aujourdhui() : null }));
+    li.querySelector('.cb-bloque').addEventListener('change', e => maj(p, { bloque_le: e.target.checked ? aujourdhui() : null }));
     li.querySelector('input[type=date]').addEventListener('change', e => maj(p, { publie_le: e.target.value || null }));
     li.querySelectorAll('button').forEach(btn => btn.addEventListener('click', () => {
       copier(p.lien, 'Lien copié');
