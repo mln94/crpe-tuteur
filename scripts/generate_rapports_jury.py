@@ -276,10 +276,21 @@ def page(annee, rows):
             + f'  <meta property="og:description" content="{escape(desc)}" />\n'
             + '  <meta property="og:type" content="website" />\n'
             + f'  <meta property="og:url" content="{url}" />\n'
+            + IMAGE_PARTAGE
             + f'  <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
             + f'  <script type="application/ld+json">{json.dumps(ld_faq, ensure_ascii=False)}</script>\n'
             + CSS_BASE + CSS)
     return head + BODY_NAV + body + TAIL
+
+
+# Image de partage (aperçu des liens : WhatsApp, Facebook, LinkedIn, X…) de toutes les pages des rapports de jury
+IMAGE_PARTAGE = ('  <meta property="og:image" content="https://www.passcrpe.fr/images/partage-rapports-jury.jpg" />\n'
+                 '  <meta property="og:image:type" content="image/jpeg" />\n'
+                 '  <meta property="og:image:width" content="1200" />\n'
+                 '  <meta property="og:image:height" content="630" />\n'
+                 '  <meta property="og:image:alt" content="Rapports de jury du CRPE : ce que le jury attend vraiment, discipline par discipline" />\n'
+                 '  <meta name="twitter:card" content="summary_large_image" />\n'
+                 '  <meta name="twitter:image" content="https://www.passcrpe.fr/images/partage-rapports-jury.jpg" />\n')
 
 
 ACADEMIES = [a['nom'] for a in json.load(open(os.path.join(ROOT, 'scripts', 'academies-data.json'), encoding='utf-8'))['academies']]
@@ -617,6 +628,7 @@ def tete(title, desc, url, ld):
             + f'  <meta property="og:description" content="{escape(desc)}" />\n'
             + '  <meta property="og:type" content="article" />\n'
             + f'  <meta property="og:url" content="{url}" />\n'
+            + IMAGE_PARTAGE
             + f'  <script type="application/ld+json">{json.dumps(ld, ensure_ascii=False)}</script>\n'
             + CSS_BASE + CSS + CSS_DISC)
 
