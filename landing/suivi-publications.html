@@ -51,10 +51,12 @@ button:disabled{opacity:.6;cursor:default}
 .camps tr{cursor:pointer}
 .camps tr:hover td{background:#f8f9ff}
 .camps .nom{font-weight:800;color:var(--indigo-fonce)}
+.camps .chev{width:28px;text-align:center;color:var(--indigo);font-size:13px}
+button.reduire{border-color:var(--line);color:var(--indigo-fonce)}
 .mini{display:flex;align-items:center;gap:8px;font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
 .meter{width:120px;height:8px;border-radius:99px;background:var(--line);overflow:hidden;display:inline-block}
 .meter i{display:block;height:100%;background:var(--indigo);width:0;transition:width .3s}
-@media (max-width:640px){.camps th:nth-child(4),.camps td:nth-child(4){display:none}.meter{width:60px}}
+@media (max-width:640px){.camps th:nth-child(5),.camps td:nth-child(5){display:none}.meter{width:60px}}
 .vide{color:var(--muted);margin:0}
 .entete-camps{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:6px}
 .entete-camps h2{margin:0}
@@ -140,7 +142,7 @@ li.done .date{color:var(--ok)}
 
     <!-- Campagne choisie -->
     <section class="carte" id="detail" hidden>
-      <div class="d-tete"><h2 id="dNom"></h2><div class="d-btns"><button type="button" id="modifier">✏️ Modifier</button><button type="button" class="danger" id="supprimer">🗑 Supprimer</button></div></div>
+      <div class="d-tete"><h2 id="dNom"></h2><div class="d-btns"><button type="button" class="reduire" id="reduire">▲ Réduire</button><button type="button" id="modifier">✏️ Modifier</button><button type="button" class="danger" id="supprimer">🗑 Supprimer</button></div></div>
       <div class="panneau" id="pModif" hidden>
         <label for="mNom">Nom de campagne<input id="mNom" type="text" autocomplete="off"></label>
         <label for="mBase">Adresse de destination<input id="mBase" type="url" autocomplete="off"></label>
@@ -228,7 +230,7 @@ function lien(base, camp, slug) {
   const u = new URL(base); for (const k in p) u.searchParams.set(k, p[k]); return u.toString();
 }
 
-let campagnes = [], pubs = [], choisie = store.get('meta_campagne', null);
+let campagnes = [], pubs = [], choisie = store.get('meta_campagne', null), ouverte = store.get('meta_ouverte', true);
 
 // ── Connexion ──
 async function demarrer() {
@@ -311,7 +313,7 @@ async function creer(nom, base, publie) {
   const { error: e2 } = await SB.from('meta_publications').insert(lignes);
   $('generer').disabled = false;
   if (e2) { toast('Liens non enregistrés : ' + e2.message); return null; }
-  choisie = c.id; store.set('meta_campagne', choisie);
+  choisie = c.id; ouverte = true; store.set('meta_campagne', choisie); store.set('meta_ouverte', true);
   await charger(); return c;
 }
 
@@ -319,20 +321,25 @@ async function creer(nom, base, publie) {
 function rendre() {
   const t = $('camps');
   $('aucune').hidden = campagnes.length > 0;
-  t.innerHTML = campagnes.length ? '<tr><th>Campagne</th><th>Liens générés le</th><th>Publiés</th><th>Dernière publication</th></tr>' +
+  t.innerHTML = campagnes.length ? '<tr><th></th><th>Campagne</th><th>Liens générés le</th><th>Publiés</th><th>Dernière publication</th></tr>' +
     campagnes.map(c => {
       const ps = pubs.filter(p => p.campagne_id === c.id), n = ps.filter(p => p.publie_le).length;
       const der = ps.map(p => p.publie_le).filter(Boolean).sort().pop();
-      return '<tr data-id="' + c.id + '"' + (c.id === choisie ? ' class="sel"' : '') + '><td class="nom">' + esc(c.nom) + '</td><td>' + esc(dateHeure(c.liens_generes_at)) + '</td>' +
+      return '<tr data-id="' + c.id + '"' + (c.id === choisie && ouverte ? ' class="sel"' : '') + ' title="' + (c.id === choisie && ouverte ? 'Réduire' : 'Ouvrir') + ' la campagne"><td class="chev">' + (c.id === choisie && ouverte ? '▼' : '▶') + '</td><td class="nom">' + esc(c.nom) + '</td><td>' + esc(dateHeure(c.liens_generes_at)) + '</td>' +
         '<td><span class="mini">' + n + ' / ' + ps.length + ' <span class="meter"><i style="width:' + (ps.length ? n / ps.length * 100 : 0) + '%"></i></span></span></td>' +
         '<td>' + (der ? esc(dateJour(der)) : '–') + '</td></tr>';
     }).join('') : '';
-  t.querySelectorAll('tr[data-id]').forEach(tr => tr.addEventListener('click', () => { choisie = tr.dataset.id; store.set('meta_campagne', choisie); rendre(); }));
+  t.querySelectorAll('tr[data-id]').forEach(tr => tr.addEventListener('click', () => {
+    // Clic sur la campagne ouverte : elle se réduit ; sur une autre : elle s'ouvre
+    if (tr.dataset.id === choisie && ouverte) ouverte = false; else { choisie = tr.dataset.id; ouverte = true; }
+    store.set('meta_campagne', choisie); store.set('meta_ouverte', ouverte); rendre();
+    if (ouverte) $('detail').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }));
   rendreDetail();
 }
 function rendreDetail() {
   const c = campagnes.find(x => x.id === choisie);
-  $('detail').hidden = !c; if (!c) return;
+  $('detail').hidden = !c || !ouverte; if (!c || !ouverte) return;
   const ps = pubs.filter(p => p.campagne_id === c.id), n = ps.filter(p => p.publie_le).length, copies = ps.filter(p => p.lien_copie_at).length;
   $('dNom').textContent = c.nom;
   if (rendreDetail.pour !== c.id) { $('pModif').hidden = true; $('pSuppr').hidden = true; rendreDetail.pour = c.id; }
@@ -405,6 +412,7 @@ $('sOui').addEventListener('click', async () => {
   if (error) { toast('Suppression impossible : ' + error.message); return; }
   $('pSuppr').hidden = true; choisie = null; store.set('meta_campagne', null); toast('Campagne « ' + c.nom + ' » supprimée'); await charger();
 });
+$('reduire').addEventListener('click', () => { ouverte = false; store.set('meta_ouverte', false); rendre(); $('camps').scrollIntoView({ behavior: 'smooth', block: 'center' }); });
 $('hide').addEventListener('change', () => { store.set('utm_hide', $('hide').checked); rendreDetail(); });
 
 function copier(txt, msg) {
