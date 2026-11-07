@@ -799,7 +799,7 @@ async function reponsesTestLisibles(detail) {
 
 // Propriétés Klaviyo du test de positionnement
 const proprietesTest = (r, lien) => ({ test_positionnement_realise: true, test_positionnement_date: dateKlaviyo(r.date), test_positionnement_score: r.pct,
-  quizcrpe_trial: true, ...(lien ? { quiz_rapport_url: lien.url, quiz_rapport_expire: dateKlaviyo(lien.expire) } : {}) });
+  ...(lien ? { quiz_rapport_url: lien.url, quiz_rapport_expire: dateKlaviyo(lien.expire) } : {}) });
 // Lien provisoire du rapport de positionnement : jeton aléatoire, valable 7 jours (effacé ensuite par une tâche planifiée Supabase)
 const RAPPORT_JOURS = 7;
 const lienRapport = token => `https://www.passcrpe.fr/quizapp?rapport=${token}`;
