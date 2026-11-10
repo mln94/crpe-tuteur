@@ -55,3 +55,10 @@ create policy "Admin gère les demandes" on public.site_nouveautes_demandes for 
 -- Images et aperçus d'email : bucket public (lecture par lien), écriture par le serveur (clé service) uniquement
 insert into storage.buckets (id, name, public) values ('nouveautes', 'nouveautes', true)
 on conflict (id) do update set public = true;
+
+-- Instagram : deux propositions par nouveauté, la publication classique (insta_image_url) et une publication
+-- construite à partir d'une capture d'écran de l'application (insta_capture_url)
+alter table public.site_nouveautes add column if not exists insta_capture_url text;
+alter table public.site_nouveautes_demandes drop constraint if exists site_nouveautes_demandes_element_check;
+alter table public.site_nouveautes_demandes add constraint site_nouveautes_demandes_element_check
+  check (element in ('insta_texte', 'insta_image', 'insta_capture', 'facebook_texte', 'facebook_image', 'groupes_message', 'email'));

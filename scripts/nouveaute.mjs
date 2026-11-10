@@ -3,8 +3,9 @@
 //   nouveaute.json   { modifie_le, type, titre, resume, lien, insta_legende, facebook_post,
 //                      groupes: { campagne, message },                       // message avec {LIEN} = lien du groupe
 //                      email: { nom, objet, preheader } }                  // fonctionnalités / design seulement
-//   instagram.png    1080 × 1350           facebook.png   1200 × 630
-//   email.html       (si email) ; ses images locales (src="xxx.png") sont envoyées dans le bucket et remplacées par leur URL
+//   instagram.png          1080 × 1350, publication Instagram classique
+//   instagram-capture.png  1080 × 1350, publication Instagram faite d'une capture de l'application (scripts/nouveaute_captures.mjs)
+//   email.html       (si email ; images = captures de l'application, montées avec scripts/nouveaute_montage.py) ; ses images locales (src="xxx.png") sont envoyées dans le bucket et remplacées par leur URL
 // Ce que fait le script :
 //   1. images → bucket Supabase public « nouveautes »
 //   2. groupes Facebook → campagne meta_campagnes (les liens par groupe sont générés à l'ouverture de /suivi-publications)
@@ -23,7 +24,7 @@ const KL = { Authorization: `Klaviyo-API-Key ${process.env.KLAVIYO_PRIVATE_API_K
 const LISTE_SIGNUP = 'SgJQyM';
 const EXPEDITEUR = { from_email: 'contact@passcrpe.fr', from_label: 'PassCRPE' };
 const APP = t => ['feature_passcrpe', 'feature_quizcrpe', 'design'].includes(t);
-const ELEMENTS = { insta_texte: 'Légende Instagram', insta_image: 'Image Instagram', facebook_texte: 'Texte Facebook', facebook_image: 'Image Facebook', groupes_message: 'Message des groupes', email: 'Email' };
+const ELEMENTS = { insta_texte: 'Légende Instagram', insta_image: 'Image Instagram (classique)', insta_capture: 'Image Instagram (capture de l\'app)', facebook_texte: 'Texte Facebook', facebook_image: 'Image Facebook', groupes_message: 'Message des groupes', email: 'Email' };
 
 const arg = process.argv.slice(2);
 if (arg[0] === '--demandes') {
@@ -66,7 +67,7 @@ const ligne = {
 };
 
 // 1. Images
-for (const [f, champ] of [['instagram.png', 'insta_image_url'], ['facebook.png', 'facebook_image_url']])
+for (const [f, champ] of [['instagram.png', 'insta_image_url'], ['instagram-capture.png', 'insta_capture_url'], ['facebook.png', 'facebook_image_url']])
   if (fs.existsSync(path.join(dossier, f))) { ligne[champ] = await envoyer(path.join(dossier, f), f); console.log(`image   ${f} → ${ligne[champ]}`); }
 
 // 2. Groupes Facebook
@@ -84,7 +85,18 @@ if (nv.groupes?.campagne) {
 }
 
 // 3. Email Klaviyo (applications seulement)
-if (APP(nv.type) && nv.email && fs.existsSync(path.join(dossier, 'email.html'))) {
+// Campagne déjà envoyée : on n'y touche plus (l'aperçu du dashboard garde l'email envoyé), on note la date d'envoi
+let dejaEnvoyee = null;
+if (APP(nv.type) && nv.klaviyo_campaign_id) {
+  const c = await klaviyo('GET', `campaigns/${nv.klaviyo_campaign_id}/`);
+  if (c.data.attributes.status !== 'Draft') {
+    dejaEnvoyee = c.data.attributes;
+    const envoi = (dejaEnvoyee.send_time || dejaEnvoyee.scheduled_at || '').slice(0, 10);
+    if (envoi) ligne.email_envoye_le = envoi;
+    console.log(`email   campagne Klaviyo déjà ${dejaEnvoyee.status === 'Sent' ? 'envoyée' : 'programmée'} (${dejaEnvoyee.status}${envoi ? ', ' + envoi : ''}) : non modifiée`);
+  }
+}
+if (APP(nv.type) && nv.email && !dejaEnvoyee && fs.existsSync(path.join(dossier, 'email.html'))) {
   let html = fs.readFileSync(path.join(dossier, 'email.html'), 'utf8');
   for (const src of new Set([...html.matchAll(/src="(?!https?:|data:|\{)([^"]+)"/g)].map(m => m[1]))) {
     const url = await envoyer(path.join(dossier, src), 'email-' + path.basename(src));
@@ -97,7 +109,6 @@ if (APP(nv.type) && nv.email && fs.existsSync(path.join(dossier, 'email.html')))
   let campagneId = nv.klaviyo_campaign_id, messageId;
   if (campagneId) {
     const c = await klaviyo('GET', `campaigns/${campagneId}/?include=campaign-messages`);
-    if (c.data.attributes.status !== 'Draft') throw new Error(`La campagne Klaviyo ${campagneId} n'est plus un brouillon (${c.data.attributes.status}) : elle n'est pas modifiée.`);
     messageId = c.included[0].id;
     await klaviyo('PATCH', `campaigns/${campagneId}/`, { data: { type: 'campaign', id: campagneId, attributes: { name: nomCampagne } } });
     await klaviyo('PATCH', `campaign-messages/${messageId}/`, { data: { type: 'campaign-message', id: messageId, attributes: { definition: { channel: 'email', label: nomCampagne, content: contenu } } } });

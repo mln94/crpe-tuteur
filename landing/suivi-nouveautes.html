@@ -92,6 +92,11 @@ button:disabled{opacity:.6;cursor:default}
 .media.large{grid-template-columns:minmax(0,300px) 1fr}
 @media (max-width:640px){.media,.media.large{grid-template-columns:1fr}}
 .media>*{min-width:0}
+.propositions{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.propositions figure{margin:0;display:flex;flex-direction:column;gap:8px;min-width:0}
+.propositions figcaption{font-weight:800;font-size:13.5px;color:var(--indigo-fonce)}
+.propositions img{width:100%;border-radius:10px;border:1px solid var(--line);display:block}
+@media (max-width:560px){.propositions{grid-template-columns:1fr}}
 .media img{width:100%;border-radius:10px;border:1px solid var(--line);display:block;background:var(--bg)}
 .texte{overflow-wrap:anywhere;font-family:'Inter',system-ui,sans-serif;white-space:pre-wrap;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:12px;font-size:14px;max-height:280px;overflow:auto;margin:0}
 .ligne{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
@@ -157,7 +162,7 @@ const SB = window.supabase.createClient('https://zqwcermgfvcusuwjfviz.supabase.c
 const ADMIN_EMAIL = 'mohamed.necib94310@gmail.com';
 const TYPES = { article: 'Article de blog', ressource: 'Ressource', feature_passcrpe: 'Fonctionnalité PassCRPE', feature_quizcrpe: 'Fonctionnalité Quiz CRPE', design: 'Design' };
 const APP = t => t === 'feature_passcrpe' || t === 'feature_quizcrpe' || t === 'design';
-const ELEMENTS = { insta_texte: 'Légende Instagram', insta_image: 'Image Instagram', groupes_message: 'Message des groupes Facebook', email: "Email de la campagne (texte, objet ou images)" };
+const ELEMENTS = { insta_texte: 'Légende Instagram', insta_image: 'Image Instagram classique', insta_capture: 'Image Instagram avec capture de l\'app', groupes_message: 'Message des groupes Facebook', email: "Email de la campagne (texte, objet ou images)" };
 
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -276,11 +281,13 @@ function corps(nv) {
 
   // Instagram
   h += '<section class="canal' + (nv.insta_publie_le ? ' fini' : '') + '"><div class="canal-tete"><h3>📸 Publication Instagram</h3>' + datePublie(nv, 'insta_publie_le', 'Publiée le') + '</div>' +
-    '<div class="media">' + (nv.insta_image_url ? '<div><img src="' + esc(nv.insta_image_url) + '" alt="Image Instagram : ' + esc(nv.titre) + '" loading="lazy"><div class="ligne" style="margin-top:8px"><a class="btn primary" href="' + esc(telecharger(nv.insta_image_url, 'instagram-' + slug + '.png')) + '">⬇ Télécharger l\'image</a>' + boutonDemande(nv, 'insta_image', '✏️ Changer l\'image') + '</div></div>' : '<p class="muet">Pas d\'image.</p>') +
-    '<div style="display:flex;flex-direction:column;gap:8px"><pre class="texte">' + esc(nv.insta_legende || '') + '</pre>' +
+    '<p class="muet">Deux propositions d\'image, avec la même légende : choisissez celle que vous préférez (ou publiez les deux en carrousel).</p>' +
+    '<div class="propositions">' + [['insta_image_url', 'insta_image', 'Proposition 1 · classique', 'instagram-classique-'], ['insta_capture_url', 'insta_capture', 'Proposition 2 · capture de l\'app', 'instagram-capture-']].map(([champ, el, titre, nom]) =>
+      '<figure><figcaption>' + titre + '</figcaption>' + (nv[champ] ? '<img src="' + esc(nv[champ]) + '" alt="' + esc(titre + ' : ' + nv.titre) + '" loading="lazy"><div class="ligne"><a class="btn primary" href="' + esc(telecharger(nv[champ], nom + slug + '.png')) + '">⬇ Télécharger</a>' + boutonDemande(nv, el, '✏️ Changer') + '</div>' : '<p class="muet">Pas encore d\'image.</p>') + '</figure>').join('') + '</div>' +
+    '<div style="display:flex;flex-direction:column;gap:8px"><b style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Légende</b><pre class="texte">' + esc(nv.insta_legende || '') + '</pre>' +
     '<div class="ligne"><button type="button" class="primary" data-copier="insta_legende">Copier la légende</button>' + boutonDemande(nv, 'insta_texte') + '</div>' +
-    '<p class="muet">Sur Instagram, le lien ne se clique pas dans la légende : mettez-le en bio ou en story (lien : ' + esc(nv.lien) + ').</p></div></div>' +
-    formulaireDemande(nv, ['insta_texte', 'insta_image']) + listeDemandes(nv, ['insta_texte', 'insta_image']) + '</section>';
+    '<p class="muet">Sur Instagram, le lien ne se clique pas dans la légende : mettez-le en bio ou en story (lien : ' + esc(nv.lien) + ').</p></div>' +
+    formulaireDemande(nv, ['insta_texte', 'insta_image', 'insta_capture']) + listeDemandes(nv, ['insta_texte', 'insta_image', 'insta_capture']) + '</section>';
 
   // Groupes Facebook
   h += '<section class="canal' + (g && g.total && g.n >= g.total ? ' fini' : '') + '"><div class="canal-tete"><h3>👥 Groupes Facebook</h3>' +
