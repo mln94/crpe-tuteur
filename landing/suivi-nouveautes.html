@@ -121,7 +121,7 @@ button:disabled{opacity:.6;cursor:default}
   <header class="tete">
     <div class="logo"><span class="logo-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><b>Pass<span>CRPE</span></b></div>
     <h1>Suivi des nouveautés</h1>
-    <p class="lede">Chaque modification du site, avec ce qui a été fait et tout ce qui est prêt pour l'annoncer : publication Instagram, publication Facebook, groupes Facebook et, pour les applications, l'email Klaviyo. Quelque chose ne vous plaît pas ? Demandez un changement.</p>
+    <p class="lede">Chaque modification du site, avec ce qui a été fait et tout ce qui est prêt pour l'annoncer : publication Instagram, groupes Facebook et, pour les applications, l'email Klaviyo. Quelque chose ne vous plaît pas ? Demandez un changement.</p>
     <nav><a href="/suivi-publications">→ Suivi des publications dans les groupes</a></nav>
     <button type="button" class="deco" id="deco" hidden>Se déconnecter</button>
   </header>
@@ -147,7 +147,7 @@ button:disabled{opacity:.6;cursor:default}
       <div class="liste" id="liste"></div>
       <p class="vide" id="aucune" hidden>Aucune nouveauté pour l'instant. Après chaque modification du site, Claude ajoute ici la nouveauté et ses publications.</p>
     </section>
-    <p class="foot">Articles et ressources : Instagram, page Facebook et groupes Facebook. Fonctionnalités et design des applications : en plus, un email Klaviyo préparé en brouillon pour la liste « Signup », à vérifier puis envoyer depuis Klaviyo. Les demandes de changement sont enregistrées ici ; dites à Claude « traite les demandes du suivi des nouveautés » pour qu'il les applique.</p>
+    <p class="foot">Articles et ressources : Instagram et groupes Facebook. Fonctionnalités et design des applications : en plus, un email Klaviyo préparé en brouillon pour la liste « Signup », à vérifier puis envoyer depuis Klaviyo. Les demandes de changement sont enregistrées ici ; dites à Claude « traite les demandes du suivi des nouveautés » pour qu'il les applique.</p>
   </div>
 </div>
 <div class="toast" id="toast" hidden></div>
@@ -157,7 +157,7 @@ const SB = window.supabase.createClient('https://zqwcermgfvcusuwjfviz.supabase.c
 const ADMIN_EMAIL = 'mohamed.necib94310@gmail.com';
 const TYPES = { article: 'Article de blog', ressource: 'Ressource', feature_passcrpe: 'Fonctionnalité PassCRPE', feature_quizcrpe: 'Fonctionnalité Quiz CRPE', design: 'Design' };
 const APP = t => t === 'feature_passcrpe' || t === 'feature_quizcrpe' || t === 'design';
-const ELEMENTS = { insta_texte: 'Légende Instagram', insta_image: 'Image Instagram', facebook_texte: 'Texte de la publication Facebook', facebook_image: 'Image Facebook', groupes_message: 'Message des groupes Facebook', email: "Email de la campagne (texte, objet ou images)" };
+const ELEMENTS = { insta_texte: 'Légende Instagram', insta_image: 'Image Instagram', groupes_message: 'Message des groupes Facebook', email: "Email de la campagne (texte, objet ou images)" };
 
 const $ = id => document.getElementById(id);
 const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -219,7 +219,6 @@ function groupes(nv) {
 function etapes(nv) {
   const g = groupes(nv), e = [
     { cle: 'insta', nom: '📸 Instagram', fait: !!nv.insta_publie_le },
-    { cle: 'facebook', nom: 'f Facebook', fait: !!nv.facebook_publie_le },
   ];
   if (g) e.push({ cle: 'groupes', nom: '👥 Groupes ' + g.n + '/' + g.total, fait: g.total > 0 && g.n >= g.total, partiel: g.n > 0 });
   if (APP(nv.type)) e.push({ cle: 'email', nom: '✉️ Email', fait: !!nv.email_envoye_le });
@@ -282,13 +281,6 @@ function corps(nv) {
     '<div class="ligne"><button type="button" class="primary" data-copier="insta_legende">Copier la légende</button>' + boutonDemande(nv, 'insta_texte') + '</div>' +
     '<p class="muet">Sur Instagram, le lien ne se clique pas dans la légende : mettez-le en bio ou en story (lien : ' + esc(nv.lien) + ').</p></div></div>' +
     formulaireDemande(nv, ['insta_texte', 'insta_image']) + listeDemandes(nv, ['insta_texte', 'insta_image']) + '</section>';
-
-  // Page Facebook
-  h += '<section class="canal' + (nv.facebook_publie_le ? ' fini' : '') + '"><div class="canal-tete"><h3>f Publication Facebook</h3>' + datePublie(nv, 'facebook_publie_le', 'Publiée le') + '</div>' +
-    '<div class="media large">' + (nv.facebook_image_url ? '<div><img src="' + esc(nv.facebook_image_url) + '" alt="Image Facebook : ' + esc(nv.titre) + '" loading="lazy"><div class="ligne" style="margin-top:8px"><a class="btn primary" href="' + esc(telecharger(nv.facebook_image_url, 'facebook-' + slug + '.png')) + '">⬇ Télécharger l\'image</a>' + boutonDemande(nv, 'facebook_image', '✏️ Changer l\'image') + '</div></div>' : '<p class="muet">Pas d\'image.</p>') +
-    '<div style="display:flex;flex-direction:column;gap:8px"><pre class="texte">' + esc(nv.facebook_post || '') + '</pre>' +
-    '<div class="ligne"><button type="button" class="primary" data-copier="facebook_post">Copier le texte (avec le lien)</button>' + boutonDemande(nv, 'facebook_texte') + '</div></div></div>' +
-    formulaireDemande(nv, ['facebook_texte', 'facebook_image']) + listeDemandes(nv, ['facebook_texte', 'facebook_image']) + '</section>';
 
   // Groupes Facebook
   h += '<section class="canal' + (g && g.total && g.n >= g.total ? ' fini' : '') + '"><div class="canal-tete"><h3>👥 Groupes Facebook</h3>' +
