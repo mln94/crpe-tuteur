@@ -494,6 +494,20 @@ SEO = {
         "Rapport de jury CRPE : l'EMC à l'écrit",
         "Question par question : l'énoncé officiel, ce que le jury attendait, un corrigé, les erreurs relevées académie "
         "par académie et ce qu'il faut travailler. Bac+3 et bac+5 en 2026, et session 2025."),
+    'admissibilite-arts': (
+        'Rapport de jury CRPE arts (écrit) 2026 et 2025 : sujets, corrigés et conseils',
+        "Les arts à l'écrit du CRPE d'après les rapports de jury : arts plastiques et éducation musicale au bac+3 "
+        "(Hockney, Schubert), sujet d'arts de l'épreuve d'application au bac+5, corrigés et erreurs fréquentes, sessions 2026 et 2025.",
+        "Rapport de jury CRPE : les arts à l'écrit",
+        "Sujet par sujet : l'énoncé officiel, ce que le jury attendait, un corrigé, les erreurs relevées académie par "
+        "académie et ce qu'il faut travailler. Bac+3 et bac+5 en 2026, et session 2025."),
+    'admissibilite-langue-vivante': (
+        'Rapport de jury CRPE langue vivante étrangère (écrit) 2026 : sujet d\'anglais, corrigé et conseils',
+        "La langue vivante étrangère à l'écrit du CRPE bac+3 d'après les rapports de jury : sujet d'anglais 2026 corrigé "
+        "(compréhension et expression de 120 mots), erreurs fréquentes en anglais, espagnol, italien et allemand, et conseils.",
+        "Rapport de jury CRPE : la langue vivante étrangère à l'écrit",
+        "Le sujet d'anglais 2026 question par question : l'énoncé officiel, un corrigé rédigé, les erreurs relevées "
+        "académie par académie et ce qu'il faut travailler. Avec l'allemand, l'espagnol et l'italien."),
     'admission-francais': (
         'Rapport de jury CRPE français (oral) 2026 et 2025 : exposé, leçon et conseils',
         "L'oral de français du CRPE d'après les rapports de jury : l'exposé disciplinaire du bac+3, la leçon du bac+5, "
@@ -647,14 +661,24 @@ CTA = '''  <div class="page-cta">
 
 # Disciplines dont l'analyse est publiée ; les autres sont annoncées « À venir » avec leur date prévue.
 PUBLIEES = {'admissibilite-francais', 'admissibilite-mathematiques', 'admissibilite-histoire-geographie', 'admissibilite-emc',
-            'admissibilite-sciences-technologie', 'admission-francais', 'admission-mathematiques'}
+            'admissibilite-sciences-technologie', 'admissibilite-arts', 'admissibilite-langue-vivante',
+            'admission-francais', 'admission-mathematiques'}
 PREVUES = {  # deux disciplines tous les deux jours
-    'admissibilite-arts': '28 octobre', 'admissibilite-langue-vivante': '28 octobre',
     'admissibilite-langues-regionales': '30 octobre',
     'admission-eps': '1er novembre',
     'admission-entretien': '3 novembre', 'admission-langue-regionale': '3 novembre',
 }
 assert set(PREVUES) | PUBLIEES == {d[0] for d in DISCIPLINES} and not set(PREVUES) & PUBLIEES
+
+
+# Sessions où l'épreuve n'existait pas : un message à la place de l'état « rapport à venir »
+SANS_EPREUVE = {
+    ('admissibilite-langue-vivante', '2025'): (
+        "Pas d'écrit de langue vivante en 2025",
+        "En 2025, le concours externe était au niveau bac+5 et ne comportait pas d'épreuve écrite de langue vivante étrangère. "
+        "L'écrit de langue vivante est apparu en 2026, avec le concours bac+3 : c'est l'un des quatre domaines de la seconde "
+        "épreuve d'admissibilité."),
+}
 
 
 def sessions_dispo(data, id_):
@@ -735,6 +759,11 @@ def panneau(data, id_, label, ic, annee, actif, autres):
         corps = (entete + f'<h2>{escape(label)}</h2>'
                  + f'<p class="rd-source">Synthèse des rapports de jury officiels, extraite de notre article <a href="/blog/rapport-jury-crpe-{annee}-conseils">Rapport de jury CRPE {annee}</a>.</p>'
                  + ''.join(f'<section class="rd-bloc"><h3>{escape(t)} <span class="rd-concours">{escape(c)}</span></h3>{h}</section>' for t, c, h in blocs))
+    elif (id_, annee) in SANS_EPREUVE:
+        titre, texte_ = SANS_EPREUVE[(id_, annee)]
+        bouton = ''.join(f'<button type="button" class="rd-btn plein" data-session="{a}">Voir la session {a}</button>' for a in autres)
+        corps = (f'<div class="rd-vide"><div class="ic" aria-hidden="true">{ic}</div>{entete}<h2>{escape(titre)}</h2>'
+                 f'<p>{texte_}</p>{bouton}</div>')
     else:
         bouton = ''.join(f'<button type="button" class="rd-btn plein" data-session="{a}">Voir la session {a}</button>' for a in autres)
         corps = (f'<div class="rd-vide"><div class="ic" aria-hidden="true">{ic}</div>{entete}<h2>{escape(label)} : rapport à venir</h2>'
