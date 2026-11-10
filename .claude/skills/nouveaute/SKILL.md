@@ -47,6 +47,8 @@ Pas de publication sur la page Facebook (retirée du dashboard le 10/11/2026 à 
    - `instagram.png` classique, visuel texte (modèle : `<dossier quiz sujets>/instagram.html`) ;
    - `instagram-capture.png` faite d'une capture de l'app encadrée + bulles d'avantages (modèle : `<dossier quiz sujets>/instagram-capture.html`).
    Garder les HTML sources dans le dossier pour pouvoir les modifier.
+   **Jamais « Lien en bio »** : le lien complet (ex. passcrpe.fr/rapports-jury-crpe/disciplines) est écrit sur l'image, sur une seule ligne,
+   aligné dans un encart, et en entier dans la légende (https://…). Vérifier le rendu : rien ne doit déborder ni passer sous le cercle.
    Email (applications seulement) : `email.html` (modèle : `<dossier quiz sujets>/email.html`), images = **captures de l'app uniquement**
    (éventail + écran encadré), référencées en `src="fichier.png"` (le script les héberge). Liens avec UTM `utm_source=klaviyo&utm_medium=email`.
    Copie aussi dans `emails/<passcrpe|quizcrpe>/campagnes/<sujet>/`.

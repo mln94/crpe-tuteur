@@ -286,7 +286,7 @@ function corps(nv) {
       '<figure><figcaption>' + titre + '</figcaption>' + (nv[champ] ? '<img src="' + esc(nv[champ]) + '" alt="' + esc(titre + ' : ' + nv.titre) + '" loading="lazy"><div class="ligne"><a class="btn primary" href="' + esc(telecharger(nv[champ], nom + slug + '.png')) + '">⬇ Télécharger</a>' + boutonDemande(nv, el, '✏️ Changer') + '</div>' : '<p class="muet">Pas encore d\'image.</p>') + '</figure>').join('') + '</div>' +
     '<div style="display:flex;flex-direction:column;gap:8px"><b style="font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">Légende</b><pre class="texte">' + esc(nv.insta_legende || '') + '</pre>' +
     '<div class="ligne"><button type="button" class="primary" data-copier="insta_legende">Copier la légende</button>' + boutonDemande(nv, 'insta_texte') + '</div>' +
-    '<p class="muet">Sur Instagram, le lien ne se clique pas dans la légende : mettez-le en bio ou en story (lien : ' + esc(nv.lien) + ').</p></div>' +
+    '<p class="muet">Le lien est écrit sur l\'image et dans la légende (' + esc(nv.lien) + ') : pas de « lien en bio ».</p></div>' +
     formulaireDemande(nv, ['insta_texte', 'insta_image', 'insta_capture']) + listeDemandes(nv, ['insta_texte', 'insta_image', 'insta_capture']) + '</section>';
 
   // Groupes Facebook
