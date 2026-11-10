@@ -106,6 +106,14 @@ if (APP(nv.type) && nv.email && !dejaEnvoyee && fs.existsSync(path.join(dossier,
   ligne.email_html = html; ligne.email_objet = nv.email.objet;
   const nomCampagne = nv.email.nom; // toujours « PassCRPE - … »
   const tpl = await klaviyo('POST', 'templates/', { data: { type: 'template', attributes: { name: nomCampagne, editor_type: 'CODE', html } } });
+  // Vérification : Klaviyo doit pouvoir afficher le modèle (une balise inconnue, comme {% unsubscribe_url %},
+  // bloque l'envoi sans erreur visible : la campagne passe « Sent » avec zéro destinataire)
+  const rendu = await fetch('https://a.klaviyo.com/api/template-render/', { method: 'POST', headers: KL,
+    body: JSON.stringify({ data: { type: 'template', id: tpl.data.id, attributes: { context: { first_name: 'Test' } } } }) });
+  if (!rendu.ok) {
+    await fetch(`https://a.klaviyo.com/api/templates/${tpl.data.id}/`, { method: 'DELETE', headers: KL });
+    throw new Error(`Klaviyo ne peut pas afficher email.html (balise invalide ?). Désabonnement : {% unsubscribe_link %}. Détail : ${await rendu.text()}`);
+  }
   const contenu = { subject: nv.email.objet, preview_text: nv.email.preheader || '', ...EXPEDITEUR };
   let campagneId = nv.klaviyo_campaign_id, messageId;
   if (campagneId) {

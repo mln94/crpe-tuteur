@@ -52,6 +52,8 @@ Pas de publication sur la page Facebook (retirée du dashboard le 10/11/2026 à 
    Email (applications seulement) : `email.html` (modèle : `<dossier quiz sujets>/email.html`), images = **captures de l'app uniquement**
    (éventail + écran encadré), référencées en `src="fichier.png"` (le script les héberge). Liens avec UTM `utm_source=klaviyo&utm_medium=email`.
    Copie aussi dans `emails/<passcrpe|quizcrpe>/campagnes/<sujet>/`.
+   Balises Klaviyo : `{{ first_name|default:'' }}` et **`{% unsubscribe_link %}`** pour le désabonnement (jamais `{% unsubscribe_url %}`,
+   qui n'existe pas : la campagne passe « Sent » sans aucun destinataire). Le script teste le rendu du modèle et s'arrête en cas d'erreur.
 5. `node scripts/nouveaute.mjs Ressources/nouveautes/AAAA-MM-JJ-sujet` → l'id est réécrit dans `nouveaute.json`.
    La campagne Klaviyo est créée **en brouillon** : l'utilisateur la vérifie et l'envoie lui-même.
 6. Donner à l'utilisateur le lien `https://www.passcrpe.fr/suivi-nouveautes?nouveaute=<id>` et le lien Klaviyo.
