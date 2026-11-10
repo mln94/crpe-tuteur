@@ -83,6 +83,10 @@ button.danger.plein{background:var(--rouge);color:#fff}
 .message textarea{display:block;width:100%;min-height:220px;margin-top:12px;font:15px/1.55 'Inter',sans-serif;color:var(--fg);background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:12px;resize:vertical}
 .message .ligne{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px}
 .message .etat{font-size:13px;color:var(--muted)}
+.mp{margin:10px 0 0;border:1.5px solid var(--line);border-radius:12px;padding:14px;background:#fff}
+.mp h4{margin:0 0 2px;font-size:15px;color:var(--indigo-fonce)}
+.mp .quand{font-size:13px;color:var(--muted);margin:0 0 8px}
+.mp pre{white-space:pre-wrap;overflow-wrap:anywhere;font:14px/1.55 'Inter',sans-serif;margin:0 0 10px;background:#fafaff;border-radius:10px;padding:12px;max-height:260px;overflow:auto}
 @media (max-width:700px){.panneau{grid-template-columns:1fr}}
 .resume b{color:var(--fg)}
 .bar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;margin:14px 0 12px}
@@ -179,6 +183,7 @@ li.done .date{color:var(--ok)}
         <textarea id="msgTexte" placeholder="Le texte du post, enregistré une fois pour toute la campagne. Astuce : écrivez {LIEN} à l'endroit du lien, il sera remplacé par le lien du groupe quand vous copierez le message depuis un groupe."></textarea>
         <div class="ligne"><button type="button" class="primary" id="msgEnregistrer">Enregistrer le message</button><button type="button" id="msgCopier">Copier le message</button><span class="etat" id="msgNonSauve" hidden>Modifications non enregistrées</span></div>
       </details>
+      <div id="dMp"></div>
       <div class="bar">
         <div class="progress"><span id="count"></span><span class="meter"><i id="meterFill"></i></span></div>
         <label class="toggle" for="hide"><input id="hide" type="checkbox"> Masquer les groupes déjà publiés ou bloqués</label>
@@ -388,6 +393,10 @@ function rendreDetail() {
     $('pModif').hidden = true; $('pSuppr').hidden = true; rendreDetail.pour = c.id;
     $('msgTexte').value = c.message || ''; $('msgNonSauve').hidden = true; $('dMessage').open = !c.message;
   }
+  const mps = Array.isArray(c.messages_mp) ? c.messages_mp : [];
+  $('dMp').innerHTML = mps.length ? '<p class="note" style="margin:16px 0 0;font-weight:800;color:var(--indigo-fonce)">💬 Messages privés (réponses aux personnes qui vous écrivent)</p>' + mps.map((m, i) =>
+    '<div class="mp"><h4>' + esc(m.titre) + '</h4>' + (m.quand ? '<p class="quand">' + esc(m.quand) + '</p>' : '') + '<pre>' + esc(m.texte) + '</pre><button type="button" data-mp="' + i + '">Copier ce message</button></div>').join('') : '';
+  $('dMp').querySelectorAll('[data-mp]').forEach(b => b.onclick = () => copier(mps[+b.dataset.mp].texte, 'Message privé copié'));
   $('msgEtat').textContent = c.message ? 'Enregistré le ' + dateHeure(c.message_maj_at) : 'Aucun message enregistré';
   $('dResume').innerHTML = '<span>Liens générés le <b>' + esc(dateHeure(c.liens_generes_at)) + '</b></span><span>Destination : <b>' + esc(c.base_url) + '</b></span><span>Liens copiés : <b>' + copies + ' / ' + ps.length + '</b></span>' +
     (attente ? '<span>⏳ En attente de validation : <b>' + attente + '</b></span>' : '') +
