@@ -128,6 +128,7 @@ li.done .date{color:var(--ok)}
     <div class="logo"><span class="logo-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><b>Pass<span>CRPE</span></b></div>
     <h1>Suivi des publications Meta</h1>
     <p class="lede">Chaque campagne génère un lien suivi par groupe Facebook. Copiez le lien du groupe, publiez, puis cochez : la page note quand les liens ont été générés, quand chaque lien a été copié, et la date de publication.</p>
+    <p style="margin:14px 0 0"><a href="/suivi-nouveautes" style="color:#fff;font-weight:700;font-size:13.5px;background:rgba(255,255,255,.16);padding:6px 12px;border-radius:99px;text-decoration:none">→ Suivi des nouveautés du site</a></p>
     <button type="button" class="deco" id="deco" hidden>Se déconnecter</button>
   </header>
 
@@ -231,7 +232,7 @@ const GROUPS=[
 ["CRPE 2027 – Révisions et Méthodes","932636706111901","revisions-methodes"],
 ["CRPE 2026/2027- Région Occitanie entraide, conseils, h.s,...","996537315159701","occitanie"],
 ["CRPE 2027 et 2028","3079298832293667","crpe-2027-2028"],
-// Groupes ajoutés le 07/11/2026 (identifiant Facebook à compléter : en attendant, le nom ouvre une recherche Facebook)
+// Groupes ajoutés le 07/11/2026
 ["CRPE 2026 / Vidéos, Conseils, Aides, Partages / La Marelle Du CRPE","481858367462350","marelle-crpe"],
 ["CRPE 2027 – S’entraider et se motiver !","919570968572752","entraide-motivation"],
 ["CRPE Académie de Rennes 2027","2171426773194632","rennes"],
@@ -307,6 +308,10 @@ async function charger() {
     const { data: ajout, error: e3 } = await SB.from('meta_publications').insert(manquants).select();
     if (e3) toast('Nouveaux groupes non ajoutés : ' + e3.message); else pubs = pubs.concat(ajout);
   }
+  // Lien direct vers une campagne (depuis /suivi-nouveautes) : /suivi-publications?campagne=<id>
+  const demandee = new URLSearchParams(location.search).get('campagne');
+  if (demandee && campagnes.some(x => x.id === demandee) && !charger.fait) { choisie = demandee; ouverte = true; store.set('meta_campagne', choisie); store.set('meta_ouverte', true); }
+  charger.fait = true;
   if (!campagnes.some(x => x.id === choisie)) choisie = campagnes[0]?.id || null;
   proposerImport(); rendre();
 }

@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- Page interne (suivi des nouveautés du site et de leurs publications) : lisible par Google, mais non indexée.
+     Absente du sitemap ; en-tête X-Robots-Tag aussi envoyé (vercel.json).
+     Données : tables Supabase site_nouveautes et site_nouveautes_demandes (+ meta_campagnes / meta_publications pour les
+     groupes Facebook), réservées au compte administrateur (RLS). Images et aperçus d'email : bucket public « nouveautes ». -->
+<meta name="robots" content="noindex, follow">
+<meta name="googlebot" content="noindex, follow">
+<title>Suivi des nouveautés | PassCRPE</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+:root{
+  --bg:#f5f6ff; --surface:#ffffff; --fg:#1a1a2e; --muted:#6b7280; --line:#e0e3ff;
+  --indigo:#4f46e5; --indigo-fonce:#3730a3; --indigo-clair:#eef0ff; --violet:#6366f1;
+  --ok:#059669; --ok-soft:#ecfdf5; --rouge:#b91c1c; --jaune:#fef3c7; --jaune-fg:#92400e;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  padding:28px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+[hidden]{display:none!important}
+.wrap{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.tete{background:linear-gradient(135deg,var(--indigo) 0%,var(--violet) 100%);color:#fff;border-radius:20px;padding:24px 28px;position:relative}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;margin-bottom:12px}
+.logo-ic{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center}
+.logo-ic svg{width:20px;height:20px}
+.logo b span{color:#c7d2fe}
+h1{font-weight:900;font-size:clamp(24px,5vw,32px);line-height:1.15;letter-spacing:-.5px;margin:0}
+h2{font-size:19px;font-weight:800;margin:0 0 12px}
+h3{font-size:15px;font-weight:800;margin:0;color:var(--indigo-fonce);display:flex;align-items:center;gap:8px}
+.lede{color:#e0e7ff;margin:8px 0 0;max-width:70ch}
+.tete nav{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+.tete nav a{color:#fff;font-weight:700;font-size:13.5px;background:rgba(255,255,255,.16);padding:6px 12px;border-radius:99px;text-decoration:none}
+.deco{position:absolute;top:20px;right:22px;background:rgba(255,255,255,.16);color:#fff;border:0}
+.carte{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:18px}
+label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+input[type=email],input[type=password],select,textarea{font:500 15px 'Inter',sans-serif;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:90px;line-height:1.5}
+input:focus-visible,button:focus-visible,a:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
+button,.btn{font:700 13px 'Inter',sans-serif;border-radius:10px;padding:9px 13px;cursor:pointer;border:1.5px solid var(--indigo);background:#fff;color:var(--indigo);white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+button.primary,.btn.primary{background:var(--indigo);color:#fff}
+button.discret{border-color:var(--line);color:var(--indigo-fonce)}
+button.danger{border-color:var(--rouge);color:var(--rouge)}
+button.danger.plein{background:var(--rouge);color:#fff}
+button:hover,.btn:hover{filter:brightness(1.08)}
+button:disabled{opacity:.6;cursor:default}
+.err{color:var(--rouge);font-size:14px;margin:0;min-height:1em}
+.auth{width:100%;max-width:420px;margin:40px auto 0;display:flex;flex-direction:column;gap:14px}
+/* Demandes en attente */
+.attente{background:var(--jaune);border:1.5px solid #fde68a;border-radius:12px;padding:12px 16px;font-size:14px;color:var(--jaune-fg)}
+.attente b{color:#78350f}
+/* Filtres */
+.filtres{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.filtres button{border-color:var(--line);color:var(--muted)}
+.filtres button[aria-pressed=true]{background:var(--indigo-clair);border-color:var(--indigo);color:var(--indigo-fonce)}
+/* Liste des nouveautés */
+.liste{display:flex;flex-direction:column;gap:10px}
+.nv{border:1.5px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}
+.nv.ouverte{border-color:var(--indigo)}
+.nv-tete{display:grid;grid-template-columns:24px 92px 1fr auto;gap:12px;align-items:center;padding:14px 16px;cursor:pointer;width:100%;background:none;border:0;border-radius:0;color:var(--fg);font:inherit;text-align:left;white-space:normal}
+.nv-tete:hover{background:#f8f9ff;filter:none}
+.nv.ouverte .nv-tete{background:var(--indigo-clair)}
+.chev{color:var(--indigo);font-size:12px;text-align:center}
+.nv-date{font-weight:700;font-size:13.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.nv-titre{min-width:0;display:flex;flex-direction:column;gap:4px}
+.nv-titre b{font-weight:800;color:var(--indigo-fonce)}
+.canaux{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.puce{font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;background:#f3f4f6;color:var(--muted);white-space:nowrap}
+.puce.ok{background:#dcfce7;color:#166534}
+.puce.att{background:var(--jaune);color:var(--jaune-fg)}
+.type{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:6px;width:max-content}
+.type.article,.type.ressource{background:#e0f2fe;color:#075985}
+.type.feature_passcrpe{background:#ede9fe;color:#5b21b6}
+.type.feature_quizcrpe{background:#fce7f3;color:#9d174d}
+.type.design{background:#ffedd5;color:#9a3412}
+@media (max-width:700px){.nv-tete{grid-template-columns:20px 1fr}.nv-date{grid-column:2}.nv-titre{grid-column:2}.canaux{grid-column:2;justify-content:flex-start}}
+/* Détail */
+.nv-corps{padding:4px 16px 18px;display:flex;flex-direction:column;gap:14px}
+.fait{background:#fafaff;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px}
+.fait p{margin:4px 0 0;white-space:pre-line}
+.lienv{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:10px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+.lienv a{color:var(--indigo)}
+.canal{border:1.5px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.canal.fini{background:var(--ok-soft);border-color:#a7f3d0}
+.canal-tete{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.media{display:grid;grid-template-columns:minmax(0,220px) 1fr;gap:14px;align-items:start}
+.media.large{grid-template-columns:minmax(0,300px) 1fr}
+@media (max-width:640px){.media,.media.large{grid-template-columns:1fr}}
+.media>*{min-width:0}
+.media img{width:100%;border-radius:10px;border:1px solid var(--line);display:block;background:var(--bg)}
+.texte{overflow-wrap:anywhere;font-family:'Inter',system-ui,sans-serif;white-space:pre-wrap;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:12px;font-size:14px;max-height:280px;overflow:auto;margin:0}
+.ligne{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.date{display:flex;align-items:center;gap:8px;flex-direction:row;text-transform:none;letter-spacing:0;font-size:13px;font-weight:600;color:var(--muted)}
+.date input[type=date]{width:auto;padding:5px 9px;font:500 14px 'Inter',sans-serif;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--fg)}
+.date input[type=checkbox]{width:18px;height:18px;accent-color:var(--ok)}
+.meter{width:120px;height:8px;border-radius:99px;background:var(--line);overflow:hidden;display:inline-block}
+.meter i{display:block;height:100%;background:var(--indigo)}
+.muet{color:var(--muted);font-size:13.5px;margin:0}
+/* Demande de changement */
+.demande{border:1.5px dashed var(--indigo);border-radius:12px;padding:12px;background:var(--indigo-clair);display:flex;flex-direction:column;gap:10px}
+.dems{display:flex;flex-direction:column;gap:6px}
+.dem{font-size:13.5px;padding:8px 10px;border-radius:10px;background:#fff;border:1px solid var(--line)}
+.dem .badge{font-size:11.5px;font-weight:800;padding:2px 8px;border-radius:99px;margin-right:6px}
+.dem .badge.att{background:var(--jaune);color:var(--jaune-fg)}
+.dem .badge.ok{background:#dcfce7;color:#166534}
+.dem small{color:var(--muted);display:block;margin-top:3px}
+.apercu{width:100%;height:720px;border:1.5px solid var(--line);border-radius:10px;background:#fff}
+.suppr{background:#fef2f2;border:1.5px solid #fecaca;border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+.vide{color:var(--muted);margin:0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--indigo-fonce);color:#fff;padding:10px 18px;border-radius:99px;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(55,48,163,.3);z-index:9}
+.foot{color:var(--muted);font-size:13.5px;max-width:76ch;margin:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tete">
+    <div class="logo"><span class="logo-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><b>Pass<span>CRPE</span></b></div>
+    <h1>Suivi des nouveautés</h1>
+    <p class="lede">Chaque modification du site, avec ce qui a été fait et tout ce qui est prêt pour l'annoncer : publication Instagram, publication Facebook, groupes Facebook et, pour les applications, l'email Klaviyo. Quelque chose ne vous plaît pas ? Demandez un changement.</p>
+    <nav><a href="/suivi-publications">→ Suivi des publications dans les groupes</a></nav>
+    <button type="button" class="deco" id="deco" hidden>Se déconnecter</button>
+  </header>
+
+  <section class="carte auth" id="auth" hidden>
+    <h2>Connexion</h2>
+    <label for="email">E-mail<input id="email" type="email" autocomplete="username"></label>
+    <label for="mdp">Mot de passe<input id="mdp" type="password" autocomplete="current-password"></label>
+    <button type="button" class="primary" id="connexion">Se connecter</button>
+    <p class="err" id="authErr"></p>
+  </section>
+
+  <div id="app" hidden style="display:flex;flex-direction:column;gap:20px">
+    <div class="attente" id="attente" hidden></div>
+    <section class="carte">
+      <h2>Toutes les nouveautés</h2>
+      <div class="filtres" id="filtres" role="group" aria-label="Filtrer par type">
+        <button type="button" data-f="tous" aria-pressed="true">Tout</button>
+        <button type="button" data-f="contenu" aria-pressed="false">Articles et ressources</button>
+        <button type="button" data-f="app" aria-pressed="false">Applications PassCRPE et Quiz CRPE</button>
+        <button type="button" data-f="afaire" aria-pressed="false">Reste à publier</button>
+      </div>
+      <div class="liste" id="liste"></div>
+      <p class="vide" id="aucune" hidden>Aucune nouveauté pour l'instant. Après chaque modification du site, Claude ajoute ici la nouveauté et ses publications.</p>
+    </section>
+    <p class="foot">Articles et ressources : Instagram, page Facebook et groupes Facebook. Fonctionnalités et design des applications : en plus, un email Klaviyo préparé en brouillon pour la liste « Signup », à vérifier puis envoyer depuis Klaviyo. Les demandes de changement sont enregistrées ici ; dites à Claude « traite les demandes du suivi des nouveautés » pour qu'il les applique.</p>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const SB = window.supabase.createClient('https://zqwcermgfvcusuwjfviz.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8');
+const ADMIN_EMAIL = 'mohamed.necib94310@gmail.com';
+const TYPES = { article: 'Article de blog', ressource: 'Ressource', feature_passcrpe: 'Fonctionnalité PassCRPE', feature_quizcrpe: 'Fonctionnalité Quiz CRPE', design: 'Design' };
+const APP = t => t === 'feature_passcrpe' || t === 'feature_quizcrpe' || t === 'design';
+const ELEMENTS = { insta_texte: 'Légende Instagram', insta_image: 'Image Instagram', facebook_texte: 'Texte de la publication Facebook', facebook_image: 'Image Facebook', groupes_message: 'Message des groupes Facebook', email: "Email de la campagne (texte, objet ou images)" };
+
+const $ = id => document.getElementById(id);
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+                set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+const aujourdhui = () => { const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); };
+const dateHeure = x => x ? new Date(x).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }) : '';
+const dateJour = x => x ? new Date(x + 'T12:00:00').toLocaleDateString('fr-FR', { dateStyle: 'medium' }) : '';
+const telecharger = (url, nom) => url + (url.includes('?') ? '&' : '?') + 'download=' + encodeURIComponent(nom);
+
+let nouveautes = [], demandes = [], campagnes = [], pubs = [];
+let ouverte = store.get('nv_ouverte', null), filtre = store.get('nv_filtre', 'tous');
+let formDemande = null, confirmSuppr = null, apercuEmail = null; // { id, element } ; id
+
+// ── Connexion ──
+async function demarrer() {
+  const { data } = await SB.auth.getSession();
+  if (data.session?.user?.email === ADMIN_EMAIL) return ouvrir();
+  $('auth').hidden = false; $('app').hidden = true; $('deco').hidden = true;
+  $('email').value = ADMIN_EMAIL;
+}
+$('connexion').addEventListener('click', async () => {
+  const email = $('email').value.trim(), password = $('mdp').value;
+  if (email !== ADMIN_EMAIL) { $('authErr').textContent = 'Accès non autorisé.'; return; }
+  $('connexion').disabled = true; $('authErr').textContent = '';
+  const { error } = await SB.auth.signInWithPassword({ email, password });
+  $('connexion').disabled = false;
+  if (error) { $('authErr').textContent = error.message; return; }
+  ouvrir();
+});
+$('mdp').addEventListener('keydown', e => { if (e.key === 'Enter') $('connexion').click(); });
+$('deco').addEventListener('click', async () => { await SB.auth.signOut(); demarrer(); });
+
+async function ouvrir() {
+  $('auth').hidden = true; $('app').hidden = false; $('deco').hidden = false;
+  await charger();
+}
+async function charger() {
+  const [n, d, c, p] = await Promise.all([
+    SB.from('site_nouveautes').select('*').order('modifie_le', { ascending: false }).order('created_at', { ascending: false }),
+    SB.from('site_nouveautes_demandes').select('*').order('created_at', { ascending: false }),
+    SB.from('meta_campagnes').select('id,nom'),
+    SB.from('meta_publications').select('campagne_id,publie_le,bloque_le'),
+  ]);
+  const err = n.error || d.error || c.error || p.error;
+  if (err) { toast('Chargement impossible : ' + err.message); return; }
+  nouveautes = n.data; demandes = d.data; campagnes = c.data; pubs = p.data;
+  const lien = new URLSearchParams(location.search).get('nouveaute');
+  if (lien && nouveautes.some(x => x.id === lien)) ouverte = lien;
+  rendre();
+}
+
+// ── Avancement d'une nouveauté ──
+function groupes(nv) {
+  const c = campagnes.find(x => x.id === nv.meta_campagne_id); if (!c) return null;
+  const ps = pubs.filter(x => x.campagne_id === c.id && !x.bloque_le);
+  return { nom: c.nom, n: ps.filter(x => x.publie_le).length, total: ps.length };
+}
+function etapes(nv) {
+  const g = groupes(nv), e = [
+    { cle: 'insta', nom: '📸 Instagram', fait: !!nv.insta_publie_le },
+    { cle: 'facebook', nom: 'f Facebook', fait: !!nv.facebook_publie_le },
+  ];
+  if (g) e.push({ cle: 'groupes', nom: '👥 Groupes ' + g.n + '/' + g.total, fait: g.total > 0 && g.n >= g.total, partiel: g.n > 0 });
+  if (APP(nv.type)) e.push({ cle: 'email', nom: '✉️ Email', fait: !!nv.email_envoye_le });
+  return e;
+}
+const resteAPublier = nv => etapes(nv).some(e => !e.fait);
+const demandesDe = id => demandes.filter(x => x.nouveaute_id === id);
+
+// ── Affichage ──
+function rendre() {
+  const enAttente = demandes.filter(x => x.statut === 'en_attente');
+  $('attente').hidden = !enAttente.length;
+  $('attente').innerHTML = '⏳ <b>' + enAttente.length + ' demande' + (enAttente.length > 1 ? 's' : '') + ' de changement en attente.</b> Dites à Claude « traite les demandes du suivi des nouveautés » pour qu\'il les applique.';
+  document.querySelectorAll('#filtres button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.f === filtre)));
+  const liste = nouveautes.filter(nv => filtre === 'tous' || (filtre === 'app' ? APP(nv.type) : filtre === 'contenu' ? !APP(nv.type) : resteAPublier(nv)));
+  $('aucune').hidden = liste.length > 0;
+  if (!nouveautes.length) $('aucune').textContent = "Aucune nouveauté pour l'instant. Après chaque modification du site, Claude ajoute ici la nouveauté et ses publications.";
+  else if (!liste.length) $('aucune').textContent = 'Aucune nouveauté pour ce filtre.';
+  $('liste').innerHTML = liste.map(nv => {
+    const o = nv.id === ouverte, dem = demandesDe(nv.id).filter(x => x.statut === 'en_attente').length;
+    return '<article class="nv' + (o ? ' ouverte' : '') + '" data-id="' + nv.id + '">' +
+      '<button type="button" class="nv-tete" aria-expanded="' + o + '"><span class="chev">' + (o ? '▼' : '▶') + '</span>' +
+      '<span class="nv-date">' + esc(dateJour(nv.modifie_le)) + '</span>' +
+      '<span class="nv-titre"><span class="type ' + nv.type + '">' + esc(TYPES[nv.type]) + '</span><b>' + esc(nv.titre) + '</b></span>' +
+      '<span class="canaux">' + etapes(nv).map(e => '<span class="puce' + (e.fait ? ' ok' : e.partiel ? ' att' : '') + '">' + (e.fait ? '✓ ' : '') + e.nom + '</span>').join('') +
+      (dem ? '<span class="puce att">✏️ ' + dem + ' demande' + (dem > 1 ? 's' : '') + '</span>' : '') + '</span></button>' +
+      (o ? corps(nv) : '') + '</article>';
+  }).join('');
+  brancher();
+}
+
+function boutonDemande(nv, element, libelle) {
+  return '<button type="button" class="discret" data-act="demander" data-el="' + element + '">' + (libelle || '✏️ Demander un changement') + '</button>';
+}
+function formulaireDemande(nv, elements) {
+  if (!formDemande || formDemande.id !== nv.id || !elements.includes(formDemande.element)) return '';
+  return '<div class="demande"><label>Élément<select data-champ="element">' + elements.map(k => '<option value="' + k + '"' + (k === formDemande.element ? ' selected' : '') + '>' + esc(ELEMENTS[k]) + '</option>').join('') + '</select></label>' +
+    '<label>Ce que vous voulez changer<textarea data-champ="demande" placeholder="ex. Ton plus direct, moins long. Mettre en avant les 810 questions dès la première ligne. Image : plus de contraste sur le titre…"></textarea></label>' +
+    '<div class="ligne"><button type="button" class="primary" data-act="envoyer">Envoyer la demande</button><button type="button" data-act="annuler">Annuler</button></div></div>';
+}
+function listeDemandes(nv, elements) {
+  const ds = demandesDe(nv.id).filter(x => elements.includes(x.element)); if (!ds.length) return '';
+  return '<div class="dems">' + ds.map(x => '<div class="dem"><span class="badge ' + (x.statut === 'faite' ? 'ok">✅ Faite' : 'att">⏳ En attente') + '</span><b>' + esc(ELEMENTS[x.element]) + '</b> : ' + esc(x.demande) +
+    '<small>Demandée le ' + esc(dateHeure(x.created_at)) + (x.statut === 'faite' ? ' · faite le ' + esc(dateHeure(x.traitee_at)) + (x.reponse ? ' · ' + esc(x.reponse) : '') : '') + '</small></div>').join('') + '</div>';
+}
+function datePublie(nv, champ, libelle) {
+  return '<label class="date"><input type="checkbox" data-coche="' + champ + '"' + (nv[champ] ? ' checked' : '') + '> ' + libelle + ' <input type="date" data-date="' + champ + '" value="' + esc(nv[champ] || '') + '"></label>';
+}
+
+function corps(nv) {
+  const g = groupes(nv), slug = nv.titre.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
+  let h = '<div class="nv-corps">';
+  h += '<div class="fait"><h3>🛠 Ce qui a été fait</h3><p>' + esc(nv.resume) + '</p>' +
+    '<div class="lienv"><a href="' + esc(nv.lien) + '" target="_blank" rel="noopener">' + esc(nv.lien) + '</a><button type="button" class="discret" data-copier="lien">Copier le lien</button></div></div>';
+
+  // Instagram
+  h += '<section class="canal' + (nv.insta_publie_le ? ' fini' : '') + '"><div class="canal-tete"><h3>📸 Publication Instagram</h3>' + datePublie(nv, 'insta_publie_le', 'Publiée le') + '</div>' +
+    '<div class="media">' + (nv.insta_image_url ? '<div><img src="' + esc(nv.insta_image_url) + '" alt="Image Instagram : ' + esc(nv.titre) + '" loading="lazy"><div class="ligne" style="margin-top:8px"><a class="btn primary" href="' + esc(telecharger(nv.insta_image_url, 'instagram-' + slug + '.png')) + '">⬇ Télécharger l\'image</a>' + boutonDemande(nv, 'insta_image', '✏️ Changer l\'image') + '</div></div>' : '<p class="muet">Pas d\'image.</p>') +
+    '<div style="display:flex;flex-direction:column;gap:8px"><pre class="texte">' + esc(nv.insta_legende || '') + '</pre>' +
+    '<div class="ligne"><button type="button" class="primary" data-copier="insta_legende">Copier la légende</button>' + boutonDemande(nv, 'insta_texte') + '</div>' +
+    '<p class="muet">Sur Instagram, le lien ne se clique pas dans la légende : mettez-le en bio ou en story (lien : ' + esc(nv.lien) + ').</p></div></div>' +
+    formulaireDemande(nv, ['insta_texte', 'insta_image']) + listeDemandes(nv, ['insta_texte', 'insta_image']) + '</section>';
+
+  // Page Facebook
+  h += '<section class="canal' + (nv.facebook_publie_le ? ' fini' : '') + '"><div class="canal-tete"><h3>f Publication Facebook</h3>' + datePublie(nv, 'facebook_publie_le', 'Publiée le') + '</div>' +
+    '<div class="media large">' + (nv.facebook_image_url ? '<div><img src="' + esc(nv.facebook_image_url) + '" alt="Image Facebook : ' + esc(nv.titre) + '" loading="lazy"><div class="ligne" style="margin-top:8px"><a class="btn primary" href="' + esc(telecharger(nv.facebook_image_url, 'facebook-' + slug + '.png')) + '">⬇ Télécharger l\'image</a>' + boutonDemande(nv, 'facebook_image', '✏️ Changer l\'image') + '</div></div>' : '<p class="muet">Pas d\'image.</p>') +
+    '<div style="display:flex;flex-direction:column;gap:8px"><pre class="texte">' + esc(nv.facebook_post || '') + '</pre>' +
+    '<div class="ligne"><button type="button" class="primary" data-copier="facebook_post">Copier le texte (avec le lien)</button>' + boutonDemande(nv, 'facebook_texte') + '</div></div></div>' +
+    formulaireDemande(nv, ['facebook_texte', 'facebook_image']) + listeDemandes(nv, ['facebook_texte', 'facebook_image']) + '</section>';
+
+  // Groupes Facebook
+  h += '<section class="canal' + (g && g.total && g.n >= g.total ? ' fini' : '') + '"><div class="canal-tete"><h3>👥 Groupes Facebook</h3>' +
+    (g ? '<span class="ligne" style="font-weight:800;color:var(--indigo-fonce)">' + g.n + ' / ' + g.total + ' publiés <span class="meter"><i style="width:' + (g.total ? g.n / g.total * 100 : 0) + '%"></i></span></span>' : '') + '</div>' +
+    (g ? '<p class="muet">Campagne <b>' + esc(g.nom) + '</b> dans le suivi des publications : un lien suivi par groupe, et le message prêt à copier.</p>' +
+      '<div class="ligne"><a class="btn primary" href="/suivi-publications?campagne=' + encodeURIComponent(nv.meta_campagne_id) + '">Ouvrir la campagne des groupes →</a>' + boutonDemande(nv, 'groupes_message') + '</div>'
+      : '<p class="muet">Pas de campagne de groupes liée.</p>') +
+    formulaireDemande(nv, ['groupes_message']) + listeDemandes(nv, ['groupes_message']) + '</section>';
+
+  // Email Klaviyo (applications seulement)
+  if (APP(nv.type)) {
+    h += '<section class="canal' + (nv.email_envoye_le ? ' fini' : '') + '"><div class="canal-tete"><h3>✉️ Email Klaviyo (liste Signup)</h3>' + datePublie(nv, 'email_envoye_le', 'Envoyé le') + '</div>' +
+      (nv.email_objet ? '<p style="margin:0"><b>Objet :</b> ' + esc(nv.email_objet) + '</p>' : '') +
+      '<div class="ligne">' + (nv.klaviyo_url ? '<a class="btn primary" href="' + esc(nv.klaviyo_url) + '" target="_blank" rel="noopener">Ouvrir la campagne dans Klaviyo ↗</a>' : '<span class="muet">Campagne Klaviyo pas encore créée.</span>') +
+      (nv.email_html ? '<button type="button" data-act="voirEmail">' + (apercuEmail === nv.id ? '▲ Masquer l\'email' : '👁 Voir l\'email') + '</button>' : '') + boutonDemande(nv, 'email') + '</div>' +
+      (apercuEmail === nv.id ? '<iframe class="apercu" sandbox="allow-popups allow-popups-to-escape-sandbox" title="Aperçu de l\'email" srcdoc="' + esc(nv.email_html) + '"></iframe>' : '') +
+      '<p class="muet">Créée en brouillon pour tous les inscrits (liste Signup) : vérifiez-la dans Klaviyo, puis cliquez sur Envoyer.</p>' +
+      formulaireDemande(nv, ['email']) + listeDemandes(nv, ['email']) + '</section>';
+  }
+
+  // Suppression
+  h += confirmSuppr === nv.id
+    ? '<div class="suppr"><p style="margin:0">Supprimer « <b>' + esc(nv.titre) + '</b> » du suivi et ses demandes de changement ? La campagne des groupes et la campagne Klaviyo, elles, sont gardées.</p><div class="ligne"><button type="button" class="danger plein" data-act="supprimerOui">Oui, supprimer</button><button type="button" data-act="supprimerNon">Annuler</button></div></div>'
+    : '<div class="ligne" style="justify-content:space-between"><span class="muet">Ajoutée le ' + esc(dateHeure(nv.created_at)) + (nv.updated_at && nv.updated_at !== nv.created_at ? ' · mise à jour le ' + esc(dateHeure(nv.updated_at)) : '') + '</span><button type="button" class="danger" data-act="supprimer">🗑 Supprimer</button></div>';
+  return h + '</div>';
+}
+
+function brancher() {
+  document.querySelectorAll('.nv').forEach(el => {
+    const nv = nouveautes.find(x => x.id === el.dataset.id);
+    el.querySelector('.nv-tete').addEventListener('click', () => {
+      ouverte = ouverte === nv.id ? null : nv.id; formDemande = null; confirmSuppr = null; store.set('nv_ouverte', ouverte); rendre();
+    });
+    el.querySelectorAll('[data-copier]').forEach(b => b.addEventListener('click', () => {
+      const champ = b.dataset.copier; copier(nv[champ] || '', champ === 'lien' ? 'Lien copié' : 'Texte copié');
+    }));
+    el.querySelectorAll('[data-coche]').forEach(cb => cb.addEventListener('change', () => maj(nv, { [cb.dataset.coche]: cb.checked ? (nv[cb.dataset.coche] || aujourdhui()) : null })));
+    el.querySelectorAll('[data-date]').forEach(i => i.addEventListener('change', () => maj(nv, { [i.dataset.date]: i.value || null })));
+    el.querySelectorAll('[data-act]').forEach(b => b.addEventListener('click', async () => {
+      const a = b.dataset.act;
+      if (a === 'demander') { formDemande = { id: nv.id, element: b.dataset.el }; rendre(); el.ownerDocument.querySelector('.nv[data-id="' + nv.id + '"] .demande textarea')?.focus(); }
+      else if (a === 'voirEmail') { apercuEmail = apercuEmail === nv.id ? null : nv.id; rendre(); }
+      else if (a === 'annuler') { formDemande = null; rendre(); }
+      else if (a === 'envoyer') {
+        const box = b.closest('.demande'), texte = box.querySelector('[data-champ=demande]').value.trim(), element = box.querySelector('[data-champ=element]').value;
+        if (!texte) { toast('Décrivez le changement voulu'); return; }
+        b.disabled = true;
+        const { data, error } = await SB.from('site_nouveautes_demandes').insert({ nouveaute_id: nv.id, element, demande: texte }).select().single();
+        b.disabled = false;
+        if (error) { toast('Demande non enregistrée : ' + error.message); return; }
+        demandes.unshift(data); formDemande = null; toast('Demande enregistrée'); rendre();
+      }
+      else if (a === 'supprimer') { confirmSuppr = nv.id; rendre(); }
+      else if (a === 'supprimerNon') { confirmSuppr = null; rendre(); }
+      else if (a === 'supprimerOui') {
+        b.disabled = true;
+        const { error } = await SB.from('site_nouveautes').delete().eq('id', nv.id);
+        if (error) { b.disabled = false; toast('Suppression impossible : ' + error.message); return; }
+        nouveautes = nouveautes.filter(x => x.id !== nv.id); demandes = demandes.filter(x => x.nouveaute_id !== nv.id);
+        confirmSuppr = null; ouverte = null; toast('Nouveauté supprimée'); rendre();
+      }
+    }));
+    // Le menu « Élément » du formulaire change la demande en cours sans perdre le texte
+    el.querySelector('.demande select')?.addEventListener('change', e => { formDemande.element = e.target.value; });
+  });
+}
+async function maj(nv, champs) {
+  const avant = { ...nv }; Object.assign(nv, champs, { updated_at: new Date().toISOString() }); rendre();
+  const { error } = await SB.from('site_nouveautes').update({ ...champs, updated_at: nv.updated_at }).eq('id', nv.id);
+  if (error) { Object.assign(nv, avant); rendre(); toast('Non enregistré : ' + error.message); }
+}
+$('filtres').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; filtre = b.dataset.f; store.set('nv_filtre', filtre); rendre(); });
+
+function copier(txt, msg) {
+  if (!txt) { toast('Rien à copier'); return; }
+  const fallback = () => { const t = document.createElement('textarea'); t.value = txt; document.body.append(t); t.select();
+    try { document.execCommand('copy'); toast(msg); } catch (e) { toast('Copie impossible : sélectionnez le texte à la main'); } t.remove(); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(() => toast(msg), fallback); else fallback();
+}
+let tt; function toast(m) { const t = $('toast'); t.textContent = m; t.hidden = false; clearTimeout(tt); tt = setTimeout(() => t.hidden = true, 2200); }
+
+demarrer();
+</script>
+</body>
+</html>
