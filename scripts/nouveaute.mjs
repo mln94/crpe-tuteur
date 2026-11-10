@@ -9,7 +9,7 @@
 // Ce que fait le script :
 //   1. images → bucket Supabase public « nouveautes »
 //   2. groupes Facebook → campagne meta_campagnes (les liens par groupe sont générés à l'ouverture de /suivi-publications)
-//   3. email → template + campagne Klaviyo en BROUILLON pour la liste Signup (rien n'est envoyé), lien Klaviyo enregistré
+//   3. email → template + campagne Klaviyo en BROUILLON pour la liste Newsletter (rien n'est envoyé), lien Klaviyo enregistré
 //   4. ligne site_nouveautes (id gardé dans nouveaute.json → les relances du script mettent à jour au lieu de dupliquer)
 // Usage : node scripts/nouveaute.mjs "Ressources/nouveautes/2026-11-10-sujet"
 //         node scripts/nouveaute.mjs --demandes        (liste les demandes de changement en attente)
@@ -21,7 +21,8 @@ import { createClient } from '@supabase/supabase-js';
 
 const sb = createClient(process.env.VITE_SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, { auth: { persistSession: false } });
 const KL = { Authorization: `Klaviyo-API-Key ${process.env.KLAVIYO_PRIVATE_API_KEY}`, revision: '2026-04-15', 'Content-Type': 'application/vnd.api+json', accept: 'application/vnd.api+json' };
-const LISTE_SIGNUP = 'SgJQyM';
+// Audience des emails nouveautés : les abonnés à la newsletter (consentement marketing), modifiable par nouveaute.json → email.liste
+const LISTE_NEWSLETTER = 'U97rGQ';
 const EXPEDITEUR = { from_email: 'contact@passcrpe.fr', from_label: 'PassCRPE' };
 const APP = t => ['feature_passcrpe', 'feature_quizcrpe', 'design'].includes(t);
 const ELEMENTS = { insta_texte: 'Légende Instagram', insta_image: 'Image Instagram (classique)', insta_capture: 'Image Instagram (capture de l\'app)', facebook_texte: 'Texte Facebook', facebook_image: 'Image Facebook', groupes_message: 'Message des groupes', email: 'Email' };
@@ -114,11 +115,12 @@ if (APP(nv.type) && nv.email && !dejaEnvoyee && fs.existsSync(path.join(dossier,
     await klaviyo('PATCH', `campaign-messages/${messageId}/`, { data: { type: 'campaign-message', id: messageId, attributes: { definition: { channel: 'email', label: nomCampagne, content: contenu } } } });
   } else {
     const c = await klaviyo('POST', 'campaigns/', { data: { type: 'campaign', attributes: {
-      name: nomCampagne, audiences: { included: [LISTE_SIGNUP], excluded: [] },
+      name: nomCampagne, audiences: { included: [nv.email.liste || LISTE_NEWSLETTER], excluded: [] },
       send_strategy: { method: 'immediate' },
       'campaign-messages': { data: [{ type: 'campaign-message', attributes: { definition: { channel: 'email', label: nomCampagne, content: contenu } } }] },
     } } });
     campagneId = c.data.id; messageId = c.data.relationships['campaign-messages'].data[0].id;
+    ligne.email_envoye_le = null; // nouvelle campagne : pas encore envoyée
     nv.klaviyo_campaign_id = campagneId;
   }
   await klaviyo('POST', 'campaign-message-assign-template/', { data: { type: 'campaign-message', id: messageId, relationships: { template: { data: { type: 'template', id: tpl.data.id } } } } });

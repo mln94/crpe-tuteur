@@ -17,7 +17,7 @@ Script : `node scripts/nouveaute.mjs <dossier>` (images → bucket `nouveautes`,
 | type | Instagram | Groupes Facebook | Email Klaviyo |
 |---|---|---|---|
 | `article`, `ressource` | oui | oui | **non** |
-| `feature_passcrpe`, `feature_quizcrpe`, `design` | oui | oui | oui (brouillon, liste Signup `SgJQyM`) |
+| `feature_passcrpe`, `feature_quizcrpe`, `design` | oui | oui | oui (brouillon, liste Newsletter `U97rGQ` : les abonnés ; la liste Signup contient des comptes non consentants, ignorés par Klaviyo) |
 
 Pas de publication sur la page Facebook (retirée du dashboard le 10/11/2026 à la demande de l'utilisateur).
 

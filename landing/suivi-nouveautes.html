@@ -152,7 +152,7 @@ button:disabled{opacity:.6;cursor:default}
       <div class="liste" id="liste"></div>
       <p class="vide" id="aucune" hidden>Aucune nouveauté pour l'instant. Après chaque modification du site, Claude ajoute ici la nouveauté et ses publications.</p>
     </section>
-    <p class="foot">Articles et ressources : Instagram et groupes Facebook. Fonctionnalités et design des applications : en plus, un email Klaviyo préparé en brouillon pour la liste « Signup », à vérifier puis envoyer depuis Klaviyo. Les demandes de changement sont enregistrées ici ; dites à Claude « traite les demandes du suivi des nouveautés » pour qu'il les applique.</p>
+    <p class="foot">Articles et ressources : Instagram et groupes Facebook. Fonctionnalités et design des applications : en plus, un email Klaviyo préparé en brouillon pour la liste « Newsletter » (les inscrits qui ont accepté les emails), à vérifier puis envoyer depuis Klaviyo. Les demandes de changement sont enregistrées ici ; dites à Claude « traite les demandes du suivi des nouveautés » pour qu'il les applique.</p>
   </div>
 </div>
 <div class="toast" id="toast" hidden></div>
@@ -299,12 +299,12 @@ function corps(nv) {
 
   // Email Klaviyo (applications seulement)
   if (APP(nv.type)) {
-    h += '<section class="canal' + (nv.email_envoye_le ? ' fini' : '') + '"><div class="canal-tete"><h3>✉️ Email Klaviyo (liste Signup)</h3>' + datePublie(nv, 'email_envoye_le', 'Envoyé le') + '</div>' +
+    h += '<section class="canal' + (nv.email_envoye_le ? ' fini' : '') + '"><div class="canal-tete"><h3>✉️ Email Klaviyo (liste Newsletter)</h3>' + datePublie(nv, 'email_envoye_le', 'Envoyé le') + '</div>' +
       (nv.email_objet ? '<p style="margin:0"><b>Objet :</b> ' + esc(nv.email_objet) + '</p>' : '') +
       '<div class="ligne">' + (nv.klaviyo_url ? '<a class="btn primary" href="' + esc(nv.klaviyo_url) + '" target="_blank" rel="noopener">Ouvrir la campagne dans Klaviyo ↗</a>' : '<span class="muet">Campagne Klaviyo pas encore créée.</span>') +
       (nv.email_html ? '<button type="button" data-act="voirEmail">' + (apercuEmail === nv.id ? '▲ Masquer l\'email' : '👁 Voir l\'email') + '</button>' : '') + boutonDemande(nv, 'email') + '</div>' +
       (apercuEmail === nv.id ? '<iframe class="apercu" sandbox="allow-popups allow-popups-to-escape-sandbox" title="Aperçu de l\'email" srcdoc="' + esc(nv.email_html) + '"></iframe>' : '') +
-      '<p class="muet">Créée en brouillon pour tous les inscrits (liste Signup) : vérifiez-la dans Klaviyo, puis cliquez sur Envoyer.</p>' +
+      '<p class="muet">Créée en brouillon pour les abonnés à la newsletter (seuls les inscrits qui ont accepté les emails peuvent la recevoir) : vérifiez-la dans Klaviyo, puis cliquez sur Envoyer.</p>' +
       formulaireDemande(nv, ['email']) + listeDemandes(nv, ['email']) + '</section>';
   }
 
