@@ -2082,6 +2082,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       if (error) {
         window.dataLayer.push({ event: 'sign_up_error', error_reason: error.message });
         showAuthMessage(translateSupabaseError(error.message), 'error');
+      } else if (signUpData?.user && Array.isArray(signUpData.user.identities) && signUpData.user.identities.length === 0) {
+        // E-mail déjà inscrit (quel que soit le site d'origine) : Supabase ne crée pas de compte et renvoie un compte factice.
+        // Pas de réinscription : on invite à se connecter, et rien n'est envoyé à Klaviyo
+        window.dataLayer.push({ event: 'sign_up_error', error_reason: 'compte_existant' });
+        showAuthMessage('Un compte existe déjà avec cette adresse e-mail. Connectez-vous avec votre mot de passe, ou cliquez sur « Mot de passe oublié ».', 'error');
       } else {
         window.dataLayer.push({ event: 'sign_up_' + (window.SIGNUP_PARCOURS||(location.pathname.indexOf('/quiz')===0?'quizcrpe':'passcrpe')), method: 'email' });
         // Klaviyo + Supabase profil — fire and forget
