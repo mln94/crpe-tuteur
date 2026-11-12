@@ -6,7 +6,7 @@ Usage : python3 scripts/quiz/construire.py <matiere> [<matiere>...] > lignes.jso
   (variable d'environnement PROGRAMME_JSON) ;
 - autres matières : référentiel.py (table programme_cycle4_disciplines).
 """
-import collections, json, os, re, sys
+import collections, hashlib, json, os, re, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from referentiel import R, EMC_NOTIONS, SVT_NOTIONS, PC_NOTIONS, TECH_NOTIONS, ARTS_NOTIONS, ANGLAIS_NOTIONS
 
@@ -37,8 +37,18 @@ def ref_fm(ref, obj, prog):
         objectif = objectif.split(' - ')[0]
     return dict(classe=r['classe'], theme=r['thematique'], sous_theme=r['sous_categorie'], objectif=objectif)
 
+# Explications enrichies (facultatif) : explications_<matiere>.json, par clé de question (notion, énoncé, choix).
+# Elles remplacent l'explication écrite dans les fichiers sources ; supprimer le fichier rétablit celles d'origine.
+def cle_question(notion, v):
+    return hashlib.sha1(json.dumps([notion, v['question'], v['choix']], ensure_ascii=False).encode()).hexdigest()[:10]
+
+def explications(matiere):
+    f = os.path.join(os.path.dirname(os.path.abspath(__file__)), f'explications_{matiere}.json')
+    return {k: v['explication'] for k, v in json.load(open(f, encoding='utf-8')).items()} if os.path.exists(f) else {}
+
 def lignes(matiere, prog=None):
     rows, vues, niveaux = [], set(), collections.Counter()
+    expl = explications(matiere)
     for mod in FICHIERS[matiere]:
         for n in __import__(mod).NOTIONS:
             assert n['notion'] not in vues, n['notion']; vues.add(n['notion'])
@@ -63,7 +73,7 @@ def lignes(matiere, prog=None):
                 if v['type'] == 'qcm': assert v['reponse'] in v['choix'] and len(set(v['choix'])) == len(v['choix']), v['question']
                 niveaux[n['niveau']] += 1
                 rows.append(dict(matiere=matiere, ordre=len(rows) + 1, question=v['question'], choix=v['choix'], reponse=v['reponse'],
-                                 explication=v['explication'], niveau=n['niveau'], type=v['type'], notion=n['notion'],
+                                 explication=expl.get(cle_question(n['notion'], v), v['explication']), niveau=n['niveau'], type=v['type'], notion=n['notion'],
                                  programme_ref=ref + ('' if obj is None else f".{obj}"), tolerance=v.get('tolerance', 0), **meta))
     print(matiere, dict(niveaux), len(rows), 'questions,', len(vues), 'notions', file=sys.stderr)
     return rows
