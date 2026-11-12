@@ -980,6 +980,56 @@
     .qz-page-tete p { font-size: 15px; line-height: 1.6; margin-bottom: 18px; }
     .qz-stats-series { margin-top: 0; }
     .qz-total-q { margin: 6px 0 14px; }
+    /* Mes stats · Par matière */
+    .mm { display: flex; flex-direction: column; gap: 14px; }
+    .mm-tete { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .mm-tete h2 { margin: 0 0 4px; font-size: 20px; } .mm-tete p { margin: 0; font-size: 13px; color: var(--gray-600); }
+    .mm-nav { display: flex; align-items: center; gap: 6px; border: 1px solid var(--gray-200); border-radius: 12px; padding: 4px; }
+    .mm-nav span { min-width: 128px; text-align: center; font-size: 14px; font-weight: 700; }
+    .mm-nav button { width: 36px; height: 36px; border: 0; border-radius: 9px; background: #fff7ed; color: #c2410c; font: inherit; font-size: 20px; font-weight: 700; cursor: pointer; }
+    .mm-nav button:disabled { opacity: .35; cursor: default; }
+    .mm-vide { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 36px 16px; border: 1px dashed var(--gray-300, #d1d5db); border-radius: 14px; text-align: center; }
+    .mm-vide p { margin: 0; color: var(--gray-600); } .mm-vide b { color: var(--gray-900); font-size: 16px; } .mm-vide .quiz-btn { margin-top: 8px; }
+    .mm-legende { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--gray-600); }
+    .mm-legende span { display: inline-flex; align-items: center; gap: 6px; } .mm-legende i { width: 12px; height: 12px; border-radius: 3px; }
+    .mm-legende i.mm-l-prec { width: 2px; height: 14px; border-radius: 1px; background: #4b5563; }
+    .mm-graphe { display: flex; flex-direction: column; }
+    .mm-ligne { display: grid; grid-template-columns: 150px minmax(0, 1fr) 116px; column-gap: 12px; align-items: center; width: 100%; padding: 0; border: 0; background: none; font: inherit; color: inherit; text-align: left; }
+    button.mm-ligne { min-height: 44px; cursor: pointer; }
+    button.mm-ligne:hover .mm-piste, button.mm-ligne:focus-visible .mm-piste, button.mm-ligne.on .mm-piste { background: #f8fafc; }
+    button.mm-ligne:focus-visible { outline: 2px solid #f97316; outline-offset: 2px; border-radius: 6px; }
+    .mm-nom { font-size: 14px; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .mm-piste { position: relative; display: block; height: 44px; border-left: 1px solid #d1d5db; border-radius: 0 6px 6px 0; }
+    .mm-g { position: absolute; top: 0; bottom: 0; border-left: 1px solid #f1f5f9; }
+    .mm-barre { position: absolute; left: 0; top: 13px; height: 18px; border-radius: 0 4px 4px 0; }
+    .mm-obj { position: absolute; top: 0; bottom: 0; border-left: 2px dashed #6b7280; }
+    .mm-prec { position: absolute; top: 8px; height: 28px; width: 2px; margin-left: -1px; background: #4b5563; border-radius: 1px; box-shadow: 0 0 0 2px #fff; }
+    .mm-bulle { display: none; position: absolute; top: 40px; z-index: 5; width: 210px; margin-left: -105px; padding: 10px 12px; background: #111827; color: #fff; border-radius: 10px; font-size: 12px; line-height: 1.5; box-shadow: 0 8px 24px rgba(17,24,39,.18); flex-direction: column; gap: 2px; }
+    .mm-bulle b { font-size: 13px; }
+    button.mm-ligne:hover .mm-bulle, button.mm-ligne:focus-visible .mm-bulle { display: flex; }
+    .mm-val { display: flex; align-items: baseline; gap: 8px; font-variant-numeric: tabular-nums; }
+    .mm-val b { font-size: 15px; font-weight: 800; color: var(--gray-900); }
+    .mm-val em { font-style: normal; font-size: 12px; font-weight: 700; color: var(--gray-600); } .mm-val em.mieux { color: #15803d; } .mm-val em.moins { color: #b91c1c; }
+    .mm-pas { font-size: 12px; font-weight: 600; color: var(--gray-600); line-height: 1.25; }
+    .mm-haut, .mm-axe { height: 22px; } .mm-haut .mm-piste, .mm-axe .mm-piste { height: 22px; border-left: 0; }
+    .mm-obj-lbl { position: absolute; left: 60%; bottom: 2px; transform: translateX(-50%); font-size: 11px; font-weight: 700; color: var(--gray-600); white-space: nowrap; }
+    .mm-axe .mm-piste span { position: absolute; transform: translateX(-50%); font-size: 11px; color: var(--gray-600); font-variant-numeric: tabular-nums; }
+    .mm-note { margin: 0; font-size: 12px; color: var(--gray-600); }
+    .mm-detail { display: flex; flex-direction: column; gap: 8px; padding: 16px; border: 1px solid #fed7aa; background: #fffbf5; border-radius: 14px; }
+    .mm-detail-tete { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+    .mm-detail-tete div { display: flex; flex-direction: column; gap: 2px; min-width: 0; } .mm-detail-tete span { font-size: 12px; color: var(--gray-600); }
+    .mm-detail-tete .quiz-btn { margin: 0; }
+    .mm-d-ligne { display: grid; grid-template-columns: 200px minmax(0, 1fr) 120px; column-gap: 10px; align-items: center; min-height: 30px; font-size: 13px; }
+    .mm-d-nom { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .mm-d-piste { position: relative; height: 10px; background: #f1f5f9; border-radius: 4px; overflow: hidden; } .mm-d-piste i { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 0 4px 4px 0; }
+    .mm-d-val { font-size: 12px; color: var(--gray-600); white-space: nowrap; font-variant-numeric: tabular-nums; } .mm-d-val b { color: var(--gray-900); }
+    .mm-travailler { align-self: flex-start; font-weight: 700; }
+    @media (max-width: 560px) {
+      .mm-ligne { grid-template-columns: 88px minmax(0, 1fr) 64px; }
+      .mm-val { flex-direction: column; align-items: flex-start; gap: 0; } .mm-val b { font-size: 13px; }
+      .mm-d-ligne { grid-template-columns: 110px minmax(0, 1fr) 92px; }
+      .sg-bascule button { padding: 8px 10px; font-size: 13px; }
+    }
     .sg-bascule { display: inline-flex; gap: 4px; padding: 4px; margin: 0 0 14px; border-radius: 999px; background: var(--gray-100); }
     .sg-bascule button { border: 0; background: none; padding: 8px 16px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 800; color: var(--gray-600); cursor: pointer; }
     .sg-bascule button[aria-pressed="true"] { background: #fff; color: #c2410c; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
@@ -2626,7 +2676,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   var filtreSeries = '', filtreNiveau = '', vueSeries = 'liste', modeGraph = 'serie', etapeSeries = 'admissibilite';
   // Étape d'une série : l'admission (quiz de l'entretien, à venir) aura ses propres matières « admission… »
   function etapeSerie(x) { return /^admission/.test(x.matiere || '') ? 'admission' : 'admissibilite'; }
-  try { vueSeries = localStorage.getItem('qz_vue_series') || 'liste'; modeGraph = localStorage.getItem('qz_mode_graph') || 'serie'; } catch (e) {}
+  try { vueSeries = localStorage.getItem('qz_vue_series') || 'liste'; if (['liste', 'graph', 'matieres'].indexOf(vueSeries) < 0) vueSeries = 'liste'; modeGraph = localStorage.getItem('qz_mode_graph') || 'serie'; } catch (e) {}
   function garderSerie(mat, niveau, score, total, essai, recap) {
     return SB.auth.getSession().then(function (r) {
       var u = r.data.session && r.data.session.user; if (!u) return;
@@ -2670,14 +2720,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       MATIERES.filter(function (m) { return faites[m[0]]; }).map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === filtreSeries ? ' selected' : '') + '>' + esc(m[1]) + '</option>'; }).join('') + '</select></div>' +
       '<div class="qz-barre-champ"><label for="series-niv">Niveau</label><select id="series-niv" class="quiz-select"><option value="">Tous les niveaux</option>' +
       Object.keys(NIVEAUX).map(function (k) { return '<option value="' + k + '"' + (k === filtreNiveau ? ' selected' : '') + '>' + NIVEAUX[k] + '</option>'; }).join('') + '</select></div></div>' +
-      '<div class="sg-bascule" role="group" aria-label="Affichage"><button type="button" data-vs="liste" aria-pressed="' + (vueSeries !== 'graph') + '">📋 Notes</button><button type="button" data-vs="graph" aria-pressed="' + (vueSeries === 'graph') + '">📈 Graphique</button></div>' +
-      (vueSeries === 'graph' ? graphSeries(liste) : '') +
-      (vueSeries === 'graph' ? '' : '<div class="stats qz-stats-series"><div class="stat"><b>' + nb + '</b><span>série' + (nb > 1 ? 's' : '') + ' terminée' + (nb > 1 ? 's' : '') + '</span></div>' +
+      '<div class="sg-bascule" role="group" aria-label="Affichage"><button type="button" data-vs="liste" aria-pressed="' + (vueSeries === 'liste') + '">📋 Notes</button><button type="button" data-vs="graph" aria-pressed="' + (vueSeries === 'graph') + '">📈 Graphique</button><button type="button" data-vs="matieres" aria-pressed="' + (vueSeries === 'matieres') + '">📊 Par matière</button></div>' +
+      (vueSeries === 'graph' ? graphSeries(liste) : vueSeries === 'matieres' ? graphMatieres(parEtape.filter(function (x) { return !filtreNiveau || (x.niveau || 'facile') === filtreNiveau; })) : '') +
+      (vueSeries !== 'liste' ? '' : '<div class="stats qz-stats-series"><div class="stat"><b>' + nb + '</b><span>série' + (nb > 1 ? 's' : '') + ' terminée' + (nb > 1 ? 's' : '') + '</span></div>' +
       '<div class="stat"><b>' + (nb ? noteTxt(Math.round(somme / nb * 2) / 2) : '–') + ' / 20</b><span>note moyenne</span></div>' +
       '<div class="stat"><b>' + (best === null ? '–' : noteTxt(best)) + ' / 20</b><span>meilleure note</span></div></div>') +
-      '<p class="qz-note qz-total-q">' + questions + ' questions répondues' + (filtreSeries ? ' en ' + esc(label(filtreSeries)) : '') + (filtreNiveau ? ' · niveau ' + NIVEAUX[filtreNiveau].toLowerCase() : '') + (vueSeries === 'graph' ? '.' : '. Touchez une série pour voir le détail.') + '</p>' +
+      '<p class="qz-note qz-total-q">' + questions + ' questions répondues' + (filtreSeries ? ' en ' + esc(label(filtreSeries)) : '') + (filtreNiveau ? ' · niveau ' + NIVEAUX[filtreNiveau].toLowerCase() : '') + (vueSeries !== 'liste' ? '.' : '. Touchez une série pour voir le détail.') + '</p>' +
       (nb ? '' : '<div class="quiz-card"><p>Aucune série avec ces filtres.</p></div>') +
-      (vueSeries === 'graph' ? '' : '<div class="qz-series">' + liste.map(function (x) {
+      (vueSeries !== 'liste' ? '' : '<div class="qz-series">' + liste.map(function (x) {
         var n = note20(x), cl = n >= 16 ? 'tres-bien' : n >= 12 ? 'bien' : n >= 8 ? 'moyen' : 'faible', d = new Date(x.created_at);
         var sc = ((x.details || [])[0] || {}).seance;
         var mode = sc ? '<span class="qz-serie-mode en-seance">▶️ ' + (sc === 'bonus' ? 'Séance bonus' : 'Séance ' + sc + ' / ' + SEANCE_PAR_JOUR) + '</span>' : '<span class="qz-serie-mode libre">Entraînement libre</span>';
@@ -2699,10 +2749,86 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     root.querySelectorAll('[data-gm]').forEach(function (b) { b.addEventListener('click', function () {
       modeGraph = b.dataset.gm; try { localStorage.setItem('qz_mode_graph', modeGraph); } catch (e) {} afficherSeries(toutes);
     }); });
+    root.querySelectorAll('[data-mm-sem]').forEach(function (b) { b.addEventListener('click', function () { mmSem += +b.dataset.mmSem; mmDetail = null; afficherSeries(toutes); }); });
+    root.querySelectorAll('[data-mm-mat]').forEach(function (b) { b.addEventListener('click', function () {
+      mmDetail = mmDetail === b.dataset.mmMat ? null : b.dataset.mmMat; afficherSeries(toutes);
+      var dt = root.querySelector('.mm-detail'); if (dt) dt.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }); });
+    var mf = root.querySelector('[data-mm-fermer]'); if (mf) mf.addEventListener('click', function () { mmDetail = null; afficherSeries(toutes); });
     root.querySelectorAll('[data-vs]').forEach(function (b) { b.addEventListener('click', function () {
       vueSeries = b.dataset.vs; try { localStorage.setItem('qz_vue_series', vueSeries); } catch (e) {} afficherSeries(toutes);
     }); });
     activerGraph();
+  }
+  // ── Mes stats · Par matière : moyenne de la semaine (lundi → dimanche) par matière, en barres horizontales ──
+  // Moyenne = bonnes réponses ÷ questions × 20, sur les séries de la semaine ; moins de MM_MIN réponses : pas assez de données.
+  // Repère : la moyenne de la semaine précédente, et l'écart. Clic sur une barre : le détail de la semaine par thème.
+  var MM_MIN = 5, MM_OBJ = 12, mmSem = 0, mmDetail = null;
+  var MM_COURT = { francais: 'Français', mathematiques: 'Maths', histoire_geographie: 'Histoire-géo', emc: 'EMC', svt: 'SVT', physique_chimie: 'Physique-chimie', technologie: 'Techno', arts: 'Arts', anglais: 'Anglais' };
+  function mmNom(m) { return MM_COURT[m] || label(m); }
+  function mmLundi(t) { var d = new Date(t); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return d; }
+  function mmCouleur(v) { return v < 8 ? '#dc2626' : v <= MM_OBJ ? '#f97316' : '#15803d'; }
+  function mmFmt(v) { return (Math.round(v * 10) / 10).toFixed(1).replace('.', ','); }
+  // Séries d'une semaine (décalage en semaines par rapport à la semaine en cours), par matière
+  function mmSemaine(series, decalage) {
+    var debut = mmLundi(Date.now()); debut.setDate(debut.getDate() + 7 * decalage);
+    var fin = new Date(debut); fin.setDate(fin.getDate() + 7);
+    var parMat = {};
+    series.forEach(function (x) {
+      var t = new Date(x.created_at); if (t < debut || t >= fin || !x.total) return;
+      var m = parMat[x.matiere] = parMat[x.matiere] || { matiere: x.matiere, score: 0, total: 0, series: [] };
+      m.score += x.score; m.total += x.total; m.series.push(x);
+    });
+    Object.keys(parMat).forEach(function (k) { var m = parMat[k]; m.moyenne = m.score / m.total * 20; m.assez = m.total >= MM_MIN; });
+    return { debut: debut, parMat: parMat };
+  }
+  function graphMatieres(series) {
+    var plusAncienne = series.reduce(function (a, x) { var t = new Date(x.created_at).getTime(); return Math.min(a, t); }, Date.now());
+    var minSem = -Math.round((mmLundi(Date.now()) - mmLundi(plusAncienne)) / (7 * 864e5));
+    if (mmSem > 0) mmSem = 0; if (mmSem < minSem) mmSem = minSem;
+    var S = mmSemaine(series, mmSem), P = mmSemaine(series, mmSem - 1);
+    var libelle = 'Semaine du ' + S.debut.getDate() + ' ' + S.debut.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '');
+    var h = '<div class="quiz-card mm"><div class="mm-tete"><div><h2>Moyenne par matière</h2><p>Note moyenne sur 20 des réponses de la semaine, du lundi au dimanche</p></div>' +
+      '<div class="mm-nav"><button type="button" data-mm-sem="-1" aria-label="Semaine précédente"' + (mmSem <= minSem ? ' disabled' : '') + '>‹</button><span>' + libelle + '</span>' +
+      '<button type="button" data-mm-sem="1" aria-label="Semaine suivante"' + (mmSem >= 0 ? ' disabled' : '') + '>›</button></div></div>';
+    var mats = Object.keys(S.parMat).map(function (k) { return S.parMat[k]; });
+    if (!mats.length) return h + '<div class="mm-vide"><p><b>Aucune révision cette semaine</b></p><p>Lance une séance pour voir apparaître tes moyennes.</p><a class="quiz-btn" href="/quizapp?vue=seances">Commencer une session</a></div></div>';
+    // Points faibles en haut ; les matières sans assez de données à la fin
+    mats.sort(function (a, b) { return a.assez === b.assez ? (a.assez ? a.moyenne - b.moyenne : 0) : (a.assez ? -1 : 1); });
+    h += '<div class="mm-legende"><span><i style="background:#dc2626"></i>Moins de 8</span><span><i style="background:#f97316"></i>De 8 à 12</span><span><i style="background:#15803d"></i>Plus de 12</span><span><i class="mm-l-prec"></i>Semaine précédente</span></div>' +
+      '<div class="mm-graphe"><div class="mm-ligne mm-haut"><span></span><span class="mm-piste"><span class="mm-obj-lbl">Objectif ' + MM_OBJ + '</span></span><span></span></div>';
+    h += mats.map(function (m) {
+      var p = P.parMat[m.matiere], pOk = p && p.assez, ecart = m.assez && pOk ? Math.round((m.moyenne - p.moyenne) * 10) / 10 : null;
+      var ecTxt = ecart === null ? '' : (ecart > 0 ? '+' : ecart < 0 ? '−' : '±') + mmFmt(Math.abs(ecart));
+      var fin = m.assez ? m.moyenne / 20 * 100 : 100, bulleG = Math.min(Math.max(m.assez ? fin : 50, 28), 72);
+      var bulle = '<b>' + esc(label(m.matiere)) + '</b><span>' + (m.assez ? 'Moyenne : ' + mmFmt(m.moyenne) + ' / 20' : 'Moins de ' + MM_MIN + ' réponses : pas assez de données') + '</span>' +
+        '<span>' + pluriel(m.total, 'réponse') + ' cette semaine</span><span>' + (ecart === null ? 'Pas de comparaison avec la semaine précédente' : 'Écart avec la semaine précédente : ' + ecTxt) + '</span>';
+      return '<button type="button" class="mm-ligne' + (mmDetail === m.matiere ? ' on' : '') + '" data-mm-mat="' + m.matiere + '" aria-label="' + esc(label(m.matiere)) + ' : ' + (m.assez ? mmFmt(m.moyenne) + ' sur 20' : 'pas assez de données') + ', ' + pluriel(m.total, 'réponse') + '. Voir le détail.">' +
+        '<span class="mm-nom" title="' + esc(label(m.matiere)) + '">' + esc(mmNom(m.matiere)) + '</span>' +
+        '<span class="mm-piste"><span class="mm-g" style="left:25%"></span><span class="mm-g" style="left:50%"></span><span class="mm-g" style="left:75%"></span><span class="mm-g" style="left:100%"></span>' +
+          '<span class="mm-barre" style="width:' + fin + '%;background:' + (m.assez ? mmCouleur(m.moyenne) : '#e5e7eb') + '"></span>' +
+          '<span class="mm-obj" style="left:' + (MM_OBJ / 20 * 100) + '%"></span>' +
+          (m.assez && pOk ? '<span class="mm-prec" style="left:' + (p.moyenne / 20 * 100) + '%"></span>' : '') +
+          '<span class="mm-bulle" role="tooltip" style="left:' + bulleG + '%">' + bulle + '</span></span>' +
+        '<span class="mm-val">' + (m.assez ? '<b>' + mmFmt(m.moyenne) + '</b>' + (ecart !== null ? '<em class="' + (ecart > 0 ? 'mieux' : ecart < 0 ? 'moins' : '') + '">' + ecTxt + '</em>' : '') : '<span class="mm-pas">Pas assez de données</span>') + '</span></button>';
+    }).join('');
+    h += '<div class="mm-ligne mm-axe"><span></span><span class="mm-piste">' + [0, 5, 10, 15, 20].map(function (v) { return '<span style="left:' + (v / 20 * 100) + '%">' + v + '</span>'; }).join('') + '</span><span></span></div></div>' +
+      '<p class="mm-note">Barres triées de la note la plus faible à la plus forte. Survole une barre pour le détail, clique pour voir les thèmes de la semaine.</p>';
+    // Détail de la matière choisie : note de la semaine par thème
+    var md = mmDetail && S.parMat[mmDetail];
+    if (md) {
+      var th = {}, ordre = [];
+      md.series.forEach(function (x) { (x.details || []).forEach(function (q) { var t = q.theme || 'Autres questions'; if (!th[t]) { th[t] = { nom: t, n: 0, ok: 0 }; ordre.push(t); } th[t].n++; if (q.ok) th[t].ok++; }); });
+      var lignes = ordre.map(function (t) { return th[t]; }).sort(function (a, b) { return a.ok / a.n - b.ok / b.n; });
+      h += '<div class="mm-detail"><div class="mm-detail-tete"><div><b>' + esc(label(md.matiere)) + ' · détail par thème</b><span>' + libelle + ' · ' + (md.assez ? 'moyenne ' + mmFmt(md.moyenne) + ' / 20' : 'moyenne non calculée') + ' sur ' + pluriel(md.total, 'réponse') + '</span></div>' +
+        '<button type="button" class="quiz-btn ghost" data-mm-fermer>Fermer</button></div>' +
+        lignes.map(function (t) {
+          var v = t.ok / t.n * 20, nom = groupe(t.nom) ? groupe(t.nom).court : t.nom;
+          return '<div class="mm-d-ligne" title="' + esc(t.nom) + '"><span class="mm-d-nom">' + esc(nom) + '</span><span class="mm-d-piste"><i style="width:' + (v / 20 * 100) + '%;background:' + mmCouleur(v) + '"></i></span><span class="mm-d-val"><b>' + mmFmt(v) + '</b> / 20 · ' + t.n + ' q.</span></div>';
+        }).join('') +
+        '<a class="quiz-link mm-travailler" href="/quizapp?vue=matiere&amp;m=' + encodeURIComponent(md.matiere) + '">Travailler cette matière →</a></div>';
+    }
+    return h + '</div>';
   }
   function lierEtapes(toutes) {
     root.querySelectorAll('[data-se]').forEach(function (b) { b.addEventListener('click', function () {
