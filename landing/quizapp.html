@@ -2681,7 +2681,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // Les séries enregistrées avant le suivi des séances (12 novembre 2026, 16 h) n'ont pas l'information : mode inconnu, sans étiquette.
   var SUIVI_SEANCES = Date.parse('2026-11-12T15:00:00Z');
   function modeSerie(x) { var sc = ((x.details || [])[0] || {}).seance; return sc ? 'seance' : new Date(x.created_at).getTime() >= SUIVI_SEANCES ? 'libre' : 'inconnu'; }
-  var filtreMode = '';
+  var filtreMode = '', filtrePeriode = '';
+  // Période des notes : depuis minuit, le lundi, le 1er du mois, ou les 3 derniers mois (vide : tout)
+  var PERIODES = [['', 'Tout'], ['jour', 'Aujourd’hui'], ['semaine', 'Cette semaine'], ['mois', 'Ce mois-ci'], ['3mois', '3 derniers mois']];
+  function debutPeriode(k) {
+    var d = new Date(); d.setHours(0, 0, 0, 0);
+    if (k === 'semaine') d.setDate(d.getDate() - (d.getDay() + 6) % 7);
+    else if (k === 'mois') d.setDate(1);
+    else if (k === '3mois') d.setMonth(d.getMonth() - 3);
+    else if (k !== 'jour') return 0;
+    return d.getTime();
+  }
   var filtreSeries = '', filtreNiveau = '', vueSeries = 'liste', modeGraph = 'serie', etapeSeries = 'admissibilite';
   // Étape d'une série : l'admission (quiz de l'entretien, à venir) aura ses propres matières « admission… »
   function etapeSerie(x) { return /^admission/.test(x.matiere || '') ? 'admission' : 'admissibilite'; }
@@ -2707,7 +2717,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function afficherSeries(toutes) {
     var parEtape = toutes.filter(function (x) { return etapeSerie(x) === etapeSeries; });
     var okMode = function (x) { return !filtreMode || modeSerie(x) === filtreMode; };
-    var liste = parEtape.filter(function (x) { return (!filtreSeries || x.matiere === filtreSeries) && (!filtreNiveau || (x.niveau || 'facile') === filtreNiveau) && okMode(x); });
+    var depP = debutPeriode(filtrePeriode);
+    var liste = parEtape.filter(function (x) { return (!filtreSeries || x.matiere === filtreSeries) && (!filtreNiveau || (x.niveau || 'facile') === filtreNiveau) && okMode(x) && new Date(x.created_at).getTime() >= depP; });
     var nb = liste.length, somme = 0, questions = 0, best = null, faites = {};
     liste.forEach(function (x) { var n = note20(x); somme += n; questions += x.total; if (best === null || n > best) best = n; });
     toutes.forEach(function (x) { faites[x.matiere] = true; });
@@ -2730,14 +2741,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       MATIERES.filter(function (m) { return faites[m[0]]; }).map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === filtreSeries ? ' selected' : '') + '>' + esc(m[1]) + '</option>'; }).join('') + '</select></div>' +
       '<div class="qz-barre-champ"><label for="series-niv">Niveau</label><select id="series-niv" class="quiz-select"><option value="">Tous les niveaux</option>' +
       Object.keys(NIVEAUX).map(function (k) { return '<option value="' + k + '"' + (k === filtreNiveau ? ' selected' : '') + '>' + NIVEAUX[k] + '</option>'; }).join('') + '</select></div>' +
+      (vueSeries === 'matieres' ? '' : '<div class="qz-barre-champ"><label for="series-periode">Période</label><select id="series-periode" class="quiz-select">' +
+        PERIODES.map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === filtrePeriode ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></div>') +
       '<div class="qz-barre-champ"><label for="series-mode">Mode</label><select id="series-mode" class="quiz-select">' +
-      [['', 'Séances et entraînement libre'], ['seance', 'En séance'], ['libre', 'Entraînement libre']].map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === filtreMode ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></div></div>' +
+      [['', 'Tous'], ['seance', 'En séance'], ['libre', 'Entraînement libre']].map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === filtreMode ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></div></div>' +
       '<div class="sg-bascule" role="group" aria-label="Affichage"><button type="button" data-vs="liste" aria-pressed="' + (vueSeries === 'liste') + '">📋 Notes</button><button type="button" data-vs="graph" aria-pressed="' + (vueSeries === 'graph') + '">📈 Graphique</button><button type="button" data-vs="matieres" aria-pressed="' + (vueSeries === 'matieres') + '">📊 Par matière</button></div>' +
       (vueSeries === 'graph' ? graphSeries(liste) : vueSeries === 'matieres' ? graphMatieres(parEtape.filter(function (x) { return (!filtreNiveau || (x.niveau || 'facile') === filtreNiveau) && okMode(x); })) : '') +
       (vueSeries !== 'liste' ? '' : '<div class="stats qz-stats-series"><div class="stat"><b>' + nb + '</b><span>série' + (nb > 1 ? 's' : '') + ' terminée' + (nb > 1 ? 's' : '') + '</span></div>' +
       '<div class="stat"><b>' + (nb ? noteTxt(Math.round(somme / nb * 2) / 2) : '–') + ' / 20</b><span>note moyenne</span></div>' +
       '<div class="stat"><b>' + (best === null ? '–' : noteTxt(best)) + ' / 20</b><span>meilleure note</span></div></div>') +
-      '<p class="qz-note qz-total-q">' + questions + ' questions répondues' + (filtreSeries ? ' en ' + esc(label(filtreSeries)) : '') + (filtreNiveau ? ' · niveau ' + NIVEAUX[filtreNiveau].toLowerCase() : '') + (vueSeries !== 'liste' ? '.' : '. Touchez une série pour voir le détail.') + '</p>' +
+      '<p class="qz-note qz-total-q">' + questions + ' questions répondues' + (filtreSeries ? ' en ' + esc(label(filtreSeries)) : '') + (filtreNiveau ? ' · niveau ' + NIVEAUX[filtreNiveau].toLowerCase() : '') + (filtrePeriode && vueSeries !== 'matieres' ? ' · ' + PERIODES.filter(function (o) { return o[0] === filtrePeriode; })[0][1].toLowerCase() : '') + (vueSeries !== 'liste' ? '.' : '. Touchez une série pour voir le détail.') + '</p>' +
       (nb ? '' : '<div class="quiz-card"><p>Aucune série avec ces filtres.</p></div>') +
       (vueSeries !== 'liste' ? '' : '<div class="qz-series">' + liste.map(function (x) {
         var n = note20(x), cl = n >= 16 ? 'tres-bien' : n >= 12 ? 'bien' : n >= 8 ? 'moyen' : 'faible', d = new Date(x.created_at);
@@ -2757,6 +2770,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     sel.addEventListener('change', function () { filtreSeries = sel.value; afficherSeries(toutes); });
     var sn = document.getElementById('series-niv');
     sn.addEventListener('change', function () { filtreNiveau = sn.value; afficherSeries(toutes); });
+    var spe = document.getElementById('series-periode');
+    if (spe) spe.addEventListener('change', function () { filtrePeriode = spe.value; afficherSeries(toutes); });
     var smo = document.getElementById('series-mode');
     smo.addEventListener('change', function () { filtreMode = smo.value; afficherSeries(toutes); });
     lierEtapes(toutes);
