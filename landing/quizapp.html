@@ -2673,6 +2673,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   // ── Mes séries : historique des séries terminées (table quiz_series) ──
+  // Mode d'une série : faite en séance (numéro ou « bonus » gardé avec ses réponses) ou en entraînement libre.
+  // Les séries enregistrées avant le suivi des séances (12 novembre 2026, 16 h) n'ont pas l'information : mode inconnu, sans étiquette.
+  var SUIVI_SEANCES = Date.parse('2026-11-12T15:00:00Z');
+  function modeSerie(x) { var sc = ((x.details || [])[0] || {}).seance; return sc ? 'seance' : new Date(x.created_at).getTime() >= SUIVI_SEANCES ? 'libre' : 'inconnu'; }
+  var filtreMode = '';
   var filtreSeries = '', filtreNiveau = '', vueSeries = 'liste', modeGraph = 'serie', etapeSeries = 'admissibilite';
   // Étape d'une série : l'admission (quiz de l'entretien, à venir) aura ses propres matières « admission… »
   function etapeSerie(x) { return /^admission/.test(x.matiere || '') ? 'admission' : 'admissibilite'; }
@@ -2697,7 +2702,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
   function afficherSeries(toutes) {
     var parEtape = toutes.filter(function (x) { return etapeSerie(x) === etapeSeries; });
-    var liste = parEtape.filter(function (x) { return (!filtreSeries || x.matiere === filtreSeries) && (!filtreNiveau || (x.niveau || 'facile') === filtreNiveau); });
+    var okMode = function (x) { return !filtreMode || modeSerie(x) === filtreMode; };
+    var liste = parEtape.filter(function (x) { return (!filtreSeries || x.matiere === filtreSeries) && (!filtreNiveau || (x.niveau || 'facile') === filtreNiveau) && okMode(x); });
     var nb = liste.length, somme = 0, questions = 0, best = null, faites = {};
     liste.forEach(function (x) { var n = note20(x); somme += n; questions += x.total; if (best === null || n > best) best = n; });
     toutes.forEach(function (x) { faites[x.matiere] = true; });
@@ -2719,9 +2725,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     html += '<div class="qz-barre"><div class="qz-barre-champ"><label for="series-mat">Matière</label><select id="series-mat" class="quiz-select"><option value="">Toutes les matières</option>' +
       MATIERES.filter(function (m) { return faites[m[0]]; }).map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === filtreSeries ? ' selected' : '') + '>' + esc(m[1]) + '</option>'; }).join('') + '</select></div>' +
       '<div class="qz-barre-champ"><label for="series-niv">Niveau</label><select id="series-niv" class="quiz-select"><option value="">Tous les niveaux</option>' +
-      Object.keys(NIVEAUX).map(function (k) { return '<option value="' + k + '"' + (k === filtreNiveau ? ' selected' : '') + '>' + NIVEAUX[k] + '</option>'; }).join('') + '</select></div></div>' +
+      Object.keys(NIVEAUX).map(function (k) { return '<option value="' + k + '"' + (k === filtreNiveau ? ' selected' : '') + '>' + NIVEAUX[k] + '</option>'; }).join('') + '</select></div>' +
+      '<div class="qz-barre-champ"><label for="series-mode">Mode</label><select id="series-mode" class="quiz-select">' +
+      [['', 'Séances et entraînement libre'], ['seance', 'En séance'], ['libre', 'Entraînement libre']].map(function (o) { return '<option value="' + o[0] + '"' + (o[0] === filtreMode ? ' selected' : '') + '>' + o[1] + '</option>'; }).join('') + '</select></div></div>' +
       '<div class="sg-bascule" role="group" aria-label="Affichage"><button type="button" data-vs="liste" aria-pressed="' + (vueSeries === 'liste') + '">📋 Notes</button><button type="button" data-vs="graph" aria-pressed="' + (vueSeries === 'graph') + '">📈 Graphique</button><button type="button" data-vs="matieres" aria-pressed="' + (vueSeries === 'matieres') + '">📊 Par matière</button></div>' +
-      (vueSeries === 'graph' ? graphSeries(liste) : vueSeries === 'matieres' ? graphMatieres(parEtape.filter(function (x) { return !filtreNiveau || (x.niveau || 'facile') === filtreNiveau; })) : '') +
+      (vueSeries === 'graph' ? graphSeries(liste) : vueSeries === 'matieres' ? graphMatieres(parEtape.filter(function (x) { return (!filtreNiveau || (x.niveau || 'facile') === filtreNiveau) && okMode(x); })) : '') +
       (vueSeries !== 'liste' ? '' : '<div class="stats qz-stats-series"><div class="stat"><b>' + nb + '</b><span>série' + (nb > 1 ? 's' : '') + ' terminée' + (nb > 1 ? 's' : '') + '</span></div>' +
       '<div class="stat"><b>' + (nb ? noteTxt(Math.round(somme / nb * 2) / 2) : '–') + ' / 20</b><span>note moyenne</span></div>' +
       '<div class="stat"><b>' + (best === null ? '–' : noteTxt(best)) + ' / 20</b><span>meilleure note</span></div></div>') +
@@ -2729,8 +2737,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       (nb ? '' : '<div class="quiz-card"><p>Aucune série avec ces filtres.</p></div>') +
       (vueSeries !== 'liste' ? '' : '<div class="qz-series">' + liste.map(function (x) {
         var n = note20(x), cl = n >= 16 ? 'tres-bien' : n >= 12 ? 'bien' : n >= 8 ? 'moyen' : 'faible', d = new Date(x.created_at);
-        var sc = ((x.details || [])[0] || {}).seance;
-        var mode = sc ? '<span class="qz-serie-mode en-seance">▶️ ' + (sc === 'bonus' ? 'Séance bonus' : 'Séance ' + sc + ' / ' + SEANCE_PAR_JOUR) + '</span>' : '<span class="qz-serie-mode libre">Entraînement libre</span>';
+        var sc = ((x.details || [])[0] || {}).seance, md = modeSerie(x);
+        var mode = md === 'seance' ? '<span class="qz-serie-mode en-seance">▶️ ' + (sc === 'bonus' ? 'Séance bonus' : 'Séance ' + sc + ' / ' + SEANCE_PAR_JOUR) + '</span>' : md === 'libre' ? '<span class="qz-serie-mode libre">Entraînement libre</span>' : '';
         return '<details class="qz-serie"><summary><span class="qz-serie-note ' + cl + '">' + noteTxt(n) + '<small>/20</small></span>' +
           '<span class="qz-serie-info"><b>' + esc(label(x.matiere)) + mode + '</b><span>' + NIVEAUX[x.niveau] + ' · ' + x.score + ' / ' + x.total + ' bonnes réponses' + (x.essai ? ' · série d’essai' : '') + '</span>' +
           '<span class="qz-serie-date">' + d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + '</span></span>' +
@@ -2745,6 +2753,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     sel.addEventListener('change', function () { filtreSeries = sel.value; afficherSeries(toutes); });
     var sn = document.getElementById('series-niv');
     sn.addEventListener('change', function () { filtreNiveau = sn.value; afficherSeries(toutes); });
+    var smo = document.getElementById('series-mode');
+    smo.addEventListener('change', function () { filtreMode = smo.value; afficherSeries(toutes); });
     lierEtapes(toutes);
     root.querySelectorAll('[data-gm]').forEach(function (b) { b.addEventListener('click', function () {
       modeGraph = b.dataset.gm; try { localStorage.setItem('qz_mode_graph', modeGraph); } catch (e) {} afficherSeries(toutes);
