@@ -534,6 +534,7 @@
     .pc-h { font-size: 20px; color: var(--gray-900); margin: 34px 0 4px; letter-spacing: -.01em; }
     .pc-sous { color: var(--gray-500); font-size: 14px; margin: 0 0 14px; line-height: 1.5; }
     .pc-ech { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .pc-ech-bloc { margin-bottom: 22px; } .pc-ech-bloc > .pc-h { margin-top: 0; }  /* échéances en tête de page, au-dessus du bandeau */
     .pc-e { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 14px; padding: 13px; }
     .pc-e .j { display: inline-block; font-weight: 900; font-size: 12px; padding: 3px 9px; border-radius: 999px; background: var(--gray-100); color: var(--gray-500); margin-bottom: 8px; }
     .pc-e.proche { border-color: #fed7aa; background: #fff7ed; } .pc-e.proche .j { background: #f97316; color: #fff; }
@@ -2151,7 +2152,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<div class="pc-anneau"><svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="12"/><circle cx="70" cy="70" r="60" fill="none" stroke="#f97316" stroke-width="12" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="' + Math.round(377 * (1 - M.pct / 100)) + '"/></svg>' +
       '<div><strong>' + M.pct + ' %</strong><small>' + M.finis + ' / ' + M.items.length + ' matières</small></div></div></section>';
 
-    // Échéances (ajoutées en bas de page, après les étapes du quiz et le plan)
+    // Échéances (placées en tête de page, au-dessus du bandeau)
     var ech = '<div class="pc-ech-bloc"><h3 class="pc-h">📅 Tes échéances</h3><p class="pc-sous">Concours 2027. Dates des écrits fixées par arrêté ; résultats et oraux selon ton académie.</p><div class="pc-ech">' +
       ECHEANCES.map(function (e) {
         var j = joursAvant(e[0]), passe = j < 0, cls = passe ? 'passe' : (e[4] === 'cle' ? 'cle' : (j <= 30 ? 'proche' : ''));
@@ -2224,8 +2225,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }).join('') + '</div>';
       }).join('') + '</section>';
 
-    // Mobile : les étapes du quiz juste sous le bandeau, puis le plan en 3 étapes et les échéances
-    h += '<div class="pc-plan-mobile">' + plan + '</div>' + ech;
+    // Mobile : les échéances au-dessus du bandeau, les étapes du quiz juste dessous, le plan en 3 étapes en bas
+    h = ech + h + '<div class="pc-plan-mobile">' + plan + '</div>';
     root.innerHTML = '<div class="pc-grille"><div class="pc-gauche">' + h + '</div><aside class="pc-plan">' + plan + '</aside></div>';
     root.querySelector('[data-pc-domaines]').addEventListener('click', function () { choixDomaines('parcours'); });
     // Groupes d'étapes repliables (état mémorisé sur cet appareil)
