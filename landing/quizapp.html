@@ -774,6 +774,7 @@
     .lc-q .quiz-btn.on { background: #fff7ed; border-color: #f97316; color: #c2410c; }
     .lc-valider { position: sticky; bottom: 12px; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 8px 0 16px; padding: 12px 14px 12px 18px; background: rgba(255,255,255,.97); border: 1.5px solid #fed7aa; border-radius: 18px; box-shadow: 0 10px 30px rgba(16,24,40,.12); font-size: 14px; font-weight: 700; color: var(--gray-600); }
     .lc-valider .quiz-btn { margin: 0; }
+    .lc-valider [data-lnote]:not(.pret) { background: #fff; color: #c2410c; border: 1.5px solid #fdba74; box-shadow: none; }
     @media (max-width: 1099px) { .lc-valider { bottom: 78px; } }
     .lc-bilan .big { font-size: 46px; font-weight: 900; color: var(--gray-900); margin: 6px 0; }
     .lc-bilan .quiz-actions { justify-content: center; }
@@ -2201,7 +2202,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var e = essaiActif(), th = themes[ti];
     var qs = e && e.termine ? [] : composer(cat, pm, null, [th.nom], e ? e.restantes : 10).map(function (q) { return Object.assign({}, q, { mat: mat }, q.type === 'qcm' ? { choix: melange(q.choix) } : {}); });
     var tot = 0, mai = 0; themes.forEach(function (x) { tot += x.notions; mai += x.mai; });
-    lc = { mode: 'ecrit', mat: mat, ti: ti, themes: themes, theme: th, qs: qs, rep: {}, score: 0, recap: [], sel: {},
+    lc = { mode: 'ecrit', immediat: !!seanceActive(), mat: mat, ti: ti, themes: themes, theme: th, qs: qs, rep: {}, score: 0, recap: [], sel: {},
       etape: 'Étape 1 · Quiz admissibilité', pct: tot ? Math.round(mai / tot * 100) : 0,
       info: '<b>' + nf(tot) + ' notion' + (tot > 1 ? 's' : '') + '</b> · ' + nf(mai) + ' maîtrisée' + (mai > 1 ? 's' : '') + ' · ' + nf(themes.length) + ' thèmes' };
     lcDessiner();
@@ -2235,10 +2236,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       return tete + '<button type="button" class="qd-it' + (i === x.ti ? ' on' : '') + '" data-lth="' + i + '">' + pt(t.etat, i + 1) + '<span class="nm">' + esc(t.court) + '</span><span class="nb" title="Questions restantes sur le total">' + nf(Math.max(0, t.n - (t.f || 0))) + ' / ' + nf(t.n) + '</span></button>';
     }).join('');
     var corps = function (q, i) {
-      if (q.type === 'numerique') return '<form class="quiz-num" data-lnum="' + i + '"><input type="text" autocomplete="off" placeholder="Votre réponse" aria-label="Votre réponse" data-lin="' + i + '"><button type="button" class="quiz-btn ghost" data-lnsp="' + i + '">Je ne sais pas</button></form>';
+      if (q.type === 'numerique') return '<form class="quiz-num" data-lnum="' + i + '"><input type="text" autocomplete="off" placeholder="Votre réponse" aria-label="Votre réponse" data-lin="' + i + '">' + (x.immediat ? '<button type="button" class="quiz-btn" data-lok="' + i + '">Valider</button>' : '') + '<button type="button" class="quiz-btn ghost" data-lnsp="' + i + '">Je ne sais pas</button></form>';
       if (q.type === 'cliquer_mot') return '<p class="quiz-hint">Clique sur le ou les mots.</p><div class="quiz-phrase">' + q.choix.map(function (t, k) {
         return /[\wÀ-ÿ]/.test(t) ? '<button type="button" class="tok" data-ltok="' + i + ':' + k + '">' + esc(t) + '</button>' : '<span class="punct">' + esc(t) + '</span>';
-      }).join(' ') + '</div><div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-lnsp="' + i + '">Je ne sais pas</button></div>';
+      }).join(' ') + '</div><div class="quiz-actions">' + (x.immediat ? '<button type="button" class="quiz-btn" data-lok="' + i + '">Valider</button>' : '') + '<button type="button" class="quiz-btn ghost" data-lnsp="' + i + '">Je ne sais pas</button></div>';
       return '<div class="quiz-choices">' + q.choix.map(function (c, k) { return '<button type="button" class="quiz-choice" data-lk="' + i + ':' + k + '">' + esc(c) + '</button>'; }).join('') + '</div>';
     };
     var n = x.qs.length;
@@ -2251,7 +2252,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return '<div class="quiz-card qz-question lc-q" id="lc-q-' + i + '"><p class="qz-num">Question ' + (i + 1) + ' / ' + n + '</p>' +
           (x.mode === 'sj' ? '<div class="quiz-meta"><span class="chip sujet">📄 Sujet ' + esc(sjNomSujet(q)) + '</span><span class="chip theme">' + esc(q.partie) + '</span></div>' : '') +
           (q.contexte ? '<div class="sj-contexte">' + esc(q.contexte) + '</div>' : '') + '<p class="quiz-q">' + esc(q.question) + '</p>' + corps(q, i) + '<div class="lc-fb" id="lc-fb-' + i + '"></div></div>';
-      }).join('') + (n && !(e && e.termine) ? '<div class="lc-valider" id="lc-valider"><span id="lc-valider-txt">0 / ' + n + ' réponses choisies</span><button type="button" class="quiz-btn" data-lvalider>' + (seanceActive() ? 'Valider ces questions' : 'Valider ma série') + '</button></div>' : '') + '<div id="lc-bilan"></div>';
+      }).join('') + (n && !(e && e.termine) ? (x.immediat ? '<div class="lc-valider" id="lc-valider"><span id="lc-valider-txt">0 / ' + n + ' répondues · la correction s’affiche dès ta réponse</span><button type="button" class="quiz-btn" data-lnote>Générer ma note</button></div>'
+        : '<div class="lc-valider" id="lc-valider"><span id="lc-valider-txt">0 / ' + n + ' réponses choisies</span><button type="button" class="quiz-btn" data-lvalider>Valider ma série</button></div>') : '') + '<div id="lc-bilan"></div>';
     root.innerHTML = '<div class="lc-grille"><aside class="lc-side"><details class="qd-carte" id="lc-som"' + (window.innerWidth >= 1100 ? ' open' : '') + '><summary><button type="button" class="lc-retour" data-lretour>← Mon parcours</button>' +
       '<span class="lbl">' + esc(x.etape) + '</span><h4>' + ic + ' ' + esc(label(x.mat)) + '</h4><p class="lc-info">' + x.info + '</p><div class="barre"><i style="width:' + x.pct + '%"></i></div>' +
       (window.innerWidth < 1100 ? '<span class="qd-sous" style="display:block">Sommaire ▾</span>' : '<p class="qd-sous">Sommaire · restantes / total</p>') + '</summary>' + som + '</details></aside>' +
@@ -2262,7 +2264,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var n = lc.qs.length, r = Object.keys(lc.rep).filter(function (k) { return lc.rep[k] === 'ok' || lc.rep[k] === 'ko'; }).length;
     var c = document.getElementById('lc-compte'); if (c) c.textContent = r + ' / ' + n + ' répondues · ' + lc.score + ' juste' + (lc.score > 1 ? 's' : '');
     var b = document.getElementById('lc-barre'); if (b) b.style.width = Math.round(r / n * 100) + '%';
-    if (r < n) return;
+    if (lc.immediat) {
+      var vt = document.getElementById('lc-valider-txt'); if (vt) vt.textContent = r + ' / ' + n + ' répondues · ' + lc.score + ' juste' + (lc.score > 1 ? 's' : '');
+      var bn = document.querySelector('[data-lnote]'); if (bn) bn.classList.toggle('pret', r >= n);
+      if (!lc.noteDemandee) return;
+    }
+    if (r < n || lc.bilanFait) return;
+    lc.bilanFait = true;
     var pc = Math.round(lc.score / n * 100), ok = pc >= 80, suivant = lc.ti + 1 < lc.themes.length;
     if (lc.mode === 'ecrit') {
       var niv = {}; lc.qs.forEach(function (q) { niv[q.niveau] = (niv[q.niveau] || 0) + 1; });
@@ -2301,7 +2309,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
   root.addEventListener('click', function (e) {
     if (!lc || !e.target.closest) return;
-    var b = e.target.closest('[data-lk],[data-ltok],[data-lnsp],[data-lth],[data-lretour],[data-lvalider]'); if (!b || !root.contains(b)) return;
+    var b = e.target.closest('[data-lk],[data-ltok],[data-lnsp],[data-lth],[data-lretour],[data-lvalider],[data-lok],[data-lnote]'); if (!b || !root.contains(b)) return;
     if (seanceActive() && seance.pause) return;  // séance en pause : questions masquées
     if (b.dataset.lretour !== undefined) { e.preventDefault(); lc = null; history.pushState(null, '', '/quizapp'); parcoursVue(); top(); return; }
     if (b.dataset.lth !== undefined) {
@@ -2314,6 +2322,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var ch = lc.choix = lc.choix || {};
     if (b.dataset.lk !== undefined) {
       var pk = b.dataset.lk.split(':'), i = +pk[0], k = +pk[1];
+      if (lc.rep[i]) return;
+      if (lc.immediat) { ch[i] = { v: lc.qs[i].choix[k], k: k }; lcCorriger(i).catch(function () {}); return; }  // séance : correction dès le clic
       document.querySelectorAll('#lc-q-' + i + ' .quiz-choice').forEach(function (x) { x.classList.toggle('sel', x === b); });
       ch[i] = { v: lc.qs[i].choix[k], k: k }; lcChoisi(i); return;
     }
@@ -2328,9 +2338,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var i4 = +b.dataset.lnsp, carte = document.getElementById('lc-q-' + i4), dej = ch[i4] && ch[i4].nsp;
       carte.querySelectorAll('.quiz-choice, .tok').forEach(function (x) { x.classList.remove('sel'); }); lc.sel[i4] = [];
       var ni = carte.querySelector('[data-lin]'); if (ni) ni.value = '';
+      if (lc.immediat) { if (lc.rep[i4]) return; ch[i4] = { v: '', nsp: true }; lcCorriger(i4).catch(function () {}); return; }
       if (dej) delete ch[i4]; else ch[i4] = { v: '', nsp: true };
       b.classList.toggle('on', !dej); lcChoisi(i4); return;
     }
+    if (b.dataset.lok !== undefined) { var i5 = +b.dataset.lok; if (ch[i5] && !lc.rep[i5]) lcCorriger(i5).catch(function () {}); return; }
+    if (b.dataset.lnote !== undefined) return lcNote();
     if (b.dataset.lvalider !== undefined) lcValider();
   });
   root.addEventListener('input', function (e) {
@@ -2342,10 +2355,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   });
   root.addEventListener('submit', function (e) {
     var f = lc && e.target.closest && e.target.closest('[data-lnum]'); if (!f) return;
-    e.preventDefault();  // Entrée : passer à la question suivante
+    e.preventDefault();  // Entrée : passer à la question suivante (en séance : corriger la réponse)
+    if (lc.immediat) { var iN = +f.dataset.lnum; if ((lc.choix || {})[iN] && !lc.rep[iN]) lcCorriger(iN).catch(function () {}); return; }
     var s = document.getElementById('lc-q-' + (+f.dataset.lnum + 1)); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'center' });
   });
   function lcChoisi(i) {
+    if (lc.immediat) { var ca = document.getElementById('lc-q-' + i); if (ca) ca.classList.toggle('choisie', !!(lc.choix || {})[i]); return; }
     var n = lc.qs.length, c = Object.keys(lc.choix || {}).length;
     var carte = document.getElementById('lc-q-' + i); if (carte) carte.classList.toggle('choisie', !!lc.choix[i]);
     var t = document.getElementById('lc-valider-txt'); if (t) t.textContent = c + ' / ' + n + ' réponse' + (c > 1 ? 's' : '') + ' choisie' + (c > 1 ? 's' : '');
@@ -2353,6 +2368,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var b = document.getElementById('lc-barre'); if (b) b.style.width = Math.round(c / n * 100) + '%';
   }
   // Correction de toute la série, question par question (même enregistrement que les séries), puis la note
+  function lcCorriger(i) {
+    var c = (lc.choix || {})[i] || { v: '', nsp: true }, q = lc.qs[i], carte = document.getElementById('lc-q-' + i);
+    carte.querySelectorAll('input, button').forEach(function (x) { x.disabled = true; });
+    return lcRepondre(i, c.v, function (d) {
+      if (q.type === 'qcm') carte.querySelectorAll('.quiz-choice').forEach(function (x, j) { x.classList.remove('sel'); if (q.choix[j] === d.reponse) x.classList.add('good'); else if (j === c.k) x.classList.add('bad'); });
+      else if (q.type === 'cliquer_mot') { var att = String(d.reponse).split(',').map(Number), mes = c.toks || []; carte.querySelectorAll('.tok').forEach(function (x) { var k = +x.dataset.ltok.split(':')[1]; x.classList.remove('sel'); if (att.indexOf(k) >= 0) x.classList.add('good'); else if (mes.indexOf(k) >= 0) x.classList.add('bad'); }); }
+      else { var ni = carte.querySelector('[data-lin]'); if (ni) ni.classList.add(d.correct ? 'good' : 'bad'); }
+    }, function () { carte.querySelectorAll('input, button').forEach(function (x) { x.disabled = false; }); });
+  }
+  // Séance : note du lot à la demande ; les questions sans réponse comptent comme fausses
+  function lcNote() {
+    var reste = lc.qs.map(function (q, i) { return i; }).filter(function (i) { return !lc.rep[i]; });
+    if (reste.length && !confirm(reste.length + ' question' + (reste.length > 1 ? 's' : '') + ' sans réponse ' + (reste.length > 1 ? 'compteront' : 'comptera') + ' comme fausse' + (reste.length > 1 ? 's' : '') + '. Générer ta note quand même ?')) return;
+    lc.noteDemandee = true; lc.valide = true;
+    var bt = document.querySelector('[data-lnote]'); if (bt) { bt.disabled = true; bt.textContent = 'Calcul de ta note…'; }
+    var suite = Promise.resolve();
+    reste.forEach(function (i) { suite = suite.then(function () { return lcCorriger(i); }); });
+    suite.then(function () {
+      lcMaj();
+      var v = document.getElementById('lc-valider'); if (v) v.remove();
+      var bi = document.getElementById('lc-bilan'); if (bi) bi.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, function () { lc.noteDemandee = false; lc.valide = false; if (bt) { bt.disabled = false; bt.textContent = 'Générer ma note'; } });
+  }
   function lcValider() {
     var ch = lc.choix || {}, n = lc.qs.length, manque = n - Object.keys(ch).length;
     if (manque && !confirm(manque + ' question' + (manque > 1 ? 's' : '') + ' sans réponse ' + (manque > 1 ? 'compteront' : 'comptera') + ' comme fausse' + (manque > 1 ? 's' : '') + '. Valider quand même ?')) return;
@@ -2362,12 +2400,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var suite = Promise.resolve();
     lc.qs.forEach(function (q, i) {
       suite = suite.then(function () {
-        var c = ch[i] || { v: '', nsp: true }, carte = document.getElementById('lc-q-' + i);
-        return lcRepondre(i, c.v, function (d) {
-          if (q.type === 'qcm') carte.querySelectorAll('.quiz-choice').forEach(function (x, j) { x.classList.remove('sel'); if (q.choix[j] === d.reponse) x.classList.add('good'); else if (j === c.k) x.classList.add('bad'); });
-          else if (q.type === 'cliquer_mot') { var att = String(d.reponse).split(',').map(Number), mes = c.toks || []; carte.querySelectorAll('.tok').forEach(function (x) { var k = +x.dataset.ltok.split(':')[1]; x.classList.remove('sel'); if (att.indexOf(k) >= 0) x.classList.add('good'); else if (mes.indexOf(k) >= 0) x.classList.add('bad'); }); }
-          else { var ni = carte.querySelector('[data-lin]'); if (ni) ni.classList.add(d.correct ? 'good' : 'bad'); }
-        });
+        return lcCorriger(i);
       });
     });
     suite.then(function () {
@@ -3309,10 +3342,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var l1 = !o ? '⭐ Séance bonus : objectif du jour déjà atteint · <b>' + pluriel(n, 'question') + '</b>'
       : (n >= o ? '✅ Objectif de la séance atteint : ' : '🎯 Objectif de la séance : ') + '<b>' + nf(n) + ' / ' + nf(o) + '</b> questions';
     return '<span>' + l1 + '</span>' + (S.objJour ? '<small>Aujourd’hui : ' + nf(jour) + ' / ' + nf(S.objJour) + ' questions</small>' : '') +
-      (S.p100 ? seanceReperes(S.p70, S.p100) : '');
+      (S.p100 || S.p70 ? seanceReperes(S.p70, S.p100) : '');
   }
   function parSeance(parJour) { return Math.ceil((parJour || 0) / SEANCE_PAR_JOUR); }
-  function seanceReperes(p70, p100) { return '<small class="sc-reperes">Par séance : <b>' + nf(p70) + '</b> questions pour ' + OBJ_PCT + ' % des notions · <b>' + nf(p100) + '</b> pour 100 %</small>'; }
+  // Repères : questions par séance pour maîtriser 70 % puis 100 % des notions d'ici la fin de l'étape 1 (avant les écrits)
+  function seanceReperes(p70, p100) {
+    var fin = new Date(FIN_ETAPE1 + 'T00:00:00').toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' });
+    var qps = function (n) { return '<b>' + nf(n) + ' question' + (n > 1 ? 's' : '') + ' par séance</b>'; };
+    return '<small class="sc-reperes">' + (p70 ? qps(p70) + ' pour maîtriser ' + OBJ_PCT + ' % des notions d’ici le ' + fin + ', avant les écrits' : '✅ ' + OBJ_PCT + ' % des notions déjà maîtrisées') +
+      ' · ' + (p100 ? qps(p100) + ' pour les maîtriser toutes (100 %)' : '🎉 toutes les notions maîtrisées') + '</small>';
+  }
   function seanceTitre(S) { return S.objectif ? 'Séance ' + S.numero + ' / ' + SEANCE_PAR_JOUR : 'Séance bonus'; }
   // Bandeau affiché au-dessus des questions de la page de la matière
   function seanceBloc() {
