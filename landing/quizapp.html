@@ -1432,7 +1432,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // Domaines de l'écrit : le français et les mathématiques pour tous, plus 3 domaines choisis parmi 4 (onboarding, modifiable).
   // Le quiz, le quiz sujets et le tableau des notions ne portent que sur les matières de ces domaines.
   // Gardés dans le compte (user_metadata.domaines) et dans ce navigateur.
-  var DOMAINES = {
+  var DOMAINES_ECRIT = {
     hg: ['Histoire-géographie et EMC', '🌍', ['histoire_geographie', 'emc'], 'Histoire, géographie, enseignement moral et civique'],
     sciences: ['Sciences et technologie', '🔬', ['svt', 'physique_chimie', 'technologie'], 'SVT, physique-chimie, technologie'],
     arts: ['Arts', '🎨', ['arts'], 'Arts plastiques et éducation musicale'],
@@ -1440,8 +1440,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }, ORDRE_DOMAINES = ['hg', 'sciences', 'arts', 'lv'];
   var domainesChoisis = null, domainesCharges = false, ecranCible = 'parcours';
   function cleDomaines(u) { return 'passcrpe-quiz-domaines:' + String((u && u.email) || (compte && compte.email) || '').toLowerCase(); }
-  function domainesValides(d) { return Array.isArray(d) && d.length === 3 && d.every(function (k) { return DOMAINES[k]; }) && d[0] !== d[1] && d[1] !== d[2] && d[0] !== d[2]; }
-  function matieresDomaines(d) { var l = ['francais', 'mathematiques']; (d || []).forEach(function (k) { l = l.concat(DOMAINES[k][2]); }); return l; }
+  function domainesValides(d) { return Array.isArray(d) && d.length === 3 && d.every(function (k) { return DOMAINES_ECRIT[k]; }) && d[0] !== d[1] && d[1] !== d[2] && d[0] !== d[2]; }
+  function matieresDomaines(d) { var l = ['francais', 'mathematiques']; (d || []).forEach(function (k) { l = l.concat(DOMAINES_ECRIT[k][2]); }); return l; }
   function appliquerDomaines() {
     var l = domainesChoisis ? matieresDomaines(domainesChoisis) : null;
     MATIERES = l ? MATIERES_TOUTES.filter(function (m) { return l.indexOf(m[0]) >= 0; }) : MATIERES_TOUTES.slice();
@@ -1473,7 +1473,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         '<div class="dm-socle">Pour tout le monde : <span>✍️ Français</span><span>🔢 Mathématiques</span></div>' +
         '<div class="dm-grille">' + ORDRE_DOMAINES.map(function (k) {
           var on = sel.indexOf(k) >= 0, plein = sel.length >= 3 && !on;
-          return '<button type="button" class="dm-carte" data-dm="' + k + '" aria-pressed="' + on + '"' + (plein ? ' disabled' : '') + '><span class="ic">' + DOMAINES[k][1] + '</span><span><b>' + esc(DOMAINES[k][0]) + '</b><small>' + esc(DOMAINES[k][3]) + '</small></span><span class="coche"></span></button>';
+          return '<button type="button" class="dm-carte" data-dm="' + k + '" aria-pressed="' + on + '"' + (plein ? ' disabled' : '') + '><span class="ic">' + DOMAINES_ECRIT[k][1] + '</span><span><b>' + esc(DOMAINES_ECRIT[k][0]) + '</b><small>' + esc(DOMAINES_ECRIT[k][3]) + '</small></span><span class="coche"></span></button>';
         }).join('') + '</div>' +
         '<div class="dm-bas"><span class="dm-compte">' + sel.length + ' / 3 domaines choisis</span><span class="quiz-actions" style="margin:0">' +
         (premier ? '' : '<button type="button" class="quiz-btn ghost" data-dm-annuler>Annuler</button>') +
@@ -1504,7 +1504,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function joursAvant(iso) { var a = new Date(); a.setHours(0, 0, 0, 0); return Math.round((new Date(iso + 'T00:00:00') - a) / 864e5); }
   function concoursParcours() { return sjConcours(); } // même concours que le quiz sujets (profil, ou choix fait dans le quiz sujets)
   function epreuvesEcrit(c) {
-    var dom = matieresDomaines(domainesChoisis).slice(2), noms = domainesChoisis.map(function (k) { return DOMAINES[k][0]; }).join(' · ');
+    var dom = matieresDomaines(domainesChoisis).slice(2), noms = domainesChoisis.map(function (k) { return DOMAINES_ECRIT[k][0]; }).join(' · ');
     if (c === 'bac5') return [
       { nom: 'Épreuve de français', date: 'Mar. 30 mars · 14 h-17 h', mats: ['francais'] },
       { nom: 'Épreuve de mathématiques', date: 'Mer. 31 mars · 9 h-12 h', mats: ['mathematiques'] },
@@ -1566,7 +1566,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     h += '<section class="pc-hero"><div><div class="sur">⏳ ' + (jEcrits > 0 ? 'J-' + jEcrits + ' avant les écrits' : 'Les écrits sont passés : place aux oraux') + '</div>' +
       '<h2>' + (prenom ? 'Bonjour ' + esc(prenom) + ' 👋' : 'Ton parcours 👋') + '</h2>' +
       '<p>Ton chemin vers le CRPE, étape par étape : les notions de l’écrit, puis les épreuves passées, puis les oraux.</p>' +
-      '<div class="pc-puces"><span>🎓 CRPE ' + (c === 'bac5' ? 'Bac+5' : 'Bac+3') + '</span>' + domainesChoisis.map(function (k) { return '<span>' + DOMAINES[k][1] + ' ' + esc(DOMAINES[k][0]) + '</span>'; }).join('') + '<button type="button" data-pc-domaines>Modifier</button></div>' +
+      '<div class="pc-puces"><span>🎓 CRPE ' + (c === 'bac5' ? 'Bac+5' : 'Bac+3') + '</span>' + domainesChoisis.map(function (k) { return '<span>' + DOMAINES_ECRIT[k][1] + ' ' + esc(DOMAINES_ECRIT[k][0]) + '</span>'; }).join('') + '<button type="button" data-pc-domaines>Modifier</button></div>' +
       '<button type="button" class="pc-cta" data-pc-quiz="' + conseil + '">▶ Continuer en ' + esc(label(conseil)) + '</button></div>' +
       '<div class="pc-anneau"><svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="12"/><circle cx="70" cy="70" r="60" fill="none" stroke="#f97316" stroke-width="12" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="' + Math.round(377 * (1 - pct / 100)) + '"/></svg>' +
       '<div><strong>' + pct + ' %</strong><small>notions maîtrisées</small></div></div></section>';
@@ -1973,7 +1973,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '</div>' +
       '<div class="pf-carte"><div class="pf-titre"><h3>Domaines de l’écrit</h3><button type="button" class="pf-lien" data-pf-domaines>Modifier</button></div>' +
       '<div class="pf-ligne"><span>Toujours</span><b>Français, mathématiques</b></div>' +
-      '<div class="pf-ligne"><span>Mes 3 domaines</span><b>' + (domainesChoisis ? domainesChoisis.map(function (k) { return esc(DOMAINES[k][0]); }).join(', ') : 'À choisir') + '</b></div></div>' +
+      '<div class="pf-ligne"><span>Mes 3 domaines</span><b>' + (domainesChoisis ? domainesChoisis.map(function (k) { return esc(DOMAINES_ECRIT[k][0]); }).join(', ') : 'À choisir') + '</b></div></div>' +
       // Un seul compte pour QuizCRPE et PassCRPE : la déconnexion vaut pour les deux
       '<button type="button" class="pf-deconnexion" data-act="pf-deconnexion">Se déconnecter</button>' +
       '<p class="pf-note">Vous serez déconnecté du Quiz CRPE et de PassCRPE.</p></div>';
