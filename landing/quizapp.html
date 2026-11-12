@@ -484,6 +484,14 @@
     .pc-seance-obj b { color: #fff; } .pc-seance-obj small { color: #cbd5e1; font-size: 12px; }
     .pc-seance-b { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
     .pc-seance-b .pc-cta { margin: 0; }
+    .sc-jour { display: flex; flex-wrap: wrap; gap: 12px 28px; align-items: center; justify-content: space-between; }
+    .sc-jour .lbl { display: block; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--gray-500); }
+    .sc-jour-l b { font-size: 22px; color: var(--gray-900); }
+    .sc-jour-r { flex: 1; min-width: 220px; max-width: 420px; font-size: 14px; color: var(--gray-600); }
+    .sc-jour-r b { color: var(--gray-900); }
+    .sc-lots { font-size: 13.5px; color: var(--gray-600); margin: 10px 0 0; }
+    .sc-nouvelle h2 { margin: 0 0 6px; font-size: 20px; }
+    .sc-nouvelle p { margin: 0 0 6px; color: var(--gray-600); }
     .sc-reperes { display: block; font-size: 12px; color: var(--gray-500); margin-top: 2px; }
     .pc-seance-lancer { display: inline-flex; flex-direction: column; gap: 6px; }
     .pc-hero .sc-reperes { color: #cbd5e1; } .pc-hero .sc-reperes b { color: #fff; }
@@ -1275,7 +1283,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <p class="quiz-lead">Lancez des séries de 20 questions rattachées au programme du concours, par matière et par niveau. Chaque notion est posée sous plusieurs formes : avec 3 bonnes réponses, elle est maîtrisée. En cas d'erreur, vous voyez l'explication et une question similaire revient plus tard.</p>
   <div class="qz-disc-grille"><aside class="qz-disc" id="qz-disc" aria-label="Disciplines"></aside><div id="quiz-app"></div></div>
 </main>
-<nav class="quiz-tabbar" aria-label="Navigation du quiz"><a href="/quizapp" class="qz-logo" aria-label="Le Quiz CRPE by PassCRPE"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span><b>Le Quiz CRPE</b><small>by PassCRPE</small></span></a><a href="/quizapp" class="actif" aria-current="page" data-vue=""><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></svg></span><span class="tb-l">Mon parcours</span><span class="tb-c">Parcours</span></a><a href="/quizapp?vue=series" data-vue="series"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tb-l">Mes séries</span><span class="tb-c">Séries</span></a><a href="/quizapp?vue=notions" data-vue="notions"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg></span><span class="tb-l">Tableau des notions</span><span class="tb-c">Notions</span></a><a href="/quizapp?vue=test" data-vue="test"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span><span class="tb-l">Mon test de positionnement</span><span class="tb-c">Mon test</span></a><a href="/quizapp?vue=support" id="tab-support" data-vue="support"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg><span class="pastille" hidden></span></span><span class="tb-l">Support</span><span class="tb-c">Support</span></a><a href="/quizapp?vue=profil" data-vue="profil"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="tb-l">Profil</span><span class="tb-c">Profil</span></a><div class="qz-side-compte" id="qz-side-compte"></div></nav>
+<nav class="quiz-tabbar" aria-label="Navigation du quiz"><a href="/quizapp" class="qz-logo" aria-label="Le Quiz CRPE by PassCRPE"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span><b>Le Quiz CRPE</b><small>by PassCRPE</small></span></a><a href="/quizapp" class="actif" aria-current="page" data-vue=""><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></svg></span><span class="tb-l">Mon parcours</span><span class="tb-c">Parcours</span></a><a href="/quizapp?vue=seances" data-vue="seances"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2.5"/><path d="M9.5 2h5"/><path d="M12 2v3"/></svg></span><span class="tb-l">Séances</span><span class="tb-c">Séances</span></a><a href="/quizapp?vue=series" data-vue="series"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tb-l">Mes stats</span><span class="tb-c">Stats</span></a><a href="/quizapp?vue=notions" data-vue="notions"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg></span><span class="tb-l">Tableau des notions</span><span class="tb-c">Notions</span></a><a href="/quizapp?vue=test" data-vue="test"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span><span class="tb-l">Mon test de positionnement</span><span class="tb-c">Mon test</span></a><a href="/quizapp?vue=support" id="tab-support" data-vue="support"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg><span class="pastille" hidden></span></span><span class="tb-l">Support</span><span class="tb-c">Support</span></a><a href="/quizapp?vue=profil" data-vue="profil"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="tb-l">Profil</span><span class="tb-c">Profil</span></a><div class="qz-side-compte" id="qz-side-compte"></div></nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
   // Menu du compte dans l'en-tête : nom du profil et accès aux deux outils
@@ -1742,6 +1750,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (jr) return rapportPartage(jr);
     var v = vue();
     if (v === 'series') return mesSeries();
+    if (v === 'seances') return seancesVue();
     if (v === 'notions') return mesNotions();
     if (v === 'support') return supportVue();
     if (v === 'test') return monTest();
@@ -2636,7 +2645,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var nb = liste.length, somme = 0, questions = 0, best = null, faites = {};
     liste.forEach(function (x) { var n = note20(x); somme += n; questions += x.total; if (best === null || n > best) best = n; });
     toutes.forEach(function (x) { faites[x.matiere] = true; });
-    var html = '<div class="qz-page-tete"><h1>Mes séries</h1><p>L’historique de vos séries terminées : votre note, la date et la correction de chaque question.</p></div>';
+    var html = '<div class="qz-page-tete"><h1>Mes stats</h1><p>L’historique de vos séries terminées : votre note, la date et la correction de chaque question.</p></div>';
     if (!toutes.length) {
       root.innerHTML = html + '<div class="quiz-card"><h2>Aucune série terminée pour l’instant</h2><p>Chaque série terminée apparaîtra ici, avec votre note sur 20 et le détail de vos réponses.</p>' +
         '<div class="quiz-actions"><a class="quiz-btn" href="/quizapp">Lancer une série</a></div></div>';
@@ -3317,6 +3326,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!S.pause && !S.ecoule && Date.now() >= S.fin) { S.ecoule = true; seanceSauver(); return true; }
     return false;
   }
+  function seancesVue() {
+    st = null; tst = null; intro(false); marquerOnglet('seances');
+    root.innerHTML = '<div class="quiz-card"><p>Chargement de tes séances…</p></div>';
+    (compte ? Promise.resolve(compte) : api('/api/quiz/compte')).then(function (c) {
+      compte = c;
+      if (!c.positionnement) return introTest();
+      if (!domainesCharges) return chargerDomaines().then(seancesVue);
+      if (!domainesChoisis) return choixDomaines();
+      return chargerPc(true).then(function (d) { if (vue() === 'seances') dessinerSeances(d, modelePc(d)); });
+    }).catch(function (e) { if (e && e.status === 401) return connexion(); erreur('Tes séances n’ont pas pu être chargées. Réessaie dans quelques instants.'); });
+  }
+  function dessinerSeances(d, M) {
+    var O = objectifJour(d, M), S = seanceActive(), faites = seancesFaites();
+    var pctJ = O.parJour ? Math.min(100, Math.round(O.faitesAuj / O.parJour * 100)) : 100;
+    var h = '<div class="qz-page-tete"><h1>Séances</h1><p>Une séance dure ' + SEANCE_MIN + ' minutes : des lots de 10 questions, matière et thème tirés au hasard parmi tes épreuves d’admissibilité, avec la correction dès ta réponse. Objectif : ' + SEANCE_PAR_JOUR + ' séances par jour.</p></div>';
+    h += '<div class="quiz-card sc-jour"><div class="sc-jour-l"><span class="lbl">Aujourd’hui</span><b>' + Math.min(faites, SEANCE_PAR_JOUR) + ' / ' + SEANCE_PAR_JOUR + '</b> séances terminées' + (faites > SEANCE_PAR_JOUR ? ' (+ ' + (faites - SEANCE_PAR_JOUR) + ' bonus)' : '') + '</div>' +
+      '<div class="sc-jour-r">' + (O.parJour ? (O.faitesAuj >= O.parJour ? '✅ Objectif du jour atteint : ' : '🎯 Objectif du jour : ') + '<b>' + nf(O.faitesAuj) + ' / ' + nf(O.parJour) + '</b> questions' : '🎉 Objectif de ' + OBJ_PCT + ' % des notions atteint') +
+      '<div class="sc-barre"><i style="width:' + pctJ + '%"></i></div></div></div>';
+    if (S) {
+      var lots = S.lots || [];
+      h += '<div class="quiz-card sc-cours"><div class="sc-tete"><span class="sc-titre" data-sc-etat>▶️ ' + seanceTitre(S) + (S.ecoule ? ' terminée' : ' en cours') + '</span>' +
+        '<span class="sc-chrono' + (S.ecoule ? ' fin' : '') + '" data-sc-chrono>' + seanceChrono(S) + '</span><span class="sc-obj" data-sc-obj>' + seanceObjectif(S) + '</span></div>' +
+        '<div class="sc-barre"><i data-sc-barre style="width:' + seancePct(S) + '%"></i></div>' +
+        (lots.length ? '<p class="sc-lots"><b>Déjà travaillé :</b> ' + lots.map(function (l) { return esc(label(l.mat)) + ' · ' + esc(groupe(l.theme) ? groupe(l.theme).court : l.theme); }).join(' — ') + '</p>' : '') +
+        '<div class="quiz-actions">' + (S.ecoule ? '<button type="button" class="quiz-btn" data-act="seance-fin">Voir le rapport de séance →</button>'
+          : '<button type="button" class="quiz-btn" data-act="seance-reprendre">Continuer la séance →</button><button type="button" class="quiz-btn ghost" data-act="seance-pause">' + (S.pause ? '▶️ Reprendre' : '⏸ Pause') + '</button>' +
+            '<button type="button" class="quiz-btn ghost" data-act="seance-fin">Terminer la séance</button>') + '</div></div>';
+    } else {
+      var lib = O.parJour && O.faitesAuj < O.parJour ? 'Lancer la séance ' + Math.min(SEANCE_PAR_JOUR, faites + 1) + ' / ' + SEANCE_PAR_JOUR : 'Lancer une séance bonus';
+      h += '<div class="quiz-card sc-nouvelle"><h2>Nouvelle séance</h2><p>' + (O.parJour && O.faitesAuj < O.parJour ? 'Il te reste <b>' + pluriel(O.parJour - O.faitesAuj, 'question') + '</b> pour atteindre l’objectif du jour.' : 'L’objectif du jour est atteint : une séance de plus fait encore progresser tes notions.') + '</p>' +
+        (O.parJour100 ? seanceReperes(parSeance(O.parJour), parSeance(O.parJour100)) : '') +
+        '<div class="quiz-actions"><button type="button" class="quiz-btn" data-sc-lancer>▶️ ' + lib + ' · ' + SEANCE_MIN + ' min</button></div></div>';
+    }
+    root.innerHTML = h;
+    var bl = root.querySelector('[data-sc-lancer]'); if (bl) bl.addEventListener('click', function () { seanceLancer(d, M); });
+  }
   function seanceLancer(d, M) {
     var e = essaiActif();
     if (e && e.termine) return ouvrirPaiement();
@@ -3419,7 +3464,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       root.querySelectorAll('[data-act="seance-pause"]').forEach(function (b) { b.remove(); });
       var inf = root.querySelector('[data-sc-info]'); if (inf) inf.textContent = 'Le temps est écoulé : valide ces questions pour voir le rapport de séance.';
       var su = document.getElementById('sc-suite'); if (su) su.textContent = 'Voir le rapport de séance';
-      var rc = root.querySelector('.pc-seance [data-act="seance-reprendre"]'); if (rc) { rc.textContent = 'Voir le rapport de séance →'; rc.dataset.act = 'seance-fin'; }
+      root.querySelectorAll('[data-sc-etat]').forEach(function (t) { t.textContent = '▶️ ' + seanceTitre(S) + ' terminée'; });
+      root.querySelectorAll('[data-act="seance-reprendre"]').forEach(function (rc) { rc.textContent = 'Voir le rapport de séance →'; rc.dataset.act = 'seance-fin'; });
     }
     seanceAfficher(S);
   }
@@ -3675,9 +3721,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           '<div class="quiz-actions">' + (e.termine ? '<button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz pour ' + PRIX + '</button>'
             : '<button type="button" class="quiz-btn" data-act="again">' + (e.restantes > 1 ? 'Continuer : mes ' + e.restantes + ' dernières questions du jour' : 'Continuer : ma dernière question du jour') + '</button>' +
               '<button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button>') +
-          '<a class="quiz-btn ghost" href="/quizapp?vue=series">Mes séries</a></div>';
+          '<a class="quiz-btn ghost" href="/quizapp?vue=series">Mes stats</a></div>';
       })(essaiActif())
-        : '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="again">Nouvelle série de ' + SERIE + '</button><button type="button" class="quiz-btn ghost" data-act="prog">Ma progression</button><a class="quiz-btn ghost" href="/quizapp?vue=series">Mes séries</a><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>') +
+        : '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="again">Nouvelle série de ' + SERIE + '</button><button type="button" class="quiz-btn ghost" data-act="prog">Ma progression</button><a class="quiz-btn ghost" href="/quizapp?vue=series">Mes stats</a><button type="button" class="quiz-btn ghost" data-act="home">Changer de matière ou de niveau</button></div>') +
       '<div class="quiz-recap">' + st.recap.map(function (r) {
         return '<div class="' + (r.ok ? 'r-ok' : 'r-ko') + '">' + esc(r.q) + (r.ok ? '' : ' <em>Réponse : ' + esc(r.attendu) + '</em>') + '</div>';
       }).join('') + '</div></div>';
