@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { readFileSync } from 'fs';
 import Anthropic from '@anthropic-ai/sdk';
 import { createClient } from '@supabase/supabase-js';
 import { config } from 'dotenv';
@@ -1276,6 +1277,24 @@ registerEntraineurRoutes(app, { supabaseAdmin, anthropic: entraineurClient, mode
 
 /* ── Static (dev local uniquement — sur Vercel ces fichiers sont servis directement depuis dist/) ── */
 app.use(express.static(path.join(__dirname, 'landing')));
+
+// Dev local : mêmes adresses courtes que sur Vercel (/quizcrpe, /quizapp…), lues dans vercel.json
+if (!process.env.VERCEL) {
+  try {
+    const vercel = JSON.parse(readFileSync(path.join(__dirname, 'vercel.json'), 'utf8'));
+    for (const r of vercel.redirects || []) {
+      if (/[:(*]/.test(r.source) || /^https?:/.test(r.destination)) continue;
+      app.get(r.source, (req, res) => res.redirect(r.permanent ? 301 : 302, r.destination + (req.url.includes('?') ? req.url.slice(req.url.indexOf('?')) : '')));
+    }
+    for (const r of vercel.rewrites || []) {
+      if (!/\.html$/.test(r.destination) || /[(*]/.test(r.source)) continue;
+      app.get(r.source, (req, res, next) => {
+        const fichier = r.destination.replace(/:(\w+)/g, (_, k) => req.params[k] || '');
+        res.sendFile(path.join(__dirname, 'landing', fichier), err => err && next());
+      });
+    }
+  } catch (e) { console.warn('[dev] vercel.json non lu :', e.message); }
+}
 
 if (isProd) {
   app.use('/app', express.static(path.join(__dirname, 'dist/app')));

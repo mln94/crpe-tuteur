@@ -424,6 +424,135 @@
     .quiz-tabbar a.actif { color: var(--indigo-600); }
     .quiz-tabbar .ico { position: relative; }
     .quiz-tabbar svg { width: 20px; height: 20px; display: block; }
+
+    /* ── Mon parcours : menu à gauche sur ordinateur, choix des domaines, parcours en 3 étapes ── */
+    @media (min-width: 1100px) {
+      .quiz-tabbar { top: 64px; bottom: 0; left: 0; right: auto; width: 232px; flex-direction: column; justify-content: flex-start; gap: 4px; padding: 20px 12px; border-top: 0; border-right: 1px solid var(--gray-100); }
+      .quiz-tabbar a { flex: 0 0 auto; max-width: none; flex-direction: row; gap: 12px; padding: 11px 14px; font-size: 15px; border-radius: 12px; color: var(--gray-600); }
+      .quiz-tabbar a:hover { background: var(--gray-50); color: var(--gray-900); }
+      .quiz-tabbar a.actif { background: var(--indigo-50); color: var(--indigo-700); }
+      .quiz-tabbar .tb-c { display: none; } .quiz-tabbar .tb-l { display: inline; }
+      .quiz-wrap { --larg: 780px; max-width: none; margin: 0 0 0 232px; padding-left: max(32px, calc((100vw - 232px - var(--larg)) / 2)); padding-right: max(32px, calc((100vw - 232px - var(--larg)) / 2)); padding-bottom: 72px; }
+      body.qz-large .quiz-wrap { --larg: 1000px; }
+    }
+    /* Choix des domaines (onboarding et profil) */
+    .dm-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
+    .dm-carte { display: grid; grid-template-columns: 40px 1fr 24px; gap: 12px; align-items: center; text-align: left; padding: 16px; border: 2px solid var(--gray-200); border-radius: 16px; background: #fff; font: inherit; color: inherit; cursor: pointer; transition: border-color .15s, background .15s; }
+    .dm-carte .ic { font-size: 28px; line-height: 1; }
+    .dm-carte b { display: block; font-size: 16px; color: var(--gray-900); }
+    .dm-carte small { display: block; font-size: 13px; color: var(--gray-500); margin-top: 2px; }
+    .dm-carte .coche { width: 24px; height: 24px; border-radius: 50%; border: 2px solid var(--gray-300); }
+    .dm-carte[aria-pressed="true"] { border-color: var(--indigo-600); background: var(--indigo-50); }
+    .dm-carte[aria-pressed="true"] .coche { border-color: var(--indigo-600); background: var(--indigo-600) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E") center/14px no-repeat; }
+    .dm-carte:disabled { opacity: .45; cursor: not-allowed; }
+    .dm-socle { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 14px; color: var(--gray-600); }
+    .dm-socle span { background: var(--gray-100); border-radius: 999px; padding: 5px 12px; font-weight: 700; color: var(--gray-700); }
+    .dm-bas { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; }
+    .dm-compte { font-weight: 800; color: var(--indigo-700); }
+    @media (max-width: 600px) { .dm-grille { grid-template-columns: 1fr; } }
+    /* Parcours */
+    .pc-hero { position: relative; overflow: hidden; border-radius: 22px; padding: 28px 30px; color: #fff; background: radial-gradient(520px 260px at 78% 120%, rgba(249,115,22,.45), transparent 70%), linear-gradient(120deg, #1e1b4b, #312e81 55%, #3b1d4a); display: grid; grid-template-columns: 1fr auto; gap: 22px; align-items: center; }
+    .pc-hero .sur { color: #fdba74; font-weight: 800; font-size: 14px; }
+    .pc-hero h2 { margin: 6px 0 8px; font-size: 30px; letter-spacing: -.02em; color: #fff; }
+    .pc-hero p { margin: 0 0 16px; color: #c7d2fe; font-size: 15px; line-height: 1.5; }
+    .pc-puces { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 18px; }
+    .pc-puces span { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 600; }
+    .pc-puces button { background: none; border: 0; color: #fdba74; font: inherit; font-size: 13px; font-weight: 800; text-decoration: underline; cursor: pointer; padding: 5px 4px; }
+    .pc-cta { display: inline-flex; gap: 10px; align-items: center; background: #f97316; color: #fff; border: 0; border-radius: 12px; padding: 14px 20px; font: inherit; font-weight: 800; font-size: 15px; cursor: pointer; box-shadow: 0 10px 24px -10px rgba(249,115,22,.9); }
+    .pc-cta:hover { background: #ea580c; }
+    .pc-anneau { position: relative; width: 140px; height: 140px; }
+    .pc-anneau svg { transform: rotate(-90deg); display: block; }
+    .pc-anneau div { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
+    .pc-anneau strong { font-size: 32px; font-weight: 900; }
+    .pc-anneau small { color: #c7d2fe; font-size: 12px; }
+    .pc-h { font-size: 20px; color: var(--gray-900); margin: 34px 0 4px; letter-spacing: -.01em; }
+    .pc-sous { color: var(--gray-500); font-size: 14px; margin: 0 0 14px; line-height: 1.5; }
+    .pc-ech { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
+    .pc-e { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 14px; padding: 13px; }
+    .pc-e .j { display: inline-block; font-weight: 900; font-size: 12px; padding: 3px 9px; border-radius: 999px; background: var(--gray-100); color: var(--gray-500); margin-bottom: 8px; }
+    .pc-e.proche { border-color: #fed7aa; background: #fff7ed; } .pc-e.proche .j { background: #f97316; color: #fff; }
+    .pc-e.cle { border: 2px solid #f97316; } .pc-e.cle .j { background: var(--gray-900); color: #fff; }
+    .pc-e.passe { opacity: .55; }
+    .pc-e b { display: block; font-size: 14px; color: var(--gray-900); margin-bottom: 3px; }
+    .pc-e .d { font-size: 13px; font-weight: 700; color: var(--gray-700); }
+    .pc-e small { display: block; color: var(--gray-500); font-size: 12px; margin-top: 4px; }
+    .pc-fil { display: grid; grid-template-columns: repeat(3, 1fr); position: relative; margin: 6px 0 0; }
+    .pc-fil::before { content: ''; position: absolute; top: 29px; left: 16.6%; right: 16.6%; height: 4px; border-radius: 4px; background: linear-gradient(90deg, #f97316 0 var(--av, 0%), var(--gray-200) var(--av, 0%)); }
+    .pc-pas { all: unset; box-sizing: border-box; cursor: pointer; text-align: center; padding: 0 8px; position: relative; }
+    .pc-pas .num { width: 58px; height: 58px; border-radius: 50%; margin: 0 auto 10px; display: grid; place-items: center; font-size: 24px; line-height: 1; background: #fff; border: 3px solid var(--gray-200); position: relative; z-index: 1; }
+    .pc-pas.encours .num { border-color: #f97316; background: #fff7ed; box-shadow: 0 0 0 6px rgba(249,115,22,.15); }
+    .pc-pas.ouvert .num { border-color: var(--indigo-600); background: var(--indigo-50); }
+    .pc-pas.bientot .num { filter: grayscale(1); opacity: .7; }
+    .pc-pas .n { display: block; font-size: 12px; font-weight: 800; color: var(--gray-500); text-transform: uppercase; letter-spacing: .06em; }
+    .pc-pas strong { display: block; font-size: 16px; margin: 3px 0 4px; color: var(--gray-900); }
+    .pc-pas small { display: block; color: var(--gray-500); font-size: 13px; line-height: 1.4; max-width: 230px; margin: 0 auto; }
+    .pc-pas .etat { display: inline-block; margin-top: 8px; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 999px; }
+    .pc-pas.encours .etat { background: #fff7ed; color: #c2410c; }
+    .pc-pas.ouvert .etat { background: var(--indigo-50); color: var(--indigo-700); }
+    .pc-pas.bientot .etat { background: var(--gray-100); color: var(--gray-500); }
+    .pc-etape { margin-top: 30px; scroll-margin-top: 80px; }
+    .pc-etape > h3 { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 20px; color: var(--gray-900); margin: 0 0 4px; }
+    .pc-etape > h3 em { font-style: normal; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 999px; background: var(--gray-100); color: var(--gray-500); }
+    .pc-delai { display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center; background: #fff7ed; border: 1.5px solid #fed7aa; border-radius: 18px; padding: 18px 20px; margin: 12px 0 16px; }
+    .pc-delai .gros { font-size: 40px; font-weight: 900; color: #c2410c; line-height: 1; text-align: center; }
+    .pc-delai .gros small { display: block; font-size: 13px; font-weight: 800; color: #9a3412; margin-top: 4px; }
+    .pc-delai p { margin: 0; color: #7c2d12; font-size: 15px; line-height: 1.55; }
+    .pc-epreuve { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 18px; padding: 18px 20px; margin-bottom: 14px; }
+    .pc-ep-tete { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; margin-bottom: 6px; }
+    .pc-ep-tete h4 { margin: 0; font-size: 17px; color: var(--gray-900); }
+    .pc-ep-tete .date { font-size: 12.5px; font-weight: 700; color: #c2410c; background: #fff7ed; border: 1px solid #fed7aa; padding: 3px 10px; border-radius: 999px; }
+    .pc-ep-tete .moy { margin-left: auto; font-size: 13px; font-weight: 800; color: var(--gray-700); }
+    .pc-legende { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12.5px; color: var(--gray-500); margin: 0 0 4px; }
+    .pc-legende i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; vertical-align: -1px; }
+    .pc-mat { display: grid; grid-template-columns: 190px 1fr auto; gap: 14px; align-items: center; padding: 12px 0; border-top: 1px dashed var(--gray-200); }
+    .pc-mat:first-of-type { border-top: 0; }
+    .pc-mat .nom { font-weight: 800; color: var(--gray-900); font-size: 15px; }
+    .pc-mat .nom small { display: block; font-weight: 500; color: var(--gray-500); font-size: 12.5px; margin-top: 2px; }
+    .pc-barres { display: grid; gap: 7px; }
+    .pc-barre { display: grid; grid-template-columns: 1fr 175px; gap: 10px; align-items: center; font-size: 12.5px; color: var(--gray-600); }
+    .pc-barre .fond { height: 10px; border-radius: 9px; background: var(--gray-100); overflow: hidden; }
+    .pc-barre .fond i { display: block; height: 100%; border-radius: 9px; }
+    .pc-barre.reu i { background: var(--indigo-600); } .pc-barre.mai i { background: #10b981; }
+    .pc-barre b { color: var(--gray-900); }
+    .pc-btn { border: 1.5px solid var(--gray-200); background: #fff; border-radius: 10px; padding: 9px 14px; font: inherit; font-weight: 800; font-size: 13px; color: var(--gray-800); cursor: pointer; white-space: nowrap; }
+    .pc-btn:hover { border-color: var(--indigo-600); color: var(--indigo-700); }
+    .pc-btn.plein { background: #f97316; border-color: #f97316; color: #fff; }
+    .pc-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .pc-sujets { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .pc-sujet { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; gap: 6px; }
+    .pc-sujet .ic { font-size: 24px; }
+    .pc-sujet b { font-size: 15px; color: var(--gray-900); }
+    .pc-sujet small { color: var(--gray-500); font-size: 13px; }
+    .pc-sujet .fond { height: 8px; border-radius: 9px; background: var(--gray-100); overflow: hidden; margin: 4px 0; }
+    .pc-sujet .fond i { display: block; height: 100%; background: var(--indigo-600); }
+    .pc-sujet .pc-btn { align-self: flex-start; margin-top: 4px; }
+    .pc-adm { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 18px; padding: 18px 20px; margin-bottom: 14px; }
+    .pc-adm-tete { display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: center; margin-bottom: 8px; }
+    .pc-adm-tete h4 { margin: 0; font-size: 17px; color: var(--gray-900); }
+    .pc-avenir { font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 999px; background: var(--gray-100); color: var(--gray-500); }
+    .pc-adm p { margin: 0 0 10px; color: var(--gray-600); font-size: 14.5px; line-height: 1.6; }
+    .pc-sous-etapes { list-style: none; margin: 12px 0 0; padding: 0; display: grid; gap: 8px; }
+    .pc-sous-etapes > li { display: grid; grid-template-columns: 30px 1fr auto; gap: 12px; align-items: start; padding: 12px 14px; border: 1px solid var(--gray-200); border-radius: 12px; background: var(--gray-50); }
+    .pc-sous-etapes .no { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; background: #fff; border: 1.5px solid var(--gray-300); font-weight: 900; font-size: 13px; color: var(--gray-500); }
+    .pc-sous-etapes b { display: block; font-size: 14.5px; color: var(--gray-900); }
+    .pc-sous-etapes small { display: block; font-size: 13px; color: var(--gray-500); line-height: 1.5; margin-top: 2px; }
+    .pc-sous-etapes ol { margin: 6px 0 0 18px; padding: 0; font-size: 13px; color: var(--gray-500); line-height: 1.6; }
+    @media (max-width: 860px) {
+      .pc-hero { grid-template-columns: 1fr; padding: 22px 20px; border-radius: 18px; }
+      .pc-hero h2 { font-size: 24px; padding-right: 92px; } .pc-hero .sur { padding-right: 92px; }
+      .pc-anneau { position: absolute; right: 14px; top: 16px; width: 82px; height: 82px; }
+      .pc-anneau svg { width: 82px; height: 82px; } .pc-anneau strong { font-size: 19px; } .pc-anneau small { display: none; }
+      .pc-cta { width: 100%; justify-content: center; }
+      .pc-ech { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; margin: 0 -20px; padding: 0 20px 6px; }
+      .pc-e { flex: 0 0 70%; scroll-snap-align: start; }
+      .pc-fil::before { top: 23px; }
+      .pc-pas .num { width: 46px; height: 46px; font-size: 20px; } .pc-pas strong { font-size: 13px; } .pc-pas small { display: none; } .pc-pas .etat { font-size: 10.5px; padding: 3px 7px; }
+      .pc-mat { grid-template-columns: 1fr; gap: 8px; }
+      .pc-mat .pc-btn { justify-self: start; }
+      .pc-delai { grid-template-columns: 1fr; text-align: center; }
+      .pc-epreuve, .pc-adm { padding: 16px; }
+      .pc-sous-etapes > li { grid-template-columns: 30px 1fr; } .pc-sous-etapes > li > .pc-avenir { grid-column: 2; justify-self: start; }
+    }
     .quiz-tabbar .pastille { position: absolute; top: -2px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; border: 1.5px solid #fff; }
     /* Essai gratuit et fenêtre de paiement */
     .quiz-niveau:disabled { opacity: .45; cursor: not-allowed; }
@@ -561,7 +690,7 @@
     .qz-serie .quiz-recap > div { display: grid; grid-template-columns: 20px 1fr; align-items: start; }
     .qz-recap-theme { display: block; font-size: 11px; font-weight: 800; color: #7c3aed; text-transform: uppercase; letter-spacing: .03em; }
     .quiz-tabbar .tb-c { display: none; }
-    @media (max-width: 480px) { .quiz-tabbar .tb-l { display: none; } .quiz-tabbar .tb-c { display: inline; } .quiz-tabbar a { font-size: 11.5px; } }
+    @media (max-width: 1099px) { .quiz-tabbar .tb-l { display: none; } .quiz-tabbar .tb-c { display: inline; } .quiz-tabbar a { font-size: 11px; } }
     /* Mes notions */
     .nt-carte { margin-bottom: 16px; }
     .nt-carte h2 { font-size: 20px; font-weight: 900; color: var(--gray-900); margin-bottom: 4px; }
@@ -821,7 +950,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <p class="quiz-lead">Lancez des séries de 20 questions rattachées au programme du concours, par matière et par niveau. Chaque notion est posée sous plusieurs formes : avec 3 bonnes réponses, elle est maîtrisée. En cas d'erreur, vous voyez l'explication et une question similaire revient plus tard.</p>
   <div id="quiz-app"></div>
 </main>
-<nav class="quiz-tabbar" aria-label="Navigation du quiz"><a href="/quizapp" class="actif" aria-current="page" data-vue=""><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg></span>Accueil</a><a href="/quizapp?vue=series" data-vue="series"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tb-l">Mes séries</span><span class="tb-c">Séries</span></a><a href="/quizapp?vue=notions" data-vue="notions"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg></span><span class="tb-l">Mes notions</span><span class="tb-c">Notions</span></a><a href="/quizapp?vue=test" data-vue="test"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>Mon test</a><a href="/quizapp?vue=support" id="tab-support" data-vue="support"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg><span class="pastille" hidden></span></span>Support</a><a href="/quizapp?vue=profil" data-vue="profil"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>Profil</a></nav>
+<nav class="quiz-tabbar" aria-label="Navigation du quiz"><a href="/quizapp" class="actif" aria-current="page" data-vue=""><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></svg></span><span class="tb-l">Mon parcours</span><span class="tb-c">Parcours</span></a><a href="/quizapp?vue=quiz" data-vue="quiz"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="tb-l">Quiz</span><span class="tb-c">Quiz</span></a><a href="/quizapp?vue=series" data-vue="series"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tb-l">Mes séries</span><span class="tb-c">Séries</span></a><a href="/quizapp?vue=notions" data-vue="notions"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg></span><span class="tb-l">Tableau des notions</span><span class="tb-c">Notions</span></a><a href="/quizapp?vue=test" data-vue="test"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span><span class="tb-l">Mon test de positionnement</span><span class="tb-c">Mon test</span></a><a href="/quizapp?vue=support" id="tab-support" data-vue="support"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg><span class="pastille" hidden></span></span><span class="tb-l">Support</span><span class="tb-c">Support</span></a><a href="/quizapp?vue=profil" data-vue="profil"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="tb-l">Profil</span><span class="tb-c">Profil</span></a></nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
   // Menu du compte dans l'en-tête : nom du profil et accès aux deux outils
@@ -894,7 +1023,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function sauver(mat, pm) { var p = lire(); p[mat] = pm; ecrire(p); }
 
   function esc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-  function label(k) { for (var i = 0; i < MATIERES.length; i++) if (MATIERES[i][0] === k) return MATIERES[i][1]; return k; }
+  var MATIERES_TOUTES = MATIERES.slice();
+  function label(k) { for (var i = 0; i < MATIERES_TOUTES.length; i++) if (MATIERES_TOUTES[i][0] === k) return MATIERES_TOUTES[i][1]; return k; }
   function top() { window.scrollTo({ top: root.offsetTop - 90, behavior: 'smooth' }); }
   function melange(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)), t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
   function jours(n) { return n <= 1 ? 'demain' : 'dans ' + n + ' jours'; }
@@ -1132,12 +1262,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     top();
   }
   function accueil(message) {
-    // Avant le premier quiz (après le test de positionnement) : choix de l'épreuve
-    if (!epreuve()) return choixEpreuve();
+    // Domaines de l'écrit pas encore choisis : choix d'abord (le quiz ne porte que sur ces domaines)
+    if (!domainesCharges) return chargerDomaines().then(function () { accueil(message); });
+    if (!domainesChoisis) return choixDomaines();
+    // Le parcours remplace l'ancien écran de choix de l'épreuve : quiz des notions par défaut
+    if (!epreuve()) choisirEpreuve('ecrit');
     if (epreuve() === 'sujets') return sjAccueil(message);
     st = null; intro(true);
-    if (vue()) history.pushState(null, '', '/quizapp');
-    marquerOnglet('');
+    if (vue() !== 'quiz') history.pushState(null, '', '/quizapp?vue=quiz');
+    marquerOnglet('quiz');
     var e = essaiActif();
     root.innerHTML = barreCompte() + barreEpreuve('ecrit') + barreFiltres(false) + (e ? essaiBandeau(e) : '') +
       (message ? '<div class="quiz-msg ok-msg">' + esc(message) + '</div>' : '') +
@@ -1153,6 +1286,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     (bilanGlobal.totaux ? Promise.resolve(bilanGlobal.totaux) : api('/api/quiz/totaux')).then(function (t) {
       bilanGlobal.totaux = t;
       if (!document.getElementById('qz-bilan')) return;
+      // Seulement les matières des domaines choisis
+      var ms = t.matieres.filter(function (m) { return MATIERES.some(function (x) { return x[0] === m.matiere; }); });
+      t = { matieres: ms, questions: ms.reduce(function (a, m) { return a + m.questions; }, 0), notions: ms.reduce(function (a, m) { return a + m.notions; }, 0) };
       var p = lire(), faites = 0, maitrisees = 0;
       t.matieres.forEach(function (m) {
         var pm = p[m.matiere]; if (!pm || !pm.notions) return;
@@ -1164,7 +1300,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         '<div class="stat"><b>' + nb(faites) + '</b><span>questions faites</span></div>' +
         '<div class="stat"><b>' + nb(maitrisees) + ' / ' + nb(t.notions) + '</b><span>notions maîtrisées</span></div></div>' +
         '<div class="prog-bar qz-bilan-barre" aria-label="' + pc + ' % des questions faites"><span class="m" style="width:' + pc + '%"></span></div>' +
-        '<p class="qz-note">' + pc + ' % des questions du quiz faites, toutes matières confondues.</p>';
+        '<p class="qz-note">' + pc + ' % des questions du quiz faites, dans les matières de tes domaines.</p>';
     }).catch(function () { el.hidden = true; });
   }
 
@@ -1250,6 +1386,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // ── Navigation interne : Accueil, Mes séries, Support (adresses /quizapp, /quizapp?vue=series, /quizapp?vue=support) ──
   function vue() { return new URLSearchParams(location.search).get('vue') || ''; }
   function marquerOnglet(v) {
+    document.body.classList.remove('qz-large');
     document.querySelectorAll('.quiz-tabbar a[data-vue]').forEach(function (a) {
       var on = a.dataset.vue === v; a.classList.toggle('actif', on);
       if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
@@ -1276,7 +1413,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (v === 'support') return supportVue();
     if (v === 'test') return monTest();
     if (v === 'profil') return profilVue();
-    marquerOnglet(''); boot();
+    if (v === 'quiz') { ecranCible = 'quiz'; marquerOnglet('quiz'); return boot(); }
+    ecranCible = 'parcours'; marquerOnglet(''); boot();
   }
   window.addEventListener('popstate', route);
   // Liens internes (onglets, logo, Support, menu du compte) : changement d'écran sans recharger la page
@@ -1288,6 +1426,222 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     fermerPaiement();
     history.pushState(null, '', a.getAttribute('href')); route(); window.scrollTo(0, 0);
   });
+
+
+  // ── Mon parcours ──
+  // Domaines de l'écrit : le français et les mathématiques pour tous, plus 3 domaines choisis parmi 4 (onboarding, modifiable).
+  // Le quiz, le quiz sujets et le tableau des notions ne portent que sur les matières de ces domaines.
+  // Gardés dans le compte (user_metadata.domaines) et dans ce navigateur.
+  var DOMAINES = {
+    hg: ['Histoire-géographie et EMC', '🌍', ['histoire_geographie', 'emc'], 'Histoire, géographie, enseignement moral et civique'],
+    sciences: ['Sciences et technologie', '🔬', ['svt', 'physique_chimie', 'technologie'], 'SVT, physique-chimie, technologie'],
+    arts: ['Arts', '🎨', ['arts'], 'Arts plastiques et éducation musicale'],
+    lv: ['Langue vivante', '🇬🇧', ['anglais'], 'Anglais']
+  }, ORDRE_DOMAINES = ['hg', 'sciences', 'arts', 'lv'];
+  var domainesChoisis = null, domainesCharges = false, ecranCible = 'parcours';
+  function cleDomaines(u) { return 'passcrpe-quiz-domaines:' + String((u && u.email) || (compte && compte.email) || '').toLowerCase(); }
+  function domainesValides(d) { return Array.isArray(d) && d.length === 3 && d.every(function (k) { return DOMAINES[k]; }) && d[0] !== d[1] && d[1] !== d[2] && d[0] !== d[2]; }
+  function matieresDomaines(d) { var l = ['francais', 'mathematiques']; (d || []).forEach(function (k) { l = l.concat(DOMAINES[k][2]); }); return l; }
+  function appliquerDomaines() {
+    var l = domainesChoisis ? matieresDomaines(domainesChoisis) : null;
+    MATIERES = l ? MATIERES_TOUTES.filter(function (m) { return l.indexOf(m[0]) >= 0; }) : MATIERES_TOUTES.slice();
+    if (!MATIERES.some(function (m) { return m[0] === choix.mat; })) { choix.mat = MATIERES[0][0]; garderChoix(); }
+  }
+  function chargerDomaines() {
+    return SB.auth.getSession().then(function (r) {
+      var u = r.data.session && r.data.session.user, d = u && u.user_metadata && u.user_metadata.domaines;
+      if (!domainesValides(d)) { try { d = JSON.parse(localStorage.getItem(cleDomaines(u))); } catch (e) { d = null; } }
+      domainesChoisis = domainesValides(d) ? ORDRE_DOMAINES.filter(function (k) { return d.indexOf(k) >= 0; }) : null;
+      domainesCharges = !!u; appliquerDomaines();
+    }).catch(function () {});
+  }
+  function enregistrerDomaines(d) {
+    domainesChoisis = ORDRE_DOMAINES.filter(function (k) { return d.indexOf(k) >= 0; }); domainesCharges = true;
+    try { localStorage.setItem(cleDomaines(), JSON.stringify(domainesChoisis)); } catch (e) {}
+    appliquerDomaines(); precharger();
+    return SB.auth.updateUser({ data: { domaines: domainesChoisis } }).catch(function () {});
+  }
+  // Écran de choix : à la première visite après le test (onboarding), puis depuis le parcours ou le profil
+  function choixDomaines(depuis) {
+    st = null; tst = null; intro(false); marquerOnglet(depuis === 'profil' ? 'profil' : '');
+    var sel = (domainesChoisis || []).slice(), premier = !domainesChoisis;
+    var dessiner = function () {
+      root.innerHTML = '<div class="quiz-card">' +
+        (premier ? '<p class="dm-compte" style="margin:0 0 6px">👋 Dernière étape avant ton parcours</p>' : '') +
+        '<h2>' + (premier ? 'Quels domaines as-tu choisis pour l’écrit ?' : 'Modifier mes domaines') + '</h2>' +
+        '<p>Choisis tes <strong>3 domaines parmi les 4</strong>. Ton quiz, tes épreuves passées et ton tableau des notions porteront uniquement sur eux, en plus du français et des mathématiques. Tu pourras les modifier à tout moment.</p>' +
+        '<div class="dm-socle">Pour tout le monde : <span>✍️ Français</span><span>🔢 Mathématiques</span></div>' +
+        '<div class="dm-grille">' + ORDRE_DOMAINES.map(function (k) {
+          var on = sel.indexOf(k) >= 0, plein = sel.length >= 3 && !on;
+          return '<button type="button" class="dm-carte" data-dm="' + k + '" aria-pressed="' + on + '"' + (plein ? ' disabled' : '') + '><span class="ic">' + DOMAINES[k][1] + '</span><span><b>' + esc(DOMAINES[k][0]) + '</b><small>' + esc(DOMAINES[k][3]) + '</small></span><span class="coche"></span></button>';
+        }).join('') + '</div>' +
+        '<div class="dm-bas"><span class="dm-compte">' + sel.length + ' / 3 domaines choisis</span><span class="quiz-actions" style="margin:0">' +
+        (premier ? '' : '<button type="button" class="quiz-btn ghost" data-dm-annuler>Annuler</button>') +
+        '<button type="button" class="quiz-btn" data-dm-ok' + (sel.length === 3 ? '' : ' disabled') + '>' + (premier ? 'Créer mon parcours →' : 'Enregistrer') + '</button></span></div></div>';
+      root.querySelectorAll('[data-dm]').forEach(function (b) {
+        b.addEventListener('click', function () { var k = b.dataset.dm, i = sel.indexOf(k); if (i >= 0) sel.splice(i, 1); else if (sel.length < 3) sel.push(k); dessiner(); });
+      });
+      var an = root.querySelector('[data-dm-annuler]'); if (an) an.addEventListener('click', function () { if (depuis === 'profil') profilVue(); else parcoursVue(); });
+      root.querySelector('[data-dm-ok]').addEventListener('click', function () {
+        enregistrerDomaines(sel);
+        if (depuis === 'profil') return profilVue();
+        if (vue()) history.pushState(null, '', '/quizapp');
+        parcoursVue(); top();
+      });
+    };
+    dessiner(); top();
+  }
+
+  // Calendrier 2027 : écrits fixés par les arrêtés du 22/09/2026 (JO du 30/09/2026) ; le reste dépend des académies
+  var ECRITS = '2027-03-30';
+  var ECHEANCES = [
+    ['2026-11-25', 'Clôture des inscriptions', 'mer. 25 nov. 2026, 12 h', 'Sur Cyclades', ''],
+    [ECRITS, 'Écrits d’admissibilité', '30 et 31 mars 2027', 'Toutes les académies', 'cle'],
+    ['2027-04-15', 'Résultats d’admissibilité', 'mi-avril à fin mai 2027', 'Selon ton académie', '≈'],
+    ['2027-05-15', 'Oraux d’admission', 'mai-juin 2027', 'Selon ton académie', '≈'],
+    ['2027-06-20', 'Résultats d’admission', 'fin juin 2027', 'Selon ton académie', '≈']
+  ];
+  function joursAvant(iso) { var a = new Date(); a.setHours(0, 0, 0, 0); return Math.round((new Date(iso + 'T00:00:00') - a) / 864e5); }
+  function concoursParcours() { return sjConcours(); } // même concours que le quiz sujets (profil, ou choix fait dans le quiz sujets)
+  function epreuvesEcrit(c) {
+    var dom = matieresDomaines(domainesChoisis).slice(2), noms = domainesChoisis.map(function (k) { return DOMAINES[k][0]; }).join(' · ');
+    if (c === 'bac5') return [
+      { nom: 'Épreuve de français', date: 'Mar. 30 mars · 14 h-17 h', mats: ['francais'] },
+      { nom: 'Épreuve de mathématiques', date: 'Mer. 31 mars · 9 h-12 h', mats: ['mathematiques'] },
+      { nom: 'Épreuve d’application', sous: noms, date: 'Mer. 31 mars · 15 h-18 h', mats: dom }];
+    return [
+      { nom: 'Épreuve 1 · Français et mathématiques', date: 'Mar. 30 mars · 13 h-17 h', mats: ['francais', 'mathematiques'] },
+      { nom: 'Épreuve 2 · Domaines au choix', sous: noms, date: 'Mer. 31 mars · 9 h-13 h', mats: dom }];
+  }
+
+  function parcoursVue() {
+    st = null; tst = null; intro(false); marquerOnglet(''); document.body.classList.add('qz-large');
+    if (!domainesCharges) return chargerDomaines().then(parcoursVue);
+    if (!domainesChoisis) return choixDomaines();
+    root.innerHTML = '<div class="quiz-card"><p>Chargement de ton parcours…</p></div>';
+    SB.auth.getSession().then(function (r) {
+      var s = r.data.session; if (!s) return connexion();
+      pfUser = s.user;
+      var cs = sjConcours();
+      return Promise.all([
+        compte ? Promise.resolve(compte) : api('/api/quiz/compte'),
+        SB.rpc('quiz_notions_resume').then(function (x) { return x.error ? null : x.data; }, function () { return null; }),
+        SB.from('quiz_series').select('matiere, score, total').eq('user_id', s.user.id).limit(2000).then(function (x) { return x.error ? [] : (x.data || []); }, function () { return []; }),
+        sjCharger(cs).catch(function () { return []; })
+      ]).then(function (d) { compte = d[0]; if (vue()) return; dessinerParcours(d[1], d[2], d[3], cs); });
+    }).catch(function (e) { if (e && e.status === 401) return connexion(); erreur('Ton parcours n’a pas pu être chargé. Réessaie dans quelques instants.'); });
+  }
+
+  function dessinerParcours(resume, series, sujets, cs) {
+    document.body.classList.add('qz-large');
+    var c = concoursParcours(), p = lireProfil(), prenom = (p.prenom || '').trim();
+    var notions = {}; ((resume && resume.matieres) || []).forEach(function (m) { notions[m.matiere] = m; });
+    var reu = {}; series.forEach(function (x) { var r = reu[x.matiere] = reu[x.matiere] || { s: 0, t: 0 }; r.s += x.score || 0; r.t += x.total || 0; });
+    var test = {}; ((compte && compte.positionnement && compte.positionnement.matieres) || []).forEach(function (m) { test[m.matiere] = m.pct; });
+    var actives = MATIERES.map(function (m) { return m[0]; });
+    var tot = 0, mai = 0, enc = 0;
+    actives.forEach(function (k) { var n = notions[k]; if (n) { tot += n.total; mai += n.maitrisees; enc += n.en_cours + n.a_revoir; } });
+    var pct = tot ? Math.round(mai / tot * 100) : 0, jEcrits = joursAvant(ECRITS), restantes = tot - mai;
+    var parJour = jEcrits > 0 ? Math.ceil(restantes / jEcrits) : restantes;
+    var reussite = function (k) {
+      var r = reu[k]; if (r && r.t) return { v: Math.round(r.s / r.t * 100), src: 'aux séries' };
+      if (test[k] != null) return { v: test[k], src: 'au test' };
+      return null;
+    };
+    var ic = function (k) { var m = MATIERES_TOUTES.filter(function (x) { return x[0] === k; })[0]; return m ? m[2] : ''; };
+    // Prochaine matière conseillée : la moins maîtrisée de l'épreuve 1, puis des domaines
+    var conseil = actives.slice().sort(function (a, b) {
+      var pa = notions[a] && notions[a].total ? notions[a].maitrisees / notions[a].total : 0, pb = notions[b] && notions[b].total ? notions[b].maitrisees / notions[b].total : 0;
+      var ra = (reussite(a) || { v: 0 }).v, rb = (reussite(b) || { v: 0 }).v;
+      return (pa - pb) || (ra - rb);
+    })[0];
+
+    // Épreuves passées (quiz sujets) : questions du concours, par matière active
+    var vus = sjLire().q || {}, parMat = {};
+    sujets.forEach(function (q) { var m = parMat[q.matiere] = parMat[q.matiere] || { n: 0, f: 0, ok: 0 }; m.n++; if (vus[q.id]) { m.f++; if (vus[q.id].ok) m.ok++; } });
+    var sjTot = 0, sjFaites = 0; actives.forEach(function (k) { if (parMat[k]) { sjTot += parMat[k].n; sjFaites += parMat[k].f; } });
+
+    var h = '';
+    // Bandeau
+    h += '<section class="pc-hero"><div><div class="sur">⏳ ' + (jEcrits > 0 ? 'J-' + jEcrits + ' avant les écrits' : 'Les écrits sont passés : place aux oraux') + '</div>' +
+      '<h2>' + (prenom ? 'Bonjour ' + esc(prenom) + ' 👋' : 'Ton parcours 👋') + '</h2>' +
+      '<p>Ton chemin vers le CRPE, étape par étape : les notions de l’écrit, puis les épreuves passées, puis les oraux.</p>' +
+      '<div class="pc-puces"><span>🎓 CRPE ' + (c === 'bac5' ? 'Bac+5' : 'Bac+3') + '</span>' + domainesChoisis.map(function (k) { return '<span>' + DOMAINES[k][1] + ' ' + esc(DOMAINES[k][0]) + '</span>'; }).join('') + '<button type="button" data-pc-domaines>Modifier</button></div>' +
+      '<button type="button" class="pc-cta" data-pc-quiz="' + conseil + '">▶ Continuer en ' + esc(label(conseil)) + '</button></div>' +
+      '<div class="pc-anneau"><svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="12"/><circle cx="70" cy="70" r="60" fill="none" stroke="#f97316" stroke-width="12" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="' + Math.round(377 * (1 - pct / 100)) + '"/></svg>' +
+      '<div><strong>' + pct + ' %</strong><small>notions maîtrisées</small></div></div></section>';
+
+    // Échéances
+    h += '<h3 class="pc-h">📅 Tes échéances</h3><p class="pc-sous">Concours 2027. Dates des écrits fixées par arrêté ; résultats et oraux selon ton académie.</p><div class="pc-ech">' +
+      ECHEANCES.map(function (e) {
+        var j = joursAvant(e[0]), passe = j < 0, cls = passe ? 'passe' : (e[4] === 'cle' ? 'cle' : (j <= 30 ? 'proche' : ''));
+        return '<div class="pc-e ' + cls + '"><span class="j">' + (passe ? 'Passé' : (e[4] === '≈' ? '≈ ' : '') + 'J-' + j) + '</span><b>' + esc(e[1]) + '</b><span class="d">' + esc(e[2]) + '</span><small>' + esc(e[3]) + '</small></div>';
+      }).join('') + '</div>';
+
+    // Fil en 3 étapes
+    h += '<h3 class="pc-h">🧭 Ton apprentissage en 3 étapes</h3><p class="pc-sous">Apprends les notions de l’écrit, entraîne-toi sur les vrais sujets, puis prépare les oraux.</p>' +
+      '<div class="pc-fil" style="--av:' + Math.min(50, Math.round(pct / 2)) + '%">' +
+      '<button type="button" class="pc-pas encours" data-pc-aller="pc-e1"><span class="num">✍️</span><span class="n">Étape 1</span><strong>Quiz admissibilité</strong><small>Les notions des écrits, matière par matière</small><span class="etat">En cours · ' + pct + ' %</span></button>' +
+      '<button type="button" class="pc-pas ouvert" data-pc-aller="pc-e2"><span class="num">📄</span><span class="n">Étape 2</span><strong>Épreuves passées</strong><small>Les questions des sujets officiels, par matière</small><span class="etat">' + nf(sjFaites) + ' / ' + nf(sjTot) + ' questions</span></button>' +
+      '<button type="button" class="pc-pas bientot" data-pc-aller="pc-e3"><span class="num">🎤</span><span class="n">Étape 3</span><strong>Admission</strong><small>La leçon, l’EPS et l’entretien</small><span class="etat">À venir</span></button></div>';
+
+    // Étape 1 : quiz admissibilité
+    h += '<section class="pc-etape" id="pc-e1"><h3>✍️ Étape 1 · Quiz admissibilité</h3>' +
+      '<div class="pc-delai"><div class="gros">' + Math.max(0, jEcrits) + '<small>jours pour le finir</small></div><p>' +
+      (restantes > 0 ? 'Il te reste <strong>' + nf(restantes) + ' notions</strong> à maîtriser sur ' + nf(tot) + ' avant les écrits du 30 mars. Au rythme de <strong>' + nf(parJour) + ' notion' + (parJour > 1 ? 's' : '') + ' par jour</strong>, tu arrives prêt(e) le jour J.' + (enc ? ' ' + nf(enc) + ' notions sont déjà en cours.' : '')
+        : 'Bravo : toutes les notions de tes épreuves sont maîtrisées. Continue les révisions et les épreuves passées.') + '</p></div>' +
+      '<div class="pc-legende"><span><i style="background:var(--indigo-600)"></i>Réussite (séries, ou test de positionnement)</span><span><i style="background:#10b981"></i>Notions maîtrisées</span></div>';
+    epreuvesEcrit(c).forEach(function (ep) {
+      var s = 0, t = 0, ms = 0, mt = 0;
+      ep.mats.forEach(function (k) { var r = reussite(k); if (r) { s += r.v; t++; } var n = notions[k]; if (n) { ms += n.maitrisees; mt += n.total; } });
+      h += '<div class="pc-epreuve"><div class="pc-ep-tete"><h4>' + esc(ep.nom) + '</h4><span class="date">📅 ' + esc(ep.date) + '</span><span class="moy">Réussite ' + (t ? Math.round(s / t) + ' %' : '—') + ' · ' + (mt ? Math.round(ms / mt * 100) : 0) + ' % maîtrisé</span></div>' +
+        (ep.sous ? '<p class="pc-sous" style="margin:0 0 4px">' + esc(ep.sous) + '</p>' : '') +
+        ep.mats.map(function (k) {
+          var r = reussite(k), n = notions[k] || { total: 0, maitrisees: 0 }, pm = n.total ? Math.round(n.maitrisees / n.total * 100) : 0;
+          return '<div class="pc-mat"><div class="nom">' + ic(k) + ' ' + esc(label(k)) + '<small>' + nf(n.maitrisees) + ' / ' + nf(n.total) + ' notions maîtrisées</small></div>' +
+            '<div class="pc-barres"><div class="pc-barre reu"><span class="fond"><i style="width:' + (r ? r.v : 0) + '%"></i></span><span><b>' + (r ? r.v + ' %' : '—') + '</b> ' + (r ? 'réussite ' + r.src : 'pas encore de série') + '</span></div>' +
+            '<div class="pc-barre mai"><span class="fond"><i style="width:' + pm + '%"></i></span><span><b>' + pm + ' %</b> maîtrisé</span></div></div>' +
+            '<button type="button" class="pc-btn' + (k === conseil ? ' plein' : '') + '" data-pc-quiz="' + k + '">S’entraîner →</button></div>';
+        }).join('') + '</div>';
+    });
+    h += '</section>';
+
+    // Étape 2 : épreuves passées par matière
+    h += '<section class="pc-etape" id="pc-e2"><h3>📄 Étape 2 · Épreuves passées</h3>' +
+      '<p class="pc-sous">Les questions reprises des sujets officiels ' + (cs === 'bac5' ? 'Bac+5 (2025 et 2026)' : 'Bac+3 (2026)') + ', corrigées et expliquées avec les remarques des jurys. À faire en complément de l’étape 1, et surtout le dernier mois avant les écrits.</p><div class="pc-sujets">' +
+      actives.map(function (k) {
+        var m = parMat[k];
+        if (!m) return '<div class="pc-sujet"><span class="ic">' + ic(k) + '</span><b>' + esc(label(k)) + '</b><small>' + (k === 'anglais' && cs === 'bac5' ? 'Pas d’épreuve écrite d’anglais au Bac+5' : 'Questions à venir') + '</small><button type="button" class="pc-btn" disabled>Bientôt</button></div>';
+        return '<div class="pc-sujet"><span class="ic">' + ic(k) + '</span><b>' + esc(label(k)) + '</b><small>' + nf(m.n) + ' questions · ' + nf(m.f) + ' faites · ' + nf(m.ok) + ' réussies</small>' +
+          '<span class="fond"><i style="width:' + Math.round(m.ok / m.n * 100) + '%"></i></span><button type="button" class="pc-btn' + (m.f ? ' plein' : '') + '" data-pc-sujets="' + k + '">' + (m.f ? 'Continuer' : 'Commencer') + ' →</button></div>';
+      }).join('') + '</div></section>';
+
+    // Étape 3 : admission (à venir)
+    var avenir = '<span class="pc-avenir">À venir</span>';
+    h += '<section class="pc-etape" id="pc-e3"><h3>🎤 Étape 3 · Admission <em>À venir</em></h3>' +
+      '<p class="pc-sous">Les oraux auront lieu en mai-juin 2027, selon ton académie. Chaque étape aura son quiz spécifique : nous te préviendrons dès qu’il sera prêt.</p>' +
+      '<div class="pc-adm"><div class="pc-adm-tete"><h4>📚 Épreuve 1 · Leçon</h4>' + avenir + '</div>' +
+      '<p>Au choix, en <strong>français</strong> ou en <strong>mathématiques</strong> : un quiz spécifique pour préparer ta leçon.</p></div>' +
+      '<div class="pc-adm"><div class="pc-adm-tete"><h4>🏃 Épreuve 2 · Partie 1 : éducation physique et sportive</h4>' + avenir + '</div>' +
+      '<p>Cette épreuve permet d’apprécier les connaissances du candidat dans le champ des activités physiques, sportives et artistiques supports de l’enseignement de l’éducation physique et sportive à l’école et au collège, et sur le développement moteur et psychologique de l’enfant. Elle mobilise également les capacités d’analyse et de réflexion du candidat.</p></div>' +
+      '<div class="pc-adm"><div class="pc-adm-tete"><h4>🤝 Épreuve 2 · Partie 2 : entretien avec le jury (35 min)</h4>' + avenir + '</div>' +
+      '<ul class="pc-sous-etapes">' +
+      '<li><span class="no">1</span><span><b>Ta présentation (5 min)</b><small>Ta motivation, ton parcours et les expériences qui t’ont conduit(e) au concours : enseignements suivis, stages, engagement associatif, périodes de formation à l’étranger.</small></span>' + avenir + '</li>' +
+      '<li><span class="no">2</span><span><b>L’échange avec le jury (10 min)</b><small>Les questions du jury sur ta présentation.</small></span>' + avenir + '</li>' +
+      '<li><span class="no">3</span><span><b>Les valeurs de la République, dont la laïcité</b><small>Ta capacité à les transmettre et à les incarner, avec une mise en situation.</small></span>' + avenir + '</li>' +
+      '<li><span class="no">4</span><span><b>Ton aptitude au métier (entretien de 20 min)</b><ol><li>Se projeter dans le métier de professeur</li><li>Transmettre et incarner les exigences du service public : droits et obligations du fonctionnaire dont la neutralité, lutte contre les discriminations et les stéréotypes, promotion de l’égalité, notamment entre les filles et les garçons</li><li>Comprendre les grands enjeux liés à la transition écologique</li><li>Appréhender l’épanouissement de l’élève dans toutes ses dimensions</li></ol></span>' + avenir + '</li>' +
+      '</ul></div></section>';
+
+    root.innerHTML = h;
+    root.querySelector('[data-pc-domaines]').addEventListener('click', function () { choixDomaines('parcours'); });
+    root.querySelectorAll('[data-pc-aller]').forEach(function (b) { b.addEventListener('click', function () { var el = document.getElementById(b.dataset.pcAller); if (el) el.scrollIntoView({ behavior: 'smooth' }); }); });
+    root.querySelectorAll('[data-pc-quiz]').forEach(function (b) {
+      b.addEventListener('click', function () { choisirEpreuve('ecrit'); choix.mat = b.dataset.pcQuiz; garderChoix(); accueil(); top(); });
+    });
+    root.querySelectorAll('[data-pc-sujets]').forEach(function (b) {
+      b.addEventListener('click', function () { choisirEpreuve('sujets'); history.pushState(null, '', '/quizapp?vue=quiz'); marquerOnglet('quiz'); intro(false); sjDemarrer(b.dataset.pcSujets); top(); });
+    });
+  }
 
   // Mon test de positionnement (menu du compte) : le rapport, ou le test s'il n'est pas encore fait
   function monTest() {
@@ -1597,7 +1951,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function profilVue() {
     st = null; tst = null; intro(false); marquerOnglet('profil'); pfEdit = null;
     root.innerHTML = '<div class="quiz-card"><p>Chargement de votre profil…</p></div>';
-    SB.auth.getSession().then(function (r) { var s = r.data.session; if (!s) return connexion(); pfUser = s.user; afficherProfil(); });
+    SB.auth.getSession().then(function (r) { var s = r.data.session; if (!s) return connexion(); pfUser = s.user; return chargerDomaines().then(afficherProfil); });
   }
   var pfUser = null;
   function lireProfil() {
@@ -1617,12 +1971,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
            '<div class="pf-champ"><label for="pf-academie">Académie</label><select id="pf-academie"><option value="">Choisir une académie…</option>' + ACADEMIES.map(function (a) { return '<option' + (a === e.academie ? ' selected' : '') + '>' + esc(a) + '</option>'; }).join('') + '</select></div>'
          : '<div class="pf-ligne"><span>Prénom</span><b>' + esc(p.prenom) + '</b></div><div class="pf-ligne"><span>Concours</span><b>' + esc(p.concours) + '</b></div><div class="pf-ligne"><span>Académie</span><b>' + esc(p.academie || '—') + '</b></div>') +
       '</div>' +
+      '<div class="pf-carte"><div class="pf-titre"><h3>Domaines de l’écrit</h3><button type="button" class="pf-lien" data-pf-domaines>Modifier</button></div>' +
+      '<div class="pf-ligne"><span>Toujours</span><b>Français, mathématiques</b></div>' +
+      '<div class="pf-ligne"><span>Mes 3 domaines</span><b>' + (domainesChoisis ? domainesChoisis.map(function (k) { return esc(DOMAINES[k][0]); }).join(', ') : 'À choisir') + '</b></div></div>' +
       // Un seul compte pour QuizCRPE et PassCRPE : la déconnexion vaut pour les deux
       '<button type="button" class="pf-deconnexion" data-act="pf-deconnexion">Se déconnecter</button>' +
       '<p class="pf-note">Vous serez déconnecté du Quiz CRPE et de PassCRPE.</p></div>';
     var ip = document.getElementById('pf-prenom'), sa = document.getElementById('pf-academie');
     if (ip) ip.addEventListener('input', function () { pfEdit.prenom = ip.value; majEnregistrer(); });
     if (sa) sa.addEventListener('change', function () { pfEdit.academie = sa.value; majEnregistrer(); });
+    var bd = root.querySelector('[data-pf-domaines]'); if (bd) bd.addEventListener('click', function () { choixDomaines('profil'); });
   }
   function majEnregistrer() { var b = root.querySelector('[data-act="pf-enregistrer"]'); if (b) b.disabled = !(pfEdit.prenom.trim() && pfEdit.concours && pfEdit.academie); }
   function enregistrerProfil() {
@@ -1642,7 +2000,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // Choix de l'écran d'après le compte
   function aiguiller(c) {
     if (!c.positionnement) return introTest();
-    if (c.paid) { fermerPaiement(); accueil(); return precharger(); }
+    if (!domainesCharges) return chargerDomaines().then(function () { aiguiller(c); });
+    if (!domainesChoisis) return choixDomaines();
+    var ecran = ecranCible === 'quiz' ? accueil : parcoursVue;
+    if (c.paid) { fermerPaiement(); ecran(); return precharger(); }
     // Pas encore payé : menu du quiz avec les 10 questions gratuites du jour (le rapport du test est dans « Mon test »,
     // et s'affiche directement à la fin du test) ; le paiement s'ouvre quand les questions du jour sont faites
     var e = c.essai;
@@ -1650,10 +2011,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var pr = lire();
     if (e && !MATIERES.some(function (m) { return pr[m[0]] && pr[m[0]].series; })) {
       // Aucune série faite : première matière conseillée par le test présélectionnée, à son niveau conseillé
-      var m = e.conseillees[0];
+      var m = e.conseillees.filter(function (x) { return MATIERES.some(function (y) { return y[0] === x.matiere; }); })[0];
       if (m) { choix.mat = m.matiere; choix.niveau = m.niveau; garderChoix(); }
     }
-    accueil();
+    ecran();
   }
   function etatCompte(c) { return c ? [!!c.paid, !!c.positionnement, c.essai ? c.essai.faites : ''].join('|') : ''; }
   // Compte déjà chargé (changement de menu) : écran affiché tout de suite, compte rafraîchi en arrière-plan.
@@ -1917,7 +2278,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // Essai : ouverture du menu du quiz (pas de série lancée d'office), sur la première matière conseillée par le test
   // si aucune série n'a encore été faite ; la personne choisit ensuite sa matière, ses thèmes et lance sa série
   function lancerEssai() {
-    var e = essaiActif(), pr = lire(), m = e && e.conseillees[0];
+    var e = essaiActif(), pr = lire(), m = e && e.conseillees.filter(function (x) { return MATIERES.some(function (y) { return y[0] === x.matiere; }); })[0];
     if (m && !MATIERES.some(function (x) { return pr[x[0]] && pr[x[0]].series; })) { choix.mat = m.matiere; choix.niveau = m.niveau; garderChoix(); }
     accueil(); top();
   }
@@ -2281,8 +2642,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function sjNomSujet(q) { return SJ_CONCOURS[q.concours] + ' ' + q.session + ' · ' + q.sujet; }
   function sjAccueil(message) {
     st = null; intro(true);
-    if (vue()) history.pushState(null, '', '/quizapp');
-    marquerOnglet('');
+    if (vue() !== 'quiz') history.pushState(null, '', '/quizapp?vue=quiz');
+    marquerOnglet('quiz');
     var c = sjConcours(), e = essaiActif();
     intro(true, 'sujets');
     root.innerHTML = barreEpreuve('sujets') + (e ? essaiBandeau(e) : '') +
@@ -2303,6 +2664,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           '<small>' + nf(liste.length) + ' question' + (liste.length > 1 ? 's' : '') + ' · ' + nf(faites) + ' faite' + (faites > 1 ? 's' : '') + ' · ' + nf(ok) + ' réussie' + (ok > 1 ? 's' : '') + '</small>' +
           '<span class="sj-barre"><span style="width:' + Math.round(ok / liste.length * 100) + '%"></span></span></button>';
       };
+      qs = qs.filter(function (q) { return MATIERES.some(function (m) { return m[0] === q.matiere; }); });
       el.innerHTML = '<p class="sj-chiffres" style="margin-top:14px">' + nf(qs.length) + ' questions tirées de ' + nf(Object.keys(sujets).length) + ' épreuves officielles · ' + SJ_CONCOURS[c] + '</p>' +
         '<p style="font-size:14px;color:var(--gray-500)">Choisissez une matière pour lancer une série de ' + SERIE + ' questions : d’abord celles que vous n’avez jamais vues, puis celles que vous avez ratées.</p>' +
         '<div class="sj-grille">' + carte('tout', '🎲', 'Toutes les matières', qs, '') +
@@ -2322,7 +2684,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var c = sjConcours();
     root.innerHTML = '<div class="quiz-card"><p>Chargement des questions…</p></div>';
     sjCharger(c).then(function (qs) {
-      var vus = sjLire().q || {}, pool = qs.filter(function (q) { return mat === 'tout' || q.matiere === mat; });
+      var vus = sjLire().q || {}, pool = qs.filter(function (q) { return mat === 'tout' ? MATIERES.some(function (m) { return m[0] === q.matiere; }) : q.matiere === mat; });
       var jamais = melange(pool.filter(function (q) { return !vus[q.id]; })), ratees = melange(pool.filter(function (q) { return vus[q.id] && !vus[q.id].ok; }));
       var reussies = melange(pool.filter(function (q) { return vus[q.id] && vus[q.id].ok; }));
       var serie = jamais.concat(ratees, reussies).slice(0, e ? e.restantes : SERIE).map(function (q) {
@@ -2514,7 +2876,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     inp.disabled = true; root.querySelector('.quiz-num button').disabled = true;
     envoyer(v, function (d) { inp.classList.add(d.correct ? 'good' : 'bad'); });
   });
-  route();
+  chargerDomaines().then(route, route);
   // Pastille sur l'onglet Support : réponses du support du quiz pas encore lues
   SB.auth.getSession().then(function (r) {
     if (!r.data.session) return;
