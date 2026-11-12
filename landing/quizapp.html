@@ -2398,8 +2398,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (b.dataset.lretour !== undefined) { e.preventDefault(); lc = null; history.pushState(null, '', '/quizapp'); parcoursVue(); top(); return; }
     if (b.dataset.lth !== undefined) {
       var ti = +b.dataset.lth, mode = lc.mode, mat = lc.mat;
-      var enCours = !lc.valide && Object.keys(lc.choix || {}).length;
-      if (enCours && ti !== lc.ti && !confirm('Changer de thème ? Tes réponses choisies ne sont pas encore validées et seront perdues.')) return;
+      // Réponses saisies mais pas encore corrigées : elles seraient perdues (les réponses corrigées, elles, sont déjà enregistrées)
+      var enCours = !lc.valide && Object.keys(lc.choix || {}).filter(function (k) { return !lc.rep[k]; }).length;
+      if (enCours && ti !== lc.ti) return confirmer('↔️', 'Changer de thème ?', enCours + ' réponse' + (enCours > 1 ? 's' : '') + ' saisie' + (enCours > 1 ? 's' : '') + ' mais pas encore validée' + (enCours > 1 ? 's' : '') + ' ser' + (enCours > 1 ? 'ont' : 'a') + ' perdue' + (enCours > 1 ? 's' : '') + '. Tes réponses déjà corrigées sont enregistrées.', 'Changer de thème', 'Rester ici', function () { matiereVue(mode, mat, ti); });
       matiereVue(mode, mat, ti); return;
     }
     if (lc.valide) return;
@@ -2427,7 +2428,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       b.classList.toggle('on', !dej); lcChoisi(i4); return;
     }
     if (b.dataset.lok !== undefined) { var i5 = +b.dataset.lok; if (ch[i5] && !lc.rep[i5]) lcCorriger(i5).catch(function () {}); return; }
-    if (b.dataset.lnote !== undefined) return lcNote();
+    if (b.dataset.lnote !== undefined) return lcNote(false);
     if (b.dataset.lvalider !== undefined) lcValider();
   });
   root.addEventListener('input', function (e) {
@@ -2462,9 +2463,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }, function () { carte.querySelectorAll('input, button').forEach(function (x) { x.disabled = false; }); });
   }
   // Rapport de la série à la demande (séance ou série libre) ; les questions sans réponse comptent comme fausses
-  function lcNote() {
+  // Fenêtre de confirmation aux couleurs du site (à la place de l'alerte du navigateur)
+  function confirmer(ico, titre, texte, oui, non, siOui) {
+    var old = document.getElementById('qz-pop-conf'); if (old) old.remove();
+    document.body.insertAdjacentHTML('beforeend', '<div class="qz-pop" id="qz-pop-conf" role="dialog" aria-modal="true" aria-labelledby="qz-conf-titre"><div class="qz-pop-carte">' +
+      '<div class="qz-pop-ico">' + ico + '</div><h2 id="qz-conf-titre">' + esc(titre) + '</h2><p>' + esc(texte) + '</p>' +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-conf-non>' + esc(non) + '</button><button type="button" class="quiz-btn" data-conf-oui>' + esc(oui) + '</button></div></div></div>');
+    var pop = document.getElementById('qz-pop-conf');
+    var fermer = function () { pop.remove(); document.removeEventListener('keydown', clavier); };
+    var clavier = function (ev) { if (ev.key === 'Escape') fermer(); };
+    document.addEventListener('keydown', clavier);
+    pop.addEventListener('click', function (ev) {
+      if (ev.target === pop || ev.target.closest('[data-conf-non]')) return fermer();
+      if (ev.target.closest('[data-conf-oui]')) { fermer(); siOui(); }
+    });
+    pop.querySelector('[data-conf-non]').focus();
+  }
+  function lcNote(force) {
     var reste = lc.qs.map(function (q, i) { return i; }).filter(function (i) { return !lc.rep[i]; });
-    if (reste.length && !confirm(reste.length + ' question' + (reste.length > 1 ? 's' : '') + ' sans réponse ' + (reste.length > 1 ? 'compteront' : 'comptera') + ' comme fausse' + (reste.length > 1 ? 's' : '') + '. Afficher ton rapport quand même ?')) return;
+    if (reste.length && force !== true) {
+      var pl = reste.length > 1;
+      return confirmer('📝', 'Il te reste ' + reste.length + ' question' + (pl ? 's' : '') + ' sans réponse', (pl ? 'Elles compteront' : 'Elle comptera') + ' comme fausse' + (pl ? 's' : '') + ' dans ta note. Tu peux encore y répondre avant d’afficher ton rapport.', 'Afficher mon rapport', 'Continuer la série', function () { lcNote(true); });
+    }
     lc.noteDemandee = true; lc.valide = true;
     var bt = document.querySelector('[data-lnote]'); if (bt) { bt.disabled = true; bt.textContent = 'Préparation du rapport…'; }
     var suite = Promise.resolve();
@@ -2475,9 +2495,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var bi = document.getElementById('lc-bilan'); if (bi) bi.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }, function () { lc.noteDemandee = false; lc.valide = false; if (bt) { bt.disabled = false; bt.textContent = 'Afficher mon rapport'; } });
   }
-  function lcValider() {
+  function lcValider(force) {
     var ch = lc.choix || {}, n = lc.qs.length, manque = n - Object.keys(ch).length;
-    if (manque && !confirm(manque + ' question' + (manque > 1 ? 's' : '') + ' sans réponse ' + (manque > 1 ? 'compteront' : 'comptera') + ' comme fausse' + (manque > 1 ? 's' : '') + '. Valider quand même ?')) return;
+    if (manque && force !== true) return confirmer('📝', 'Il te reste ' + manque + ' question' + (manque > 1 ? 's' : '') + ' sans réponse', (manque > 1 ? 'Elles compteront' : 'Elle comptera') + ' comme fausse' + (manque > 1 ? 's' : '') + ' dans ta note.', 'Valider ma série', 'Continuer la série', function () { lcValider(true); });
     lc.valide = true;
     var bt = document.querySelector('[data-lvalider]'); bt.disabled = true; bt.textContent = 'Correction…';
     root.querySelectorAll('.lc-q input, .lc-q button').forEach(function (x) { x.disabled = true; });
