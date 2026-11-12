@@ -2283,7 +2283,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var e = essaiActif(), th = themes[ti];
     var qs = e && e.termine ? [] : composer(cat, pm, null, [th.nom], e ? e.restantes : 10).map(function (q) { return Object.assign({}, q, { mat: mat }, q.type === 'qcm' ? { choix: melange(q.choix) } : {}); });
     var tot = 0, mai = 0; themes.forEach(function (x) { tot += x.notions; mai += x.mai; });
-    lc = { mode: 'ecrit', immediat: !!seanceActive(), mat: mat, ti: ti, themes: themes, theme: th, qs: qs, rep: {}, score: 0, recap: [], sel: {},
+    lc = { mode: 'ecrit', immediat: true, mat: mat, ti: ti, themes: themes, theme: th, qs: qs, rep: {}, score: 0, recap: [], sel: {},
       etape: 'Étape 1 · Quiz admissibilité', pct: tot ? Math.round(mai / tot * 100) : 0,
       info: '<b>' + nf(tot) + ' notion' + (tot > 1 ? 's' : '') + '</b> · ' + nf(mai) + ' maîtrisée' + (mai > 1 ? 's' : '') + ' · ' + nf(themes.length) + ' thèmes' };
     lcDessiner();
@@ -2304,7 +2304,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var ordre = th.qs.filter(function (q) { return !vus[q.id]; }).concat(th.qs.filter(function (q) { return vus[q.id] && !vus[q.id].ok; }), th.qs.filter(function (q) { return vus[q.id] && vus[q.id].ok; }));
     var qs = e && e.termine ? [] : ordre.slice(0, e ? e.restantes : ordre.length).map(function (q) { return Object.assign({}, q, { mat: q.matiere }, q.type === 'qcm' ? { choix: melange(q.choix) } : {}); });
     var n = 0, f = 0; themes.forEach(function (x) { n += x.n; f += x.ok; });
-    lc = { mode: 'sj', mat: mat, ti: ti, themes: themes, theme: th, qs: qs, rep: {}, score: 0, recap: [], sel: {},
+    lc = { mode: 'sj', immediat: true, mat: mat, ti: ti, themes: themes, theme: th, qs: qs, rep: {}, score: 0, recap: [], sel: {},
       etape: 'Étape 2 · Épreuves passées', pct: n ? Math.round(f / n * 100) : 0,
       info: '<b>' + nf(n) + ' questions</b> · ' + nf(themes.length) + ' sujet' + (themes.length > 1 ? 's' : '') + ' officiel' + (themes.length > 1 ? 's' : '') };
     lcDessiner();
@@ -2333,7 +2333,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return '<div class="quiz-card qz-question lc-q" id="lc-q-' + i + '"><p class="qz-num">Question ' + (i + 1) + ' / ' + n + '</p>' +
           (x.mode === 'sj' ? '<div class="quiz-meta"><span class="chip sujet">📄 Sujet ' + esc(sjNomSujet(q)) + '</span><span class="chip theme">' + esc(q.partie) + '</span></div>' : '') +
           (q.contexte ? '<div class="sj-contexte">' + esc(q.contexte) + '</div>' : '') + '<p class="quiz-q">' + esc(q.question) + '</p>' + corps(q, i) + '<div class="lc-fb" id="lc-fb-' + i + '"></div></div>';
-      }).join('') + (n && !(e && e.termine) ? (x.immediat ? '<div class="lc-valider lc-fixe" id="lc-valider"><span id="lc-valider-txt">0 / ' + n + ' répondues · la correction s’affiche dès ta réponse</span><button type="button" class="quiz-btn" data-lnote>Générer ma note</button></div>'
+      }).join('') + (n && !(e && e.termine) ? (x.immediat ? '<div class="lc-valider lc-fixe" id="lc-valider"><span id="lc-valider-txt">0 / ' + n + ' répondues · la correction s’affiche dès ta réponse</span><button type="button" class="quiz-btn" data-lnote>Afficher mon rapport</button></div>'
         : '<div class="lc-valider" id="lc-valider"><span id="lc-valider-txt">0 / ' + n + ' réponses choisies</span><button type="button" class="quiz-btn" data-lvalider>Valider ma série</button></div>') : '') + '<div id="lc-bilan"></div>';
     root.innerHTML = '<div class="lc-grille"><aside class="lc-side"><details class="qd-carte" id="lc-som"' + (window.innerWidth >= 1100 ? ' open' : '') + '><summary><button type="button" class="lc-retour" data-lretour>← Mon parcours</button>' +
       '<span class="lbl">' + esc(x.etape) + '</span><h4>' + ic + ' ' + esc(label(x.mat)) + '</h4><p class="lc-info">' + x.info + '</p><div class="barre"><i style="width:' + x.pct + '%"></i></div>' +
@@ -2407,7 +2407,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (b.dataset.lk !== undefined) {
       var pk = b.dataset.lk.split(':'), i = +pk[0], k = +pk[1];
       if (lc.rep[i]) return;
-      if (lc.immediat) { ch[i] = { v: lc.qs[i].choix[k], k: k }; lcCorriger(i).catch(function () {}); return; }  // séance : correction dès le clic
+      if (lc.immediat) { ch[i] = { v: lc.qs[i].choix[k], k: k }; lcCorriger(i).catch(function () {}); return; }  // correction dès le clic
       document.querySelectorAll('#lc-q-' + i + ' .quiz-choice').forEach(function (x) { x.classList.toggle('sel', x === b); });
       ch[i] = { v: lc.qs[i].choix[k], k: k }; lcChoisi(i); return;
     }
@@ -2461,19 +2461,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       else { var ni = carte.querySelector('[data-lin]'); if (ni) ni.classList.add(d.correct ? 'good' : 'bad'); }
     }, function () { carte.querySelectorAll('input, button').forEach(function (x) { x.disabled = false; }); });
   }
-  // Séance : note du lot à la demande ; les questions sans réponse comptent comme fausses
+  // Rapport de la série à la demande (séance ou série libre) ; les questions sans réponse comptent comme fausses
   function lcNote() {
     var reste = lc.qs.map(function (q, i) { return i; }).filter(function (i) { return !lc.rep[i]; });
-    if (reste.length && !confirm(reste.length + ' question' + (reste.length > 1 ? 's' : '') + ' sans réponse ' + (reste.length > 1 ? 'compteront' : 'comptera') + ' comme fausse' + (reste.length > 1 ? 's' : '') + '. Générer ta note quand même ?')) return;
+    if (reste.length && !confirm(reste.length + ' question' + (reste.length > 1 ? 's' : '') + ' sans réponse ' + (reste.length > 1 ? 'compteront' : 'comptera') + ' comme fausse' + (reste.length > 1 ? 's' : '') + '. Afficher ton rapport quand même ?')) return;
     lc.noteDemandee = true; lc.valide = true;
-    var bt = document.querySelector('[data-lnote]'); if (bt) { bt.disabled = true; bt.textContent = 'Calcul de ta note…'; }
+    var bt = document.querySelector('[data-lnote]'); if (bt) { bt.disabled = true; bt.textContent = 'Préparation du rapport…'; }
     var suite = Promise.resolve();
     reste.forEach(function (i) { suite = suite.then(function () { return lcCorriger(i); }); });
     suite.then(function () {
       lcMaj();
       var v = document.getElementById('lc-valider'); if (v) v.remove();
       var bi = document.getElementById('lc-bilan'); if (bi) bi.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, function () { lc.noteDemandee = false; lc.valide = false; if (bt) { bt.disabled = false; bt.textContent = 'Générer ma note'; } });
+    }, function () { lc.noteDemandee = false; lc.valide = false; if (bt) { bt.disabled = false; bt.textContent = 'Afficher mon rapport'; } });
   }
   function lcValider() {
     var ch = lc.choix || {}, n = lc.qs.length, manque = n - Object.keys(ch).length;
