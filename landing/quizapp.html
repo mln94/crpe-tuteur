@@ -2151,7 +2151,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<div class="pc-anneau"><svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="12"/><circle cx="70" cy="70" r="60" fill="none" stroke="#f97316" stroke-width="12" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="' + Math.round(377 * (1 - M.pct / 100)) + '"/></svg>' +
       '<div><strong>' + M.pct + ' %</strong><small>' + M.finis + ' / ' + M.items.length + ' matières</small></div></div></section>';
 
-    // Échéances (ajoutées après le plan : sur mobile, les 3 étapes viennent juste sous le bandeau)
+    // Échéances (ajoutées en bas de page, après les étapes du quiz et le plan)
     var ech = '<div class="pc-ech-bloc"><h3 class="pc-h">📅 Tes échéances</h3><p class="pc-sous">Concours 2027. Dates des écrits fixées par arrêté ; résultats et oraux selon ton académie.</p><div class="pc-ech">' +
       ECHEANCES.map(function (e) {
         var j = joursAvant(e[0]), passe = j < 0, cls = passe ? 'passe' : (e[4] === 'cle' ? 'cle' : (j <= 30 ? 'proche' : ''));
@@ -2185,7 +2185,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         '<div class="pp-obj">Un quiz pour chaque étape de l’entretien avec le jury et de l’EPS : nombre de questions à venir.</div>' +
         '<ul class="pc-fl">' + ADMISSION.map(function (pa) { return pa[2].map(function (x) { return '<li><button type="button" disabled><span class="ic">🔒</span><span>' + esc(x[0]) + '</span><span class="nb">' + (x[1] || '') + '</span></button></li>'; }).join(''); }).join('') + '</ul></div>' +
       '</div></div>';
-    h += '<div class="pc-plan-mobile">' + plan + '</div>' + ech;
 
     // Section 1 : quiz admissibilité, une étape par matière
     h += '<section class="pc-section" id="pc-e1"><div class="pc-section-tete" data-pc-plier role="button" tabindex="0" aria-expanded="true"><span class="pc-plier-btn"><span class="ouvert">Réduire ▴</span><span class="ferme">Afficher ▾</span></span><h3>✍️ Étape 1 · Quiz admissibilité</h3><p>Réussis chaque matière pour arriver prêt(e) aux écrits.</p></div>';
@@ -2225,6 +2224,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }).join('') + '</div>';
       }).join('') + '</section>';
 
+    // Mobile : les étapes du quiz juste sous le bandeau, puis le plan en 3 étapes et les échéances
+    h += '<div class="pc-plan-mobile">' + plan + '</div>' + ech;
     root.innerHTML = '<div class="pc-grille"><div class="pc-gauche">' + h + '</div><aside class="pc-plan">' + plan + '</aside></div>';
     root.querySelector('[data-pc-domaines]').addEventListener('click', function () { choixDomaines('parcours'); });
     // Groupes d'étapes repliables (état mémorisé sur cet appareil)
