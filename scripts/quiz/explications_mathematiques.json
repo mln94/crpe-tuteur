@@ -1,0 +1,2570 @@
+{
+ "47e9cbecbb": {
+  "question": "Calculez : 3 + 4 × 5",
+  "explication": "La multiplication est prioritaire sur l'addition : 4 × 5 = 20, puis 3 + 20 = 23. Erreur classique : calculer de gauche à droite (3 + 4 = 7, puis 7 × 5 = 35). Les priorités se travaillent dès le cycle 3."
+ },
+ "13f9572209": {
+  "question": "Calculez : 20 − 12 ÷ 4",
+  "explication": "La division passe avant la soustraction : 12 ÷ 4 = 3, puis 20 − 3 = 17. Calculer de gauche à droite donnerait (20 − 12) ÷ 4 = 2, ce qui est faux. Multiplications et divisions passent avant additions et soustractions."
+ },
+ "82a784ce37": {
+  "question": "Calculez : (6 + 4) × 3 − 2",
+  "explication": "Ordre des calculs : parenthèses d'abord (6 + 4 = 10), puis multiplication (10 × 3 = 30), enfin soustraction (30 − 2 = 28). Sans parenthèses, 6 + 4 × 3 − 2 vaudrait 16 : les parenthèses changent l'ordre des calculs."
+ },
+ "548e0dfe7b": {
+  "question": "Lequel de ces nombres est un diviseur de 48 ?",
+  "explication": "12 divise 48 car 48 = 12 × 4 : la division tombe juste (reste 0). 48 ÷ 5, 48 ÷ 7 et 48 ÷ 9 ont un reste non nul. Liste des diviseurs de 48 : 1, 2, 3, 4, 6, 8, 12, 16, 24, 48 (on les trouve par paires)."
+ },
+ "daf092c81f": {
+  "question": "Lequel de ces nombres est un multiple de 7 ?",
+  "explication": "63 = 7 × 9 : c'est un multiple de 7. Vérification des autres : 54 = 7 × 7 + 5, 75 = 7 × 10 + 5, 86 = 7 × 12 + 2, les restes ne sont pas nuls. « a est multiple de b » signifie a = b × k avec k entier."
+ },
+ "78cc2e6f22": {
+  "question": "Quelle affirmation est vraie ?",
+  "explication": "45 = 15 × 3 : 45 est un multiple de 15, et 15 est un diviseur de 45. Les deux phrases disent la même relation dans les deux sens. Le multiple est le plus grand nombre (pour des entiers positifs non nuls)."
+ },
+ "2fa058e119": {
+  "question": "Lequel de ces nombres est divisible par 3 ?",
+  "explication": "Critère de divisibilité par 3 : la somme des chiffres est divisible par 3. Pour 372 : 3 + 7 + 2 = 12, divisible par 3 (372 = 3 × 124). Pour 124, 251 et 410, les sommes 7, 8 et 5 ne le sont pas."
+ },
+ "1e69ad1900": {
+  "question": "Lequel de ces nombres est divisible par 9 ?",
+  "explication": "Critère de divisibilité par 9 : la somme des chiffres est divisible par 9. 3 + 1 + 0 + 5 = 9, donc 3 105 = 9 × 345. Pour 1 234, 2 017 et 4 114, la somme vaut 10. Un nombre divisible par 9 l'est aussi par 3."
+ },
+ "78001d9de5": {
+  "question": "La somme des chiffres d'un nombre est 21. Ce nombre est…",
+  "explication": "21 est divisible par 3 (21 = 3 × 7) mais pas par 9 : le nombre est divisible par 3, pas par 9. Tout multiple de 9 est multiple de 3, mais la réciproque est fausse (exemple : 12)."
+ },
+ "f405e17b46": {
+  "question": "Calculez : 12 ÷ 0,5",
+  "explication": "Diviser par 0,5, c'est chercher combien de fois 0,5 est contenu dans 12 : 24 fois, car 0,5 = 1/2 et diviser par 1/2 revient à multiplier par 2. Diviser par un nombre inférieur à 1 donne un résultat plus grand : un obstacle fréquent chez les élèves."
+ },
+ "6a68e8b594": {
+  "question": "Calculez : 3,6 ÷ 0,4",
+  "explication": "On multiplie dividende et diviseur par 10 sans changer le quotient : 3,6 ÷ 0,4 = 36 ÷ 4 = 9. Vérification : 9 × 0,4 = 3,6. C'est la technique pour se ramener à un diviseur entier."
+ },
+ "80a7e73aa9": {
+  "question": "Calculez : 7 ÷ 0,1",
+  "explication": "Diviser par 0,1 revient à multiplier par 10 : 7 ÷ 0,1 = 70 (il y a 70 dixièmes dans 7). Vérification : 70 × 0,1 = 7. Erreur fréquente : répondre 0,7, en confondant avec la multiplication par 0,1."
+ },
+ "7c4be7a4d9": {
+  "question": "Dans le calcul 5 × 8, comment appelle-t-on 5 et 8 ?",
+  "explication": "Dans une multiplication, les nombres multipliés sont des facteurs et le résultat est le produit. Dans une addition, on parle de termes et de somme ; dans une division, de dividende, diviseur et quotient."
+ },
+ "35d00b8d83": {
+  "question": "Le calcul 3 × (4 + 5) est…",
+  "explication": "La nature d'une expression est donnée par la dernière opération effectuée. Ici on calcule d'abord la parenthèse, puis on multiplie par 3 : c'est un produit. Ce repère sert ensuite en calcul littéral (développer, factoriser)."
+ },
+ "541888348e": {
+  "question": "Comment appelle-t-on le résultat d'une division ?",
+  "explication": "Le résultat d'une division est le quotient ; on divise le dividende par le diviseur. Le produit est le résultat d'une multiplication, la somme d'une addition, la différence d'une soustraction."
+ },
+ "1df9f97bf8": {
+  "question": "Quel est l'opposé de −7 ?",
+  "explication": "L'opposé de −7 est 7 : leur somme est nulle (−7 + 7 = 0), et ils sont symétriques par rapport à zéro sur la droite graduée. Ne pas confondre avec l'inverse, dont le produit avec le nombre vaut 1 (ici −1/7)."
+ },
+ "84b17d3bd5": {
+  "question": "Quelle est la distance à zéro du nombre −4,5 ?",
+  "explication": "La distance à zéro d'un nombre est toujours positive : celle de −4,5 est 4,5. Sur la droite graduée, −4,5 est à 4,5 unités de l'origine. On l'appelle aussi valeur absolue."
+ },
+ "8645b783fa": {
+  "question": "Calculez la somme d'un nombre et de son opposé, par exemple 12,3 + (−12,3).",
+  "explication": "Un nombre et son opposé ont toujours une somme nulle : 12,3 + (−12,3) = 0. C'est la définition même de l'opposé ; elle justifie la règle « soustraire, c'est ajouter l'opposé »."
+ },
+ "4952a59b89": {
+  "question": "Quel est le plus petit de ces nombres ?",
+  "explication": "Entre deux nombres négatifs, le plus petit est celui qui est le plus loin de zéro : −5 < −2. Sur la droite graduée, −5 est le plus à gauche. Erreur fréquente : penser que −5 > −2 parce que 5 > 2."
+ },
+ "d82ac40159": {
+  "question": "Quelle comparaison est vraie ?",
+  "explication": "Sur une droite graduée, −3 est à gauche de −1, donc −3 < −1. Image concrète : −3 °C est plus froid que −1 °C. Tout nombre négatif est plus petit que 0."
+ },
+ "d1fac634cb": {
+  "question": "Comment ranger −1,5 ; −2 ; 0,5 dans l'ordre croissant ?",
+  "explication": "Ordre croissant = du plus petit au plus grand. Parmi les négatifs, le plus petit est le plus éloigné de zéro : −2 < −1,5 ; puis vient le positif 0,5. Placer les nombres sur une droite graduée évite l'erreur."
+ },
+ "fd73d60f74": {
+  "question": "Calculez : (−8) + 5",
+  "explication": "Signes différents : on calcule la différence des distances à zéro (8 − 5 = 3) et on prend le signe du nombre le plus éloigné de zéro (−8), d'où −3. Image : avec une dette de 8 € et un gain de 5 €, il reste une dette de 3 €."
+ },
+ "3039e3a740": {
+  "question": "Calculez : (−4) + (−7)",
+  "explication": "Même signe : on additionne les distances à zéro (4 + 7 = 11) et on garde le signe commun : −11. Image : deux dettes de 4 € et 7 € font une dette de 11 €."
+ },
+ "116c749274": {
+  "question": "Calculez : 6,5 + (−9)",
+  "explication": "Signes différents : 9 − 6,5 = 2,5 ; −9 est plus éloigné de zéro que 6,5, donc le résultat est négatif : −2,5. Sur la droite graduée : partir de 6,5 et reculer de 9."
+ },
+ "d924ec7b28": {
+  "question": "Calculez : 3 − (−5)",
+  "explication": "Soustraire un nombre revient à ajouter son opposé : 3 − (−5) = 3 + 5 = 8. Interprétation : l'écart entre 3 et −5 sur la droite graduée est bien de 8. Erreur fréquente : répondre −2."
+ },
+ "16213da5e5": {
+  "question": "Calculez : (−2) − 6",
+  "explication": "On transforme la soustraction en addition de l'opposé : (−2) − 6 = (−2) + (−6) = −8. Sur la droite graduée : partir de −2 et reculer de 6."
+ },
+ "0fca378196": {
+  "question": "Calculez : (−10) − (−4)",
+  "explication": "Soustraire −4, c'est ajouter 4 : (−10) − (−4) = (−10) + 4 = −6. Signes différents : 10 − 4 = 6, avec le signe de −10."
+ },
+ "e720821bdd": {
+  "question": "Le matin, il fait −3 °C. L'après-midi, la température a augmenté de 8 °C. Quelle est la température l'après-midi (en °C) ?",
+  "explication": "Une augmentation se traduit par une addition : −3 + 8 = 5, il fait 5 °C. Sur un thermomètre : on monte de 3 graduations pour atteindre 0, puis encore de 5. Les températures sont un support concret classique pour introduire les relatifs."
+ },
+ "7782cf6bd0": {
+  "question": "Un plongeur est à −12 m. Il remonte de 5 m. À quelle altitude se trouve-t-il (en m) ?",
+  "explication": "Remonter de 5 m, c'est ajouter 5 : −12 + 5 = −7. Le plongeur est à 7 m sous la surface. L'altitude négative signifie « sous le niveau de la mer »."
+ },
+ "5df9172b26": {
+  "question": "À Moscou il fait −15 °C et à Paris 4 °C. Quel est l'écart de température entre les deux villes (en °C) ?",
+  "explication": "Un écart se calcule par une soustraction (le plus grand moins le plus petit) : 4 − (−15) = 4 + 15 = 19 °C. Sur un thermomètre : 15 degrés pour remonter jusqu'à 0, puis 4 de plus. Erreur fréquente : 15 − 4 = 11."
+ },
+ "d70b27243b": {
+  "question": "Quelle fraction est la plus grande ?",
+  "explication": "Quand les dénominateurs sont égaux, on partage l'unité en parts de même taille (des septièmes) : la plus grande fraction est celle qui en prend le plus, donc celle au plus grand numérateur : 5/7."
+ },
+ "ec18251acd": {
+  "question": "Quelle comparaison est vraie ?",
+  "explication": "On réduit au même dénominateur, 12 : 3/4 = 9/12 et 2/3 = 8/12, donc 3/4 > 2/3. Autre méthode : comparer à 1, il manque 1/4 à 3/4 et 1/3 à 2/3 ; comme 1/4 < 1/3, 3/4 est plus proche de 1."
+ },
+ "a8b1f46cfa": {
+  "question": "Quelle fraction est égale à 1/2 ?",
+  "explication": "4/8 = 1/2 : on divise numérateur et dénominateur par 4. Repère utile : une fraction vaut 1/2 quand son numérateur est la moitié de son dénominateur. 3/5 et 2/3 sont plus grands que 1/2, 5/12 plus petit."
+ },
+ "d3ab21e23e": {
+  "question": "Calculez : 2/9 + 5/9",
+  "explication": "Même dénominateur : on additionne les numérateurs et on garde le dénominateur, 2/9 + 5/9 = 7/9 (2 neuvièmes + 5 neuvièmes = 7 neuvièmes). Erreur classique : additionner aussi les dénominateurs (7/18)."
+ },
+ "600e576a8c": {
+  "question": "Calculez : 1/2 + 1/4",
+  "explication": "On met au même dénominateur : 1/2 = 2/4, donc 2/4 + 1/4 = 3/4. Additionner numérateurs et dénominateurs (2/6) est l'erreur la plus fréquente : un schéma (une moitié et un quart de tablette) la rend évidente."
+ },
+ "6c3681947a": {
+  "question": "Calculez : 1 − 3/8",
+  "explication": "On écrit 1 sous forme de fraction de même dénominateur : 1 = 8/8. Puis 8/8 − 3/8 = 5/8. C'est aussi le calcul de ce qui reste quand on a pris 3/8 d'un tout."
+ },
+ "59b08bbc40": {
+  "question": "Combien vaut 7² ?",
+  "explication": "7² se lit « 7 au carré » : c'est 7 × 7 = 49, l'aire d'un carré de côté 7. Erreur fréquente : calculer 7 × 2 = 14. Connaître les carrés jusqu'à 12² (ou 15²) facilite le calcul mental."
+ },
+ "5e025772d9": {
+  "question": "Combien vaut 12² ?",
+  "explication": "12² = 12 × 12 = 144. Calcul mental : 12 × 12 = 12 × 10 + 12 × 2 = 120 + 24 = 144. Les carrés parfaits usuels (1, 4, 9, …, 144) servent souvent avec Pythagore."
+ },
+ "b82c3f38ba": {
+  "question": "Quel nombre entier positif a pour carré 81 ?",
+  "explication": "9 × 9 = 81 : le nombre positif dont le carré est 81 est 9, c'est la racine carrée de 81. (−9)² vaut aussi 81, d'où la précision « positif »."
+ },
+ "d0f25bbf22": {
+  "question": "Combien vaut 10³ ?",
+  "explication": "10³ = 10 × 10 × 10 = 1 000 : l'exposant indique le nombre de zéros après le 1. Ces puissances de 10 sont la base de la notation scientifique et des conversions d'unités (1 m³ = 1 000 dm³)."
+ },
+ "2bbd41823e": {
+  "question": "Combien vaut 2³ ?",
+  "explication": "2³ = 2 × 2 × 2 = 8 : l'exposant indique combien de fois on multiplie 2 par lui-même. Erreur classique : calculer 2 × 3 = 6. 2³ est aussi le volume d'un cube d'arête 2."
+ },
+ "fc4026e4e6": {
+  "question": "Combien vaut 5² + 2³ ?",
+  "explication": "Les puissances sont prioritaires sur l'addition : 5² = 25 et 2³ = 8, puis 25 + 8 = 33. Ordre complet : parenthèses, puissances, multiplications et divisions, additions et soustractions."
+ },
+ "21ec4dfd3e": {
+  "question": "Calculez 3x + 2 pour x = 4.",
+  "explication": "On remplace x par 4 : 3 × 4 + 2. Le « 3x » signifie 3 × x : 12 + 2 = 14. Erreur fréquente : lire 3x comme le nombre 34. Rétablir le signe × lors de la substitution évite cette confusion."
+ },
+ "ba58589b04": {
+  "question": "Calculez 5 − 2a pour a = 3.",
+  "explication": "On remplace a par 3 : 5 − 2 × 3. La multiplication passe d'abord (6), puis 5 − 6 = −1. Erreur fréquente : calculer (5 − 2) × 3 = 9 en oubliant les priorités."
+ },
+ "05b8ba40db": {
+  "question": "Calculez x² + 1 pour x = 6.",
+  "explication": "x² + 1 pour x = 6 : 6² = 36, puis 36 + 1 = 37. La puissance est prioritaire. Erreur fréquente : calculer 6 × 2 + 1 = 13."
+ },
+ "93fa428ac3": {
+  "question": "L'expression 4(x + 1) est…",
+  "explication": "4(x + 1) signifie 4 × (x + 1) : on calcule d'abord la parenthèse, puis on multiplie. La dernière opération est une multiplication : c'est un produit. Le développer donne la somme 4x + 4."
+ },
+ "b4e91898de": {
+  "question": "L'expression 3x + 7 est…",
+  "explication": "Dans 3x + 7, on calcule d'abord 3 × x, puis on ajoute 7 : la dernière opération est une addition, c'est une somme de deux termes (3x et 7). Reconnaître la structure d'une expression guide le calcul littéral."
+ },
+ "48bb143b57": {
+  "question": "L'expression (a + 2)(a − 3) est…",
+  "explication": "(a + 2)(a − 3) est le produit de deux facteurs, (a + 2) et (a − 3) : le signe × est sous-entendu entre les parenthèses. C'est la forme factorisée ; la développer donne une somme."
+ },
+ "09544f39ba": {
+  "question": "Résolvez : x + 7 = 15",
+  "explication": "On isole x en soustrayant 7 aux deux membres : x = 15 − 7 = 8. Vérification : 8 + 7 = 15. Au cycle 3, ce type d'équation se résout aussi comme un « nombre manquant » (quel nombre ajouter à 7 pour faire 15 ?)."
+ },
+ "8ea0cf73b4": {
+  "question": "Résolvez : 4x = 28",
+  "explication": "4x signifie 4 × x. On divise les deux membres par 4 : x = 28 ÷ 4 = 7. Vérification : 4 × 7 = 28. Diviser est l'opération inverse de multiplier."
+ },
+ "e0306bf953": {
+  "question": "Résolvez : x − 3,5 = 6",
+  "explication": "On ajoute 3,5 aux deux membres pour isoler x : x = 6 + 3,5 = 9,5. Vérification : 9,5 − 3,5 = 6. L'addition est l'opération inverse de la soustraction."
+ },
+ "5a44052d42": {
+  "question": "Quelle formule donne le périmètre P d'un carré de côté c ?",
+  "explication": "Un carré a 4 côtés de même longueur c : P = c + c + c + c = 4c. Ne pas confondre avec l'aire, A = c². Produire une formule, c'est généraliser un calcul fait sur des exemples."
+ },
+ "1d712410bf": {
+  "question": "Quelle expression représente le double d'un nombre n augmenté de 3 ?",
+  "explication": "On traduit dans l'ordre : le double de n (2n), augmenté de 3 (+ 3), donc 2n + 3. 2(n + 3) est le double de la somme n + 3. Exemple pour n = 5 : 2n + 3 = 13 et 2(n + 3) = 16."
+ },
+ "fdd6e930ce": {
+  "question": "Quelle formule donne l'aire A d'un rectangle de longueur L et de largeur l ?",
+  "explication": "L'aire d'un rectangle est le produit de ses dimensions : A = L × l (nombre de carrés unités qui le pavent). 2L + 2l est son périmètre. Confondre aire et périmètre est une erreur très fréquente."
+ },
+ "b242266f54": {
+  "question": "Simplifiez 12/18.",
+  "explication": "Le plus grand diviseur commun de 12 et 18 est 6 : 12/18 = (12 ÷ 6)/(18 ÷ 6) = 2/3, fraction irréductible. 6/9 et 4/6 sont égales mais pas simplifiées au maximum."
+ },
+ "75e4754474": {
+  "question": "Quelle fraction est égale à 15/25 ?",
+  "explication": "On divise numérateur et dénominateur par 5 : 15/25 = 3/5. Une fraction ne change pas de valeur quand on divise (ou multiplie) ses deux termes par le même nombre non nul."
+ },
+ "7acf31b357": {
+  "question": "Simplifiez 28/35.",
+  "explication": "28 = 7 × 4 et 35 = 7 × 5 : on divise par 7, 28/35 = 4/5. Repérer un facteur commun grâce aux tables (ici la table de 7) est la méthode la plus rapide."
+ },
+ "111fe42a2d": {
+  "question": "Quel est l'inverse de 4 ?",
+  "explication": "Deux nombres sont inverses si leur produit vaut 1 : 4 × 1/4 = 1, donc l'inverse de 4 est 1/4 (= 0,25). −4 est l'opposé de 4 (somme nulle) ; 0,4 n'est pas l'inverse."
+ },
+ "298fa62d4e": {
+  "question": "Quel est l'inverse de 2/5 ?",
+  "explication": "Pour une fraction, on échange numérateur et dénominateur : l'inverse de 2/5 est 5/2, car 2/5 × 5/2 = 10/10 = 1. L'inverse sert à diviser par une fraction : diviser par 2/5, c'est multiplier par 5/2."
+ },
+ "23199846b7": {
+  "question": "Quel est l'inverse de 0,5 ?",
+  "explication": "0,5 × 2 = 1, donc l'inverse de 0,5 est 2. En effet 0,5 = 1/2, dont l'inverse est 2/1 = 2. C'est pourquoi diviser par 0,5 revient à multiplier par 2."
+ },
+ "3323fa3914": {
+  "question": "Combien vaut √64 ?",
+  "explication": "√64 est le nombre positif dont le carré vaut 64 : 8 × 8 = 64, donc √64 = 8. Connaître les carrés parfaits (1, 4, 9, …, 144) permet de trouver ces racines de tête, utile avec le théorème de Pythagore."
+ },
+ "ed496f191d": {
+  "question": "Combien vaut √121 ?",
+  "explication": "11 × 11 = 121, donc √121 = 11. Astuce : 11² = 121, 12² = 144, 13² = 169, 15² = 225 sont à connaître pour les calculs de longueur."
+ },
+ "e4e622d757": {
+  "question": "Combien vaut √(9 × 16) ?",
+  "explication": "9 × 16 = 144 et √144 = 12. On peut aussi utiliser √(a × b) = √a × √b : √9 × √16 = 3 × 4 = 12. Attention : cette règle ne vaut pas pour une somme, √(9 + 16) = 5 ≠ 3 + 4."
+ },
+ "a5170568b9": {
+  "question": "Dans un repère, le point A a pour coordonnées (3 ; −2). Que vaut son abscisse ?",
+  "explication": "Dans le couple (x ; y), le premier nombre est l'abscisse (lu sur l'axe horizontal), le second l'ordonnée (axe vertical) : l'abscisse de A est 3. Moyen mnémotechnique : on avance d'abord dans le couloir, puis on prend l'escalier."
+ },
+ "ca8b74f349": {
+  "question": "Un point a une abscisse nulle. Où se trouve-t-il ?",
+  "explication": "Abscisse nulle signifie x = 0 : le point n'est ni à gauche ni à droite de l'origine, il est sur l'axe vertical, celui des ordonnées. Piège : on pense souvent à l'axe des abscisses. Il n'est à l'origine que si son ordonnée est aussi nulle."
+ },
+ "1a0b62bd07": {
+  "question": "Le point B est 4 unités à gauche de l'origine et 1 unité au-dessus. Quelles sont ses coordonnées ?",
+  "explication": "À gauche de l'origine, l'abscisse est négative (−4) ; au-dessus, l'ordonnée est positive (1) : B(−4 ; 1). On écrit toujours l'abscisse en premier, d'où l'erreur (1 ; −4) quand on inverse l'ordre."
+ },
+ "1685a2eb57": {
+  "question": "Quel est le volume (en cm³) d'un pavé droit de 5 cm × 3 cm × 2 cm ?",
+  "explication": "Volume d'un pavé droit = longueur × largeur × hauteur = 5 × 3 × 2 = 30 cm³. Sens : 30 petits cubes d'1 cm d'arête remplissent le pavé (5 × 3 = 15 cubes par couche, sur 2 couches)."
+ },
+ "051d4e0465": {
+  "question": "Quel est le volume (en cm³) d'un cube de 4 cm d'arête ?",
+  "explication": "Volume d'un cube = arête × arête × arête = 4³ = 64 cm³. Erreur fréquente : calculer 4 × 3 = 12. Le cube est un pavé dont les trois dimensions sont égales."
+ },
+ "9c3e585924": {
+  "question": "Un aquarium mesure 50 cm × 20 cm × 30 cm. Quel est son volume en dm³ ?",
+  "explication": "On convertit d'abord en dm : 50 cm = 5 dm, 20 cm = 2 dm, 30 cm = 3 dm. Volume = 5 × 2 × 3 = 30 dm³, soit 30 L car 1 dm³ = 1 L. Convertir avant de calculer évite les erreurs (30 000 cm³ = 30 dm³)."
+ },
+ "95ea86fa66": {
+  "question": "Combien de litres y a-t-il dans 1 m³ ?",
+  "explication": "1 m³ = 1 000 dm³ (un cube de 1 m contient 10 × 10 × 10 cubes de 1 dm) et 1 dm³ = 1 L, donc 1 m³ = 1 000 L. Ce lien entre unités de volume et de contenance est un incontournable du concours."
+ },
+ "a770d1a9a2": {
+  "question": "Convertissez 2,5 L en cL.",
+  "explication": "1 L = 100 cL, donc 2,5 L = 2,5 × 100 = 250 cL. Dans le tableau de conversion des contenances (L, dL, cL, mL), on passe d'une unité à la suivante en multipliant par 10."
+ },
+ "d5f11c4443": {
+  "question": "Convertissez 750 cm³ en litres.",
+  "explication": "1 L = 1 dm³ = 1 000 cm³, donc 750 cm³ = 750 ÷ 1 000 = 0,75 L. Repère utile : 1 cm³ = 1 mL, donc 750 cm³ = 750 mL = 0,75 L."
+ },
+ "d0fa751ff3": {
+  "question": "Que conserve une symétrie centrale ?",
+  "explication": "La symétrie centrale est un demi-tour autour du centre : la figure image est superposable à la figure de départ, sans la retourner. Elle conserve longueurs, angles, aires, alignement et parallélisme."
+ },
+ "ee0877e470": {
+  "question": "Le symétrique d'une droite par une symétrie centrale est…",
+  "explication": "Par une symétrie centrale, l'image d'une droite est une droite parallèle (ou la même droite si elle passe par le centre). C'est une différence avec la symétrie axiale, qui ne conserve pas la direction des droites."
+ },
+ "9c6496da97": {
+  "question": "A' est le symétrique de A par rapport au point O. Que représente O pour le segment [AA'] ?",
+  "explication": "Dans la symétrie de centre O, O est le milieu de [AA'] : A' est sur la demi-droite opposée à [OA), à la même distance de O. C'est la définition qui sert à construire l'image d'un point."
+ },
+ "675b9e8c71": {
+  "question": "Un triangle a deux angles de 50° et 70°. Combien mesure le troisième angle (en degrés) ?",
+  "explication": "La somme des angles d'un triangle vaut 180° : 180 − 50 − 70 = 60°. Cette propriété se démontre avec les angles alternes-internes ; à l'école, on la fait constater en découpant et juxtaposant les trois angles."
+ },
+ "08337a1cf0": {
+  "question": "Un triangle rectangle a un angle de 35°. Combien mesure son troisième angle (en degrés) ?",
+  "explication": "Un triangle rectangle a un angle de 90° : 180 − 90 − 35 = 55°. Ses deux angles aigus sont donc complémentaires (leur somme vaut 90°) : 35 + 55 = 90."
+ },
+ "613ba422ff": {
+  "question": "Combien mesure chaque angle d'un triangle équilatéral (en degrés) ?",
+  "explication": "Les trois angles d'un triangle équilatéral sont égaux et leur somme vaut 180° : 180 ÷ 3 = 60°. Réciproquement, un triangle qui a trois angles de 60° est équilatéral."
+ },
+ "af70d61cec": {
+  "question": "Quelle est l'aire (en cm²) d'un triangle de base 8 cm et de hauteur 5 cm ?",
+  "explication": "Aire d'un triangle = base × hauteur ÷ 2 = 8 × 5 ÷ 2 = 20 cm². On divise par 2 car le triangle est la moitié d'un parallélogramme de même base et même hauteur. La hauteur est perpendiculaire à la base."
+ },
+ "85595e3bdd": {
+  "question": "Quelle est l'aire (en cm²) d'un triangle rectangle dont les côtés de l'angle droit mesurent 6 cm et 4 cm ?",
+  "explication": "Dans un triangle rectangle, chaque côté de l'angle droit est la hauteur relative à l'autre : aire = 6 × 4 ÷ 2 = 12 cm². C'est la moitié du rectangle de 6 cm sur 4 cm."
+ },
+ "01b2a53083": {
+  "question": "Un triangle a une aire de 30 cm² et une base de 12 cm. Quelle est sa hauteur (en cm) ?",
+  "explication": "On part de la formule : 30 = 12 × h ÷ 2, soit 30 = 6 × h, donc h = 5 cm. Vérification : 12 × 5 ÷ 2 = 30. Utiliser une formule « à l'envers » est un attendu classique."
+ },
+ "92c3290b70": {
+  "question": "Un parallélogramme qui a un angle droit est…",
+  "explication": "Dans un parallélogramme, les angles consécutifs sont supplémentaires et les angles opposés égaux : un angle droit entraîne quatre angles droits. C'est donc un rectangle."
+ },
+ "f35fb667e6": {
+  "question": "Un parallélogramme qui a deux côtés consécutifs de même longueur est…",
+  "explication": "Dans un parallélogramme, les côtés opposés sont égaux : si deux côtés consécutifs sont égaux, les quatre le sont. C'est un losange, dont les diagonales sont aussi perpendiculaires."
+ },
+ "fc8d984ce4": {
+  "question": "Un quadrilatère qui est à la fois un rectangle et un losange est…",
+  "explication": "Le carré a les propriétés du rectangle (quatre angles droits, diagonales de même longueur) et celles du losange (quatre côtés égaux, diagonales perpendiculaires). Un carré est donc à la fois un rectangle et un losange."
+ },
+ "99e800cee0": {
+  "question": "Quelle est l'aire (en cm²) d'un parallélogramme de base 7 cm et de hauteur 4 cm ?",
+  "explication": "Aire d'un parallélogramme = base × hauteur = 7 × 4 = 28 cm². En découpant un triangle d'un côté pour le recoller de l'autre, on obtient un rectangle de mêmes base et hauteur. Ne pas multiplier par le côté oblique."
+ },
+ "2b0ca22e54": {
+  "question": "Quelle est l'aire (en m²) d'un rectangle de 12 m sur 3,5 m ?",
+  "explication": "Aire d'un rectangle = longueur × largeur = 12 × 3,5 = 42 m². Calcul mental : 12 × 3 = 36 et 12 × 0,5 = 6, total 42. L'unité d'aire est le m² car on multiplie des m par des m."
+ },
+ "52969b02a5": {
+  "question": "Quelle est l'aire (en cm²) d'un carré de 9 cm de côté ?",
+  "explication": "Aire d'un carré = côté × côté = 9² = 81 cm². Erreur fréquente : calculer 4 × 9 = 36, qui est son périmètre en cm."
+ },
+ "2040086dbb": {
+  "question": "Combien de cm² y a-t-il dans 1 m² ?",
+  "explication": "1 m = 100 cm, donc 1 m² = 100 cm × 100 cm = 10 000 cm². Pour les aires, on multiplie par 100 (et non 10) à chaque changement d'unité : deux colonnes par unité dans le tableau de conversion."
+ },
+ "76f9a0ea6b": {
+  "question": "Convertissez 3,2 m² en dm².",
+  "explication": "1 m² = 10 dm × 10 dm = 100 dm², donc 3,2 m² = 3,2 × 100 = 320 dm². Erreur fréquente : multiplier par 10 comme pour les longueurs (32 dm²)."
+ },
+ "a4a56eccdf": {
+  "question": "Convertissez 1 hectare en m².",
+  "explication": "1 ha = 1 hm² = 100 m × 100 m = 10 000 m², l'aire d'un carré de 100 m de côté (environ un terrain de football et demi). L'are vaut 100 m² (carré de 10 m de côté)."
+ },
+ "a129193004": {
+  "question": "Un triangle ABC est rectangle en A, avec AB = 3 cm et AC = 4 cm. Combien mesure BC (en cm) ?",
+  "explication": "Le triangle est rectangle en A : l'hypoténuse est [BC], le côté opposé à l'angle droit. Pythagore : BC² = AB² + AC² = 9 + 16 = 25, donc BC = √25 = 5 cm. Le triangle 3-4-5 est le plus connu des triangles rectangles."
+ },
+ "36c2e2b579": {
+  "question": "Un triangle est rectangle ; ses côtés de l'angle droit mesurent 6 cm et 8 cm. Combien mesure l'hypoténuse (en cm) ?",
+  "explication": "Pythagore : hypoténuse² = 6² + 8² = 36 + 64 = 100, donc hypoténuse = 10 cm. C'est le triangle 3-4-5 agrandi deux fois. Erreur fréquente : additionner les longueurs (6 + 8 = 14) au lieu de leurs carrés."
+ },
+ "6ec18ee7fb": {
+  "question": "Dans un triangle rectangle, l'hypoténuse mesure 13 cm et un côté 5 cm. Combien mesure le troisième côté (en cm) ?",
+  "explication": "L'hypoténuse (13) est le plus long côté : 13² = 5² + x², donc x² = 169 − 25 = 144 et x = 12 cm. Pour un côté de l'angle droit, on soustrait les carrés. Triplet à connaître : 5-12-13."
+ },
+ "8a5c1dcd33": {
+  "question": "Dans une classe de 25 élèves, 10 ont un chien. Quelle est la fréquence des élèves ayant un chien, en pourcentage ?",
+  "explication": "Fréquence = effectif ÷ effectif total = 10 ÷ 25 = 0,4, soit 40 %. Astuce : 10/25 = 40/100 en multipliant par 4. Une fréquence est toujours comprise entre 0 et 1 (entre 0 et 100 %)."
+ },
+ "e669f8af3c": {
+  "question": "Sur 50 lancers, une pièce est tombée 22 fois sur pile. Quelle est la fréquence de pile, en pourcentage ?",
+  "explication": "Fréquence = 22 ÷ 50 = 0,44, soit 44 % (22/50 = 44/100). La fréquence observée s'approche de 50 % quand on fait beaucoup de lancers, mais sur 50 lancers l'écart est normal : c'est la fluctuation d'échantillonnage."
+ },
+ "c438006d6e": {
+  "question": "Dans un sondage, 3 personnes sur 4 sont satisfaites. Quel pourcentage cela représente-t-il ?",
+  "explication": "3 sur 4, c'est 3/4 = 0,75 = 75/100, soit 75 %. Équivalences à connaître : 1/2 = 50 %, 1/4 = 25 %, 3/4 = 75 %, 1/5 = 20 %, 1/10 = 10 %."
+ },
+ "fd5735a2a4": {
+  "question": "Quelle est la moyenne de 12, 15 et 18 ?",
+  "explication": "Moyenne = somme des valeurs ÷ nombre de valeurs = (12 + 15 + 18) ÷ 3 = 45 ÷ 3 = 15. Ici, les valeurs sont régulièrement espacées autour de 15, d'où une moyenne égale à la valeur centrale."
+ },
+ "fc1402430b": {
+  "question": "Un élève a eu 8, 14, 11 et 15. Quelle est sa moyenne ?",
+  "explication": "Moyenne = (8 + 14 + 11 + 15) ÷ 4 = 48 ÷ 4 = 12. Attention à diviser par le nombre de notes (4), pas par 3. La moyenne n'est pas forcément l'une des valeurs de la série."
+ },
+ "2c17ac34ba": {
+  "question": "Quelle est la moyenne de 2,5 ; 3,5 et 6 ?",
+  "explication": "Moyenne = (2,5 + 3,5 + 6) ÷ 3 = 12 ÷ 3 = 4. Interprétation : si les trois valeurs étaient égales, avec le même total, chacune vaudrait 4."
+ },
+ "8c096d5559": {
+  "question": "On tire une carte au hasard dans un jeu de 32 cartes. Quelle est la probabilité de tirer un as ?",
+  "explication": "Tirage équiprobable : probabilité = issues favorables ÷ issues possibles. Un jeu de 32 cartes contient 4 as : 4/32 = 1/8. 1/13 correspondrait à un jeu de 52 cartes."
+ },
+ "e2f055c69a": {
+  "question": "Une urne contient 3 boules rouges et 7 boules bleues. On en tire une au hasard. Quelle est la probabilité qu'elle soit rouge ?",
+  "explication": "Il y a 3 + 7 = 10 boules, dont 3 rouges : probabilité = 3/10. Erreur classique : 3/7, qui compare les rouges aux bleues au lieu de les comparer au total."
+ },
+ "0bb9488cca": {
+  "question": "On lance un dé équilibré à 6 faces. Quelle est la probabilité d'obtenir 5 ?",
+  "explication": "Le dé équilibré a 6 issues équiprobables, une seule est favorable (le 5) : probabilité = 1/6. Erreur fréquente : 1/5, en confondant le nombre attendu et le nombre d'issues."
+ },
+ "ec48a0885f": {
+  "question": "On lance un dé. « Obtenir 7 » est un événement…",
+  "explication": "Aucune face ne porte 7 : l'événement ne peut pas se réaliser, il est impossible et sa probabilité vaut 0. Toute probabilité est comprise entre 0 (impossible) et 1 (certain)."
+ },
+ "4ca004da99": {
+  "question": "On lance un dé. « Obtenir un nombre inférieur à 10 » est un événement…",
+  "explication": "Toutes les issues possibles (1 à 6) sont inférieures à 10 : l'événement se réalise toujours, il est certain et sa probabilité vaut 1. Son contraire (« obtenir 10 ou plus ») est impossible."
+ },
+ "57fa045cb9": {
+  "question": "Dans une expérience aléatoire, comment appelle-t-on chacun des résultats possibles ?",
+  "explication": "Chaque résultat possible d'une expérience aléatoire est une issue (au dé : 1, 2, …, 6). Un événement est un ensemble d'issues (« obtenir un nombre pair » = {2 ; 4 ; 6}). Ce vocabulaire est au programme de cycle 4."
+ },
+ "c63e781ede": {
+  "question": "Quelle est l'étendue de la série 4 ; 9 ; 2 ; 15 ; 7 ?",
+  "explication": "Étendue = plus grande valeur − plus petite valeur = 15 − 2 = 13. L'étendue mesure la dispersion de la série. Il faut repérer le minimum et le maximum, la série n'étant pas rangée."
+ },
+ "36ee4e374e": {
+  "question": "Les températures d'une semaine vont de −2 °C à 11 °C. Quelle est l'étendue (en °C) ?",
+  "explication": "Étendue = 11 − (−2) = 11 + 2 = 13 °C. Soustraire un négatif revient à ajouter son opposé. Erreur fréquente : 11 − 2 = 9."
+ },
+ "ae94ef7ad2": {
+  "question": "Quelle est l'étendue de la série 12 ; 12 ; 18 ; 20 ; 14 ?",
+  "explication": "Étendue = 20 − 12 = 8. Les valeurs répétées (12 deux fois) ne changent rien : seuls comptent le minimum et le maximum."
+ },
+ "52b89c6532": {
+  "question": "Combien font 20 % de 150 ?",
+  "explication": "20 % de 150 = 150 × 20/100 = 30. Calcul mental : 10 % de 150 = 15, donc 20 % = 30. Prendre un pourcentage, c'est appliquer un coefficient de proportionnalité."
+ },
+ "5d4395b61a": {
+  "question": "Combien font 15 % de 80 ?",
+  "explication": "15 % de 80 = 80 × 0,15 = 12. Calcul mental : 10 % de 80 = 8 et 5 % = 4, donc 15 % = 8 + 4 = 12."
+ },
+ "29ca1f467b": {
+  "question": "Un article à 60 € est soldé à −25 %. Quel est le montant de la remise (en €) ?",
+  "explication": "La remise vaut 25 % de 60 € = 60 × 0,25 = 15 € (25 % = un quart). Le prix soldé est donc 60 − 15 = 45 €, soit 75 % du prix initial. Bien lire si la question porte sur la remise ou sur le nouveau prix."
+ },
+ "39768b809d": {
+  "question": "3 kg de pommes coûtent 7,50 €. Combien coûte 1 kg (en €) ?",
+  "explication": "Prix unitaire = prix total ÷ quantité = 7,50 ÷ 3 = 2,50 € le kilo. Passer par l'unité (règle de trois) est la procédure de base pour les problèmes de proportionnalité."
+ },
+ "e72b1a5309": {
+  "question": "5 cahiers coûtent 12 €. Combien coûtent 8 cahiers (en €) ?",
+  "explication": "Passage par l'unité : 1 cahier coûte 12 ÷ 5 = 2,40 €, donc 8 cahiers coûtent 8 × 2,40 = 19,20 €. Autre procédure : coefficient 8/5 = 1,6, et 12 × 1,6 = 19,20 €."
+ },
+ "348fdfbb76": {
+  "question": "Une voiture roule à 90 km/h. Quelle distance (en km) parcourt-elle en 2 h ?",
+  "explication": "Distance = vitesse × durée = 90 km/h × 2 h = 180 km. 90 km/h signifie 90 km parcourus en 1 h : en 2 h, deux fois plus. À vitesse constante, la distance est proportionnelle à la durée."
+ },
+ "c87bc67980": {
+  "question": "Laquelle de ces situations est une situation de proportionnalité ?",
+  "explication": "Prix payé = prix du litre × nombre de litres : doubler la quantité double le prix, c'est une situation de proportionnalité. La taille d'un enfant ne double pas quand son âge double : ces grandeurs ne sont pas proportionnelles."
+ },
+ "9eb5e24b6e": {
+  "question": "Le tableau « 2 → 6 ; 5 → 15 ; 7 → 21 » est-il un tableau de proportionnalité ?",
+  "explication": "On multiplie chaque nombre de la première ligne par 3 pour obtenir la seconde : 2 × 3 = 6, 5 × 3 = 15, 7 × 3 = 21. Les quotients 6/2, 15/5, 21/7 sont égaux : c'est un tableau de proportionnalité de coefficient 3."
+ },
+ "92e6ba78c8": {
+  "question": "Le tableau « 1 → 4 ; 2 → 7 ; 3 → 10 » est-il un tableau de proportionnalité ?",
+  "explication": "4/1 = 4 mais 7/2 = 3,5 : les quotients ne sont pas égaux, ce n'est pas proportionnel. Ici on ajoute 3 d'une colonne à l'autre (y = 3x + 1) : une relation affine, pas linéaire. Autre indice : 1 → 4 mais 2 → 7 ≠ 8."
+ },
+ "2aa623ffd5": {
+  "question": "On considère la formule y = 2x + 1. Quelle valeur de y correspond à x = 5 ?",
+  "explication": "On remplace x par 5 : y = 2 × 5 + 1 = 10 + 1 = 11. La multiplication est prioritaire. Un tableau de valeurs se remplit en répétant ce calcul pour chaque valeur de x."
+ },
+ "90325d81e0": {
+  "question": "Avec la formule P = 4c, quel est P lorsque c = 2,5 ?",
+  "explication": "P = 4 × c avec c = 2,5 : P = 4 × 2,5 = 10. C'est le périmètre d'un carré de côté 2,5. Calcul mental : 4 × 2,5 = 2 × 5 = 10."
+ },
+ "819b0fe56c": {
+  "question": "Avec la formule y = x² − 3, quelle valeur de y correspond à x = −2 ?",
+  "explication": "On remplace x par −2 : (−2)² − 3 = 4 − 3 = 1. Le carré d'un nombre négatif est positif : (−2)² = (−2) × (−2) = 4. Erreur fréquente : écrire −2² = −4."
+ },
+ "0648313ba2": {
+  "question": "Pour 4 personnes, il faut 200 g de farine. Combien en faut-il (en g) pour 6 personnes ?",
+  "explication": "Passage par l'unité : pour 1 personne, 200 ÷ 4 = 50 g ; pour 6 personnes, 6 × 50 = 300 g. Autre procédure : 6 personnes = 4 + 2, soit 200 g + 100 g (linéarité additive). Varier les procédures est un attendu du cycle 3."
+ },
+ "d415b28d08": {
+  "question": "Sur une carte à l'échelle 1/100 000, 3 cm représentent combien de km ?",
+  "explication": "Échelle 1/100 000 : 1 cm sur la carte représente 100 000 cm en réalité, soit 1 000 m = 1 km. Donc 3 cm représentent 3 km. Le piège est la conversion : 100 000 cm = 1 km."
+ },
+ "f61918cbf5": {
+  "question": "6 stylos coûtent 9 €. Combien coûtent 10 stylos (en €) ?",
+  "explication": "Passage par l'unité : 1 stylo coûte 9 ÷ 6 = 1,50 €, donc 10 stylos coûtent 15 €. Autre voie : 2 stylos coûtent 3 €, donc 10 stylos coûtent 5 × 3 = 15 €."
+ },
+ "ffae207820": {
+  "question": "Programme : choisir un nombre, le multiplier par 3, puis ajouter 4. Quel est le résultat avec 5 ?",
+  "explication": "On applique les étapes dans l'ordre : 5 × 3 = 15, puis 15 + 4 = 19. En notant x le nombre de départ, le programme s'écrit 3x + 4 : c'est un tremplin vers le calcul littéral."
+ },
+ "e36770f857": {
+  "question": "Programme : choisir un nombre, lui ajouter 2, puis multiplier le résultat par 5. Quel est le résultat avec 4 ?",
+  "explication": "On ajoute d'abord 2 (4 + 2 = 6), puis on multiplie le résultat par 5 (6 × 5 = 30). L'expression est 5(x + 2) : les parenthèses traduisent « multiplier le résultat ». Sans elles, 4 + 2 × 5 = 14."
+ },
+ "64cd9de3ba": {
+  "question": "Programme : choisir un nombre, le mettre au carré, puis soustraire 10. Quel est le résultat avec −3 ?",
+  "explication": "On met −3 au carré : (−3)² = (−3) × (−3) = 9, puis 9 − 10 = −1. Le carré d'un nombre négatif est positif. L'expression du programme est x² − 10."
+ },
+ "5a30324006": {
+  "question": "Dans Scratch, quelle figure trace le script « répéter 4 fois : avancer de 50, tourner de 90° » ?",
+  "explication": "Le lutin trace 4 segments de même longueur en tournant de 90° à chaque fois : 4 côtés égaux et 4 angles droits, c'est un carré. La boucle évite d'écrire quatre fois les mêmes instructions."
+ },
+ "3a867d1632": {
+  "question": "Pour tracer un triangle équilatéral avec une boucle « répéter 3 fois : avancer, tourner », de quel angle faut-il tourner ?",
+  "explication": "Le lutin tourne de l'angle extérieur, pas de l'angle intérieur : 360° ÷ 3 = 120° (180° − 60°). Pour un polygone régulier à n côtés, il tourne de 360° ÷ n. Erreur classique : tourner de 60°, ce qui ne ferme pas la figure."
+ },
+ "bca2cae8ac": {
+  "question": "Combien de fois le lutin dit-il « Bonjour » avec « répéter 5 fois : dire Bonjour » ?",
+  "explication": "La boucle « répéter 5 fois » exécute son contenu exactement 5 fois : le lutin dit « Bonjour » 5 fois. Les boucles à nombre fixe d'itérations sont la première structure algorithmique travaillée au cycle 3."
+ },
+ "b77b2eef20": {
+  "question": "Quelle formule donne l'aire d'un disque de rayon r ?",
+  "explication": "Aire du disque = π × r² (en unités d'aire, cm² par exemple). 2πr est le périmètre du cercle, une longueur. Repère : l'aire contient un carré (r²), le périmètre non."
+ },
+ "aa0adf8ccb": {
+  "question": "Quelle formule donne le périmètre d'un cercle de rayon r ?",
+  "explication": "Périmètre du cercle = 2 × π × r, soit π × d (le diamètre vaut deux rayons). π ≈ 3,14 est le rapport constant entre le périmètre et le diamètre de tout cercle."
+ },
+ "28bee7dc4c": {
+  "question": "Quelle est l'aire d'un disque de rayon 10 cm, en prenant π ≈ 3,14 (en cm²) ?",
+  "explication": "A = π × r² ≈ 3,14 × 10² = 3,14 × 100 = 314 cm². On élève le rayon au carré avant de multiplier par π. Erreur fréquente : calculer 3,14 × 20 (confusion avec le périmètre)."
+ },
+ "c541d5c07b": {
+  "question": "Quel solide a une base polygonale et des faces latérales triangulaires qui se rejoignent en un sommet ?",
+  "explication": "La pyramide a une base polygonale et des faces latérales triangulaires qui se rejoignent en un sommet (l'apex). Le prisme droit, lui, a deux bases parallèles et des faces latérales rectangulaires."
+ },
+ "d78ec321c5": {
+  "question": "Combien de faces a un cube ?",
+  "explication": "Un cube a 6 faces carrées, 12 arêtes et 8 sommets. Vérification par la relation d'Euler : faces + sommets − arêtes = 6 + 8 − 12 = 2. Son patron comporte 6 carrés."
+ },
+ "4416dce66a": {
+  "question": "Quel solide a deux bases en forme de disque ?",
+  "explication": "Le cylindre a deux bases en forme de disque, parallèles et superposables, reliées par une surface courbe. Le cône n'a qu'une base circulaire et un sommet ; la sphère n'a aucune base."
+ },
+ "b7cd8091e9": {
+  "question": "Quelle est la différence entre une sphère et une boule ?",
+  "explication": "La sphère est la surface : l'ensemble des points situés à la distance r du centre. La boule est le solide plein : la sphère et tout son intérieur. Même distinction que cercle (ligne) / disque (surface)."
+ },
+ "8fab82c49a": {
+  "question": "Un ballon de football gonflé ressemble plutôt à…",
+  "explication": "Un ballon gonflé est creux : on considère son enveloppe, qui est une sphère. Une bille ou une boule de pétanque, pleines, sont des boules. La distinction est la même que cercle / disque."
+ },
+ "2ba5e37773": {
+  "question": "Comment appelle-t-on un segment qui relie deux points d'une sphère en passant par son centre ?",
+  "explication": "Un diamètre relie deux points de la sphère en passant par le centre : il mesure deux rayons (d = 2r). Un rayon relie le centre à un point de la sphère."
+ },
+ "8fe09ac728": {
+  "question": "Quelle est la notation scientifique de 45 000 ?",
+  "explication": "Notation scientifique : a × 10ⁿ avec 1 ≤ a < 10. 45 000 = 4,5 × 10 000 = 4,5 × 10⁴. 45 × 10³ est une écriture juste mais pas scientifique, car 45 ≥ 10."
+ },
+ "7ce1dc0da8": {
+  "question": "Quelle est la notation scientifique de 0,003 ?",
+  "explication": "0,003 = 3 millièmes = 3 ÷ 1 000 = 3 × 10⁻³. Pour un nombre inférieur à 1, l'exposant est négatif : on compte de combien de rangs on déplace la virgule vers la droite pour obtenir 3 (ici 3 rangs)."
+ },
+ "7a77b17fc3": {
+  "question": "Quel nombre s'écrit 2,1 × 10⁵ ?",
+  "explication": "Multiplier par 10⁵ décale la virgule de 5 rangs vers la droite : 2,1 × 10⁵ = 2,1 × 100 000 = 210 000. Vérification : 210 000 a 6 chiffres, et un nombre a × 10⁵ en a toujours 6."
+ },
+ "4e62491990": {
+  "question": "Calculez : (−4) × 6",
+  "explication": "Produit de deux nombres de signes différents : le résultat est négatif. 4 × 6 = 24, donc (−4) × 6 = −24. Sens : ajouter 6 fois une dette de 4 € fait une dette de 24 €."
+ },
+ "c4066efe24": {
+  "question": "Calculez : (−5) × (−3)",
+  "explication": "Produit de deux nombres négatifs : le résultat est positif. 5 × 3 = 15, donc (−5) × (−3) = 15. C'est la règle des signes, qui découle de la distributivité."
+ },
+ "6932429458": {
+  "question": "Calculez : (−2) × (−2) × (−2)",
+  "explication": "On compte les facteurs négatifs : trois (nombre impair), donc le produit est négatif. 2 × 2 × 2 = 8, d'où −8. C'est aussi (−2)³ = −8. Avec un nombre pair de facteurs négatifs, le produit serait positif."
+ },
+ "6831f87084": {
+  "question": "Résolvez : 2x + 3 = 11",
+  "explication": "On isole x en deux étapes : on soustrait 3 aux deux membres (2x = 8), puis on divise par 2 (x = 4). Vérification : 2 × 4 + 3 = 11. On défait les opérations dans l'ordre inverse de celui où elles s'appliquent à x."
+ },
+ "689cd8dd43": {
+  "question": "Résolvez : 5x − 4 = 21",
+  "explication": "On ajoute 4 aux deux membres : 5x = 25 ; on divise par 5 : x = 5. Vérification : 5 × 5 − 4 = 21. Toujours vérifier la solution en la reportant dans l'équation."
+ },
+ "96b9ecd73a": {
+  "question": "Résolvez : 3x + 7 = 1",
+  "explication": "On soustrait 7 aux deux membres : 3x = 1 − 7 = −6 ; on divise par 3 : x = −2. Vérification : 3 × (−2) + 7 = −6 + 7 = 1. La solution d'une équation peut être négative."
+ },
+ "00e103e6ea": {
+  "question": "Quelle est la médiane de la série 3 ; 8 ; 5 ; 12 ; 6 ?",
+  "explication": "On range d'abord la série : 3 ; 5 ; 6 ; 8 ; 12. Avec 5 valeurs (nombre impair), la médiane est la valeur du milieu, la 3e : 6. Autant de valeurs en dessous qu'au-dessus. Oublier de ranger est l'erreur la plus fréquente."
+ },
+ "9c7bb054d1": {
+  "question": "Quelle est la médiane de la série 10 ; 14 ; 11 ; 17 ; 13 ; 20 ; 15 ?",
+  "explication": "Série rangée : 10 ; 11 ; 13 ; 14 ; 15 ; 17 ; 20. 7 valeurs : la médiane est la 4e, 14 (3 valeurs de part et d'autre). Contrairement à la moyenne, elle n'est pas influencée par les valeurs extrêmes."
+ },
+ "d5a06f51b8": {
+  "question": "Quelle est la médiane de la série 2 ; 4 ; 6 ; 8 ?",
+  "explication": "Avec 4 valeurs (nombre pair), il n'y a pas de valeur centrale unique : la médiane est la moyenne des deux valeurs du milieu, (4 + 6) ÷ 2 = 5. Elle n'appartient pas forcément à la série."
+ },
+ "3b39dbe5f9": {
+  "question": "Calculez astucieusement : 7 × 102",
+  "explication": "On décompose 102 = 100 + 2 et on distribue : 7 × 102 = 7 × 100 + 7 × 2 = 700 + 14 = 714. Le calcul mental s'appuie sur la distributivité, souvent sans la nommer à l'école."
+ },
+ "ad928a63fc": {
+  "question": "Calculez astucieusement : 25 × 99",
+  "explication": "99 = 100 − 1 : 25 × 99 = 25 × 100 − 25 × 1 = 2 500 − 25 = 2 475. La distributivité marche aussi avec une soustraction."
+ },
+ "267c4902c0": {
+  "question": "Calculez astucieusement : 13 × 7 + 13 × 3",
+  "explication": "13 est un facteur commun aux deux produits : on factorise, 13 × 7 + 13 × 3 = 13 × (7 + 3) = 13 × 10 = 130. C'est la distributivité utilisée « dans l'autre sens »."
+ },
+ "807f077e66": {
+  "question": "Calculez : −5 + 8 − 12 + 3",
+  "explication": "On regroupe les positifs (8 + 3 = 11) et les négatifs (5 + 12 = 17), puis 11 − 17 = −6. Additions et soustractions peuvent se réordonner quand on garde chaque signe avec son nombre."
+ },
+ "5cd1225b9a": {
+  "question": "Calculez : 4 − (−6) + (−9)",
+  "explication": "Soustraire −6, c'est ajouter 6 : 4 − (−6) + (−9) = 4 + 6 − 9 = 1. On simplifie d'abord l'écriture (suppression des parenthèses), puis on calcule de gauche à droite."
+ },
+ "8282d5d05a": {
+  "question": "Calculez : −2,5 − 1,5 + 7",
+  "explication": "−2,5 − 1,5 = −4 (deux nombres négatifs : on additionne les distances à zéro), puis −4 + 7 = 3. Sur la droite graduée : reculer de 2,5, encore de 1,5, puis avancer de 7."
+ },
+ "2dcdeb3ca5": {
+  "question": "Un élève a lu 1/3 d'un livre lundi et 1/4 mardi. Quelle fraction du livre lui reste-t-il ? Donnez la réponse sous forme décimale arrondie au centième.",
+  "explication": "Lu : 1/3 + 1/4 = 4/12 + 3/12 = 7/12. Reste : 1 − 7/12 = 5/12 ≈ 0,4167, soit 0,42 au centième. Le dénominateur commun 12 est le plus petit multiple commun de 3 et 4."
+ },
+ "7698a43962": {
+  "question": "Dans une classe, 2/5 des élèves sont externes et 1/3 sont demi-pensionnaires ; les autres sont internes. Quelle fraction est interne ?",
+  "explication": "Externes et demi-pensionnaires : 2/5 + 1/3 = 6/15 + 5/15 = 11/15. Les internes sont le reste : 1 − 11/15 = 4/15. La classe entière correspond à 1 = 15/15."
+ },
+ "a63927040d": {
+  "question": "On verse 3/4 L puis 5/8 L d'eau dans une bouteille vide. Combien de litres contient-elle ?",
+  "explication": "On réduit au même dénominateur : 3/4 = 6/8, donc 6/8 + 5/8 = 11/8 L = 1,375 L. Le résultat dépasse 1 L, ce qui est cohérent puisque 3/4 L est déjà proche d'un litre."
+ },
+ "4a4dbb5106": {
+  "question": "Calculez : 2 × 3² − 4",
+  "explication": "Priorités : puissance, puis multiplication, puis soustraction. 3² = 9, 2 × 9 = 18, 18 − 4 = 14. Erreur fréquente : calculer (2 × 3)² = 36 en appliquant le carré au produit."
+ },
+ "24f07f59fb": {
+  "question": "Calculez : (2 × 3)² − 4",
+  "explication": "La parenthèse d'abord : 2 × 3 = 6 ; puis le carré : 6² = 36 ; enfin 36 − 4 = 32. Comparer avec 2 × 3² − 4 = 14 montre le rôle des parenthèses : le carré porte sur tout le produit."
+ },
+ "e6b2e7a1a0": {
+  "question": "Calculez : −3² + 10",
+  "explication": "Sans parenthèses, le carré ne porte que sur 3 : −3² = −(3 × 3) = −9. Donc −9 + 10 = 1. Avec parenthèses, (−3)² = 9 et le résultat serait 19. Piège classique, y compris sur les calculatrices."
+ },
+ "99fa36e078": {
+  "question": "Développez 3(x + 5).",
+  "explication": "On distribue 3 à chaque terme de la parenthèse : 3 × x + 3 × 5 = 3x + 15. Erreur fréquente : ne multiplier que le premier terme (3x + 5). Vérification avec x = 1 : 3 × 6 = 18 et 3 + 15 = 18."
+ },
+ "73fbf07845": {
+  "question": "Développez −2(a − 4).",
+  "explication": "On distribue −2 à chaque terme : −2 × a = −2a et −2 × (−4) = +8, d'où −2a + 8. Le piège est le signe : moins par moins donne plus."
+ },
+ "6f3b52f871": {
+  "question": "Développez 5(2x − 1).",
+  "explication": "On distribue 5 : 5 × 2x = 10x et 5 × (−1) = −5, d'où 10x − 5. Erreur fréquente : oublier de multiplier le second terme (10x − 1)."
+ },
+ "2e92c2920c": {
+  "question": "Réduisez 4x + 3 + 2x − 7.",
+  "explication": "Réduire, c'est regrouper les termes de même nature : les termes en x (4x + 2x = 6x) et les nombres (3 − 7 = −4). On obtient 6x − 4. On ne peut pas additionner 6x et −4, qui ne sont pas de même nature."
+ },
+ "e3f6b21bbf": {
+  "question": "Réduisez 5a − 2a + a.",
+  "explication": "Tous les termes sont en a : on additionne les coefficients, 5 − 2 + 1 = 4, d'où 4a. Le « a » seul a pour coefficient 1, souvent oublié."
+ },
+ "3ca1b0451e": {
+  "question": "Réduisez 3x × 4x.",
+  "explication": "Pour un produit, on multiplie les nombres entre eux (3 × 4 = 12) et les lettres entre elles (x × x = x²) : 12x². Ne pas confondre avec la somme 3x + 4x = 7x. Vérification avec x = 2 : 6 × 8 = 48 = 12 × 4."
+ },
+ "a7d0631a2c": {
+  "question": "« Le carré d'un nombre est toujours plus grand que ce nombre. » Quel nombre est un contre-exemple ?",
+  "explication": "0,5² = 0,25 < 0,5 : l'affirmation est fausse. Pour tout nombre strictement compris entre 0 et 1, le carré est plus petit que le nombre. Pour −2, (−2)² = 4 > −2 : ce n'est pas un contre-exemple."
+ },
+ "c13cd06493": {
+  "question": "« La somme de deux nombres premiers est toujours paire. » Quel exemple la contredit ?",
+  "explication": "2 + 3 = 5 est impair : l'affirmation est fausse. 2 est le seul nombre premier pair ; la somme de deux nombres premiers impairs est bien paire, mais pas celle de 2 et d'un premier impair."
+ },
+ "038d72d4e4": {
+  "question": "Combien de contre-exemples faut-il pour prouver qu'une affirmation générale est fausse ?",
+  "explication": "Un seul contre-exemple suffit à prouver qu'une affirmation générale est fausse. En revanche, mille exemples ne prouvent pas qu'elle est vraie : il faut une démonstration. Principe clé du raisonnement mathématique."
+ },
+ "28ae0f7d72": {
+  "question": "Calculez : (−36) ÷ 4",
+  "explication": "Quotient de deux nombres de signes différents : il est négatif. 36 ÷ 4 = 9, donc (−36) ÷ 4 = −9. Mêmes règles des signes que pour la multiplication."
+ },
+ "bdbf0b7135": {
+  "question": "Calculez : (−45) ÷ (−9)",
+  "explication": "Les deux nombres sont négatifs : le quotient est positif. 45 ÷ 9 = 5. Vérification : (−9) × 5 = −45."
+ },
+ "42ccf0665a": {
+  "question": "Calculez : 7,2 ÷ (−0,8)",
+  "explication": "On multiplie dividende et diviseur par 10 : 72 ÷ 8 = 9. Signes différents, donc le quotient est négatif : −9. Vérification : (−0,8) × (−9) = 7,2."
+ },
+ "bf6defcb1d": {
+  "question": "Calculez : 2/3 × 9/4",
+  "explication": "Produit de fractions : numérateurs entre eux, dénominateurs entre eux. 2/3 × 9/4 = 18/12 = 3/2. Plus rapide : simplifier avant de multiplier (3 avec 9, 2 avec 4) : 1/1 × 3/2 = 3/2."
+ },
+ "5f38fd2d1b": {
+  "question": "Calculez : 5/6 × 3/10",
+  "explication": "5 × 3 = 15 et 6 × 10 = 60, donc 15/60 = 1/4 (on divise par 15). Simplifier avant : 5 avec 10 et 3 avec 6 donne 1/2 × 1/2 = 1/4. Pas besoin de dénominateur commun pour multiplier."
+ },
+ "eda3146587": {
+  "question": "Calculez : 4 × 3/8",
+  "explication": "4 = 4/1, donc 4 × 3/8 = 12/8 = 3/2. On ne multiplie que le numérateur par l'entier. Erreur classique : multiplier aussi le dénominateur (12/32), ce qui redonne la même fraction."
+ },
+ "6b8ddac6e8": {
+  "question": "Combien font les 3/4 de 60 ?",
+  "explication": "Prendre les 3/4 de 60 : on partage en 4 (60 ÷ 4 = 15), puis on prend 3 parts (15 × 3 = 45). C'est aussi 60 × 3/4. Le schéma en barre est très efficace pour ce type de problème."
+ },
+ "da4e0a6a4b": {
+  "question": "Un réservoir de 50 L est rempli aux 2/5. Combien de litres contient-il ?",
+  "explication": "2/5 de 50 L : un cinquième vaut 50 ÷ 5 = 10 L, donc deux cinquièmes valent 20 L. Résultat cohérent : 2/5 est un peu moins de la moitié."
+ },
+ "deb142f391": {
+  "question": "Combien font les 2/3 des 3/4 de 120 ?",
+  "explication": "« Les 2/3 des 3/4 » se traduit par un produit : 3/4 de 120 = 90, puis 2/3 de 90 = 60. Ou directement 2/3 × 3/4 = 6/12 = 1/2, et la moitié de 120 vaut 60."
+ },
+ "58d423180e": {
+  "question": "Calculez : 3/4 ÷ 1/2",
+  "explication": "Diviser par une fraction, c'est multiplier par son inverse : 3/4 ÷ 1/2 = 3/4 × 2/1 = 6/4 = 3/2. Sens : combien de demis dans 3/4 ? Un et demi. Le résultat est plus grand que 3/4, car on divise par un nombre inférieur à 1."
+ },
+ "5776076463": {
+  "question": "Calculez : 2/5 ÷ 4",
+  "explication": "Diviser par 4, c'est multiplier par 1/4 : 2/5 × 1/4 = 2/20 = 1/10. Sens : partager 2/5 en 4 parts égales. Erreur fréquente : multiplier le numérateur par 4 (8/5)."
+ },
+ "37f454bf0a": {
+  "question": "Calculez : 6 ÷ 3/5",
+  "explication": "On multiplie par l'inverse de 3/5 : 6 × 5/3 = 30/3 = 10. Sens : il y a 10 fois 3/5 dans 6 (10 × 3/5 = 6). Vérifier en remultipliant est un bon réflexe."
+ },
+ "997a6a66f7": {
+  "question": "Écrivez sous la forme d'une seule puissance : 2³ × 2⁴",
+  "explication": "Même base : on additionne les exposants, 2³ × 2⁴ = 2³⁺⁴ = 2⁷. En effet, on multiplie 3 fois 2 puis encore 4 fois 2, soit 7 facteurs 2. Erreur fréquente : multiplier les exposants (2¹²)."
+ },
+ "42f2109ed6": {
+  "question": "Écrivez sous la forme d'une seule puissance : 10⁵ × 10²",
+  "explication": "10⁵ × 10² = 10⁵⁺² = 10⁷ : 100 000 × 100 = 10 000 000 (7 zéros). Les puissances de 10 rendent la règle évidente : on ajoute les zéros."
+ },
+ "cd5cbba315": {
+  "question": "Écrivez sous la forme d'une seule puissance : (3²)³",
+  "explication": "Puissance d'une puissance : on multiplie les exposants, (3²)³ = 3²ˣ³ = 3⁶. En effet (3²)³ = 3² × 3² × 3², soit 2 + 2 + 2 = 6 facteurs 3. À distinguer de 3² × 3³ = 3⁵."
+ },
+ "a3f9f9863f": {
+  "question": "Entre quels entiers consécutifs se trouve √50 ?",
+  "explication": "On encadre 50 entre deux carrés parfaits consécutifs : 49 = 7² et 64 = 8². Comme 49 < 50 < 64, on a 7 < √50 < 8 (√50 ≈ 7,07). La racine carrée conserve l'ordre des nombres positifs."
+ },
+ "cf11a246a5": {
+  "question": "Entre quels entiers consécutifs se trouve √20 ?",
+  "explication": "16 = 4² < 20 < 25 = 5², donc 4 < √20 < 5 (√20 ≈ 4,47). Erreur fréquente : diviser par 2 (10 et 11) au lieu de chercher les carrés."
+ },
+ "fe8960771f": {
+  "question": "Quel entier est le plus proche de √99 ?",
+  "explication": "√100 = 10 et 99 est très proche de 100 : √99 ≈ 9,95, donc l'entier le plus proche est 10. Erreur classique : répondre 50 en divisant par 2."
+ },
+ "60af87cde2": {
+  "question": "Factorisez 6x + 9.",
+  "explication": "Factoriser, c'est transformer une somme en produit. 6x = 3 × 2x et 9 = 3 × 3 : le facteur commun est 3, d'où 3(2x + 3). Vérification en développant : 3 × 2x + 3 × 3 = 6x + 9."
+ },
+ "9609db1153": {
+  "question": "Factorisez 5a − 5b.",
+  "explication": "5 est facteur commun aux deux termes : 5a − 5b = 5(a − b). Le signe moins reste à l'intérieur de la parenthèse. Vérification : 5(a − b) = 5a − 5b."
+ },
+ "65cb2130ba": {
+  "question": "Factorisez x² + 4x.",
+  "explication": "x² = x × x et 4x = 4 × x : x est facteur commun, d'où x(x + 4). Vérification : x × x + x × 4 = x² + 4x. La forme factorisée sert à résoudre des équations produit nul."
+ },
+ "23073fa057": {
+  "question": "Le triple d'un nombre augmenté de 5 vaut 26. Quel est ce nombre ?",
+  "explication": "On traduit : le triple du nombre (3x) augmenté de 5, égal à 26 : 3x + 5 = 26. Donc 3x = 21 et x = 7. Vérification : 3 × 7 + 5 = 26. Choisir l'inconnue et traduire la phrase est l'étape clé."
+ },
+ "f7757f656a": {
+  "question": "Paul a 12 ans de plus que sa fille. Ensemble, ils ont 48 ans. Quel âge a la fille ?",
+  "explication": "Âge de la fille : x ; âge de Paul : x + 12. Ensemble : x + x + 12 = 48, donc 2x = 36 et x = 18 ans (Paul a 30 ans). Erreur fréquente : 48 ÷ 2 = 24, en oubliant l'écart. Procédure arithmétique : (48 − 12) ÷ 2 = 18."
+ },
+ "0dfe9d9fe5": {
+  "question": "Un cinéma propose une place à 8 € ou un abonnement de 30 € puis 5 € la place. À partir de combien de places les deux formules coûtent-elles le même prix ?",
+  "explication": "Pour x places : 8x € sans abonnement, 30 + 5x € avec. Égalité : 8x = 30 + 5x, donc 3x = 30 et x = 10 places (80 € dans les deux cas). Au-delà, l'abonnement devient plus avantageux."
+ },
+ "9ec66a7e4d": {
+  "question": "Quelle est la forme irréductible de 84/126 ?",
+  "explication": "Le PGCD de 84 et 126 est 42 (84 = 42 × 2, 126 = 42 × 3) : 84/126 = 2/3. On peut aussi simplifier par étapes (par 2, par 3, par 7). 42/63 et 14/21 sont égales mais encore simplifiables."
+ },
+ "78ea63f24c": {
+  "question": "Quelle fraction est irréductible ?",
+  "explication": "9 = 3² et 16 = 2⁴ n'ont aucun diviseur commun autre que 1 : 9/16 est irréductible. Les autres se simplifient : 15/27 par 3, 14/35 par 7, 21/28 par 7."
+ },
+ "3292dc67a5": {
+  "question": "Quelle est la forme irréductible de 45/75 ?",
+  "explication": "Le PGCD de 45 et 75 est 15 : 45/75 = 3/5. Méthode : décomposer en facteurs premiers, 45 = 3² × 5 et 75 = 3 × 5², les facteurs communs donnent 3 × 5 = 15."
+ },
+ "f66292c747": {
+  "question": "Combien vaut 10⁻² ?",
+  "explication": "10⁻² = 1/10² = 1/100 = 0,01 : un exposant négatif donne l'inverse, pas un nombre négatif. Repère : 10⁻ⁿ a son 1 au n-ième rang après la virgule (10⁻² = un centième)."
+ },
+ "d34980138b": {
+  "question": "Combien vaut 2⁻³ ?",
+  "explication": "2⁻³ = 1/2³ = 1/8 = 0,125. L'exposant négatif signifie « inverse de la puissance positive ». Erreurs fréquentes : −8 (signe) ou −6 (multiplication de 2 par −3)."
+ },
+ "3902396d93": {
+  "question": "À quoi est égal 5⁰ ?",
+  "explication": "Tout nombre non nul élevé à la puissance 0 vaut 1 : 5⁰ = 1. Justification : 5³ ÷ 5³ = 1 et, par la règle des exposants, 5³ ÷ 5³ = 5³⁻³ = 5⁰. La convention garde ainsi les règles cohérentes."
+ },
+ "500ddf0ed6": {
+  "question": "Quel est le volume (en cm³) d'un cylindre de rayon 2 cm et de hauteur 10 cm ? Prenez π ≈ 3,14.",
+  "explication": "V = aire de la base × hauteur = π × r² × h ≈ 3,14 × 2² × 10 = 3,14 × 4 × 10 = 125,6 cm³. On élève le rayon au carré (4), pas le diamètre. Même principe que pour tout prisme : base × hauteur."
+ },
+ "0a0d3db70f": {
+  "question": "Une boîte cylindrique a un rayon de 5 cm et une hauteur de 4 cm. Quel est son volume (en cm³), avec π ≈ 3,14 ?",
+  "explication": "V = π × r² × h ≈ 3,14 × 5² × 4 = 3,14 × 25 × 4 = 3,14 × 100 = 314 cm³. Astuce : calculer 25 × 4 = 100 d'abord simplifie le calcul."
+ },
+ "c214eb692c": {
+  "question": "Si on double le rayon d'un cylindre sans changer sa hauteur, son volume est…",
+  "explication": "V = π × r² × h : le rayon intervient au carré. Si r double, r² est multiplié par 4, donc le volume aussi. Erreur fréquente : répondre « doublé ». Doubler la hauteur, en revanche, doublerait seulement le volume."
+ },
+ "5e179e53ab": {
+  "question": "Deux droites parallèles sont coupées par une sécante. Deux angles alternes-internes sont…",
+  "explication": "Quand deux droites parallèles sont coupées par une sécante, les angles alternes-internes (de part et d'autre de la sécante, entre les deux droites) sont égaux. C'est une propriété qui permet de calculer des angles ou de démontrer un parallélisme."
+ },
+ "2f0626f73e": {
+  "question": "Deux droites parallèles sont coupées par une sécante. Un angle mesure 65°. Combien mesure l'angle correspondant (en degrés) ?",
+  "explication": "Avec deux droites parallèles et une sécante, les angles correspondants (placés du même côté de la sécante, dans la même position) sont égaux : l'angle mesure aussi 65°. Image : on fait glisser une droite sur l'autre."
+ },
+ "0e7ff27d76": {
+  "question": "Deux angles alternes-internes formés par deux droites et une sécante ont la même mesure. Que peut-on dire des deux droites ?",
+  "explication": "C'est la réciproque : si deux droites coupées par une sécante forment des angles alternes-internes égaux, alors elles sont parallèles. Elle sert à démontrer un parallélisme à partir de mesures d'angles."
+ },
+ "25846dacb8": {
+  "question": "Où se trouve le centre du cercle circonscrit à un triangle ?",
+  "explication": "Le centre du cercle circonscrit est à égale distance des trois sommets. Tout point de la médiatrice d'un segment est équidistant de ses extrémités : le centre est donc le point de concours des trois médiatrices."
+ },
+ "87e14c1ab1": {
+  "question": "Dans un triangle rectangle, où se trouve le centre du cercle circonscrit ?",
+  "explication": "Dans un triangle rectangle, l'hypoténuse est un diamètre du cercle circonscrit : le centre est le milieu de l'hypoténuse. Réciproquement, un triangle inscrit dans un demi-cercle est rectangle."
+ },
+ "dafa4fdc5e": {
+  "question": "Un triangle est rectangle et son hypoténuse mesure 10 cm. Quel est le rayon (en cm) de son cercle circonscrit ?",
+  "explication": "L'hypoténuse est un diamètre du cercle circonscrit : rayon = 10 ÷ 2 = 5 cm. Conséquence : la médiane issue de l'angle droit mesure aussi 5 cm, la moitié de l'hypoténuse."
+ },
+ "a6721f2b39": {
+  "question": "Quel est le volume (en cm³) d'une pyramide dont la base a une aire de 36 cm² et la hauteur mesure 10 cm ?",
+  "explication": "V(pyramide) = aire de la base × hauteur ÷ 3 = 36 × 10 ÷ 3 = 120 cm³. Une pyramide occupe le tiers du prisme de même base et même hauteur : on peut le montrer en remplissant de sable."
+ },
+ "7aeb5caa96": {
+  "question": "Le volume d'un cône comparé à celui d'un cylindre de même base et de même hauteur est…",
+  "explication": "V(cône) = (aire de la base × hauteur) ÷ 3 : c'est le tiers du cylindre de même base et même hauteur. Même relation qu'entre pyramide et prisme. Erreur fréquente : répondre « la moitié »."
+ },
+ "60b58b9a47": {
+  "question": "Une pyramide à base carrée de 6 cm de côté a une hauteur de 5 cm. Quel est son volume (en cm³) ?",
+  "explication": "Aire de la base carrée : 6 × 6 = 36 cm². Volume : 36 × 5 ÷ 3 = 60 cm³. Oublier la division par 3 donne 180 cm³, le volume du pavé correspondant."
+ },
+ "105ca69c6b": {
+  "question": "Un triangle a des côtés de 5 cm, 12 cm et 13 cm. Est-il rectangle ?",
+  "explication": "On compare le carré du plus grand côté à la somme des carrés des deux autres : 5² + 12² = 25 + 144 = 169 = 13². Par la réciproque du théorème de Pythagore, le triangle est rectangle (l'angle droit est opposé au côté de 13 cm)."
+ },
+ "3924d55e3a": {
+  "question": "Un triangle a des côtés de 4 cm, 6 cm et 7 cm. Est-il rectangle ?",
+  "explication": "Plus grand côté : 7, et 7² = 49. Somme des carrés des deux autres : 4² + 6² = 16 + 36 = 52. Comme 52 ≠ 49, le triangle n'est pas rectangle : c'est la contraposée du théorème de Pythagore."
+ },
+ "06ef8da46e": {
+  "question": "Pour appliquer la réciproque du théorème de Pythagore, quel côté faut-il comparer à la somme des carrés des deux autres ?",
+  "explication": "Dans un triangle rectangle, l'hypoténuse est le plus grand côté : on compare donc le carré du plus grand côté à la somme des carrés des deux autres. Comparer un autre côté conduirait toujours à une inégalité, sans rien prouver."
+ },
+ "8aedbf0fc7": {
+  "question": "Dans le triangle ABC, I est le milieu de [AB] et J celui de [AC]. BC = 14 cm. Combien mesure IJ (en cm) ?",
+  "explication": "Théorème des milieux : le segment qui joint les milieux de deux côtés est parallèle au troisième côté et mesure sa moitié. IJ = 14 ÷ 2 = 7 cm et (IJ) // (BC). C'est un cas particulier du théorème de Thalès."
+ },
+ "a95dde193b": {
+  "question": "Dans un triangle, la droite qui passe par les milieux de deux côtés est…",
+  "explication": "Théorème de la droite des milieux : dans un triangle, la droite passant par les milieux de deux côtés est parallèle au troisième côté. Réciproquement, la parallèle à un côté passant par le milieu d'un autre coupe le troisième en son milieu."
+ },
+ "5a58633b3a": {
+  "question": "Dans un triangle, le segment qui joint les milieux de deux côtés mesure 4,5 cm. Combien mesure le troisième côté (en cm) ?",
+  "explication": "Le segment des milieux mesure la moitié du troisième côté, donc le troisième côté mesure le double : 4,5 × 2 = 9 cm. Attention au sens de la relation : on multiplie par 2 ici."
+ },
+ "26215dc7f9": {
+  "question": "Un élève a 12 (coefficient 2) et 15 (coefficient 1). Quelle est sa moyenne ?",
+  "explication": "Moyenne pondérée : (12 × 2 + 15 × 1) ÷ (2 + 1) = (24 + 15) ÷ 3 = 39 ÷ 3 = 13. On divise par la somme des coefficients (3), pas par le nombre de notes (2). La moyenne est tirée vers la note de plus fort coefficient."
+ },
+ "8c6c6ad488": {
+  "question": "Dans une classe, 10 élèves ont 8 et 15 élèves ont 13. Quelle est la moyenne de la classe ?",
+  "explication": "Chaque note est pondérée par son effectif : (10 × 8 + 15 × 13) ÷ 25 = (80 + 195) ÷ 25 = 275 ÷ 25 = 11. Erreur fréquente : faire (8 + 13) ÷ 2 = 10,5, sans tenir compte des effectifs."
+ },
+ "77f11d2b6c": {
+  "question": "Notes : 10 (coef. 1), 14 (coef. 3). Quelle est la moyenne ?",
+  "explication": "(10 × 1 + 14 × 3) ÷ (1 + 3) = (10 + 42) ÷ 4 = 52 ÷ 4 = 13. Le coefficient 3 rapproche la moyenne de 14. Sans coefficients, on aurait 12."
+ },
+ "35bf70260b": {
+  "question": "On ajoute une valeur très grande à une série. Quel indicateur est le plus modifié ?",
+  "explication": "La moyenne utilise toutes les valeurs : une valeur très grande la tire vers le haut. La médiane, valeur centrale de la série rangée, bouge au plus d'une position. C'est pourquoi on cite souvent le salaire médian plutôt que le salaire moyen."
+ },
+ "4290c742a1": {
+  "question": "Série : 2 ; 3 ; 4 ; 5 ; 100. Quelle est la médiane ?",
+  "explication": "Série déjà rangée, 5 valeurs : la médiane est la 3e, 4. La valeur extrême 100 ne la modifie pas : la médiane est un indicateur robuste."
+ },
+ "629ae09e49": {
+  "question": "Série : 2 ; 3 ; 4 ; 5 ; 100. Quelle est la moyenne ?",
+  "explication": "Moyenne = (2 + 3 + 4 + 5 + 100) ÷ 5 = 114 ÷ 5 = 22,8. Elle est supérieure à 4 des 5 valeurs : la valeur extrême la déforme. Comparer moyenne (22,8) et médiane (4) révèle une série très dissymétrique."
+ },
+ "d3e2802fe5": {
+  "question": "La probabilité qu'il pleuve demain est 0,3. Quelle est la probabilité qu'il ne pleuve pas ?",
+  "explication": "Un événement et son contraire ont des probabilités de somme 1 : P(non A) = 1 − P(A) = 1 − 0,3 = 0,7. Il ne pleut pas ou il pleut : l'un des deux arrive forcément."
+ },
+ "3508266cb4": {
+  "question": "On lance un dé. Quel est l'événement contraire de « obtenir un nombre pair » ?",
+  "explication": "L'événement contraire regroupe toutes les issues qui ne réalisent pas l'événement : ici 1, 3 et 5, soit « obtenir un nombre impair ». Les deux événements n'ont aucune issue commune et couvrent ensemble toutes les issues."
+ },
+ "915bf5534a": {
+  "question": "La probabilité de gagner à un jeu est 2/9. Quelle est la probabilité de perdre ? Donnez la réponse arrondie au centième.",
+  "explication": "P(perdre) = 1 − P(gagner) = 1 − 2/9 = 7/9 ≈ 0,777…, soit 0,78 au centième. On écrit 1 sous la forme 9/9 pour soustraire."
+ },
+ "7a28ed161a": {
+  "question": "On lance deux pièces. Quelle est la probabilité d'obtenir deux fois pile ?",
+  "explication": "Un arbre ou un tableau donne 4 issues équiprobables : PP, PF, FP, FF. Une seule est favorable : 1/4. C'est aussi 1/2 × 1/2. Erreur classique : 1/3, en pensant qu'il n'y a que 3 cas (2 piles, 1 pile, 0 pile)."
+ },
+ "13566d862b": {
+  "question": "On lance deux pièces. Quelle est la probabilité d'obtenir exactement un pile ?",
+  "explication": "Parmi les 4 issues équiprobables (PP, PF, FP, FF), deux donnent exactement un pile : PF et FP. Probabilité 2/4 = 1/2. Distinguer PF et FP est indispensable pour avoir des issues équiprobables."
+ },
+ "deaa3fe203": {
+  "question": "On lance deux dés. Combien y a-t-il d'issues possibles ?",
+  "explication": "Chaque issue du premier dé se combine avec chacune des 6 issues du second : 6 × 6 = 36 issues équiprobables. Un tableau à double entrée les visualise ; il sert ensuite à calculer, par exemple, la probabilité d'une somme."
+ },
+ "9a937922bc": {
+  "question": "Par quel nombre multiplie-t-on un prix pour l'augmenter de 15 % ?",
+  "explication": "Augmenter de 15 %, c'est ajouter 15 % : x + 0,15x = 1,15x. Le coefficient multiplicateur est 1 + 15/100 = 1,15. Il permet de calculer le nouveau prix en une seule opération."
+ },
+ "91c6994759": {
+  "question": "Par quel nombre multiplie-t-on un prix pour le diminuer de 30 % ?",
+  "explication": "Diminuer de 30 %, c'est garder 70 % : x − 0,3x = 0,7x. Le coefficient est 1 − 30/100 = 0,7. Erreur fréquente : multiplier par 0,3, ce qui donne la remise et non le nouveau prix."
+ },
+ "cedf84de8f": {
+  "question": "Un article coûte 80 €. Son prix augmente de 10 %. Quel est le nouveau prix (en €) ?",
+  "explication": "Augmenter de 10 % revient à multiplier par 1,1 : 80 × 1,1 = 88 €. En deux étapes : 10 % de 80 = 8 €, puis 80 + 8 = 88 €."
+ },
+ "3ace23ea46": {
+  "question": "On partage 60 € entre deux enfants proportionnellement à leur âge : 4 ans et 8 ans. Combien reçoit le plus jeune (en €) ?",
+  "explication": "Partage proportionnel : 4 + 8 = 12 parts. Une part vaut 60 ÷ 12 = 5 €. Le plus jeune reçoit 4 × 5 = 20 €, l'aîné 8 × 5 = 40 €. Vérification : 20 + 40 = 60."
+ },
+ "77f6d2ec49": {
+  "question": "Une recette demande farine et sucre dans le ratio 3 : 1. Pour 400 g de mélange, combien faut-il de farine (en g) ?",
+  "explication": "Ratio 3 : 1 → 3 + 1 = 4 parts. Une part = 400 ÷ 4 = 100 g ; farine = 3 parts = 300 g, sucre = 100 g. Erreur fréquente : diviser 400 par 3."
+ },
+ "3276f843d0": {
+  "question": "Trois amis partagent un gain de 900 € proportionnellement à leurs mises : 100 €, 200 € et 300 €. Combien reçoit celui qui a misé 300 € (en €) ?",
+  "explication": "Mises totales : 100 + 200 + 300 = 600 €. Celui qui a misé 300 € a fourni 300/600 = 1/2 des mises : il reçoit la moitié du gain, 450 €. Les autres reçoivent 150 € et 300 €."
+ },
+ "978eab6a1c": {
+  "question": "Programme : choisir un nombre, multiplier par 4, puis soustraire 3. Le résultat est 25. Quel nombre a-t-on choisi ?",
+  "explication": "On remonte le programme en faisant les opérations inverses dans l'ordre inverse : 25 + 3 = 28, puis 28 ÷ 4 = 7. Vérification : 7 × 4 − 3 = 25. Équation équivalente : 4x − 3 = 25."
+ },
+ "11f056a64e": {
+  "question": "Programme : choisir un nombre, ajouter 5, puis multiplier par 2. Le résultat est 18. Quel nombre a-t-on choisi ?",
+  "explication": "Opérations inverses dans l'ordre inverse : 18 ÷ 2 = 9, puis 9 − 5 = 4. Vérification : (4 + 5) × 2 = 18. Équation équivalente : 2(x + 5) = 18."
+ },
+ "04c4ed8d98": {
+  "question": "Programme : choisir un nombre, le diviser par 3, puis ajouter 7. Le résultat est 12. Quel nombre a-t-on choisi ?",
+  "explication": "On défait « ajouter 7 » (12 − 7 = 5), puis « diviser par 3 » (5 × 3 = 15). Vérification : 15 ÷ 3 + 7 = 12. Équation équivalente : x/3 + 7 = 12."
+ },
+ "8c7c199846": {
+  "question": "Soit f(x) = 3x − 2. Quelle est l'image de 4 par f ?",
+  "explication": "L'image de 4 est la valeur de f(4) : on remplace x par 4, 3 × 4 − 2 = 12 − 2 = 10. On note f(4) = 10, ou f : 4 ↦ 10. Calculer une image, c'est appliquer la fonction comme un programme de calcul."
+ },
+ "11d2b7f4be": {
+  "question": "Soit f(x) = 2x + 6. Quel est l'antécédent de 0 par f ?",
+  "explication": "Chercher un antécédent de 0, c'est trouver x tel que f(x) = 0 : 2x + 6 = 0, donc 2x = −6 et x = −3. Vérification : 2 × (−3) + 6 = 0. Image : on part de x ; antécédent : on cherche x."
+ },
+ "14462dcc75": {
+  "question": "Soit g(x) = x² + 1. Quelle est l'image de −3 par g ?",
+  "explication": "g(−3) = (−3)² + 1 = 9 + 1 = 10. Le carré d'un nombre négatif est positif. Erreur classique : écrire −3² + 1 = −8, en oubliant les parenthèses autour de −3."
+ },
+ "a08def96cc": {
+  "question": "Script : « si nombre > 10 alors dire Grand sinon dire Petit ». Que dit le lutin pour 10 ?",
+  "explication": "La condition « nombre > 10 » est fausse pour 10 : 10 n'est pas strictement supérieur à 10. Le lutin exécute la branche « sinon » et dit « Petit ». Distinguer > (strict) et ≥ (large) est un piège fréquent en programmation."
+ },
+ "13a2660af3": {
+  "question": "Script : « si nombre modulo 2 = 0 alors dire Pair sinon dire Impair ». Que dit le lutin pour 7 ?",
+  "explication": "« 7 modulo 2 » est le reste de la division de 7 par 2 : 7 = 2 × 3 + 1, le reste vaut 1. La condition « = 0 » est fausse, le lutin dit « Impair ». Le test « modulo 2 = 0 » est la façon classique de tester la parité."
+ },
+ "40c5e23a38": {
+  "question": "Dans un programme, à quoi sert une instruction « si… alors… sinon » ?",
+  "explication": "L'instruction conditionnelle « si… alors… sinon » choisit entre deux actions selon qu'une condition est vraie ou fausse. Les boucles, elles, répètent des instructions. Ce sont les deux structures de contrôle au programme du cycle 4."
+ },
+ "7d1f2d76cf": {
+  "question": "Un train parcourt 240 km en 2 h 30 min. Quelle est sa vitesse moyenne (en km/h) ?",
+  "explication": "On convertit la durée en heures décimales : 2 h 30 min = 2,5 h (et non 2,3 h). Vitesse = distance ÷ durée = 240 ÷ 2,5 = 96 km/h. Erreur classique : diviser par 2,30."
+ },
+ "4c176a0178": {
+  "question": "Convertissez 36 km/h en m/s.",
+  "explication": "36 km/h = 36 000 m en 3 600 s, soit 10 m/s. Règle : pour passer des km/h aux m/s, on divise par 3,6 (car 1 km = 1 000 m et 1 h = 3 600 s). Dans l'autre sens, on multiplie par 3,6."
+ },
+ "5c91220604": {
+  "question": "Un cycliste roule à 20 km/h pendant 45 min. Quelle distance (en km) parcourt-il ?",
+  "explication": "45 min = 45/60 h = 0,75 h. Distance = vitesse × durée = 20 × 0,75 = 15 km. Raisonnement proportionnel : en 15 min (un quart d'heure), il fait 5 km ; en 45 min, trois fois plus."
+ },
+ "ac0067610e": {
+  "question": "Un robinet débite 12 L par minute. Combien de minutes faut-il pour remplir une baignoire de 150 L ?",
+  "explication": "Durée = volume ÷ débit = 150 ÷ 12 = 12,5 min, soit 12 min 30 s (0,5 min = 30 s). Attention à ne pas écrire 12 min 50 s : la partie décimale d'une durée n'est pas en minutes."
+ },
+ "ce958e8723": {
+  "question": "Développez (2x − 3)².",
+  "explication": "(a − b)² = a² − 2ab + b² avec a = 2x et b = 3 : (2x)² = 4x², 2ab = 2 × 2x × 3 = 12x, b² = 9. Résultat : 4x² − 12x + 9. Oublier le double produit (4x² − 9) est l'erreur classique."
+ },
+ "b6c224a413": {
+  "question": "Factorisez x² − 49.",
+  "explication": "x² − 49 est une différence de deux carrés : x² − 7². Identité a² − b² = (a − b)(a + b), d'où (x − 7)(x + 7). Vérification : en développant, les termes −7x et +7x s'annulent."
+ },
+ "114d465178": {
+  "question": "Factorisez 9x² + 6x + 1.",
+  "explication": "On reconnaît a² + 2ab + b² : 9x² = (3x)², 1 = 1², et le double produit 2 × 3x × 1 = 6x est bien présent. Donc 9x² + 6x + 1 = (3x + 1)². Il faut toujours vérifier le double produit avant de conclure."
+ },
+ "017e42f201": {
+  "question": "Calculez mentalement 101² à l'aide d'une identité remarquable.",
+  "explication": "101² = (100 + 1)² = 100² + 2 × 100 × 1 + 1² = 10 000 + 200 + 1 = 10 201. Les identités remarquables servent aussi au calcul mental : 99² = (100 − 1)² = 9 801."
+ },
+ "261507a66f": {
+  "question": "Développez (x + 2)(x + 5).",
+  "explication": "Double distributivité : chaque terme du premier facteur multiplie chaque terme du second. x × x + x × 5 + 2 × x + 2 × 5 = x² + 5x + 2x + 10 = x² + 7x + 10. Erreur fréquente : x² + 10, en oubliant les produits croisés."
+ },
+ "215d8d4ef4": {
+  "question": "Développez (2a − 1)(a + 3).",
+  "explication": "(2a − 1)(a + 3) = 2a × a + 2a × 3 − 1 × a − 1 × 3 = 2a² + 6a − a − 3 = 2a² + 5a − 3. Quatre produits, puis on réduit. Vérification avec a = 1 : 1 × 4 = 4 et 2 + 5 − 3 = 4."
+ },
+ "9b0e5ed3ff": {
+  "question": "Développez (3 − x)(x − 4).",
+  "explication": "(3 − x)(x − 4) = 3x − 12 − x² + 4x = −x² + 7x − 12. Attention aux signes : −x × (−4) = +4x. Vérification avec x = 0 : 3 × (−4) = −12."
+ },
+ "8216118cb9": {
+  "question": "Résolvez l'inéquation 3x − 5 > 7.",
+  "explication": "On ajoute 5 aux deux membres : 3x > 12. On divise par 3, nombre positif, sans changer le sens : x > 4. Les solutions sont tous les nombres strictement supérieurs à 4, pas un seul nombre."
+ },
+ "d8576d6a26": {
+  "question": "Résolvez l'inéquation −2x ≥ 8.",
+  "explication": "On divise les deux membres par −2, un nombre négatif : le sens de l'inégalité change, x ≤ −4. Vérification avec x = −5 : −2 × (−5) = 10 ≥ 8. C'est le piège principal des inéquations."
+ },
+ "f12a2fe271": {
+  "question": "Quel nombre est solution de 5 − x < 2 ?",
+  "explication": "5 − x < 2 donne −x < −3, puis x > 3 en multipliant par −1 (le sens change). Seul 4 convient. Vérification : 5 − 4 = 1 < 2, alors que 5 − 3 = 2 n'est pas strictement inférieur à 2."
+ },
+ "590b8e5ea5": {
+  "question": "Quelles sont les solutions de (x − 3)(x + 5) = 0 ?",
+  "explication": "Un produit de facteurs est nul si et seulement si l'un des facteurs est nul : x − 3 = 0 ou x + 5 = 0, donc x = 3 ou x = −5. Erreur fréquente : prendre les nombres écrits (3 et 5) sans résoudre."
+ },
+ "4e5fa726c1": {
+  "question": "Quelles sont les solutions de x² = 5x ?",
+  "explication": "On ramène tout dans un membre et on factorise : x² − 5x = 0 ⇔ x(x − 5) = 0, donc x = 0 ou x = 5. Diviser les deux membres par x ferait perdre la solution 0 (on ne divise pas par une quantité qui peut être nulle)."
+ },
+ "087a7d0149": {
+  "question": "Quelles sont les solutions de (2x − 1)(x + 4) = 0 ?",
+  "explication": "Produit nul : 2x − 1 = 0 donne x = 1/2, et x + 4 = 0 donne x = −4. Vérification : (2 × 1/2 − 1) = 0. On résout chaque facteur comme une équation du premier degré."
+ },
+ "f867f8bbdb": {
+  "question": "Dans un triangle ABC, M est sur [AB] et N sur [AC], avec (MN) parallèle à (BC). AM = 3 cm, AB = 9 cm et BC = 12 cm. Combien mesure MN (en cm) ?",
+  "explication": "Les droites (MN) et (BC) sont parallèles : par le théorème de Thalès, AM/AB = MN/BC, soit 3/9 = MN/12. Donc MN = 12 × 3/9 = 4 cm. Le petit triangle AMN est une réduction de ABC de rapport 1/3."
+ },
+ "72ce134258": {
+  "question": "Avec (MN) parallèle à (BC), AM = 4 cm, AB = 10 cm et AN = 6 cm. Combien mesure AC (en cm) ?",
+  "explication": "Thalès : AM/AB = AN/AC, soit 4/10 = 6/AC. Produit en croix : AC = 6 × 10 ÷ 4 = 15 cm. Bien associer les côtés correspondants : AM et AN (petit triangle) avec AB et AC (grand triangle)."
+ },
+ "3b12ae5d55": {
+  "question": "Pour prouver avec la réciproque de Thalès que (MN) // (BC), que faut-il vérifier en plus de l'égalité AM/AB = AN/AC ?",
+  "explication": "La réciproque de Thalès exige que les points A, M, B et A, N, C soient alignés dans le même ordre. Sans cette condition, M et N pourraient être de part et d'autre de A, et les droites ne seraient pas forcément parallèles."
+ },
+ "f5ca7768fc": {
+  "question": "Un arbre projette une ombre de 12 m. Au même moment, un bâton de 1,5 m projette une ombre de 2 m. Quelle est la hauteur de l'arbre (en m) ?",
+  "explication": "Au même moment, les rayons du soleil sont parallèles : hauteurs et ombres sont proportionnelles. h/12 = 1,5/2, donc h = 12 × 0,75 = 9 m. C'est la méthode attribuée à Thalès pour mesurer la pyramide de Khéops."
+ },
+ "6b574a7418": {
+  "question": "Dans un triangle rectangle, le cosinus d'un angle aigu est égal à…",
+  "explication": "Dans un triangle rectangle : cos = adjacent / hypoténuse, sin = opposé / hypoténuse, tan = opposé / adjacent. Moyen mnémotechnique : « CAH SOH TOA ». Le côté adjacent est le côté de l'angle qui n'est pas l'hypoténuse."
+ },
+ "a30d8ee7dd": {
+  "question": "Un triangle ABC est rectangle en A, avec BC = 10 cm et l'angle B = 30°. Combien mesure AC (en cm) ? On rappelle que sin 30° = 0,5.",
+  "explication": "Vu de l'angle B, AC est le côté opposé et BC l'hypoténuse (opposée à l'angle droit en A). sin B = AC/BC, donc AC = BC × sin 30° = 10 × 0,5 = 5 cm. Repère : dans un triangle rectangle à 30°, le côté opposé à 30° vaut la moitié de l'hypoténuse."
+ },
+ "9e7f43de10": {
+  "question": "Une échelle de 5 m est posée contre un mur ; son pied est à 3 m du mur. Quel est le cosinus de l'angle entre l'échelle et le sol ?",
+  "explication": "L'échelle, le mur et le sol forment un triangle rectangle. Pour l'angle au sol, le côté adjacent est la distance au mur (3 m), l'hypoténuse est l'échelle (5 m) : cos = 3/5 = 0,6. Le mur mesure 4 m jusqu'au haut de l'échelle (triangle 3-4-5)."
+ },
+ "baa2450a9d": {
+  "question": "Quelle formule donne le volume d'une boule de rayon r ?",
+  "explication": "Volume de la boule : V = (4/3) × π × r³ (unité de volume : r au cube). 4πr² est l'aire de la sphère (unité d'aire). Le cube sur r rappelle qu'il s'agit d'un volume."
+ },
+ "dbcea19292": {
+  "question": "Quel est le volume (en cm³) d'une boule de rayon 3 cm ? Prenez π ≈ 3,14 et arrondissez à l'unité.",
+  "explication": "V = (4/3) × π × r³ ≈ 4/3 × 3,14 × 27 = 4 × 3,14 × 9 = 113,04, soit environ 113 cm³. Simplifier 27/3 = 9 avant de multiplier évite les erreurs d'arrondi."
+ },
+ "74fe261a76": {
+  "question": "Si on double le rayon d'une boule, son volume est multiplié par…",
+  "explication": "Le volume dépend du cube du rayon : (2r)³ = 8r³, donc le volume est multiplié par 8. Plus généralement, agrandir une figure de rapport k multiplie les longueurs par k, les aires par k², les volumes par k³."
+ },
+ "c2692c3f8e": {
+  "question": "Série rangée : 2 ; 4 ; 5 ; 7 ; 8 ; 10 ; 12 ; 15. Quel est le premier quartile Q1 ?",
+  "explication": "Série de 8 valeurs rangée. Q1 est la plus petite valeur telle qu'au moins 25 % des données lui soient inférieures ou égales : 8 × 0,25 = 2, donc Q1 est la 2e valeur, 4. Le premier quartile est toujours une valeur de la série."
+ },
+ "9c653d30be": {
+  "question": "Même série : 2 ; 4 ; 5 ; 7 ; 8 ; 10 ; 12 ; 15. Quel est le troisième quartile Q3 ?",
+  "explication": "8 × 0,75 = 6 : Q3 est la 6e valeur de la série rangée, soit 10. Au moins 75 % des valeurs (6 sur 8) lui sont inférieures ou égales. Si le calcul ne tombe pas juste, on prend le rang entier supérieur."
+ },
+ "277ab491c0": {
+  "question": "Que représente l'écart interquartile Q3 − Q1 ?",
+  "explication": "Entre Q1 et Q3 se trouvent environ 50 % des valeurs, celles du centre de la série. L'écart interquartile Q3 − Q1 mesure leur dispersion ; contrairement à l'étendue, il n'est pas influencé par les valeurs extrêmes."
+ },
+ "6beb20a26f": {
+  "question": "P(A) = 0,5 ; P(B) = 0,4 ; P(A et B) = 0,2. Calculez P(A ou B).",
+  "explication": "P(A ou B) = P(A) + P(B) − P(A et B) = 0,5 + 0,4 − 0,2 = 0,7. On retire P(A et B) car les issues communes ont été comptées deux fois. Un diagramme de Venn rend la formule évidente."
+ },
+ "ffac0d7afa": {
+  "question": "Dans une classe, 60 % des élèves font du sport, 30 % de la musique et 10 % les deux. Quelle proportion (en %) fait du sport ou de la musique ?",
+  "explication": "60 % + 30 % compte deux fois les 10 % qui font les deux : 60 + 30 − 10 = 80 %. Les 20 % restants ne font ni sport ni musique. Un diagramme de Venn ou un tableau à double entrée aide à visualiser."
+ },
+ "f85ede51d6": {
+  "question": "A et B sont incompatibles, P(A) = 0,25 et P(B) = 0,35. Combien vaut P(A ou B) ?",
+  "explication": "Incompatibles signifie qu'ils ne peuvent pas se réaliser en même temps : P(A et B) = 0. Donc P(A ou B) = 0,25 + 0,35 = 0,6. On additionne simplement, sans correction. 0,0875 est le produit, qui n'a pas de sens ici."
+ },
+ "ce2f8fda6b": {
+  "question": "Un prix baisse de 20 %, puis augmente de 20 %. Par rapport au prix initial, quel est le pourcentage de baisse finale ?",
+  "explication": "Baisse de 20 % : × 0,8 ; hausse de 20 % : × 1,2. Coefficient global : 0,8 × 1,2 = 0,96, soit 96 % du prix initial, une baisse de 4 %. Les 20 % de la hausse portent sur un prix déjà réduit : les pourcentages ne s'annulent pas."
+ },
+ "1bdefe4e4d": {
+  "question": "Après une hausse de 25 %, un article coûte 50 €. Quel était son prix initial (en €) ?",
+  "explication": "Prix initial × 1,25 = 50, donc prix initial = 50 ÷ 1,25 = 40 €. Vérification : 40 + 25 % de 40 = 40 + 10 = 50. Retirer 25 % de 50 donnerait 37,50 €, faux car la hausse portait sur 40 €."
+ },
+ "63f020988b": {
+  "question": "Une population augmente de 10 % deux années de suite. De quel pourcentage a-t-elle augmenté au total ?",
+  "explication": "Deux hausses de 10 % : 1,1 × 1,1 = 1,21, soit une hausse totale de 21 %. Exemple : 100 → 110 → 121. La seconde hausse s'applique à une valeur déjà augmentée : les pourcentages successifs se multiplient, ils ne s'additionnent pas."
+ },
+ "563d5fd862": {
+  "question": "La fonction f(x) = −3x + 2 est…",
+  "explication": "f(x) = ax + b avec a = −3 et b = 2 : c'est une fonction affine de coefficient directeur −3 (la droite descend) et d'ordonnée à l'origine 2. Elle n'est pas linéaire car b ≠ 0."
+ },
+ "ae4f7829b3": {
+  "question": "Une droite passe par les points (0 ; 1) et (2 ; 7). Quelle fonction affine représente-t-elle ?",
+  "explication": "Le point (0 ; 1) donne l'ordonnée à l'origine : b = 1. Coefficient directeur : a = (7 − 1) ÷ (2 − 0) = 3 (quand x augmente de 1, y augmente de 3). Donc f(x) = 3x + 1. Vérification : f(2) = 7."
+ },
+ "f647635e07": {
+  "question": "Quelle fonction est linéaire ?",
+  "explication": "Une fonction linéaire s'écrit f(x) = ax : sa représentation est une droite passant par l'origine. f(x) = −5x est linéaire (a = −5). 2x + 1 est affine non linéaire, x² n'est pas affine, 3 est constante."
+ },
+ "070a7f8fdc": {
+  "question": "Écrivez sous la forme 10ⁿ : 10⁷ ÷ 10³",
+  "explication": "Quotient de puissances de même base : on soustrait les exposants, 10⁷ ÷ 10³ = 10⁷⁻³ = 10⁴. Vérification : 10 000 000 ÷ 1 000 = 10 000."
+ },
+ "295439a485": {
+  "question": "Quelle est la notation scientifique de (3 × 10⁴) × (5 × 10³) ?",
+  "explication": "On regroupe : (3 × 5) × (10⁴ × 10³) = 15 × 10⁷. Comme 15 ≥ 10, on réécrit 15 = 1,5 × 10 : 1,5 × 10⁸. Erreur fréquente : s'arrêter à 15 × 10⁷, qui n'est pas une notation scientifique."
+ },
+ "ff37820f89": {
+  "question": "Écrivez sous la forme 2ⁿ : 2⁵ × 2⁻⁸",
+  "explication": "Même base : on additionne les exposants, 5 + (−8) = −3, donc 2⁻³ (= 1/8). Les règles des puissances restent valables avec des exposants négatifs."
+ },
+ "7fa836d77e": {
+  "question": "Quelles sont les solutions de x² = 25 ?",
+  "explication": "5² = 25 et (−5)² = 25 : l'équation x² = 25 a deux solutions, −5 et 5. Oublier la solution négative est l'erreur la plus fréquente. 12,5 vient d'une confusion entre carré et double."
+ },
+ "9ba2a7c6bb": {
+  "question": "Quelles sont les solutions de x² = −4 ?",
+  "explication": "Un carré est toujours positif ou nul : aucun nombre n'a pour carré −4. L'équation n'a pas de solution. Ne pas confondre avec x² = 4, qui a deux solutions."
+ },
+ "af7755cbaf": {
+  "question": "Quelles sont les solutions de x² = 7 ?",
+  "explication": "Pour a > 0, x² = a a deux solutions : √a et −√a. Ici √7 ≈ 2,65 et −√7. 3,5 vient d'une confusion entre carré et double."
+ },
+ "01a21d4ec8": {
+  "question": "Quelle est la décomposition en produit de facteurs premiers de 60 ?",
+  "explication": "On divise successivement par les nombres premiers : 60 = 2 × 30 = 2 × 2 × 15 = 2 × 2 × 3 × 5 = 2² × 3 × 5. Dans une décomposition en facteurs premiers, tous les facteurs sont premiers ; 6, 10, 4, 15 et 30 ne le sont pas."
+ },
+ "fbb440b12c": {
+  "question": "Lequel de ces nombres est premier ?",
+  "explication": "61 n'est divisible ni par 2, ni par 3, ni par 5, ni par 7 (il suffit de tester jusqu'à √61 ≈ 7,8) : il est premier. Pièges : 51 = 3 × 17, 57 = 3 × 19 et 91 = 7 × 13 semblent premiers mais ne le sont pas."
+ },
+ "72e8e23046": {
+  "question": "Quel est le plus grand diviseur commun de 84 et 120 ?",
+  "explication": "84 = 2² × 3 × 7 et 120 = 2³ × 3 × 5. Le PGCD est le produit des facteurs communs avec le plus petit exposant : 2² × 3 = 12. Il sert à simplifier 84/120 en 7/10 en une seule étape."
+ },
+ "3f4b693377": {
+  "question": "Script : « mettre n à 1 ; répéter jusqu'à ce que n > 20 : mettre n à n × 2 ». Quelle est la valeur finale de n ?",
+  "explication": "On suit la boucle pas à pas : n vaut 1, 2, 4, 8, 16, puis 32. À 16, la condition « n > 20 » est fausse, on double encore ; à 32 elle devient vraie et la boucle s'arrête. La valeur finale est 32."
+ },
+ "a0ccd5f36c": {
+  "question": "Quelle est la différence entre « répéter 10 fois » et « répéter jusqu'à ce que… » ?",
+  "explication": "« Répéter 10 fois » fait un nombre fixé de tours. « Répéter jusqu'à ce que… » s'arrête dès que la condition devient vraie : le nombre de tours n'est pas connu à l'avance. Si la condition ne devient jamais vraie, la boucle est infinie."
+ },
+ "4d140b23bd": {
+  "question": "Script : « mettre s à 0 ; mettre k à 1 ; répéter jusqu'à ce que k > 4 : ajouter k à s ; ajouter 1 à k ». Que vaut s à la fin ?",
+  "explication": "Tableau de suivi : k = 1, s = 1 ; k = 2, s = 3 ; k = 3, s = 6 ; k = 4, s = 10 ; k passe à 5, la condition « k > 4 » est vraie, on s'arrête. s = 1 + 2 + 3 + 4 = 10. Faire tourner un programme à la main est un attendu du concours."
+ },
+ "3181fcabcf": {
+  "question": "D'après la relation de Chasles, à quoi est égal le vecteur AB + BC ?",
+  "explication": "Relation de Chasles : AB + BC = AC. Enchaîner la translation de A vers B puis celle de B vers C revient à aller directement de A vers C. Le point intermédiaire B « disparaît »."
+ },
+ "243b70c3bc": {
+  "question": "À quoi est égal le vecteur AB + BA ?",
+  "explication": "BA est l'opposé de AB (même direction, même longueur, sens contraire). Par Chasles, AB + BA = AA, le vecteur nul : on revient au point de départ."
+ },
+ "e1f7a968c5": {
+  "question": "ABCD est un parallélogramme. Quelle égalité de vecteurs est vraie ?",
+  "explication": "ABCD est un parallélogramme si et seulement si les vecteurs AB et DC sont égaux : même direction, même sens, même longueur. Piège : AB = CD est faux, car ces vecteurs sont de sens contraires. Bien suivre l'ordre des lettres."
+ },
+ "92c732bee9": {
+  "question": "Un lutin exécute « avancer de 10 », puis « tourner de 90° à droite », puis « avancer de 10 ». Qu'a-t-il tracé ?",
+  "explication": "Les instructions s'exécutent dans l'ordre : le lutin trace un segment, pivote d'un quart de tour, puis trace un second segment. On obtient deux segments formant un angle droit, comme un « L ». Sans le virage, on aurait un seul segment de 20 pas."
+ },
+ "b202b4b0ad": {
+  "question": "Pourquoi l'ordre des instructions est-il important dans un programme ?",
+  "explication": "Un programme est une suite ordonnée d'instructions exécutées l'une après l'autre (la séquence). Changer l'ordre peut changer le résultat, comme dans un calcul (ajouter puis multiplier ≠ multiplier puis ajouter). C'est la première notion d'algorithmique."
+ },
+ "5fa8327bda": {
+  "question": "x vaut 2. On exécute « ajouter 3 à x », puis « multiplier x par 4 ». Que vaut x ?",
+  "explication": "On exécute dans l'ordre : x = 2 + 3 = 5, puis x = 5 × 4 = 20. Dans l'ordre inverse : 2 × 4 = 8, puis 8 + 3 = 11. L'ordre des instructions joue le même rôle que les parenthèses dans un calcul."
+ },
+ "69f25a5e8f": {
+  "question": "Dans un programme qui demande l'âge de l'utilisateur puis affiche « Vous êtes majeur » ou « Vous êtes mineur », l'âge saisi est…",
+  "explication": "L'âge saisi est une entrée : une donnée fournie au programme par l'utilisateur. Le programme la traite (comparaison à 18) et produit une sortie (le message). Entrées, traitement, sorties : le schéma de base de tout programme."
+ },
+ "9a18705f9a": {
+  "question": "Un programme demande l'âge de l'utilisateur puis affiche « Vous êtes majeur » ou « Vous êtes mineur ». Le message affiché est…",
+  "explication": "Le message affiché est une sortie : ce que le programme produit à partir des entrées. Ici, la sortie dépend d'une condition sur l'âge saisi (âge ≥ 18)."
+ },
+ "1df014628f": {
+  "question": "Dans Scratch, quel bloc permet de récupérer une entrée de l'utilisateur ?",
+  "explication": "Le bloc « demander … et attendre » affiche une question et attend la saisie de l'utilisateur ; la valeur saisie est rangée dans la variable « réponse ». « Dire » produit une sortie, « avancer » et « répéter » sont des instructions de mouvement et de boucle."
+ },
+ "b98db34a51": {
+  "question": "Un programme par blocs calcule « (5 + 3) × 2 ». Quel résultat affiche-t-il ?",
+  "explication": "L'emboîtement des blocs joue le rôle des parenthèses : le bloc intérieur (5 + 3 = 8) est calculé d'abord, puis 8 × 2 = 16. Sans parenthèses, 5 + 3 × 2 vaudrait 11."
+ },
+ "a5ff7a2afb": {
+  "question": "Un programme demande un nombre, le multiplie par 3 puis retire 4. On saisit 6. Quel nombre affiche-t-il ?",
+  "explication": "On applique les étapes dans l'ordre : 6 × 3 = 18, puis 18 − 4 = 14. Le programme calcule 3n − 4 pour le nombre n saisi."
+ },
+ "5338fc73c7": {
+  "question": "Un programme calcule le périmètre d'un carré : « côté × 4 ». On saisit 7. Quel résultat affiche-t-il ?",
+  "explication": "Le programme applique la formule P = 4 × côté : 7 × 4 = 28. La variable « côté » rend le programme réutilisable pour n'importe quel carré."
+ },
+ "e9e6487e2a": {
+  "question": "Pour qu'un programme trace un carré plus grand, que faut-il modifier dans « répéter 4 fois : avancer de 50, tourner de 90° » ?",
+  "explication": "La longueur « 50 » fixe la taille du côté : l'augmenter agrandit le carré. Le nombre de répétitions (4) et l'angle (90°) fixent la forme : les modifier ne donnerait plus un carré."
+ },
+ "99ea2dbb33": {
+  "question": "Un programme Scratch trace un carré : « répéter 4 fois : avancer de 50, tourner de 90° ». Pour qu'il trace un hexagone régulier, que faut-il changer ?",
+  "explication": "Pour un polygone régulier à n côtés, on répète n fois et on tourne de 360° ÷ n. Pour un hexagone : 6 fois, 360 ÷ 6 = 60°. Le lutin tourne de l'angle extérieur ; l'angle intérieur de l'hexagone vaut 120°."
+ },
+ "cdf0644131": {
+  "question": "De combien de degrés le lutin doit-il tourner à chaque fois pour tracer un pentagone régulier ?",
+  "explication": "Le lutin fait un tour complet (360°) en 5 virages égaux : 360 ÷ 5 = 72°. Erreur fréquente : tourner de 108°, l'angle intérieur du pentagone régulier, ce qui ne ferme pas la figure."
+ },
+ "7e99767095": {
+  "question": "Quelle condition teste si un nombre n est pair ?",
+  "explication": "Un nombre est pair si sa division par 2 tombe juste, c'est-à-dire si le reste vaut 0 (en Scratch : « n modulo 2 = 0 »). « n > 2 » ou « n = 2 » ne disent rien de la parité."
+ },
+ "bb3e6414b1": {
+  "question": "« Si température < 0 alors afficher Gel. » Il fait 3 °C. Qu'affiche le programme ?",
+  "explication": "La condition « 3 < 0 » est fausse : l'instruction n'est pas exécutée et, sans « sinon », le programme n'affiche rien. Une instruction « si… alors » sans « sinon » ne fait rien quand la condition est fausse."
+ },
+ "10f3002f2d": {
+  "question": "Quelle condition est vraie pour x = 5 ?",
+  "explication": "« ≥ » signifie supérieur ou égal : 5 ≥ 5 est vrai. « 5 > 5 » et « 5 < 5 » sont faux. Le choix entre inégalité stricte et large change le comportement d'un programme à la valeur limite."
+ },
+ "a13d6896a4": {
+  "question": "La variable « points » vaut 10. On exécute « ajouter 5 à points » trois fois. Que vaut « points » ?",
+  "explication": "La variable part de 10 et augmente de 5 à chaque exécution : 15, 20, puis 25. Résultat : 10 + 3 × 5 = 25. Une variable garde sa valeur d'une instruction à l'autre."
+ },
+ "072e40e967": {
+  "question": "a vaut 4. On exécute « mettre a à a × a ». Que vaut a ?",
+  "explication": "La nouvelle valeur est calculée avec l'ancienne : a = 4 × 4 = 16, puis le résultat remplace l'ancienne valeur. « Mettre a à a × a » n'est pas une équation, c'est une affectation."
+ },
+ "d13c16673e": {
+  "question": "Qu'est-ce qu'une variable dans un programme ?",
+  "explication": "Une variable est un nom associé à une valeur stockée en mémoire, qui peut être lue et modifiée pendant l'exécution (score, compteur, réponse). Elle permet au programme de « se souvenir » d'une information."
+ },
+ "7df0bf57b6": {
+  "question": "Quel programme affiche les nombres de 1 à 10 ?",
+  "explication": "On initialise n à 1, puis à chaque tour on affiche n et on l'augmente de 1 : la boucle affiche 1, 2, …, 10. Une variable qui change à chaque tour de boucle est un compteur."
+ },
+ "44f4870c48": {
+  "question": "Pour calculer la somme 1 + 2 + … + 100, que faut-il ?",
+  "explication": "Il faut une boucle (pour parcourir les nombres de 1 à 100) et une variable « somme » initialisée à 0, à laquelle on ajoute chaque nombre. Cette variable est un accumulateur. Le résultat est 5 050."
+ },
+ "3c48903766": {
+  "question": "Quel est le résultat de la somme 1 + 2 + … + 10 calculée par un programme ?",
+  "explication": "1 + 2 + … + 10 = 55. Méthode de Gauss : on associe les termes deux à deux (1 + 10, 2 + 9, …), soit 5 paires de 11 = 55. Formule générale : n(n + 1) ÷ 2."
+ },
+ "39aa4b603d": {
+  "question": "« Répéter 5 fois : avancer de 20. » Comment faire avancer le lutin deux fois plus loin au total ?",
+  "explication": "Distance totale actuelle : 5 × 20 = 100 pas ; on veut 200. On peut doubler le nombre de répétitions (10 × 20) ou la longueur de chaque pas (5 × 40). Les deux paramètres jouent multiplicativement."
+ },
+ "f4434f4183": {
+  "question": "Un programme affiche « Bravo » si le score est supérieur à 15. Comment l'afficher aussi pour un score de 15 ?",
+  "explication": "« > 15 » exclut 15 ; « ≥ 15 » (supérieur ou égal) l'inclut. Remplacer 15 par 16 ferait l'inverse de ce qu'on veut. Tester le programme avec la valeur limite (15) est un bon réflexe."
+ },
+ "ab06a39ad4": {
+  "question": "« Répéter 4 fois : ajouter 3 à x », avec x = 0 au départ. On remplace « 4 » par « 7 ». Que vaut x à la fin ?",
+  "explication": "x part de 0 et augmente de 3 à chaque tour : avec 7 tours, x = 7 × 3 = 21. Le nombre de répétitions multiplie l'effet de l'instruction répétée."
+ },
+ "7090c553fa": {
+  "question": "On veut échanger les valeurs de a et b. Quelle suite d'instructions est correcte ?",
+  "explication": "Pour échanger a et b, il faut une variable temporaire c : on sauvegarde a dans c, on copie b dans a, puis c dans b. Sans c, « mettre a à b » écrase l'ancienne valeur de a, qui est perdue. Image : échanger le contenu de deux verres avec un troisième."
+ },
+ "0311ba9ea8": {
+  "question": "a = 3 et b = 8. On exécute : « mettre c à a », « mettre a à b », « mettre b à c ». Que vaut b ?",
+  "explication": "c = 3 (sauvegarde de a) ; a = 8 (copie de b) ; b = 3 (copie de c). Les valeurs sont échangées : a = 8 et b = 3. Suivre les variables dans un tableau évite les erreurs."
+ },
+ "7db495c926": {
+  "question": "Un compteur commence à 0. Dans une boucle de 6 tours, on ajoute 2 si le tour est pair (2, 4, 6) et 1 sinon. Que vaut le compteur ?",
+  "explication": "Tours 1, 3, 5 (impairs) : + 1 chacun, soit 3. Tours 2, 4, 6 (pairs) : + 2 chacun, soit 6. Total : 3 + 6 = 9. Une condition dans une boucle permet de traiter différemment certains tours."
+ },
+ "ffcfa0065d": {
+  "question": "« Si âge ≥ 18 ET permis = oui alors conduire. » Une personne a 20 ans sans permis. Peut-elle conduire selon le programme ?",
+  "explication": "Avec ET, les deux conditions doivent être vraies. Âge ≥ 18 est vrai (20 ans), mais permis = oui est faux : la condition globale est fausse, la personne ne peut pas conduire selon le programme."
+ },
+ "84f82e505e": {
+  "question": "« Si note < 5 OU absences > 10 alors convoquer. » Un élève a 12 de moyenne et 14 absences. Est-il convoqué ?",
+  "explication": "Avec OU, une seule condition vraie suffit. La note (12) n'est pas inférieure à 5, mais les absences (14) dépassent 10 : la condition globale est vraie, l'élève est convoqué."
+ },
+ "7ef9e4a2b7": {
+  "question": "Quelle condition décrit un nombre x compris entre 10 et 20 inclus ?",
+  "explication": "« Compris entre 10 et 20 inclus » signifie x ≥ 10 ET x ≤ 20 : les deux conditions doivent être vraies en même temps. Avec OU, tout nombre vérifierait au moins l'une des deux (30 ≥ 10, par exemple)."
+ },
+ "c0fccb9b6f": {
+  "question": "Dans un diagramme en barres, que représente la hauteur de chaque barre ?",
+  "explication": "Dans un diagramme en barres, la hauteur de chaque barre représente l'effectif (ou la fréquence) de la catégorie. Les barres ont la même largeur : c'est la hauteur qui porte l'information. Bien lire l'échelle de l'axe vertical."
+ },
+ "4eea11c01d": {
+  "question": "Dans un diagramme circulaire, une catégorie occupe un quart du disque. Quel pourcentage représente-t-elle ?",
+  "explication": "Un quart du disque représente un quart de l'effectif total, soit 25 % (angle de 360° ÷ 4 = 90°). Dans un diagramme circulaire, les angles sont proportionnels aux effectifs : 1 % correspond à 3,6°."
+ },
+ "c5327a4be1": {
+  "question": "Un diagramme en barres indique : rouge 6 élèves, bleu 9 élèves, vert 5 élèves. Combien d'élèves ont été interrogés ?",
+  "explication": "L'effectif total est la somme des effectifs de chaque catégorie : 6 + 9 + 5 = 20 élèves. Il sert ensuite à calculer les fréquences (bleu : 9/20 = 45 %)."
+ },
+ "35d67ebf47": {
+  "question": "Deux classes ont la même moyenne de 12. Dans la classe A, les notes vont de 10 à 14 ; dans la classe B, de 4 à 19. Que peut-on dire ?",
+  "explication": "La moyenne ne décrit pas la dispersion. Étendues : 14 − 10 = 4 pour A et 19 − 4 = 15 pour B : les notes de B sont beaucoup plus dispersées. Deux séries de même moyenne peuvent être très différentes."
+ },
+ "1972a1d452": {
+  "question": "Série A : 8, 10, 12. Série B : 2, 10, 18. Quelle est la différence entre l'étendue de B et celle de A ?",
+  "explication": "Étendue de A : 12 − 8 = 4 ; étendue de B : 18 − 2 = 16 ; différence : 16 − 4 = 12. Les deux séries ont la même moyenne et la même médiane (10), mais B est bien plus dispersée."
+ },
+ "d9fa1ced25": {
+  "question": "Pour comparer deux séries de notes, quels indicateurs utiliser ensemble ?",
+  "explication": "Pour comparer deux séries, on associe un indicateur de position (moyenne ou médiane), qui dit autour de quelle valeur se situent les données, et un indicateur de dispersion (étendue, écart interquartile), qui dit si elles sont resserrées ou étalées."
+ },
+ "8b4887c036": {
+  "question": "Dans une classe, il y a 12 filles et 8 garçons. Quel est le ratio filles : garçons sous sa forme la plus simple ?",
+  "explication": "Le ratio filles : garçons est 12 : 8. On le simplifie comme une fraction, en divisant par 4 : 3 : 2. Il y a 3 filles pour 2 garçons. Attention à l'ordre : 2 : 3 serait le ratio garçons : filles."
+ },
+ "01daec1475": {
+  "question": "Une boisson se prépare avec un ratio sirop : eau de 1 : 5. Combien de cL d'eau faut-il pour 4 cL de sirop ?",
+  "explication": "Ratio 1 : 5 : pour 1 cL de sirop, 5 cL d'eau. Pour 4 cL de sirop, il faut 4 × 5 = 20 cL d'eau (24 cL de boisson). Un ratio traduit une situation de proportionnalité."
+ },
+ "574fdc588e": {
+  "question": "On partage 60 € entre deux personnes selon le ratio 2 : 3. Combien reçoit la personne qui a la plus grande part (en €) ?",
+  "explication": "Ratio 2 : 3 → 2 + 3 = 5 parts. Une part vaut 60 ÷ 5 = 12 €. La plus grande part : 3 × 12 = 36 € (l'autre reçoit 24 €). Erreur fréquente : diviser 60 par 3."
+ },
+ "6fdf3b704c": {
+  "question": "Laquelle de ces fonctions est linéaire ?",
+  "explication": "Une fonction linéaire s'écrit f(x) = ax : ici f(x) = 3x (a = 3). Elle modélise une situation de proportionnalité, de coefficient a. 3x + 2 est affine non linéaire, x² n'est pas affine, 3 est constante."
+ },
+ "0c04e95553": {
+  "question": "f est linéaire et f(4) = 12. Quel est son coefficient a ?",
+  "explication": "Pour une fonction linéaire, f(x) = ax, donc a = f(x) ÷ x = 12 ÷ 4 = 3. D'où f(x) = 3x. Le coefficient a est le coefficient de proportionnalité."
+ },
+ "6b135f5a12": {
+  "question": "Comment est représentée graphiquement une fonction linéaire ?",
+  "explication": "Une fonction linéaire est représentée par une droite passant par l'origine, car f(0) = a × 0 = 0. C'est la traduction graphique de la proportionnalité : les points sont alignés avec l'origine."
+ },
+ "d6f14394fb": {
+  "question": "Un cinéma vend 128 places à 7 € et 64 places à 5 €. Quelle est la recette totale, en euros ?",
+  "explication": "Recette = 128 × 7 + 64 × 5 = 896 + 320 = 1 216 €. Contrôle par ordre de grandeur : 130 × 7 ≈ 900 et 60 × 5 = 300, environ 1 200 €. Problème à plusieurs étapes typique du cycle 3."
+ },
+ "842ad43c38": {
+  "question": "On partage 255 bonbons entre 15 enfants. Combien chacun en reçoit-il ?",
+  "explication": "Partage équitable : 255 ÷ 15 = 17 bonbons chacun. Vérification : 15 × 17 = 150 + 105 = 255. La division-partage (valeur d'une part) est l'un des deux sens de la division, avec la division-quotition (nombre de parts)."
+ },
+ "3b30863144": {
+  "question": "Léa calcule le prix de 9 cahiers à 2,95 € et trouve 265,50 €. Que peut-on dire ?",
+  "explication": "Ordre de grandeur : 9 cahiers à environ 3 € coûtent environ 27 €. 265,50 € est dix fois trop grand : erreur de position de la virgule. Le bon prix est 9 × 2,95 = 26,55 €. Contrôler un résultat par un ordre de grandeur est une compétence attendue."
+ },
+ "4ec867a17c": {
+  "question": "Sur une droite graduée de 1 en 1, le point A est à 3 graduations à gauche de l'origine. Quelle est son abscisse ?",
+  "explication": "À gauche de l'origine se trouvent les nombres négatifs : 3 graduations à gauche donnent l'abscisse −3. À droite, on aurait 3. La droite graduée est le support privilégié pour introduire les nombres relatifs."
+ },
+ "113f4ac40b": {
+  "question": "Sur une droite graduée, A a pour abscisse −2 et B a pour abscisse 5. Quelle est la distance AB ?",
+  "explication": "De −2 à 0 : 2 unités ; de 0 à 5 : 5 unités. Distance AB = 2 + 5 = 7. On peut aussi calculer 5 − (−2) = 7. Une distance est toujours positive."
+ },
+ "738acb0de2": {
+  "question": "Quel nombre est situé exactement au milieu de −4 et 2 sur une droite graduée ?",
+  "explication": "Le milieu a pour abscisse la moyenne des deux abscisses : (−4 + 2) ÷ 2 = −2 ÷ 2 = −1. Vérification : de −4 à −1 il y a 3 unités, et de −1 à 2 aussi."
+ },
+ "0e99dda809": {
+  "question": "Que vaut 2⁵ ?",
+  "explication": "2⁵ = 2 × 2 × 2 × 2 × 2 = 32 (2, 4, 8, 16, 32). Erreur fréquente : 2 × 5 = 10. Les puissances de 2 sont utiles en informatique (1 octet = 2³ bits)."
+ },
+ "95e54e4744": {
+  "question": "Que signifie 7⁴ ?",
+  "explication": "7⁴ = 7 × 7 × 7 × 7 : l'exposant indique le nombre de facteurs égaux à 7. 7 × 4 est le produit de 7 par 4, et 7 + 7 + 7 + 7 aussi : ne pas confondre puissance et multiplication."
+ },
+ "66c14d6859": {
+  "question": "Que vaut (−3)³ ?",
+  "explication": "(−3)³ = (−3) × (−3) × (−3) = 9 × (−3) = −27. Trois facteurs négatifs (nombre impair) donnent un résultat négatif. Avec un exposant pair, (−3)² = 9, le résultat serait positif."
+ },
+ "42dcd79e48": {
+  "question": "Pour tout nombre a, que vaut a¹ ?",
+  "explication": "Une puissance d'exposant 1 n'a qu'un seul facteur : a¹ = a. Par convention, a⁰ = 1 (pour a non nul). Ces cas particuliers rendent les règles de calcul cohérentes (a² × a¹ = a³)."
+ },
+ "8eb0117438": {
+  "question": "n désigne un nombre entier. Quelle expression désigne toujours un nombre pair ?",
+  "explication": "Un nombre pair est un multiple de 2 : il s'écrit 2n, avec n entier. n + 1, n² et 3n peuvent être pairs ou impairs selon n (pour n = 3 : 4, 9, 9). Le calcul littéral permet de prouver des propriétés vraies pour tous les entiers."
+ },
+ "37b582dfcc": {
+  "question": "n désigne un nombre entier. Quelle expression désigne toujours un nombre impair ?",
+  "explication": "Un nombre impair est un nombre pair augmenté de 1 : il s'écrit 2n + 1. Exemple : la somme de deux impairs (2n + 1) + (2m + 1) = 2(n + m + 1) est paire, démontré pour tous les cas."
+ },
+ "4286a8be28": {
+  "question": "Quelle est l'aire d'un rectangle de longueur L et de largeur ℓ ?",
+  "explication": "L'aire d'un rectangle est le produit de ses dimensions : L × ℓ. 2(L + ℓ) est son périmètre. Confondre aire et périmètre est une erreur très fréquente chez les élèves comme chez les adultes."
+ },
+ "e2bffb6735": {
+  "question": "Simplifier (6x) ÷ (3x), pour x non nul.",
+  "explication": "On sépare les nombres et les lettres : (6 ÷ 3) × (x ÷ x) = 2 × 1 = 2. Pour x non nul, x ÷ x = 1 : la lettre disparaît. Erreur fréquente : répondre 2x."
+ },
+ "7486917ce2": {
+  "question": "Simplifier la fraction (12a²) / (4a), pour a non nul.",
+  "explication": "12 ÷ 4 = 3 et a² ÷ a = (a × a) ÷ a = a. Donc 12a² / (4a) = 3a. La condition « a non nul » évite la division par zéro."
+ },
+ "5ceed837ab": {
+  "question": "Simplifier (15 × 7) / (21 × 5).",
+  "explication": "15 × 7 = 105 et 21 × 5 = 105 : le quotient vaut 1. Mieux, on simplifie avant de calculer : 15/5 = 3 et 7/21 = 1/3, donc 3 × 1/3 = 1. Ne pas effectuer les produits avant de simplifier."
+ },
+ "17c2198e46": {
+  "question": "Calculer 1/2 + 1/3 × 3/4.",
+  "explication": "La multiplication est prioritaire, même avec des fractions : 1/3 × 3/4 = 3/12 = 1/4. Puis 1/2 + 1/4 = 2/4 + 1/4 = 3/4. Calculer de gauche à droite donnerait (5/6) × 3/4 = 5/8, faux."
+ },
+ "2f0d72af42": {
+  "question": "Calculer (1/2 + 1/3) × 6.",
+  "explication": "La parenthèse d'abord : 1/2 + 1/3 = 3/6 + 2/6 = 5/6. Puis 5/6 × 6 = 5. On peut aussi distribuer : 1/2 × 6 + 1/3 × 6 = 3 + 2 = 5."
+ },
+ "d4d04d75b8": {
+  "question": "Calculer 2/3 ÷ 4/9.",
+  "explication": "Diviser par 4/9, c'est multiplier par son inverse 9/4 : 2/3 × 9/4 = 18/12 = 3/2. Simplifier avant : 9/3 = 3 et 2/4 = 1/2, d'où 3 × 1/2 = 3/2. Le résultat est supérieur à 2/3, car 4/9 < 1."
+ },
+ "8a73f7f6ab": {
+  "question": "Calculer 1 − 2/5 × 5/4.",
+  "explication": "La multiplication est prioritaire sur la soustraction : 2/5 × 5/4 = 10/20 = 1/2, puis 1 − 1/2 = 1/2. Calculer d'abord 1 − 2/5 = 3/5, puis × 5/4 = 3/4, est l'erreur classique."
+ },
+ "0ddd7872e7": {
+  "question": "Qu'est-ce qu'une hauteur d'un triangle ?",
+  "explication": "Une hauteur passe par un sommet et est perpendiculaire au côté opposé (ou à son prolongement). À ne pas confondre avec la médiane (sommet et milieu du côté opposé) et la médiatrice (perpendiculaire au côté en son milieu)."
+ },
+ "a076a5484d": {
+  "question": "Comment s'appelle le point de concours des trois hauteurs d'un triangle ?",
+  "explication": "Les trois hauteurs d'un triangle sont concourantes en un point appelé orthocentre. Points remarquables à connaître : médianes → centre de gravité, médiatrices → centre du cercle circonscrit, bissectrices → centre du cercle inscrit."
+ },
+ "cfa57b7f37": {
+  "question": "Un triangle a un côté de 8 cm, et la hauteur relative à ce côté mesure 5 cm. Quelle est son aire, en cm² ?",
+  "explication": "Aire du triangle = base × hauteur relative à cette base ÷ 2 = 8 × 5 ÷ 2 = 20 cm². La hauteur doit être celle relative au côté choisi comme base : elle lui est perpendiculaire."
+ },
+ "82e96be107": {
+  "question": "Qu'est-ce qu'une médiane d'un triangle ?",
+  "explication": "Une médiane relie un sommet au milieu du côté opposé. Les trois médianes se coupent au centre de gravité, situé aux deux tiers de chaque médiane en partant du sommet. C'est le point d'équilibre d'un triangle découpé dans du carton."
+ },
+ "2ee962b822": {
+  "question": "Une médiane partage un triangle en deux triangles. Que peut-on dire de leurs aires ?",
+  "explication": "La médiane coupe le côté opposé en deux segments égaux ; les deux triangles obtenus ont donc des bases égales et la même hauteur (issue du sommet commun). Leurs aires sont égales, même si leurs formes diffèrent."
+ },
+ "5b6ceabe1d": {
+  "question": "Un triangle a une aire de 30 cm². Quelle est l'aire de chacun des deux triangles formés par une médiane, en cm² ?",
+  "explication": "Une médiane partage un triangle en deux triangles de même aire (bases égales, même hauteur) : 30 ÷ 2 = 15 cm² chacun."
+ },
+ "9cad9a601f": {
+  "question": "Que peut-on dire des diagonales d'un parallélogramme ?",
+  "explication": "Les diagonales d'un parallélogramme se coupent en leur milieu. Réciproquement, un quadrilatère dont les diagonales ont le même milieu est un parallélogramme. Elles ne sont perpendiculaires que pour un losange, de même longueur que pour un rectangle."
+ },
+ "6670cf2381": {
+  "question": "Que peut-on dire des côtés opposés d'un parallélogramme ?",
+  "explication": "Dans un parallélogramme, les côtés opposés sont parallèles (c'est la définition) et de même longueur. Les angles opposés sont aussi égaux. Chacune de ces propriétés a une réciproque utile pour démontrer."
+ },
+ "a8d094db29": {
+  "question": "Un quadrilatère a des diagonales de même milieu et de même longueur. Quelle est sa nature ?",
+  "explication": "Diagonales de même milieu : c'est un parallélogramme. Diagonales de même longueur en plus : c'est un rectangle. Si elles étaient aussi perpendiculaires, ce serait un carré."
+ },
+ "1554e41331": {
+  "question": "Un quadrilatère a des diagonales de même milieu et perpendiculaires. Quelle est sa nature ?",
+  "explication": "Diagonales de même milieu : parallélogramme. Diagonales perpendiculaires en plus : losange. Le losange est le seul parallélogramme dont les diagonales sont perpendiculaires (avec le carré, qui est un losange particulier)."
+ },
+ "4426749fbe": {
+  "question": "Que fait une translation sur une figure ?",
+  "explication": "Une translation fait glisser la figure : tous les points se déplacent dans la même direction, le même sens et de la même longueur. Pas de rotation, pas de retournement (comme la symétrie axiale), pas d'agrandissement."
+ },
+ "09d47887a2": {
+  "question": "Quelle propriété une translation ne conserve-t-elle pas forcément ?",
+  "explication": "Une translation est une isométrie : elle conserve longueurs, angles, aires, alignement et parallélisme. Seule la position de la figure change (et rien d'autre, pas même l'orientation)."
+ },
+ "21c74128ee": {
+  "question": "La translation qui transforme A en B transforme C en D. Quelle est la nature du quadrilatère ABDC ?",
+  "explication": "Par définition, la translation qui transforme A en B transforme C en D si et seulement si ABDC est un parallélogramme (éventuellement aplati quand les points sont alignés). Attention à l'ordre des lettres : ABDC, pas ABCD."
+ },
+ "c457839c22": {
+  "question": "Quelle est la section d'un pavé droit par un plan parallèle à une face ?",
+  "explication": "Un plan parallèle à une face coupe le pavé droit selon un rectangle superposable à cette face. Cette propriété se vérifie en coupant un pain de mie ou un morceau de pâte à modeler."
+ },
+ "de6066acdf": {
+  "question": "Quelle est la section d'un cylindre par un plan perpendiculaire à son axe ?",
+  "explication": "Perpendiculairement à son axe, le cylindre est coupé selon un disque de même rayon que la base (comme une rondelle de saucisson). Parallèlement à l'axe, on obtient un rectangle."
+ },
+ "a7a4f78ad6": {
+  "question": "Quelle est la section d'une boule par un plan ?",
+  "explication": "La section d'une boule par un plan est toujours un disque. Il est le plus grand quand le plan passe par le centre : son rayon est alors celui de la boule (grand cercle, comme l'équateur terrestre)."
+ },
+ "ed4a87a973": {
+  "question": "Un triangle ABC est inscrit dans un cercle de diamètre [BC]. Que peut-on en déduire ?",
+  "explication": "Si un triangle est inscrit dans un cercle dont un côté est un diamètre, il est rectangle au sommet opposé à ce diamètre : ici en A, opposé à [BC]. Propriété utile pour construire un angle droit ou démontrer qu'un triangle est rectangle."
+ },
+ "aee0b7cb86": {
+  "question": "Où se trouve le centre du cercle circonscrit à un triangle rectangle ?",
+  "explication": "Dans un triangle rectangle, l'hypoténuse est un diamètre du cercle circonscrit : son centre est le milieu de l'hypoténuse. Ce point est donc à égale distance des trois sommets."
+ },
+ "6fc28f6bfe": {
+  "question": "Un triangle rectangle a une hypoténuse de 10 cm. Quel est le rayon de son cercle circonscrit, en cm ?",
+  "explication": "L'hypoténuse est un diamètre du cercle circonscrit : rayon = 10 ÷ 2 = 5 cm. Inutile de connaître les autres côtés."
+ },
+ "f8ae03267c": {
+  "question": "Dans un triangle ABC rectangle en A, M est le milieu de [BC] et BC = 12 cm. Combien mesure AM, en cm ?",
+  "explication": "M, milieu de l'hypoténuse [BC], est le centre du cercle circonscrit : MA = MB = MC = 12 ÷ 2 = 6 cm. Dans un triangle rectangle, la médiane issue de l'angle droit mesure la moitié de l'hypoténuse."
+ },
+ "33f44fd319": {
+  "question": "Pour montrer la répartition des élèves d'une classe selon leur moyen de transport (en parts du total), quel graphique choisir ?",
+  "explication": "Pour montrer des parts d'un tout, on choisit un diagramme circulaire : chaque secteur est proportionnel à la part de la catégorie. Un diagramme en barres conviendrait aussi pour comparer les effectifs."
+ },
+ "a5b07bfba2": {
+  "question": "Pour montrer l'évolution de la température heure par heure au cours d'une journée, quel graphique choisir ?",
+  "explication": "Pour une évolution dans le temps, on utilise un graphique cartésien : le temps en abscisse, la grandeur en ordonnée, les points reliés par une courbe. On lit d'un coup d'œil les hausses, les baisses et les extremums."
+ },
+ "4c3d5caa85": {
+  "question": "Dans un diagramme circulaire, une catégorie représente 25 % de l'effectif. Quel angle faut-il lui attribuer, en degrés ?",
+  "explication": "Les angles sont proportionnels aux effectifs : 100 % correspond à 360°, donc 25 % à 360 × 0,25 = 90°, un quart de disque. Repère : 1 % = 3,6°."
+ },
+ "4f1e208484": {
+  "question": "On lance une pièce 50 fois et on obtient 27 fois « pile ». Quelle est la fréquence de « pile », en pourcentage ?",
+  "explication": "Fréquence = effectif ÷ effectif total = 27 ÷ 50 = 0,54, soit 54 %. Astuce : 27/50 = 54/100. Elle est proche de la probabilité théorique de 50 %, mais pas égale : c'est normal."
+ },
+ "452bd2a558": {
+  "question": "On lance un dé 60 fois et on obtient 13 fois le 6. Que peut-on dire ?",
+  "explication": "Fréquence observée : 13/60 ≈ 0,22 ; probabilité théorique : 1/6 ≈ 0,17. Sur 60 lancers, cet écart est normal : c'est la fluctuation d'échantillonnage. On ne peut pas conclure que le dé est truqué, ni que la probabilité vaut 13/60."
+ },
+ "d047d31bff": {
+  "question": "Dans un tableau de résultats, quelle est la somme des fréquences de toutes les issues ?",
+  "explication": "Chaque fréquence vaut effectif ÷ effectif total ; la somme des effectifs vaut l'effectif total, donc la somme des fréquences vaut 1 (100 %). C'est un contrôle utile pour vérifier un tableau."
+ },
+ "8d9d1c552e": {
+  "question": "On tire un nombre entier de 1 à 10. A = « le nombre est pair », B = « le nombre est supérieur à 6 ». Quel est l'évènement A ∩ B (A et B) ?",
+  "explication": "A ∩ B (« A et B ») contient les issues qui réalisent les deux à la fois. A = {2 ; 4 ; 6 ; 8 ; 10}, B = {7 ; 8 ; 9 ; 10}. Communs : {8 ; 10}. 6 n'est pas « supérieur à 6 » au sens strict."
+ },
+ "de1e31b15e": {
+  "question": "Même expérience (entier de 1 à 10). Combien d'issues compte A ∪ B (A ou B), avec A = « pair » et B = « supérieur à 6 » ?",
+  "explication": "A ∪ B (« A ou B ») contient les issues qui réalisent au moins l'un des deux : {2 ; 4 ; 6 ; 7 ; 8 ; 9 ; 10}, soit 7 issues. Par le calcul : 5 + 4 − 2 = 7 (on retire les 2 issues communes comptées deux fois)."
+ },
+ "9244f6b077": {
+  "question": "Comment appelle-t-on un évènement qui ne contient aucune issue ?",
+  "explication": "Un événement qui ne contient aucune issue est impossible : c'est l'ensemble vide, de probabilité 0. À l'inverse, l'événement certain contient toutes les issues et a pour probabilité 1."
+ },
+ "6e85bac190": {
+  "question": "On lance un dé à six faces. Quel est le complémentaire de l'évènement « obtenir 1 ou 2 » ?",
+  "explication": "L'événement contraire (complémentaire) regroupe toutes les issues qui ne réalisent pas l'événement : {3 ; 4 ; 5 ; 6}. Sa probabilité : 1 − 2/6 = 4/6 = 2/3."
+ },
+ "7e36cdf5d4": {
+  "question": "Notes d'une classe : 8 (3 élèves), 10 (5 élèves), 12 (7 élèves), 15 (5 élèves). Quel est l'effectif cumulé croissant de la note 12 ?",
+  "explication": "L'effectif cumulé croissant d'une valeur est le nombre de valeurs inférieures ou égales à elle : 3 + 5 + 7 = 15 élèves ont 12 ou moins. 7 est l'effectif de la seule note 12, 20 l'effectif total."
+ },
+ "1322f91afe": {
+  "question": "Avec la même série (8 : 3 élèves ; 10 : 5 ; 12 : 7 ; 15 : 5), quelle est la médiane ?",
+  "explication": "Effectif total : 20. La médiane est entre la 10e et la 11e valeur. Effectifs cumulés : 3 (note 8), 8 (note 10), 15 (note 12) : les 9e à 15e valeurs valent 12, donc la médiane est 12. 11 serait une moyenne de valeurs, sans rapport ici."
+ },
+ "c88cfd67f4": {
+  "question": "À quoi sert la colonne des effectifs cumulés croissants ?",
+  "explication": "Les effectifs cumulés croissants donnent, pour chaque valeur, le nombre de données inférieures ou égales. Ils permettent de repérer la médiane (moitié de l'effectif) et les quartiles (quart et trois quarts) sans réécrire toute la série."
+ },
+ "0f4a61b2b9": {
+  "question": "Que se passe-t-il pour la fréquence d'apparition de « pile » quand on lance une pièce un très grand nombre de fois ?",
+  "explication": "Quand on répète l'expérience un grand nombre de fois, la fréquence de « pile » se stabilise autour de la probabilité 0,5 : c'est la loi des grands nombres. Elle n'est jamais exactement 0,5 sur un petit nombre de lancers."
+ },
+ "4599ba4a74": {
+  "question": "Pour estimer la probabilité qu'une punaise tombe pointe en l'air, que faire ?",
+  "explication": "Une punaise n'est pas symétrique : les deux positions ne sont pas équiprobables, on ne peut pas dire 1/2. On estime la probabilité par la fréquence observée sur un grand nombre de lancers, grâce à la stabilisation des fréquences."
+ },
+ "dc1a409949": {
+  "question": "Deux élèves simulent 20 lancers d'un dé ; leurs fréquences de 6 diffèrent. Que montre-t-on ?",
+  "explication": "Sur 20 lancers, les fréquences varient d'une série à l'autre même avec un dé équilibré : c'est la fluctuation d'échantillonnage. Plus les séries sont longues, plus les fréquences se rapprochent de 1/6."
+ },
+ "1c7e05938f": {
+  "question": "Dans un tableur, quelle formule calcule la moyenne des cellules A1 à A20 ?",
+  "explication": "Une formule de tableur commence par = ; la fonction MOYENNE calcule la moyenne d'une plage, notée A1:A20. Piège : « =A1+A20/2 » calcule A1 + (A20 ÷ 2) à cause des priorités."
+ },
+ "db6fbdcbc9": {
+  "question": "Quelle formule de tableur donne la médiane des valeurs de B2 à B30 ?",
+  "explication": "=MEDIANE(B2:B30) trie les valeurs et renvoie la valeur centrale. MOYENNE, MAX, MIN, SOMME et NB sont les autres fonctions statistiques de base du tableur."
+ },
+ "b7aacf387b": {
+  "question": "Comment calculer l'étendue des valeurs de C1 à C15 avec un tableur ?",
+  "explication": "Étendue = valeur maximale − valeur minimale : =MAX(C1:C15)-MIN(C1:C15). « =C15-C1 » fait la différence entre la dernière et la première cellule, qui ne contiennent pas forcément les extremums."
+ },
+ "6ba645fcb9": {
+  "question": "Une formule « =SOMME(A1:A10)/10 » calcule…",
+  "explication": "La somme des 10 valeurs divisée par leur nombre (10) donne la moyenne. La formule équivaut à =MOYENNE(A1:A10), tant que les 10 cellules sont remplies."
+ },
+ "74929783d5": {
+  "question": "Dans un repère, les points représentant une situation de proportionnalité sont…",
+  "explication": "Une situation de proportionnalité est représentée par des points alignés avec l'origine du repère (droite passant par l'origine). C'est la caractérisation graphique de la proportionnalité, au programme du cycle 4."
+ },
+ "ac3072a18e": {
+  "question": "Des points sont alignés sur une droite qui ne passe pas par l'origine. La situation est-elle proportionnelle ?",
+  "explication": "Des points alignés sur une droite qui ne passe pas par l'origine traduisent une relation affine, pas proportionnelle. Exemple : un abonnement fixe plus un prix par séance. Il faut l'alignement ET le passage par l'origine."
+ },
+ "8bee7eace7": {
+  "question": "Le prix d'un taxi est de 3 € de prise en charge plus 2 € par kilomètre. La représentation graphique est…",
+  "explication": "Pour 0 km, on paie déjà 3 € : le point (0 ; 3) n'est pas l'origine. Le prix est une fonction affine du nombre de km (P = 2k + 3), représentée par une droite qui ne passe pas par l'origine. Doubler la distance ne double pas le prix."
+ },
+ "1d307d46c1": {
+  "question": "Sur une carte à l'échelle 1/25 000, deux villages sont à 4 cm l'un de l'autre. Quelle est la distance réelle, en km ?",
+  "explication": "Échelle 1/25 000 : 1 cm sur la carte = 25 000 cm en réalité. 4 cm représentent 4 × 25 000 = 100 000 cm = 1 000 m = 1 km. La difficulté est la conversion des cm en km."
+ },
+ "d05701750d": {
+  "question": "Un plan est à l'échelle 1/100. Une pièce mesure 5 m de long. Quelle est sa longueur sur le plan, en cm ?",
+  "explication": "On convertit dans la même unité : 5 m = 500 cm. À l'échelle 1/100, on divise par 100 : 500 ÷ 100 = 5 cm sur le plan. Repère : à 1/100, 1 cm sur le plan représente 1 m."
+ },
+ "e65f08a056": {
+  "question": "Que signifie une échelle de 1/50 000 ?",
+  "explication": "L'échelle 1/50 000 signifie que 1 cm sur la carte représente 50 000 cm, soit 500 m, dans la réalité. L'échelle est un coefficient de proportionnalité entre deux longueurs exprimées dans la même unité."
+ },
+ "34ad8ca63e": {
+  "question": "Une maquette d'avion est à l'échelle 1/72. L'avion réel mesure 36 m. Quelle est la longueur de la maquette ?",
+  "explication": "36 m = 3 600 cm ; à l'échelle 1/72, on divise par 72 : 3 600 ÷ 72 = 50 cm. Contrôle : 50 × 72 = 3 600. Une maquette est une réduction : sa longueur est plus petite que celle de l'objet réel."
+ },
+ "a73438948a": {
+  "question": "« Le périmètre d'un carré en fonction de son côté c » s'écrit…",
+  "explication": "Le périmètre dépend du côté : à chaque valeur de c correspond une seule valeur de P, donnée par P = 4c. « En fonction de » prépare la notion de fonction. c² serait l'aire."
+ },
+ "cf49b6e413": {
+  "question": "Le prix payé dépend du nombre de croissants achetés, à 1,20 € pièce. Quelle phrase est correcte ?",
+  "explication": "Le prix dépend du nombre de croissants (prix = 1,20 × nombre) : on dit que le prix est fonction du nombre de croissants. La grandeur qui dépend de l'autre est celle qui est « fonction de »."
+ },
+ "eb04836425": {
+  "question": "L'aire A d'un carré en fonction de son côté c est A = c². Que vaut A pour c = 6 ?",
+  "explication": "A = c² avec c = 6 : A = 6 × 6 = 36. L'aire n'est pas proportionnelle au côté : si c double, A est multipliée par 4."
+ },
+ "3ad4a401d5": {
+  "question": "Un abonnement de streaming coûte 9 € par mois. Quelle formule donne le coût C en fonction du nombre de mois m ?",
+  "explication": "Le coût est proportionnel au nombre de mois : 9 € par mois, donc C = 9 × m = 9m. Pour 12 mois : 108 €. C'est une fonction linéaire de coefficient 9."
+ },
+ "6ca9dfde87": {
+  "question": "Une salle de sport demande 30 € d'inscription puis 15 € par mois. Quel est le coût C en fonction du nombre de mois m ?",
+  "explication": "Le coût comporte une partie fixe (30 € d'inscription, payée une fois) et une partie variable (15 € par mois) : C = 30 + 15m. C'est une fonction affine. Erreur fréquente : 45m, qui ferait payer l'inscription chaque mois."
+ },
+ "89a157e019": {
+  "question": "Avec la formule C = 30 + 15m, quel est le coût pour 8 mois, en euros ?",
+  "explication": "On remplace m par 8 : C = 30 + 15 × 8 = 30 + 120 = 150 €. La multiplication est prioritaire."
+ },
+ "5f861ec266": {
+  "question": "La droite représentant la fonction affine f(x) = 2x + 3 coupe l'axe des ordonnées au point d'ordonnée…",
+  "explication": "Pour f(x) = ax + b, la droite coupe l'axe des ordonnées au point (0 ; b), car f(0) = b. Ici b = 3. Le coefficient a = 2 indique l'inclinaison de la droite."
+ },
+ "b9fad515ef": {
+  "question": "La droite d'une fonction affine passe par (0 ; 1) et (2 ; 7). Quelle est cette fonction ?",
+  "explication": "Le point (0 ; 1) donne l'ordonnée à l'origine b = 1. Coefficient directeur : a = (7 − 1) ÷ (2 − 0) = 6 ÷ 2 = 3. D'où f(x) = 3x + 1. Vérification : f(2) = 6 + 1 = 7."
+ },
+ "b3db119137": {
+  "question": "Pour f(x) = −2x + 5, que se passe-t-il quand x augmente de 1 ?",
+  "explication": "Le coefficient directeur a = −2 est la variation de f(x) quand x augmente de 1 : f(x) diminue de 2. Exemple : f(0) = 5, f(1) = 3. Un coefficient négatif donne une droite qui descend."
+ },
+ "9e18b4d04e": {
+  "question": "La droite d'une fonction affine est parallèle à l'axe des abscisses. Que vaut son coefficient directeur ?",
+  "explication": "Une droite parallèle à l'axe des abscisses est horizontale : f(x) ne varie pas, le coefficient directeur vaut 0. La fonction est constante, f(x) = b."
+ },
+ "4fc8df0edd": {
+  "question": "Pour la fonction carré f(x) = x², que vaut f(−4) ?",
+  "explication": "f(−4) = (−4)² = (−4) × (−4) = 16. Le carré d'un nombre négatif est positif : f(−4) = f(4). La fonction carré n'est pas affine, sa courbe est une parabole."
+ },
+ "e39689eabb": {
+  "question": "Quels nombres ont pour image 9 par la fonction carré ?",
+  "explication": "3² = 9 et (−3)² = 9 : par la fonction carré, 9 a deux antécédents, 3 et −3. Tout nombre strictement positif a deux antécédents opposés ; 0 n'en a qu'un ; un nombre négatif n'en a aucun."
+ },
+ "7625648f3a": {
+  "question": "Quelle est l'allure de la représentation graphique de la fonction carré ?",
+  "explication": "La courbe de la fonction carré est une parabole, symétrique par rapport à l'axe des ordonnées puisque x et −x ont la même image. Ce n'est pas une droite : la fonction carré n'est pas affine."
+ },
+ "07af0d705a": {
+  "question": "Quelle expression informatique correspond à « le double de x augmenté de 5 » ?",
+  "explication": "En programmation, la multiplication s'écrit *. « Le double de x augmenté de 5 » : on calcule 2 * x, puis on ajoute 5, d'où (2 * x) + 5. 2 * (x + 5) serait le double de (x + 5)."
+ },
+ "d4db2ff36a": {
+  "question": "Quelle formule correspond à l'emboîtement de blocs « ( (a) + (b) ) / (2) » ?",
+  "explication": "L'emboîtement des blocs remplace les parenthèses : le bloc intérieur (a + b) est calculé d'abord, puis divisé par 2. C'est la moyenne de a et b. Sans parenthèses, a + b ÷ 2 ne diviserait que b."
+ },
+ "68c42ed080": {
+  "question": "Un programme calcule « (côté) * (côté) * (côté) ». Que donne-t-il pour un côté de 3 ?",
+  "explication": "3 × 3 × 3 = 27 : le programme calcule côté³, le volume d'un cube de côté 3. Un programme par blocs traduit une formule."
+ },
+ "f96d6af40e": {
+  "question": "x vaut 0. On exécute « répéter 5 fois : ajouter 3 à x ». Que vaut x à la fin ?",
+  "explication": "x part de 0 et augmente de 3 à chaque tour : 3, 6, 9, 12, 15. Après 5 tours, x = 5 × 3 = 15. Une boucle qui ajoute toujours la même valeur revient à une multiplication."
+ },
+ "bf384f44c1": {
+  "question": "x vaut 1. On exécute « répéter 4 fois : mettre x à x × 2 ». Que vaut x à la fin ?",
+  "explication": "x double à chaque tour : 1 → 2 → 4 → 8 → 16. Après 4 tours, x = 2⁴ = 16. Une boucle qui multiplie toujours par la même valeur donne une puissance."
+ },
+ "c15c55a5e2": {
+  "question": "Un lutin exécute « répéter 3 fois : avancer de 100, tourner de 120° ». Que trace-t-il ?",
+  "explication": "3 côtés égaux et 3 virages de 120° : 3 × 120° = 360°, le lutin revient à son point de départ. On obtient un triangle équilatéral. Tourner de 60° (l'angle intérieur) ne refermerait pas la figure."
+ },
+ "5bfe0ba504": {
+  "question": "Combien de fois le bloc « dire Bonjour » est-il exécuté dans « répéter 3 fois : répéter 4 fois : dire Bonjour » ?",
+  "explication": "Boucles imbriquées : la boucle intérieure (4 fois) est exécutée à chacun des 3 tours de la boucle extérieure, soit 3 × 4 = 12 exécutions de « dire Bonjour »."
+ },
+ "0a66c6b02e": {
+  "question": "Quelle condition teste si un âge est compris entre 12 et 18 ans inclus ?",
+  "explication": "« Entre 12 et 18 inclus » exige que les deux conditions soient vraies en même temps : âge ≥ 12 ET âge ≤ 18. Avec OU, tous les âges vérifieraient au moins une des deux conditions."
+ },
+ "44b29a0d91": {
+  "question": "Pour x = 7, quelle condition est fausse ?",
+  "explication": "7 > 7 est faux : un nombre n'est pas strictement supérieur à lui-même. En revanche 7 ≥ 7, 7 < 10 et 7 ≠ 0 sont vrais. Attention à la différence entre > (strict) et ≥ (large)."
+ },
+ "0c6ebac379": {
+  "question": "« Si note ≥ 10 alors dire Admis sinon dire Refusé. » La note vaut 9,5. Qu'affiche le programme ?",
+  "explication": "La condition 9,5 ≥ 10 est fausse : le programme exécute la branche « sinon » et affiche « Refusé ». Un programme applique sa condition à la lettre, sans arrondir."
+ },
+ "04b4f0208b": {
+  "question": "« score » vaut 0. On exécute « répéter 10 fois : si le nombre tiré est pair, ajouter 1 à score ». Les tirages sont 2, 5, 8, 3, 6, 1, 4, 7, 10, 9. Que vaut score ?",
+  "explication": "On compte les tirages pairs : 2, 8, 6, 4 et 10, soit 5 fois. La variable « score » sert de compteur : elle n'augmente que lorsque la condition est vraie."
+ },
+ "32d8082fe5": {
+  "question": "« vies » vaut 3. Le joueur touche deux obstacles et le programme exécute deux fois « ajouter −1 à vies ». Que vaut vies ?",
+  "explication": "Ajouter −1, c'est retirer 1 : 3 − 1 − 1 = 1 vie. Un compteur peut aussi diminuer."
+ },
+ "b6f1203f8f": {
+  "question": "Pourquoi faut-il souvent « mettre score à 0 » au début d'un programme ?",
+  "explication": "Initialiser une variable, c'est lui donner sa valeur de départ. Sans « mettre score à 0 », la variable garde la valeur de la partie précédente et le score serait faux. C'est un oubli très fréquent."
+ },
+ "39f999a8f5": {
+  "question": "a vaut 5 et b vaut 8. On exécute « mettre a à b », puis « mettre b à a ». Que vaut b ?",
+  "explication": "Après « mettre a à b », a vaut 8 et l'ancienne valeur 5 est perdue. « Mettre b à a » donne donc b = 8. Pour échanger deux variables, il faut une variable intermédiaire qui sauvegarde l'ancienne valeur."
+ },
+ "7546a151ed": {
+  "question": "Dans Scratch, à quoi sert un bloc personnalisé (« Créer un bloc ») ?",
+  "explication": "Un bloc personnalisé regroupe une suite d'instructions sous un nom et peut être appelé autant de fois que nécessaire, comme un sous-programme. Il évite de répéter du code et rend le programme plus lisible."
+ },
+ "a6b834cfd6": {
+  "question": "Un bloc personnalisé « carré (côté) » trace un carré de la taille donnée. Comment appelle-t-on « côté » ?",
+  "explication": "« côté » est un paramètre : une valeur fournie au bloc au moment de l'appeler. Le même bloc « carré » trace ainsi des carrés de tailles différentes (carré 50, carré 100)."
+ },
+ "9d66303aa7": {
+  "question": "Quel est l'intérêt de structurer un long programme en plusieurs sous-programmes ?",
+  "explication": "Un programme découpé en sous-programmes, chacun réalisant une tâche précise, est plus lisible, plus facile à tester et à corriger, et ses parties sont réutilisables. Il ne s'exécute pas forcément plus vite."
+ },
+ "d9fe40f22a": {
+  "question": "Quel programme affiche les multiples de 7 inférieurs à 50 ?",
+  "explication": "On part de 7 et on ajoute 7 à chaque tour ; la boucle s'arrête quand n dépasse 50. Le programme dit 7, 14, 21, 28, 35, 42, 49. Une boucle conditionnelle convient car on s'arrête selon une valeur limite."
+ },
+ "9e7350ea6b": {
+  "question": "Un programme ajoute 15 € chaque mois à une tirelire qui contient 40 €, jusqu'à atteindre au moins 200 €. Combien de mois faut-il ?",
+  "explication": "Après 10 mois : 40 + 15 × 10 = 190 €, pas encore 200 €. Après 11 mois : 40 + 165 = 205 €. Il faut 11 mois. Par le calcul : (200 − 40) ÷ 15 ≈ 10,7, on arrondit à l'entier supérieur."
+ },
+ "166266c566": {
+  "question": "Pour qu'un programme demande un mot de passe jusqu'à ce qu'il soit correct, quelle structure faut-il ?",
+  "explication": "On ne sait pas combien d'essais seront nécessaires : il faut une boucle conditionnelle, « répéter jusqu'à ce que la réponse soit correcte ». « Répéter 3 fois » limiterait le nombre d'essais sans vérifier la réponse."
+ },
+ "19602e1e3d": {
+  "question": "Calculer 20 − 4 × 3.",
+  "explication": "La multiplication est prioritaire : 4 × 3 = 12, puis 20 − 12 = 8. Calculer de gauche à droite (16 × 3 = 48) est l'erreur classique."
+ },
+ "f430bc06e1": {
+  "question": "Calculer (20 − 4) × 3.",
+  "explication": "Les parenthèses imposent de calculer d'abord 20 − 4 = 16, puis 16 × 3 = 48. Comparer avec 20 − 4 × 3 = 8 montre le rôle des parenthèses."
+ },
+ "632757eee3": {
+  "question": "Calculer 36 ÷ (2 + 4) × 5.",
+  "explication": "Parenthèses d'abord : 2 + 4 = 6. Puis divisions et multiplications de gauche à droite : 36 ÷ 6 = 6, puis 6 × 5 = 30. Erreur fréquente : calculer 6 × 5 = 30 d'abord, puis 36 ÷ 30."
+ },
+ "60c206755d": {
+  "question": "Calculer 7 + 3 × (10 − 2 × 4).",
+  "explication": "On commence par les parenthèses, en respectant les priorités à l'intérieur : 2 × 4 = 8, puis 10 − 8 = 2. Ensuite 3 × 2 = 6, enfin 7 + 6 = 13."
+ },
+ "6c33a0341b": {
+  "question": "Quelle expression traduit « le triple de la somme de 5 et de 2 » ?",
+  "explication": "« Le triple de la somme » : on calcule d'abord la somme (5 + 2), puis on la triple. Les parenthèses sont indispensables : 3 × (5 + 2) = 21, alors que 3 × 5 + 2 = 17."
+ },
+ "1c2b0fd789": {
+  "question": "Quelle expression traduit « la différence entre 10 et le produit de 2 par 3 » ?",
+  "explication": "On soustrait le produit 2 × 3 de 10 : 10 − 2 × 3 = 4. La multiplication étant prioritaire, les parenthèses sont inutiles. La dernière opération est une soustraction : c'est une différence."
+ },
+ "b75e4ad5b8": {
+  "question": "Un programme : « choisir un nombre, ajouter 4, multiplier par 2 ». Quelle expression correspond, pour le nombre 6 ?",
+  "explication": "On ajoute 4 d'abord, puis on multiplie le résultat par 2 : (6 + 4) × 2 = 20. Sans parenthèses, 6 + 4 × 2 = 14 ne respecte pas l'ordre du programme."
+ },
+ "13e845cafe": {
+  "question": "Quelle phrase correspond à l'expression 5 × 8 − 3 ?",
+  "explication": "Dans 5 × 8 − 3, on calcule d'abord le produit 5 × 8, puis on soustrait 3 : la dernière opération est une soustraction, c'est la différence entre le produit de 5 par 8 et 3."
+ },
+ "bb742af295": {
+  "question": "Calculer (−3) + 7 + (−5) + 2.",
+  "explication": "On regroupe les positifs (7 + 2 = 9) et les négatifs (−3 − 5 = −8), puis 9 − 8 = 1. On peut réordonner les termes d'une somme sans changer le résultat."
+ },
+ "9256d29925": {
+  "question": "Calculer (−6) + (−4) + 10.",
+  "explication": "(−6) + (−4) = −10, puis −10 + 10 = 0. Repérer les opposés (−10 et 10) simplifie le calcul."
+ },
+ "7272d6323f": {
+  "question": "Calculer 12 + (−15) + (−8) + 6.",
+  "explication": "Positifs : 12 + 6 = 18. Négatifs : −15 − 8 = −23. Total : 18 − 23 = −5 ; le signe est celui du groupe le plus éloigné de zéro."
+ },
+ "78e5e95ba7": {
+  "question": "Calculer (−2,5) + 4 + (−1,5).",
+  "explication": "(−2,5) + (−1,5) = −4, puis −4 + 4 = 0. Regrouper les décimaux qui « se complètent » (2,5 et 1,5) rend le calcul simple."
+ },
+ "0393f5c21e": {
+  "question": "Le matin il fait −4 °C ; l'après-midi, la température a augmenté de 9 °C. Quelle température fait-il, en °C ?",
+  "explication": "Une augmentation se traduit par une addition : −4 + 9 = 5 °C. Sur un thermomètre : 4 degrés pour remonter à 0, puis 5 de plus."
+ },
+ "7a7efa863e": {
+  "question": "Un sous-marin est à −120 m. Il remonte de 45 m. À quelle altitude est-il, en mètres ?",
+  "explication": "Remonter de 45 m, c'est ajouter 45 : −120 + 45 = −75 m. Le sous-marin est encore à 75 m sous la surface."
+ },
+ "63bb35c8b0": {
+  "question": "Quel est l'écart de température entre 6 °C et −11 °C, en degrés ?",
+  "explication": "Écart = plus grande valeur − plus petite = 6 − (−11) = 6 + 11 = 17 °C. Sur un thermomètre : 11 degrés de −11 à 0, puis 6 jusqu'à 6."
+ },
+ "de88112aca": {
+  "question": "Un compte affiche −35 €. On dépose 80 €, puis on paie 60 €. Quel est le solde, en euros ?",
+  "explication": "Dépôt : + 80 ; paiement : − 60. Solde : −35 + 80 − 60 = 45 − 60 = −15 €. Le compte reste à découvert de 15 €. Les comptes bancaires sont un contexte concret pour les relatifs."
+ },
+ "781dd321c4": {
+  "question": "Calculer 3x² pour x = 2.",
+  "explication": "Dans 3x², le carré ne porte que sur x : x² = 4, puis 3 × 4 = 12. Erreur fréquente : calculer (3 × 2)² = 36."
+ },
+ "2a0d774884": {
+  "question": "Calculer x² + 2x pour x = 5.",
+  "explication": "On remplace x par 5 : 5² + 2 × 5 = 25 + 10 = 35. Puissance et multiplication passent avant l'addition."
+ },
+ "a0821455db": {
+  "question": "Calculer (2x)² pour x = 3.",
+  "explication": "Les parenthèses indiquent que le carré porte sur 2x : 2 × 3 = 6, puis 6² = 36. Comparer avec 2x² = 2 × 9 = 18 pour x = 3."
+ },
+ "5bb04aafe6": {
+  "question": "Calculer a³ − a pour a = 2.",
+  "explication": "2³ = 2 × 2 × 2 = 8, puis 8 − 2 = 6. Erreur fréquente : 2³ = 6."
+ },
+ "ce0e81dadd": {
+  "question": "L'égalité 2x + 3 = 11 est-elle vraie pour x = 4 ?",
+  "explication": "On remplace x par 4 dans chaque membre : 2 × 4 + 3 = 11. Les deux membres sont égaux : l'égalité est vraie, 4 est solution de l'équation. Tester une valeur est la base de la notion d'équation."
+ },
+ "80c90ff630": {
+  "question": "L'égalité 5x − 2 = 3x + 4 est-elle vraie pour x = 2 ?",
+  "explication": "Membre de gauche : 5 × 2 − 2 = 8. Membre de droite : 3 × 2 + 4 = 10. 8 ≠ 10 : l'égalité est fausse pour x = 2, ce n'est pas une solution (la solution est x = 3)."
+ },
+ "a6475e9f71": {
+  "question": "Pour quelle valeur de x l'égalité 4x = x + 9 est-elle vraie ?",
+  "explication": "Pour x = 3 : 4 × 3 = 12 et 3 + 9 = 12, l'égalité est vraie. Par le calcul : 4x − x = 9, donc 3x = 9 et x = 3."
+ },
+ "56279390f2": {
+  "question": "L'égalité x² = 2x est-elle vraie pour x = 2 ?",
+  "explication": "Pour x = 2 : 2² = 4 et 2 × 2 = 4, l'égalité est vraie. Elle l'est aussi pour x = 0 : une équation peut avoir plusieurs solutions (x² = 2x ⇔ x(x − 2) = 0)."
+ },
+ "b6f4f069c4": {
+  "question": "« Je pense à un nombre, je lui ajoute 7 et j'obtiens 19. » Quelle équation traduit ce problème ?",
+  "explication": "Le nombre cherché est x ; « je lui ajoute 7 » donne x + 7 ; « j'obtiens 19 » donne = 19. L'équation est x + 7 = 19, de solution 12. Au cycle 3, on parle de « nombre manquant »."
+ },
+ "64a71eb02f": {
+  "question": "Résoudre 6x = 42.",
+  "explication": "6x signifie 6 × x. On divise les deux membres par 6 : x = 42 ÷ 6 = 7. Vérification : 6 × 7 = 42."
+ },
+ "3ac3d11cff": {
+  "question": "Résoudre x + 3,5 = 10.",
+  "explication": "On soustrait 3,5 aux deux membres : x = 10 − 3,5 = 6,5. Vérification : 6,5 + 3,5 = 10."
+ },
+ "72f9f0b46e": {
+  "question": "Un paquet de 8 biscuits pèse 96 g. Quelle est la masse d'un biscuit, en g ? (Résoudre 8x = 96.)",
+  "explication": "8 biscuits pèsent 96 g : 8x = 96, donc x = 96 ÷ 8 = 12 g. L'équation traduit un problème de partage."
+ },
+ "4e6ae3072f": {
+  "question": "La somme de trois entiers consécutifs n, n + 1 et n + 2 est toujours…",
+  "explication": "n + (n + 1) + (n + 2) = 3n + 3 = 3(n + 1) : c'est toujours un multiple de 3 (trois fois le nombre du milieu). Exemple : 4 + 5 + 6 = 15 = 3 × 5. Le calcul littéral prouve la propriété pour tous les entiers."
+ },
+ "8f619869fc": {
+  "question": "Pourquoi la somme de deux nombres impairs est-elle toujours paire ?",
+  "explication": "Un nombre impair s'écrit 2n + 1. (2n + 1) + (2m + 1) = 2n + 2m + 2 = 2(n + m + 1), un multiple de 2 : la somme est paire, pour tous les impairs. L'exemple 3 + 5 = 8 illustre mais ne démontre pas."
+ },
+ "943791e99a": {
+  "question": "Un exemple qui vérifie une propriété suffit-il à la démontrer ?",
+  "explication": "Un exemple ne démontre pas une propriété générale : il faut un raisonnement valable dans tous les cas (souvent par le calcul littéral). En revanche, un seul contre-exemple suffit à prouver qu'elle est fausse."
+ },
+ "206bc024a9": {
+  "question": "Le produit de deux entiers consécutifs n(n + 1) est toujours…",
+  "explication": "Parmi deux entiers consécutifs, l'un est forcément pair : leur produit n(n + 1) est donc pair. Exemples : 3 × 4 = 12, 6 × 7 = 42."
+ },
+ "26ccc007f7": {
+  "question": "La distance Terre-Soleil est d'environ 150 000 000 km. Quelle est son écriture scientifique ?",
+  "explication": "150 000 000 = 1,5 × 100 000 000 = 1,5 × 10⁸ km. En notation scientifique, le premier facteur est compris entre 1 et 10 (exclu) ; 15 × 10⁷ est égal mais pas scientifique."
+ },
+ "3efade65be": {
+  "question": "Quelle est l'écriture scientifique de 0,000 23 ?",
+  "explication": "On déplace la virgule de 4 rangs vers la droite pour obtenir 2,3 : l'exposant est −4. 0,000 23 = 2,3 × 10⁻⁴. Un nombre inférieur à 1 a un exposant négatif."
+ },
+ "d3f9f9f29f": {
+  "question": "Calculer (3 × 10⁵) × (2 × 10³).",
+  "explication": "On regroupe : (3 × 2) × (10⁵ × 10³) = 6 × 10⁵⁺³ = 6 × 10⁸. On additionne les exposants des puissances de 10. 6 est bien compris entre 1 et 10."
+ },
+ "789d56690e": {
+  "question": "La lumière parcourt environ 3 × 10⁵ km par seconde. Quelle distance parcourt-elle en 100 secondes ?",
+  "explication": "Distance = vitesse × durée = 3 × 10⁵ × 100 = 3 × 10⁵ × 10² = 3 × 10⁷ km, soit 30 millions de km. Erreur fréquente : multiplier l'exposant par 100."
+ },
+ "bec27610d9": {
+  "question": "Un carré a une aire de 64 cm². Quelle est la longueur de son côté, en cm ?",
+  "explication": "L'aire d'un carré vaut côté², donc côté = √aire = √64 = 8 cm. Ici, seule la solution positive a un sens : une longueur ne peut pas être négative."
+ },
+ "2e3803abf1": {
+  "question": "Quelles sont les solutions de x² = 49 ?",
+  "explication": "7² = 49 et (−7)² = 49 : l'équation a deux solutions, 7 et −7. Dans un problème de longueur, on ne garderait que 7 ; en calcul, il faut donner les deux."
+ },
+ "3ede83b4f9": {
+  "question": "Combien de solutions l'équation x² = −4 a-t-elle ?",
+  "explication": "Un carré est toujours positif ou nul : aucun nombre réel n'a pour carré −4. L'équation x² = −4 n'a pas de solution. Pour x² = a : deux solutions si a > 0, une si a = 0, aucune si a < 0."
+ },
+ "b64fbcfa2f": {
+  "question": "Un terrain carré a une aire de 225 m². Quel est son périmètre, en mètres ?",
+  "explication": "On retrouve d'abord le côté : √225 = 15 m (15 × 15 = 225). Puis le périmètre : 4 × 15 = 60 m. Erreur fréquente : diviser l'aire par 4 (56,25), en confondant aire et périmètre."
+ },
+ "bfb911ac53": {
+  "question": "Sur une droite graduée en dixièmes, le point A est sur la 7e graduation après 2. Quelle est son abscisse ?",
+  "explication": "Graduée en dixièmes : chaque graduation vaut 0,1. Sept graduations après 2 : 2 + 7 × 0,1 = 2,7. Erreur fréquente : 2,07, en confondant dixièmes et centièmes."
+ },
+ "bc2798d83f": {
+  "question": "Sur une droite où l'unité est partagée en 4, que vaut chaque graduation ?",
+  "explication": "L'unité partagée en 4 parts égales : chaque graduation vaut 1/4 = 1 ÷ 4 = 0,25. Erreur classique : répondre 0,4, en associant le nombre de parts au chiffre des dixièmes."
+ },
+ "26f25eaf2e": {
+  "question": "Quel nombre est placé à mi-chemin entre 1,4 et 1,5 sur une droite graduée ?",
+  "explication": "Entre 1,4 et 1,5, on passe aux centièmes : 1,40 et 1,50. Le milieu est 1,45 = (1,4 + 1,5) ÷ 2. Il y a toujours un décimal entre deux décimaux : c'est une différence essentielle avec les entiers."
+ },
+ "783d7fbf9b": {
+  "question": "Sur une droite graduée de 5 en 5, le point B est 3 graduations après 10. Quelle est son abscisse ?",
+  "explication": "Chaque graduation vaut 5 : 3 graduations après 10 donnent 10 + 3 × 5 = 25. Toujours repérer le pas de la graduation avant de lire une abscisse."
+ },
+ "03e99efa50": {
+  "question": "Combien de faces a un pavé droit ?",
+  "explication": "Un pavé droit a 6 faces rectangulaires (opposées deux à deux et superposables), 12 arêtes et 8 sommets. Relation d'Euler : 6 + 8 − 12 = 2."
+ },
+ "d6ce442c81": {
+  "question": "Combien d'arêtes a un cube ?",
+  "explication": "Un cube a 12 arêtes de même longueur : 4 sur la face du dessus, 4 sur celle du dessous et 4 verticales. Il a aussi 6 faces et 8 sommets."
+ },
+ "7130e7a278": {
+  "question": "En perspective cavalière, comment représente-t-on les arêtes cachées ?",
+  "explication": "En perspective cavalière, les arêtes cachées sont tracées en pointillés : on distingue ainsi l'avant de l'arrière, ce qui donne l'illusion du relief. Les arêtes visibles sont en trait plein."
+ },
+ "ca7acb02a9": {
+  "question": "En perspective cavalière, la face avant d'un cube est dessinée…",
+  "explication": "En perspective cavalière, les faces frontales sont dessinées en vraie grandeur : la face avant d'un cube est un carré. Les arêtes fuyantes sont obliques et raccourcies. Les angles droits des faces latérales ne sont donc pas conservés sur le dessin."
+ },
+ "d4a9feca75": {
+  "question": "Combien de carrés compte le patron d'un cube ?",
+  "explication": "Un cube a 6 faces carrées : son patron compte 6 carrés. Il existe 11 patrons différents du cube ; tous les assemblages de 6 carrés ne se replient pas en cube (par exemple 6 carrés en ligne)."
+ },
+ "bffe5cd222": {
+  "question": "De quoi est composé le patron d'un cylindre de révolution ?",
+  "explication": "Le patron d'un cylindre de révolution comprend deux disques (les bases) et un rectangle (la surface latérale déroulée). Le rectangle s'enroule autour des disques."
+ },
+ "090b16172d": {
+  "question": "Dans le patron d'un cylindre de rayon r et de hauteur h, quelle est la longueur du rectangle ?",
+  "explication": "La longueur du rectangle s'enroule exactement autour du disque de base : elle vaut le périmètre du disque, 2πr. Sa largeur est la hauteur h. D'où l'aire latérale : 2πr × h."
+ },
+ "e5186322b4": {
+  "question": "Le patron d'un prisme droit à base triangulaire comprend…",
+  "explication": "Un prisme droit à base triangulaire a deux bases triangulaires superposables et trois faces latérales rectangulaires (une par côté du triangle). Son patron comprend donc 2 triangles et 3 rectangles."
+ },
+ "1f3a766a5a": {
+  "question": "Deux vecteurs AB et CD sont égaux. Que peut-on dire du quadrilatère ABDC ?",
+  "explication": "Les vecteurs AB et CD sont égaux si et seulement si ABDC est un parallélogramme (éventuellement aplati). Attention à l'ordre des lettres : ABDC, pas ABCD."
+ },
+ "635731125a": {
+  "question": "Qu'est-ce que le vecteur nul ?",
+  "explication": "Le vecteur nul est le vecteur AA (ou BB…), de longueur 0. Il correspond à la translation qui ne déplace aucun point. C'est aussi la somme d'un vecteur et de son opposé : AB + BA = 0."
+ },
+ "791e7b2a57": {
+  "question": "Quel est l'opposé du vecteur AB ?",
+  "explication": "L'opposé du vecteur AB est BA : même direction, même longueur, sens contraire. AB + BA donne le vecteur nul."
+ },
+ "4288ed2887": {
+  "question": "Quelles caractéristiques définissent un vecteur ?",
+  "explication": "Un vecteur est défini par une direction (celle d'une droite), un sens (sur cette droite) et une longueur (norme). Deux vecteurs sont égaux s'ils ont ces trois caractéristiques en commun, même s'ils ne partent pas du même point."
+ },
+ "e0202e0fbe": {
+  "question": "Deux droites parallèles sont coupées par une sécante. Un angle mesure 65°. Combien mesure l'angle alterne-interne associé, en degrés ?",
+  "explication": "Avec des droites parallèles coupées par une sécante, les angles alternes-internes sont égaux : l'angle associé mesure aussi 65°. Cette propriété permet de calculer des angles dans des figures complexes."
+ },
+ "b952875b8b": {
+  "question": "Deux angles adjacents forment un angle plat. L'un mesure 110°. Combien mesure l'autre, en degrés ?",
+  "explication": "Deux angles adjacents qui forment un angle plat sont supplémentaires : leur somme vaut 180°. L'autre angle mesure 180 − 110 = 70°. Complémentaires : somme 90° ; supplémentaires : somme 180°."
+ },
+ "a202b40a61": {
+  "question": "Deux droites coupées par une sécante forment des angles correspondants de 72° et 75°. Les droites sont-elles parallèles ?",
+  "explication": "Si les droites étaient parallèles, les angles correspondants seraient égaux. Or 72° ≠ 75° : les droites ne sont pas parallèles (contraposée). Elles se coupent, même si le dessin ne le montre pas."
+ },
+ "ee38c0954c": {
+  "question": "Comment appelle-t-on deux angles opposés par le sommet ?",
+  "explication": "Deux droites sécantes forment deux paires d'angles opposés par le sommet : ils ont le même sommet, leurs côtés sont dans le prolongement l'un de l'autre, et ils ont toujours la même mesure."
+ },
+ "4333b8b07e": {
+  "question": "Peut-on construire un triangle de côtés 3 cm, 4 cm et 9 cm ?",
+  "explication": "Inégalité triangulaire : chaque côté doit être plus petit que la somme des deux autres. 3 + 4 = 7 < 9 : les deux petits côtés sont trop courts pour se rejoindre, le triangle n'existe pas. Le tester au compas est très parlant en classe."
+ },
+ "f4309f7770": {
+  "question": "Peut-on construire un triangle de côtés 5 cm, 6 cm et 10 cm ?",
+  "explication": "On compare le plus grand côté à la somme des deux autres : 5 + 6 = 11 > 10, le triangle existe. Il suffit de faire ce test avec le plus grand côté."
+ },
+ "281d67da3f": {
+  "question": "Avec des côtés de 4 cm, 6 cm et 10 cm, qu'obtient-on ?",
+  "explication": "4 + 6 = 10 : c'est le cas d'égalité de l'inégalité triangulaire. Les trois points sont alignés, le « triangle » est aplati (le troisième sommet est sur le plus grand côté)."
+ },
+ "5bad4a996d": {
+  "question": "Pour construire un triangle connaissant deux côtés, quel autre élément suffit ?",
+  "explication": "Deux côtés et l'angle qu'ils forment déterminent un triangle unique. Autres cas : trois côtés, ou un côté et ses deux angles adjacents. Connaître deux côtés seuls ne suffit pas : le triangle peut s'ouvrir plus ou moins."
+ },
+ "3e41876aa6": {
+  "question": "Quelle propriété le losange possède-t-il toujours ?",
+  "explication": "Un losange a toujours quatre côtés de même longueur, et ses diagonales sont perpendiculaires et se coupent en leur milieu. Ses diagonales n'ont pas la même longueur, sauf s'il s'agit d'un carré."
+ },
+ "7543093d51": {
+  "question": "Un carré est-il un losange ?",
+  "explication": "Oui : un carré a quatre côtés égaux, c'est donc un losange (un losange ayant un angle droit). C'est aussi un rectangle. L'orientation de la figure ne change pas sa nature : un carré « posé sur la pointe » reste un carré."
+ },
+ "b8c4576f0f": {
+  "question": "Quelles sont les diagonales d'un carré ?",
+  "explication": "Les diagonales d'un carré ont le même milieu (parallélogramme), la même longueur (rectangle) et sont perpendiculaires (losange). Le carré cumule les propriétés du rectangle et du losange."
+ },
+ "5d506bbe13": {
+  "question": "Un losange a des diagonales de 6 cm et 8 cm. Quelle est son aire, en cm² ?",
+  "explication": "Aire du losange = (grande diagonale × petite diagonale) ÷ 2 = (8 × 6) ÷ 2 = 24 cm². Le losange occupe la moitié du rectangle de dimensions 8 cm sur 6 cm qui l'entoure."
+ },
+ "75198956ae": {
+  "question": "Combien de faces a une pyramide à base carrée ?",
+  "explication": "Une pyramide à base carrée a 5 faces : 1 base carrée et 4 faces latérales triangulaires. Elle a aussi 5 sommets et 8 arêtes (5 + 5 − 8 = 2, relation d'Euler)."
+ },
+ "9057448029": {
+  "question": "Combien d'arêtes a une pyramide à base carrée ?",
+  "explication": "4 arêtes forment le carré de base et 4 arêtes latérales relient chaque sommet de la base au sommet de la pyramide : 8 arêtes au total."
+ },
+ "1ff43c83b9": {
+  "question": "Quel solide obtient-on en faisant tourner un triangle rectangle autour d'un des côtés de l'angle droit ?",
+  "explication": "En faisant tourner un triangle rectangle autour d'un côté de l'angle droit, l'hypoténuse décrit la surface conique : on obtient un cône de révolution. Un rectangle tournant autour d'un côté donne un cylindre, un demi-disque une boule."
+ },
+ "039b756c0a": {
+  "question": "Quelle est la forme des faces latérales d'une pyramide ?",
+  "explication": "Les faces latérales d'une pyramide sont des triangles qui se rejoignent tous au sommet. Il y en a autant que de côtés au polygone de base."
+ },
+ "62623ad794": {
+  "question": "Dans un triangle ABC, M ∈ [AB] et N ∈ [AC], avec (MN) // (BC), AM = 2 cm, AB = 6 cm et BC = 9 cm. Combien mesure MN, en cm ?",
+  "explication": "(MN) // (BC) : par le théorème de Thalès, MN/BC = AM/AB = 2/6 = 1/3. Donc MN = 9 ÷ 3 = 3 cm. AMN est une réduction de ABC de rapport 1/3."
+ },
+ "b9096c9d83": {
+  "question": "M ∈ [AB] et N ∈ [AC] avec AM/AB = 3/5 et AN/AC = 3/5. Que peut-on en déduire ?",
+  "explication": "Les rapports AM/AB et AN/AC sont égaux (3/5) et les points sont alignés dans le même ordre : par la réciproque du théorème de Thalès, (MN) et (BC) sont parallèles."
+ },
+ "b6b9f94088": {
+  "question": "M ∈ [AB] et N ∈ [AC] avec AM/AB = 0,4 et AN/AC = 0,5. Que peut-on en déduire ?",
+  "explication": "Si (MN) était parallèle à (BC), les rapports AM/AB et AN/AC seraient égaux (Thalès). Or 0,4 ≠ 0,5 : par contraposée, les droites ne sont pas parallèles."
+ },
+ "424fb8237e": {
+  "question": "Configuration « papillon » : (BC) et (DE) se coupent en A, avec (BD) // (CE), AB = 4, AC = 6 et BD = 5. Combien vaut CE ?",
+  "explication": "En configuration papillon, les triangles ABD et ACE ont des côtés proportionnels : CE/BD = AC/AB = 6/4 = 1,5. Donc CE = 5 × 1,5 = 7,5. Les rapports s'écrivent de la même façon que dans la configuration classique."
+ },
+ "9f0cfde372": {
+  "question": "Dans un triangle rectangle, comment calcule-t-on le cosinus d'un angle aigu ?",
+  "explication": "cos = côté adjacent ÷ hypoténuse (CAH). Le côté adjacent est le côté de l'angle qui n'est pas l'hypoténuse. Moyen mnémotechnique : SOH CAH TOA."
+ },
+ "39738399b5": {
+  "question": "Dans un triangle rectangle, la tangente d'un angle aigu est égale à…",
+  "explication": "tan = côté opposé ÷ côté adjacent (TOA). Contrairement au sinus et au cosinus, la tangente n'utilise pas l'hypoténuse : elle sert quand on connaît les deux côtés de l'angle droit."
+ },
+ "05d6224de4": {
+  "question": "Dans un triangle rectangle, l'hypoténuse mesure 10 cm et un angle aigu mesure 30°. Combien mesure le côté opposé à cet angle, en cm ? (sin 30° = 0,5)",
+  "explication": "sin = opposé / hypoténuse, donc opposé = hypoténuse × sin 30° = 10 × 0,5 = 5 cm. Dans un triangle rectangle avec un angle de 30°, le côté opposé à cet angle vaut la moitié de l'hypoténuse."
+ },
+ "8ff9db9e4d": {
+  "question": "Dans un triangle rectangle, le côté adjacent à un angle de 60° mesure 4 cm. Quelle est la longueur de l'hypoténuse, en cm ? (cos 60° = 0,5)",
+  "explication": "cos 60° = adjacent / hypoténuse, donc hypoténuse = adjacent ÷ cos 60° = 4 ÷ 0,5 = 8 cm. Quand l'inconnue est au dénominateur, on divise. L'hypoténuse est bien plus longue que le côté adjacent."
+ },
+ "e794958850": {
+  "question": "On note les pointures de 10 élèves : 36, 38, 37, 38, 39, 38, 36, 37, 38, 40. Quel est l'effectif de la pointure 38 ?",
+  "explication": "On compte les occurrences de 38 dans la liste : 4 élèves (positions 2, 4, 6 et 9). L'effectif d'une valeur est le nombre de fois où elle apparaît. Barrer les valeurs au fur et à mesure évite les oublis."
+ },
+ "5d876e9b63": {
+  "question": "Pour organiser une liste de données brutes, quel outil est le plus adapté ?",
+  "explication": "Un tableau d'effectifs range chaque valeur avec le nombre de fois où elle apparaît. Il organise les données brutes et prépare les calculs (fréquences, moyenne) et les graphiques."
+ },
+ "46ae60d212": {
+  "question": "Dans un tableau d'effectifs, les effectifs sont 5, 8, 12 et 5. Quel est l'effectif total ?",
+  "explication": "L'effectif total est la somme des effectifs : 5 + 8 + 12 + 5 = 30. Il sert de dénominateur pour les fréquences."
+ },
+ "ac0d096243": {
+  "question": "Dans une enquête sur le sport préféré, « football », « natation », « tennis » sont…",
+  "explication": "Le caractère étudié est « le sport préféré » ; « football », « natation », « tennis » sont ses valeurs (modalités). Le nombre de personnes ayant choisi chacune est l'effectif. Ici, le caractère est qualitatif : on ne peut pas calculer de moyenne."
+ },
+ "7e131a8480": {
+  "question": "Une fréquence vaut 3/4. Comment l'écrire en pourcentage ?",
+  "explication": "3/4 = 3 ÷ 4 = 0,75 = 75/100, soit 75 %. Une fréquence peut s'écrire sous forme de fraction, de décimal ou de pourcentage."
+ },
+ "9cd56584b0": {
+  "question": "Une fréquence vaut 0,2. Quelle fraction lui correspond ?",
+  "explication": "0,2 = 2/10 = 1/5 (en simplifiant par 2). Soit 20 %. Équivalences à connaître : 0,5 = 1/2, 0,25 = 1/4, 0,2 = 1/5, 0,1 = 1/10."
+ },
+ "b5a32d3252": {
+  "question": "Dans une classe de 25 élèves, 10 font du judo. Quelle est la fréquence des judokas, en pourcentage ?",
+  "explication": "Fréquence = 10 ÷ 25 = 0,4, soit 40 %. Astuce : 10/25 = 40/100 en multipliant par 4."
+ },
+ "3e6febe6e0": {
+  "question": "Une fréquence peut-elle être supérieure à 1 ?",
+  "explication": "Une fréquence est l'effectif d'une valeur divisé par l'effectif total : la partie ne peut pas dépasser le tout, donc elle est comprise entre 0 et 1 (entre 0 et 100 %). Une fréquence supérieure à 1 signale une erreur de calcul."
+ },
+ "11e3ea35f7": {
+  "question": "Léo a eu 12 et 14. Quelle note doit-il avoir au troisième contrôle pour avoir 14 de moyenne ?",
+  "explication": "Pour 14 de moyenne sur 3 notes, il faut un total de 14 × 3 = 42 points. Il a déjà 12 + 14 = 26 : il lui faut 42 − 26 = 16. Raisonner sur le total est la méthode clé des problèmes de moyenne."
+ },
+ "91d14288dd": {
+  "question": "Les températures de la semaine sont 10, 12, 9, 11, 13, 14 et 15 °C. Quelle est la température moyenne, en °C ?",
+  "explication": "Somme : 10 + 12 + 9 + 11 + 13 + 14 + 15 = 84 ; nombre de jours : 7 ; moyenne : 84 ÷ 7 = 12 °C. Vérifier le nombre de valeurs avant de diviser."
+ },
+ "824ae6c8fd": {
+  "question": "La moyenne d'une série est-elle toujours une des valeurs de la série ?",
+  "explication": "Non : la moyenne de 1 et 2 est 1,5, qui n'appartient pas à la série. La moyenne peut même ne pas être un entier quand toutes les valeurs le sont. La médiane d'une série d'effectif impair, elle, est toujours une valeur de la série."
+ },
+ "044019b864": {
+  "question": "Un cycliste parcourt 40 km le lundi, 60 km le mardi et 50 km le mercredi. Quelle est la distance moyenne par jour, en km ?",
+  "explication": "Distance moyenne = distance totale ÷ nombre de jours = (40 + 60 + 50) ÷ 3 = 150 ÷ 3 = 50 km. Sens : en roulant 50 km chaque jour, il aurait fait la même distance totale."
+ },
+ "72234b3837": {
+  "question": "Un jeu : on lance un dé ; Alice gagne si on obtient 1 ou 2, Bob gagne sinon. Le jeu est-il équitable ?",
+  "explication": "Alice gagne avec 2 issues sur 6 (probabilité 1/3), Bob avec 4 issues sur 6 (2/3). Le jeu n'est pas équitable : Bob a deux fois plus de chances. Un jeu est équitable si chaque joueur a la même probabilité de gagner."
+ },
+ "40b65eb4b6": {
+  "question": "Un jeu de pile ou face avec une pièce équilibrée est-il équitable ?",
+  "explication": "Avec une pièce équilibrée, pile et face ont chacune une probabilité de 1/2 : chaque joueur a autant de chances de gagner, le jeu est équitable."
+ },
+ "b1f88ed35e": {
+  "question": "Après cinq « pile » de suite, quelle est la probabilité d'obtenir « face » au lancer suivant ?",
+  "explication": "La pièce n'a pas de mémoire : chaque lancer est indépendant des précédents, la probabilité d'obtenir face reste 1/2. Croire que « face doit sortir » après plusieurs piles est une erreur répandue (le biais du joueur)."
+ },
+ "e3660297a6": {
+  "question": "Qu'est-ce qu'une expérience aléatoire ?",
+  "explication": "Une expérience aléatoire a plusieurs issues possibles connues, mais on ne peut pas prévoir laquelle se produira. Lancer un dé, tirer une carte ou une boule dans une urne sont des expériences aléatoires."
+ },
+ "cead4726a7": {
+  "question": "Deux classes ont la même moyenne. L'étendue des notes vaut 4 dans la classe A et 15 dans la classe B. Que peut-on dire ?",
+  "explication": "L'étendue mesure la dispersion : 15 dans la classe B contre 4 dans la classe A, donc les notes de B sont beaucoup plus dispersées. À moyenne égale, la classe A est plus homogène."
+ },
+ "c46e2a18ca": {
+  "question": "Série : 7, 15, 9, 21, 12. Quelle est l'étendue ?",
+  "explication": "Étendue = plus grande valeur − plus petite valeur = 21 − 7 = 14. La série n'étant pas rangée, il faut repérer le minimum et le maximum avec soin."
+ },
+ "a3b4db7031": {
+  "question": "Si toutes les valeurs d'une série sont égales, que vaut l'étendue ?",
+  "explication": "Si toutes les valeurs sont égales, la plus grande et la plus petite valeur sont égales : étendue = 0. Une étendue nulle signifie qu'il n'y a aucune dispersion."
+ },
+ "6d3c50c11e": {
+  "question": "L'étendue d'une série est 12 et sa plus petite valeur est 5. Quelle est sa plus grande valeur ?",
+  "explication": "Étendue = max − min, donc max = min + étendue = 5 + 12 = 17. On utilise la définition « à l'envers », comme pour une formule."
+ },
+ "3f46747609": {
+  "question": "Salaires dans une petite entreprise : 1 500, 1 600, 1 600, 1 700 et 9 000 €. Quel indicateur représente le mieux le salaire « typique » ?",
+  "explication": "La valeur extrême 9 000 € tire la moyenne vers le haut (3 080 €), alors que 4 salariés sur 5 gagnent moins de 1 700 €. La médiane (1 600 €) représente mieux le salaire typique : c'est pourquoi l'INSEE publie le salaire médian."
+ },
+ "7f02d8915b": {
+  "question": "Avec les salaires 1 500, 1 600, 1 600, 1 700 et 9 000 €, quelle est la moyenne, en euros ?",
+  "explication": "Somme : 1 500 + 1 600 + 1 600 + 1 700 + 9 000 = 15 400 € ; moyenne : 15 400 ÷ 5 = 3 080 €. Elle est supérieure à 4 des 5 salaires : la moyenne est sensible aux valeurs extrêmes."
+ },
+ "cee8d39324": {
+  "question": "Dans une série de 9 valeurs rangées dans l'ordre croissant, quelle est la médiane ?",
+  "explication": "Avec 9 valeurs (nombre impair) rangées, la médiane est la valeur du milieu : la 5e, avec 4 valeurs avant et 4 après. Rang de la médiane pour n impair : (n + 1) ÷ 2."
+ },
+ "24c7a35262": {
+  "question": "Une médiane de 13 dans un contrôle signifie que…",
+  "explication": "La médiane partage la série en deux moitiés : au moins la moitié des élèves ont 13 ou moins, et au moins la moitié 13 ou plus. Elle ne dit rien de la moyenne ni de la note maximale."
+ },
+ "89117e3b2c": {
+  "question": "On lance un dé à six faces. Quel est l'ensemble des issues (univers) ?",
+  "explication": "L'univers est l'ensemble de toutes les issues possibles : pour un dé à six faces, {1 ; 2 ; 3 ; 4 ; 5 ; 6}. 0 n'est pas une issue. La somme des probabilités de toutes les issues vaut 1."
+ },
+ "2d4afe0dde": {
+  "question": "On lance un dé. L'évènement « obtenir un nombre premier » est l'ensemble…",
+  "explication": "Les nombres premiers ont exactement deux diviseurs, 1 et eux-mêmes : entre 1 et 6, ce sont 2, 3 et 5. 1 n'est pas premier (il n'a qu'un diviseur). Probabilité : 3/6 = 1/2."
+ },
+ "fada83e4fc": {
+  "question": "Un évènement qui contient une seule issue s'appelle…",
+  "explication": "Un événement élémentaire ne contient qu'une seule issue, par exemple « obtenir 4 » avec un dé (probabilité 1/6). « Obtenir un nombre pair » contient 3 issues : ce n'est pas un événement élémentaire."
+ },
+ "f1294bc377": {
+  "question": "On lance un dé. L'évènement « obtenir un nombre inférieur à 7 » est…",
+  "explication": "Toutes les issues (1 à 6) sont inférieures à 7 : l'événement se réalise toujours, il est certain et sa probabilité vaut 1."
+ },
+ "7ac023b7bd": {
+  "question": "On lance deux dés à six faces. Combien y a-t-il d'issues possibles (couples) ?",
+  "explication": "Chacune des 6 faces du premier dé se combine avec chacune des 6 du second : 6 × 6 = 36 couples équiprobables. Un tableau à double entrée les représente tous."
+ },
+ "f0855f42eb": {
+  "question": "On lance deux dés. Quelle est la probabilité d'obtenir une somme égale à 7 ?",
+  "explication": "Dans le tableau des 36 couples, 6 donnent une somme de 7 : (1;6), (2;5), (3;4), (4;3), (5;2), (6;1). Probabilité : 6/36 = 1/6. 7 est la somme la plus probable, car c'est elle qu'on obtient de plus de façons."
+ },
+ "a6bd6e60a9": {
+  "question": "On lance deux dés. Quelle est la probabilité d'obtenir un double six ?",
+  "explication": "Un seul couple sur 36 donne un double six : (6;6). Probabilité 1/36, soit aussi 1/6 × 1/6 (lancers indépendants). Un double quelconque aurait une probabilité de 6/36 = 1/6."
+ },
+ "091180a3d5": {
+  "question": "On lance une pièce puis un dé. Quelle est la probabilité d'obtenir « pile » et un 6 ?",
+  "explication": "La pièce a 2 issues, le dé 6 : 2 × 6 = 12 issues équiprobables, dont une seule (pile ; 6) convient. Probabilité 1/12 = 1/2 × 1/6."
+ },
+ "70d622b4db": {
+  "question": "Que représentent les extrémités d'une boîte à moustaches (les « moustaches ») ?",
+  "explication": "Les extrémités des moustaches indiquent le minimum et le maximum de la série. La boîte va du premier quartile Q1 au troisième Q3 ; un trait à l'intérieur marque la médiane."
+ },
+ "b75130369d": {
+  "question": "Dans une boîte à moustaches, que représente le trait à l'intérieur de la boîte ?",
+  "explication": "Le trait à l'intérieur de la boîte marque la médiane ; la boîte s'étend de Q1 à Q3. La moyenne n'apparaît pas sur une boîte à moustaches classique."
+ },
+ "8b98d42c9c": {
+  "question": "Quelle proportion des valeurs se trouve entre Q1 et Q3 ?",
+  "explication": "Environ un quart des valeurs est en dessous de Q1, un quart au-dessus de Q3 : il en reste environ la moitié entre Q1 et Q3, dans la boîte."
+ },
+ "e364eba55e": {
+  "question": "Une série a pour premier quartile 8 et pour troisième quartile 14. Quel est l'écart entre les deux quartiles ?",
+  "explication": "Écart interquartile = Q3 − Q1 = 14 − 8 = 6. Il mesure la dispersion de la moitié centrale des données ; contrairement à l'étendue, il n'est pas sensible aux valeurs extrêmes. C'est la largeur de la boîte."
+ },
+ "217eb9b02a": {
+  "question": "Deux expériences sont indépendantes. Comment calcule-t-on la probabilité que deux évènements A et B se produisent ?",
+  "explication": "Pour deux expériences indépendantes, P(A et B) = P(A) × P(B). Exemple : obtenir 6 puis 6 avec un dé, 1/6 × 1/6 = 1/36. Sur un arbre, on multiplie les probabilités le long d'une branche."
+ },
+ "b29edb8960": {
+  "question": "On lance trois fois une pièce équilibrée. Combien y a-t-il d'issues possibles ?",
+  "explication": "Chaque lancer a 2 issues : 2 × 2 × 2 = 8 issues pour trois lancers (PPP, PPF, PFP, PFF, FPP, FPF, FFP, FFF). Un arbre de probabilités les fait toutes apparaître."
+ },
+ "0cd7e21656": {
+  "question": "On lance trois fois une pièce. Quelle est la probabilité d'obtenir trois fois « pile » ?",
+  "explication": "Les lancers sont indépendants : P(PPP) = 1/2 × 1/2 × 1/2 = 1/8. C'est une seule issue (PPP) sur 8 équiprobables."
+ },
+ "704db2c470": {
+  "question": "Dans un tableur, quelle formule simule le lancer d'un dé à six faces ?",
+  "explication": "=ALEA.ENTRE.BORNES(1;6) renvoie un entier au hasard entre 1 et 6 inclus, comme un dé. =ALEA()*6 donne un décimal entre 0 et 6. Recopier la formule sur de nombreuses lignes permet de simuler des milliers de lancers."
+ },
+ "67dbaca84f": {
+  "question": "Un pull à 40 € est soldé à −25 %. Quel est son nouveau prix, en euros ?",
+  "explication": "La remise vaut 25 % de 40 € = 10 € (25 % = un quart). Nouveau prix : 40 − 10 = 30 €. En une étape : 40 × 0,75 = 30 €."
+ },
+ "768f7d068c": {
+  "question": "Un livre coûte 18 €. On bénéficie d'une remise de 10 %. Combien économise-t-on, en euros ?",
+  "explication": "On économise 10 % de 18 € = 18 ÷ 10 = 1,80 €. Prendre 10 %, c'est diviser par 10. Le prix payé est 16,20 €."
+ },
+ "049e9ab799": {
+  "question": "Sur 600 élèves d'un collège, 35 % sont demi-pensionnaires. Combien sont-ils ?",
+  "explication": "35 % de 600 = 600 × 35 ÷ 100 = 210 élèves. Calcul mental : 10 % = 60, donc 30 % = 180 et 5 % = 30 ; 180 + 30 = 210."
+ },
+ "d62dd4b6e1": {
+  "question": "Un jeu vidéo coûte 60 € ; son prix augmente de 5 %. Quel est le nouveau prix, en euros ?",
+  "explication": "5 % de 60 € = 3 € (10 % = 6, donc 5 % = 3). Nouveau prix : 60 + 3 = 63 €, soit 60 × 1,05."
+ },
+ "a989be2af1": {
+  "question": "Une voiture parcourt 180 km en 2 h. Quelle est sa vitesse moyenne, en km/h ?",
+  "explication": "Vitesse moyenne = distance ÷ durée = 180 ÷ 2 = 90 km/h. Elle ne signifie pas que la voiture a roulé à 90 km/h en permanence."
+ },
+ "b7e898f26a": {
+  "question": "Un cycliste roule à 20 km/h pendant 3 h. Quelle distance parcourt-il, en km ?",
+  "explication": "Distance = vitesse × durée = 20 × 3 = 60 km. 20 km/h signifie 20 km en 1 h : en 3 h, trois fois plus."
+ },
+ "c98007e974": {
+  "question": "Un train roule à 300 km/h. Combien de temps met-il pour parcourir 750 km, en heures ?",
+  "explication": "Durée = distance ÷ vitesse = 750 ÷ 300 = 2,5 h, soit 2 h 30 min (0,5 h = 30 min). Erreur fréquente : écrire 2 h 50 min."
+ },
+ "fb4ffb44a6": {
+  "question": "Un piéton marche à 5 km/h pendant 30 minutes. Quelle distance parcourt-il, en km ?",
+  "explication": "On convertit 30 min en heures : 0,5 h. Distance = 5 × 0,5 = 2,5 km. Raisonnement direct : en une demi-heure, on fait la moitié de 5 km."
+ },
+ "4874c8838d": {
+  "question": "Tableau de proportionnalité : 3 kg coûtent 12 €. Combien coûtent 5 kg, en euros ?",
+  "explication": "Passage par l'unité : 1 kg coûte 12 ÷ 3 = 4 €, donc 5 kg coûtent 5 × 4 = 20 €. Le prix au kilo est le coefficient de proportionnalité."
+ },
+ "7ae2f6bb76": {
+  "question": "Ce tableau est-il de proportionnalité ? 2 → 5 ; 4 → 10 ; 6 → 16",
+  "explication": "On compare les quotients : 5/2 = 2,5 ; 10/4 = 2,5 ; 16/6 ≈ 2,67. Le coefficient n'est pas constant : ce n'est pas un tableau de proportionnalité. Il suffit d'une colonne qui ne suit pas pour conclure."
+ },
+ "8cd8caea6d": {
+  "question": "Dans un tableau de proportionnalité, comment passe-t-on de la première ligne à la seconde ?",
+  "explication": "Dans un tableau de proportionnalité, on passe de la première ligne à la seconde en multipliant par un même nombre, le coefficient de proportionnalité. On peut aussi utiliser les propriétés de linéarité (additionner deux colonnes, multiplier une colonne)."
+ },
+ "714cd0ac34": {
+  "question": "6 stylos coûtent 9 €. Combien coûtent 10 stylos, en euros ?",
+  "explication": "1 stylo coûte 9 ÷ 6 = 1,50 €, donc 10 stylos coûtent 15 €. Autre procédure : 2 stylos coûtent 3 €, donc 10 stylos coûtent 5 × 3 = 15 €."
+ },
+ "15791d14df": {
+  "question": "Sur un graphique, l'axe horizontal donne le temps et l'axe vertical la distance parcourue. Que lit-on en abscisse ?",
+  "explication": "L'abscisse se lit sur l'axe horizontal, ici le temps ; l'ordonnée sur l'axe vertical, ici la distance. Sur un graphique, on place en abscisse la grandeur dont dépend l'autre."
+ },
+ "afe88697e9": {
+  "question": "Une courbe de température monte de 8 h à 14 h puis redescend. Que peut-on dire ?",
+  "explication": "La courbe monte de 8 h à 14 h (la température augmente), puis descend (elle diminue). Le maximum est atteint vers 14 h. Lire le sens de variation est une compétence de base de lecture graphique."
+ },
+ "feae0cbd50": {
+  "question": "Le point (3 ; 7) appartient à la courbe d'une grandeur en fonction du temps. Que signifie-t-il ?",
+  "explication": "Dans le couple (3 ; 7), le premier nombre est l'abscisse (l'instant 3) et le second l'ordonnée (la valeur 7). Le point signifie qu'à l'instant 3 la grandeur vaut 7. Inverser les deux est l'erreur la plus fréquente."
+ },
+ "78680184f6": {
+  "question": "Une portion de courbe horizontale signifie que la grandeur…",
+  "explication": "Une portion horizontale signifie que la grandeur ne varie pas : elle reste constante. Sur un graphique distance-temps, un palier indique que le mobile est à l'arrêt."
+ },
+ "5fe17a1a0a": {
+  "question": "La formule est y = 3x − 1. Que vaut y pour x = 4 ?",
+  "explication": "On remplace x par 4 : y = 3 × 4 − 1 = 12 − 1 = 11. La multiplication est prioritaire."
+ },
+ "81c092b839": {
+  "question": "La formule est y = x² + 1. Que vaut y pour x = −2 ?",
+  "explication": "On remplace x par −2 : (−2)² + 1 = 4 + 1 = 5. Le carré d'un nombre négatif est positif. Écrire −2² + 1 = −3 est une erreur de parenthèses."
+ },
+ "3420a57d7a": {
+  "question": "Le périmètre d'un cercle est P = 2πr. Avec π ≈ 3,14, que vaut P pour r = 5, arrondi à l'unité ?",
+  "explication": "P = 2 × π × r ≈ 2 × 3,14 × 5 = 31,4, soit environ 31 à l'unité. Calcul mental : 2 × 5 = 10, puis 10 × 3,14 = 31,4."
+ },
+ "c7f03abe13": {
+  "question": "Avec la formule y = 10 − 2x, pour quelle valeur de x a-t-on y = 0 ?",
+  "explication": "On cherche x tel que 10 − 2x = 0 : 2x = 10, donc x = 5. Vérification : 10 − 2 × 5 = 0. C'est le point où la droite coupe l'axe des abscisses."
+ },
+ "b55f5820a6": {
+  "question": "Une recette demande de la farine et du sucre dans le ratio 3 : 1. Avec 300 g de farine, combien de sucre faut-il ?",
+  "explication": "Ratio 3 : 1 → 3 parts de farine pour 1 part de sucre. 300 g de farine = 3 parts, donc 1 part = 100 g de sucre."
+ },
+ "ee3231574e": {
+  "question": "On partage 60 billes entre Ana et Bilal dans le ratio 2 : 3. Combien Bilal en reçoit-il ?",
+  "explication": "Ratio 2 : 3 → 2 + 3 = 5 parts. Une part vaut 60 ÷ 5 = 12 billes. Bilal en reçoit 3 × 12 = 36, Ana 2 × 12 = 24. Vérification : 36 + 24 = 60."
+ },
+ "f441c156fa": {
+  "question": "Dans une classe, il y a 12 filles et 18 garçons. Quel est le ratio filles : garçons simplifié ?",
+  "explication": "Le ratio filles : garçons est 12 : 18. On divise par 6 (PGCD) : 2 : 3, soit 2 filles pour 3 garçons. L'ordre des termes compte : 3 : 2 serait garçons : filles."
+ },
+ "e6682acc4a": {
+  "question": "Les nombres 4 ; 10 et 6 ; 15 sont-ils proportionnels (4/10 = 6/15) ?",
+  "explication": "4/10 = 0,4 et 6/15 = 0,4 : les rapports sont égaux, les nombres sont proportionnels. Vérification par les produits en croix : 4 × 15 = 60 = 10 × 6."
+ },
+ "0c0202ec58": {
+  "question": "Un prix passe de 50 € à 60 €. De quel pourcentage a-t-il augmenté ?",
+  "explication": "Taux d'évolution = (valeur finale − valeur initiale) ÷ valeur initiale = (60 − 50) ÷ 50 = 10 ÷ 50 = 0,2, soit + 20 %. On divise par la valeur de départ, pas par celle d'arrivée."
+ },
+ "4184bbf612": {
+  "question": "Une population passe de 800 à 600 habitants. De quel pourcentage a-t-elle diminué ?",
+  "explication": "Baisse : 800 − 600 = 200 habitants. Taux : 200 ÷ 800 = 0,25, soit − 25 %. Erreur fréquente : diviser par 600 (33 %)."
+ },
+ "11d56f30c5": {
+  "question": "Un article augmente de 10 % puis baisse de 10 %. Retrouve-t-il son prix initial ?",
+  "explication": "Hausse de 10 % puis baisse de 10 % : 1,1 × 0,9 = 0,99, soit 99 % du prix initial (− 1 %). Exemple : 100 € → 110 € → 99 €. La baisse s'applique à un prix plus élevé, elle retire donc plus."
+ },
+ "9be0c9b97e": {
+  "question": "Un salaire de 2 000 € augmente de 3 %. Quel est le nouveau salaire, en euros ?",
+  "explication": "Augmenter de 3 %, c'est multiplier par 1,03 : 2 000 × 1,03 = 2 060 €. En deux étapes : 3 % de 2 000 = 60 €, puis 2 000 + 60."
+ },
+ "8529377d00": {
+  "question": "Programme : « choisir un nombre x, le multiplier par 4, ajouter 2 ». Quelle expression obtient-on ?",
+  "explication": "On applique les étapes dans l'ordre à x : multiplier par 4 donne 4x, puis ajouter 2 donne 4x + 2. 4(x + 2) correspondrait à « ajouter 2, puis multiplier par 4 »."
+ },
+ "57550073bc": {
+  "question": "Programme : « choisir x, ajouter 3, multiplier par 2, soustraire 6 ». Quelle expression simplifiée obtient-on ?",
+  "explication": "(x + 3) × 2 − 6 = 2x + 6 − 6 = 2x : le résultat est toujours le double du nombre choisi. Le calcul littéral explique ce que plusieurs essais laissaient deviner, et le prouve pour tous les nombres."
+ },
+ "3a4529e675": {
+  "question": "Programme : « choisir un nombre, l'élever au carré, soustraire 1 ». Quel résultat pour 5 ?",
+  "explication": "5² = 25, puis 25 − 1 = 24. L'expression du programme est x² − 1, que l'on peut factoriser en (x − 1)(x + 1) : 4 × 6 = 24."
+ },
+ "614e63662f": {
+  "question": "Programme : « choisir x, multiplier par 3, ajouter 5 ». On obtient 26. Quel nombre avait-on choisi ?",
+  "explication": "On remonte le programme avec les opérations inverses dans l'ordre inverse : 26 − 5 = 21, puis 21 ÷ 3 = 7. Vérification : 7 × 3 + 5 = 26. Équation équivalente : 3x + 5 = 26."
+ },
+ "db43688445": {
+  "question": "Le prix payé est proportionnel à la masse achetée, à 4 € le kg. Quelle fonction linéaire modélise ce prix ?",
+  "explication": "Prix = 4 € × masse : p(m) = 4m. C'est une fonction linéaire (forme ax) de coefficient 4, qui traduit la proportionnalité entre masse et prix."
+ },
+ "f96e2994e8": {
+  "question": "f est linéaire et f(4) = 12. Que vaut le coefficient a ?",
+  "explication": "f linéaire : f(x) = ax. Avec f(4) = 12, on a 4a = 12, donc a = 3 et f(x) = 3x."
+ },
+ "7afd3db64b": {
+  "question": "Comment est la représentation graphique d'une fonction linéaire ?",
+  "explication": "Une fonction linéaire est représentée par une droite passant par l'origine, puisque f(0) = 0. C'est la traduction graphique d'une situation de proportionnalité."
+ },
+ "5e0f53cdbe": {
+  "question": "f est la fonction linéaire de coefficient −2. Que vaut f(−3) ?",
+  "explication": "f(x) = −2x, donc f(−3) = −2 × (−3) = 6. Produit de deux négatifs : résultat positif."
+ },
+ "641ea97ef3": {
+  "question": "Pour résoudre graphiquement f(x) = 4, que cherche-t-on sur la courbe de f ?",
+  "explication": "Résoudre f(x) = 4, c'est chercher les antécédents de 4 : on trace la droite horizontale y = 4 et on lit les abscisses des points où elle coupe la courbe. Il peut y avoir zéro, une ou plusieurs solutions."
+ },
+ "44d18de16d": {
+  "question": "Les droites de f(x) = 2x et g(x) = x + 3 se coupent au point (3 ; 6). Quelle est la solution de 2x = x + 3 ?",
+  "explication": "Au point d'intersection, les deux fonctions ont la même valeur : 2x = x + 3. La solution est l'abscisse de ce point, x = 3 (l'ordonnée 6 est la valeur commune). Vérification : 2 × 3 = 6 = 3 + 3."
+ },
+ "a4954d3817": {
+  "question": "Pour résoudre graphiquement f(x) > 0, on cherche les x pour lesquels la courbe est…",
+  "explication": "f(x) > 0 signifie que l'ordonnée du point de la courbe est positive : on cherche les x pour lesquels la courbe est au-dessus de l'axe des abscisses. Pour f(x) < 0, on cherche la partie en dessous."
+ },
+ "6323364652": {
+  "question": "La droite de f(x) = 3x − 6 coupe l'axe des abscisses en un point. Quelle est son abscisse ?",
+  "explication": "La droite coupe l'axe des abscisses là où f(x) = 0 : 3x − 6 = 0, donc 3x = 6 et x = 2. Le point d'intersection est (2 ; 0)."
+ },
+ "b1ab5c758e": {
+  "question": "Dans Scratch, quel bloc lance habituellement un programme ?",
+  "explication": "« Quand le drapeau vert est cliqué » est un bloc d'événement : le script qui le suit démarre quand on clique sur le drapeau. Les blocs « chapeau » (arrondis en haut) déclenchent les scripts."
+ },
+ "4354f62d7f": {
+  "question": "Le bloc « quand la touche espace est pressée » est…",
+  "explication": "« Quand la touche espace est pressée » est un événement : le script se lance chaque fois que l'utilisateur appuie sur la touche. Plusieurs scripts peuvent attendre des événements différents et s'exécuter en parallèle."
+ },
+ "8662c2eed3": {
+  "question": "Un lutin doit miauler quand on clique dessus. Quel bloc de départ faut-il ?",
+  "explication": "Pour réagir au clic sur le lutin, on commence le script par l'événement « quand ce lutin est cliqué ». Le drapeau vert lancerait le son au démarrage, sans attendre de clic."
+ },
+ "7a4ef5c707": {
+  "question": "Pourquoi programme-t-on souvent un jeu à l'aide d'évènements ?",
+  "explication": "Les événements permettent au programme de réagir aux actions du joueur (touches, clics, contacts entre lutins) au moment où elles se produisent. C'est la programmation événementielle, au cœur des jeux et des interfaces."
+ },
+ "44c7cabbb0": {
+  "question": "a vaut 3 et b vaut 4. Quelle est la valeur de l'expression a * b + a ?",
+  "explication": "On remplace : 3 × 4 + 3. La multiplication est prioritaire : 12 + 3 = 15. En programmation, * désigne la multiplication."
+ },
+ "eaba6d310d": {
+  "question": "x vaut 10. Que vaut l'expression (x − 4) * 2 ?",
+  "explication": "Les parenthèses d'abord : 10 − 4 = 6, puis 6 × 2 = 12. Sans parenthèses, x − 4 * 2 vaudrait 2."
+ },
+ "c66ecb2d50": {
+  "question": "n vaut 17. Que vaut « n modulo 5 » (le reste de la division de n par 5) ?",
+  "explication": "« modulo » donne le reste de la division euclidienne : 17 = 3 × 5 + 2, le reste est 2. Le reste est toujours inférieur au diviseur (ici, entre 0 et 4)."
+ },
+ "319933b788": {
+  "question": "x vaut 6. L'expression « x > 5 et x < 10 » vaut…",
+  "explication": "6 > 5 est vrai et 6 < 10 est vrai : avec « et », les deux conditions sont vraies, donc l'expression vaut vrai. La condition teste si x est strictement compris entre 5 et 10."
+ },
+ "264da3f34e": {
+  "question": "Dans Scratch, que fait le bloc « aller à x : 0 y : 0 » ?",
+  "explication": "Dans Scratch, l'origine du repère (0 ; 0) est au centre de la scène. « aller à x : 0 y : 0 » y place le lutin. Les abscisses vont de −240 à 240, les ordonnées de −180 à 180."
+ },
+ "bde5c6c103": {
+  "question": "Un lutin est en x = 50. On exécute « ajouter 20 à x » deux fois. Quelle est sa nouvelle abscisse ?",
+  "explication": "L'abscisse augmente de 20 à chaque exécution : 50 + 20 + 20 = 90. Le lutin s'est déplacé de 40 pas vers la droite."
+ },
+ "83c37fc362": {
+  "question": "Un lutin est en (0 ; 0). Il exécute « ajouter −30 à y ». Où va-t-il ?",
+  "explication": "Ajouter −30 à y fait diminuer l'ordonnée : le lutin descend de 30 pas, jusqu'en (0 ; −30). y augmente vers le haut, x vers la droite, comme dans un repère mathématique."
+ },
+ "c084f83b3c": {
+  "question": "Dans Scratch, l'orientation « 90 » correspond à…",
+  "explication": "Dans Scratch, l'orientation se mesure en degrés à partir du haut : 0 = haut, 90 = droite, 180 = bas, −90 = gauche. Attention, ce n'est pas la convention des angles en mathématiques."
+ },
+ "9575b687f2": {
+  "question": "Quel programme trace un carré de côté 80 ?",
+  "explication": "Un carré a 4 côtés égaux et 4 angles droits : on répète 4 fois « avancer de 80, tourner de 90° » (4 × 90° = 360°). Avancer de 320 tracerait un seul segment."
+ },
+ "ad8b8fc930": {
+  "question": "Combien de fois faut-il répéter « avancer, tourner de 45° » pour revenir au point de départ en traçant un polygone régulier ?",
+  "explication": "Pour revenir au départ, le lutin doit tourner de 360° au total : 360 ÷ 45 = 8 répétitions. On trace un octogone régulier. Règle : nombre de côtés = 360 ÷ angle de rotation."
+ },
+ "18e91be634": {
+  "question": "Un programme répète 6 fois « avancer de 50, tourner de 60° ». Quelle est la longueur totale tracée ?",
+  "explication": "6 côtés de 50 pas : 6 × 50 = 300 pas. C'est le périmètre de l'hexagone régulier tracé (6 × 60° = 360°)."
+ },
+ "667c3e8af8": {
+  "question": "Pourquoi utiliser une boucle « répéter » pour tracer un polygone ?",
+  "explication": "La boucle évite d'écrire plusieurs fois les mêmes instructions : le programme est plus court, plus lisible et plus facile à modifier (changer la longueur à un seul endroit)."
+ },
+ "690a94fa47": {
+  "question": "« Si x > 10 alors dire Grand sinon dire Petit. » Pour x = 10, qu'affiche le programme ?",
+  "explication": "10 > 10 est faux (inégalité stricte) : le programme exécute la branche « sinon » et affiche « Petit ». Pour inclure 10, il faudrait « x ≥ 10 »."
+ },
+ "9566605c05": {
+  "question": "« Si n est pair alors mettre n à n ÷ 2 sinon mettre n à 3n + 1. » n vaut 7. Que vaut n après une exécution ?",
+  "explication": "7 est impair : on applique la branche « sinon », n = 3 × 7 + 1 = 22. C'est l'algorithme de la suite de Syracuse, un problème mathématique encore non résolu."
+ },
+ "1fa16e8d69": {
+  "question": "Même règle (pair : n ÷ 2 ; impair : 3n + 1). n vaut 22. Que vaut n après deux exécutions ?",
+  "explication": "Première exécution : 22 est pair, n = 22 ÷ 2 = 11. Deuxième : 11 est impair, n = 3 × 11 + 1 = 34. On applique la règle pas à pas, en réévaluant la condition à chaque fois."
+ },
+ "bdcbda2ad7": {
+  "question": "Quelle structure permet d'exécuter des instructions différentes selon qu'une condition est vraie ou fausse ?",
+  "explication": "L'instruction « si … alors … sinon » exécute un bloc si la condition est vraie, un autre si elle est fausse : c'est une instruction conditionnelle à deux branches. « Répéter » est une boucle."
+ },
+ "59eab86987": {
+  "question": "Un programme part de 1 et double le nombre tant qu'il est inférieur à 100. Quel nombre affiche-t-il à la fin ?",
+  "explication": "Valeurs successives : 1, 2, 4, 8, 16, 32, 64, 128. À 64, la condition « inférieur à 100 » est vraie, on double encore ; à 128 elle est fausse, la boucle s'arrête. Le programme affiche 128."
+ },
+ "3521445086": {
+  "question": "Une somme de 1 000 € augmente de 100 € chaque année. Combien d'années faut-il pour dépasser 1 500 € ?",
+  "explication": "Après 5 ans : 1 000 + 500 = 1 500 €, ce qui n'est pas « plus que » 1 500 €. Après 6 ans : 1 600 €. Il faut 6 ans. « Dépasser » signifie strictement supérieur : attention au cas d'égalité."
+ },
+ "6db202f513": {
+  "question": "Pour calculer le nombre d'années nécessaires, la structure adaptée est…",
+  "explication": "On ne connaît pas à l'avance le nombre d'années : il faut une boucle « répéter jusqu'à » (seuil atteint) et une variable compteur qui augmente de 1 à chaque tour. Le compteur donne le résultat."
+ },
+ "d136d6c80f": {
+  "question": "Un programme ajoute 7 à un nombre de départ 0 jusqu'à dépasser 50. Combien d'additions effectue-t-il ?",
+  "explication": "Après 7 additions : 49, pas encore au-delà de 50. Après 8 : 56 > 50. Le programme effectue 8 additions. Par le calcul : 50 ÷ 7 ≈ 7,1, donc 8 tours."
+ },
+ "1e3a7244f0": {
+  "question": "Un programme doit tracer un triangle équilatéral mais trace : « répéter 3 fois : avancer de 100, tourner de 60° ». Quelle est l'erreur ?",
+  "explication": "Le lutin tourne de l'angle extérieur, pas de l'angle intérieur du triangle : il faut 360° ÷ 3 = 120°. Avec 60°, le lutin ne revient pas au départ (3 × 60° = 180°). Déboguer, c'est trouver et corriger ce type d'erreur."
+ },
+ "38091c2997": {
+  "question": "Un compteur de points recommence toujours à la valeur de la partie précédente. Que manque-t-il ?",
+  "explication": "Il manque l'initialisation « mettre points à 0 » au début du programme : sans elle, la variable garde la valeur de la partie précédente. Initialiser ses variables est un réflexe à acquérir."
+ },
+ "f659b4755d": {
+  "question": "Un programme doit afficher les nombres de 1 à 5 : « mettre n à 1 ; répéter 5 fois : ajouter 1 à n ; dire n ». Qu'affiche-t-il ?",
+  "explication": "n vaut 1, mais il est augmenté avant d'être affiché : le programme dit 2, 3, 4, 5, 6. Pour afficher 1 à 5, il faut inverser les deux instructions : dire n, puis ajouter 1 à n."
+ },
+ "53532dc376": {
+  "question": "Un programme ne s'arrête jamais : « répéter jusqu'à x = 10 : ajouter 2 à x », avec x qui vaut 1 au départ. Pourquoi ?",
+  "explication": "x prend les valeurs 1, 3, 5, 7, 9, 11… et n'est jamais égal à 10 : la condition d'arrêt n'est jamais vraie, la boucle est infinie. Tester « x ≥ 10 » ou « x > 9 » corrigerait le problème."
+ },
+ "fbafa1979f": {
+  "question": "Dans Scratch, à quoi sert une liste ?",
+  "explication": "Une liste stocke plusieurs valeurs sous un même nom (des notes, des mots), chacune repérée par sa position. On peut ajouter, supprimer, lire ou remplacer un élément, et parcourir la liste avec une boucle."
+ },
+ "7f261f1c5a": {
+  "question": "La liste « notes » contient 12, 15, 9, 18. Quelle est la valeur de l'élément 3 ?",
+  "explication": "Dans Scratch, les éléments d'une liste sont numérotés à partir de 1 : élément 1 = 12, élément 2 = 15, élément 3 = 9. Dans d'autres langages (Python), la numérotation commence à 0."
+ },
+ "c115ed38b6": {
+  "question": "La liste « notes » contient 12, 15, 9, 18. Quelle est sa longueur ?",
+  "explication": "La longueur d'une liste est son nombre d'éléments : 12, 15, 9, 18, soit 4. Elle sert souvent à régler le nombre de tours d'une boucle qui parcourt la liste."
+ },
+ "f7f2c752b1": {
+  "question": "Un programme parcourt la liste 12, 15, 9, 18 et additionne ses éléments. Quel résultat obtient-il ?",
+  "explication": "On parcourt la liste en ajoutant chaque élément à une variable somme initialisée à 0 : 12 + 15 + 9 + 18 = 54. En divisant par la longueur (4), on obtiendrait la moyenne, 13,5."
+ },
+ "9221bf253b": {
+  "question": "La condition « x < 0 ou x > 100 » est vraie pour x = 50 ?",
+  "explication": "Pour x = 50 : « x < 0 » est faux et « x > 100 » est faux. Avec « ou », il faudrait au moins une condition vraie : l'expression est fausse."
+ },
+ "c1950b21ca": {
+  "question": "La condition « non (x = 5) » est vraie pour x = 5 ?",
+  "explication": "« x = 5 » est vrai pour x = 5 ; « non » inverse la valeur logique : « non (x = 5) » est faux. Cette condition est vraie pour toutes les valeurs différentes de 5."
+ },
+ "c229ac80c6": {
+  "question": "Une condition « A ou B » est vraie quand…",
+  "explication": "« A ou B » est vraie dès qu'au moins une des deux conditions est vraie (y compris les deux). « A et B » exige que les deux soient vraies. Ce sont les opérateurs logiques de base."
+ },
+ "71921a5b1b": {
+  "question": "Quelle condition teste qu'une note n'est pas comprise entre 0 et 20 ?",
+  "explication": "Une note hors de [0 ; 20] est soit négative, soit supérieure à 20 : « note < 0 ou note > 20 ». Avec « et », la condition ne serait jamais vraie, car aucune note n'est à la fois négative et supérieure à 20."
+ },
+ "1432f9ce26": {
+  "question": "x vaut 2. « Répéter jusqu'à x > 30 : mettre x à x × 2. » Que vaut x à la fin ?",
+  "explication": "Valeurs successives : 2, 4, 8, 16, 32. À 16, la condition « x > 30 » est fausse, on double encore ; à 32 elle est vraie, la boucle s'arrête. x vaut 32."
+ },
+ "faa990eb9d": {
+  "question": "n vaut 0. « Répéter jusqu'à n = 12 : ajouter 3 à n. » Combien de tours la boucle fait-elle ?",
+  "explication": "n passe de 0 à 3, 6, 9, puis 12 : la condition « n = 12 » devient vraie après 4 tours. Un tableau de suivi (tour, valeur de n) évite les erreurs."
+ },
+ "a7ea4ff24f": {
+  "question": "Quelle est la différence entre « répéter 10 fois » et « répéter jusqu'à … » ?",
+  "explication": "« Répéter 10 fois » fait exactement 10 tours. « Répéter jusqu'à … » s'arrête dès que la condition devient vraie : on l'utilise quand on ne connaît pas à l'avance le nombre de tours (atteindre un seuil, une bonne réponse)."
+ },
+ "ccfe35a30d": {
+  "question": "s vaut 0 et i vaut 1. « Répéter jusqu'à i > 4 : ajouter i à s ; ajouter 1 à i. » Que vaut s à la fin ?",
+  "explication": "Suivi : i = 1, s = 1 ; i = 2, s = 3 ; i = 3, s = 6 ; i = 4, s = 10 ; i passe à 5 > 4, on s'arrête. s = 1 + 2 + 3 + 4 = 10. La variable s accumule, i sert de compteur."
+ }
+}
