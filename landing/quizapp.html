@@ -3615,7 +3615,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var c = document.getElementById('qz-tb-seance'); if (!c) return;
     var S = seance && seance.email === emailCle() ? seance : null;
     c.hidden = !S;
-    if (S) { c.textContent = S.ecoule ? '📋 Rapport de séance prêt' : (S.pause ? '⏸ ' : '▶️ ') + seanceChrono(S).replace(/^⏱ |^⏸ En pause · /, ''); c.title = S.ecoule ? 'Voir le rapport de ta séance' : (S.pause ? 'Séance en pause : clique pour la reprendre' : 'Séance en cours : clique pour continuer'); c.classList.toggle('fin', !!S.ecoule); }
+    if (S) { c.textContent = S.ecoule ? '📋 Rapport de séance prêt' : (S.pause ? '⏸ Séance en pause · ' : '▶️ Séance en cours · ') + seanceChrono(S).replace(/^⏱ |^⏸ En pause · /, ''); c.title = S.ecoule ? 'Voir le rapport de ta séance' : (S.pause ? 'Séance en pause : clique pour la reprendre' : 'Séance en cours : clique pour continuer'); c.classList.toggle('fin', !!S.ecoule); }
   }
   // Pause : le chrono s'arrête et les questions sont masquées ; à la reprise, la fin de la séance est décalée d'autant
   function seancePause() {
