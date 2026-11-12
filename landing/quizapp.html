@@ -774,6 +774,10 @@
     .lc-q .quiz-btn.on { background: #fff7ed; border-color: #f97316; color: #c2410c; }
     .lc-valider { position: sticky; bottom: 12px; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 8px 0 16px; padding: 12px 14px 12px 18px; background: rgba(255,255,255,.97); border: 1.5px solid #fed7aa; border-radius: 18px; box-shadow: 0 10px 30px rgba(16,24,40,.12); font-size: 14px; font-weight: 700; color: var(--gray-600); }
     .lc-valider .quiz-btn { margin: 0; }
+    .lc-valider.lc-fixe { position: fixed; bottom: 16px; z-index: 60; margin: 0; box-sizing: border-box; }
+    .lc-main.avec-barre { padding-bottom: 90px; }
+    @media (max-width: 1099px) { .lc-valider.lc-fixe { bottom: 78px; } }
+    @media (max-width: 760px) { .sc-bloc .sc-reperes, .sc-bloc .sc-info { display: none; } .sc-bloc { padding: 12px 14px; } }
     .lc-valider [data-lnote]:not(.pret) { background: #fff; color: #c2410c; border: 1.5px solid #fdba74; box-shadow: none; }
     @media (max-width: 1099px) { .lc-valider { bottom: 78px; } }
     .lc-bilan .big { font-size: 46px; font-weight: 900; color: var(--gray-900); margin: 6px 0; }
@@ -2252,14 +2256,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         return '<div class="quiz-card qz-question lc-q" id="lc-q-' + i + '"><p class="qz-num">Question ' + (i + 1) + ' / ' + n + '</p>' +
           (x.mode === 'sj' ? '<div class="quiz-meta"><span class="chip sujet">📄 Sujet ' + esc(sjNomSujet(q)) + '</span><span class="chip theme">' + esc(q.partie) + '</span></div>' : '') +
           (q.contexte ? '<div class="sj-contexte">' + esc(q.contexte) + '</div>' : '') + '<p class="quiz-q">' + esc(q.question) + '</p>' + corps(q, i) + '<div class="lc-fb" id="lc-fb-' + i + '"></div></div>';
-      }).join('') + (n && !(e && e.termine) ? (x.immediat ? '<div class="lc-valider" id="lc-valider"><span id="lc-valider-txt">0 / ' + n + ' répondues · la correction s’affiche dès ta réponse</span><button type="button" class="quiz-btn" data-lnote>Générer ma note</button></div>'
+      }).join('') + (n && !(e && e.termine) ? (x.immediat ? '<div class="lc-valider lc-fixe" id="lc-valider"><span id="lc-valider-txt">0 / ' + n + ' répondues · la correction s’affiche dès ta réponse</span><button type="button" class="quiz-btn" data-lnote>Générer ma note</button></div>'
         : '<div class="lc-valider" id="lc-valider"><span id="lc-valider-txt">0 / ' + n + ' réponses choisies</span><button type="button" class="quiz-btn" data-lvalider>Valider ma série</button></div>') : '') + '<div id="lc-bilan"></div>';
     root.innerHTML = '<div class="lc-grille"><aside class="lc-side"><details class="qd-carte" id="lc-som"' + (window.innerWidth >= 1100 ? ' open' : '') + '><summary><button type="button" class="lc-retour" data-lretour>← Mon parcours</button>' +
       '<span class="lbl">' + esc(x.etape) + '</span><h4>' + ic + ' ' + esc(label(x.mat)) + '</h4><p class="lc-info">' + x.info + '</p><div class="barre"><i style="width:' + x.pct + '%"></i></div>' +
       (window.innerWidth < 1100 ? '<span class="qd-sous" style="display:block">Sommaire ▾</span>' : '<p class="qd-sous">Sommaire · restantes / total</p>') + '</summary>' + som + '</details></aside>' +
-      '<div class="lc-main">' + droite + '</div></div>';
+      '<div class="lc-main' + (x.immediat ? ' avec-barre' : '') + '">' + droite + '</div></div>';
+    placerBarreNote();
     top();
   }
+  // Séance : la barre « Générer ma note » est fixée au bas de l'écran, à la largeur de la colonne des questions
+  function placerBarreNote() {
+    var v = document.querySelector('.lc-valider.lc-fixe'), m = document.querySelector('.lc-main'); if (!v || !m) return;
+    var r = m.getBoundingClientRect(); v.style.left = Math.round(r.left) + 'px'; v.style.width = Math.round(r.width) + 'px';
+  }
+  window.addEventListener('resize', placerBarreNote);
   function lcMaj() {
     var n = lc.qs.length, r = Object.keys(lc.rep).filter(function (k) { return lc.rep[k] === 'ok' || lc.rep[k] === 'ko'; }).length;
     var c = document.getElementById('lc-compte'); if (c) c.textContent = r + ' / ' + n + ' répondues · ' + lc.score + ' juste' + (lc.score > 1 ? 's' : '');
