@@ -726,13 +726,14 @@ async function quizCompte(req, { frais = false } = {}) {
   if (error || !data?.user) return null;
   // Accès payé : profils_utilisateurs.quizcrpe_paye (source de vérité, modifiable à la main dans Supabase)
   const [{ data: ligne, error: e2 }, { data: profil, error: e3 }] = await Promise.all([
-    supabaseAdmin.from('quiz_comptes').select('positionnement, essai_jour, essai_jour_ids, reponses_positionnement').eq('user_id', data.user.id).maybeSingle(),
+    supabaseAdmin.from('quiz_comptes').select('positionnement, essai_jour, essai_jour_ids, reponses_positionnement, offre7_activee_at, offre7_jours').eq('user_id', data.user.id).maybeSingle(),
     supabaseAdmin.from('profils_utilisateurs').select('quizcrpe_paye').eq('user_id', data.user.id).maybeSingle(),
   ]);
   if (e2 || e3) throw new Error((e2 || e3).message);
   const l = ligne || {};
   const compte = { id: data.user.id, email: data.user.email, positionnement: l.positionnement || null, paid: profil?.quizcrpe_paye === true,
-    essaiJour: l.essai_jour || null, essaiJourIds: l.essai_jour_ids || [], reponsesTest: l.reponses_positionnement || [] };
+    essaiJour: l.essai_jour || null, essaiJourIds: l.essai_jour_ids || [], reponsesTest: l.reponses_positionnement || [],
+    offre7Debut: l.offre7_activee_at || null, offre7Jours: Array.isArray(l.offre7_jours) ? l.offre7_jours : [] };
   quizSessions.set(token, { compte, until: Date.now() + 120000 });
   return compte;
 }
@@ -764,14 +765,14 @@ function quizEssai(compte) {
   return { parJour: ESSAI_PAR_JOUR, faites, restantes: ESSAI_PAR_JOUR - faites, termine: faites >= ESSAI_PAR_JOUR, conseillees };
 }
 
-// Semaine d'essai : accès complet et illimité pendant 7 jours à partir du test de positionnement.
-// Comptes dont le test date d'avant l'offre : leur semaine court à partir du lancement (13/11/2026), jusqu'au 20/11 à minuit.
-// Ensuite : retour à l'essai de 10 questions par jour.
+// Offre 7 jours (« Profiter de ma semaine offerte ») : accès complet et illimité pendant 7 jours à partir du clic d'activation
+// (lien de l'email ?offre=7jours ou bouton de l'application). Ensuite : retour à l'essai de 10 questions par jour.
+// Klaviyo : 7_days_offer (true au clic), 7_days_offer_debut / _fin, 7_days_offer_jours_utilises (jours où le compte a répondu
+// à au moins une question pendant la semaine), 7_days_offer_derniere_utilisation.
 const SEMAINE_ESSAI_JOURS = 7;
-const SEMAINE_ESSAI_LANCEMENT = Date.parse('2026-11-13T00:00:00+01:00');
 function semaineEssaiFin(compte) {
-  const d = Date.parse(compte?.positionnement?.date || '');
-  return Number.isFinite(d) ? Math.max(d, SEMAINE_ESSAI_LANCEMENT) + SEMAINE_ESSAI_JOURS * 86400000 : null;
+  const d = Date.parse(compte?.offre7Debut || '');
+  return Number.isFinite(d) ? d + SEMAINE_ESSAI_JOURS * 86400000 : null;
 }
 const quizIllimite = compte => !!compte && (compte.paid || (semaineEssaiFin(compte) || 0) > Date.now());
 
@@ -780,7 +781,7 @@ async function quizAcces(req, res) {
   try {
     const compte = await quizCompte(req);
     if (!compte) { res.status(401).json({ error: 'Connexion requise.', code: 'connexion' }); return null; }
-    if (compte.paid || compte.positionnement) return compte;
+    if (compte.paid || compte.positionnement || quizIllimite(compte)) return compte;
     res.status(402).json({ error: 'Accès réservé aux comptes débloqués.', code: 'paiement' }); return null;
   } catch (err) {
     console.error('[quiz/acces]', err.message);
@@ -935,6 +936,7 @@ app.get('/api/quiz/compte', async (req, res) => {
       reponses_test: compte.positionnement ? await reponsesTestLisibles(compte.reponsesTest) : [],
       essai: quizIllimite(compte) ? null : await quizEssai(compte),
       semaine_essai_fin: !compte.paid && quizIllimite(compte) ? new Date(semaineEssaiFin(compte)).toISOString() : null,
+      offre7: compte.paid ? null : { activee: !!compte.offre7Debut, fin: compte.offre7Debut ? new Date(semaineEssaiFin(compte)).toISOString() : null },
       paypal_client_id: process.env.VITE_PAYPAL_CLIENT_ID || process.env.PAYPAL_CLIENT_ID || null, prix: QUIZ_PRICE.value });
   } catch (err) {
     console.error('[quiz/compte]', err.message);
@@ -1125,6 +1127,39 @@ async function quizEssaiCompter(compte, id) {
   return { essai: { parJour, faites, restantes, termine } };
 }
 
+// Offre 7 jours : un jour d'utilisation de plus (première réponse du jour pendant la semaine), noté en base et dans Klaviyo
+async function offre7Noter(compte) {
+  if (compte.paid || !compte.offre7Debut || !quizIllimite(compte)) return;
+  const jour = jourParis();
+  if (compte.offre7Jours.includes(jour)) return;
+  compte.offre7Jours = [...compte.offre7Jours, jour];
+  const { error } = await supabaseAdmin.from('quiz_comptes').update({ offre7_jours: compte.offre7Jours, updated_at: new Date().toISOString() }).eq('user_id', compte.id);
+  if (error) { console.error('[offre7]', error.message); return; }
+  if (compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) {
+    try { await klaviyoSetProperties(compte.email, { '7_days_offer_jours_utilises': compte.offre7Jours.length, '7_days_offer_derniere_utilisation': dateKlaviyo(new Date().toISOString()) }); }
+    catch (e) { console.error('[Klaviyo offre7]', e.message); }
+  }
+}
+// Activation de l'offre 7 jours (clic « Profiter de ma semaine offerte ») : une seule fois par compte
+app.post('/api/quiz/offre-7-jours', async (req, res) => {
+  try {
+    const compte = await quizCompte(req, { frais: true });
+    if (!compte) return res.status(401).json({ error: 'Connexion requise.', code: 'connexion' });
+    if (compte.paid) return res.json({ paye: true });
+    if (compte.offre7Debut) return res.json({ deja: true, fin: new Date(semaineEssaiFin(compte)).toISOString(), active: quizIllimite(compte) });
+    const maintenant = new Date().toISOString();
+    const { error } = await supabaseAdmin.from('quiz_comptes').upsert({ user_id: compte.id, email: compte.email, offre7_activee_at: maintenant, updated_at: maintenant }, { onConflict: 'user_id' });
+    if (error) throw new Error(error.message);
+    compte.offre7Debut = maintenant; quizOublier(compte.id);
+    const fin = new Date(semaineEssaiFin(compte)).toISOString();
+    if (compte.email && process.env.KLAVIYO_PRIVATE_API_KEY) {
+      try { await klaviyoSetProperties(compte.email, { '7_days_offer': true, '7_days_offer_debut': dateKlaviyo(maintenant), '7_days_offer_fin': dateKlaviyo(fin), '7_days_offer_jours_utilises': 0 }); }
+      catch (e) { console.error('[Klaviyo offre7]', e.message); }
+    }
+    res.json({ active: true, fin });
+  } catch (err) { console.error('[quiz/offre-7-jours]', err.message); res.status(500).json({ error: 'L’offre n’a pas pu être activée. Réessayez dans quelques instants.' }); }
+});
+
 app.post('/api/quiz/reponse', async (req, res) => {
   const id = Number(req.body?.id);
   const reponse = req.body?.reponse ?? req.body?.choix ?? '';
@@ -1139,6 +1174,7 @@ app.post('/api/quiz/reponse', async (req, res) => {
     if (r.status) return res.status(r.status).json(r.body);
     essai = r.essai;
   }
+  await offre7Noter(compte);
   const c = await quizCorriger(id, reponse);
   if (!c) return res.status(404).json({ error: 'Question inconnue.' });
   res.json(essai ? { ...c, essai } : c);
@@ -1170,6 +1206,7 @@ app.post('/api/quiz/sujets/reponse', async (req, res) => {
     if (r.status) return res.status(r.status).json(r.body);
     essai = r.essai;
   }
+  await offre7Noter(compte);
   const c = corrigerQuestion(q, req.body?.reponse ?? '');
   res.json(essai ? { ...c, essai } : c);
 });

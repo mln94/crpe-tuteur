@@ -455,6 +455,8 @@
     /* Parcours */
     .pc-essai-semaine { margin: 4px 0 12px; padding: 9px 13px; border-radius: 12px; background: rgba(251,146,60,.18); border: 1px solid rgba(251,146,60,.45); color: #fed7aa; font-size: 14px; line-height: 1.45; }
     .pc-essai-semaine b { color: #fff; }
+    .pc-offre7-btn { display: block; margin-top: 10px; width: 100%; min-height: 44px; border: 0; border-radius: 12px; background: #fb923c; color: #1f1147; font: inherit; font-size: 15px; font-weight: 800; cursor: pointer; }
+    .pc-offre7-btn:disabled { opacity: .6; cursor: wait; }
     .pc-hero { position: relative; overflow: hidden; border-radius: 22px; padding: 30px 34px; color: #fff; background: radial-gradient(520px 260px at 72% 125%, rgba(249,115,22,.5), transparent 70%), linear-gradient(120deg, #1e1b2e, #2a1f3d 60%, #3b1d24); box-shadow: 0 20px 40px -24px rgba(30,27,46,.6); display: grid; grid-template-columns: 1fr auto; gap: 22px; align-items: center; }
     .pc-hero .sur { color: #fdba74; font-weight: 800; font-size: 14px; }
     .pc-hero h2 { margin: 6px 0 8px; font-size: 30px; letter-spacing: -.02em; color: #fff; }
@@ -2149,7 +2151,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<h2>' + (prenom ? 'Bonjour ' + esc(prenom) + ' 👋' : 'Ton parcours 👋') + '</h2>' +
       '<div class="pc-auj"><span>📆 ' + esc(aujourdhui.charAt(0).toUpperCase() + aujourdhui.slice(1)) + '</span><span>' + (!objJour ? '🎉 Objectif de ' + OBJ_PCT + ' % des notions atteint' : faitesAuj >= objJour ? '✅ Objectif du jour atteint : <b>' + nf(faitesAuj) + ' / ' + nf(objJour) + ' questions</b>' : '🎯 Objectif du jour : <b>' + nf(faitesAuj) + ' / ' + nf(objJour) + ' questions</b> · encore ' + nf(objJour - faitesAuj)) + '</span></div>' +
       '<p>Ton parcours vers le concours, étape par étape : les notions de l’écrit, les épreuves passées, puis les oraux.</p>' +
-      (compte && !compte.paid && compte.semaine_essai_fin ? '<div class="pc-essai-semaine">🎁 <b>Semaine d’essai :</b> accès complet jusqu’au ' + esc(new Date(Date.parse(compte.semaine_essai_fin) - 1).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })) + ' inclus</div>' : '') +
+      (compte && !compte.paid && compte.semaine_essai_fin ? '<div class="pc-essai-semaine">🎁 <b>Semaine offerte :</b> accès complet jusqu’au ' + esc(offre7Date(compte.semaine_essai_fin)) + ' inclus</div>'
+        : compte && compte.offre7 && !compte.offre7.activee ? '<div class="pc-essai-semaine">🎁 <b>Une semaine d’accès complet t’est offerte</b>, sans limite de questions. Elle démarre quand tu cliques :<button type="button" class="pc-offre7-btn" data-offre7>Profiter de ma semaine offerte →</button></div>' : '') +
       '<div class="pc-puces"><span>🎓 CRPE ' + (c === 'bac5' ? 'Bac+5' : 'Bac+3') + '</span>' + domainesChoisis.map(function (k) { return '<span>' + DOMAINES_ECRIT[k][1] + ' ' + esc(DOMAINES_ECRIT[k][0]) + '</span>'; }).join('') + '<button type="button" data-pc-domaines>Modifier</button></div>' +
       seanceHero(objJour, faitesAuj, O.parJour100) + '</div>' +
       '<div class="pc-anneau"><svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="12"/><circle cx="70" cy="70" r="60" fill="none" stroke="#f97316" stroke-width="12" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="' + Math.round(377 * (1 - M.pct / 100)) + '"/></svg>' +
@@ -3127,11 +3130,42 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function etatCompte(c) { return c ? [!!c.paid, !!c.positionnement, c.essai ? c.essai.faites : ''].join('|') : ''; }
   // Compte déjà chargé (changement de menu) : écran affiché tout de suite, compte rafraîchi en arrière-plan.
   // boot(true) force le rechargement (paiement, erreur d'accès, bouton « Réessayer »).
+  // ── Offre 7 jours : lien de l'email (?offre=7jours) ou bouton « Profiter de ma semaine offerte » ──
+  // Le lien est mémorisé (connexion éventuelle entre-temps), puis l'offre est activée côté serveur (Klaviyo : 7_days_offer = true)
+  try { if (/[?&]offre=7jours(&|$)/.test(location.search)) { localStorage.setItem('qz_offre7', String(Date.now()));
+    var qOffre = location.search.replace(/([?&])offre=7jours(&|$)/, function (m, a, b) { return b ? a : ''; }); history.replaceState(null, '', location.pathname + (qOffre === '?' ? '' : qOffre)); } } catch (e) {}
+  function offre7EnAttente() { try { var t = +localStorage.getItem('qz_offre7'); return !!t && Date.now() - t < 7 * 864e5; } catch (e) { return false; } }
+  function offre7Date(iso) { return new Date(Date.parse(iso) - 1).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }); }
+  function offre7Activer() {
+    return api('/api/quiz/offre-7-jours', { method: 'POST', body: '{}' }).then(function (d) {
+      try { localStorage.removeItem('qz_offre7'); } catch (e) {}
+      if (d.paye) return;
+      return api('/api/quiz/compte').then(function (c) { compte = c; pcCache = null; offre7Fenetre(d); if (!vue() && !st && !tst) parcoursVue(); });
+    });
+  }
+  function offre7Fenetre(d) {
+    var old = document.getElementById('qz-pop-offre7'); if (old) old.remove();
+    var titre = d.active === false ? 'Ta semaine offerte est terminée' : d.deja ? 'Ta semaine offerte est déjà activée' : 'Ta semaine offerte est activée !';
+    var texte = d.active === false ? 'Elle s’est terminée le ' + offre7Date(d.fin) + '. Tu gardes 10 questions gratuites chaque jour pour continuer ton parcours.'
+      : 'Accès complet à tout le quiz, sans limite de questions, jusqu’au <b>' + esc(offre7Date(d.fin)) + '</b> inclus. Suis ton parcours : chaque jour, ton objectif t’attend.';
+    document.body.insertAdjacentHTML('beforeend', '<div class="qz-pop" id="qz-pop-offre7" role="dialog" aria-modal="true" aria-labelledby="qz-offre7-titre"><div class="qz-pop-carte">' +
+      '<div class="qz-pop-ico">🎁</div><h2 id="qz-offre7-titre">' + titre + '</h2><p>' + texte + '</p>' +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn" data-offre7-ok>' + (d.active === false ? 'Continuer' : 'C’est parti →') + '</button></div></div></div>');
+    var pop = document.getElementById('qz-pop-offre7');
+    pop.addEventListener('click', function (ev) { if (ev.target === pop || ev.target.closest('[data-offre7-ok]')) pop.remove(); });
+    pop.querySelector('[data-offre7-ok]').focus();
+  }
+  document.addEventListener('click', function (ev) {
+    var b = ev.target.closest && ev.target.closest('[data-offre7]'); if (!b) return;
+    b.disabled = true; b.textContent = 'Activation…';
+    offre7Activer().catch(function (e) { b.disabled = false; b.textContent = 'Profiter de ma semaine offerte →'; if (e && e.status === 401) connexion(); });
+  });
   function boot(forcer) {
     st = null; tst = null;
     if (compte && forcer !== true) {
       var avant = etatCompte(compte);
       adopterProgression().then(function () { synchroniser(); aiguiller(compte); });
+      if (offre7EnAttente()) offre7Activer().catch(function () {});
       api('/api/quiz/compte').then(function (c) {
         compte = c;
         // L'écran n'est redessiné que si le compte a changé et qu'aucune série ni test n'a commencé entre-temps
@@ -3142,7 +3176,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     root.innerHTML = '<div class="quiz-card"><p>Chargement…</p></div>';
     jeton().then(function (t) {
       if (!t) return connexion();
-      return api('/api/quiz/compte').then(function (c) { compte = c; return adopterProgression().then(function () { synchroniser(); aiguiller(c); }); });
+      return api('/api/quiz/compte').then(function (c) { compte = c; if (offre7EnAttente()) offre7Activer().catch(function () {}); return adopterProgression().then(function () { synchroniser(); aiguiller(c); }); });
     }).catch(function (e) { if (e.status === 401) return connexion(); erreur('Votre compte n\'a pas pu être chargé. Réessayez dans quelques instants.'); });
   }
   function connexion() {
