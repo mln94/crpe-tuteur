@@ -488,6 +488,10 @@
     .pc-seance-lancer { display: inline-flex; flex-direction: column; gap: 6px; }
     .pc-hero .sc-reperes { color: #cbd5e1; } .pc-hero .sc-reperes b { color: #fff; }
     .pc-seance-pause { font: inherit; font-size: 13px; font-weight: 700; color: #fff; background: transparent; border: 1.5px solid rgba(255,255,255,.4); border-radius: 10px; padding: 7px 12px; cursor: pointer; }
+    .sc-rapport .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    @media (max-width: 560px) { .sc-rapport .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .sc-encours { font-size: 14px; color: var(--gray-600); margin: 4px 0 0; }
+    .sc-encours b { color: var(--gray-900); }
     .sc-rapport .big small { font-size: 22px; color: var(--gray-500); }
     .sc-graphe { text-align: left; display: grid; gap: 14px; margin-bottom: 8px; }
     .sc-g-tete { display: flex; justify-content: space-between; gap: 10px; font-weight: 700; font-size: 14px; color: var(--gray-900); padding-bottom: 4px; border-bottom: 1px solid var(--gray-100); margin-bottom: 4px; }
@@ -2198,9 +2202,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       x.f = (x.f || 0) + Math.min(no.questions.length, s ? (s.vus || []).length : 0);
     });
     themes.forEach(function (x) { x.etat = x.mai >= x.notions ? 'fini' : x.vus ? 'cours' : 'afaire'; var g = groupe(x.nom); x.court = g ? g.court : x.nom; x.bloc = g ? g.nom : ''; });
-    if (ti === 'hasard') {  // séance : un thème au hasard parmi ceux qui ne sont pas terminés
+    if (ti === 'hasard') {  // séance : un thème au hasard parmi ceux qui ne sont pas terminés, en évitant ceux déjà vus pendant la séance
+      var Sv = seanceActive(), dejaTh = ((Sv && Sv.lots) || []).filter(function (l) { return l.mat === mat; }).map(function (l) { return l.theme; });
       var ouverts = themes.map(function (x, i) { return i; }).filter(function (i) { return themes[i].etat !== 'fini'; });
-      ti = ouverts.length ? ouverts[Math.floor(Math.random() * ouverts.length)] : Math.floor(Math.random() * themes.length);
+      if (!ouverts.length) ouverts = themes.map(function (x, i) { return i; });
+      var neufs = ouverts.filter(function (i) { return dejaTh.indexOf(themes[i].nom) < 0; });
+      if (neufs.length) ouverts = neufs;
+      ti = ouverts[Math.floor(Math.random() * ouverts.length)];
+      if (Sv) { (Sv.lots = Sv.lots || []).push({ mat: mat, theme: themes[ti].nom }); seanceSauver(); }
     }
     if (ti == null || !themes[ti]) { ti = themes.findIndex(function (x) { return x.etat !== 'fini'; }); if (ti < 0) ti = 0; }
     var e = essaiActif(), th = themes[ti];
@@ -2305,7 +2314,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var avantM = lc.mode !== 'sj' && !!(prog(lc.mat).notions[q.notion] || {}).maitrise;
       var suite = lc.mode === 'sj' ? sjEnregistrer(q, d.correct) : enregistrer(q, d.correct);
       lc.recap.push({ id: q.id, theme: q.theme, q: q.question, ok: d.correct, attendu: d.attendu, mat: lc.mat, niveau: q.niveau });
-      seanceNoter({ q: q.question, ok: d.correct, attendu: d.attendu, mat: lc.mat, theme: lc.mode === 'ecrit' && lc.theme ? lc.theme.court : (q.theme || '') }, lc.mode !== 'sj' && !avantM && !!(prog(lc.mat).notions[q.notion] || {}).maitrise);
+      seanceNoter({ q: q.question, ok: d.correct, attendu: d.attendu, mat: lc.mat, notion: lc.mode !== 'sj' ? q.notion : '', theme: lc.mode === 'ecrit' && lc.theme ? lc.theme.court : (q.theme || '') }, lc.mode !== 'sj' && !avantM && !!(prog(lc.mat).notions[q.notion] || {}).maitrise);
       montrer(d);
       document.getElementById('lc-q-' + i).classList.add('repondue');
       fb.innerHTML = '<div class="quiz-feedback ' + (d.correct ? 'ok' : 'ko') + '"><strong>' + (d.correct ? 'Bonne réponse !' : 'Ce n’est pas la bonne réponse. Réponse attendue : ' + esc(d.attendu)) + '</strong>' + esc(d.explication) + '<span class="suite">' + suite + '</span></div>';
@@ -3341,7 +3350,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function seanceLot() {
     var S = seanceActive(); if (!S) return;
     if (S.ecoule) return seanceFin();
-    matiereVue('ecrit', S.mats[Math.floor(Math.random() * S.mats.length)], 'hasard');
+    var lots = S.lots || [], der = lots.length ? lots[lots.length - 1].mat : null;
+    var cand = S.mats.length > 1 ? S.mats.filter(function (m) { return m !== der; }) : S.mats.slice();
+    var nb = function (m) { return lots.filter(function (l) { return l.mat === m; }).length; }, min = Math.min.apply(null, cand.map(nb));
+    cand = cand.filter(function (m) { return nb(m) === min; });
+    matiereVue('ecrit', cand[Math.floor(Math.random() * cand.length)], 'hasard');
   }
   function seanceChrono(S) {
     if (S.ecoule) return '⏱ Temps écoulé';
@@ -3457,6 +3470,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }).join('') + '</div>';
     }).join('');
     var ratees = rs.filter(function (r) { return !r.ok; });
+    var vuesN = {}, enCours = 0, a2 = 0, a1 = 0, a0 = 0;
+    rs.forEach(function (r) { if (r.notion) vuesN[r.mat + '|' + r.notion] = r; });
+    Object.keys(vuesN).forEach(function (k) {
+      var r = vuesN[k], x = prog(r.mat).notions[r.notion]; if (!x || x.maitrise) return;
+      enCours++; var b = (x.ok || []).length; if (b >= 2) a2++; else if (b === 1) a1++; else a0++;
+    });
+    var detailEnCours = enCours ? '<p class="sc-encours">Notions en cours de maîtrise : ' + [a2 ? '<b>' + a2 + '</b> à 2 bonnes réponses sur ' + MAITRISE : '', a1 ? '<b>' + a1 + '</b> à 1 bonne réponse sur ' + MAITRISE : '', a0 ? '<b>' + a0 + '</b> à revoir (aucune bonne réponse)' : ''].filter(Boolean).join(' · ') +
+      '. Elles reviendront dans tes prochaines séances jusqu’à ' + MAITRISE + ' bonnes réponses.</p>' : '';
     var msg = !n ? 'Aucune question n’a été validée pendant cette séance.' : pct >= 80 ? 'Excellente séance !' : pct >= 60 ? 'Bonne séance, continue comme ça.' : 'Les notions ratées reviendront dans tes prochaines séances pour être retravaillées.';
     // Séance suivante de la journée : la 2e tant que l'objectif du jour n'est pas atteint, sinon une séance bonus
     var faites = seancesFaites(), suiv = o && total < o ? (faites < SEANCE_PAR_JOUR ? 'Lancer ma séance ' + (faites + 1) + ' / ' + SEANCE_PAR_JOUR : 'Lancer une séance de plus') : 'Lancer une séance bonus';
@@ -3465,7 +3486,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<p class="qz-num" style="margin:8px 0 0">Note moyenne</p><div class="big">' + noteTxt(note(ok, n)) + '<small> / 20</small></div><p>' + pluriel(n, 'question') + ' · ' + ok + ' bonne' + (ok > 1 ? 's' : '') + ' réponse' + (ok > 1 ? 's' : '') + (n ? ' (' + pct + ' %)' : '') + '. ' + msg + '</p>' +
       '<div class="stats"><div class="stat"><b>' + n + '</b><span>question' + (n > 1 ? 's' : '') + '</span></div>' +
         '<div class="stat"><b>' + S.maitrisees + '</b><span>notion' + (S.maitrisees > 1 ? 's' : '') + ' maîtrisée' + (S.maitrisees > 1 ? 's' : '') + '</span></div>' +
-        '<div class="stat"><b>' + mats.length + '</b><span>matière' + (mats.length > 1 ? 's' : '') + ' travaillée' + (mats.length > 1 ? 's' : '') + '</span></div></div>' +
+        '<div class="stat"><b>' + enCours + '</b><span>notion' + (enCours > 1 ? 's' : '') + ' en cours de maîtrise</span></div>' +
+        '<div class="stat"><b>' + mats.length + '</b><span>matière' + (mats.length > 1 ? 's' : '') + ' travaillée' + (mats.length > 1 ? 's' : '') + '</span></div></div>' + detailEnCours +
       '<p class="sc-obj-fin' + (os && n >= os ? ' ok' : '') + '">' + (!os ? '⭐ Séance bonus : l’objectif du jour était déjà atteint.'
         : n >= os ? '✅ Objectif de la séance atteint : <b>' + nf(n) + ' / ' + nf(os) + '</b> questions.'
         : '🎯 Objectif de la séance : <b>' + nf(n) + ' / ' + nf(os) + '</b> questions.') + '<br>' + (!o ? '🎉 Objectif de ' + OBJ_PCT + ' % des notions atteint.'
