@@ -492,6 +492,9 @@
     .sc-lots { font-size: 13.5px; color: var(--gray-600); margin: 10px 0 0; }
     .sc-nouvelle h2 { margin: 0 0 6px; font-size: 20px; }
     .sc-nouvelle p { margin: 0 0 6px; color: var(--gray-600); }
+    .qz-serie-mode { display: inline-block; vertical-align: 2px; margin-left: 8px; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 700; white-space: nowrap; }
+    .qz-serie-mode.en-seance { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+    .qz-serie-mode.libre { background: var(--gray-100); color: var(--gray-600); }
     .sc-reperes { display: block; font-size: 12px; color: var(--gray-500); margin-top: 2px; }
     .pc-seance-lancer { display: inline-flex; flex-direction: column; gap: 6px; }
     .pc-hero .sc-reperes { color: #cbd5e1; } .pc-hero .sc-reperes b { color: #fff; }
@@ -2294,7 +2297,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var pc = Math.round(lc.score / n * 100), ok = pc >= 80, suivant = lc.ti + 1 < lc.themes.length;
     if (lc.mode === 'ecrit') {
       var niv = {}; lc.qs.forEach(function (q) { niv[q.niveau] = (niv[q.niveau] || 0) + 1; });
-      var enreg = garderSerie(lc.mat, Object.keys(niv).sort(function (a, b) { return niv[b] - niv[a]; })[0] || 'facile', lc.score, n, !!essaiActif(), lc.recap);
+      // Série faite pendant une séance : son numéro (1, 2…) ou « bonus » est noté, pour « Mes stats »
+      var Sx = seanceActive(), tag = Sx ? (Sx.objectif ? Sx.numero : 'bonus') : null;
+      var rec = tag ? lc.recap.map(function (r) { return Object.assign({}, r, { seance: tag }); }) : lc.recap;
+      var enreg = garderSerie(lc.mat, Object.keys(niv).sort(function (a, b) { return niv[b] - niv[a]; })[0] || 'facile', lc.score, n, !!essaiActif(), rec);
       if (seanceActive()) seanceEnreg = enreg;
     }
     pcCache = null;
@@ -2625,7 +2631,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     return SB.auth.getSession().then(function (r) {
       var u = r.data.session && r.data.session.user; if (!u) return;
       return SB.from('quiz_series').insert({ user_id: u.id, matiere: mat, niveau: niveau, score: score, total: total, essai: essai,
-        details: recap.map(function (x) { return { id: x.id, question: x.q, theme: x.theme, ok: x.ok, attendu: x.attendu }; }) });
+        details: recap.map(function (x) { return Object.assign({ id: x.id, question: x.q, theme: x.theme, ok: x.ok, attendu: x.attendu }, x.seance ? { seance: x.seance } : {}); }) });
     }).then(function () { majCoque(true); pcCache = null; }).catch(function () {});
   }
   function note20(x) { return Math.round(x.score / x.total * 40) / 2; }
@@ -2673,8 +2679,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       (nb ? '' : '<div class="quiz-card"><p>Aucune série avec ces filtres.</p></div>') +
       (vueSeries === 'graph' ? '' : '<div class="qz-series">' + liste.map(function (x) {
         var n = note20(x), cl = n >= 16 ? 'tres-bien' : n >= 12 ? 'bien' : n >= 8 ? 'moyen' : 'faible', d = new Date(x.created_at);
+        var sc = ((x.details || [])[0] || {}).seance;
+        var mode = sc ? '<span class="qz-serie-mode en-seance">▶️ ' + (sc === 'bonus' ? 'Séance bonus' : 'Séance ' + sc + ' / ' + SEANCE_PAR_JOUR) + '</span>' : '<span class="qz-serie-mode libre">Entraînement libre</span>';
         return '<details class="qz-serie"><summary><span class="qz-serie-note ' + cl + '">' + noteTxt(n) + '<small>/20</small></span>' +
-          '<span class="qz-serie-info"><b>' + esc(label(x.matiere)) + '</b><span>' + NIVEAUX[x.niveau] + ' · ' + x.score + ' / ' + x.total + ' bonnes réponses' + (x.essai ? ' · série d’essai' : '') + '</span>' +
+          '<span class="qz-serie-info"><b>' + esc(label(x.matiere)) + mode + '</b><span>' + NIVEAUX[x.niveau] + ' · ' + x.score + ' / ' + x.total + ' bonnes réponses' + (x.essai ? ' · série d’essai' : '') + '</span>' +
           '<span class="qz-serie-date">' + d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + '</span></span>' +
           '<span class="qz-serie-voir" aria-hidden="true"></span></summary>' +
           '<div class="quiz-recap">' + (x.details || []).map(function (q) {
