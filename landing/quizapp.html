@@ -453,6 +453,8 @@
     .dm-compte { font-weight: 800; color: var(--indigo-700); }
     @media (max-width: 600px) { .dm-grille { grid-template-columns: 1fr; } }
     /* Parcours */
+    .pc-essai-semaine { margin: 4px 0 12px; padding: 9px 13px; border-radius: 12px; background: rgba(251,146,60,.18); border: 1px solid rgba(251,146,60,.45); color: #fed7aa; font-size: 14px; line-height: 1.45; }
+    .pc-essai-semaine b { color: #fff; }
     .pc-hero { position: relative; overflow: hidden; border-radius: 22px; padding: 30px 34px; color: #fff; background: radial-gradient(520px 260px at 72% 125%, rgba(249,115,22,.5), transparent 70%), linear-gradient(120deg, #1e1b2e, #2a1f3d 60%, #3b1d24); box-shadow: 0 20px 40px -24px rgba(30,27,46,.6); display: grid; grid-template-columns: 1fr auto; gap: 22px; align-items: center; }
     .pc-hero .sur { color: #fdba74; font-weight: 800; font-size: 14px; }
     .pc-hero h2 { margin: 6px 0 8px; font-size: 30px; letter-spacing: -.02em; color: #fff; }
@@ -2147,6 +2149,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<h2>' + (prenom ? 'Bonjour ' + esc(prenom) + ' 👋' : 'Ton parcours 👋') + '</h2>' +
       '<div class="pc-auj"><span>📆 ' + esc(aujourdhui.charAt(0).toUpperCase() + aujourdhui.slice(1)) + '</span><span>' + (!objJour ? '🎉 Objectif de ' + OBJ_PCT + ' % des notions atteint' : faitesAuj >= objJour ? '✅ Objectif du jour atteint : <b>' + nf(faitesAuj) + ' / ' + nf(objJour) + ' questions</b>' : '🎯 Objectif du jour : <b>' + nf(faitesAuj) + ' / ' + nf(objJour) + ' questions</b> · encore ' + nf(objJour - faitesAuj)) + '</span></div>' +
       '<p>Ton parcours vers le concours, étape par étape : les notions de l’écrit, les épreuves passées, puis les oraux.</p>' +
+      (compte && !compte.paid && compte.semaine_essai_fin ? '<div class="pc-essai-semaine">🎁 <b>Semaine d’essai :</b> accès complet jusqu’au ' + esc(new Date(Date.parse(compte.semaine_essai_fin) - 1).toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' })) + ' inclus</div>' : '') +
       '<div class="pc-puces"><span>🎓 CRPE ' + (c === 'bac5' ? 'Bac+5' : 'Bac+3') + '</span>' + domainesChoisis.map(function (k) { return '<span>' + DOMAINES_ECRIT[k][1] + ' ' + esc(DOMAINES_ECRIT[k][0]) + '</span>'; }).join('') + '<button type="button" data-pc-domaines>Modifier</button></div>' +
       seanceHero(objJour, faitesAuj, O.parJour100) + '</div>' +
       '<div class="pc-anneau"><svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="12"/><circle cx="70" cy="70" r="60" fill="none" stroke="#f97316" stroke-width="12" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="' + Math.round(377 * (1 - M.pct / 100)) + '"/></svg>' +

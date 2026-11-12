@@ -764,6 +764,17 @@ function quizEssai(compte) {
   return { parJour: ESSAI_PAR_JOUR, faites, restantes: ESSAI_PAR_JOUR - faites, termine: faites >= ESSAI_PAR_JOUR, conseillees };
 }
 
+// Semaine d'essai : accès complet et illimité pendant 7 jours à partir du test de positionnement.
+// Comptes dont le test date d'avant l'offre : leur semaine court à partir du lancement (13/11/2026), jusqu'au 20/11 à minuit.
+// Ensuite : retour à l'essai de 10 questions par jour.
+const SEMAINE_ESSAI_JOURS = 7;
+const SEMAINE_ESSAI_LANCEMENT = Date.parse('2026-11-13T00:00:00+01:00');
+function semaineEssaiFin(compte) {
+  const d = Date.parse(compte?.positionnement?.date || '');
+  return Number.isFinite(d) ? Math.max(d, SEMAINE_ESSAI_LANCEMENT) + SEMAINE_ESSAI_JOURS * 86400000 : null;
+}
+const quizIllimite = compte => !!compte && (compte.paid || (semaineEssaiFin(compte) || 0) > Date.now());
+
 // Accès au quiz : compte payé, ou essai gratuit (test de positionnement fait) ; le nombre de questions du jour est vérifié à chaque réponse
 async function quizAcces(req, res) {
   try {
@@ -922,7 +933,8 @@ app.get('/api/quiz/compte', async (req, res) => {
     if (!compte) return res.status(401).json({ error: 'Connexion requise.' });
     res.json({ email: compte.email, positionnement: compte.positionnement, paid: compte.paid,
       reponses_test: compte.positionnement ? await reponsesTestLisibles(compte.reponsesTest) : [],
-      essai: compte.paid ? null : await quizEssai(compte),
+      essai: quizIllimite(compte) ? null : await quizEssai(compte),
+      semaine_essai_fin: !compte.paid && quizIllimite(compte) ? new Date(semaineEssaiFin(compte)).toISOString() : null,
       paypal_client_id: process.env.VITE_PAYPAL_CLIENT_ID || process.env.PAYPAL_CLIENT_ID || null, prix: QUIZ_PRICE.value });
   } catch (err) {
     console.error('[quiz/compte]', err.message);
@@ -1122,7 +1134,7 @@ app.post('/api/quiz/reponse', async (req, res) => {
   const compte = await quizAcces(req, res);
   if (!compte) return;
   let essai = null;
-  if (!compte.paid) {
+  if (!quizIllimite(compte)) {
     const r = await quizEssaiCompter(compte, id);
     if (r.status) return res.status(r.status).json(r.body);
     essai = r.essai;
@@ -1153,7 +1165,7 @@ app.post('/api/quiz/sujets/reponse', async (req, res) => {
   const compte = await quizAcces(req, res);
   if (!compte) return;
   let essai = null;
-  if (!compte.paid) {
+  if (!quizIllimite(compte)) {
     const r = await quizEssaiCompter(compte, 'sujet:' + id);
     if (r.status) return res.status(r.status).json(r.body);
     essai = r.essai;
