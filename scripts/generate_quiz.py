@@ -7,7 +7,7 @@ Données : table Supabase quiz_questions, servie par /api/quiz/catalogue et /api
 Usage   : python3 scripts/generate_quiz.py
 
 Accès : compte PassCRPE (projet Supabase « crpe », le même que le tuteur IA), créé sur /quizcrpe ou sur l'accueil. Test de positionnement gratuit et obligatoire
-(90 questions, 10 par matière, adaptatif : chaque matière commence en intermédiaire, puis monte ou descend d'un niveau selon la réponse ; carte des forces et faiblesses), puis paiement PayPal (79 € TTC pour 1 an d'accès) pour débloquer le quiz. Le serveur
+(90 questions, 10 par matière, adaptatif : chaque matière commence en intermédiaire, puis monte ou descend d'un niveau selon la réponse ; carte des forces et faiblesses), puis paiement PayPal (89 € TTC pour 1 an d'accès) pour débloquer le quiz. Le serveur
 (app.js) vérifie le paiement avant de servir les questions.
 
 Fonctionnement du quiz :
@@ -39,7 +39,7 @@ MATIERES = [
     ('arts', 'Arts', '🎨'),
     ('anglais', 'Anglais', '🇬🇧'),
 ]
-PRIX = '79 €'
+PRIX = '89 €'
 # Profil : mêmes listes que le tuteur IA (src/App.jsx, CONCOURS_LIST et ACADEMIES_LIST)
 CONCOURS = [
     'Concours externe et externe spécial — Bac+3',
