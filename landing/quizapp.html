@@ -314,7 +314,7 @@
     .ep-oral-badge { font-size: 11.5px; font-weight: 800; padding: 2px 8px; border-radius: 999px; background: #fff; border: 1px solid var(--gray-200); color: var(--gray-500); text-transform: uppercase; letter-spacing: .03em; }
     @media (max-width: 760px) { .ep-choix { grid-template-columns: 1fr; } }
     .ep-carte .ep-badge.neuf { background: #ffedd5; color: #9a3412; }
-    /* Type de quiz : Quiz, Quiz sujets, Oral (à venir) */
+    /* Type de quiz : Quiz, Quiz sujets ; Didactique, Rédaction et Oral (à venir) */
     .ep-switch { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 14px; }
     .ep-sw { display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 12px; border: 2px solid var(--gray-200); background: #fff; font: inherit; font-size: 14px; font-weight: 700; color: var(--gray-600); cursor: pointer; }
     .ep-sw:hover { border-color: #fdba74; }
@@ -432,8 +432,10 @@
       .quiz-tabbar a:hover { background: var(--gray-50); color: var(--gray-900); }
       .quiz-tabbar a.actif { background: var(--indigo-50); color: var(--indigo-700); }
       .quiz-tabbar .tb-c { display: none; } .quiz-tabbar .tb-l { display: inline; }
-      .quiz-wrap { --larg: 780px; max-width: none; margin: 0 0 0 232px; padding-left: max(32px, calc((100vw - 232px - var(--larg)) / 2)); padding-right: max(32px, calc((100vw - 232px - var(--larg)) / 2)); padding-bottom: 72px; }
-      body.qz-large .quiz-wrap { --larg: 1000px; }
+      .quiz-wrap { --larg: 820px; max-width: none; margin: 0 0 0 232px; padding-left: 40px; padding-right: 40px; padding-bottom: 72px; }
+      .quiz-wrap > * { max-width: var(--larg); }
+      body.qz-large .quiz-wrap { --larg: 1340px; }
+      body.qz-avec-disc .quiz-wrap { --larg: 1200px; }
     }
     /* Choix des domaines (onboarding et profil) */
     .dm-grille { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0; }
@@ -451,10 +453,34 @@
     .dm-compte { font-weight: 800; color: var(--indigo-700); }
     @media (max-width: 600px) { .dm-grille { grid-template-columns: 1fr; } }
     /* Parcours */
-    .pc-hero { position: relative; overflow: hidden; border-radius: 22px; padding: 28px 30px; color: #fff; background: radial-gradient(520px 260px at 78% 120%, rgba(249,115,22,.45), transparent 70%), linear-gradient(120deg, #1e1b4b, #312e81 55%, #3b1d4a); display: grid; grid-template-columns: 1fr auto; gap: 22px; align-items: center; }
+    .pc-hero { position: relative; overflow: hidden; border-radius: 22px; padding: 30px 34px; color: #fff; background: radial-gradient(520px 260px at 72% 125%, rgba(249,115,22,.5), transparent 70%), linear-gradient(120deg, #1e1b2e, #2a1f3d 60%, #3b1d24); box-shadow: 0 20px 40px -24px rgba(30,27,46,.6); display: grid; grid-template-columns: 1fr auto; gap: 22px; align-items: center; }
     .pc-hero .sur { color: #fdba74; font-weight: 800; font-size: 14px; }
     .pc-hero h2 { margin: 6px 0 8px; font-size: 30px; letter-spacing: -.02em; color: #fff; }
-    .pc-hero p { margin: 0 0 16px; color: #c7d2fe; font-size: 15px; line-height: 1.5; }
+    .pc-auj { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 0 0 10px; color: #fde68a; font-size: 14px; font-weight: 600; }
+    .pc-auj b { color: #fff; }
+    /* Séance du jour : bandeau (chrono, pause, objectif), pause, rapport */
+    .sc-bloc { padding: 16px 20px; position: sticky; top: 70px; z-index: 15; }
+    .sc-tete { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; }
+    .sc-titre { font-weight: 800; color: #c2410c; }
+    .sc-chrono { font-weight: 800; font-size: 18px; font-variant-numeric: tabular-nums; color: #1e1b2e; background: #fff7ed; border: 1.5px solid #fdba74; border-radius: 10px; padding: 4px 10px; }
+    .sc-chrono.fin { color: #b91c1c; background: #fef2f2; border-color: #fca5a5; }
+    .sc-pause-btn { font: inherit; font-size: 13px; font-weight: 700; border: 1.5px solid var(--gray-200); background: #fff; border-radius: 10px; padding: 5px 10px; cursor: pointer; }
+    .sc-pause-btn:hover { border-color: #fdba74; }
+    .sc-obj { font-size: 14px; color: var(--gray-600); display: flex; flex-direction: column; line-height: 1.35; }
+    .sc-obj b { color: var(--gray-900); }
+    .sc-obj small { font-size: 12px; color: var(--gray-500); }
+    .sc-terminer { margin-left: auto; }
+    .sc-barre { height: 4px; background: var(--gray-100); border-radius: 4px; overflow: hidden; margin: 8px 0 6px; }
+    .sc-barre i { display: block; height: 100%; background: #f97316; transition: width 1s linear; }
+    .sc-info { margin: 0; font-size: 13px; color: var(--gray-500); }
+    body.sc-en-pause .lc-main > .lc-tete, body.sc-en-pause .lc-main > .lc-q, body.sc-en-pause .lc-valider, body.sc-en-pause #lc-bilan { filter: blur(6px); pointer-events: none; user-select: none; }
+    .sc-obj-fin { font-size: 15px; background: #fff7ed; border-radius: 12px; padding: 10px 14px; margin: 14px 0; }
+    .sc-obj-fin.ok { background: #f0fdf4; }
+    .sc-mats { display: grid; gap: 6px; text-align: left; max-width: 420px; margin: 0 auto 14px; font-size: 14px; }
+    .sc-mats div { display: flex; justify-content: space-between; border-bottom: 1px solid var(--gray-100); padding: 4px 0; }
+    .sc-h { text-align: left; margin: 18px 0 6px; font-size: 16px; }
+    @media (max-width: 1099px) { .sc-bloc { top: 8px; } }
+    .pc-hero p { margin: 0 0 16px; color: #d1d5db; font-size: 15px; line-height: 1.5; }
     .pc-puces { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 18px; }
     .pc-puces span { background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); border-radius: 999px; padding: 5px 12px; font-size: 13px; font-weight: 600; }
     .pc-puces button { background: none; border: 0; color: #fdba74; font: inherit; font-size: 13px; font-weight: 800; text-decoration: underline; cursor: pointer; padding: 5px 4px; }
@@ -464,7 +490,7 @@
     .pc-anneau svg { transform: rotate(-90deg); display: block; }
     .pc-anneau div { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; }
     .pc-anneau strong { font-size: 32px; font-weight: 900; }
-    .pc-anneau small { color: #c7d2fe; font-size: 12px; }
+    .pc-anneau small { color: #d1d5db; font-size: 12px; }
     .pc-h { font-size: 20px; color: var(--gray-900); margin: 34px 0 4px; letter-spacing: -.01em; }
     .pc-sous { color: var(--gray-500); font-size: 14px; margin: 0 0 14px; line-height: 1.5; }
     .pc-ech { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; }
@@ -553,6 +579,243 @@
       .pc-epreuve, .pc-adm { padding: 16px; }
       .pc-sous-etapes > li { grid-template-columns: 30px 1fr; } .pc-sous-etapes > li > .pc-avenir { grid-column: 2; justify-self: start; }
     }
+
+    /* ── Coque d'application (ordinateur) : barre latérale avec logo et compte, barre de progression en haut ── */
+    .quiz-tabbar .qz-logo, .qz-side-compte, .qz-topbar { display: none; }
+    @media (min-width: 1100px) {
+      body { background: #f9fafb; }
+      nav.site-nav.nav-app { display: none; }
+      .quiz-tabbar { top: 0; padding: 18px 12px 0; background: #fff; }
+      .quiz-tabbar .qz-logo { display: flex; flex-direction: row; max-width: none; flex: 0 0 auto; border-radius: 0; gap: 12px; align-items: center; padding: 4px 8px 22px; text-decoration: none; }
+      .qz-logo .ic { width: 42px; height: 42px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg, #f97316, #fb923c); color: #fff; box-shadow: 0 6px 16px -6px rgba(249,115,22,.7); }
+      .qz-logo .ic svg { width: 22px; height: 22px; }
+      .qz-logo b { display: block; font-size: 16px; font-weight: 800; color: var(--gray-900); }
+      .qz-logo small { display: block; font-size: 12px; color: var(--gray-500); font-weight: 600; }
+      .quiz-tabbar a.qz-logo:hover { background: none; }
+      .quiz-tabbar a.actif { background: #f97316; color: #fff; box-shadow: 0 8px 18px -8px rgba(249,115,22,.8); }
+      .quiz-tabbar a.actif:hover { background: #ea580c; color: #fff; }
+      .qz-side-compte { display: block; margin-top: auto; border-top: 1px solid var(--gray-100); padding: 14px 8px 16px; }
+      .qz-side-compte .id { display: flex; gap: 10px; align-items: center; }
+      .qz-side-compte .av { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: #fff7ed; color: #c2410c; font-weight: 900; font-size: 16px; flex-shrink: 0; }
+      .qz-side-compte strong { display: block; font-size: 14px; color: var(--gray-900); }
+      .qz-side-compte small { display: block; font-size: 12px; font-weight: 700; color: #c2410c; }
+      .qz-side-compte .liens { display: flex; gap: 6px; margin-top: 10px; }
+      .qz-side-compte .liens a { flex: 1; display: block; white-space: nowrap; text-align: center; padding: 7px 2px; border-radius: 8px; border: 1px solid var(--gray-200); font-size: 11.5px; font-weight: 700; color: var(--gray-600); text-decoration: none; }
+      .qz-side-compte .liens a:hover { border-color: var(--indigo-600); color: var(--indigo-700); }
+      .qz-topbar { display: flex; align-items: center; gap: 14px; position: sticky; top: 0; z-index: 80; margin-left: 232px; padding: 14px 32px; background: rgba(255,255,255,.94); backdrop-filter: blur(10px); border-bottom: 1px solid var(--gray-100); font-size: 14px; color: var(--gray-500); }
+      .qz-topbar .ech { flex: 0 1 auto; min-width: 0; margin-left: 10px; padding-left: 14px; border-left: 1px solid var(--gray-200); display: flex; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; align-items: center; gap: 6px; font-size: 12px; }
+      .qz-topbar .ech::-webkit-scrollbar { display: none; }
+      .qz-topbar .ech .t { font-weight: 800; color: var(--gray-700); margin-right: 2px; white-space: nowrap; flex-shrink: 0; }
+      .qz-topbar .ech .e { flex-shrink: 0; }
+      .qz-topbar .ech .e { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px 3px 3px; border-radius: 999px; border: 1px solid var(--gray-200); background: #fff; color: var(--gray-700); font-weight: 700; white-space: nowrap; }
+      .qz-topbar .ech .e b { padding: 2px 8px; border-radius: 999px; background: var(--gray-100); color: var(--gray-600); font-size: 11.5px; font-weight: 900; }
+      .qz-topbar .ech .e small { color: var(--gray-400); font-weight: 600; font-size: 12px; }
+      .qz-topbar .ech .e.proche { border-color: #fed7aa; background: #fff7ed; } .qz-topbar .ech .e.proche b { background: #f97316; color: #fff; }
+      .qz-topbar .ech .e.cle { border: 1.5px solid #f97316; } .qz-topbar .ech .e.cle b { background: var(--gray-900); color: #fff; }
+      .qz-topbar .ech .e.passe { opacity: .5; }
+      .pc-ech-bloc { display: none; }
+      .qz-topbar > span, .qz-topbar .pill { white-space: nowrap; flex-shrink: 0; }
+      .qz-topbar { gap: 10px; padding-left: 28px; padding-right: 24px; }
+      .qz-topbar .pill { padding: 6px 11px; }
+      .qz-topbar .pill.moy { background: #fff7ed; border-color: #fed7aa; color: #9a3412; }
+      .qz-topbar .ech { margin-left: 4px !important; padding-left: 12px !important; gap: 5px !important; -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent); mask-image: linear-gradient(90deg, #000 calc(100% - 24px), transparent); padding-right: 18px; }
+      @media (max-width: 1599px) { .qz-topbar .tb-prog { display: none; } }
+      .qz-topbar .jauge { width: 80px; height: 6px; border-radius: 9px; background: var(--gray-200); overflow: hidden; }
+      .qz-topbar .jauge i { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #f97316, #fb923c); transition: width .4s; }
+      .qz-topbar .pills { margin-left: auto; display: flex; gap: 8px; }
+      .qz-topbar .pill { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; border-radius: 999px; border: 1px solid var(--gray-200); background: #fff; font-weight: 800; font-size: 13px; color: var(--gray-900); }
+      .quiz-wrap { padding-top: 28px; }
+      .quiz-wrap > h1 { display: none; }
+    }
+    /* Questions : carte avec le numéro, la question et des choix à cocher */
+    .qz-question .quiz-top > span:last-child { display: none; } /* le numéro est au-dessus de la question */
+    .qz-num { margin: 4px 0 6px; font-size: 13px; font-weight: 800; color: #e11d48; }
+    .qz-question .quiz-q { font-size: 18px; margin-bottom: 16px; }
+    .quiz-choice { position: relative; padding: 15px 16px 15px 50px; border-radius: 12px; border: 1.5px solid var(--gray-200); font-weight: 500; }
+    .quiz-choice::before { content: ''; position: absolute; left: 16px; top: 50%; width: 20px; height: 20px; margin-top: -10px; border-radius: 50%; border: 2px solid var(--gray-400); background: #fff; box-sizing: border-box; transition: border-color .15s, box-shadow .15s; }
+    .quiz-choice:hover:not(:disabled)::before { border-color: #f97316; }
+    .quiz-choice.sel::before { border-color: #f97316; box-shadow: inset 0 0 0 4px #fff; background: #f97316; }
+    .quiz-choice.good::before { border-color: #16a34a; background: #16a34a; box-shadow: inset 0 0 0 4px #fff; }
+    .quiz-choice.bad::before { border-color: #dc2626; background: #dc2626; box-shadow: inset 0 0 0 4px #fff; }
+    .qz-question { border-radius: 20px; border: 1px solid var(--gray-200); box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 8px 24px rgba(16,24,40,.04); }
+
+    /* ── Écran du quiz : menu des disciplines à gauche, quiz à droite (ordinateur) ── */
+    .qz-disc { display: none; }
+    @media (min-width: 1100px) {
+      body.qz-avec-disc .qz-disc-grille { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: 24px; align-items: start; }
+      body.qz-avec-disc .qz-disc { display: block; position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow: auto; }
+      body.qz-avec-disc .qz-barre { top: 64px; }
+    }
+    .qd-carte { background: #fff; border: 1px solid var(--gray-200); border-radius: 18px; padding: 16px 14px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 8px 22px rgba(16,24,40,.05); }
+    .qd-carte .lbl { display: block; padding: 0 6px; font-size: 12px; font-weight: 800; color: #e11d48; }
+    .qd-carte h4 { margin: 3px 6px 8px; font-size: 15px; color: var(--gray-900); }
+    .lc-info { margin: -4px 6px 10px; font-size: 13px; color: var(--gray-500); }
+    .lc-info b { color: var(--gray-900); }
+    .qd-carte .barre { height: 5px; margin: 0 6px 10px; border-radius: 9px; background: var(--gray-100); overflow: hidden; }
+    .qd-carte .barre i { display: block; height: 100%; border-radius: 9px; background: linear-gradient(90deg, #e11d48, #fb923c); }
+    .qd-sous { margin: 10px 6px 4px; font-size: 11.5px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; letter-spacing: .05em; }
+    .qd-it { display: grid; grid-template-columns: 24px 1fr auto; gap: 10px; align-items: center; width: 100%; text-align: left; padding: 8px 8px; border: 0; border-radius: 10px; background: none; font: inherit; color: var(--gray-700); cursor: pointer; }
+    .qd-it:hover:not(:disabled) { background: var(--gray-50); }
+    .qd-it.on { background: #fff1f2; color: #be123c; }
+    .qd-it:disabled { cursor: default; color: var(--gray-400); }
+    .qd-it .pt { width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 11px; font-weight: 900; border: 2px solid var(--gray-300); color: var(--gray-500); background: #fff; }
+    .qd-it .pt.fini { background: #10b981; border-color: #10b981; color: #fff; }
+    .qd-it .pt.cours { border-color: #f97316; color: #c2410c; }
+    .qd-it .pt.ferme { border-color: var(--gray-200); background: var(--gray-100); font-size: 10px; }
+    .qd-it.on .pt { border-color: #e11d48; color: #be123c; }
+    .qd-it .nm { font-size: 14px; font-weight: 600; line-height: 1.3; }
+    .qd-it .nb { font-size: 11.5px; font-weight: 700; color: var(--gray-400); white-space: nowrap; }
+    .qd-it.on .nb { color: #e11d48; }
+    /* Parcours : les 3 étapes avec toutes leurs matières */
+    .pc-fil.liste { align-items: start; }
+    .pc-fl { list-style: none; margin: 14px auto 0; padding: 0; max-width: 270px; display: grid; gap: 4px; text-align: left; }
+    .pc-fl button { display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; align-items: center; width: 100%; padding: 7px 10px; border: 1px solid var(--gray-200); border-radius: 10px; background: #fff; font: inherit; font-size: 13px; color: var(--gray-700); cursor: pointer; text-align: left; }
+    .pc-fl button:hover:not(:disabled) { border-color: #f97316; background: #fff7ed; }
+    .pc-fl button:disabled { cursor: default; background: var(--gray-50); color: var(--gray-500); }
+    .pc-fl .nb { font-size: 11.5px; font-weight: 800; color: var(--gray-400); white-space: nowrap; }
+    .pc-fl .ic { text-align: center; }
+    @media (max-width: 860px) {
+      .pc-fil.liste { grid-template-columns: 1fr; gap: 22px; }
+      .pc-fil.liste::before { display: none; }
+      .pc-fl { max-width: none; }
+    }
+
+    /* ── Parcours : plan d'apprentissage vertical, à droite ── */
+    .pc-grille { display: grid; grid-template-columns: minmax(0, 1fr) 350px; gap: 28px; align-items: start; }
+    .pc-plan { position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow: auto; padding: 2px 4px 12px 2px; }
+    .pc-plan-mobile { display: none; }
+    @media (max-width: 1099px) { .pc-grille { display: block; } .pc-plan { display: none; } .pc-plan-mobile { display: block; margin-top: 30px; } }
+    .pp { background: #fff; border: 1px solid var(--gray-200); border-radius: 20px; padding: 20px 18px; box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 8px 24px rgba(16,24,40,.05); }
+    .pp > h3 { margin: 0 0 4px; font-size: 18px; color: var(--gray-900); }
+    .pp > .sous { margin: 0 0 16px; font-size: 13px; color: var(--gray-500); line-height: 1.5; }
+    .pp-tl { position: relative; padding-left: 44px; }
+    .pp-tl::before { content: ''; position: absolute; left: 17px; top: 18px; bottom: 18px; width: 3px; border-radius: 3px; background: var(--gray-200); }
+    .pp-pas { position: relative; padding-bottom: 20px; }
+    .pp-pas:last-child { padding-bottom: 0; }
+    .pp-pas .num { position: absolute; left: -44px; top: 0; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; font-size: 17px; line-height: 1; background: #fff; border: 2px solid var(--gray-300); z-index: 1; }
+    .pp-pas.actuel .num { border: 3px solid #f97316; background: #fff7ed; box-shadow: 0 0 0 5px rgba(249,115,22,.14); }
+    .pp-pas.fini .num { background: #10b981; border-color: #10b981; color: #fff; }
+    .pp-pas.bientot .num { filter: grayscale(1); opacity: .75; }
+    .pp-pas .lbl { display: block; font-size: 12px; font-weight: 800; color: #e11d48; }
+    .pp-pas h4 { margin: 2px 0 2px; font-size: 16px; color: var(--gray-900); }
+    .pp-pas .quand { display: inline-block; margin: 4px 0 8px; font-size: 12.5px; font-weight: 700; color: #c2410c; background: #fff7ed; border: 1px solid #fed7aa; padding: 3px 9px; border-radius: 999px; }
+    .pp-pas.bientot .quand { color: var(--gray-500); background: var(--gray-50); border-color: var(--gray-200); }
+    .pp-obj { font-size: 13px; color: var(--gray-600); line-height: 1.5; }
+    .pp-obj b { color: var(--gray-900); }
+    .pp-barre { height: 7px; border-radius: 9px; background: var(--gray-100); overflow: hidden; margin: 6px 0 4px; }
+    .pp-barre i { display: block; height: 100%; border-radius: 9px; background: linear-gradient(90deg, #f97316, #fb923c); }
+    .pp-tests { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; margin: 10px 0 4px; }
+    .pp-tests span { display: flex; gap: 6px; align-items: center; padding: 6px 8px; border-radius: 9px; border: 1px dashed #fdba74; background: #fffaf5; font-size: 12px; font-weight: 700; color: #9a3412; }
+    .pp-tests button { display: flex; gap: 6px; align-items: center; padding: 6px 8px; border-radius: 9px; font: inherit; font-size: 12px; font-weight: 700; text-align: left; cursor: pointer; }
+    .pp-tests button.pret { border: 1.5px solid #f97316; background: #fff7ed; color: #9a3412; box-shadow: 0 0 0 3px rgba(249,115,22,.12); }
+    .pp-tests button.pret:hover { background: #ffedd5; }
+    .pp-tests button.fait { border: 1px solid #a7f3d0; background: #ecfdf5; color: #065f46; }
+    .pp-tests button span { display: block; color: inherit; padding: 0; border: 0; background: none; }
+    .pp-tests button small { display: block; font-size: 11px; font-weight: 600; }
+    .qz-pop { position: fixed; inset: 0; z-index: 300; display: grid; place-items: center; padding: 16px; background: rgba(17,24,39,.55); backdrop-filter: blur(3px); animation: qzPop .2s ease-out; }
+    .qz-pop-carte { width: min(460px, 100%); background: #fff; border-radius: 22px; padding: 28px 26px 22px; text-align: center; box-shadow: 0 24px 60px rgba(0,0,0,.25); }
+    .qz-pop-ico { width: 64px; height: 64px; margin: 0 auto 10px; border-radius: 50%; display: grid; place-items: center; font-size: 32px; background: #fff7ed; box-shadow: 0 0 0 8px rgba(249,115,22,.12); }
+    .qz-pop-sur { margin: 0; font-size: 12px; font-weight: 800; color: #e11d48; }
+    .qz-pop-carte h2 { margin: 4px 0 8px; font-size: 24px; color: var(--gray-900); }
+    .qz-pop-carte p { color: var(--gray-600); line-height: 1.55; }
+    .qz-pop-carte .quiz-actions { justify-content: center; }
+    @keyframes qzPop { from { opacity: 0; } to { opacity: 1; } }
+    .pp-tests span.ferme { border-style: solid; border-color: var(--gray-200); background: var(--gray-50); color: var(--gray-500); }
+    .pp-tests small { display: block; font-size: 11px; font-weight: 600; }
+    .pp-tests span span { display: block; padding: 0; border: 0; background: none; color: inherit; }
+    .pp-tests span.ferme small { font-weight: 500; }
+    .pp-pas .pc-fl { margin: 10px 0 0; max-width: none; }
+    .pp-pas .pc-fl button { padding: 6px 9px; font-size: 12.5px; }
+
+    /* ── Page d'une étape : sommaire des thèmes à gauche, questions à la suite à droite ── */
+    .lc-grille { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 24px; align-items: start; }
+    .lc-side { position: sticky; top: 76px; max-height: calc(100vh - 92px); overflow: auto; }
+    .lc-side summary { list-style: none; cursor: pointer; }
+    .lc-side summary::-webkit-details-marker { display: none; }
+    .lc-retour { display: inline-block; margin: 0 6px 10px; font-size: 13px; font-weight: 700; color: var(--gray-500); text-decoration: none; background: none; border: 0; padding: 0; cursor: pointer; font-family: inherit; }
+    .lc-retour:hover { color: #c2410c; }
+    .lc-tete { margin-bottom: 16px; }
+    .lc-tete h2 { margin: 0 0 6px; font-size: 24px; }
+    .lc-tete p { margin: 0; color: var(--gray-500); font-size: 14px; }
+    .lc-tete .lc-compte { margin-top: 12px; display: flex; gap: 12px; align-items: center; font-size: 13px; font-weight: 700; color: var(--gray-600); }
+    .lc-tete .lc-compte .pp-barre { flex: 1; max-width: 260px; margin: 0; }
+    .lc-q { margin-bottom: 16px; scroll-margin-top: 80px; }
+    .lc-q .quiz-feedback { margin-top: 14px; }
+    .lc-q.repondue { border-color: var(--gray-200); }
+    .lc-bilan { text-align: center; }
+    .lc-bilan .big small { font-size: 22px; color: var(--gray-500); }
+    .lc-bilan .lc-pc { margin: 0 0 6px; font-weight: 700; color: var(--gray-600); }
+    .lc-q.choisie { border-color: #fdba74; }
+    .lc-q .quiz-btn.on { background: #fff7ed; border-color: #f97316; color: #c2410c; }
+    .lc-valider { position: sticky; bottom: 12px; z-index: 20; display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 8px 0 16px; padding: 12px 14px 12px 18px; background: rgba(255,255,255,.97); border: 1.5px solid #fed7aa; border-radius: 18px; box-shadow: 0 10px 30px rgba(16,24,40,.12); font-size: 14px; font-weight: 700; color: var(--gray-600); }
+    .lc-valider .quiz-btn { margin: 0; }
+    @media (max-width: 1099px) { .lc-valider { bottom: 78px; } }
+    .lc-bilan .big { font-size: 46px; font-weight: 900; color: var(--gray-900); margin: 6px 0; }
+    .lc-bilan .quiz-actions { justify-content: center; }
+    @media (max-width: 1099px) { .lc-grille { display: block; } .lc-side { position: static; max-height: none; margin-bottom: 16px; } .lc-side .qd-carte { margin-bottom: 0; } }
+    /* ── Parcours : frise verticale ── */
+    .pc-section { margin-top: 38px; scroll-margin-top: 80px; }
+    .pc-section-tete { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; margin-bottom: 16px; }
+    .pc-section-tete h3 { margin: 0; font-size: 21px; color: var(--gray-900); letter-spacing: -.01em; }
+    [data-pc-plier] { cursor: pointer; user-select: none; border-radius: 12px; }
+    [data-pc-plier]:hover h3 { color: #c2410c; }
+    [data-pc-plier]:focus-visible { outline: 3px solid rgba(249,115,22,.4); outline-offset: 4px; }
+    [data-pc-plier] { position: relative; padding: 14px 150px 14px 18px; background: #fff; border: 1px solid var(--gray-200); }
+    .pc-section.replie [data-pc-plier] { background: #fffaf5; border-color: #fed7aa; }
+    .pc-plier-btn { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); padding: 8px 14px; border-radius: 999px; background: #f97316; color: #fff; font-size: 13.5px; font-weight: 800; white-space: nowrap; box-shadow: 0 4px 12px rgba(249,115,22,.3); }
+    [data-pc-plier]:hover .pc-plier-btn { background: #ea580c; }
+    .pc-plier-btn .ferme, .pc-section.replie .pc-plier-btn .ouvert { display: none; }
+    .pc-section.replie .pc-plier-btn .ferme { display: inline; }
+    @media (max-width: 600px) { [data-pc-plier] { padding: 56px 14px 14px; } .pc-plier-btn { top: 12px; right: auto; left: 14px; transform: none; } }
+    .pc-section.replie > :not(.pc-section-tete) { display: none; }
+    .pc-section.replie .pc-section-tete { margin-bottom: 0; }
+    .pc-section-tete p { margin: 0; color: var(--gray-500); font-size: 14px; }
+    .pc-section-tete em { font-style: normal; font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 999px; background: var(--gray-100); color: var(--gray-500); }
+    .pc-tl { position: relative; padding-left: 64px; }
+    .pc-tl::before { content: ''; position: absolute; left: 21px; top: 22px; bottom: 22px; width: 3px; border-radius: 3px; background: var(--gray-200); }
+    .pc-tl .pc-fait-ligne { position: absolute; left: 21px; top: 22px; width: 3px; border-radius: 3px; background: #10b981; }
+    .pc-partie { position: relative; margin: 6px 0 12px; font-size: 13px; font-weight: 800; color: var(--gray-500); text-transform: uppercase; letter-spacing: .06em; }
+    .pc-item { position: relative; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; background: #fff; border: 1px solid var(--gray-200); border-radius: 18px; padding: 18px 22px; margin-bottom: 14px; box-shadow: 0 1px 2px rgba(16,24,40,.04), 0 6px 18px rgba(16,24,40,.04); }
+    .pc-item .rond { position: absolute; left: -64px; top: 18px; width: 44px; height: 44px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; font-size: 15px; z-index: 1; }
+    .pc-item .rond.fini { background: #10b981; color: #fff; }
+    .pc-item .rond.cours { background: #fff; color: #c2410c; border: 3px solid #f97316; box-shadow: 0 0 0 5px rgba(249,115,22,.14); }
+    .pc-item .rond.afaire { background: #fff; color: var(--gray-500); border: 2px solid var(--gray-300); }
+    .pc-item .rond.ferme { background: var(--gray-100); color: var(--gray-400); border: 2px solid var(--gray-200); font-size: 16px; }
+    .pc-item .lbl { font-size: 12.5px; font-weight: 800; color: #e11d48; }
+    .pc-item h4 { margin: 3px 0 6px; font-size: 17px; color: var(--gray-900); }
+    .pc-item p { margin: 0; font-size: 14px; color: var(--gray-600); line-height: 1.55; }
+    .pc-item .meta { display: block; margin-top: 6px; font-size: 13px; color: var(--gray-400); }
+    .pc-item .meta b { color: var(--gray-700); }
+    .pc-item .barre { height: 6px; max-width: 300px; border-radius: 9px; background: var(--gray-100); overflow: hidden; margin-top: 12px; }
+    .pc-item .barre i { display: block; height: 100%; border-radius: 9px; background: #10b981; }
+    .pc-item.cours .barre i { background: #f97316; }
+    .pc-item .cote { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; }
+    .pc-item .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+    .pc-item .chips button { border: 1px solid var(--gray-200); background: var(--gray-50); border-radius: 999px; padding: 4px 10px; font: inherit; font-size: 12.5px; font-weight: 700; color: var(--gray-700); cursor: pointer; }
+    .pc-item .chips button:hover { border-color: #f97316; color: #c2410c; background: #fff7ed; }
+    .pc-item ol { margin: 8px 0 0 18px; padding: 0; font-size: 13.5px; color: var(--gray-600); line-height: 1.6; }
+    .pc-item.verrou { background: #fcfcfd; }
+    .pc-badge { font-size: 12px; font-weight: 800; padding: 5px 11px; border-radius: 999px; white-space: nowrap; }
+    .pc-badge.fini { background: #d1fae5; color: #047857; }
+    .pc-badge.cours { background: #fff7ed; color: #c2410c; }
+    .pc-badge.afaire { background: var(--gray-100); color: var(--gray-500); }
+    .pc-badge.avenir { background: #eef2ff; color: #4338ca; }
+    .pc-graph { background: #fff; border: 1px solid var(--gray-200); border-radius: 18px; padding: 16px 20px; margin: 0 0 18px; }
+    .pc-graph h4 { margin: 0 0 10px; font-size: 15px; color: var(--gray-900); }
+    .pc-graph .ligne { display: grid; grid-template-columns: 210px 1fr 200px; gap: 12px; align-items: center; padding: 6px 0; font-size: 13.5px; color: var(--gray-600); }
+    .pc-graph .ligne b { color: var(--gray-900); }
+    .pc-graph .fond { height: 10px; border-radius: 9px; background: var(--gray-100); overflow: hidden; display: grid; }
+    .pc-graph .fond i { display: block; height: 100%; border-radius: 9px; grid-area: 1/1; }
+    .pc-graph .fond i.reu { background: rgba(79,70,229,.85); }
+    .pc-graph .fond i.mai { background: #10b981; }
+    @media (max-width: 860px) {
+      .pc-tl { padding-left: 44px; }
+      .pc-tl::before, .pc-tl .pc-fait-ligne { left: 15px; }
+      .pc-item { grid-template-columns: 1fr; padding: 16px; }
+      .pc-item .rond { left: -44px; width: 32px; height: 32px; font-size: 13px; }
+      .pc-item .cote { flex-direction: row; align-items: center; justify-content: space-between; }
+      .pc-graph .ligne { grid-template-columns: 1fr; gap: 4px; }
+    }
     .quiz-tabbar .pastille { position: absolute; top: -2px; right: -3px; width: 8px; height: 8px; border-radius: 50%; background: #ef4444; border: 1.5px solid #fff; }
     /* Essai gratuit et fenêtre de paiement */
     .quiz-niveau:disabled { opacity: .45; cursor: not-allowed; }
@@ -608,11 +871,13 @@
     .prog-groupe .g-tete b::before { content: "▸ "; color: #ea580c; }
     .prog-groupe[open] .g-tete b::before { content: "▾ "; }
     .prog-groupe .g-tete span { font-size: 13px; font-weight: 600; color: var(--gray-500); text-align: right; }
+    .prog-groupe .g-tete { flex: 1 1 auto; min-width: 0; } .prog-groupe .g-tete b { min-width: 0; overflow-wrap: anywhere; } .prog-groupe .g-tete span { flex-shrink: 0; }
     .prog-groupe .g-themes { padding: 0 16px 14px; border-top: 1px solid var(--gray-100); }
     .prog-groupe .g-tete b { white-space: nowrap; }
     @media (max-width: 600px) { .prog-groupe .g-tete { flex-direction: column; align-items: flex-start; gap: 2px; } .prog-groupe .g-tete span { text-align: left; } }
     .prog-groupe .g-tete b { white-space: nowrap; }
     @media (max-width: 600px) { .prog-groupe .g-tete { flex-direction: column; align-items: flex-start; gap: 2px; } .prog-groupe .g-tete span { text-align: left; } }
+    @media (max-width: 600px) { .prog-groupe .g-tete b { white-space: normal; } } /* titres longs (SVT…) : retour à la ligne sur mobile */
     .qz-modes { grid-template-columns: repeat(2, 1fr); }
     .qz-tete { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 14px; margin-bottom: 4px; }
     .qz-tete h2 { margin-bottom: 2px; }
@@ -662,6 +927,7 @@
     .logo-quiz .nav-logo-text small { font-size: 10.5px; font-weight: 700; color: var(--gray-500); letter-spacing: .02em; }
     .logo-quiz .nav-logo-text small b { font-weight: 800; color: var(--indigo-700); }
     .quiz-tabbar a.actif { color: #ea580c; }
+    @media (min-width: 1100px) { .quiz-tabbar a.actif, .quiz-tabbar a.actif:hover { color: #fff; } }
     /* Nom « QuizCRPE by PassCRPE » dans les textes, aux couleurs du logo */
     .marque-q { white-space: nowrap; font-weight: 800; color: #ea580c; }
     .marque-q .by { font-size: .78em; font-weight: 700; color: var(--gray-500); }
@@ -671,6 +937,32 @@
     .qz-page-tete p { font-size: 15px; line-height: 1.6; margin-bottom: 18px; }
     .qz-stats-series { margin-top: 0; }
     .qz-total-q { margin: 6px 0 14px; }
+    .sg-bascule { display: inline-flex; gap: 4px; padding: 4px; margin: 0 0 14px; border-radius: 999px; background: var(--gray-100); }
+    .sg-bascule button { border: 0; background: none; padding: 8px 16px; border-radius: 999px; font: inherit; font-size: 14px; font-weight: 800; color: var(--gray-600); cursor: pointer; }
+    .sg-bascule button[aria-pressed="true"] { background: #fff; color: #c2410c; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+    .sg-etapes { display: flex; gap: 6px; margin: 0 0 14px; border-bottom: 1.5px solid var(--gray-200); }
+    .sg-etapes button { border: 0; background: none; padding: 10px 16px; margin-bottom: -1.5px; border-bottom: 3px solid transparent; font: inherit; font-size: 15px; font-weight: 800; color: var(--gray-500); cursor: pointer; }
+    .sg-etapes button[aria-selected="true"] { color: #c2410c; border-bottom-color: #f97316; }
+    .sg-etapes small { display: inline-block; min-width: 20px; padding: 1px 7px; margin-left: 4px; border-radius: 999px; background: var(--gray-100); color: var(--gray-500); font-size: 12px; text-align: center; }
+    .sg-mode { display: inline-flex; gap: 2px; padding: 3px; margin: 0 0 8px; border-radius: 10px; border: 1px solid var(--gray-200); }
+    .sg-mode button { border: 0; background: none; padding: 5px 11px; border-radius: 8px; font: inherit; font-size: 12.5px; font-weight: 700; color: var(--gray-500); cursor: pointer; }
+    .sg-mode button[aria-pressed="true"] { background: var(--gray-900); color: #fff; }
+    .sg-carte { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 18px; padding: 16px 18px 10px; margin: 0 0 16px; }
+    .sg-tete { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; margin-bottom: 6px; }
+    .sg-tete h3 { margin: 0; font-size: 16px; color: var(--gray-900); }
+    .sg-tete span { font-size: 13px; color: var(--gray-500); } .sg-tete b { color: var(--gray-900); }
+    .sg-zone { position: relative; }
+    .sg { display: block; width: 100%; height: auto; overflow: visible; }
+    .sg text { font-size: 11px; fill: var(--gray-500); font-family: inherit; }
+    .sg .g { stroke: var(--gray-100); stroke-width: 1; }
+    .sg .g10 { stroke: var(--gray-300); stroke-width: 1; stroke-dasharray: 4 4; }
+    .sg .l { fill: none; stroke: #ea580c; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+    .sg .p { fill: #ea580c; stroke: #fff; stroke-width: 2; }
+    .sg .sg-x { stroke: var(--gray-400); stroke-width: 1; }
+    .sg .sg-pt { fill: #ea580c; stroke: #fff; stroke-width: 2.5; }
+    .sg-bulle { position: absolute; pointer-events: none; background: var(--gray-900); color: #fff; border-radius: 10px; padding: 7px 10px; font-size: 12px; line-height: 1.4; white-space: nowrap; box-shadow: 0 6px 16px rgba(0,0,0,.18); }
+    .sg-bulle b, .sg-bulle span, .sg-bulle small { display: block; } .sg-bulle small { color: #d1d5db; }
+    .sg-leg { margin: 4px 0 0; font-size: 12px; color: var(--gray-500); }
     .qz-series { display: grid; gap: 10px; }
     .qz-serie { background: #fff; border: 1.5px solid var(--gray-200); border-radius: 16px; overflow: hidden; }
     .qz-serie summary { list-style: none; display: flex; align-items: center; gap: 14px; padding: 14px 16px; cursor: pointer; }
@@ -944,13 +1236,14 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </nav>
 
+<div class="qz-topbar" id="qz-topbar"><span class="tb-prog" title="Progression des écrits : notions maîtrisées">Progression</span><span class="jauge"><i id="qz-tb-jauge"></i></span><span id="qz-tb-txt" title="Progression des écrits : notions maîtrisées"></span><div class="ech" id="qz-tb-ech"></div><span class="pills"><span class="pill moy" id="qz-tb-moy" title="Moyenne de toutes tes séries">📊 Moyenne – / 20</span><span class="pill" id="qz-tb-serie" title="Jours d’affilée avec au moins une série">🔥 0 jour</span><span class="pill" id="qz-tb-q" title="Questions répondues dans les séries">✅ 0 question</span></span></div>
 <main class="quiz-wrap">
   <h1><span class="marque-q">Le Quiz CRPE <span class="by">by</span> <b>PassCRPE</b></span></h1>
   <p class="quiz-confirm" id="quiz-confirm" hidden>✓ Votre adresse e-mail est confirmée : bienvenue sur le <span class="marque-q">Quiz CRPE <span class="by">by</span> <b>PassCRPE</b></span> !</p>
   <p class="quiz-lead">Lancez des séries de 20 questions rattachées au programme du concours, par matière et par niveau. Chaque notion est posée sous plusieurs formes : avec 3 bonnes réponses, elle est maîtrisée. En cas d'erreur, vous voyez l'explication et une question similaire revient plus tard.</p>
-  <div id="quiz-app"></div>
+  <div class="qz-disc-grille"><aside class="qz-disc" id="qz-disc" aria-label="Disciplines"></aside><div id="quiz-app"></div></div>
 </main>
-<nav class="quiz-tabbar" aria-label="Navigation du quiz"><a href="/quizapp" class="actif" aria-current="page" data-vue=""><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></svg></span><span class="tb-l">Mon parcours</span><span class="tb-c">Parcours</span></a><a href="/quizapp?vue=quiz" data-vue="quiz"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span class="tb-l">Quiz</span><span class="tb-c">Quiz</span></a><a href="/quizapp?vue=series" data-vue="series"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tb-l">Mes séries</span><span class="tb-c">Séries</span></a><a href="/quizapp?vue=notions" data-vue="notions"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg></span><span class="tb-l">Tableau des notions</span><span class="tb-c">Notions</span></a><a href="/quizapp?vue=test" data-vue="test"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span><span class="tb-l">Mon test de positionnement</span><span class="tb-c">Mon test</span></a><a href="/quizapp?vue=support" id="tab-support" data-vue="support"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg><span class="pastille" hidden></span></span><span class="tb-l">Support</span><span class="tb-c">Support</span></a><a href="/quizapp?vue=profil" data-vue="profil"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="tb-l">Profil</span><span class="tb-c">Profil</span></a></nav>
+<nav class="quiz-tabbar" aria-label="Navigation du quiz"><a href="/quizapp" class="qz-logo" aria-label="Le Quiz CRPE by PassCRPE"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.5"/></svg></span><span><b>Le Quiz CRPE</b><small>by PassCRPE</small></span></a><a href="/quizapp" class="actif" aria-current="page" data-vue=""><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></svg></span><span class="tb-l">Mon parcours</span><span class="tb-c">Parcours</span></a><a href="/quizapp?vue=series" data-vue="series"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></span><span class="tb-l">Mes séries</span><span class="tb-c">Séries</span></a><a href="/quizapp?vue=notions" data-vue="notions"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 6h13M8 12h13M8 18h13"/><path d="M3 6h.01M3 12h.01M3 18h.01"/></svg></span><span class="tb-l">Tableau des notions</span><span class="tb-c">Notions</span></a><a href="/quizapp?vue=test" data-vue="test"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span><span class="tb-l">Mon test de positionnement</span><span class="tb-c">Mon test</span></a><a href="/quizapp?vue=support" id="tab-support" data-vue="support"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg><span class="pastille" hidden></span></span><span class="tb-l">Support</span><span class="tb-c">Support</span></a><a href="/quizapp?vue=profil" data-vue="profil"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><span class="tb-l">Profil</span><span class="tb-c">Profil</span></a><div class="qz-side-compte" id="qz-side-compte"></div></nav>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
   // Menu du compte dans l'en-tête : nom du profil et accès aux deux outils
@@ -1188,12 +1481,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
   function libelleThemes(n) { return n ? n + ' thème' + (n > 1 ? 's' : '') + ' choisi' + (n > 1 ? 's' : '') : 'Choisir mes thèmes'; }
   function barreFiltres(enSerie) {
+    setTimeout(dessinerDisc);
     if (enSerie && st && st.sj) {
       return '<div class="qz-barre en-serie"><span class="qz-bandeau"><span class="qz-dd-ico">📄</span><b>Quiz sujets</b> · ' + SJ_CONCOURS[st.concours] + ' · ' +
         (st.mat === 'tout' ? 'Toutes les matières' : esc(label(st.mat))) + '</span><button type="button" class="quiz-link qz-quitter" data-act="quitter">Quitter la série</button></div>';
     }
     if (enSerie && st && st.cible) {
-      return '<div class="qz-barre en-serie"><span class="qz-bandeau"><span class="qz-dd-ico">🎯</span><b>Révision ciblée</b> · ' + pluriel(st.cible, 'notion') + '</span>' +
+      return '<div class="qz-barre en-serie"><span class="qz-bandeau"><span class="qz-dd-ico">' + (st.test != null ? '🧪' : '🎯') + '</span><b>' + (st.test != null ? 'Test ' + (st.test + 1) : 'Révision ciblée') + '</b> · ' + (st.test != null ? pluriel(st.cible, 'question') : pluriel(st.cible, 'notion')) + '</span>' +
         '<button type="button" class="quiz-link qz-quitter" data-act="quitter">Quitter la série</button></div>';
     }
     if (enSerie && st) {
@@ -1255,6 +1549,12 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<button type="button" class="ep-carte" data-epreuve="sujets"><span class="ep-ico">📄</span><b>Quiz sujets</b>' +
       '<span class="ep-txt">Uniquement des questions tirées des sujets officiels 2025 et 2026, au bac+3 ou au bac+5, dans les 9 matières. La banque s’enrichit à chaque session.</span>' +
       '<span class="ep-badge neuf">Nouveau</span><span class="ep-go">Commencer le quiz sujets →</span></button>' +
+      '<div class="ep-carte off" aria-disabled="true"><span class="ep-ico">📚</span><b>Quiz didactique</b>' +
+      '<span class="ep-txt">La didactique des disciplines : démarches d’enseignement, obstacles et erreurs des élèves, analyse de productions.</span>' +
+      '<span class="ep-badge">À venir</span></div>' +
+      '<div class="ep-carte off" aria-disabled="true"><span class="ep-ico">📝</span><b>Quiz rédaction</b>' +
+      '<span class="ep-txt">La rédaction des réponses de l’écrit : structurer, argumenter et rédiger dans une langue correcte.</span>' +
+      '<span class="ep-badge">À venir</span></div>' +
       '<div class="ep-carte off" aria-disabled="true"><span class="ep-ico">🎤</span><b>Oral</b>' +
       '<span class="ep-txt">Les épreuves orales d’admission : entraînement à l’entretien et aux mises en situation.</span>' +
       '<span class="ep-badge">À venir</span></div>' +
@@ -1386,9 +1686,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // ── Navigation interne : Accueil, Mes séries, Support (adresses /quizapp, /quizapp?vue=series, /quizapp?vue=support) ──
   function vue() { return new URLSearchParams(location.search).get('vue') || ''; }
   function marquerOnglet(v) {
-    document.body.classList.remove('qz-large');
+    document.body.classList.remove('qz-large'); majCoque(); if (!/matiere$/.test(vue())) lc = null;
+    document.body.classList.toggle('qz-avec-disc', v === 'quiz'); if (v === 'quiz') dessinerDisc();
     document.querySelectorAll('.quiz-tabbar a[data-vue]').forEach(function (a) {
-      var on = a.dataset.vue === v; a.classList.toggle('actif', on);
+      var on = a.dataset.vue === (v === 'quiz' ? '' : v); a.classList.toggle('actif', on);  // plus d'onglet Quiz : l'écran du quiz relève du parcours
       if (on) a.setAttribute('aria-current', 'page'); else a.removeAttribute('aria-current');
     });
   }
@@ -1414,6 +1715,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (v === 'test') return monTest();
     if (v === 'profil') return profilVue();
     if (v === 'quiz') { ecranCible = 'quiz'; marquerOnglet('quiz'); return boot(); }
+    if (v === 'matiere' || v === 'sujets-matiere') { var pr = new URLSearchParams(location.search), t0 = pr.get('t'); return matiereVue(v === 'matiere' ? 'ecrit' : 'sj', pr.get('m') || 'francais', t0 == null ? null : +t0); }
     ecranCible = 'parcours'; marquerOnglet(''); boot();
   }
   window.addEventListener('popstate', route);
@@ -1495,12 +1797,55 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // Calendrier 2027 : écrits fixés par les arrêtés du 22/09/2026 (JO du 30/09/2026) ; le reste dépend des académies
   var ECRITS = '2027-03-30';
   var ECHEANCES = [
-    ['2026-11-25', 'Clôture des inscriptions', 'mer. 25 nov. 2026, 12 h', 'Sur Cyclades', ''],
-    [ECRITS, 'Écrits d’admissibilité', '30 et 31 mars 2027', 'Toutes les académies', 'cle'],
-    ['2027-04-15', 'Résultats d’admissibilité', 'mi-avril à fin mai 2027', 'Selon ton académie', '≈'],
-    ['2027-05-15', 'Oraux d’admission', 'mai-juin 2027', 'Selon ton académie', '≈'],
-    ['2027-06-20', 'Résultats d’admission', 'fin juin 2027', 'Selon ton académie', '≈']
+    ['2026-11-25', 'Clôture des inscriptions', 'mer. 25 nov. 2026, 12 h', 'Sur Cyclades', '', 'Inscriptions', '25 nov.'],
+    [ECRITS, 'Écrits d’admissibilité', '30 et 31 mars 2027', 'Toutes les académies', 'cle', 'Écrits', '30-31 mars'],
+    ['2027-04-15', 'Résultats d’admissibilité', 'mi-avril à fin mai 2027', 'Selon ton académie', '≈', 'Admissibilité', 'mi-avril'],
+    ['2027-05-15', 'Oraux d’admission', 'mai-juin 2027', 'Selon ton académie', '≈', 'Oraux', 'mai-juin'],
+    ['2027-06-20', 'Résultats d’admission', 'fin juin 2027', 'Selon ton académie', '≈', 'Admission', 'fin juin']
   ];
+  // Étape 1 : 2 tests par mois. Chaque test s'ouvre à sa date : 5 questions par matière de l'écrit, toutes mélangées
+  var TESTS = [['2026-12-15', '15 déc.'], ['2026-12-31', '31 déc.'], ['2027-01-15', '15 janv.'], ['2027-01-31', '31 janv.'], ['2027-02-15', '15 févr.'], ['2027-02-28', '28 févr.']];
+  var TEST_PAR_MATIERE = 5;
+  function testsLire(cle) { try { return JSON.parse(localStorage.getItem(cle + ':' + ((coque.user && coque.user.id) || (pfUser && pfUser.id) || '')) || '{}') || {}; } catch (e) { return {}; } }
+  function testsEcrire(cle, v) { try { localStorage.setItem(cle + ':' + ((coque.user && coque.user.id) || (pfUser && pfUser.id) || ''), JSON.stringify(v)); } catch (e) {} }
+  function testOuvert(i) { return joursAvant(TESTS[i][0]) <= 0; }
+  function demarrerTest(i) {
+    if (!testOuvert(i)) return;
+    var e = essaiActif();
+    if (e && e.termine) { return ouvrirPaiement(); }
+    history.pushState(null, '', '/quizapp?vue=quiz'); marquerOnglet('quiz'); intro(false);
+    root.innerHTML = '<div class="quiz-card"><p>Préparation du test ' + (i + 1) + '…</p></div>'; top();
+    var mats = MATIERES.map(function (m) { return m[0]; });
+    Promise.all(mats.map(charger)).then(function (cats) {
+      var serie = [];
+      mats.forEach(function (m, k) { composer(cats[k], prog(m), null, null, TEST_PAR_MATIERE).forEach(function (q) { serie.push(Object.assign({}, q, { mat: m, choix: q.type === 'qcm' ? melange(q.choix) : q.choix })); }); });
+      serie = melange(serie);
+      if (e) serie = serie.slice(0, e.restantes);
+      if (!serie.length) return erreur('Le test n’a pas pu être préparé. Réessaie dans quelques instants.');
+      st = { mat: mats[0], niveau: serie[0].niveau, cible: serie.length, test: i, themes: null, cat: cats[0], serie: serie, i: 0, score: 0, recap: [], sel: [], repondu: false };
+      question();
+    }).catch(function (x) { if (x && (x.status === 401 || x.status === 402)) return boot(true); erreur('Le test n’a pas pu être préparé. Réessaie dans quelques instants.'); });
+  }
+  // Popup : un test vient d'ouvrir (annoncé une seule fois par test)
+  function annoncerTest() {
+    if (!coque.user || document.getElementById('qz-pop-test')) return;
+    var faits = testsLire('qz_tests_faits'), vus = testsLire('qz_tests_annonces'), i = -1;
+    TESTS.forEach(function (t, k) { if (testOuvert(k) && !faits[k] && !vus[k]) i = k; });
+    if (i < 0) return;
+    TESTS.forEach(function (t, k) { if (testOuvert(k)) vus[k] = 1; }); testsEcrire('qz_tests_annonces', vus);
+    var n = MATIERES.length * TEST_PAR_MATIERE;
+    document.body.insertAdjacentHTML('beforeend', '<div class="qz-pop" id="qz-pop-test" role="dialog" aria-modal="true" aria-labelledby="qz-pop-titre"><div class="qz-pop-carte">' +
+      '<div class="qz-pop-ico">🧪</div><p class="qz-pop-sur">Étape 1 · Quiz admissibilité</p><h2 id="qz-pop-titre">Ton test ' + (i + 1) + ' est prêt !</h2>' +
+      '<p>Depuis le ' + TESTS[i][1] + ', ton test de mi-parcours est disponible : <b>' + n + ' questions</b>, ' + TEST_PAR_MATIERE + ' par matière de l’écrit, pour mesurer tes progrès.</p>' +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn" data-pop-go="' + i + '">Passer le test maintenant →</button><button type="button" class="quiz-btn ghost" data-pop-fermer>Plus tard</button></div></div></div>');
+    var pop = document.getElementById('qz-pop-test'), fermer = function () { pop.remove(); };
+    pop.addEventListener('click', function (ev) {
+      if (ev.target === pop || ev.target.closest('[data-pop-fermer]')) return fermer();
+      var g = ev.target.closest('[data-pop-go]'); if (g) { fermer(); demarrerTest(+g.dataset.popGo); }
+    });
+    document.addEventListener('keydown', function esc(ev) { if (ev.key === 'Escape') { fermer(); document.removeEventListener('keydown', esc); } });
+    pop.querySelector('[data-pop-go]').focus();
+  }
   function joursAvant(iso) { var a = new Date(); a.setHours(0, 0, 0, 0); return Math.round((new Date(iso + 'T00:00:00') - a) / 864e5); }
   function concoursParcours() { return sjConcours(); } // même concours que le quiz sujets (profil, ou choix fait dans le quiz sujets)
   function epreuvesEcrit(c) {
@@ -1514,132 +1859,502 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       { nom: 'Épreuve 2 · Domaines au choix', sous: noms, date: 'Mer. 31 mars · 9 h-13 h', mats: dom }];
   }
 
-  function parcoursVue() {
-    st = null; tst = null; intro(false); marquerOnglet(''); document.body.classList.add('qz-large');
-    if (!domainesCharges) return chargerDomaines().then(parcoursVue);
-    if (!domainesChoisis) return choixDomaines();
-    root.innerHTML = '<div class="quiz-card"><p>Chargement de ton parcours…</p></div>';
-    SB.auth.getSession().then(function (r) {
-      var s = r.data.session; if (!s) return connexion();
+  // Données du parcours (aussi utilisées par le menu des disciplines), gardées 20 s
+  var pcCache = null;
+  function chargerPc(force) {
+    if (pcCache && !force && Date.now() - pcCache.at < 20000) return Promise.resolve(pcCache);
+    return SB.auth.getSession().then(function (r) {
+      var s = r.data.session; if (!s) { var e = new Error('connexion'); e.status = 401; throw e; }
       pfUser = s.user;
       var cs = sjConcours();
       return Promise.all([
         compte ? Promise.resolve(compte) : api('/api/quiz/compte'),
         SB.rpc('quiz_notions_resume').then(function (x) { return x.error ? null : x.data; }, function () { return null; }),
-        SB.from('quiz_series').select('matiere, score, total').eq('user_id', s.user.id).limit(2000).then(function (x) { return x.error ? [] : (x.data || []); }, function () { return []; }),
-        sjCharger(cs).catch(function () { return []; })
-      ]).then(function (d) { compte = d[0]; if (vue()) return; dessinerParcours(d[1], d[2], d[3], cs); });
-    }).catch(function (e) { if (e && e.status === 401) return connexion(); erreur('Ton parcours n’a pas pu être chargé. Réessaie dans quelques instants.'); });
+        SB.from('quiz_series').select('matiere, score, total, created_at').eq('user_id', s.user.id).limit(2000).then(function (x) { return x.error ? [] : (x.data || []); }, function () { return []; }),
+        sjCharger(cs).catch(function () { return []; }),
+        (bilanGlobal.totaux ? Promise.resolve(bilanGlobal.totaux) : api('/api/quiz/totaux').then(function (t) { bilanGlobal.totaux = t; return t; })).catch(function () { return null; })
+      ]).then(function (d) { compte = d[0]; pcCache = { at: Date.now(), resume: d[1], series: d[2], sujets: d[3], cs: cs, totaux: d[4] }; return pcCache; });
+    });
+  }
+  // Étape 3 : l'entretien avec le jury (35 min), en deux parties
+  var ADMISSION = [
+    ['Partie 1 · Présentation et échange', '15 min', [
+      ['Ta présentation', '5 min', 'Ta motivation, les éléments de ton parcours et les expériences qui t’ont conduit(e) au concours, en valorisant les enseignements suivis, les stages, l’engagement associatif ou les périodes de formation à l’étranger.'],
+      ['L’échange avec le jury', '10 min', 'Les questions du jury sur ta présentation.']]],
+    ['Partie 2 · Entretien avec le jury', '20 min', [
+      ['Les valeurs de la République, dont la laïcité', '', 'Les appréhender, et montrer ta capacité à les transmettre et à les incarner, au travers de questions diverses dont une mise en situation.'],
+      ['Se projeter dans le métier de professeur', '', ''],
+      ['Les exigences du service public', '', 'Les transmettre et les incarner : droits et obligations du fonctionnaire dont la neutralité, lutte contre les discriminations et les stéréotypes, promotion de l’égalité, notamment entre les filles et les garçons.'],
+      ['Les grands enjeux de la transition écologique', '', ''],
+      ['L’épanouissement de l’élève dans toutes ses dimensions', '', '']]]
+  ];
+  // Modèle : une étape par matière (admissibilité, épreuves passées), et les étapes de l'admission
+  function modelePc(d) {
+    var c = concoursParcours(), notions = {}, reu = {}, test = {}, qn = {}, parMat = {}, vus = sjLire().q || {};
+    ((d.resume && d.resume.matieres) || []).forEach(function (m) { notions[m.matiere] = m; });
+    d.series.forEach(function (x) { var r = reu[x.matiere] = reu[x.matiere] || { s: 0, t: 0, n: 0 }; r.s += x.score || 0; r.t += x.total || 0; r.n++; });
+    ((compte && compte.positionnement && compte.positionnement.matieres) || []).forEach(function (m) { test[m.matiere] = m.pct; });
+    ((d.totaux && d.totaux.matieres) || []).forEach(function (m) { qn[m.matiere] = m.questions; });
+    d.sujets.forEach(function (q) { var m = parMat[q.matiere] = parMat[q.matiere] || { n: 0, f: 0, ok: 0 }; m.n++; if (vus[q.id]) { m.f++; if (vus[q.id].ok) m.ok++; } });
+    var ic = function (k) { var m = MATIERES_TOUTES.filter(function (x) { return x[0] === k; })[0]; return m ? m[2] : ''; };
+    var M = { c: c, cs: d.cs, ic: ic, tot: 0, mai: 0, enc: 0, sjN: 0, sjF: 0 };
+    M.epreuves = epreuvesEcrit(c).map(function (ep) {
+      return { nom: ep.nom, date: ep.date, items: ep.mats.map(function (k) {
+        var n = notions[k] || { total: 0, maitrisees: 0, en_cours: 0, a_revoir: 0 }, r = reu[k];
+        var it = { k: k, nom: label(k), ic: ic(k), q: qn[k] || 0, tot: n.total, mai: n.maitrisees, enc: n.en_cours + n.a_revoir, ns: r ? r.n : 0 };
+        it.reu = r && r.t ? { v: Math.round(r.s / r.t * 100), src: 'aux séries' } : (test[k] != null ? { v: test[k], src: 'au test de positionnement' } : null);
+        it.pct = it.tot ? Math.round(it.mai / it.tot * 100) : 0;
+        it.etat = it.tot && it.mai >= it.tot ? 'fini' : (it.mai || it.enc || (r && r.t) ? 'cours' : 'afaire');
+        M.tot += it.tot; M.mai += it.mai; M.enc += it.enc;
+        return it;
+      }) };
+    });
+    M.items = [].concat.apply([], M.epreuves.map(function (ep) { return ep.items; }));
+    M.sujets = M.items.map(function (it) {
+      var m = parMat[it.k] || { n: 0, f: 0, ok: 0 };
+      var e = !m.n ? 'ferme' : m.f >= m.n ? 'fini' : m.f ? 'cours' : 'afaire';
+      M.sjN += m.n; M.sjF += m.f;
+      return { k: it.k, nom: it.nom, ic: it.ic, n: m.n, f: m.f, ok: m.ok, etat: e, pct: m.n ? Math.round(m.ok / m.n * 100) : 0 };
+    });
+    M.pct = M.tot ? Math.round(M.mai / M.tot * 100) : 0;
+    M.prochain = M.items.filter(function (x) { return x.etat === 'cours'; })[0] || M.items.filter(function (x) { return x.etat === 'afaire'; })[0] || M.items[0];
+    M.finis = M.items.filter(function (x) { return x.etat === 'fini'; }).length;
+    return M;
   }
 
-  function dessinerParcours(resume, series, sujets, cs) {
+  function parcoursVue() {
+    seanceAbandon();
+    st = null; tst = null; intro(false); marquerOnglet(''); document.body.classList.add('qz-large');
+    if (!domainesCharges) return chargerDomaines().then(parcoursVue);
+    if (!domainesChoisis) return choixDomaines();
+    if (!pcCache) root.innerHTML = '<div class="quiz-card"><p>Chargement de ton parcours…</p></div>';
+    chargerPc(true).then(function (d) { if (vue()) return; dessinerParcours(d); })
+      .catch(function (e) { if (e && e.status === 401) return connexion(); erreur('Ton parcours n’a pas pu être chargé. Réessaie dans quelques instants.'); });
+  }
+  // Ouverture d'une discipline : quiz des notions, ou quiz sujets (série lancée)
+  function ouvrirQuiz(k) { choisirEpreuve('ecrit'); choix.mat = k; garderChoix(); accueil(); top(); }
+  function serieHasard(k) {
+    choisirEpreuve('ecrit'); choix.mat = k; delete choix.themes[k]; if (!choix.niveau) choix.niveau = 'facile'; garderChoix();
+    history.pushState(null, '', '/quizapp?vue=quiz'); marquerOnglet('quiz'); intro(false); demarrer(k, choix.niveau); top();
+  }
+  function ouvrirSujets(k) { choisirEpreuve('sujets'); if (vue() !== 'quiz') history.pushState(null, '', '/quizapp?vue=quiz'); marquerOnglet('quiz'); intro(false); sjDemarrer(k); top(); }
+
+  // Menu des disciplines (à gauche de l'écran du quiz) : toutes les disciplines, par étape
+  function dessinerDisc() {
+    var el = document.getElementById('qz-disc');
+    if (!el || !document.body.classList.contains('qz-avec-disc') || !domainesChoisis) return;
+    if (!pcCache) { if (!dessinerDisc.enCours) { dessinerDisc.enCours = true; chargerPc().then(function () { dessinerDisc.enCours = false; dessinerDisc(); }, function () { dessinerDisc.enCours = false; }); } return; }
+    var M = modelePc(pcCache), sj = st ? !!st.sj : epreuve() === 'sujets', mat = st ? st.mat : (sj ? null : choix.mat);
+    var pt = function (e, n) { return '<span class="pt ' + e + '">' + (e === 'fini' ? '✓' : e === 'ferme' ? '🔒' : n) + '</span>'; };
+    var h = '<div class="qd-carte"><span class="lbl">Étape 1 · Quiz admissibilité</span><h4>Les notions de l’écrit</h4><div class="barre"><i style="width:' + M.pct + '%"></i></div>' +
+      M.epreuves.map(function (ep) {
+        return '<p class="qd-sous">' + esc(ep.nom.replace(/ · .*/, '')) + '</p>' + ep.items.map(function (it) {
+          var i = M.items.indexOf(it) + 1;
+          return '<button type="button" class="qd-it' + (!sj && mat === it.k ? ' on' : '') + '" data-qd-quiz="' + it.k + '">' + pt(it.etat, i) + '<span class="nm">' + it.ic + ' ' + esc(it.nom) + '</span><span class="nb">' + nf(it.q) + ' q.</span></button>';
+        }).join('');
+      }).join('') + '</div>' +
+      '<div class="qd-carte"><span class="lbl">Étape 2 · Épreuves passées</span><h4>Les sujets officiels ' + (M.cs === 'bac5' ? 'Bac+5' : 'Bac+3') + '</h4><div class="barre"><i style="width:' + (M.sjN ? Math.round(M.sjF / M.sjN * 100) : 0) + '%"></i></div>' +
+      M.sujets.map(function (x, i) {
+        return '<button type="button" class="qd-it' + (sj && mat === x.k ? ' on' : '') + '"' + (x.n ? ' data-qd-sujets="' + x.k + '"' : ' disabled') + '>' + pt(x.etat, i + 1) + '<span class="nm">' + x.ic + ' ' + esc(x.nom) + '</span><span class="nb">' + (x.n ? nf(x.n) + ' q.' : 'bientôt') + '</span></button>';
+      }).join('') + '</div>' +
+      '<div class="qd-carte"><span class="lbl">Étape 3 · Admission · À venir</span><h4>L’entretien avec le jury</h4>' +
+      ADMISSION.map(function (pa, j) {
+        var base = j ? ADMISSION[0][2].length : 0;
+        return '<p class="qd-sous">' + esc(pa[0]) + ' · ' + pa[1] + '</p>' + pa[2].map(function (x, i) { return '<button type="button" class="qd-it" disabled>' + pt('ferme', base + i + 1) + '<span class="nm">' + esc(x[0]) + '</span><span class="nb">' + (x[1] || '') + '</span></button>'; }).join('');
+      }).join('') + '</div>';
+    el.innerHTML = h;
+    el.querySelectorAll('[data-qd-quiz]').forEach(function (b) { b.addEventListener('click', function () { if (st && !st.fini && st.i > 0 && !confirm('Quitter la série en cours ? Vos réponses déjà données sont enregistrées.')) return; st = null; ouvrirQuiz(b.dataset.qdQuiz); }); });
+    el.querySelectorAll('[data-qd-sujets]').forEach(function (b) { b.addEventListener('click', function () { if (st && !st.fini && st.i > 0 && !confirm('Quitter la série en cours ? Vos réponses déjà données sont enregistrées.')) return; st = null; ouvrirSujets(b.dataset.qdSujets); }); });
+  }
+
+  // Barre du haut (progression des écrits, jours d'affilée, questions répondues) et compte de la barre latérale
+  var coque = { at: 0 };
+  function majCoque(force) {
+    if (!force && Date.now() - coque.at < 30000) return dessinerCoque();
+    coque.at = Date.now();
+    SB.auth.getSession().then(function (r) {
+      var u = r.data.session && r.data.session.user; if (!u) return;
+      coque.user = u; dessinerCoque();
+      return Promise.all([
+        SB.rpc('quiz_notions_resume').then(function (x) { return x.error ? null : x.data; }, function () { return null; }),
+        SB.from('quiz_series').select('created_at, total, score').eq('user_id', u.id).order('created_at', { ascending: false }).limit(1000).then(function (x) { return x.error ? [] : (x.data || []); }, function () { return []; })
+      ]).then(function (d) { coque.resume = d[0]; coque.series = d[1]; dessinerCoque(); });
+    }).catch(function () {});
+  }
+  function dessinerCoque() {
+    var u = coque.user; if (!u) return;
+    var m = u.user_metadata || {}, nom = ((m.prenom || '') + ' ' + (m.nom || '')).trim() || u.email, cc = sjConcours();
+    var sc = document.getElementById('qz-side-compte');
+    if (sc) sc.innerHTML = '<div class="id"><span class="av">' + esc((nom[0] || '?').toUpperCase()) + '</span><span><strong>' + esc(nom) + '</strong><small>Candidat(e) · ' + (cc === 'bac5' ? 'Bac+5' : 'Bac+3') + '</small></span></div>' +
+      '<div class="liens"><a href="/espace">🏠 Mon espace</a><a href="/app">🤖 PassCRPE</a></div>';
+    var tot = 0, mai = 0;
+    ((coque.resume && coque.resume.matieres) || []).forEach(function (x) { if (MATIERES.some(function (y) { return y[0] === x.matiere; })) { tot += x.total; mai += x.maitrisees; } });
+    var j = document.getElementById('qz-tb-jauge'); if (j) j.style.width = (tot ? Math.round(mai / tot * 100) : 0) + '%';
+    var t = document.getElementById('qz-tb-txt'); if (t) t.textContent = nf(mai) + ' / ' + nf(tot) + ' notions';
+    // Jours d'affilée : séries faites aujourd'hui (ou hier) et les jours précédents sans interruption
+    var jours = {}, q = 0;
+    (coque.series || []).forEach(function (x) { var d = new Date(x.created_at); jours[d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate()] = 1; q += x.total || 0; });
+    var cle = function (d) { return d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate(); }, d = new Date(), serie = 0;
+    if (!jours[cle(d)]) d.setDate(d.getDate() - 1);
+    while (jours[cle(d)]) { serie++; d.setDate(d.getDate() - 1); }
+    var a = document.getElementById('qz-tb-serie'); if (a) { a.textContent = '🔥 ' + serie + ' j'; a.title = serie + ' jour' + (serie > 1 ? 's' : '') + ' d’affilée avec au moins une série'; }
+    // Moyenne globale : toutes les séries, toutes matières et tous niveaux confondus (moyenne des notes sur 20)
+    var ms = 0, mn = 0; (coque.series || []).forEach(function (x) { if (x.total) { ms += note20(x); mn++; } });  // même calcul que Mes séries
+    var mo = document.getElementById('qz-tb-moy');
+    if (mo) { var mv = mn ? Math.round(ms / mn * 2) / 2 : null; mo.textContent = '📊 Moyenne ' + (mv === null ? '–' : noteTxt(mv)) + ' / 20'; mo.title = mn ? 'Moyenne de tes ' + mn + ' série' + (mn > 1 ? 's' : '') + ', tous quiz confondus' : 'Pas encore de série terminée'; }
+    var b = document.getElementById('qz-tb-q'); if (b) { b.textContent = '✅ ' + nf(q) + ' q.'; b.title = nf(q) + ' question' + (q > 1 ? 's' : '') + ' répondue' + (q > 1 ? 's' : '') + ' dans les séries'; }
+    // Échéances du concours, sous la progression
+    annoncerTest();
+    var ec = document.getElementById('qz-tb-ech');
+    if (ec) ec.innerHTML = '<span class="t" title="Échéances du concours 2027">📅</span>' + ECHEANCES.map(function (e) {
+      var j = joursAvant(e[0]), passe = j < 0, cls = passe ? 'passe' : (e[4] === 'cle' ? 'cle' : (j <= 30 ? 'proche' : ''));
+      return '<span class="e ' + cls + '" title="' + esc(e[1] + ' · ' + e[2] + ' · ' + e[3]) + '"><b>' + (passe ? 'Passé' : (e[4] === '≈' ? '≈' : '') + 'J-' + j) + '</b>' + esc(e[5]) + '</span>';
+    }).join('');
+  }
+
+  // Objectif : au moins OBJ_PCT % des notions des domaines choisis maîtrisées d'ici la fin de l'étape 1 (sinon les écrits).
+  // Objectif du jour, en questions : MAITRISE bonnes réponses par notion restante, réparties sur les jours restants.
+  // Commun au bandeau, au plan (menu de droite) et à la séance du jour.
+  var OBJ_PCT = 70, FIN_ETAPE1 = '2027-02-28';
+  function objectifJour(d, M) {
+    var minuit = new Date(); minuit.setHours(0, 0, 0, 0);
+    var faitesAuj = (d.series || []).reduce(function (a, x) { return a + (x.created_at && new Date(x.created_at) >= minuit ? (x.total || 0) : 0); }, 0);
+    var objN = Math.ceil(M.tot * OBJ_PCT / 100), resteN = Math.max(0, objN - M.mai);
+    var jFin = joursAvant(FIN_ETAPE1) >= 0 ? joursAvant(FIN_ETAPE1) : joursAvant(ECRITS), j = Math.max(1, jFin);
+    return { objN: objN, resteN: resteN, parJour: jFin >= 0 ? Math.ceil(resteN * MAITRISE / j) : 0, faitesAuj: faitesAuj };
+  }
+  function dessinerParcours(d) {
     document.body.classList.add('qz-large');
-    var c = concoursParcours(), p = lireProfil(), prenom = (p.prenom || '').trim();
-    var notions = {}; ((resume && resume.matieres) || []).forEach(function (m) { notions[m.matiere] = m; });
-    var reu = {}; series.forEach(function (x) { var r = reu[x.matiere] = reu[x.matiere] || { s: 0, t: 0 }; r.s += x.score || 0; r.t += x.total || 0; });
-    var test = {}; ((compte && compte.positionnement && compte.positionnement.matieres) || []).forEach(function (m) { test[m.matiere] = m.pct; });
-    var actives = MATIERES.map(function (m) { return m[0]; });
-    var tot = 0, mai = 0, enc = 0;
-    actives.forEach(function (k) { var n = notions[k]; if (n) { tot += n.total; mai += n.maitrisees; enc += n.en_cours + n.a_revoir; } });
-    var pct = tot ? Math.round(mai / tot * 100) : 0, jEcrits = joursAvant(ECRITS), restantes = tot - mai;
-    var parJour = jEcrits > 0 ? Math.ceil(restantes / jEcrits) : restantes;
-    var reussite = function (k) {
-      var r = reu[k]; if (r && r.t) return { v: Math.round(r.s / r.t * 100), src: 'aux séries' };
-      if (test[k] != null) return { v: test[k], src: 'au test' };
-      return null;
-    };
-    var ic = function (k) { var m = MATIERES_TOUTES.filter(function (x) { return x[0] === k; })[0]; return m ? m[2] : ''; };
-    // Prochaine matière conseillée : la moins maîtrisée de l'épreuve 1, puis des domaines
-    var conseil = actives.slice().sort(function (a, b) {
-      var pa = notions[a] && notions[a].total ? notions[a].maitrisees / notions[a].total : 0, pb = notions[b] && notions[b].total ? notions[b].maitrisees / notions[b].total : 0;
-      var ra = (reussite(a) || { v: 0 }).v, rb = (reussite(b) || { v: 0 }).v;
-      return (pa - pb) || (ra - rb);
-    })[0];
-
-    // Épreuves passées (quiz sujets) : questions du concours, par matière active
-    var vus = sjLire().q || {}, parMat = {};
-    sujets.forEach(function (q) { var m = parMat[q.matiere] = parMat[q.matiere] || { n: 0, f: 0, ok: 0 }; m.n++; if (vus[q.id]) { m.f++; if (vus[q.id].ok) m.ok++; } });
-    var sjTot = 0, sjFaites = 0; actives.forEach(function (k) { if (parMat[k]) { sjTot += parMat[k].n; sjFaites += parMat[k].f; } });
-
+    var M = modelePc(d), c = M.c, cs = M.cs, p = lireProfil(), prenom = (p.prenom || '').trim();
+    var jEcrits = joursAvant(ECRITS), restantes = M.tot - M.mai, parJour = jEcrits > 0 ? Math.ceil(restantes / jEcrits) : restantes;
+    var etiquette = { fini: 'Terminé', cours: 'En cours', afaire: 'À faire' };
+    var rond = function (etat, n) { return '<span class="rond ' + etat + '">' + (etat === 'fini' ? '✓' : etat === 'ferme' ? '🔒' : n) + '</span>'; };
+    var pt = function (e, n) { return '<span class="ic">' + (e === 'fini' ? '✅' : e === 'ferme' ? '🔒' : e === 'cours' ? '🟠' : '⚪') + '</span>'; };
     var h = '';
+    var FIN1 = FIN_ETAPE1, O = objectifJour(d, M), objJour = O.parJour, faitesAuj = O.faitesAuj;
+    var aujourdhui = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
     // Bandeau
     h += '<section class="pc-hero"><div><div class="sur">⏳ ' + (jEcrits > 0 ? 'J-' + jEcrits + ' avant les écrits' : 'Les écrits sont passés : place aux oraux') + '</div>' +
       '<h2>' + (prenom ? 'Bonjour ' + esc(prenom) + ' 👋' : 'Ton parcours 👋') + '</h2>' +
-      '<p>Ton chemin vers le CRPE, étape par étape : les notions de l’écrit, puis les épreuves passées, puis les oraux.</p>' +
+      '<div class="pc-auj"><span>📆 ' + esc(aujourdhui.charAt(0).toUpperCase() + aujourdhui.slice(1)) + '</span><span>' + (!objJour ? '🎉 Objectif de ' + OBJ_PCT + ' % des notions atteint' : faitesAuj >= objJour ? '✅ Objectif du jour atteint : <b>' + nf(faitesAuj) + ' / ' + nf(objJour) + ' questions</b>' : '🎯 Objectif du jour : <b>' + nf(faitesAuj) + ' / ' + nf(objJour) + ' questions</b> · encore ' + nf(objJour - faitesAuj)) + '</span></div>' +
+      '<p>Ton parcours vers le concours, étape par étape : les notions de l’écrit, les épreuves passées, puis les oraux.</p>' +
       '<div class="pc-puces"><span>🎓 CRPE ' + (c === 'bac5' ? 'Bac+5' : 'Bac+3') + '</span>' + domainesChoisis.map(function (k) { return '<span>' + DOMAINES_ECRIT[k][1] + ' ' + esc(DOMAINES_ECRIT[k][0]) + '</span>'; }).join('') + '<button type="button" data-pc-domaines>Modifier</button></div>' +
-      '<button type="button" class="pc-cta" data-pc-quiz="' + conseil + '">▶ Continuer en ' + esc(label(conseil)) + '</button></div>' +
-      '<div class="pc-anneau"><svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="12"/><circle cx="70" cy="70" r="60" fill="none" stroke="#f97316" stroke-width="12" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="' + Math.round(377 * (1 - pct / 100)) + '"/></svg>' +
-      '<div><strong>' + pct + ' %</strong><small>notions maîtrisées</small></div></div></section>';
+      '<button type="button" class="pc-cta" data-pc-seance>▶️ ' + (objJour && faitesAuj < objJour ? 'Lancer la séance ' + Math.min(SEANCE_PAR_JOUR, seancesFaites() + 1) + ' / ' + SEANCE_PAR_JOUR : 'Lancer une séance bonus') + ' · ' + SEANCE_MIN + ' min</button></div>' +
+      '<div class="pc-anneau"><svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="12"/><circle cx="70" cy="70" r="60" fill="none" stroke="#f97316" stroke-width="12" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="' + Math.round(377 * (1 - M.pct / 100)) + '"/></svg>' +
+      '<div><strong>' + M.pct + ' %</strong><small>' + M.finis + ' / ' + M.items.length + ' matières</small></div></div></section>';
 
     // Échéances
-    h += '<h3 class="pc-h">📅 Tes échéances</h3><p class="pc-sous">Concours 2027. Dates des écrits fixées par arrêté ; résultats et oraux selon ton académie.</p><div class="pc-ech">' +
+    h += '<div class="pc-ech-bloc"><h3 class="pc-h">📅 Tes échéances</h3><p class="pc-sous">Concours 2027. Dates des écrits fixées par arrêté ; résultats et oraux selon ton académie.</p><div class="pc-ech">' +
       ECHEANCES.map(function (e) {
         var j = joursAvant(e[0]), passe = j < 0, cls = passe ? 'passe' : (e[4] === 'cle' ? 'cle' : (j <= 30 ? 'proche' : ''));
         return '<div class="pc-e ' + cls + '"><span class="j">' + (passe ? 'Passé' : (e[4] === '≈' ? '≈ ' : '') + 'J-' + j) + '</span><b>' + esc(e[1]) + '</b><span class="d">' + esc(e[2]) + '</span><small>' + esc(e[3]) + '</small></div>';
+      }).join('') + '</div></div>';
+
+    // Plan d'apprentissage, uniquement sous forme de quiz :
+    // étape 1, 3 mois pour atteindre 5 000 questions, avec 2 tests par mois ; étape 2, le 4e mois, les épreuves passées complétées
+    // (avant les écrits du 30 mars) ; étape 3, 1 mois et demi pour le quiz d'admission, avant les oraux
+    var FIN3 = '2027-05-15';
+    var testsFaits = testsLire('qz_tests_faits');
+    var phase = joursAvant(FIN1) >= 0 ? 1 : joursAvant(ECRITS) >= 0 ? 2 : 3;
+    // Plan (menu de droite) : objectif exprimé en notions à maîtriser (celles des domaines choisis), pas en questions
+    // Objectif : au moins 70 % des notions maîtrisées ; rythme : MAITRISE bonnes réponses par notion restante, jusqu'au 28 février
+    var objN = O.objN, nResteN = O.resteN, rythmeQ = O.parJour;
+    var objNotions = 'au moins <b>' + OBJ_PCT + ' % de tes notions</b> maîtrisées' + (M.tot ? ', soit <b>' + nf(objN) + ' notion' + (objN > 1 ? 's' : '') + '</b>' : '');
+    var cls = function (n) { return phase === n ? 'actuel' : phase > n ? 'fini' : (n === 3 ? 'bientot' : ''); };
+    var plan = '<div class="pp"><h3>🧭 Ton apprentissage en 3 étapes</h3><p class="sous">Uniquement sous forme de quiz : des séries de questions pour apprendre les notions de l’écrit matière par matière, t’entraîner sur les vrais sujets, puis préparer l’entretien.</p><div class="pp-tl">' +
+      '<div class="pp-pas ' + cls(1) + '"><span class="num">' + (phase > 1 ? '✓' : '✍️') + '</span><span class="lbl">Étape 1</span><h4>Quiz admissibilité</h4><span class="quand">3 mois · jusqu’au 28 février</span>' +
+        '<div class="pp-obj">Objectif : ' + objNotions + '<div class="pp-barre"><i style="width:' + (objN ? Math.min(100, Math.round(M.mai / objN * 100)) : 0) + '%"></i></div>' + (M.tot ? (M.mai >= objN ? '✅ Objectif atteint : ' + nf(M.mai) + ' notions maîtrisées' : nf(M.mai) + ' / ' + nf(objN) + ' notions') : '') + (phase === 1 && nResteN ? ' · au moins <b>' + nf(rythmeQ) + ' question' + (rythmeQ > 1 ? 's' : '') + ' par jour</b> (' + MAITRISE + ' bonnes réponses par notion)' : '') + '</div>' +
+        '<div class="pp-obj" style="margin-top:8px"><b>2 tests par mois</b> pour mesurer tes progrès :</div><div class="pp-tests">' +
+        TESTS.map(function (t, i) {
+          var fait = testsFaits[i], ouvert = testOuvert(i), d = t[1].replace(' ', '\u00a0');
+          if (fait) return '<button type="button" class="fait" data-pc-test="' + i + '" title="Repasser le test ' + (i + 1) + '">✅ <span>Test ' + (i + 1) + '<small>' + String(fait.note).replace('.', ',') + ' / 20</small></span></button>';
+          if (ouvert) return '<button type="button" class="pret" data-pc-test="' + i + '">🧪 <span>Test ' + (i + 1) + '<small>Prêt · commencer →</small></span></button>';
+          return '<span class="ferme" title="Disponible à partir du ' + t[1] + '">🔒 <span>Test ' + (i + 1) + '<small>Disponible le ' + d + '</small></span></span>';
+        }).join('') + '</div></div>' +
+      '<div class="pp-pas ' + cls(2) + '"><span class="num">' + (phase > 2 ? '✓' : '📄') + '</span><span class="lbl">Étape 2</span><h4>Quiz épreuves passées</h4><span class="quand">4e mois · mars, jusqu’aux écrits</span>' +
+        '<div class="pp-obj">Objectif : ' + objNotions + ' et <b>toutes les épreuves passées</b> complétées<div class="pp-barre"><i style="width:' + (M.sjN ? Math.round(M.sjF / M.sjN * 100) : 0) + '%"></i></div>' + nf(M.sjF) + ' / ' + nf(M.sjN) + ' questions des sujets officiels</div></div>' +
+      '<div class="pp-pas ' + cls(3) + '"><span class="num">🎤</span><span class="lbl">Étape 3 · À venir</span><h4>Quiz admission</h4><span class="quand">1 mois et demi · avril à mi-mai</span>' +
+        '<div class="pp-obj">Un quiz pour chaque étape de l’entretien avec le jury : nombre de questions à venir.</div>' +
+        '<ul class="pc-fl">' + ADMISSION.map(function (pa) { return pa[2].map(function (x) { return '<li><button type="button" disabled><span class="ic">🔒</span><span>' + esc(x[0]) + '</span><span class="nb">' + (x[1] || '') + '</span></button></li>'; }).join(''); }).join('') + '</ul></div>' +
+      '</div></div>';
+    h += '<div class="pc-plan-mobile">' + plan + '</div>';
+
+    // Section 1 : quiz admissibilité, une étape par matière
+    h += '<section class="pc-section" id="pc-e1"><div class="pc-section-tete" data-pc-plier role="button" tabindex="0" aria-expanded="true"><span class="pc-plier-btn"><span class="ouvert">Réduire ▴</span><span class="ferme">Afficher ▾</span></span><h3>✍️ Étape 1 · Quiz admissibilité</h3><p>Réussis chaque matière pour arriver prêt(e) aux écrits.</p></div>';
+    no = 0;
+    h += [M].map(function (ep) {
+      return '<div class="pc-tl">' + ep.items.map(function (it) {
+        no++;
+        return '<div class="pc-item ' + it.etat + '">' + rond(it.etat, no) +
+          '<div><span class="lbl">Étape ' + no + '</span><h4>' + it.ic + ' ' + esc(it.nom) + '</h4>' +
+          '<p><b>' + nf(it.q) + ' questions</b> · ' + nf(it.mai) + ' notions maîtrisées sur ' + nf(it.tot) + (it.enc ? ' · ' + nf(it.enc) + ' en cours' : '') + '</p>' +
+          '<span class="meta"><b>' + (it.ns ? nf(it.ns) + ' série' + (it.ns > 1 ? 's' : '') + ' faite' + (it.ns > 1 ? 's' : '') : 'Aucune série faite') + '</b>' + (it.reu ? ' · réussite <b>' + it.reu.v + ' %</b> ' + it.reu.src : '') + '</span>' +
+          '<div class="barre"><i style="width:' + it.pct + '%"></i></div></div>' +
+          '<div class="cote"><span class="pc-badge ' + it.etat + '">' + etiquette[it.etat] + (it.etat === 'cours' ? ' · ' + it.pct + ' %' : '') + '</span><button type="button" class="pc-btn' + (it === M.prochain ? ' plein' : '') + '" data-pc-quiz="' + it.k + '">' + 'Lancer une série' + '</button></div></div>';
       }).join('') + '</div>';
+    }).join('') + '</section>';
 
-    // Fil en 3 étapes
-    h += '<h3 class="pc-h">🧭 Ton apprentissage en 3 étapes</h3><p class="pc-sous">Apprends les notions de l’écrit, entraîne-toi sur les vrais sujets, puis prépare les oraux.</p>' +
-      '<div class="pc-fil" style="--av:' + Math.min(50, Math.round(pct / 2)) + '%">' +
-      '<button type="button" class="pc-pas encours" data-pc-aller="pc-e1"><span class="num">✍️</span><span class="n">Étape 1</span><strong>Quiz admissibilité</strong><small>Les notions des écrits, matière par matière</small><span class="etat">En cours · ' + pct + ' %</span></button>' +
-      '<button type="button" class="pc-pas ouvert" data-pc-aller="pc-e2"><span class="num">📄</span><span class="n">Étape 2</span><strong>Épreuves passées</strong><small>Les questions des sujets officiels, par matière</small><span class="etat">' + nf(sjFaites) + ' / ' + nf(sjTot) + ' questions</span></button>' +
-      '<button type="button" class="pc-pas bientot" data-pc-aller="pc-e3"><span class="num">🎤</span><span class="n">Étape 3</span><strong>Admission</strong><small>La leçon, l’EPS et l’entretien</small><span class="etat">À venir</span></button></div>';
-
-    // Étape 1 : quiz admissibilité
-    h += '<section class="pc-etape" id="pc-e1"><h3>✍️ Étape 1 · Quiz admissibilité</h3>' +
-      '<div class="pc-delai"><div class="gros">' + Math.max(0, jEcrits) + '<small>jours pour le finir</small></div><p>' +
-      (restantes > 0 ? 'Il te reste <strong>' + nf(restantes) + ' notions</strong> à maîtriser sur ' + nf(tot) + ' avant les écrits du 30 mars. Au rythme de <strong>' + nf(parJour) + ' notion' + (parJour > 1 ? 's' : '') + ' par jour</strong>, tu arrives prêt(e) le jour J.' + (enc ? ' ' + nf(enc) + ' notions sont déjà en cours.' : '')
-        : 'Bravo : toutes les notions de tes épreuves sont maîtrisées. Continue les révisions et les épreuves passées.') + '</p></div>' +
-      '<div class="pc-legende"><span><i style="background:var(--indigo-600)"></i>Réussite (séries, ou test de positionnement)</span><span><i style="background:#10b981"></i>Notions maîtrisées</span></div>';
-    epreuvesEcrit(c).forEach(function (ep) {
-      var s = 0, t = 0, ms = 0, mt = 0;
-      ep.mats.forEach(function (k) { var r = reussite(k); if (r) { s += r.v; t++; } var n = notions[k]; if (n) { ms += n.maitrisees; mt += n.total; } });
-      h += '<div class="pc-epreuve"><div class="pc-ep-tete"><h4>' + esc(ep.nom) + '</h4><span class="date">📅 ' + esc(ep.date) + '</span><span class="moy">Réussite ' + (t ? Math.round(s / t) + ' %' : '—') + ' · ' + (mt ? Math.round(ms / mt * 100) : 0) + ' % maîtrisé</span></div>' +
-        (ep.sous ? '<p class="pc-sous" style="margin:0 0 4px">' + esc(ep.sous) + '</p>' : '') +
-        ep.mats.map(function (k) {
-          var r = reussite(k), n = notions[k] || { total: 0, maitrisees: 0 }, pm = n.total ? Math.round(n.maitrisees / n.total * 100) : 0;
-          return '<div class="pc-mat"><div class="nom">' + ic(k) + ' ' + esc(label(k)) + '<small>' + nf(n.maitrisees) + ' / ' + nf(n.total) + ' notions maîtrisées</small></div>' +
-            '<div class="pc-barres"><div class="pc-barre reu"><span class="fond"><i style="width:' + (r ? r.v : 0) + '%"></i></span><span><b>' + (r ? r.v + ' %' : '—') + '</b> ' + (r ? 'réussite ' + r.src : 'pas encore de série') + '</span></div>' +
-            '<div class="pc-barre mai"><span class="fond"><i style="width:' + pm + '%"></i></span><span><b>' + pm + ' %</b> maîtrisé</span></div></div>' +
-            '<button type="button" class="pc-btn' + (k === conseil ? ' plein' : '') + '" data-pc-quiz="' + k + '">S’entraîner →</button></div>';
-        }).join('') + '</div>';
-    });
-    h += '</section>';
-
-    // Étape 2 : épreuves passées par matière
-    h += '<section class="pc-etape" id="pc-e2"><h3>📄 Étape 2 · Épreuves passées</h3>' +
-      '<p class="pc-sous">Les questions reprises des sujets officiels ' + (cs === 'bac5' ? 'Bac+5 (2025 et 2026)' : 'Bac+3 (2026)') + ', corrigées et expliquées avec les remarques des jurys. À faire en complément de l’étape 1, et surtout le dernier mois avant les écrits.</p><div class="pc-sujets">' +
-      actives.map(function (k) {
-        var m = parMat[k];
-        if (!m) return '<div class="pc-sujet"><span class="ic">' + ic(k) + '</span><b>' + esc(label(k)) + '</b><small>' + (k === 'anglais' && cs === 'bac5' ? 'Pas d’épreuve écrite d’anglais au Bac+5' : 'Questions à venir') + '</small><button type="button" class="pc-btn" disabled>Bientôt</button></div>';
-        return '<div class="pc-sujet"><span class="ic">' + ic(k) + '</span><b>' + esc(label(k)) + '</b><small>' + nf(m.n) + ' questions · ' + nf(m.f) + ' faites · ' + nf(m.ok) + ' réussies</small>' +
-          '<span class="fond"><i style="width:' + Math.round(m.ok / m.n * 100) + '%"></i></span><button type="button" class="pc-btn' + (m.f ? ' plein' : '') + '" data-pc-sujets="' + k + '">' + (m.f ? 'Continuer' : 'Commencer') + ' →</button></div>';
+    // Section 2 : épreuves passées, une étape par matière
+    h += '<section class="pc-section" id="pc-e2"><div class="pc-section-tete" data-pc-plier role="button" tabindex="0" aria-expanded="true"><span class="pc-plier-btn"><span class="ouvert">Réduire ▴</span><span class="ferme">Afficher ▾</span></span><h3>📄 Étape 2 · Épreuves passées</h3><p>Les questions des sujets officiels ' + (cs === 'bac5' ? 'Bac+5 (2025 et 2026)' : 'Bac+3 (2026)') + ', corrigées avec les remarques des jurys.</p></div><div class="pc-tl">' +
+      M.sujets.map(function (x, i) {
+        var vide = x.k === 'anglais' && cs === 'bac5' ? 'Pas d’épreuve écrite d’anglais au Bac+5.' : 'Questions à venir.';
+        return '<div class="pc-item ' + x.etat + (x.etat === 'ferme' ? ' verrou' : '') + '">' + rond(x.etat, i + 1) +
+          '<div><span class="lbl">Étape ' + (i + 1) + '</span><h4>' + x.ic + ' ' + esc(x.nom) + '</h4>' +
+          (x.n ? '<p><b>' + nf(x.n) + ' questions</b> des sujets officiels · ' + nf(x.f) + ' faites · ' + nf(x.ok) + ' réussies</p>' : '<p>' + vide + '</p>') +
+          '<div class="barre"><i style="width:' + x.pct + '%"></i></div></div>' +
+          '<div class="cote"><span class="pc-badge ' + (x.etat === 'ferme' ? 'afaire' : x.etat) + '">' + (x.etat === 'ferme' ? 'Bientôt' : etiquette[x.etat]) + '</span>' +
+          (x.n ? '<button type="button" class="pc-btn" data-pc-sujets="' + x.k + '">' + 'Lancer une série' + '</button>' : '<button type="button" class="pc-btn" disabled>🔒</button>') + '</div></div>';
       }).join('') + '</div></section>';
 
-    // Étape 3 : admission (à venir)
-    var avenir = '<span class="pc-avenir">À venir</span>';
-    h += '<section class="pc-etape" id="pc-e3"><h3>🎤 Étape 3 · Admission <em>À venir</em></h3>' +
-      '<p class="pc-sous">Les oraux auront lieu en mai-juin 2027, selon ton académie. Chaque étape aura son quiz spécifique : nous te préviendrons dès qu’il sera prêt.</p>' +
-      '<div class="pc-adm"><div class="pc-adm-tete"><h4>📚 Épreuve 1 · Leçon</h4>' + avenir + '</div>' +
-      '<p>Au choix, en <strong>français</strong> ou en <strong>mathématiques</strong> : un quiz spécifique pour préparer ta leçon.</p></div>' +
-      '<div class="pc-adm"><div class="pc-adm-tete"><h4>🏃 Épreuve 2 · Partie 1 : éducation physique et sportive</h4>' + avenir + '</div>' +
-      '<p>Cette épreuve permet d’apprécier les connaissances du candidat dans le champ des activités physiques, sportives et artistiques supports de l’enseignement de l’éducation physique et sportive à l’école et au collège, et sur le développement moteur et psychologique de l’enfant. Elle mobilise également les capacités d’analyse et de réflexion du candidat.</p></div>' +
-      '<div class="pc-adm"><div class="pc-adm-tete"><h4>🤝 Épreuve 2 · Partie 2 : entretien avec le jury (35 min)</h4>' + avenir + '</div>' +
-      '<ul class="pc-sous-etapes">' +
-      '<li><span class="no">1</span><span><b>Ta présentation (5 min)</b><small>Ta motivation, ton parcours et les expériences qui t’ont conduit(e) au concours : enseignements suivis, stages, engagement associatif, périodes de formation à l’étranger.</small></span>' + avenir + '</li>' +
-      '<li><span class="no">2</span><span><b>L’échange avec le jury (10 min)</b><small>Les questions du jury sur ta présentation.</small></span>' + avenir + '</li>' +
-      '<li><span class="no">3</span><span><b>Les valeurs de la République, dont la laïcité</b><small>Ta capacité à les transmettre et à les incarner, avec une mise en situation.</small></span>' + avenir + '</li>' +
-      '<li><span class="no">4</span><span><b>Ton aptitude au métier (entretien de 20 min)</b><ol><li>Se projeter dans le métier de professeur</li><li>Transmettre et incarner les exigences du service public : droits et obligations du fonctionnaire dont la neutralité, lutte contre les discriminations et les stéréotypes, promotion de l’égalité, notamment entre les filles et les garçons</li><li>Comprendre les grands enjeux liés à la transition écologique</li><li>Appréhender l’épanouissement de l’élève dans toutes ses dimensions</li></ol></span>' + avenir + '</li>' +
-      '</ul></div></section>';
+    // Section 3 : admission (à venir)
+    no = 0;
+    h += '<section class="pc-section" id="pc-e3"><div class="pc-section-tete" data-pc-plier role="button" tabindex="0" aria-expanded="true"><span class="pc-plier-btn"><span class="ouvert">Réduire ▴</span><span class="ferme">Afficher ▾</span></span><h3>🎤 Étape 3 · Admission</h3><em>À venir</em><p>L’entretien avec le jury (35 min), en deux parties. Chaque étape aura son quiz spécifique.</p></div>' +
+      ADMISSION.map(function (pa) {
+        return '<p class="pc-partie">' + esc(pa[0]) + ' · ' + pa[1] + '</p><div class="pc-tl">' + pa[2].map(function (x) {
+          no++;
+          return '<div class="pc-item verrou">' + rond('ferme', no) + '<div><span class="lbl">Étape ' + no + (x[1] ? ' · ' + x[1] : '') + '</span><h4>' + esc(x[0]) + '</h4>' + (x[2] ? '<p>' + esc(x[2]) + '</p>' : '') + '</div>' +
+            '<div class="cote"><span class="pc-badge avenir">À venir</span><button type="button" class="pc-btn" disabled>🔒</button></div></div>';
+        }).join('') + '</div>';
+      }).join('') + '</section>';
 
-    root.innerHTML = h;
+    root.innerHTML = '<div class="pc-grille"><div class="pc-gauche">' + h + '</div><aside class="pc-plan">' + plan + '</aside></div>';
     root.querySelector('[data-pc-domaines]').addEventListener('click', function () { choixDomaines('parcours'); });
-    root.querySelectorAll('[data-pc-aller]').forEach(function (b) { b.addEventListener('click', function () { var el = document.getElementById(b.dataset.pcAller); if (el) el.scrollIntoView({ behavior: 'smooth' }); }); });
-    root.querySelectorAll('[data-pc-quiz]').forEach(function (b) {
-      b.addEventListener('click', function () { choisirEpreuve('ecrit'); choix.mat = b.dataset.pcQuiz; garderChoix(); accueil(); top(); });
+    // Groupes d'étapes repliables (état mémorisé sur cet appareil)
+    var plies = {}; try { plies = JSON.parse(localStorage.getItem('qz_pc_plies') || '{}') || {}; } catch (e) {}
+    var plier = function (sec, oui) { sec.classList.toggle('replie', oui); sec.querySelector('[data-pc-plier]').setAttribute('aria-expanded', oui ? 'false' : 'true'); };
+    root.querySelectorAll('.pc-section').forEach(function (sec) {
+      plier(sec, !!plies[sec.id]);
+      var t = sec.querySelector('[data-pc-plier]'), basculer = function () {
+        plies[sec.id] = !sec.classList.contains('replie'); plier(sec, plies[sec.id]);
+        try { localStorage.setItem('qz_pc_plies', JSON.stringify(plies)); } catch (e) {}
+      };
+      t.addEventListener('click', basculer);
+      t.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); basculer(); } });
     });
-    root.querySelectorAll('[data-pc-sujets]').forEach(function (b) {
-      b.addEventListener('click', function () { choisirEpreuve('sujets'); history.pushState(null, '', '/quizapp?vue=quiz'); marquerOnglet('quiz'); intro(false); sjDemarrer(b.dataset.pcSujets); top(); });
+    root.querySelectorAll('[data-pc-aller]').forEach(function (b) { b.addEventListener('click', function () { var el = document.getElementById(b.dataset.pcAller); if (el && el.classList.contains('replie')) el.querySelector('[data-pc-plier]').click(); if (el) el.scrollIntoView({ behavior: 'smooth' }); }); });
+    root.querySelector('[data-pc-seance]').addEventListener('click', function () { seanceLancer(d, M); });
+    root.querySelectorAll('[data-pc-test]').forEach(function (b) { b.addEventListener('click', function () { demarrerTest(+b.dataset.pcTest); }); });
+    root.querySelectorAll('[data-pc-quiz]').forEach(function (b) { b.addEventListener('click', function () { matiereVue('ecrit', b.dataset.pcQuiz); }); });
+    root.querySelectorAll('[data-pc-sujets]').forEach(function (b) { b.addEventListener('click', function () { matiereVue('sj', b.dataset.pcSujets); }); });
+  }
+
+  // ── Page d'une étape du parcours ──
+  // Étape 1 (quiz admissibilité) : sommaire des thèmes de la matière ; à droite, 10 questions du thème choisi, à faire à la suite
+  // (mêmes règles de révision et de maîtrise que les séries). Étape 2 (épreuves passées) : sommaire des sujets officiels ;
+  // à droite, toutes les questions du sujet dans la matière.
+  var lc = null;
+  function matiereVue(mode, mat, ti) {
+    // Séance en cours : on reste dans la séance seulement si elle a demandé cet écran (lot suivant, autre thème du sommaire)
+    if (seance && !seance.nav) seanceAbandon(); else if (seance) seance.nav = false;
+    st = null; tst = null; intro(false); marquerOnglet(''); document.body.classList.add('qz-large');
+    var url = '/quizapp?vue=' + (mode === 'sj' ? 'sujets-matiere' : 'matiere') + '&m=' + encodeURIComponent(mat) + (ti != null ? '&t=' + ti : '');
+    if (location.pathname + location.search !== url) history.pushState(null, '', url);
+    root.innerHTML = '<div class="quiz-card"><p>Chargement…</p></div>';
+    (compte ? Promise.resolve(compte) : api('/api/quiz/compte')).then(function (c) {
+      compte = c;
+      if (!c.positionnement) return introTest();
+      if (mode === 'sj') return sjCharger(sjConcours()).then(function (qs) { lcSujets(mat, qs.filter(function (q) { return q.matiere === mat; }), ti); });
+      return charger(mat).then(function (cat) { lcEcrit(mat, cat, ti); });
+    }).catch(function (e) {
+      if (e && e.status === 401) return connexion();
+      if (e && e.status === 402) return boot(true);
+      erreur('Cette étape n’a pas pu être chargée. Réessaie dans quelques instants.');
+    });
+  }
+  function lcEcrit(mat, cat, ti) {
+    var pm = prog(mat), themes = [], parNom = {};
+    cat.ordre.forEach(function (k) {
+      var no = cat.notions[k], t = no.theme || 'Notions', s = pm.notions[k];
+      if (!parNom[t]) { parNom[t] = { nom: t, n: 0, notions: 0, mai: 0, vus: 0 }; themes.push(parNom[t]); }
+      var x = parNom[t]; x.n += no.questions.length; x.notions++; if (s && s.maitrise) x.mai++; if (s && (s.vus || []).length) x.vus++;
+      x.f = (x.f || 0) + Math.min(no.questions.length, s ? (s.vus || []).length : 0);
+    });
+    themes.forEach(function (x) { x.etat = x.mai >= x.notions ? 'fini' : x.vus ? 'cours' : 'afaire'; var g = groupe(x.nom); x.court = g ? g.court : x.nom; x.bloc = g ? g.nom : ''; });
+    if (ti === 'hasard') {  // séance : un thème au hasard parmi ceux qui ne sont pas terminés
+      var ouverts = themes.map(function (x, i) { return i; }).filter(function (i) { return themes[i].etat !== 'fini'; });
+      ti = ouverts.length ? ouverts[Math.floor(Math.random() * ouverts.length)] : Math.floor(Math.random() * themes.length);
+    }
+    if (ti == null || !themes[ti]) { ti = themes.findIndex(function (x) { return x.etat !== 'fini'; }); if (ti < 0) ti = 0; }
+    var e = essaiActif(), th = themes[ti];
+    var qs = e && e.termine ? [] : composer(cat, pm, null, [th.nom], e ? e.restantes : 10).map(function (q) { return Object.assign({}, q, { mat: mat }, q.type === 'qcm' ? { choix: melange(q.choix) } : {}); });
+    var tot = 0, mai = 0; themes.forEach(function (x) { tot += x.notions; mai += x.mai; });
+    lc = { mode: 'ecrit', mat: mat, ti: ti, themes: themes, theme: th, qs: qs, rep: {}, score: 0, recap: [], sel: {},
+      etape: 'Étape 1 · Quiz admissibilité', pct: tot ? Math.round(mai / tot * 100) : 0,
+      info: '<b>' + nf(tot) + ' notion' + (tot > 1 ? 's' : '') + '</b> · ' + nf(mai) + ' maîtrisée' + (mai > 1 ? 's' : '') + ' · ' + nf(themes.length) + ' thèmes' };
+    lcDessiner();
+  }
+  function lcSujets(mat, tous, ti) {
+    var vus = sjLire().q || {}, themes = [], parNom = {};
+    tous.forEach(function (q) {
+      var t = SJ_CONCOURS[q.concours] + ' ' + q.session + ' · ' + q.sujet;
+      if (!parNom[t]) { parNom[t] = { nom: t, court: q.session + ' · ' + q.sujet, bloc: 'Session ' + q.session, n: 0, f: 0, ok: 0, qs: [] }; themes.push(parNom[t]); }
+      var x = parNom[t]; x.n++; x.qs.push(q); if (vus[q.id]) { x.f++; if (vus[q.id].ok) x.ok++; }
+    });
+    themes.sort(function (a, b) { return b.nom < a.nom ? -1 : 1; });
+    themes.forEach(function (x) { x.etat = x.f >= x.n ? 'fini' : x.f ? 'cours' : 'afaire'; });
+    if (!themes.length) { root.innerHTML = '<div class="quiz-msg">Pas encore de question des épreuves passées dans cette matière pour ton concours.</div><div class="quiz-actions"><a class="quiz-btn ghost" href="/quizapp">← Mon parcours</a></div>'; return; }
+    if (ti == null || !themes[ti]) { ti = themes.findIndex(function (x) { return x.etat !== 'fini'; }); if (ti < 0) ti = 0; }
+    var e = essaiActif(), th = themes[ti];
+    // Les questions jamais vues d'abord, puis les ratées, puis les réussies
+    var ordre = th.qs.filter(function (q) { return !vus[q.id]; }).concat(th.qs.filter(function (q) { return vus[q.id] && !vus[q.id].ok; }), th.qs.filter(function (q) { return vus[q.id] && vus[q.id].ok; }));
+    var qs = e && e.termine ? [] : ordre.slice(0, e ? e.restantes : ordre.length).map(function (q) { return Object.assign({}, q, { mat: q.matiere }, q.type === 'qcm' ? { choix: melange(q.choix) } : {}); });
+    var n = 0, f = 0; themes.forEach(function (x) { n += x.n; f += x.ok; });
+    lc = { mode: 'sj', mat: mat, ti: ti, themes: themes, theme: th, qs: qs, rep: {}, score: 0, recap: [], sel: {},
+      etape: 'Étape 2 · Épreuves passées', pct: n ? Math.round(f / n * 100) : 0,
+      info: '<b>' + nf(n) + ' questions</b> · ' + nf(themes.length) + ' sujet' + (themes.length > 1 ? 's' : '') + ' officiel' + (themes.length > 1 ? 's' : '') };
+    lcDessiner();
+  }
+  function lcDessiner() {
+    var x = lc, th = x.theme, e = essaiActif(), ic = (MATIERES_TOUTES.filter(function (m) { return m[0] === x.mat; })[0] || [])[2] || '';
+    var pt = function (et, n) { return '<span class="pt ' + et + '">' + (et === 'fini' ? '✓' : n) + '</span>'; };
+    var bloc = null, som = x.themes.map(function (t, i) {
+      var tete = t.bloc && t.bloc !== bloc ? '<p class="qd-sous">' + esc(t.bloc) + '</p>' : ''; bloc = t.bloc;
+      return tete + '<button type="button" class="qd-it' + (i === x.ti ? ' on' : '') + '" data-lth="' + i + '">' + pt(t.etat, i + 1) + '<span class="nm">' + esc(t.court) + '</span><span class="nb" title="Questions restantes sur le total">' + nf(Math.max(0, t.n - (t.f || 0))) + ' / ' + nf(t.n) + '</span></button>';
+    }).join('');
+    var corps = function (q, i) {
+      if (q.type === 'numerique') return '<form class="quiz-num" data-lnum="' + i + '"><input type="text" autocomplete="off" placeholder="Votre réponse" aria-label="Votre réponse" data-lin="' + i + '"><button type="button" class="quiz-btn ghost" data-lnsp="' + i + '">Je ne sais pas</button></form>';
+      if (q.type === 'cliquer_mot') return '<p class="quiz-hint">Clique sur le ou les mots.</p><div class="quiz-phrase">' + q.choix.map(function (t, k) {
+        return /[\wÀ-ÿ]/.test(t) ? '<button type="button" class="tok" data-ltok="' + i + ':' + k + '">' + esc(t) + '</button>' : '<span class="punct">' + esc(t) + '</span>';
+      }).join(' ') + '</div><div class="quiz-actions"><button type="button" class="quiz-btn ghost" data-lnsp="' + i + '">Je ne sais pas</button></div>';
+      return '<div class="quiz-choices">' + q.choix.map(function (c, k) { return '<button type="button" class="quiz-choice" data-lk="' + i + ':' + k + '">' + esc(c) + '</button>'; }).join('') + '</div>';
+    };
+    var n = x.qs.length;
+    var droite = seanceBloc() + '<div class="quiz-card lc-tete"><h2>✅ ' + esc(th.court) + '</h2><p>' + (x.mode === 'ecrit' ? nf(th.notions) + ' notion' + (th.notions > 1 ? 's' : '') + ' (' + nf(th.mai) + ' maîtrisée' + (th.mai > 1 ? 's' : '') + ') · ' : '') + (n ? n + ' question' + (n > 1 ? 's' : '') + ' · seuil de réussite 80 %' : 'Aucune question') + (x.mode === 'sj' ? ' · ' + esc(th.nom) : '') + (e && !e.termine && n < (x.mode === 'sj' ? th.n : 10) ? ' · limité à tes questions gratuites du jour' : '') + '</p>' +
+      (n ? '<div class="lc-compte"><span id="lc-compte">0 / ' + n + ' répondues</span><span class="pp-barre"><i id="lc-barre" style="width:0"></i></span></div>' : '') + '</div>' +
+      (e ? essaiBandeau(e) : '') +
+      (e && e.termine ? '<div class="quiz-card"><h2>Tes questions gratuites du jour sont faites</h2><p>Reviens demain, ou débloque le quiz pour continuer sans limite.</p><div class="quiz-actions"><button type="button" class="quiz-btn pw-cta" data-act="payer">Débloquer le quiz pour ' + PRIX + '</button></div></div>' : '') +
+      (!n && !(e && e.termine) ? '<div class="quiz-card"><p>Toutes les notions de ce thème sont maîtrisées. Bravo ! Choisis un autre thème dans le sommaire.</p></div>' : '') +
+      x.qs.map(function (q, i) {
+        return '<div class="quiz-card qz-question lc-q" id="lc-q-' + i + '"><p class="qz-num">Question ' + (i + 1) + ' / ' + n + '</p>' +
+          (x.mode === 'sj' ? '<div class="quiz-meta"><span class="chip sujet">📄 Sujet ' + esc(sjNomSujet(q)) + '</span><span class="chip theme">' + esc(q.partie) + '</span></div>' : '') +
+          (q.contexte ? '<div class="sj-contexte">' + esc(q.contexte) + '</div>' : '') + '<p class="quiz-q">' + esc(q.question) + '</p>' + corps(q, i) + '<div class="lc-fb" id="lc-fb-' + i + '"></div></div>';
+      }).join('') + (n && !(e && e.termine) ? '<div class="lc-valider" id="lc-valider"><span id="lc-valider-txt">0 / ' + n + ' réponses choisies</span><button type="button" class="quiz-btn" data-lvalider>' + (seanceActive() ? 'Valider ces questions' : 'Valider ma série') + '</button></div>' : '') + '<div id="lc-bilan"></div>';
+    root.innerHTML = '<div class="lc-grille"><aside class="lc-side"><details class="qd-carte" id="lc-som"' + (window.innerWidth >= 1100 ? ' open' : '') + '><summary><button type="button" class="lc-retour" data-lretour>← Mon parcours</button>' +
+      '<span class="lbl">' + esc(x.etape) + '</span><h4>' + ic + ' ' + esc(label(x.mat)) + '</h4><p class="lc-info">' + x.info + '</p><div class="barre"><i style="width:' + x.pct + '%"></i></div>' +
+      (window.innerWidth < 1100 ? '<span class="qd-sous" style="display:block">Sommaire ▾</span>' : '<p class="qd-sous">Sommaire · restantes / total</p>') + '</summary>' + som + '</details></aside>' +
+      '<div class="lc-main">' + droite + '</div></div>';
+    top();
+  }
+  function lcMaj() {
+    var n = lc.qs.length, r = Object.keys(lc.rep).filter(function (k) { return lc.rep[k] === 'ok' || lc.rep[k] === 'ko'; }).length;
+    var c = document.getElementById('lc-compte'); if (c) c.textContent = r + ' / ' + n + ' répondues · ' + lc.score + ' juste' + (lc.score > 1 ? 's' : '');
+    var b = document.getElementById('lc-barre'); if (b) b.style.width = Math.round(r / n * 100) + '%';
+    if (r < n) return;
+    var pc = Math.round(lc.score / n * 100), ok = pc >= 80, suivant = lc.ti + 1 < lc.themes.length;
+    if (lc.mode === 'ecrit') {
+      var niv = {}; lc.qs.forEach(function (q) { niv[q.niveau] = (niv[q.niveau] || 0) + 1; });
+      var enreg = garderSerie(lc.mat, Object.keys(niv).sort(function (a, b) { return niv[b] - niv[a]; })[0] || 'facile', lc.score, n, !!essaiActif(), lc.recap);
+      if (seanceActive()) seance.enreg = enreg;
+    }
+    pcCache = null;
+    document.getElementById('lc-bilan').innerHTML = '<div class="quiz-card lc-bilan"><p class="qz-num">Ta note</p><div class="big">' + noteTxt(Math.round(lc.score / n * 40) / 2) + '<small> / 20</small></div><p class="lc-pc">' + pc + ' % de bonnes réponses</p>' +
+      '<p>' + lc.score + ' bonne' + (lc.score > 1 ? 's' : '') + ' réponse' + (lc.score > 1 ? 's' : '') + ' sur ' + n + '. ' + (ok ? '✅ Seuil de réussite atteint : bravo !' : 'Le seuil de réussite est de 80 % : les questions ratées reviendront pour ancrer les notions.') + '</p>' +
+      (seanceActive() ? '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="seance-lot" id="sc-suite">' + (seance.ecoule ? 'Voir le rapport de séance' : '▶️ Questions suivantes · matière au hasard') + '</button>' +
+        '<button type="button" class="quiz-btn ghost" data-act="seance-fin">Terminer la séance</button></div></div>' :
+      '<div class="quiz-actions"><button type="button" class="quiz-btn' + (ok && suivant ? ' ghost' : '') + '" data-lth="' + lc.ti + '">' + (lc.mode === 'ecrit' ? '10 nouvelles questions' : 'Recommencer ce sujet') + '</button>' +
+      (suivant ? '<button type="button" class="quiz-btn' + (ok ? '' : ' ghost') + '" data-lth="' + (lc.ti + 1) + '">' + (lc.mode === 'ecrit' ? 'Thème suivant →' : 'Sujet suivant →') + '</button>' : '') + '</div></div>');
+  }
+  function lcRepondre(i, reponse, montrer, reactiver) {
+    if (!lc || lc.rep[i]) return Promise.resolve(); lc.rep[i] = 'attente';
+    var q = lc.qs[i], fb = document.getElementById('lc-fb-' + i);
+    return api(lc.mode === 'sj' ? '/api/quiz/sujets/reponse' : '/api/quiz/reponse', { method: 'POST', body: JSON.stringify({ id: q.id, reponse: reponse }) }).then(function (d) {
+      lc.rep[i] = d.correct ? 'ok' : 'ko'; if (d.correct) lc.score++;
+      if (d.essai && essaiActif()) Object.assign(compte.essai, d.essai);
+      var avantM = lc.mode !== 'sj' && !!(prog(lc.mat).notions[q.notion] || {}).maitrise;
+      var suite = lc.mode === 'sj' ? sjEnregistrer(q, d.correct) : enregistrer(q, d.correct);
+      lc.recap.push({ id: q.id, theme: q.theme, q: q.question, ok: d.correct, attendu: d.attendu, mat: lc.mat, niveau: q.niveau });
+      seanceNoter({ q: q.question, ok: d.correct, attendu: d.attendu, mat: lc.mat }, lc.mode !== 'sj' && !avantM && !!(prog(lc.mat).notions[q.notion] || {}).maitrise);
+      montrer(d);
+      document.getElementById('lc-q-' + i).classList.add('repondue');
+      fb.innerHTML = '<div class="quiz-feedback ' + (d.correct ? 'ok' : 'ko') + '"><strong>' + (d.correct ? 'Bonne réponse !' : 'Ce n’est pas la bonne réponse. Réponse attendue : ' + esc(d.attendu)) + '</strong>' + esc(d.explication) + '<span class="suite">' + suite + '</span></div>';
+      lcMaj();
+    }).catch(function (e) {
+      lc.rep[i] = null; if (reactiver) reactiver();
+      if (e && e.status === 402) { ouvrirPaiement(); throw e; }
+      if (e && e.status === 401) { connexion(); throw e; }
+      fb.innerHTML = '<div class="quiz-msg" style="margin-top:14px">La correction n’a pas pu être chargée. Réessaie.</div>';
+      throw e;
+    });
+  }
+  root.addEventListener('click', function (e) {
+    if (!lc || !e.target.closest) return;
+    var b = e.target.closest('[data-lk],[data-ltok],[data-lnsp],[data-lth],[data-lretour],[data-lvalider]'); if (!b || !root.contains(b)) return;
+    if (seanceActive() && seance.pause) return;  // séance en pause : questions masquées
+    if (b.dataset.lretour !== undefined && seanceActive()) { e.preventDefault(); seanceFin(); return; }  // quitter la séance : rapport
+    if (b.dataset.lretour !== undefined) { e.preventDefault(); lc = null; history.pushState(null, '', '/quizapp'); parcoursVue(); top(); return; }
+    if (b.dataset.lth !== undefined) {
+      var ti = +b.dataset.lth, mode = lc.mode, mat = lc.mat;
+      var enCours = !lc.valide && Object.keys(lc.choix || {}).length;
+      if (enCours && ti !== lc.ti && !confirm('Changer de thème ? Tes réponses choisies ne sont pas encore validées et seront perdues.')) return;
+      if (seanceActive()) seance.nav = true;
+      matiereVue(mode, mat, ti); return;
+    }
+    if (lc.valide) return;
+    var ch = lc.choix = lc.choix || {};
+    if (b.dataset.lk !== undefined) {
+      var pk = b.dataset.lk.split(':'), i = +pk[0], k = +pk[1];
+      document.querySelectorAll('#lc-q-' + i + ' .quiz-choice').forEach(function (x) { x.classList.toggle('sel', x === b); });
+      ch[i] = { v: lc.qs[i].choix[k], k: k }; lcChoisi(i); return;
+    }
+    if (b.dataset.ltok !== undefined) {
+      var pt2 = b.dataset.ltok.split(':'), i2 = +pt2[0], t = +pt2[1], sel = lc.sel[i2] = lc.sel[i2] || [], pos = sel.indexOf(t);
+      if (pos < 0) sel.push(t); else sel.splice(pos, 1);
+      b.classList.toggle('sel');
+      if (sel.length) ch[i2] = { v: sel.slice().sort(function (x, y) { return x - y; }).join(','), toks: sel.slice() }; else delete ch[i2];
+      lcChoisi(i2); return;
+    }
+    if (b.dataset.lnsp !== undefined) {
+      var i4 = +b.dataset.lnsp, carte = document.getElementById('lc-q-' + i4), dej = ch[i4] && ch[i4].nsp;
+      carte.querySelectorAll('.quiz-choice, .tok').forEach(function (x) { x.classList.remove('sel'); }); lc.sel[i4] = [];
+      var ni = carte.querySelector('[data-lin]'); if (ni) ni.value = '';
+      if (dej) delete ch[i4]; else ch[i4] = { v: '', nsp: true };
+      b.classList.toggle('on', !dej); lcChoisi(i4); return;
+    }
+    if (b.dataset.lvalider !== undefined) lcValider();
+  });
+  root.addEventListener('input', function (e) {
+    var inp = lc && !lc.valide && !(seanceActive() && seance.pause) && e.target.closest && e.target.closest('[data-lin]'); if (!inp) return;
+    var i = +inp.dataset.lin, v = inp.value.trim(), ch = lc.choix = lc.choix || {};
+    var ns = document.querySelector('#lc-q-' + i + ' [data-lnsp]'); if (ns) ns.classList.remove('on');
+    if (v) ch[i] = { v: v, num: true }; else delete ch[i];
+    lcChoisi(i);
+  });
+  root.addEventListener('submit', function (e) {
+    var f = lc && e.target.closest && e.target.closest('[data-lnum]'); if (!f) return;
+    e.preventDefault();  // Entrée : passer à la question suivante
+    var s = document.getElementById('lc-q-' + (+f.dataset.lnum + 1)); if (s) s.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+  function lcChoisi(i) {
+    var n = lc.qs.length, c = Object.keys(lc.choix || {}).length;
+    var carte = document.getElementById('lc-q-' + i); if (carte) carte.classList.toggle('choisie', !!lc.choix[i]);
+    var t = document.getElementById('lc-valider-txt'); if (t) t.textContent = c + ' / ' + n + ' réponse' + (c > 1 ? 's' : '') + ' choisie' + (c > 1 ? 's' : '');
+    var cc = document.getElementById('lc-compte'); if (cc) cc.textContent = c + ' / ' + n + ' répondues';
+    var b = document.getElementById('lc-barre'); if (b) b.style.width = Math.round(c / n * 100) + '%';
+  }
+  // Correction de toute la série, question par question (même enregistrement que les séries), puis la note
+  function lcValider() {
+    var ch = lc.choix || {}, n = lc.qs.length, manque = n - Object.keys(ch).length;
+    if (manque && !confirm(manque + ' question' + (manque > 1 ? 's' : '') + ' sans réponse ' + (manque > 1 ? 'compteront' : 'comptera') + ' comme fausse' + (manque > 1 ? 's' : '') + '. Valider quand même ?')) return;
+    lc.valide = true;
+    var bt = document.querySelector('[data-lvalider]'); bt.disabled = true; bt.textContent = 'Correction…';
+    root.querySelectorAll('.lc-q input, .lc-q button').forEach(function (x) { x.disabled = true; });
+    var suite = Promise.resolve();
+    lc.qs.forEach(function (q, i) {
+      suite = suite.then(function () {
+        var c = ch[i] || { v: '', nsp: true }, carte = document.getElementById('lc-q-' + i);
+        return lcRepondre(i, c.v, function (d) {
+          if (q.type === 'qcm') carte.querySelectorAll('.quiz-choice').forEach(function (x, j) { x.classList.remove('sel'); if (q.choix[j] === d.reponse) x.classList.add('good'); else if (j === c.k) x.classList.add('bad'); });
+          else if (q.type === 'cliquer_mot') { var att = String(d.reponse).split(',').map(Number), mes = c.toks || []; carte.querySelectorAll('.tok').forEach(function (x) { var k = +x.dataset.ltok.split(':')[1]; x.classList.remove('sel'); if (att.indexOf(k) >= 0) x.classList.add('good'); else if (mes.indexOf(k) >= 0) x.classList.add('bad'); }); }
+          else { var ni = carte.querySelector('[data-lin]'); if (ni) ni.classList.add(d.correct ? 'good' : 'bad'); }
+        });
+      });
+    });
+    suite.then(function () {
+      var v = document.getElementById('lc-valider'); if (v) v.remove();
+      var bi = document.getElementById('lc-bilan'); if (bi) bi.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, function () {
+      lc.valide = false; bt.disabled = false; bt.textContent = 'Valider ma série';
+      root.querySelectorAll('.lc-q:not(.repondue) input, .lc-q:not(.repondue) button').forEach(function (x) { x.disabled = false; });
     });
   }
 
@@ -1806,6 +2521,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   function finCible() {
     var n = st.serie.length, s = st.score, note = Math.round(s / n * 20 * 2) / 2;
     st.fini = true;
+    if (st.test != null) { var tf = testsLire('qz_tests_faits'); tf[st.test] = { note: note, score: s, total: n, at: new Date().toISOString() }; testsEcrire('qz_tests_faits', tf); }
     // Historique (Mes séries) : une série par matière, au niveau le plus fréquent de ses questions
     var parMat = {};
     st.recap.forEach(function (r) { (parMat[r.mat] = parMat[r.mat] || []).push(r); });
@@ -1815,10 +2531,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       garderSerie(m, niv || 'facile', rs.filter(function (r) { return r.ok; }).length, rs.length, !!essaiActif(), rs);
     });
     root.innerHTML = barreFiltres(false) + '<div class="quiz-card quiz-score">' +
-      '<div class="quiz-top" style="justify-content:center"><span class="mat">Révision ciblée · ' + pluriel(st.cible, 'notion') + '</span></div>' +
+      '<div class="quiz-top" style="justify-content:center"><span class="mat">' + (st.test != null ? '🧪 Test ' + (st.test + 1) + ' · ' + TESTS[st.test][1] : 'Révision ciblée · ' + pluriel(st.cible, 'notion')) + '</span></div>' +
       '<div class="big">' + String(note).replace('.', ',') + ' / 20</div><p>' + s + ' bonne' + (s > 1 ? 's' : '') + ' réponse' + (s > 1 ? 's' : '') + ' sur ' + n + '.</p>' +
       (essaiActif() ? '<div class="essai-bandeau qz-essai-fin"><div class="qz-essai-ligne">🎁 <strong>Questions gratuites du jour</strong>' + compteurEssai(compte.essai) + '</div></div>' : '') +
-      '<div class="quiz-actions"><a class="quiz-btn" href="/quizapp?vue=notions">Retour à Mes notions</a><a class="quiz-btn ghost" href="/quizapp">Lancer une série</a></div>' +
+      (st.test != null ? '<div class="quiz-actions"><a class="quiz-btn" href="/quizapp">Retour à mon parcours</a></div>' : '<div class="quiz-actions"><a class="quiz-btn" href="/quizapp?vue=notions">Retour à Mes notions</a><a class="quiz-btn ghost" href="/quizapp">Lancer une série</a></div>') +
       '<div class="quiz-recap">' + st.recap.map(function (r) {
         return '<div class="' + (r.ok ? 'r-ok' : 'r-ko') + '">' + esc(r.q) + (r.ok ? '' : ' <em>Réponse : ' + esc(r.attendu) + '</em>') + '</div>';
       }).join('') + '</div></div>';
@@ -1827,13 +2543,16 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   // ── Mes séries : historique des séries terminées (table quiz_series) ──
-  var filtreSeries = '';
+  var filtreSeries = '', filtreNiveau = '', vueSeries = 'liste', modeGraph = 'serie', etapeSeries = 'admissibilite';
+  // Étape d'une série : l'admission (quiz de l'entretien, à venir) aura ses propres matières « admission… »
+  function etapeSerie(x) { return /^admission/.test(x.matiere || '') ? 'admission' : 'admissibilite'; }
+  try { vueSeries = localStorage.getItem('qz_vue_series') || 'liste'; modeGraph = localStorage.getItem('qz_mode_graph') || 'serie'; } catch (e) {}
   function garderSerie(mat, niveau, score, total, essai, recap) {
-    SB.auth.getSession().then(function (r) {
+    return SB.auth.getSession().then(function (r) {
       var u = r.data.session && r.data.session.user; if (!u) return;
       return SB.from('quiz_series').insert({ user_id: u.id, matiere: mat, niveau: niveau, score: score, total: total, essai: essai,
         details: recap.map(function (x) { return { id: x.id, question: x.q, theme: x.theme, ok: x.ok, attendu: x.attendu }; }) });
-    }).catch(function () {});
+    }).then(function () { majCoque(true); pcCache = null; }).catch(function () {});
   }
   function note20(x) { return Math.round(x.score / x.total * 40) / 2; }
   function noteTxt(n) { return String(n).replace('.', ','); }
@@ -1847,7 +2566,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }).catch(function () { erreur('Vos séries n’ont pas pu être chargées. Réessayez dans quelques instants.'); });
   }
   function afficherSeries(toutes) {
-    var liste = filtreSeries ? toutes.filter(function (x) { return x.matiere === filtreSeries; }) : toutes;
+    var parEtape = toutes.filter(function (x) { return etapeSerie(x) === etapeSeries; });
+    var liste = parEtape.filter(function (x) { return (!filtreSeries || x.matiere === filtreSeries) && (!filtreNiveau || (x.niveau || 'facile') === filtreNiveau); });
     var nb = liste.length, somme = 0, questions = 0, best = null, faites = {};
     liste.forEach(function (x) { var n = note20(x); somme += n; questions += x.total; if (best === null || n > best) best = n; });
     toutes.forEach(function (x) { faites[x.matiere] = true; });
@@ -1857,13 +2577,27 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         '<div class="quiz-actions"><a class="quiz-btn" href="/quizapp">Lancer une série</a></div></div>';
       return;
     }
+    var nAdm = toutes.filter(function (x) { return etapeSerie(x) === 'admissibilite'; }).length, nAdmi = toutes.length - nAdm;
+    html += '<div class="sg-etapes" role="tablist" aria-label="Étape">' +
+      '<button type="button" role="tab" data-se="admissibilite" aria-selected="' + (etapeSeries === 'admissibilite') + '">✍️ Admissibilité <small>' + nAdm + '</small></button>' +
+      '<button type="button" role="tab" data-se="admission" aria-selected="' + (etapeSeries === 'admission') + '">🎤 Admission <small>' + nAdmi + '</small></button></div>';
+    if (!parEtape.length) {
+      root.innerHTML = html + '<div class="quiz-card"><h2>' + (etapeSeries === 'admission' ? 'Le quiz d’admission arrive bientôt' : 'Aucune série d’admissibilité pour l’instant') + '</h2><p>' +
+        (etapeSeries === 'admission' ? 'Tes séries sur l’entretien avec le jury apparaîtront ici, avec leur graphique et leurs notes, séparées de l’admissibilité.' : 'Chaque série terminée apparaîtra ici, avec ta note sur 20.') + '</p></div>';
+      lierEtapes(toutes); return;
+    }
     html += '<div class="qz-barre"><div class="qz-barre-champ"><label for="series-mat">Matière</label><select id="series-mat" class="quiz-select"><option value="">Toutes les matières</option>' +
-      MATIERES.filter(function (m) { return faites[m[0]]; }).map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === filtreSeries ? ' selected' : '') + '>' + esc(m[1]) + '</option>'; }).join('') + '</select></div></div>' +
-      '<div class="stats qz-stats-series"><div class="stat"><b>' + nb + '</b><span>série' + (nb > 1 ? 's' : '') + ' terminée' + (nb > 1 ? 's' : '') + '</span></div>' +
+      MATIERES.filter(function (m) { return faites[m[0]]; }).map(function (m) { return '<option value="' + m[0] + '"' + (m[0] === filtreSeries ? ' selected' : '') + '>' + esc(m[1]) + '</option>'; }).join('') + '</select></div>' +
+      '<div class="qz-barre-champ"><label for="series-niv">Niveau</label><select id="series-niv" class="quiz-select"><option value="">Tous les niveaux</option>' +
+      Object.keys(NIVEAUX).map(function (k) { return '<option value="' + k + '"' + (k === filtreNiveau ? ' selected' : '') + '>' + NIVEAUX[k] + '</option>'; }).join('') + '</select></div></div>' +
+      '<div class="sg-bascule" role="group" aria-label="Affichage"><button type="button" data-vs="liste" aria-pressed="' + (vueSeries !== 'graph') + '">📋 Notes</button><button type="button" data-vs="graph" aria-pressed="' + (vueSeries === 'graph') + '">📈 Graphique</button></div>' +
+      (vueSeries === 'graph' ? graphSeries(liste) : '') +
+      (vueSeries === 'graph' ? '' : '<div class="stats qz-stats-series"><div class="stat"><b>' + nb + '</b><span>série' + (nb > 1 ? 's' : '') + ' terminée' + (nb > 1 ? 's' : '') + '</span></div>' +
       '<div class="stat"><b>' + (nb ? noteTxt(Math.round(somme / nb * 2) / 2) : '–') + ' / 20</b><span>note moyenne</span></div>' +
-      '<div class="stat"><b>' + (best === null ? '–' : noteTxt(best)) + ' / 20</b><span>meilleure note</span></div></div>' +
-      '<p class="qz-note qz-total-q">' + questions + ' questions répondues' + (filtreSeries ? ' en ' + esc(label(filtreSeries)) : '') + '. Touchez une série pour voir le détail.</p>' +
-      '<div class="qz-series">' + liste.map(function (x) {
+      '<div class="stat"><b>' + (best === null ? '–' : noteTxt(best)) + ' / 20</b><span>meilleure note</span></div></div>') +
+      '<p class="qz-note qz-total-q">' + questions + ' questions répondues' + (filtreSeries ? ' en ' + esc(label(filtreSeries)) : '') + (filtreNiveau ? ' · niveau ' + NIVEAUX[filtreNiveau].toLowerCase() : '') + (vueSeries === 'graph' ? '.' : '. Touchez une série pour voir le détail.') + '</p>' +
+      (nb ? '' : '<div class="quiz-card"><p>Aucune série avec ces filtres.</p></div>') +
+      (vueSeries === 'graph' ? '' : '<div class="qz-series">' + liste.map(function (x) {
         var n = note20(x), cl = n >= 16 ? 'tres-bien' : n >= 12 ? 'bien' : n >= 8 ? 'moyen' : 'faible', d = new Date(x.created_at);
         return '<details class="qz-serie"><summary><span class="qz-serie-note ' + cl + '">' + noteTxt(n) + '<small>/20</small></span>' +
           '<span class="qz-serie-info"><b>' + esc(label(x.matiere)) + '</b><span>' + NIVEAUX[x.niveau] + ' · ' + x.score + ' / ' + x.total + ' bonnes réponses' + (x.essai ? ' · série d’essai' : '') + '</span>' +
@@ -1872,11 +2606,73 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           '<div class="quiz-recap">' + (x.details || []).map(function (q) {
             return '<div class="' + (q.ok ? 'r-ok' : 'r-ko') + '"><span>' + (q.theme ? '<span class="qz-recap-theme">' + esc(q.theme) + '</span>' : '') + esc(q.question) + (q.ok ? '' : ' <em>Réponse : ' + esc(q.attendu) + '</em>') + '</span></div>';
           }).join('') + '</div></details>';
-      }).join('') + '</div>' +
+      }).join('') + '</div>') +
       '<div class="quiz-actions"><a class="quiz-btn" href="/quizapp">Lancer une nouvelle série</a></div>';
     root.innerHTML = html;
     var sel = document.getElementById('series-mat');
     sel.addEventListener('change', function () { filtreSeries = sel.value; afficherSeries(toutes); });
+    var sn = document.getElementById('series-niv');
+    sn.addEventListener('change', function () { filtreNiveau = sn.value; afficherSeries(toutes); });
+    lierEtapes(toutes);
+    root.querySelectorAll('[data-gm]').forEach(function (b) { b.addEventListener('click', function () {
+      modeGraph = b.dataset.gm; try { localStorage.setItem('qz_mode_graph', modeGraph); } catch (e) {} afficherSeries(toutes);
+    }); });
+    root.querySelectorAll('[data-vs]').forEach(function (b) { b.addEventListener('click', function () {
+      vueSeries = b.dataset.vs; try { localStorage.setItem('qz_vue_series', vueSeries); } catch (e) {} afficherSeries(toutes);
+    }); });
+    activerGraph();
+  }
+  function lierEtapes(toutes) {
+    root.querySelectorAll('[data-se]').forEach(function (b) { b.addEventListener('click', function () {
+      if (etapeSeries === b.dataset.se) return; etapeSeries = b.dataset.se; filtreSeries = ''; filtreNiveau = ''; afficherSeries(toutes);
+    }); });
+  }
+  // Graphique : la note sur 20 de chaque série, de la plus ancienne à la plus récente (suit les filtres)
+  function graphSeries(liste) {
+    var brut = liste.slice().reverse();
+    if (!brut.length) return '';
+    var pts;
+    if (modeGraph === 'jour') {
+      var jours = {}, ordre = [];
+      brut.forEach(function (p) { var d = new Date(p.created_at), k = d.getFullYear() + '-' + d.getMonth() + '-' + d.getDate(); if (!jours[k]) { jours[k] = { created_at: p.created_at, s: 0, t: 0, n: 0 }; ordre.push(k); } var j = jours[k]; j.s += p.score; j.t += p.total; j.n++; });
+      pts = ordre.map(function (k) { var j = jours[k]; return { created_at: j.created_at, note: j.t ? Math.round(j.s / j.t * 40) / 2 : 0, jour: true, n: j.n, s: j.s, t: j.t }; });
+    } else pts = brut.map(function (p) { return Object.assign({ note: note20(p) }, p); });
+    var W = window.innerWidth < 600 ? 340 : 720, H = window.innerWidth < 600 ? 200 : 220, g = 34, d = 14, h = 14, b = 30, n = pts.length;
+    var x = function (i) { return n === 1 ? (g + W - d) / 2 : g + i * (W - g - d) / (n - 1); }, y = function (v) { return h + (20 - v) * (H - h - b) / 20; };
+    var grille = [0, 5, 10, 15, 20].map(function (v) { return '<line x1="' + g + '" x2="' + (W - d) + '" y1="' + y(v) + '" y2="' + y(v) + '" class="' + (v === 10 ? 'g10' : 'g') + '"/><text x="' + (g - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + v + '</text>'; }).join('');
+    var c = pts.map(function (p, i) { return [x(i), y(p.note)]; });
+    var ligne = n > 1 ? '<polyline points="' + c.map(function (q) { return q[0].toFixed(1) + ',' + q[1].toFixed(1); }).join(' ') + '" class="l"/>' : '';
+    var points = n <= 80 ? c.map(function (q) { return '<circle cx="' + q[0].toFixed(1) + '" cy="' + q[1].toFixed(1) + '" r="4" class="p"/>'; }).join('') : '';
+    var dt = function (p) { return new Date(p.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }); };
+    var axe = '<text x="' + g + '" y="' + (H - 8) + '" text-anchor="start">' + esc(dt(pts[0])) + '</text>' + (n > 1 ? '<text x="' + (W - d) + '" y="' + (H - 8) + '" text-anchor="end">' + esc(dt(pts[n - 1])) + '</text>' : '');
+    var moy = 0; brut.forEach(function (p) { moy += note20(p); }); moy = Math.round(moy / brut.length * 2) / 2;
+    graphSeries.pts = pts; graphSeries.c = c; graphSeries.W = W; graphSeries.H = H;
+    return '<div class="sg-carte"><div class="sg-tete"><h3>Évolution de ta note</h3><span>' + brut.length + ' série' + (brut.length > 1 ? 's' : '') + (modeGraph === 'jour' ? ' sur ' + n + ' jour' + (n > 1 ? 's' : '') : '') + ' · moyenne <b>' + noteTxt(moy) + ' / 20</b></span></div>' +
+      '<div class="sg-mode" role="group" aria-label="Points du graphique"><button type="button" data-gm="serie" aria-pressed="' + (modeGraph !== 'jour') + '">Par série</button><button type="button" data-gm="jour" aria-pressed="' + (modeGraph === 'jour') + '">Moyenne par jour</button></div>' +
+      '<div class="sg-zone" id="sg-zone"><svg viewBox="0 0 ' + W + ' ' + H + '" class="sg" role="img" aria-label="' + (modeGraph === 'jour' ? 'Note moyenne sur 20 de chaque jour' : 'Note sur 20 de chaque série') + ', de la plus ancienne à la plus récente, moyenne ' + noteTxt(moy) + ' sur 20">' +
+      grille + ligne + points + axe + '<line class="sg-x" id="sg-x" y1="' + h + '" y2="' + (H - b) + '" style="display:none"/><circle id="sg-pt" r="6" class="sg-pt" style="display:none"/></svg>' +
+      '<div class="sg-bulle" id="sg-bulle" hidden></div></div><p class="sg-leg">La ligne pointillée marque 10 / 20.</p></div>';
+  }
+  function activerGraph() {
+    var z = document.getElementById('sg-zone'); if (!z) return;
+    var svg = z.querySelector('svg'), bu = document.getElementById('sg-bulle'), xl = document.getElementById('sg-x'), pt = document.getElementById('sg-pt');
+    var cacher = function () { bu.hidden = true; xl.style.display = 'none'; pt.style.display = 'none'; };
+    var montrer = function (cx) {
+      var r = svg.getBoundingClientRect(), vx = (cx - r.left) / r.width * graphSeries.W, c = graphSeries.c, k = 0;
+      c.forEach(function (q, i) { if (Math.abs(q[0] - vx) < Math.abs(c[k][0] - vx)) k = i; });
+      var p = graphSeries.pts[k], q = c[k], d = new Date(p.created_at);
+      xl.setAttribute('x1', q[0]); xl.setAttribute('x2', q[0]); xl.style.display = '';
+      pt.setAttribute('cx', q[0]); pt.setAttribute('cy', q[1]); pt.style.display = '';
+      bu.innerHTML = p.jour
+        ? '<b>' + noteTxt(p.note) + ' / 20 de moyenne</b><span>' + d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long' }) + '</span><small>' + p.n + ' série' + (p.n > 1 ? 's' : '') + ' · ' + p.s + ' / ' + p.t + ' bonnes réponses</small>'
+        : '<b>' + noteTxt(p.note) + ' / 20</b><span>' + esc(label(p.matiere)) + ' · ' + (NIVEAUX[p.niveau] || '') + '</span><small>' + p.score + ' / ' + p.total + ' · ' + d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) + '</small>';
+      bu.hidden = false;
+      var px = q[0] / graphSeries.W * r.width, w = bu.offsetWidth;
+      bu.style.left = Math.max(0, Math.min(r.width - w, px - w / 2)) + 'px'; bu.style.top = Math.max(0, q[1] / graphSeries.H * r.height - bu.offsetHeight - 12) + 'px';
+    };
+    z.addEventListener('mousemove', function (ev) { montrer(ev.clientX); });
+    z.addEventListener('mouseleave', cacher);
+    z.addEventListener('touchstart', function (ev) { montrer(ev.touches[0].clientX); }, { passive: true });
   }
 
   // ── Support QuizCRPE : demandes enregistrées dans support_tickets (produit « quiz »), traitées dans /admin-support ──
@@ -2420,6 +3216,126 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }).catch(function () { msg('Le module de paiement PayPal n\'a pas pu se charger. Rechargez la page.', true); });
   }
 
+  // ── Séance du jour : 20 minutes chronométrées, au format des pages du parcours (10 questions à la suite, validées d'un coup).
+  // Chaque lot porte sur une matière de l'admissibilité tirée au hasard (parmi celles pas encore terminées) et un de ses thèmes.
+  // Le bandeau de séance (chrono, pause, objectif) s'affiche au-dessus des questions ; à la fin du chrono : rapport de séance ──
+  var SEANCE_MIN = 20, SEANCE_PAR_JOUR = 2, seance = null;
+  // Séances terminées aujourd'hui (dans ce navigateur) : l'objectif du jour est partagé entre les séances restantes
+  function cleSeances() { var d = new Date(); return 'qz_seances:' + String((compte && compte.email) || '').toLowerCase() + ':' + d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  function seancesFaites() { try { return +localStorage.getItem(cleSeances()) || 0; } catch (e) { return 0; } }
+  function seanceCompter() { try { localStorage.setItem(cleSeances(), String(seancesFaites() + 1)); } catch (e) {} }
+  function seanceActive() { return seance && !seance.fini ? seance : null; }
+  // Séance quittée sans passer par le rapport (autre écran) : le chrono s'arrête ; les lots validés restent enregistrés
+  function seanceAbandon() { if (seance && !seance.fini) { seance.fini = true; clearInterval(seance.timer); } seance = null; document.body.classList.remove('sc-en-pause'); }
+  function seanceLancer(d, M) {
+    var e = essaiActif();
+    if (e && e.termine) return ouvrirPaiement();
+    seanceAbandon();
+    // Objectif de la séance : ce qu'il reste de l'objectif du jour, partagé entre les séances restantes (0 : séance bonus)
+    var O = objectifJour(d, M), faitesS = seancesFaites(), restant = Math.max(0, O.parJour - O.faitesAuj), nRest = Math.max(1, SEANCE_PAR_JOUR - faitesS);
+    var mats = M.items.filter(function (x) { return x.etat !== 'fini'; }).map(function (x) { return x.k; });
+    if (!mats.length) mats = M.items.map(function (x) { return x.k; });
+    var S = seance = { debut: Date.now(), fin: Date.now() + SEANCE_MIN * 60000, objJour: O.parJour, objectif: Math.ceil(restant / nRest), numero: faitesS + 1,
+      avant: O.faitesAuj, mats: mats, recap: [], maitrisees: 0, pause: 0, ecoule: false, fini: false };
+    S.timer = setInterval(function () { seanceTic(S); }, 1000);
+    seanceLot();
+  }
+  // Lot suivant : une matière de l'admissibilité au hasard, puis un de ses thèmes au hasard (page de la matière)
+  function seanceLot() {
+    var S = seanceActive(); if (!S) return;
+    if (S.ecoule) return seanceFin();
+    S.nav = true;
+    matiereVue('ecrit', S.mats[Math.floor(Math.random() * S.mats.length)], 'hasard');
+  }
+  function seanceChrono(S) {
+    if (S.ecoule) return '⏱ Temps écoulé';
+    var t = S.pause ? S.fin - S.pause : S.fin - Date.now(), r = Math.max(0, Math.ceil(t / 1000)), txt = Math.floor(r / 60) + ':' + (r % 60 < 10 ? '0' : '') + r % 60;
+    return (S.pause ? '⏸ En pause · ' : '⏱ ') + txt;
+  }
+  function seanceObjectif(S) {
+    var n = S.recap.length, o = S.objectif, jour = S.avant + n;
+    var l1 = !o ? '⭐ Séance bonus : objectif du jour déjà atteint · <b>' + pluriel(n, 'question') + '</b>'
+      : (n >= o ? '✅ Objectif de la séance atteint : ' : '🎯 Objectif de la séance : ') + '<b>' + nf(n) + ' / ' + nf(o) + '</b> questions';
+    return '<span>' + l1 + '</span>' + (S.objJour ? '<small>Aujourd’hui : ' + nf(jour) + ' / ' + nf(S.objJour) + ' questions</small>' : '');
+  }
+  function seanceTitre(S) { return S.objectif ? 'Séance ' + S.numero + ' / ' + SEANCE_PAR_JOUR : 'Séance bonus'; }
+  // Bandeau affiché au-dessus des questions de la page de la matière
+  function seanceBloc() {
+    var S = seanceActive(); if (!S) return '';
+    return '<div class="quiz-card sc-bloc"><div class="sc-tete"><span class="sc-titre">▶️ ' + seanceTitre(S) + '</span>' +
+      '<span class="sc-chrono' + (S.ecoule ? ' fin' : '') + '" id="sc-chrono">' + seanceChrono(S) + '</span>' +
+      (S.ecoule ? '' : '<button type="button" class="sc-pause-btn" data-act="seance-pause">' + (S.pause ? '▶️ Reprendre' : '⏸ Pause') + '</button>') +
+      '<span class="sc-obj" id="sc-obj">' + seanceObjectif(S) + '</span>' +
+      '<button type="button" class="quiz-link sc-terminer" data-act="seance-fin">Terminer la séance</button></div>' +
+      '<div class="sc-barre"><i id="sc-barre" style="width:' + Math.min(100, (Date.now() - S.debut) / (S.fin - S.debut) * 100) + '%"></i></div>' +
+      '<p class="sc-info" id="sc-info">' + (S.ecoule ? 'Le temps est écoulé : valide ces questions pour voir le rapport de séance.' : '🎲 Matière et thème tirés au hasard parmi les épreuves d’admissibilité.') + '</p></div>';
+  }
+  // Pause : le chrono s'arrête et les questions sont masquées ; à la reprise, la fin de la séance est décalée d'autant
+  function seancePause() {
+    var S = seanceActive(); if (!S || S.ecoule) return;
+    if (S.pause) { var dt = Date.now() - S.pause; S.fin += dt; S.debut += dt; S.pause = 0; } else S.pause = Date.now();
+    document.body.classList.toggle('sc-en-pause', !!S.pause);
+    var b = root.querySelector('[data-act="seance-pause"]'); if (b) b.textContent = S.pause ? '▶️ Reprendre' : '⏸ Pause';
+    var c = document.getElementById('sc-chrono'); if (c) c.textContent = seanceChrono(S);
+  }
+  function seanceTic(S) {
+    if (seance !== S || S.fini) return clearInterval(S.timer);
+    if (S.pause) return;
+    if (!S.ecoule && Date.now() >= S.fin) {
+      S.ecoule = true;
+      var pb = root.querySelector('[data-act="seance-pause"]'); if (pb) pb.remove();
+      var inf = document.getElementById('sc-info'); if (inf) inf.textContent = 'Le temps est écoulé : valide ces questions pour voir le rapport de séance.';
+      var su = document.getElementById('sc-suite'); if (su) su.textContent = 'Voir le rapport de séance';
+    }
+    var c = document.getElementById('sc-chrono'); if (c) { c.textContent = seanceChrono(S); c.classList.toggle('fin', S.ecoule || S.fin - Date.now() < 60000); }
+    var b = document.getElementById('sc-barre'); if (b) b.style.width = Math.min(100, (Date.now() - S.debut) / (S.fin - S.debut) * 100) + '%';
+  }
+  // Une réponse corrigée dans la page de la matière compte pour la séance
+  function seanceNoter(r, devenueMaitrisee) {
+    var S = seanceActive(); if (!S) return;
+    S.recap.push(r); if (devenueMaitrisee) S.maitrisees++;
+    if (essaiActif() && compte.essai.termine) S.ecoule = true;  // essai : plus de questions gratuites aujourd'hui, la séance s'arrête
+    var so = document.getElementById('sc-obj'); if (so) so.innerHTML = seanceObjectif(S);
+  }
+  // Rapport de séance : volume, réussite, objectifs, notions maîtrisées, détail par matière, questions à revoir
+  function seanceFin() {
+    var S = seance; if (!S || S.fini) return;
+    if (S.pause) seancePause();
+    S.fini = true; clearInterval(S.timer); seanceCompter(); document.body.classList.remove('sc-en-pause');
+    lc = null; st = null; intro(false); marquerOnglet('');
+    if (location.pathname + location.search !== '/quizapp?vue=seance') history.pushState(null, '', '/quizapp?vue=seance');
+    var rs = S.recap, n = rs.length, ok = rs.filter(function (r) { return r.ok; }).length, pct = n ? Math.round(ok / n * 100) : 0;
+    var minutes = Math.max(1, Math.round((Math.min(Date.now(), S.fin) - S.debut) / 60000));
+    var total = S.avant + n, o = S.objJour, os = S.objectif;
+    var mats = {}; rs.forEach(function (r) { var x = mats[r.mat] = mats[r.mat] || { n: 0, ok: 0 }; x.n++; if (r.ok) x.ok++; });
+    var ic = function (m) { var x = MATIERES_TOUTES.filter(function (y) { return y[0] === m; })[0]; return x ? x[2] : ''; };
+    var ratees = rs.filter(function (r) { return !r.ok; });
+    var msg = !n ? 'Aucune question n’a été validée pendant cette séance.' : pct >= 80 ? 'Excellente séance !' : pct >= 60 ? 'Bonne séance, continue comme ça.' : 'Les notions ratées reviendront dans tes prochaines séances pour être retravaillées.';
+    root.innerHTML = '<div class="quiz-card quiz-score sc-rapport">' +
+      '<div class="quiz-top" style="justify-content:center"><span class="mat">▶️ Rapport de la ' + (os ? 'séance ' + S.numero + ' / ' + SEANCE_PAR_JOUR : 'séance bonus') + ' · ' + pluriel(minutes, 'minute') + '</span></div>' +
+      '<div class="big">' + pluriel(n, 'question') + '</div><p>' + ok + ' bonne' + (ok > 1 ? 's' : '') + ' réponse' + (ok > 1 ? 's' : '') + (n ? ' (' + pct + ' %)' : '') + '. ' + msg + '</p>' +
+      '<div class="stats"><div class="stat"><b>' + S.maitrisees + '</b><span>notion' + (S.maitrisees > 1 ? 's' : '') + ' maîtrisée' + (S.maitrisees > 1 ? 's' : '') + '</span></div>' +
+        '<div class="stat"><b>' + Object.keys(mats).length + '</b><span>matière' + (Object.keys(mats).length > 1 ? 's' : '') + ' travaillée' + (Object.keys(mats).length > 1 ? 's' : '') + '</span></div>' +
+        '<div class="stat"><b>' + pct + ' %</b><span>de réussite</span></div></div>' +
+      '<p class="sc-obj-fin' + (os && n >= os ? ' ok' : '') + '">' + (!os ? '⭐ Séance bonus : l’objectif du jour était déjà atteint.'
+        : n >= os ? '✅ Objectif de la séance atteint : <b>' + nf(n) + ' / ' + nf(os) + '</b> questions.'
+        : '🎯 Objectif de la séance : <b>' + nf(n) + ' / ' + nf(os) + '</b> questions.') + '<br>' + (!o ? '🎉 Objectif de ' + OBJ_PCT + ' % des notions atteint.'
+        : total >= o ? '✅ Objectif du jour atteint : <b>' + nf(total) + ' / ' + nf(o) + '</b> questions aujourd’hui.'
+        : '🎯 Objectif du jour : <b>' + nf(total) + ' / ' + nf(o) + '</b> questions aujourd’hui. Encore ' + pluriel(o - total, 'question') + ' pour l’atteindre.') + '</p>' +
+      (n ? '<div class="sc-mats">' + Object.keys(mats).map(function (m) {
+        return '<div><span>' + ic(m) + ' ' + esc(label(m)) + '</span><span>' + mats[m].ok + ' / ' + mats[m].n + '</span></div>';
+      }).join('') + '</div>' : '') +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="seance-relancer">▶️ Relancer une séance (' + SEANCE_MIN + ' min)</button><a class="quiz-btn ghost" href="/quizapp">Retour à mon parcours</a></div>' +
+      (ratees.length ? '<h3 class="sc-h">À revoir</h3><div class="quiz-recap">' + ratees.map(function (r) {
+        return '<div class="r-ko">' + esc(r.q) + ' <em>Réponse : ' + esc(r.attendu) + '</em></div>';
+      }).join('') + '</div>' : '') + '</div>';
+    top();
+    if (essaiActif()) {
+      if (compte.essai.termine) setTimeout(ouvrirPaiement, 900);
+      api('/api/quiz/compte').then(function (c) { compte = c; }).catch(function () {});
+    }
+  }
+
   function demarrer(mat, niveau) {
     // Essai : la série compte les questions gratuites qui restent aujourd'hui ; plus aucune, le paiement s'ouvre
     var e = essaiActif();
@@ -2444,7 +3360,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (st.sj) return sjEntete(q);
     var n = st.serie.length;
     var e = essaiActif();
-    return '<div class="quiz-top"><span class="mat">' + esc(label(q.mat || st.mat)) + ' · ' + (st.cible ? 'Révision ciblée' : NIVEAUX[st.niveau]) + '</span><span>Question ' + (st.i + 1) + ' / ' + n + '</span></div>' +
+    return '<div class="quiz-top"><span class="mat">' + esc(label(q.mat || st.mat)) + ' · ' + (st.test != null ? 'Test ' + (st.test + 1) : st.cible ? 'Révision ciblée' : NIVEAUX[st.niveau]) + '</span><span>Question ' + (st.i + 1) + ' / ' + n + '</span></div>' +
       (e ? '<div class="qz-essai-ligne qz-essai-serie" id="qz-compteur">🎁 Questions gratuites du jour' + compteurEssai(e) + '</div>' : '') +
       '<div class="quiz-bar"><span style="width:' + Math.round(st.i / n * 100) + '%"></span></div>' +
       '<div class="quiz-meta"><span class="chip ' + q.niveau + '">' + (NIVEAUX[q.niveau] || '') + '</span>' +
@@ -2476,7 +3392,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       corps = '<div class="quiz-choices">' + q.choix.map(function (c, k) { return '<button type="button" class="quiz-choice" data-k="' + k + '">' + esc(c) + '</button>'; }).join('') + '</div>';
     }
     intro(false);
-    root.innerHTML = barreFiltres(true) + '<div class="quiz-card qz-question">' + entete(q) + (q.contexte ? '<div class="sj-contexte">' + esc(q.contexte) + '</div>' : '') + '<p class="quiz-q">' + esc(q.question) + '</p>' + corps + '<div id="quiz-fb"></div></div>';
+    root.innerHTML = barreFiltres(true) + '<div class="quiz-card qz-question">' + entete(q) + (q.contexte ? '<div class="sj-contexte">' + esc(q.contexte) + '</div>' : '') + '<p class="qz-num">Question ' + (st.i + 1) + ' / ' + st.serie.length + '</p><p class="quiz-q">' + esc(q.question) + '</p>' + corps + '<div id="quiz-fb"></div></div>';
     versQuestion();
     var inp = root.querySelector('.quiz-num input'); if (inp) inp.focus({ preventScroll: true });
   }
@@ -2614,13 +3530,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // « Ma progression » : la progression est sur l'accueil, pour la matière et le niveau choisis
   function progression(mat, message) { choix.mat = mat; garderChoix(); accueil(message); top(); }
 
-  // ── Type de quiz : Quiz (notions du programme), Quiz sujets (sujets officiels), Oral (à venir) ──
+  // ── Type de quiz : Quiz (notions du programme), Quiz sujets (sujets officiels) ; Didactique, Rédaction et Oral (à venir) ──
   function barreEpreuve(actif) {
     return '<div class="ep-switch" role="group" aria-label="Type de quiz">' +
       [['ecrit', '✍️', 'Quiz'], ['sujets', '📄', 'Quiz sujets']].map(function (m) {
         return '<button type="button" class="ep-sw" data-ep-mode="' + m[0] + '" aria-pressed="' + (m[0] === actif) + '">' + m[1] + ' ' + m[2] + '</button>';
       }).join('') +
-      '<button type="button" class="ep-sw ep-oral" disabled aria-disabled="true" title="L’entraînement à l’oral arrive bientôt">🎤 Oral <span class="ep-oral-badge">À venir</span></button></div>';
+      [['📚', 'Didactique', 'Le quiz de didactique arrive bientôt'], ['📝', 'Rédaction', 'Le quiz de rédaction arrive bientôt'], ['🎤', 'Oral', 'L’entraînement à l’oral arrive bientôt']].map(function (m) {
+        return '<button type="button" class="ep-sw ep-oral" disabled aria-disabled="true" title="' + m[2] + '">' + m[0] + ' ' + m[1] + ' <span class="ep-oral-badge">À venir</span></button>';
+      }).join('') + '</div>';
   }
 
   // ── Quiz sujets : questions tirées uniquement des sujets officiels (sessions 2025 et 2026), au bac+3 ou au bac+5.
@@ -2699,6 +3617,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     });
   }
   function sjEntete(q) {
+    setTimeout(dessinerDisc);
     var n = st.serie.length, e = essaiActif();
     return '<div class="quiz-top"><span class="mat">' + esc(label(q.matiere)) + ' · Quiz sujets ' + SJ_CONCOURS[st.concours] + '</span><span>Question ' + (st.i + 1) + ' / ' + n + '</span></div>' +
       (e ? '<div class="qz-essai-ligne qz-essai-serie" id="qz-compteur">🎁 Questions gratuites du jour' + compteurEssai(e) + '</div>' : '') +
@@ -2811,6 +3730,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         toks.forEach(function (x) { var k = +x.dataset.tok; x.classList.remove('sel'); if (att.indexOf(k) >= 0) x.classList.add('good'); else if (st.sel.indexOf(k) >= 0) x.classList.add('bad'); });
       });
     }
+    else if (act === 'seance-fin') seanceFin();
+    else if (act === 'seance-pause') seancePause();
+    else if (act === 'seance-lot') seanceLot();
+    else if (act === 'seance-relancer') { root.innerHTML = '<div class="quiz-card"><p>Préparation de ta séance…</p></div>'; ((seance && seance.enreg) || Promise.resolve()).then(function () { return chargerPc(true); }).then(function (d) { seanceLancer(d, modelePc(d)); }).catch(function () { erreur('Ta séance n’a pas pu être préparée. Réessaie dans quelques instants.'); }); }
     else if (act === 'next') { if (st.i < st.serie.length - 1) { st.i++; question(); } else fin(); }
     else if (act === 'boot') boot(true);
     else if (act === 'essai') { accueil(); top(); }
@@ -3042,6 +3965,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (authMode==='register') {
       const {data,error}=await sb.auth.signUp({email,password,options:{data:{prenom,nom,concours,academie,annee_examen,tentatives_crpe:tentatives===''?null:Number(tentatives),telephone,consent_conseils:document.getElementById('authConsentConseils').checked,consent_partenaires:document.getElementById('authConsentPartenaires').checked,consent_version:'2026-10-12',consent_at:new Date().toISOString(),parcours:(window.SIGNUP_PARCOURS||(location.pathname.indexOf('/quiz')===0?'quizcrpe':'passcrpe'))}}});
       if (error) { window.dataLayer.push({event:'sign_up_error',error_reason:error.message}); showAuthMessage(error.message,'error'); }
+      else if (data?.user&&Array.isArray(data.user.identities)&&data.user.identities.length===0) { window.dataLayer.push({event:'sign_up_error',error_reason:'compte_existant'}); showAuthMessage('Un compte existe déjà avec cette adresse e-mail. Connectez-vous avec votre mot de passe, ou cliquez sur « Mot de passe oublié ».','error'); }
       else { window.dataLayer.push({event:'sign_up_'+(window.SIGNUP_PARCOURS||(location.pathname.indexOf('/quiz')===0?'quizcrpe':'passcrpe')),method:'email'}); _lastEmail=email; document.getElementById('authForm').style.display='none'; document.getElementById('authTabs').style.display='none'; document.getElementById('authToggle').style.display='none'; document.getElementById('resendBlock').style.display='block'; showAuthMessage('✓ E-mail de confirmation envoyé à '+email+'. Vérifiez vos spams.','success'); }
     } else {
       const {data,error}=await sb.auth.signInWithPassword({email,password});
