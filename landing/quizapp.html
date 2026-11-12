@@ -1974,7 +1974,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       ]).then(function (d) { compte = d[0]; pcCache = { at: Date.now(), resume: d[1], series: d[2], sujets: d[3], cs: cs, totaux: d[4] }; return pcCache; });
     });
   }
-  // Étape 3 : l'entretien avec le jury (35 min), en deux parties
+  // Étape 3 : l'entretien avec le jury (35 min) en deux parties, puis l'EPS en une partie
   var ADMISSION = [
     ['Partie 1 · Présentation et échange', '15 min', [
       ['Ta présentation', '5 min', 'Ta motivation, les éléments de ton parcours et les expériences qui t’ont conduit(e) au concours, en valorisant les enseignements suivis, les stages, l’engagement associatif ou les périodes de formation à l’étranger.'],
@@ -1984,7 +1984,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       ['Se projeter dans le métier de professeur', '', ''],
       ['Les exigences du service public', '', 'Les transmettre et les incarner : droits et obligations du fonctionnaire dont la neutralité, lutte contre les discriminations et les stéréotypes, promotion de l’égalité, notamment entre les filles et les garçons.'],
       ['Les grands enjeux de la transition écologique', '', ''],
-      ['L’épanouissement de l’élève dans toutes ses dimensions', '', '']]]
+      ['L’épanouissement de l’élève dans toutes ses dimensions', '', '']]],
+    ['Partie 3 · EPS', '', [
+      ['La culture sportive', '', 'Les techniques, les tactiques, les règlements, les sciences et technologies appliquées à la pratique des activités physiques, sportives et artistiques.'],
+      ['La culture corporelle', '', 'Les effets de la pratique physique sur son état de bien-être et de santé, les indicateurs de l’effort, la sécurité.'],
+      ['La culture citoyenne', '', 'La coopération et le respect des règles collectives dans la pratique des activités physiques, sportives et artistiques.']]]
   ];
   // Modèle : une étape par matière (admissibilité, épreuves passées), et les étapes de l'admission
   function modelePc(d) {
@@ -2054,10 +2058,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       M.sujets.map(function (x, i) {
         return '<button type="button" class="qd-it' + (sj && mat === x.k ? ' on' : '') + '"' + (x.n ? ' data-qd-sujets="' + x.k + '"' : ' disabled') + '>' + pt(x.etat, i + 1) + '<span class="nm">' + x.ic + ' ' + esc(x.nom) + '</span><span class="nb">' + (x.n ? nf(x.n) + ' q.' : 'bientôt') + '</span></button>';
       }).join('') + '</div>' +
-      '<div class="qd-carte"><span class="lbl">Étape 3 · Admission · À venir</span><h4>L’entretien avec le jury</h4>' +
+      '<div class="qd-carte"><span class="lbl">Étape 3 · Admission · À venir</span><h4>L’entretien avec le jury et l’EPS</h4>' +
       ADMISSION.map(function (pa, j) {
-        var base = j ? ADMISSION[0][2].length : 0;
-        return '<p class="qd-sous">' + esc(pa[0]) + ' · ' + pa[1] + '</p>' + pa[2].map(function (x, i) { return '<button type="button" class="qd-it" disabled>' + pt('ferme', base + i + 1) + '<span class="nm">' + esc(x[0]) + '</span><span class="nb">' + (x[1] || '') + '</span></button>'; }).join('');
+        var base = ADMISSION.slice(0, j).reduce(function (n, q) { return n + q[2].length; }, 0);
+        return '<p class="qd-sous">' + esc(pa[0]) + (pa[1] ? ' · ' + pa[1] : '') + '</p>' + pa[2].map(function (x, i) { return '<button type="button" class="qd-it" disabled>' + pt('ferme', base + i + 1) + '<span class="nm">' + esc(x[0]) + '</span><span class="nb">' + (x[1] || '') + '</span></button>'; }).join('');
       }).join('') + '</div>';
     el.innerHTML = h;
     el.querySelectorAll('[data-qd-quiz]').forEach(function (b) { b.addEventListener('click', function () { if (st && !st.fini && st.i > 0 && !confirm('Quitter la série en cours ? Vos réponses déjà données sont enregistrées.')) return; st = null; ouvrirQuiz(b.dataset.qdQuiz); }); });
@@ -2172,7 +2176,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<div class="pp-pas ' + cls(2) + '"><span class="num">' + (phase > 2 ? '✓' : '📄') + '</span><span class="lbl">Étape 2</span><h4>Quiz épreuves passées</h4><span class="quand">4e mois · mars, jusqu’aux écrits</span>' +
         '<div class="pp-obj">Objectif : ' + objNotions + ' et <b>toutes les épreuves passées</b> complétées<div class="pp-barre"><i style="width:' + (M.sjN ? Math.round(M.sjF / M.sjN * 100) : 0) + '%"></i></div>' + nf(M.sjF) + ' / ' + nf(M.sjN) + ' questions des sujets officiels</div></div>' +
       '<div class="pp-pas ' + cls(3) + '"><span class="num">🎤</span><span class="lbl">Étape 3 · À venir</span><h4>Quiz admission</h4><span class="quand">1 mois et demi · avril à mi-mai</span>' +
-        '<div class="pp-obj">Un quiz pour chaque étape de l’entretien avec le jury : nombre de questions à venir.</div>' +
+        '<div class="pp-obj">Un quiz pour chaque étape de l’entretien avec le jury et de l’EPS : nombre de questions à venir.</div>' +
         '<ul class="pc-fl">' + ADMISSION.map(function (pa) { return pa[2].map(function (x) { return '<li><button type="button" disabled><span class="ic">🔒</span><span>' + esc(x[0]) + '</span><span class="nb">' + (x[1] || '') + '</span></button></li>'; }).join(''); }).join('') + '</ul></div>' +
       '</div></div>';
     h += '<div class="pc-plan-mobile">' + plan + '</div>';
@@ -2206,9 +2210,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     // Section 3 : admission (à venir)
     no = 0;
-    h += '<section class="pc-section" id="pc-e3"><div class="pc-section-tete" data-pc-plier role="button" tabindex="0" aria-expanded="true"><span class="pc-plier-btn"><span class="ouvert">Réduire ▴</span><span class="ferme">Afficher ▾</span></span><h3>🎤 Étape 3 · Admission</h3><em>À venir</em><p>L’entretien avec le jury (35 min), en deux parties. Chaque étape aura son quiz spécifique.</p></div>' +
+    h += '<section class="pc-section" id="pc-e3"><div class="pc-section-tete" data-pc-plier role="button" tabindex="0" aria-expanded="true"><span class="pc-plier-btn"><span class="ouvert">Réduire ▴</span><span class="ferme">Afficher ▾</span></span><h3>🎤 Étape 3 · Admission</h3><em>À venir</em><p>L’entretien avec le jury (35 min), en deux parties, puis l’EPS. Chaque étape aura son quiz spécifique.</p></div>' +
       ADMISSION.map(function (pa) {
-        return '<p class="pc-partie">' + esc(pa[0]) + ' · ' + pa[1] + '</p><div class="pc-tl">' + pa[2].map(function (x) {
+        return '<p class="pc-partie">' + esc(pa[0]) + (pa[1] ? ' · ' + pa[1] : '') + '</p><div class="pc-tl">' + pa[2].map(function (x) {
           no++;
           return '<div class="pc-item verrou">' + rond('ferme', no) + '<div><span class="lbl">Étape ' + no + (x[1] ? ' · ' + x[1] : '') + '</span><h4>' + esc(x[0]) + '</h4>' + (x[2] ? '<p>' + esc(x[2]) + '</p>' : '') + '</div>' +
             '<div class="cote"><span class="pc-badge avenir">À venir</span><button type="button" class="pc-btn" disabled>🔒</button></div></div>';
