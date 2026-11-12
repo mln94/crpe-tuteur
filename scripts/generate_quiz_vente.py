@@ -23,7 +23,7 @@ SITE = 'https://www.passcrpe.fr'
 
 PRIX_QUIZ = '89 €'
 # Nombre de questions actives par matière (table quiz_questions du projet Supabase « crpe »)
-QUESTIONS = [451, 342, 2760, 738, 324, 321, 321, 1467, 2691]
+QUESTIONS = [751, 642, 2760, 738, 324, 321, 321, 1467, 2691]
 milliers = lambda n: f"{n:,}".replace(",", "\u202f")  # « 1 653 », espace fine insécable comme les autres totaux
 
 # (libellé, icône, exemples de thèmes)

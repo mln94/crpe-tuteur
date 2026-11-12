@@ -3322,7 +3322,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (lecture) {
       var fin = new Date(lecture.expire).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
       root.innerHTML = html.replace('<!--PAIEMENT-->', '<div class="essai-annonce">🔗 Rapport partagé' + (lecture.prenom ? ' de ' + esc(lecture.prenom) : '') + ' · lien valable jusqu’au ' + fin + '</div>') +
-        '<div class="quiz-card rp-bloc"><h2>Préparez le CRPE avec le <span class="marque-q">Quiz CRPE <span class="by">by</span> <b>PassCRPE</b></span></h2><p>Plus de 9 000 questions corrigées et expliquées dans les 9 matières, avec un test de positionnement gratuit.</p>' +
+        '<div class="quiz-card rp-bloc"><h2>Préparez le CRPE avec le <span class="marque-q">Quiz CRPE <span class="by">by</span> <b>PassCRPE</b></span></h2><p>10&nbsp;015 questions corrigées et expliquées dans les 9 matières, avec un test de positionnement gratuit.</p>' +
         '<div class="quiz-actions"><a class="quiz-btn" href="/quizcrpe">Découvrir le Quiz CRPE by PassCRPE</a></div></div>';
       intro(false); return;
     }
