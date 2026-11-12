@@ -2738,7 +2738,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       (vueSeries !== 'liste' ? '' : '<div class="qz-series">' + liste.map(function (x) {
         var n = note20(x), cl = n >= 16 ? 'tres-bien' : n >= 12 ? 'bien' : n >= 8 ? 'moyen' : 'faible', d = new Date(x.created_at);
         var sc = ((x.details || [])[0] || {}).seance, md = modeSerie(x);
-        var mode = md === 'seance' ? '<span class="qz-serie-mode en-seance">▶️ ' + (sc === 'bonus' ? 'Séance bonus' : 'Séance ' + sc + ' / ' + SEANCE_PAR_JOUR) + '</span>' : md === 'libre' ? '<span class="qz-serie-mode libre">Entraînement libre</span>' : '';
+        var mode = md === 'seance' ? '<span class="qz-serie-mode en-seance">' + (sc === 'bonus' ? 'Séance bonus' : 'Séance ' + sc + ' / ' + SEANCE_PAR_JOUR) + '</span>' : md === 'libre' ? '<span class="qz-serie-mode libre">Entraînement libre</span>' : '';
         return '<details class="qz-serie"><summary><span class="qz-serie-note ' + cl + '">' + noteTxt(n) + '<small>/20</small></span>' +
           '<span class="qz-serie-info"><b>' + esc(label(x.matiere)) + mode + '</b><span>' + NIVEAUX[x.niveau] + ' · ' + x.score + ' / ' + x.total + ' bonnes réponses' + (x.essai ? ' · série d’essai' : '') + '</span>' +
           '<span class="qz-serie-date">' + d.toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) + ' à ' + d.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }) + '</span></span>' +
