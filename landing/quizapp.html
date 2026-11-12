@@ -473,6 +473,31 @@
     .sc-barre { height: 4px; background: var(--gray-100); border-radius: 4px; overflow: hidden; margin: 8px 0 6px; }
     .sc-barre i { display: block; height: 100%; background: #f97316; transition: width 1s linear; }
     .sc-info { margin: 0; font-size: 13px; color: var(--gray-500); }
+    .qz-topbar .pill.sc-chip { cursor: pointer; background: #fff7ed; border-color: #fdba74; color: #c2410c; font-variant-numeric: tabular-nums; }
+    .qz-topbar .pill.sc-chip[hidden] { display: none; }
+    .qz-topbar .pill.sc-chip.fin { background: #f0fdf4; border-color: #86efac; color: #166534; }
+    .pc-seance { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 4px; padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); }
+    .pc-seance-l { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+    .pc-seance-l b { color: #fff; }
+    .pc-seance .sc-chrono { font-size: 16px; padding: 2px 9px; }
+    .pc-seance-obj { display: flex; flex-direction: column; font-size: 13px; color: #e5e7eb; line-height: 1.35; }
+    .pc-seance-obj b { color: #fff; } .pc-seance-obj small { color: #cbd5e1; font-size: 12px; }
+    .pc-seance-b { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .pc-seance-b .pc-cta { margin: 0; }
+    .sc-reperes { display: block; font-size: 12px; color: var(--gray-500); margin-top: 2px; }
+    .pc-seance-lancer { display: inline-flex; flex-direction: column; gap: 6px; }
+    .pc-hero .sc-reperes { color: #cbd5e1; } .pc-hero .sc-reperes b { color: #fff; }
+    .pc-seance-pause { font: inherit; font-size: 13px; font-weight: 700; color: #fff; background: transparent; border: 1.5px solid rgba(255,255,255,.4); border-radius: 10px; padding: 7px 12px; cursor: pointer; }
+    .sc-rapport .big small { font-size: 22px; color: var(--gray-500); }
+    .sc-graphe { text-align: left; display: grid; gap: 14px; margin-bottom: 8px; }
+    .sc-g-tete { display: flex; justify-content: space-between; gap: 10px; font-weight: 700; font-size: 14px; color: var(--gray-900); padding-bottom: 4px; border-bottom: 1px solid var(--gray-100); margin-bottom: 4px; }
+    .sc-g-tete span:last-child { font-weight: 600; color: var(--gray-600); white-space: nowrap; } .sc-g-tete b { color: var(--gray-900); }
+    .sc-g-ligne { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 2fr) 96px; gap: 10px; align-items: center; padding: 4px 0; font-size: 13.5px; color: var(--gray-700); }
+    .sc-g-nom { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .sc-g-barre { height: 10px; background: var(--gray-100); border-radius: 4px; overflow: hidden; }
+    .sc-g-barre i { display: block; height: 100%; background: #f97316; border-radius: 0 4px 4px 0; }
+    .sc-g-val { white-space: nowrap; color: var(--gray-600); text-align: right; } .sc-g-val b { color: var(--gray-900); }
+    @media (max-width: 560px) { .sc-g-ligne { grid-template-columns: minmax(0, 1fr) auto; } .sc-g-barre { grid-column: 1 / -1; grid-row: 2; } }
     body.sc-en-pause .lc-main > .lc-tete, body.sc-en-pause .lc-main > .lc-q, body.sc-en-pause .lc-valider, body.sc-en-pause #lc-bilan { filter: blur(6px); pointer-events: none; user-select: none; }
     .sc-obj-fin { font-size: 15px; background: #fff7ed; border-radius: 12px; padding: 10px 14px; margin: 14px 0; }
     .sc-obj-fin.ok { background: #f0fdf4; }
@@ -1236,7 +1261,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   </div>
 </nav>
 
-<div class="qz-topbar" id="qz-topbar"><span class="tb-prog" title="Progression des écrits : notions maîtrisées">Progression</span><span class="jauge"><i id="qz-tb-jauge"></i></span><span id="qz-tb-txt" title="Progression des écrits : notions maîtrisées"></span><div class="ech" id="qz-tb-ech"></div><span class="pills"><span class="pill moy" id="qz-tb-moy" title="Moyenne de toutes tes séries">📊 Moyenne – / 20</span><span class="pill" id="qz-tb-serie" title="Jours d’affilée avec au moins une série">🔥 0 jour</span><span class="pill" id="qz-tb-q" title="Questions répondues dans les séries">✅ 0 question</span></span></div>
+<div class="qz-topbar" id="qz-topbar"><span class="tb-prog" title="Progression des écrits : notions maîtrisées">Progression</span><span class="jauge"><i id="qz-tb-jauge"></i></span><span id="qz-tb-txt" title="Progression des écrits : notions maîtrisées"></span><div class="ech" id="qz-tb-ech"></div><span class="pills"><span class="pill sc-chip" id="qz-tb-seance" role="button" tabindex="0" hidden></span><span class="pill moy" id="qz-tb-moy" title="Moyenne de toutes tes séries">📊 Moyenne – / 20</span><span class="pill" id="qz-tb-serie" title="Jours d’affilée avec au moins une série">🔥 0 jour</span><span class="pill" id="qz-tb-q" title="Questions répondues dans les séries">✅ 0 question</span></span></div>
 <main class="quiz-wrap">
   <h1><span class="marque-q">Le Quiz CRPE <span class="by">by</span> <b>PassCRPE</b></span></h1>
   <p class="quiz-confirm" id="quiz-confirm" hidden>✓ Votre adresse e-mail est confirmée : bienvenue sur le <span class="marque-q">Quiz CRPE <span class="by">by</span> <b>PassCRPE</b></span> !</p>
@@ -1923,7 +1948,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
 
   function parcoursVue() {
-    seanceAbandon();
     st = null; tst = null; intro(false); marquerOnglet(''); document.body.classList.add('qz-large');
     if (!domainesCharges) return chargerDomaines().then(parcoursVue);
     if (!domainesChoisis) return choixDomaines();
@@ -2021,7 +2045,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var faitesAuj = (d.series || []).reduce(function (a, x) { return a + (x.created_at && new Date(x.created_at) >= minuit ? (x.total || 0) : 0); }, 0);
     var objN = Math.ceil(M.tot * OBJ_PCT / 100), resteN = Math.max(0, objN - M.mai);
     var jFin = joursAvant(FIN_ETAPE1) >= 0 ? joursAvant(FIN_ETAPE1) : joursAvant(ECRITS), j = Math.max(1, jFin);
-    return { objN: objN, resteN: resteN, parJour: jFin >= 0 ? Math.ceil(resteN * MAITRISE / j) : 0, faitesAuj: faitesAuj };
+    return { objN: objN, resteN: resteN, parJour: jFin >= 0 ? Math.ceil(resteN * MAITRISE / j) : 0, faitesAuj: faitesAuj,
+      parJour100: jFin >= 0 ? Math.ceil(Math.max(0, M.tot - M.mai) * MAITRISE / j) : 0 };  // pour maîtriser 100 % des notions
   }
   function dessinerParcours(d) {
     document.body.classList.add('qz-large');
@@ -2039,7 +2064,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       '<div class="pc-auj"><span>📆 ' + esc(aujourdhui.charAt(0).toUpperCase() + aujourdhui.slice(1)) + '</span><span>' + (!objJour ? '🎉 Objectif de ' + OBJ_PCT + ' % des notions atteint' : faitesAuj >= objJour ? '✅ Objectif du jour atteint : <b>' + nf(faitesAuj) + ' / ' + nf(objJour) + ' questions</b>' : '🎯 Objectif du jour : <b>' + nf(faitesAuj) + ' / ' + nf(objJour) + ' questions</b> · encore ' + nf(objJour - faitesAuj)) + '</span></div>' +
       '<p>Ton parcours vers le concours, étape par étape : les notions de l’écrit, les épreuves passées, puis les oraux.</p>' +
       '<div class="pc-puces"><span>🎓 CRPE ' + (c === 'bac5' ? 'Bac+5' : 'Bac+3') + '</span>' + domainesChoisis.map(function (k) { return '<span>' + DOMAINES_ECRIT[k][1] + ' ' + esc(DOMAINES_ECRIT[k][0]) + '</span>'; }).join('') + '<button type="button" data-pc-domaines>Modifier</button></div>' +
-      '<button type="button" class="pc-cta" data-pc-seance>▶️ ' + (objJour && faitesAuj < objJour ? 'Lancer la séance ' + Math.min(SEANCE_PAR_JOUR, seancesFaites() + 1) + ' / ' + SEANCE_PAR_JOUR : 'Lancer une séance bonus') + ' · ' + SEANCE_MIN + ' min</button></div>' +
+      seanceHero(objJour, faitesAuj, O.parJour100) + '</div>' +
       '<div class="pc-anneau"><svg width="140" height="140" viewBox="0 0 140 140"><circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="12"/><circle cx="70" cy="70" r="60" fill="none" stroke="#f97316" stroke-width="12" stroke-linecap="round" stroke-dasharray="377" stroke-dashoffset="' + Math.round(377 * (1 - M.pct / 100)) + '"/></svg>' +
       '<div><strong>' + M.pct + ' %</strong><small>' + M.finis + ' / ' + M.items.length + ' matières</small></div></div></section>';
 
@@ -2132,7 +2157,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       t.addEventListener('keydown', function (ev) { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); basculer(); } });
     });
     root.querySelectorAll('[data-pc-aller]').forEach(function (b) { b.addEventListener('click', function () { var el = document.getElementById(b.dataset.pcAller); if (el && el.classList.contains('replie')) el.querySelector('[data-pc-plier]').click(); if (el) el.scrollIntoView({ behavior: 'smooth' }); }); });
-    root.querySelector('[data-pc-seance]').addEventListener('click', function () { seanceLancer(d, M); });
+    var bSeance = root.querySelector('[data-pc-seance]'); if (bSeance) bSeance.addEventListener('click', function () { seanceLancer(d, M); });
     root.querySelectorAll('[data-pc-test]').forEach(function (b) { b.addEventListener('click', function () { demarrerTest(+b.dataset.pcTest); }); });
     root.querySelectorAll('[data-pc-quiz]').forEach(function (b) { b.addEventListener('click', function () { matiereVue('ecrit', b.dataset.pcQuiz); }); });
     root.querySelectorAll('[data-pc-sujets]').forEach(function (b) { b.addEventListener('click', function () { matiereVue('sj', b.dataset.pcSujets); }); });
@@ -2144,8 +2169,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // à droite, toutes les questions du sujet dans la matière.
   var lc = null;
   function matiereVue(mode, mat, ti) {
-    // Séance en cours : on reste dans la séance seulement si elle a demandé cet écran (lot suivant, autre thème du sommaire)
-    if (seance && !seance.nav) seanceAbandon(); else if (seance) seance.nav = false;
     st = null; tst = null; intro(false); marquerOnglet(''); document.body.classList.add('qz-large');
     var url = '/quizapp?vue=' + (mode === 'sj' ? 'sujets-matiere' : 'matiere') + '&m=' + encodeURIComponent(mat) + (ti != null ? '&t=' + ti : '');
     if (location.pathname + location.search !== url) history.pushState(null, '', url);
@@ -2244,7 +2267,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (lc.mode === 'ecrit') {
       var niv = {}; lc.qs.forEach(function (q) { niv[q.niveau] = (niv[q.niveau] || 0) + 1; });
       var enreg = garderSerie(lc.mat, Object.keys(niv).sort(function (a, b) { return niv[b] - niv[a]; })[0] || 'facile', lc.score, n, !!essaiActif(), lc.recap);
-      if (seanceActive()) seance.enreg = enreg;
+      if (seanceActive()) seanceEnreg = enreg;
     }
     pcCache = null;
     document.getElementById('lc-bilan').innerHTML = '<div class="quiz-card lc-bilan"><p class="qz-num">Ta note</p><div class="big">' + noteTxt(Math.round(lc.score / n * 40) / 2) + '<small> / 20</small></div><p class="lc-pc">' + pc + ' % de bonnes réponses</p>' +
@@ -2263,7 +2286,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       var avantM = lc.mode !== 'sj' && !!(prog(lc.mat).notions[q.notion] || {}).maitrise;
       var suite = lc.mode === 'sj' ? sjEnregistrer(q, d.correct) : enregistrer(q, d.correct);
       lc.recap.push({ id: q.id, theme: q.theme, q: q.question, ok: d.correct, attendu: d.attendu, mat: lc.mat, niveau: q.niveau });
-      seanceNoter({ q: q.question, ok: d.correct, attendu: d.attendu, mat: lc.mat }, lc.mode !== 'sj' && !avantM && !!(prog(lc.mat).notions[q.notion] || {}).maitrise);
+      seanceNoter({ q: q.question, ok: d.correct, attendu: d.attendu, mat: lc.mat, theme: lc.mode === 'ecrit' && lc.theme ? lc.theme.court : (q.theme || '') }, lc.mode !== 'sj' && !avantM && !!(prog(lc.mat).notions[q.notion] || {}).maitrise);
       montrer(d);
       document.getElementById('lc-q-' + i).classList.add('repondue');
       fb.innerHTML = '<div class="quiz-feedback ' + (d.correct ? 'ok' : 'ko') + '"><strong>' + (d.correct ? 'Bonne réponse !' : 'Ce n’est pas la bonne réponse. Réponse attendue : ' + esc(d.attendu)) + '</strong>' + esc(d.explication) + '<span class="suite">' + suite + '</span></div>';
@@ -2280,13 +2303,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (!lc || !e.target.closest) return;
     var b = e.target.closest('[data-lk],[data-ltok],[data-lnsp],[data-lth],[data-lretour],[data-lvalider]'); if (!b || !root.contains(b)) return;
     if (seanceActive() && seance.pause) return;  // séance en pause : questions masquées
-    if (b.dataset.lretour !== undefined && seanceActive()) { e.preventDefault(); seanceFin(); return; }  // quitter la séance : rapport
     if (b.dataset.lretour !== undefined) { e.preventDefault(); lc = null; history.pushState(null, '', '/quizapp'); parcoursVue(); top(); return; }
     if (b.dataset.lth !== undefined) {
       var ti = +b.dataset.lth, mode = lc.mode, mat = lc.mat;
       var enCours = !lc.valide && Object.keys(lc.choix || {}).length;
       if (enCours && ti !== lc.ti && !confirm('Changer de thème ? Tes réponses choisies ne sont pas encore validées et seront perdues.')) return;
-      if (seanceActive()) seance.nav = true;
       matiereVue(mode, mat, ti); return;
     }
     if (lc.valide) return;
@@ -2795,6 +2816,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // Choix de l'écran selon le compte : connexion → test → résultat et paiement → quiz
   // Choix de l'écran d'après le compte
   function aiguiller(c) {
+    seanceCharger(); majChipSeance();  // séance en cours gardée dans ce navigateur : le chrono reprend
     if (!c.positionnement) return introTest();
     if (!domainesCharges) return chargerDomaines().then(function () { aiguiller(c); });
     if (!domainesChoisis) return choixDomaines();
@@ -3218,33 +3240,63 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
   // ── Séance du jour : 20 minutes chronométrées, au format des pages du parcours (10 questions à la suite, validées d'un coup).
   // Chaque lot porte sur une matière de l'admissibilité tirée au hasard (parmi celles pas encore terminées) et un de ses thèmes.
-  // Le bandeau de séance (chrono, pause, objectif) s'affiche au-dessus des questions ; à la fin du chrono : rapport de séance ──
-  var SEANCE_MIN = 20, SEANCE_PAR_JOUR = 2, seance = null;
-  // Séances terminées aujourd'hui (dans ce navigateur) : l'objectif du jour est partagé entre les séances restantes
-  function cleSeances() { var d = new Date(); return 'qz_seances:' + String((compte && compte.email) || '').toLowerCase() + ':' + d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  // La séance est gardée dans ce navigateur (par compte) : le chrono tourne sur l'heure réelle, même en changeant de page ou
+  // après une déconnexion, jusqu'à la fin de la séance ; seule la pause l'arrête. Une séance d'un autre jour repart de zéro.
+  // Le chrono s'affiche dans la barre du haut et dans le bandeau du parcours. À la fin : rapport de séance ──
+  var SEANCE_MIN = 20, SEANCE_PAR_JOUR = 2, seance = null, seanceTimer = null, seanceEnreg = null;
+  function jourCle(t) { var d = t ? new Date(t) : new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+  function emailCle() { return String((compte && compte.email) || '').toLowerCase(); }
+  // Séances terminées aujourd'hui : l'objectif du jour est partagé entre les séances restantes
+  function cleSeances() { return 'qz_seances:' + emailCle() + ':' + jourCle(); }
   function seancesFaites() { try { return +localStorage.getItem(cleSeances()) || 0; } catch (e) { return 0; } }
   function seanceCompter() { try { localStorage.setItem(cleSeances(), String(seancesFaites() + 1)); } catch (e) {} }
-  function seanceActive() { return seance && !seance.fini ? seance : null; }
-  // Séance quittée sans passer par le rapport (autre écran) : le chrono s'arrête ; les lots validés restent enregistrés
-  function seanceAbandon() { if (seance && !seance.fini) { seance.fini = true; clearInterval(seance.timer); } seance = null; document.body.classList.remove('sc-en-pause'); }
+  function cleSeance() { return 'qz_seance:' + emailCle(); }
+  function seanceSauver() { if (seance && emailCle()) try { localStorage.setItem(cleSeance(), JSON.stringify(seance)); } catch (e) {} }
+  function seanceEffacer() {
+    if (emailCle()) try { localStorage.removeItem(cleSeance()); } catch (e) {}
+    seance = null; clearInterval(seanceTimer); seanceTimer = null; document.body.classList.remove('sc-en-pause'); majChipSeance();
+  }
+  // Séance en cours de ce compte (reprise depuis le navigateur) ; celle d'un autre jour est effacée
+  function seanceCharger() {
+    var em = emailCle(); if (!em) return null;
+    if (!seance || seance.email !== em) {
+      var s = null; try { s = JSON.parse(localStorage.getItem(cleSeance())); } catch (e) {}
+      seance = s && s.email === em ? s : null;
+    }
+    if (seance && seance.jour !== jourCle()) { seanceEffacer(); return null; }
+    if (seance && !seanceTimer) { seanceTimer = setInterval(seanceTic, 1000); }
+    if (seance) seanceVerifierFin(seance);
+    return seance;
+  }
+  function seanceActive() { return seanceCharger(); }
+  function seanceVerifierFin(S) {
+    if (!S.pause && !S.ecoule && Date.now() >= S.fin) { S.ecoule = true; seanceSauver(); return true; }
+    return false;
+  }
   function seanceLancer(d, M) {
     var e = essaiActif();
     if (e && e.termine) return ouvrirPaiement();
-    seanceAbandon();
+    if (seanceActive()) return seanceReprendre();  // une seule séance à la fois
     // Objectif de la séance : ce qu'il reste de l'objectif du jour, partagé entre les séances restantes (0 : séance bonus)
     var O = objectifJour(d, M), faitesS = seancesFaites(), restant = Math.max(0, O.parJour - O.faitesAuj), nRest = Math.max(1, SEANCE_PAR_JOUR - faitesS);
     var mats = M.items.filter(function (x) { return x.etat !== 'fini'; }).map(function (x) { return x.k; });
     if (!mats.length) mats = M.items.map(function (x) { return x.k; });
-    var S = seance = { debut: Date.now(), fin: Date.now() + SEANCE_MIN * 60000, objJour: O.parJour, objectif: Math.ceil(restant / nRest), numero: faitesS + 1,
-      avant: O.faitesAuj, mats: mats, recap: [], maitrisees: 0, pause: 0, ecoule: false, fini: false };
-    S.timer = setInterval(function () { seanceTic(S); }, 1000);
+    seance = { email: emailCle(), jour: jourCle(), debut: Date.now(), fin: Date.now() + SEANCE_MIN * 60000, objJour: O.parJour, objectif: Math.ceil(restant / nRest),
+      numero: faitesS + 1, avant: O.faitesAuj, mats: mats, recap: [], maitrisees: 0, pause: 0, ecoule: false, p70: parSeance(O.parJour), p100: parSeance(O.parJour100) };
+    seanceSauver(); seanceCharger();
+    seanceLot();
+  }
+  // Reprendre la séance en cours (barre du haut, bandeau du parcours) : rapport si le temps est écoulé, sinon un lot de questions
+  function seanceReprendre() {
+    var S = seanceActive(); if (!S) return parcoursVue();
+    if (S.ecoule) return seanceFin();
+    if (S.pause) seancePause();
     seanceLot();
   }
   // Lot suivant : une matière de l'admissibilité au hasard, puis un de ses thèmes au hasard (page de la matière)
   function seanceLot() {
     var S = seanceActive(); if (!S) return;
     if (S.ecoule) return seanceFin();
-    S.nav = true;
     matiereVue('ecrit', S.mats[Math.floor(Math.random() * S.mats.length)], 'hasard');
   }
   function seanceChrono(S) {
@@ -3256,76 +3308,121 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     var n = S.recap.length, o = S.objectif, jour = S.avant + n;
     var l1 = !o ? '⭐ Séance bonus : objectif du jour déjà atteint · <b>' + pluriel(n, 'question') + '</b>'
       : (n >= o ? '✅ Objectif de la séance atteint : ' : '🎯 Objectif de la séance : ') + '<b>' + nf(n) + ' / ' + nf(o) + '</b> questions';
-    return '<span>' + l1 + '</span>' + (S.objJour ? '<small>Aujourd’hui : ' + nf(jour) + ' / ' + nf(S.objJour) + ' questions</small>' : '');
+    return '<span>' + l1 + '</span>' + (S.objJour ? '<small>Aujourd’hui : ' + nf(jour) + ' / ' + nf(S.objJour) + ' questions</small>' : '') +
+      (S.p100 ? seanceReperes(S.p70, S.p100) : '');
   }
+  function parSeance(parJour) { return Math.ceil((parJour || 0) / SEANCE_PAR_JOUR); }
+  function seanceReperes(p70, p100) { return '<small class="sc-reperes">Par séance : <b>' + nf(p70) + '</b> questions pour ' + OBJ_PCT + ' % des notions · <b>' + nf(p100) + '</b> pour 100 %</small>'; }
   function seanceTitre(S) { return S.objectif ? 'Séance ' + S.numero + ' / ' + SEANCE_PAR_JOUR : 'Séance bonus'; }
   // Bandeau affiché au-dessus des questions de la page de la matière
   function seanceBloc() {
     var S = seanceActive(); if (!S) return '';
+    document.body.classList.toggle('sc-en-pause', !!S.pause);
     return '<div class="quiz-card sc-bloc"><div class="sc-tete"><span class="sc-titre">▶️ ' + seanceTitre(S) + '</span>' +
-      '<span class="sc-chrono' + (S.ecoule ? ' fin' : '') + '" id="sc-chrono">' + seanceChrono(S) + '</span>' +
+      '<span class="sc-chrono' + (S.ecoule ? ' fin' : '') + '" data-sc-chrono>' + seanceChrono(S) + '</span>' +
       (S.ecoule ? '' : '<button type="button" class="sc-pause-btn" data-act="seance-pause">' + (S.pause ? '▶️ Reprendre' : '⏸ Pause') + '</button>') +
-      '<span class="sc-obj" id="sc-obj">' + seanceObjectif(S) + '</span>' +
+      '<span class="sc-obj" data-sc-obj>' + seanceObjectif(S) + '</span>' +
       '<button type="button" class="quiz-link sc-terminer" data-act="seance-fin">Terminer la séance</button></div>' +
-      '<div class="sc-barre"><i id="sc-barre" style="width:' + Math.min(100, (Date.now() - S.debut) / (S.fin - S.debut) * 100) + '%"></i></div>' +
-      '<p class="sc-info" id="sc-info">' + (S.ecoule ? 'Le temps est écoulé : valide ces questions pour voir le rapport de séance.' : '🎲 Matière et thème tirés au hasard parmi les épreuves d’admissibilité.') + '</p></div>';
+      '<div class="sc-barre"><i data-sc-barre style="width:' + seancePct(S) + '%"></i></div>' +
+      '<p class="sc-info" data-sc-info>' + (S.ecoule ? 'Le temps est écoulé : valide ces questions pour voir le rapport de séance.' : S.pause ? 'Séance en pause : reprends quand tu veux, aujourd’hui (elle repart de zéro après minuit).' : '🎲 Matière et thème tirés au hasard parmi les épreuves d’admissibilité. Tu peux changer de page : le chrono continue.') + '</p></div>';
+  }
+  function seancePct(S) { var t = (S.pause || Date.now()) - S.debut; return Math.min(100, Math.max(0, t / (S.fin - S.debut) * 100)); }
+  // Encart du bandeau de « Mon parcours » : séance en cours (chrono, objectif, continuer, pause) ou bouton pour en lancer une
+  function seanceHero(objJour, faitesAuj, parJour100) {
+    var S = seanceActive();
+    if (!S) return '<span class="pc-seance-lancer"><button type="button" class="pc-cta" data-pc-seance>▶️ ' + (objJour && faitesAuj < objJour ? 'Lancer la séance ' + Math.min(SEANCE_PAR_JOUR, seancesFaites() + 1) + ' / ' + SEANCE_PAR_JOUR : 'Lancer une séance bonus') + ' · ' + SEANCE_MIN + ' min</button>' + (parJour100 ? seanceReperes(parSeance(objJour), parSeance(parJour100)) : '') + '</span>';
+    return '<div class="pc-seance"><div class="pc-seance-l"><b>▶️ ' + seanceTitre(S) + (S.ecoule ? ' terminée' : ' en cours') + '</b>' +
+      '<span class="sc-chrono" data-sc-chrono>' + seanceChrono(S) + '</span><span class="pc-seance-obj" data-sc-obj>' + seanceObjectif(S) + '</span></div>' +
+      '<div class="pc-seance-b">' + (S.ecoule ? '<button type="button" class="pc-cta" data-act="seance-fin">Voir le rapport de séance →</button>'
+        : '<button type="button" class="pc-cta" data-act="seance-reprendre">Continuer la séance →</button><button type="button" class="pc-seance-pause" data-act="seance-pause">' + (S.pause ? '▶️ Reprendre' : '⏸ Pause') + '</button>') + '</div></div>';
+  }
+  // Pastille de la barre du haut, visible sur toutes les pages pendant une séance
+  function majChipSeance() {
+    var c = document.getElementById('qz-tb-seance'); if (!c) return;
+    var S = seance && seance.email === emailCle() ? seance : null;
+    c.hidden = !S;
+    if (S) { c.textContent = S.ecoule ? '📋 Rapport de séance prêt' : (S.pause ? '⏸ ' : '▶️ ') + seanceChrono(S).replace(/^⏱ |^⏸ En pause · /, ''); c.title = S.ecoule ? 'Voir le rapport de ta séance' : (S.pause ? 'Séance en pause : clique pour la reprendre' : 'Séance en cours : clique pour continuer'); c.classList.toggle('fin', !!S.ecoule); }
   }
   // Pause : le chrono s'arrête et les questions sont masquées ; à la reprise, la fin de la séance est décalée d'autant
   function seancePause() {
     var S = seanceActive(); if (!S || S.ecoule) return;
     if (S.pause) { var dt = Date.now() - S.pause; S.fin += dt; S.debut += dt; S.pause = 0; } else S.pause = Date.now();
-    document.body.classList.toggle('sc-en-pause', !!S.pause);
-    var b = root.querySelector('[data-act="seance-pause"]'); if (b) b.textContent = S.pause ? '▶️ Reprendre' : '⏸ Pause';
-    var c = document.getElementById('sc-chrono'); if (c) c.textContent = seanceChrono(S);
+    seanceSauver(); document.body.classList.toggle('sc-en-pause', !!S.pause);
+    root.querySelectorAll('[data-act="seance-pause"]').forEach(function (b) { b.textContent = S.pause ? '▶️ Reprendre' : '⏸ Pause'; });
+    var inf = root.querySelector('[data-sc-info]'); if (inf) inf.textContent = S.pause ? 'Séance en pause : reprends quand tu veux, aujourd’hui (elle repart de zéro après minuit).' : '🎲 Matière et thème tirés au hasard parmi les épreuves d’admissibilité. Tu peux changer de page : le chrono continue.';
+    seanceAfficher(S);
   }
-  function seanceTic(S) {
-    if (seance !== S || S.fini) return clearInterval(S.timer);
-    if (S.pause) return;
-    if (!S.ecoule && Date.now() >= S.fin) {
-      S.ecoule = true;
-      var pb = root.querySelector('[data-act="seance-pause"]'); if (pb) pb.remove();
-      var inf = document.getElementById('sc-info'); if (inf) inf.textContent = 'Le temps est écoulé : valide ces questions pour voir le rapport de séance.';
+  function seanceAfficher(S) {
+    document.querySelectorAll('[data-sc-chrono]').forEach(function (c) { c.textContent = seanceChrono(S); c.classList.toggle('fin', S.ecoule || (!S.pause && S.fin - Date.now() < 60000)); });
+    document.querySelectorAll('[data-sc-barre]').forEach(function (b) { b.style.width = seancePct(S) + '%'; });
+    majChipSeance();
+  }
+  function seanceTic() {
+    var S = seance;
+    if (!S || S.email !== emailCle()) { clearInterval(seanceTimer); seanceTimer = null; seance = null; majChipSeance(); return; }  // déconnexion : la séance reste gardée
+    if (S.jour !== jourCle()) return seanceEffacer();  // minuit passé : la séance repart de zéro
+    if (seanceVerifierFin(S)) {
+      root.querySelectorAll('[data-act="seance-pause"]').forEach(function (b) { b.remove(); });
+      var inf = root.querySelector('[data-sc-info]'); if (inf) inf.textContent = 'Le temps est écoulé : valide ces questions pour voir le rapport de séance.';
       var su = document.getElementById('sc-suite'); if (su) su.textContent = 'Voir le rapport de séance';
+      var rc = root.querySelector('.pc-seance [data-act="seance-reprendre"]'); if (rc) { rc.textContent = 'Voir le rapport de séance →'; rc.dataset.act = 'seance-fin'; }
     }
-    var c = document.getElementById('sc-chrono'); if (c) { c.textContent = seanceChrono(S); c.classList.toggle('fin', S.ecoule || S.fin - Date.now() < 60000); }
-    var b = document.getElementById('sc-barre'); if (b) b.style.width = Math.min(100, (Date.now() - S.debut) / (S.fin - S.debut) * 100) + '%';
+    seanceAfficher(S);
   }
-  // Une réponse corrigée dans la page de la matière compte pour la séance
+  // Une réponse corrigée dans la page d'une matière compte pour la séance en cours
   function seanceNoter(r, devenueMaitrisee) {
-    var S = seanceActive(); if (!S) return;
+    var S = seanceActive(); if (!S || S.pause) return;
     S.recap.push(r); if (devenueMaitrisee) S.maitrisees++;
     if (essaiActif() && compte.essai.termine) S.ecoule = true;  // essai : plus de questions gratuites aujourd'hui, la séance s'arrête
-    var so = document.getElementById('sc-obj'); if (so) so.innerHTML = seanceObjectif(S);
+    seanceSauver();
+    root.querySelectorAll('[data-sc-obj]').forEach(function (o) { o.innerHTML = seanceObjectif(S); });
   }
-  // Rapport de séance : volume, réussite, objectifs, notions maîtrisées, détail par matière, questions à revoir
+  // Rapport de séance : note moyenne, questions et note par thème (graphique), objectifs, questions à revoir, séance suivante
   function seanceFin() {
-    var S = seance; if (!S || S.fini) return;
+    var S = seanceActive(); if (!S) return parcoursVue();
     if (S.pause) seancePause();
-    S.fini = true; clearInterval(S.timer); seanceCompter(); document.body.classList.remove('sc-en-pause');
+    var finS = Math.min(Date.now(), S.fin);
+    seanceCompter(); seanceEffacer();
     lc = null; st = null; intro(false); marquerOnglet('');
     if (location.pathname + location.search !== '/quizapp?vue=seance') history.pushState(null, '', '/quizapp?vue=seance');
     var rs = S.recap, n = rs.length, ok = rs.filter(function (r) { return r.ok; }).length, pct = n ? Math.round(ok / n * 100) : 0;
-    var minutes = Math.max(1, Math.round((Math.min(Date.now(), S.fin) - S.debut) / 60000));
+    var note = function (b, t) { return t ? Math.round(b / t * 40) / 2 : 0; };
+    var minutes = Math.max(1, Math.round((finS - S.debut) / 60000));
     var total = S.avant + n, o = S.objJour, os = S.objectif;
-    var mats = {}; rs.forEach(function (r) { var x = mats[r.mat] = mats[r.mat] || { n: 0, ok: 0 }; x.n++; if (r.ok) x.ok++; });
     var ic = function (m) { var x = MATIERES_TOUTES.filter(function (y) { return y[0] === m; })[0]; return x ? x[2] : ''; };
+    // Par matière, puis par thème : questions faites, bonnes réponses, note sur 20
+    var mats = [], parMat = {};
+    rs.forEach(function (r) {
+      var m = parMat[r.mat]; if (!m) { m = parMat[r.mat] = { mat: r.mat, n: 0, ok: 0, themes: [], parTh: {} }; mats.push(m); }
+      var t = r.theme || 'Notions', th = m.parTh[t]; if (!th) { th = m.parTh[t] = { nom: t, n: 0, ok: 0 }; m.themes.push(th); }
+      m.n++; th.n++; if (r.ok) { m.ok++; th.ok++; }
+    });
+    var graphe = mats.map(function (m) {
+      return '<div class="sc-g-mat"><div class="sc-g-tete"><span>' + ic(m.mat) + ' ' + esc(label(m.mat)) + '</span><span>' + pluriel(m.n, 'question') + ' · <b>' + noteTxt(note(m.ok, m.n)) + ' / 20</b></span></div>' +
+        m.themes.map(function (th) {
+          var nt = note(th.ok, th.n);
+          return '<div class="sc-g-ligne" title="' + esc(th.nom) + ' : ' + th.ok + ' bonne' + (th.ok > 1 ? 's' : '') + ' réponse' + (th.ok > 1 ? 's' : '') + ' sur ' + th.n + ' · ' + noteTxt(nt) + ' / 20">' +
+            '<span class="sc-g-nom">' + esc(th.nom) + '</span><span class="sc-g-barre"><i style="width:' + (nt / 20 * 100) + '%"></i></span>' +
+            '<span class="sc-g-val"><b>' + noteTxt(nt) + '</b> / 20 · ' + th.n + ' q.</span></div>';
+        }).join('') + '</div>';
+    }).join('');
     var ratees = rs.filter(function (r) { return !r.ok; });
     var msg = !n ? 'Aucune question n’a été validée pendant cette séance.' : pct >= 80 ? 'Excellente séance !' : pct >= 60 ? 'Bonne séance, continue comme ça.' : 'Les notions ratées reviendront dans tes prochaines séances pour être retravaillées.';
+    // Séance suivante de la journée : la 2e tant que l'objectif du jour n'est pas atteint, sinon une séance bonus
+    var faites = seancesFaites(), suiv = o && total < o ? (faites < SEANCE_PAR_JOUR ? 'Lancer ma séance ' + (faites + 1) + ' / ' + SEANCE_PAR_JOUR : 'Lancer une séance de plus') : 'Lancer une séance bonus';
     root.innerHTML = '<div class="quiz-card quiz-score sc-rapport">' +
       '<div class="quiz-top" style="justify-content:center"><span class="mat">▶️ Rapport de la ' + (os ? 'séance ' + S.numero + ' / ' + SEANCE_PAR_JOUR : 'séance bonus') + ' · ' + pluriel(minutes, 'minute') + '</span></div>' +
-      '<div class="big">' + pluriel(n, 'question') + '</div><p>' + ok + ' bonne' + (ok > 1 ? 's' : '') + ' réponse' + (ok > 1 ? 's' : '') + (n ? ' (' + pct + ' %)' : '') + '. ' + msg + '</p>' +
-      '<div class="stats"><div class="stat"><b>' + S.maitrisees + '</b><span>notion' + (S.maitrisees > 1 ? 's' : '') + ' maîtrisée' + (S.maitrisees > 1 ? 's' : '') + '</span></div>' +
-        '<div class="stat"><b>' + Object.keys(mats).length + '</b><span>matière' + (Object.keys(mats).length > 1 ? 's' : '') + ' travaillée' + (Object.keys(mats).length > 1 ? 's' : '') + '</span></div>' +
-        '<div class="stat"><b>' + pct + ' %</b><span>de réussite</span></div></div>' +
+      '<p class="qz-num" style="margin:8px 0 0">Note moyenne</p><div class="big">' + noteTxt(note(ok, n)) + '<small> / 20</small></div><p>' + pluriel(n, 'question') + ' · ' + ok + ' bonne' + (ok > 1 ? 's' : '') + ' réponse' + (ok > 1 ? 's' : '') + (n ? ' (' + pct + ' %)' : '') + '. ' + msg + '</p>' +
+      '<div class="stats"><div class="stat"><b>' + n + '</b><span>question' + (n > 1 ? 's' : '') + '</span></div>' +
+        '<div class="stat"><b>' + S.maitrisees + '</b><span>notion' + (S.maitrisees > 1 ? 's' : '') + ' maîtrisée' + (S.maitrisees > 1 ? 's' : '') + '</span></div>' +
+        '<div class="stat"><b>' + mats.length + '</b><span>matière' + (mats.length > 1 ? 's' : '') + ' travaillée' + (mats.length > 1 ? 's' : '') + '</span></div></div>' +
       '<p class="sc-obj-fin' + (os && n >= os ? ' ok' : '') + '">' + (!os ? '⭐ Séance bonus : l’objectif du jour était déjà atteint.'
         : n >= os ? '✅ Objectif de la séance atteint : <b>' + nf(n) + ' / ' + nf(os) + '</b> questions.'
         : '🎯 Objectif de la séance : <b>' + nf(n) + ' / ' + nf(os) + '</b> questions.') + '<br>' + (!o ? '🎉 Objectif de ' + OBJ_PCT + ' % des notions atteint.'
         : total >= o ? '✅ Objectif du jour atteint : <b>' + nf(total) + ' / ' + nf(o) + '</b> questions aujourd’hui.'
         : '🎯 Objectif du jour : <b>' + nf(total) + ' / ' + nf(o) + '</b> questions aujourd’hui. Encore ' + pluriel(o - total, 'question') + ' pour l’atteindre.') + '</p>' +
-      (n ? '<div class="sc-mats">' + Object.keys(mats).map(function (m) {
-        return '<div><span>' + ic(m) + ' ' + esc(label(m)) + '</span><span>' + mats[m].ok + ' / ' + mats[m].n + '</span></div>';
-      }).join('') + '</div>' : '') +
-      '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="seance-relancer">▶️ Relancer une séance (' + SEANCE_MIN + ' min)</button><a class="quiz-btn ghost" href="/quizapp">Retour à mon parcours</a></div>' +
+      (n ? '<h3 class="sc-h">Par thème : questions et note sur 20</h3><div class="sc-graphe">' + graphe + '</div>' : '') +
+      '<div class="quiz-actions"><button type="button" class="quiz-btn" data-act="seance-relancer">▶️ ' + suiv + ' (' + SEANCE_MIN + ' min)</button><a class="quiz-btn ghost" href="/quizapp">Retour à mon parcours</a></div>' +
       (ratees.length ? '<h3 class="sc-h">À revoir</h3><div class="quiz-recap">' + ratees.map(function (r) {
         return '<div class="r-ko">' + esc(r.q) + ' <em>Réponse : ' + esc(r.attendu) + '</em></div>';
       }).join('') + '</div>' : '') + '</div>';
@@ -3335,6 +3432,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       api('/api/quiz/compte').then(function (c) { compte = c; }).catch(function () {});
     }
   }
+  // Pastille de la barre du haut : reprendre la séance (ou voir son rapport) depuis n'importe quelle page
+  (function () { var c = document.getElementById('qz-tb-seance'); if (c) { c.addEventListener('click', seanceReprendre); c.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); seanceReprendre(); } }); } })();
 
   function demarrer(mat, niveau) {
     // Essai : la série compte les questions gratuites qui restent aujourd'hui ; plus aucune, le paiement s'ouvre
@@ -3733,7 +3832,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     else if (act === 'seance-fin') seanceFin();
     else if (act === 'seance-pause') seancePause();
     else if (act === 'seance-lot') seanceLot();
-    else if (act === 'seance-relancer') { root.innerHTML = '<div class="quiz-card"><p>Préparation de ta séance…</p></div>'; ((seance && seance.enreg) || Promise.resolve()).then(function () { return chargerPc(true); }).then(function (d) { seanceLancer(d, modelePc(d)); }).catch(function () { erreur('Ta séance n’a pas pu être préparée. Réessaie dans quelques instants.'); }); }
+    else if (act === 'seance-reprendre') seanceReprendre();
+    else if (act === 'seance-relancer') { root.innerHTML = '<div class="quiz-card"><p>Préparation de ta séance…</p></div>'; (seanceEnreg || Promise.resolve()).then(function () { return chargerPc(true); }).then(function (d) { seanceLancer(d, modelePc(d)); }).catch(function () { erreur('Ta séance n’a pas pu être préparée. Réessaie dans quelques instants.'); }); }
     else if (act === 'next') { if (st.i < st.serie.length - 1) { st.i++; question(); } else fin(); }
     else if (act === 'boot') boot(true);
     else if (act === 'essai') { accueil(); top(); }
