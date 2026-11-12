@@ -984,6 +984,10 @@
     .mm { display: flex; flex-direction: column; gap: 14px; }
     .mm-tete { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 12px; }
     .mm-tete h2 { margin: 0 0 4px; font-size: 20px; } .mm-tete p { margin: 0; font-size: 13px; color: var(--gray-600); }
+    .mm-commandes { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .mm-periode { display: inline-flex; gap: 2px; padding: 3px; border-radius: 10px; background: var(--gray-100); }
+    .mm-periode button { min-height: 38px; padding: 0 14px; border: 0; border-radius: 8px; background: none; font: inherit; font-size: 13px; font-weight: 700; color: var(--gray-600); cursor: pointer; }
+    .mm-periode button[aria-pressed="true"] { background: #fff; color: #c2410c; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
     .mm-nav { display: flex; align-items: center; gap: 6px; border: 1px solid var(--gray-200); border-radius: 12px; padding: 4px; }
     .mm-nav span { min-width: 128px; text-align: center; font-size: 14px; font-weight: 700; }
     .mm-nav button { width: 36px; height: 36px; border: 0; border-radius: 9px; background: #fff7ed; color: #c2410c; font: inherit; font-size: 20px; font-weight: 700; cursor: pointer; }
@@ -2759,6 +2763,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     root.querySelectorAll('[data-gm]').forEach(function (b) { b.addEventListener('click', function () {
       modeGraph = b.dataset.gm; try { localStorage.setItem('qz_mode_graph', modeGraph); } catch (e) {} afficherSeries(toutes);
     }); });
+    root.querySelectorAll('[data-mm-periode]').forEach(function (b) { b.addEventListener('click', function () {
+      if (mmPeriode === b.dataset.mmPeriode) return;
+      mmPeriode = b.dataset.mmPeriode; mmSem = 0; mmDetail = null; try { localStorage.setItem('qz_mm_periode', mmPeriode); } catch (e) {} afficherSeries(toutes);
+    }); });
     root.querySelectorAll('[data-mm-sem]').forEach(function (b) { b.addEventListener('click', function () { mmSem += +b.dataset.mmSem; mmDetail = null; afficherSeries(toutes); }); });
     root.querySelectorAll('[data-mm-mat]').forEach(function (b) { b.addEventListener('click', function () {
       mmDetail = mmDetail === b.dataset.mmMat ? null : b.dataset.mmMat; afficherSeries(toutes);
@@ -2773,16 +2781,20 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   // ── Mes stats · Par matière : moyenne de la semaine (lundi → dimanche) par matière, en barres horizontales ──
   // Moyenne = bonnes réponses ÷ questions × 20, sur les séries de la semaine ; moins de MM_MIN réponses : pas assez de données.
   // Repère : la moyenne de la semaine précédente, et l'écart. Clic sur une barre : le détail de la semaine par thème.
-  var MM_MIN = 5, MM_OBJ = 12, mmSem = 0, mmDetail = null;
+  var MM_MIN = 5, MM_OBJ = 12, mmSem = 0, mmDetail = null, mmPeriode = 'semaine';
+  try { if (localStorage.getItem('qz_mm_periode') === 'mois') mmPeriode = 'mois'; } catch (e) {}
   var MM_COURT = { francais: 'Français', mathematiques: 'Maths', histoire_geographie: 'Histoire-géo', emc: 'EMC', svt: 'SVT', physique_chimie: 'Physique-chimie', technologie: 'Techno', arts: 'Arts', anglais: 'Anglais' };
   function mmNom(m) { return MM_COURT[m] || label(m); }
   function mmLundi(t) { var d = new Date(t); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - (d.getDay() + 6) % 7); return d; }
   function mmCouleur(v) { return v < 8 ? '#dc2626' : v <= MM_OBJ ? '#f97316' : '#15803d'; }
   function mmFmt(v) { return (Math.round(v * 10) / 10).toFixed(1).replace('.', ','); }
   // Séries d'une semaine (décalage en semaines par rapport à la semaine en cours), par matière
+  function mmDebut(decalage) {
+    if (mmPeriode === 'mois') { var m = new Date(); m.setHours(0, 0, 0, 0); m.setDate(1); m.setMonth(m.getMonth() + decalage); return m; }
+    var d = mmLundi(Date.now()); d.setDate(d.getDate() + 7 * decalage); return d;
+  }
   function mmSemaine(series, decalage) {
-    var debut = mmLundi(Date.now()); debut.setDate(debut.getDate() + 7 * decalage);
-    var fin = new Date(debut); fin.setDate(fin.getDate() + 7);
+    var debut = mmDebut(decalage), fin = mmDebut(decalage + 1);
     var parMat = {};
     series.forEach(function (x) {
       var t = new Date(x.created_at); if (t < debut || t >= fin || !x.total) return;
@@ -2794,25 +2806,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   }
   function graphMatieres(series) {
     var plusAncienne = series.reduce(function (a, x) { var t = new Date(x.created_at).getTime(); return Math.min(a, t); }, Date.now());
-    var minSem = -Math.round((mmLundi(Date.now()) - mmLundi(plusAncienne)) / (7 * 864e5));
+    var a0 = new Date(plusAncienne), n0 = new Date();
+    var minSem = mmPeriode === 'mois' ? -((n0.getFullYear() - a0.getFullYear()) * 12 + n0.getMonth() - a0.getMonth()) : -Math.round((mmLundi(Date.now()) - mmLundi(plusAncienne)) / (7 * 864e5));
+    var M = mmPeriode === 'mois', cette = M ? 'ce mois-ci' : 'cette semaine', laPrec = M ? 'le mois précédent' : 'la semaine précédente';
     if (mmSem > 0) mmSem = 0; if (mmSem < minSem) mmSem = minSem;
     var S = mmSemaine(series, mmSem), P = mmSemaine(series, mmSem - 1);
-    var libelle = 'Semaine du ' + S.debut.getDate() + ' ' + S.debut.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '');
-    var h = '<div class="quiz-card mm"><div class="mm-tete"><div><h2>Moyenne par matière</h2><p>Note moyenne sur 20 des réponses de la semaine, du lundi au dimanche</p></div>' +
-      '<div class="mm-nav"><button type="button" data-mm-sem="-1" aria-label="Semaine précédente"' + (mmSem <= minSem ? ' disabled' : '') + '>‹</button><span>' + libelle + '</span>' +
-      '<button type="button" data-mm-sem="1" aria-label="Semaine suivante"' + (mmSem >= 0 ? ' disabled' : '') + '>›</button></div></div>';
+    var libelle = M ? S.debut.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' }).replace(/^./, function (c) { return c.toUpperCase(); })
+      : 'Semaine du ' + S.debut.getDate() + ' ' + S.debut.toLocaleDateString('fr-FR', { month: 'short' }).replace('.', '');
+    var h = '<div class="quiz-card mm"><div class="mm-tete"><div><h2>Moyenne par matière</h2><p>Note moyenne sur 20 des réponses ' + (M ? 'du mois' : 'de la semaine, du lundi au dimanche') + '</p></div>' +
+      '<div class="mm-commandes"><div class="mm-periode" role="group" aria-label="Période"><button type="button" data-mm-periode="semaine" aria-pressed="' + !M + '">Semaine</button><button type="button" data-mm-periode="mois" aria-pressed="' + M + '">Mois</button></div>' +
+      '<div class="mm-nav"><button type="button" data-mm-sem="-1" aria-label="' + (M ? 'Mois précédent' : 'Semaine précédente') + '"' + (mmSem <= minSem ? ' disabled' : '') + '>‹</button><span>' + libelle + '</span>' +
+      '<button type="button" data-mm-sem="1" aria-label="' + (M ? 'Mois suivant' : 'Semaine suivante') + '"' + (mmSem >= 0 ? ' disabled' : '') + '>›</button></div></div></div>';
     var mats = Object.keys(S.parMat).map(function (k) { return S.parMat[k]; });
-    if (!mats.length) return h + '<div class="mm-vide"><p><b>Aucune révision cette semaine</b></p><p>Lance une séance pour voir apparaître tes moyennes.</p><a class="quiz-btn" href="/quizapp?vue=seances">Commencer une session</a></div></div>';
+    if (!mats.length) return h + '<div class="mm-vide"><p><b>Aucune révision ' + cette + '</b></p><p>Lance une séance pour voir apparaître tes moyennes.</p><a class="quiz-btn" href="/quizapp?vue=seances">Commencer une session</a></div></div>';
     // Points faibles en haut ; les matières sans assez de données à la fin
     mats.sort(function (a, b) { return a.assez === b.assez ? (a.assez ? a.moyenne - b.moyenne : 0) : (a.assez ? -1 : 1); });
-    h += '<div class="mm-legende"><span><i style="background:#dc2626"></i>Moins de 8</span><span><i style="background:#f97316"></i>De 8 à 12</span><span><i style="background:#15803d"></i>Plus de 12</span><span><i class="mm-l-prec"></i>Semaine précédente</span></div>' +
+    h += '<div class="mm-legende"><span><i style="background:#dc2626"></i>Moins de 8</span><span><i style="background:#f97316"></i>De 8 à 12</span><span><i style="background:#15803d"></i>Plus de 12</span><span><i class="mm-l-prec"></i>' + (M ? 'Mois précédent' : 'Semaine précédente') + '</span></div>' +
       '<div class="mm-graphe"><div class="mm-ligne mm-haut"><span></span><span class="mm-piste"><span class="mm-obj-lbl">Objectif ' + MM_OBJ + '</span></span><span></span></div>';
     h += mats.map(function (m) {
       var p = P.parMat[m.matiere], pOk = p && p.assez, ecart = m.assez && pOk ? Math.round((m.moyenne - p.moyenne) * 10) / 10 : null;
       var ecTxt = ecart === null ? '' : (ecart > 0 ? '+' : ecart < 0 ? '−' : '±') + mmFmt(Math.abs(ecart));
       var fin = m.assez ? m.moyenne / 20 * 100 : 100, bulleG = Math.min(Math.max(m.assez ? fin : 50, 28), 72);
       var bulle = '<b>' + esc(label(m.matiere)) + '</b><span>' + (m.assez ? 'Moyenne : ' + mmFmt(m.moyenne) + ' / 20' : 'Moins de ' + MM_MIN + ' réponses : pas assez de données') + '</span>' +
-        '<span>' + pluriel(m.total, 'réponse') + ' cette semaine</span><span>' + (ecart === null ? 'Pas de comparaison avec la semaine précédente' : 'Écart avec la semaine précédente : ' + ecTxt) + '</span>';
+        '<span>' + pluriel(m.total, 'réponse') + ' ' + cette + '</span><span>' + (ecart === null ? 'Pas de comparaison avec ' + laPrec : 'Écart avec ' + laPrec + ' : ' + ecTxt) + '</span>';
       return '<button type="button" class="mm-ligne' + (mmDetail === m.matiere ? ' on' : '') + '" data-mm-mat="' + m.matiere + '" aria-label="' + esc(label(m.matiere)) + ' : ' + (m.assez ? mmFmt(m.moyenne) + ' sur 20' : 'pas assez de données') + ', ' + pluriel(m.total, 'réponse') + '. Voir le détail.">' +
         '<span class="mm-nom" title="' + esc(label(m.matiere)) + '">' + esc(mmNom(m.matiere)) + '</span>' +
         '<span class="mm-piste"><span class="mm-g" style="left:25%"></span><span class="mm-g" style="left:50%"></span><span class="mm-g" style="left:75%"></span><span class="mm-g" style="left:100%"></span>' +
@@ -2823,7 +2839,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         '<span class="mm-val">' + (m.assez ? '<b>' + mmFmt(m.moyenne) + '</b>' + (ecart !== null ? '<em class="' + (ecart > 0 ? 'mieux' : ecart < 0 ? 'moins' : '') + '">' + ecTxt + '</em>' : '') : '<span class="mm-pas">Pas assez de données</span>') + '</span></button>';
     }).join('');
     h += '<div class="mm-ligne mm-axe"><span></span><span class="mm-piste">' + [0, 5, 10, 15, 20].map(function (v) { return '<span style="left:' + (v / 20 * 100) + '%">' + v + '</span>'; }).join('') + '</span><span></span></div></div>' +
-      '<p class="mm-note">Barres triées de la note la plus faible à la plus forte. Survole une barre pour le détail, clique pour voir les thèmes de la semaine.</p>';
+      '<p class="mm-note">Barres triées de la note la plus faible à la plus forte. Survole une barre pour le détail, clique pour voir les thèmes ' + (M ? 'du mois' : 'de la semaine') + '.</p>';
     // Détail de la matière choisie : note de la semaine par thème
     var md = mmDetail && S.parMat[mmDetail];
     if (md) {
