@@ -1000,12 +1000,12 @@
 
     /* ── PAGE DE VENTE QUIZ ── */
     .qz-hero { padding: 72px 24px 80px; background: radial-gradient(ellipse at top, #fff7ed 0%, #fff 60%); }
-    .qz-hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr .9fr; grid-template-areas: "texte demo" "suite ."; column-gap: 48px; align-items: center; }
+    .qz-hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr .9fr; grid-template-areas: "texte suite" "demo demo"; column-gap: 56px; align-items: end; }
     .qz-hero-texte { grid-area: texte; }
     .qz-hero-suite { grid-area: suite; }
     .qz-hero .qz-demo { grid-area: demo; }
     .qz-hero { overflow-x: clip; }
-    .qz-quiz-img { grid-area: demo; position: relative; margin: 0; }
+    .qz-quiz-img { grid-area: demo; position: relative; margin: 64px 0 0; }
     .qz-quiz-img::before { content: ""; position: absolute; inset: -18px -18px 18px 18px; border-radius: 28px; background: linear-gradient(135deg, #fed7aa, #fff7ed); z-index: 0; }
     .qz-quiz-img img { position: relative; z-index: 1; display: block; width: 100%; height: auto; border-radius: 20px; border: 1px solid #fde4cc; background: #fff; box-shadow: 0 24px 60px rgba(234,88,12,.14), 0 6px 18px rgba(17,24,39,.06); }
     .qz-hero .hero-badge { margin-bottom: 20px; }
@@ -1214,7 +1214,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       </div>
     </div>
     <figure class="qz-quiz-img">
-      <img src="/images/quizcrpe-quiz.jpg" alt="Une série du Quiz CRPE en mathématiques, thème Nombres et calculs : choix du niveau de difficulté et question « Quelle est la notation scientifique de 45 000 ? »" width="636" height="614" loading="eager">
+      <img src="/images/quizcrpe-quiz.jpg" alt="Le Quiz CRPE sur ordinateur : une série de mathématiques (Nombres et calculs) avec le sommaire des thèmes, le choix du niveau de difficulté et la question « Quelle est la notation scientifique de 45 000 ? »" width="1874" height="862" loading="eager">
     </figure>
   </div>
 </header>
