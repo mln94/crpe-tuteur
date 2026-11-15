@@ -19,6 +19,7 @@
     { "source": "/blog/salaire-professeur-des-ecoles-remuneration", "destination": "/salaire-professeur-des-ecoles-remuneration.html" },
     { "source": "/blog/rapport-jury-crpe-2025-conseils", "destination": "/rapport-jury-crpe-2025-conseils.html" },
     { "source": "/blog/rapport-jury-crpe-2026-conseils", "destination": "/rapport-jury-crpe-2026-conseils.html" },
+    { "source": "/blog/crpe-2028-fin-concours-bac5-titulaires-master", "destination": "/crpe-2028-fin-concours-bac5-titulaires-master.html" },
     { "source": "/crpe-par-academie", "destination": "/crpe-par-academie.html" },
     { "source": "/crpe-par-academie-2027", "destination": "/crpe-par-academie-2027.html" },
     { "source": "/crpe-par-academie/:slug", "destination": "/academies/:slug.html" },
