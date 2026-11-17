@@ -33,6 +33,7 @@
     { "source": "/nouveau-mot-de-passe", "destination": "/nouveau-mot-de-passe.html" },
     { "source": "/contact", "destination": "/contact.html" },
     { "source": "/newsletter", "destination": "/newsletter.html" },
+    { "source": "/copie-parfaite-noel", "destination": "/copie-parfaite-noel.html" },
     { "source": "/suivi-publications", "destination": "/suivi-publications.html" },
     { "source": "/suivi-nouveautes", "destination": "/suivi-nouveautes.html" },
     { "source": "/outils", "destination": "/outils.html" },
@@ -44,6 +45,7 @@
   ],
   "headers": [
     { "source": "/newsletter(.html)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
+    { "source": "/copie-parfaite-noel(.html)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
     { "source": "/suivi-publications(.html)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }] },
     { "source": "/suivi-nouveautes(.html)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }] }
   ],

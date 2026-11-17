@@ -1,0 +1,806 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TMLHJT3Q');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<!-- Page non référencée : accessible uniquement par lien direct (bandeau de l'accueil, e-mails, Facebook), absente du sitemap -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>La Copie Parfaite de Noël · Challenge CRPE gratuit | PassCRPE</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="description" content="Challenge gratuit PassCRPE du 9 au 20 décembre 2026 : trois sujets blancs du CRPE (maths, français et un sujet optionnel) à rendre en 12 jours, en binôme. Inscriptions jusqu'au 8 décembre.">
+<link rel="canonical" href="https://www.passcrpe.fr/copie-parfaite-noel">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://www.passcrpe.fr/copie-parfaite-noel">
+<meta property="og:title" content="La Copie Parfaite de Noël · Challenge CRPE gratuit">
+<meta property="og:image" content="https://www.passcrpe.fr/images/partage-passcrpe.jpg">
+<meta property="og:description" content="3 sujets blancs du CRPE, 12 jours, avant les fêtes. Gratuit, inscriptions jusqu'au 8 décembre.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=Caveat:wght@500;700&display=swap">
+<style>
+/* Layout : une copie double d'écolier — lignes Seyès, marge rouge, annotations au stylo rouge. Colonne unique, sections qui alternent papier / surface. */
+:root {
+  --paper: #FBFCFF;
+  --surface: #EEF2FB;
+  --ink: #18264F;
+  --muted: #56628A;
+  --line: #CBD7EF;
+  --line-strong: #A9BCE3;
+  --margin: #E59AA0;
+  --red: #CF2E25;
+  --blue: #2950C8;
+  --blue-ink: #FFFFFF;
+  --ok: #1E7F4F;
+  --font-display: "Bricolage Grotesque", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0E1328; --surface: #161D38; --ink: #E5EAF8; --muted: #9DA8CB;
+    --line: #232D4E; --line-strong: #33406A; --margin: #7A3B44; --red: #FF6D60;
+    --blue: #7F9EFF; --blue-ink: #0B1023; --ok: #5ED39A; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0E1328; --surface: #161D38; --ink: #E5EAF8; --muted: #9DA8CB;
+  --line: #232D4E; --line-strong: #33406A; --margin: #7A3B44; --red: #FF6D60;
+  --blue: #7F9EFF; --blue-ink: #0B1023; --ok: #5ED39A; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+body {
+  background: var(--paper); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 1080px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3 { font-family: var(--font-display); line-height: 1.08; margin: 0; text-wrap: balance; letter-spacing: -0.02em; }
+h1 { font-size: clamp(2.6rem, 6.5vw, 4.6rem); font-weight: 800; }
+h2 { font-size: clamp(1.9rem, 4vw, 2.7rem); font-weight: 700; }
+h3 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.01em; }
+p { margin: 0; }
+.eyebrow {
+  font-size: .78rem; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; color: var(--muted);
+}
+.hand { font-family: var(--font-hand); color: var(--red); font-weight: 700; }
+.lead { font-size: 1.15rem; color: var(--muted); max-width: 58ch; }
+a { color: var(--blue); }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 4px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: .5em;
+  background: var(--blue); color: var(--blue-ink); text-decoration: none;
+  font-weight: 600; font-size: 1rem; padding: .9em 1.4em; border-radius: 10px; border: 0; cursor: pointer;
+  transition: transform .15s ease, box-shadow .15s ease;
+  box-shadow: 0 2px 0 color-mix(in srgb, var(--blue) 55%, #000);
+}
+.btn:hover { transform: translateY(-1px); box-shadow: 0 4px 0 color-mix(in srgb, var(--blue) 55%, #000); }
+.btn:active { transform: translateY(1px); box-shadow: 0 1px 0 color-mix(in srgb, var(--blue) 55%, #000); }
+.btn[disabled] { opacity: .6; cursor: progress; }
+
+/* Header : bandeau bleu foncé, logo PassCRPE en blanc */
+header.top { background: #1E2F7A; border-bottom: 0; }
+header.top .wrap { display: flex; justify-content: space-between; align-items: center; padding-block: 14px; gap: 16px; flex-wrap: wrap; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; color: #FFFFFF; text-decoration: none; }
+.brand svg { width: 30px; height: 30px; flex: none; }
+.top-right { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.top .btn { padding: .6em 1em; font-size: .92rem; background: #FFFFFF; color: #1E2F7A; box-shadow: 0 2px 0 #0D1A4D; }
+.free-tag {
+  display: inline-block; background: #F5B400; color: #1A1A1A; font-weight: 800; font-size: .82rem;
+  letter-spacing: .08em; text-transform: uppercase; padding: .45em .9em; border-radius: 6px; white-space: nowrap;
+}
+.hero-free {
+  align-self: flex-start; display: inline-block; background: var(--red); color: #FFFFFF; font-family: var(--font-display);
+  font-weight: 800; font-size: clamp(1.05rem, 2.4vw, 1.35rem); letter-spacing: .06em; text-transform: uppercase;
+  padding: .4em .85em; border-radius: 8px; transform: rotate(-1.5deg);
+}
+.ia-ban {
+  display: grid; grid-template-columns: auto 1fr; gap: 18px; align-items: center;
+  border: 2px solid var(--red); border-radius: 12px; padding: 20px 22px; background: color-mix(in srgb, var(--red) 6%, var(--paper));
+}
+.ia-ban .no { font-family: var(--font-display); font-weight: 800; font-size: 1.6rem; color: var(--red); line-height: 1; }
+.ia-ban p { color: var(--ink); }
+.field select {
+  font: inherit; color: var(--ink); background: var(--paper);
+  border: 1.5px solid var(--line-strong); border-radius: 8px; padding: .75em .9em; width: 100%;
+}
+.field select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 22%, transparent); }
+.field select[aria-invalid="true"] { border-color: var(--red); }
+.hint { font-size: .85rem; color: var(--ink); background: color-mix(in srgb, #F5B400 18%, var(--paper)); border-left: 3px solid #F5B400; padding: 8px 10px; border-radius: 4px; }
+
+/* Hero */
+.hero .wrap { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: center; padding-block: 64px 72px; }
+.hero-text { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.hero h1 em { font-style: normal; color: var(--red); position: relative; white-space: nowrap; }
+.hero h1 em::after {
+  content: ""; position: absolute; left: -2%; right: -2%; bottom: .02em; height: .14em;
+  background: var(--red); opacity: .25; border-radius: 40% 60% 50% 50%; transform: rotate(-1deg);
+}
+.hero-meta { display: flex; flex-wrap: wrap; gap: 10px 22px; color: var(--muted); font-size: .95rem; }
+.hero-meta b { color: var(--ink); }
+.hero-cta { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; }
+.hero-cta small { color: var(--muted); }
+
+/* La copie (Seyès) */
+.copie {
+  position: relative; min-width: 0;
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(90deg, transparent 54px, var(--margin) 54px, var(--margin) 56px, transparent 56px),
+    linear-gradient(var(--line-strong) 1px, transparent 1px),
+    linear-gradient(var(--line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--line) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 32px, 100% 8px, 32px 100%;
+  border: 1px solid var(--line-strong); border-radius: 6px;
+  padding: 26px 22px 30px 72px;
+  box-shadow: 0 1px 0 var(--line), 0 18px 40px -24px color-mix(in srgb, var(--ink) 45%, transparent);
+  transform: rotate(1.2deg);
+  font-family: var(--font-hand); color: var(--ink); font-size: 1.45rem; line-height: 32px;
+}
+.copie .l { display: block; }
+.copie .t { font-weight: 700; text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: 4px; }
+.copie .ann { position: absolute; color: var(--red); font-weight: 700; font-size: 1.4rem; line-height: 1.1; }
+.copie .tick { color: var(--ok); }
+.note-circle {
+  position: absolute; right: 18px; top: -26px; width: 104px; height: 104px;
+  display: grid; place-items: center; text-align: center;
+  font-family: var(--font-hand); color: var(--red); font-weight: 700; font-size: 2.3rem; line-height: .9;
+  border: 3px solid var(--red); border-radius: 52% 48% 50% 46%; transform: rotate(-8deg);
+  background: color-mix(in srgb, var(--paper) 85%, transparent);
+}
+.note-circle small { display: block; font-size: 1.05rem; }
+.margin-mark { position: absolute; left: 10px; font-family: var(--font-hand); color: var(--red); font-weight: 700; font-size: 1.3rem; }
+
+/* Chiffres */
+.figures { border-block: 1px solid var(--line); background: var(--surface); }
+.figures .wrap { display: grid; grid-template-columns: repeat(3, 1fr); padding-block: 0; }
+.fig { padding: 30px 24px; display: flex; flex-direction: column; gap: 4px; }
+.fig + .fig { border-left: 1px solid var(--line); }
+.fig strong { font-family: var(--font-display); font-size: clamp(2.4rem, 5vw, 3.4rem); font-weight: 800; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.fig strong .u { color: var(--red); }
+.fig span { color: var(--muted); font-size: .98rem; }
+
+section.block .wrap { padding-block: 80px; display: flex; flex-direction: column; gap: 40px; }
+.sec-head { display: flex; flex-direction: column; gap: 14px; max-width: 720px; }
+
+/* Étapes */
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: s; }
+.steps li {
+  display: grid; grid-template-columns: 64px 1fr; gap: 20px; padding: 22px 0; border-top: 1px dashed var(--line-strong);
+  counter-increment: s;
+}
+.steps li:last-child { border-bottom: 1px dashed var(--line-strong); }
+.steps li::before {
+  content: counter(s); font-family: var(--font-hand); font-weight: 700; font-size: 2.6rem; line-height: 1; color: var(--red);
+}
+.steps li div { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.steps p { color: var(--muted); max-width: 64ch; }
+
+/* Sujets */
+.alt { background: var(--surface); border-block: 1px solid var(--line); }
+.subjects { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.subject {
+  background: var(--paper); border: 1px solid var(--line-strong); border-radius: 8px; padding: 28px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.subject .tag { font-family: var(--font-hand); color: var(--red); font-size: 1.5rem; font-weight: 700; line-height: 1; }
+.subject ul { margin: 0; padding-left: 1.1em; color: var(--muted); display: grid; gap: 6px; }
+.platform {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: center;
+  border-top: 1px solid var(--line-strong); padding-top: 36px;
+}
+.platform > div { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.platform p { color: var(--muted); }
+.mock {
+  background: var(--paper); border: 1px solid var(--line-strong); border-radius: 10px; overflow: hidden; font-size: .92rem;
+}
+.mock-bar { display: flex; justify-content: space-between; padding: 10px 14px; background: var(--surface); border-bottom: 1px solid var(--line); color: var(--muted); font-size: .8rem; font-variant-numeric: tabular-nums; }
+.mock-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--line); align-items: center; }
+.mock-row:last-child { border-bottom: 0; }
+.pill { font-size: .75rem; font-weight: 600; padding: 3px 10px; border-radius: 99px; white-space: nowrap; }
+.pill.ok { color: var(--ok); background: color-mix(in srgb, var(--ok) 14%, transparent); }
+.pill.ko { color: var(--red); background: color-mix(in srgb, var(--red) 12%, transparent); }
+
+/* Entraide */
+.together { display: grid; grid-template-columns: 1.1fr .9fr; gap: 48px; align-items: start; }
+.together > div { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.together p { color: var(--muted); }
+.quotes { display: flex; flex-direction: column; gap: 14px; }
+.bubble {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px 14px 14px 4px; padding: 14px 16px; font-size: .95rem;
+}
+.bubble b { display: block; font-size: .8rem; color: var(--muted); font-weight: 600; margin-bottom: 2px; }
+.bubble.me { border-radius: 14px 14px 4px 14px; align-self: flex-end; background: color-mix(in srgb, var(--blue) 12%, var(--paper)); max-width: 90%; }
+.bubble-note { font-size: .8rem; color: var(--muted); }
+
+/* Règles */
+.rules { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 40px; margin: 0; }
+.rules div { display: grid; grid-template-columns: 1fr auto; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
+.rules dt { color: var(--muted); }
+.rules dd { margin: 0; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Formulaire */
+.signup .wrap { display: grid; grid-template-columns: .85fr 1.15fr; gap: 48px; align-items: start; padding-block: 80px; }
+.signup-intro { display: flex; flex-direction: column; gap: 18px; min-width: 0; position: sticky; top: 24px; }
+.signup-intro ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.signup-intro li { display: grid; grid-template-columns: 22px 1fr; gap: 8px; color: var(--muted); }
+.signup-intro li::before { content: "✓"; color: var(--ok); font-weight: 700; }
+form.card {
+  background: var(--paper); border: 1px solid var(--line-strong); border-radius: 12px; padding: 32px;
+  display: flex; flex-direction: column; gap: 18px;
+  box-shadow: 0 24px 50px -30px color-mix(in srgb, var(--ink) 40%, transparent);
+}
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field label, fieldset legend { font-weight: 600; font-size: .92rem; }
+.field input {
+  font: inherit; color: var(--ink); background: var(--paper);
+  border: 1.5px solid var(--line-strong); border-radius: 8px; padding: .75em .9em; width: 100%;
+}
+.field input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 22%, transparent); }
+.field input[aria-invalid="true"] { border-color: var(--red); }
+.err { color: var(--red); font-size: .82rem; min-height: 0; }
+fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.choices { display: flex; flex-wrap: wrap; gap: 10px; }
+.choice { position: relative; }
+.choice input { position: absolute; opacity: 0; inset: 0; }
+.choice span {
+  display: inline-block; padding: .6em 1.1em; border: 1.5px solid var(--line-strong); border-radius: 99px; cursor: pointer; font-weight: 500;
+}
+.choice input:checked + span { border-color: var(--blue); background: color-mix(in srgb, var(--blue) 12%, var(--paper)); color: var(--ink); }
+.choice input:focus-visible + span { outline: 3px solid var(--blue); outline-offset: 2px; }
+.check { display: grid; grid-template-columns: 20px 1fr; gap: 10px; align-items: start; font-size: .9rem; color: var(--muted); cursor: pointer; }
+.check input { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--blue); }
+.legal { font-size: .78rem; color: var(--muted); }
+form .btn { justify-content: center; font-size: 1.05rem; }
+.success {
+  display: flex; flex-direction: column; gap: 14px; align-items: flex-start;
+  background: var(--paper); border: 1px solid var(--line-strong); border-radius: 12px; padding: 32px;
+}
+.success .hand { font-size: 2.2rem; line-height: 1; }
+.form-error { color: var(--red); font-size: .9rem; }
+
+/* FAQ */
+.faq { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary { cursor: pointer; list-style: none; padding: 18px 0; font-weight: 600; font-size: 1.05rem; display: flex; justify-content: space-between; gap: 16px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; font-family: var(--font-hand); color: var(--red); font-size: 1.8rem; line-height: .8; }
+.faq details[open] summary::after { content: "−"; }
+.faq details p { padding-bottom: 18px; color: var(--muted); max-width: 70ch; }
+
+/* Programme */
+.timeline { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; border: 1px solid var(--line-strong); border-radius: 10px; overflow: hidden; background: var(--paper); }
+.timeline li { padding: 22px 20px; display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.timeline li + li { border-left: 1px solid var(--line); }
+.timeline .date { font-family: var(--font-display); font-weight: 800; font-size: 1.35rem; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.timeline .day { font-size: .75rem; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--red); }
+.timeline p { color: var(--muted); font-size: .93rem; }
+.timeline li.key { background: color-mix(in srgb, var(--red) 7%, var(--paper)); }
+.badge-free { display: inline-block; font-family: var(--font-hand); font-weight: 700; color: var(--red); font-size: 1.6rem; line-height: 1; transform: rotate(-4deg); }
+.cert {
+  display: grid; grid-template-columns: auto 1fr; gap: 24px; align-items: center;
+  border: 2px dashed var(--red); border-radius: 12px; padding: 24px; background: var(--paper);
+}
+.cert-seal {
+  width: 92px; height: 92px; border-radius: 50%; border: 3px double var(--red); display: grid; place-items: center; text-align: center;
+  font-family: var(--font-hand); color: var(--red); font-weight: 700; font-size: 1.15rem; line-height: 1; transform: rotate(-8deg);
+}
+.cert div { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.cert p { color: var(--muted); }
+.closed-note { border: 1px solid var(--line-strong); border-radius: 12px; padding: 28px; display: flex; flex-direction: column; gap: 10px; background: var(--paper); }
+
+/* Page de remerciement */
+.thanks .wrap { padding-block: 72px 88px; display: flex; flex-direction: column; gap: 36px; max-width: 820px; }
+.thanks .hand { font-size: 2.6rem; line-height: 1; }
+.next { list-style: none; margin: 0; padding: 0; display: grid; gap: 0; counter-reset: n; }
+.next li { display: grid; grid-template-columns: 52px 1fr; gap: 16px; padding: 20px 0; border-top: 1px dashed var(--line-strong); counter-increment: n; }
+.next li::before { content: counter(n); font-family: var(--font-hand); font-weight: 700; font-size: 2.2rem; line-height: 1; color: var(--red); }
+.next li div { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; min-width: 0; }
+.next p { color: var(--muted); }
+.btn-fb { background: #1877F2; color: #FFFFFF; box-shadow: 0 2px 0 #0B4FB3; }
+.btn-fb:hover { box-shadow: 0 4px 0 #0B4FB3; }
+
+@media (max-width: 860px) {
+  .timeline { grid-template-columns: 1fr; }
+  .timeline li + li { border-left: 0; border-top: 1px solid var(--line); }
+}
+@media (max-width: 560px) {
+  .cert { grid-template-columns: 1fr; }
+}
+
+footer { border-top: 1px solid var(--line); }
+footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: var(--muted); font-size: .85rem; }
+
+@media (max-width: 860px) {
+  .hero .wrap, .together, .signup .wrap, .platform { grid-template-columns: 1fr; }
+  .hero .wrap { padding-block: 40px 56px; gap: 56px; }
+  .signup-intro { position: static; }
+  .subjects { grid-template-columns: 1fr; }
+  .rules { grid-template-columns: 1fr; }
+}
+@media (max-width: 560px) {
+  .figures .wrap { grid-template-columns: 1fr; }
+  .fig + .fig { border-left: 0; border-top: 1px solid var(--line); }
+  .fig { padding: 22px 4px; }
+  .row { grid-template-columns: 1fr; }
+  form.card, .success { padding: 22px; }
+  .copie { font-size: 1.25rem; padding-left: 64px; }
+  .note-circle { width: 86px; height: 86px; font-size: 1.9rem; right: 8px; }
+  .steps li { grid-template-columns: 44px 1fr; gap: 12px; }
+  section.block .wrap, .signup .wrap { padding-block: 56px; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .note-circle { animation: stamp .6s cubic-bezier(.2,1.4,.4,1) .4s both; }
+  @keyframes stamp { from { transform: rotate(-20deg) scale(1.4); opacity: .2; } to { transform: rotate(-8deg) scale(1); opacity: 1; } }
+}
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TMLHJT3Q" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="/" aria-label="PassCRPE, accueil">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      PassCRPE
+    </a>
+    <div class="top-right">
+      <span class="free-tag">Challenge gratuit</span>
+      <a class="btn" href="#inscription">Je m'inscris</a>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="hero-text">
+        <span class="hero-free">Challenge gratuit</span>
+        <p class="eyebrow">Du 9 au 20 décembre 2026 · 12 jours</p>
+        <h1>La Copie Parfaite <em>de Noël</em>.</h1>
+        <p class="lead">Trois sujets blancs du CRPE à rendre en 12 jours : mathématiques et français, plus un troisième sujet optionnel que vous choisissez à l'inscription. Vous vérifiez vos réponses 3 fois maximum par épreuve, vous vous entraidez en binôme, et vous commencez les fêtes avec une copie parfaite : plus de 80 % sur les deux copies.</p>
+        <div class="hero-meta">
+          <span><b>100 % gratuit</b></span>
+          <span><b>9 → 20 décembre</b></span>
+          <span><b>Certificat Copie Parfaite</b> à la clé</span>
+        </div>
+        <div class="hero-cta">
+          <a class="btn" href="#inscription">Je relève le challenge →</a>
+          <small>Inscriptions ouvertes jusqu'au 8 décembre</small>
+        </div>
+      </div>
+
+      <div class="copie" aria-hidden="true">
+        <div class="note-circle"><div>92 %<small>Bravo !</small></div></div>
+        <span class="l t">Sujet 1 · Mathématiques</span>
+        <span class="l">Exercice 3 – question b)</span>
+        <span class="l">Aire du jardin : 12 × 7,5 = 90 m²</span>
+        <span class="l">Prix du gazon : 90 × 4,20 = 378 €</span>
+        <span class="l">&nbsp;</span>
+        <span class="l t">Sujet 2 · Français</span>
+        <span class="l">« vous » : pronom personnel sujet,</span>
+        <span class="l">2<sup>e</sup> personne du pluriel</span>
+        <span class="margin-mark" style="top: 90px">✓</span>
+        <span class="margin-mark" style="top: 122px">✓</span>
+        <span class="margin-mark" style="top: 250px">✓</span>
+        <span class="ann" style="right: 26px; top: 128px">unité ok !</span>
+        <span class="ann" style="right: 20px; bottom: 6px">Vérif. 2/3</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="figures" aria-label="Le challenge en chiffres">
+    <div class="wrap">
+      <div class="fig"><strong>12<span class="u"> j</span></strong><span>pour rendre vos 3 sujets (dont 1 optionnel)</span></div>
+      <div class="fig"><strong>3</strong><span>vérifications maximum par épreuve</span></div>
+      <div class="fig"><strong>&gt;80<span class="u"> %</span></strong><span>sur les deux copies, maths et français, pour réussir</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="programme">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Le programme</p>
+        <h2>12 jours pour finir l'année avec une copie parfaite</h2>
+        <p class="lead">Trois sujets à rendre : mathématiques, français, et un troisième sujet optionnel choisi à l'inscription. Le 20 décembre, vous recevez votre résultat et, si vous avez réussi, votre certificat Copie Parfaite. Juste à temps pour les fêtes.</p>
+      </div>
+      <ol class="timeline">
+        <li><span class="day">Jusqu'au 8 déc.</span><span class="date">Inscriptions</span><p>Clôture des inscriptions le 8 décembre à minuit. Nous formons ensuite les binômes.</p></li>
+        <li><span class="day">J1 → J4</span><span class="date">9 → 12 déc.</span><p>Annonce des binômes le 9 décembre et lancement. Sujet de mathématiques.</p></li>
+        <li><span class="day">J5 → J8</span><span class="date">13 → 16 déc.</span><p>Sujet de français. Vous continuez à retravailler vos maths si besoin.</p></li>
+        <li><span class="day">J9 → J11</span><span class="date">17 → 19 déc.</span><p>Sujet optionnel (si vous l'avez choisi) et finalisation de vos copies.</p></li>
+        <li class="key"><span class="day">J12 · le grand jour</span><span class="date">20 déc.</span><p>Résultats, remise des certificats Copie Parfaite, et place aux fêtes.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="block alt" id="principe">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Comment ça marche</p>
+        <h2>On ne vous donne pas la correction. On vous fait trouver la bonne réponse.</h2>
+        <p class="lead">Lire un corrigé donne l'impression d'avoir compris. Retravailler sa réponse jusqu'à ce qu'elle soit juste, c'est ce qui fait progresser. Le challenge est construit sur cette idée.</p>
+      </div>
+      <ol class="steps">
+        <li><div><h3>Inscrivez-vous et choisissez votre sujet optionnel</h3><p>Lors de l'inscription, vous choisissez votre troisième sujet (facultatif) : histoire-géographie, enseignement moral et civique, anglais, sciences et technologie ou arts. N'oubliez pas votre numéro de téléphone : il sert à former les binômes.</p></div></li>
+        <li><div><h3>Découvrez votre binôme le 9 décembre</h3><p>Après la clôture des inscriptions, nous vous associons à un autre candidat. Le but du binôme : s'entraider sur les sujets. Vous vous organisez comme vous le souhaitez (téléphone, messages, visio…), et chacun remet sa propre copie.</p></div></li>
+        <li><div><h3>Répondez aux questions sur la plateforme</h3><p>Chaque sujet blanc est découpé en questions. Vous rédigez et postez vos réponses directement en ligne, à votre rythme, pendant les 12 jours.</p></div></li>
+        <li><div><h3>Vérifiez vos réponses : 3 fois maximum par épreuve</h3><p>À chaque vérification, la plateforme vous indique ce qui est juste et ce qui ne l'est pas encore, sans vous donner la correction. Vous disposez de 3 vérifications par épreuve : gardez-les pour le moment où votre copie est vraiment aboutie.</p></div></li>
+        <li><div><h3>Dépassez 80 % sur les deux copies</h3><p>Le challenge est réussi quand vos copies de mathématiques et de français obtiennent chacune plus de 80 % de réussite. Le sujet optionnel est un entraînement en plus : il n'est pas obligatoire pour réussir le challenge.</p></div></li>
+      </ol>
+      <div class="ia-ban">
+        <span class="no">IA&nbsp;interdite</span>
+        <p><b>L'usage de l'intelligence artificielle est totalement interdit</b> pendant tout le challenge : pour rédiger vos réponses, pour les vérifier comme pour les échanges en binôme. Comme le jour du concours, vous ne comptez que sur vos connaissances… et sur votre binôme.</p>
+      </div>
+      <div class="cert">
+        <div class="cert-seal">Copie<br>Parfaite<br>2026</div>
+        <div>
+          <h3>Votre certificat Copie Parfaite le 20 décembre</h3>
+          <p>Chaque candidat qui dépasse 80 % sur les deux copies, mathématiques et français, reçoit son certificat nominatif à la clôture du challenge. Une belle façon de terminer l'année et de reprendre confiance avant les écrits.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="sujets">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Les trois sujets à rendre</p>
+        <h2>Trois sujets blancs, au format des écrits du concours</h2>
+        <p class="lead">Deux sujets obligatoires, mathématiques et français, et un troisième sujet optionnel, choisi lors de l'inscription.</p>
+      </div>
+      <div class="subjects">
+        <article class="subject">
+          <span class="tag">Sujet 1</span>
+          <h3>Mathématiques</h3>
+          <ul>
+            <li>Exercices indépendants et problèmes</li>
+            <li>Raisonnement, calcul, géométrie, grandeurs et mesures</li>
+            <li>Rédaction des justifications, comme le jour J</li>
+          </ul>
+        </article>
+        <article class="subject">
+          <span class="tag">Sujet 2</span>
+          <h3>Français</h3>
+          <ul>
+            <li>Compréhension et analyse de texte</li>
+            <li>Étude de la langue : grammaire, orthographe, lexique</li>
+            <li>Production écrite argumentée</li>
+          </ul>
+        </article>
+        <article class="subject">
+          <span class="tag">Sujet 3 · optionnel</span>
+          <h3>Au choix, lors de l'inscription</h3>
+          <ul>
+            <li>Histoire-géographie</li>
+            <li>Enseignement moral et civique</li>
+            <li>Anglais (langue vivante)</li>
+            <li>Sciences et technologie</li>
+            <li>Arts</li>
+          </ul>
+        </article>
+      </div>
+      <div class="platform">
+        <div>
+          <p class="eyebrow">Une plateforme dédiée</p>
+          <h3>Vous répondez en ligne, question par question</h3>
+          <p>Pas de PDF à imprimer ni de scan à envoyer. Vous postez vos réponses sur la plateforme du challenge, vous voyez où vous en êtes, et vous lancez une vérification quand votre copie est prête (3 par épreuve).</p>
+        </div>
+        <div class="mock" aria-label="Exemple d'écran de la plateforme">
+          <div class="mock-bar"><span>Sujet 1 · Mathématiques</span><span>Vérification 2 · 1 restante</span></div>
+          <div class="mock-row"><span>Exercice 1 – a)</span><span class="pill ok">Juste</span></div>
+          <div class="mock-row"><span>Exercice 1 – b)</span><span class="pill ok">Juste</span></div>
+          <div class="mock-row"><span>Exercice 2 – a)</span><span class="pill ko">À retravailler</span></div>
+          <div class="mock-row"><span>Exercice 3 – b)</span><span class="pill ok">Juste</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block alt" id="entraide">
+    <div class="wrap">
+      <div class="together">
+        <div>
+          <p class="eyebrow">L'entraide au cœur du challenge</p>
+          <h2>Vous ne préparez pas le concours seul·e</h2>
+          <p class="lead">Le challenge repose sur l'apprentissage entre pairs. Dans le groupe Facebook privé, vous échangez sur les sujets, vous comparez vos raisonnements, vous expliquez une règle de grammaire à quelqu'un qui bloque, et quelqu'un vous débloque sur un problème de proportionnalité.</p>
+          <p><b>En binôme, pour s'entraider sur les sujets.</b> Après la clôture des inscriptions, chaque participant est associé à un autre candidat ; les binômes sont annoncés le 9 décembre. Vous vous organisez comme vous le souhaitez : appels, messages, visio, à l'heure qui vous convient. Votre binôme est votre premier relais : vous vous motivez, vous confrontez vos réponses avant de les vérifier, et vous avancez au même rythme.</p>
+          <p>Expliquer à un autre candidat est l'une des meilleures façons de vérifier qu'on a compris. Travaillez à deux, partagez vos pistes, puis chacun remet sa propre copie. <b>Sans aucune IA</b> : son usage est totalement interdit.</p>
+        </div>
+        <div class="quotes" aria-label="Exemple d'échanges dans le groupe">
+          <div class="bubble"><b>Candidate · groupe du challenge</b>Je bloque sur l'exercice 2 : on parle bien de vitesse moyenne sur tout le trajet ?</div>
+          <div class="bubble me"><b>Candidat · groupe du challenge</b>Oui ! Distance totale ÷ durée totale. Ne fais pas la moyenne des deux vitesses, c'est le piège.</div>
+          <div class="bubble"><b>Candidate · groupe du challenge</b>Validé à ma 2<sup>e</sup> vérification, merci 🙏</div>
+          <p class="bubble-note">Exemple d'échange pour illustrer le fonctionnement du groupe.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="regles">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Le règlement en bref</p>
+        <h2>Les règles du jeu</h2>
+      </div>
+      <dl class="rules">
+        <div><dt>Prix</dt><dd>Gratuit</dd></div>
+        <div><dt>Clôture des inscriptions</dt><dd>8 décembre 2026</dd></div>
+        <div><dt>Annonce des binômes</dt><dd>9 décembre 2026</dd></div>
+        <div><dt>Durée du challenge</dt><dd>12 jours · 9 → 20 décembre</dd></div>
+        <div><dt>Sujets à rendre</dt><dd>3 : maths + français + 1 optionnel</dd></div>
+        <div><dt>Sujet optionnel</dt><dd>Choisi à l'inscription</dd></div>
+        <div><dt>Vérifications de vos réponses</dt><dd>3 maximum par épreuve</dd></div>
+        <div><dt>Seuil de réussite</dt><dd>&gt; 80 % sur les deux copies</dd></div>
+        <div><dt>Travail en équipe</dt><dd>Binôme, organisation libre</dd></div>
+        <div><dt>Intelligence artificielle</dt><dd>Strictement interdite</dd></div>
+        <div><dt>Récompense</dt><dd>Certificat Copie Parfaite</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <section class="signup alt" id="inscription">
+    <div class="wrap">
+      <div class="signup-intro">
+        <span class="badge-free">Gratuit !</span>
+        <h2>Prêt·e à rendre une copie parfaite avant Noël ?</h2>
+        <p class="lead">Inscriptions ouvertes jusqu'au <b>8 décembre 2026</b>. Le challenge dure 12 jours, du 9 au 20 décembre.</p>
+        <ul>
+          <li>Trois sujets à rendre : maths, français et un sujet optionnel au choix</li>
+          <li>3 vérifications maximum par épreuve</li>
+          <li>Un binôme pour s'entraider sur les sujets</li>
+          <li>Un groupe d'entraide entre candidats</li>
+          <li>Un certificat Copie Parfaite si vous réussissez</li>
+        </ul>
+      </div>
+
+      <div>
+        <div class="closed-note" id="closed" hidden>
+          <span class="hand" style="font-size:1.8rem">Inscriptions closes</span>
+          <h3>Les inscriptions au challenge sont terminées depuis le 8 décembre.</h3>
+          <p>Abonnez-vous à la newsletter PassCRPE pour être prévenu·e de la prochaine édition.</p>
+        </div>
+        <form class="card" id="signup-form" novalidate>
+          <div class="row">
+            <div class="field">
+              <label for="first_name">Prénom</label>
+              <input id="first_name" name="first_name" autocomplete="given-name" required>
+              <span class="err" id="first_name-err"></span>
+            </div>
+            <div class="field">
+              <label for="last_name">Nom</label>
+              <input id="last_name" name="last_name" autocomplete="family-name" required>
+              <span class="err" id="last_name-err"></span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="email">Adresse e-mail</label>
+            <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required>
+            <span class="err" id="email-err"></span>
+          </div>
+          <div class="field">
+            <label for="phone">Numéro de téléphone</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="06 12 34 56 78" required aria-describedby="phone-hint">
+            <span class="hint" id="phone-hint"><b>Important :</b> indiquez bien votre numéro, il est indispensable pour former les binômes et vous mettre en contact avec votre binôme. Ensuite, vous vous organisez comme vous le souhaitez.</span>
+            <span class="err" id="phone-err"></span>
+          </div>
+          <div class="field">
+            <label for="sujet_optionnel">Votre 3<sup>e</sup> sujet (optionnel)</label>
+            <select id="sujet_optionnel" name="sujet_optionnel" required>
+              <option value="" selected disabled>Choisissez une option</option>
+              <option value="aucun">Aucun : seulement maths et français</option>
+              <option value="histoire-geographie">Histoire-géographie</option>
+              <option value="emc">Enseignement moral et civique</option>
+              <option value="anglais">Anglais (langue vivante)</option>
+              <option value="sciences-technologie">Sciences et technologie</option>
+              <option value="arts">Arts</option>
+            </select>
+            <span class="err" id="sujet_optionnel-err"></span>
+          </div>
+          <fieldset>
+            <legend>Avez-vous déjà passé le CRPE ?</legend>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="deja_passe" id="deja_oui" value="Oui"><span>Oui</span></label>
+              <label class="choice"><input type="radio" name="deja_passe" id="deja_non" value="Non"><span>Non, ce sera ma première fois</span></label>
+            </div>
+            <span class="err" id="deja_passe-err"></span>
+          </fieldset>
+          <label class="check"><input type="checkbox" id="optin_newsletter" name="optin_newsletter"><span>Je souhaite recevoir la newsletter PassCRPE : conseils de préparation et actualités du concours (facultatif).</span></label>
+          <label class="check"><input type="checkbox" id="optin_partners" name="optin_partners"><span>J'accepte de recevoir des offres de partenaires de PassCRPE (facultatif).</span></label>
+          <button class="btn" type="submit" id="submit-btn">Je m'inscris gratuitement</button>
+          <p class="form-error" id="form-error" hidden></p>
+          <p class="legal">En vous inscrivant, vous acceptez de recevoir par e-mail les informations du challenge (accès, programme, résultats). Vous pouvez vous désinscrire à tout moment via le lien présent dans chaque e-mail (<a href="/politique-de-confidentialite" target="_blank" rel="noopener">politique de confidentialité</a>).</p>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="faq">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Questions fréquentes</p>
+        <h2>Avant de vous lancer</h2>
+      </div>
+      <div class="faq">
+        <details><summary>Le challenge est-il vraiment gratuit ?</summary><p>Oui. L'inscription, les trois sujets blancs, la plateforme, les vérifications et le certificat sont gratuits.</p></details>
+        <details><summary>Jusqu'à quand puis-je m'inscrire ?</summary><p>Jusqu'au 8 décembre 2026 inclus. Les binômes sont annoncés le 9 décembre, jour du lancement, et le challenge se termine le 20 décembre avec la remise des certificats : 12 jours en tout.</p></details>
+        <details><summary>Combien de sujets dois-je rendre ?</summary><p>Trois sujets : mathématiques et français, obligatoires, et un troisième sujet optionnel que vous choisissez lors de l'inscription (histoire-géographie, enseignement moral et civique, anglais, sciences et technologie ou arts). Le sujet optionnel n'est pas pris en compte pour réussir le challenge.</p></details>
+        <details><summary>Comment sont formés les binômes ?</summary><p>Après la clôture des inscriptions, nous associons chaque participant à un autre candidat, grâce au numéro de téléphone indiqué dans le formulaire : il est donc important de le renseigner correctement. Les binômes sont annoncés le 9 décembre. Le but est de s'entraider sur les sujets ; vous vous organisez ensuite comme vous le souhaitez.</p></details>
+        <details><summary>Puis-je utiliser une intelligence artificielle ?</summary><p>Non. L'usage de l'IA est totalement interdit pendant le challenge, que ce soit pour rédiger, pour vérifier vos réponses ou pour travailler en binôme. Le jour du concours, vous serez seul·e face à votre copie : le challenge vous y prépare.</p></details>
+        <details><summary>Faut-il avoir déjà passé le CRPE pour participer ?</summary><p>Non. Le challenge s'adresse aussi bien aux candidats qui préparent leur première session qu'à ceux qui le repassent. Les sujets blancs permettent à chacun de se situer.</p></details>
+        <details><summary>La plateforme me donne-t-elle les bonnes réponses ?</summary><p>Non, et c'est volontaire. À chaque vérification, vous savez si votre réponse est juste ou à retravailler, mais c'est à vous de trouver pourquoi, seul·e ou avec l'aide du groupe.</p></details>
+        <details><summary>Combien de fois puis-je vérifier mes réponses ?</summary><p>3 fois maximum par épreuve. Chaque vérification vous indique ce qui est juste et ce qui est à retravailler, sans donner la correction. Gardez vos vérifications pour le moment où votre copie est vraiment aboutie.</p></details>
+        <details><summary>Que se passe-t-il si je n'atteins pas 80 % ?</summary><p>Vous aurez tout de même travaillé des sujets complets en profondeur. Tant qu'il vous reste des vérifications et du temps sur les 12 jours, vous pouvez retravailler votre copie.</p></details>
+        <details><summary>Combien de temps faut-il y consacrer ?</summary><p>Prévoyez l'équivalent de deux épreuves écrites (trois avec le sujet optionnel), plus le temps de retravailler vos réponses. Réparti sur 12 jours, cela reste compatible avec un emploi ou des études.</p></details>
+        <details><summary>Dois-je avoir un compte Facebook ?</summary><p>Le groupe Facebook est un lieu d'entraide en plus de votre binôme. Il est recommandé pour profiter pleinement du challenge, mais la plateforme et les vérifications fonctionnent sans.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<section class="thanks" id="merci" hidden>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="hand">Bienvenue dans l'aventure !</span>
+      <h1 id="thanks-title" style="font-size: clamp(2.2rem, 5vw, 3.4rem)">Votre inscription est confirmée.</h1>
+      <p class="lead">Rendez-vous le 9 décembre pour l'annonce des binômes et le lancement de la Copie Parfaite de Noël. Voici les prochaines étapes.</p>
+    </div>
+    <ol class="next">
+      <li><div>
+        <h3>Rejoignez le groupe Facebook du challenge</h3>
+        <p>C'est là que vous retrouverez les autres candidats et que les binômes seront annoncés le 9 décembre.</p>
+        <a class="btn btn-fb" id="fb-link" href="#" target="_blank" rel="noopener">Rejoindre le groupe Facebook</a>
+      </div></li>
+      <li><div>
+        <h3>Surveillez votre boîte mail</h3>
+        <p>Vous allez recevoir un e-mail de confirmation, puis votre accès à la plateforme le 9 décembre. Pensez à vérifier vos spams et à ajouter PassCRPE à vos contacts.</p>
+      </div></li>
+      <li><div>
+        <h3>Bloquez vos dates</h3>
+        <p>Binômes et lancement le 9 décembre ; maths du 9 au 12, français du 13 au 16, sujet optionnel et finalisation du 17 au 19 ; résultats et certificats le 20 décembre.</p>
+      </div></li>
+      <li><div>
+        <h3>Parlez-en autour de vous</h3>
+        <p>Un ami ou une amie prépare aussi le CRPE ? Inscriptions ouvertes jusqu'au 8 décembre.</p>
+      </div></li>
+    </ol>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <span><a href="/">PassCRPE</a> · La Copie Parfaite de Noël 2026</span>
+    <a href="#inscription">S'inscrire au challenge</a>
+  </div>
+</footer>
+
+<script>
+/* Inscription : envoyée au serveur PassCRPE (/api/challenge/subscribe), qui ajoute le contact
+   à la liste Klaviyo « Challenge Copie Parfaite Noël 2026 » (et à la newsletter si la case est cochée). */
+const CHALLENGE = {
+  // Lien du groupe Facebook du challenge (bouton de la page de remerciement)
+  FACEBOOK_GROUP_URL: "https://www.facebook.com/groups/1789421825661180",
+  // Fin des inscriptions : 8 décembre 2026 à 23:59 (heure de Paris)
+  SIGNUP_DEADLINE: new Date("2026-12-08T23:59:59+01:00"),
+};
+
+const $ = (id) => document.getElementById(id);
+const form = $("signup-form");
+
+function normalizePhone(raw) {
+  let p = raw.replace(/[\s.\-()]/g, "");
+  if (p.startsWith("00")) p = "+" + p.slice(2);
+  if (/^0[1-9]\d{8}$/.test(p)) p = "+33" + p.slice(1);
+  return /^\+[1-9]\d{7,14}$/.test(p) ? p : null;
+}
+
+function setError(id, msg) {
+  const input = $(id);
+  const err = $(id + "-err");
+  if (input) input.setAttribute("aria-invalid", msg ? "true" : "false");
+  if (err) err.textContent = msg || "";
+  return !msg;
+}
+
+function validate() {
+  const d = {
+    first_name: $("first_name").value.trim(),
+    last_name: $("last_name").value.trim(),
+    email: $("email").value.trim().toLowerCase(),
+    phone: normalizePhone($("phone").value.trim()),
+    deja_passe: (form.querySelector('input[name="deja_passe"]:checked') || {}).value,
+    sujet_optionnel: $("sujet_optionnel").value,
+    newsletter: $("optin_newsletter").checked,
+    partners: $("optin_partners").checked,
+  };
+  let ok = true;
+  ok = setError("first_name", d.first_name ? "" : "Indiquez votre prénom.") && ok;
+  ok = setError("last_name", d.last_name ? "" : "Indiquez votre nom.") && ok;
+  ok = setError("email", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email) ? "" : "Saisissez une adresse e-mail valide, par exemple prenom@exemple.fr.") && ok;
+  ok = setError("phone", d.phone ? "" : "Saisissez un numéro valide, par exemple 06 12 34 56 78 : il est indispensable pour les binômes.") && ok;
+  ok = setError("sujet_optionnel", d.sujet_optionnel ? "" : "Choisissez votre 3e sujet, ou « Aucun ».") && ok;
+  $("deja_passe-err").textContent = d.deja_passe ? "" : "Indiquez si vous avez déjà passé le CRPE.";
+  ok = !!d.deja_passe && ok;
+  return ok ? d : null;
+}
+
+async function sendSignup(d) {
+  const res = await fetch("/api/challenge/subscribe", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      prenom: d.first_name, nom: d.last_name, email: d.email, telephone: d.phone,
+      deja_passe_crpe: d.deja_passe, sujet_optionnel: d.sujet_optionnel, consent_conseils: d.newsletter, consent_partenaires: d.partners,
+    }),
+  });
+  const json = await res.json().catch(() => ({}));
+  if (res.status === 410) { showClosed(); throw Object.assign(new Error("closed"), { closed: true }); }
+  if (!res.ok || !json.ok) throw new Error(json.error || "Erreur " + res.status);
+}
+
+function showClosed() {
+  form.hidden = true;
+  $("closed").hidden = false;
+  document.querySelectorAll('a[href="#inscription"]').forEach(a => { a.textContent = "Inscriptions closes"; });
+}
+
+function showThanks(firstName) {
+  document.querySelector("main").hidden = true;
+  $("thanks-title").textContent = `Bienvenue dans le challenge, ${firstName} !`;
+  // Tant que le lien du groupe n'est pas renseigné, le bouton est masqué
+  if (CHALLENGE.FACEBOOK_GROUP_URL.includes("VOTRE_GROUPE")) $("fb-link").hidden = true;
+  else $("fb-link").href = CHALLENGE.FACEBOOK_GROUP_URL;
+  $("merci").hidden = false;
+  window.scrollTo({ top: 0 });
+  try { history.replaceState(null, "", "#merci"); } catch (e) {}
+}
+
+if (new Date() > CHALLENGE.SIGNUP_DEADLINE) showClosed();
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("form-error").hidden = true;
+  const d = validate();
+  if (!d) { const bad = form.querySelector('[aria-invalid="true"]'); if (bad) bad.focus(); return; }
+
+  const btn = $("submit-btn");
+  btn.disabled = true; btn.textContent = "Inscription en cours…";
+  try {
+    await sendSignup(d);
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "sign_up_challenge_noel_2026" });
+    showThanks(d.first_name);
+  } catch (err) {
+    if (err.closed) return;
+    console.error(err);
+    $("form-error").textContent = "L'inscription n'a pas pu être enregistrée. Vérifiez votre connexion puis réessayez.";
+    $("form-error").hidden = false;
+  } finally {
+    btn.disabled = false; btn.textContent = "Je m'inscris gratuitement";
+  }
+});
+
+["first_name", "last_name", "email", "phone"].forEach(id => $(id).addEventListener("input", () => setError(id, "")));
+$("sujet_optionnel").addEventListener("change", () => setError("sujet_optionnel", ""));
+form.querySelectorAll('input[name="deja_passe"]').forEach(r => r.addEventListener("change", () => { $("deja_passe-err").textContent = ""; }));
+</script>
+</body>
+</html>

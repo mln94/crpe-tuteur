@@ -385,6 +385,51 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   }
 });
 
+/* ── Challenge « Copie Parfaite de Noël 2026 » (page /copie-parfaite-noel) ──
+   Tout inscrit rejoint la liste du challenge (sans abonnement marketing : les e-mails du challenge sont
+   ceux qu'il a demandés en s'inscrivant). La newsletter n'est ajoutée que si la case est cochée,
+   comme pour l'inscription classique. */
+const KLAVIYO_LIST_CHALLENGE_NOEL_2026 = 'Ur27fb'; // « Challenge Copie Parfaite Noël 2026 »
+const CHALLENGE_NOEL_2026_FIN_INSCRIPTIONS = new Date('2026-12-08T23:59:59+01:00');
+// 3e sujet (optionnel), choisi à l'inscription ; « aucun » = seulement maths et français
+const CHALLENGE_SUJETS_OPTIONNELS = new Set(['aucun', 'histoire-geographie', 'emc', 'anglais', 'sciences-technologie', 'arts']);
+
+app.post('/api/challenge/subscribe', async (req, res) => {
+  if (!klaviyoGuard(res)) return;
+  if (Date.now() > CHALLENGE_NOEL_2026_FIN_INSCRIPTIONS.getTime())
+    return res.status(410).json({ error: 'Les inscriptions au challenge sont closes.' });
+  const b = req.body || {};
+  const prenom = String(b.prenom || '').trim().slice(0, 80);
+  const nom = String(b.nom || '').trim().slice(0, 80);
+  const email = String(b.email || '').trim().toLowerCase();
+  const tel = telephoneE164(b.telephone);
+  const dejaPasse = b.deja_passe_crpe === 'Oui' ? 'Oui' : b.deja_passe_crpe === 'Non' ? 'Non' : null;
+  const sujetOptionnel = CHALLENGE_SUJETS_OPTIONNELS.has(b.sujet_optionnel) ? b.sujet_optionnel : null;
+  if (!prenom || !nom || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !tel || !dejaPasse || !sujetOptionnel)
+    return res.status(400).json({ error: 'Données invalides.' });
+  const newsletter = b.consent_conseils === true;
+  const partenaires = b.consent_partenaires === true;
+  const phoneAttrs = { phone_number: tel };
+  try {
+    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_CHALLENGE_NOEL_2026,
+      { deja_passe_crpe: dejaPasse, challenge_sujet_optionnel: sujetOptionnel, consent_partenaires: partenaires, consent_conseils: newsletter }, phoneAttrs, false);
+    // Profil déjà existant : la pipeline ne réécrit pas ses propriétés, on ajoute celles du challenge
+    // (un consentement déjà donné n'est jamais repassé à false)
+    await klaviyoSetProperties(email, {
+      deja_passe_crpe: dejaPasse,
+      challenge_sujet_optionnel: sujetOptionnel,
+      ...(partenaires ? { consent_partenaires: true } : {}),
+      ...(newsletter ? { consent_conseils: true } : {}),
+    });
+    if (newsletter)
+      await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours_newsletter: 'passcrpe' }, phoneAttrs, true);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[Klaviyo challenge]', err.message);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 /* ── Klaviyo : newsletter à la confirmation de l'inscription ──
    Toutes les fenêtres d'inscription du site enregistrent la case « Je souhaite recevoir la newsletter PassCRPE »
    dans les métadonnées Supabase (consent_conseils). À la confirmation de l'e-mail, si la case est cochée,

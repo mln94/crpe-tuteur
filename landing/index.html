@@ -1023,6 +1023,43 @@ src="https://www.facebook.com/tr?id=2908206909538261&ev=PageView&noscript=1"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 
+<!-- ═══════════ BANDEAU CHALLENGE « Copie Parfaite de Noël 2026 » ═══════════
+     Affiché jusqu'à la clôture des inscriptions (8 décembre 2026, 23:59 Paris), puis masqué automatiquement.
+     Supprimable sans risque après le challenge. -->
+<div id="pc-challenge-bar" role="region" aria-label="Challenge PassCRPE" hidden>
+  <a class="pc-cb-link" href="/copie-parfaite-noel" onclick="window.dataLayer&&dataLayer.push({event:'clic_bandeau_challenge_noel_2026'})">
+    <span class="pc-cb-tag">Gratuit</span>
+    <span class="pc-cb-text"><b>Challenge La Copie Parfaite de Noël</b> · 3 sujets blancs du CRPE en 12 jours, du 9 au 20 décembre</span>
+    <span class="pc-cb-cta">Je m'inscris →</span>
+  </a>
+  <button class="pc-cb-close" type="button" aria-label="Fermer le bandeau">×</button>
+</div>
+<style>
+  #pc-challenge-bar { position: relative; background: #18264F; color: #FFFFFF; font-size: 15px; line-height: 1.4; z-index: 101; }
+  #pc-challenge-bar[hidden] { display: none !important; }
+  #pc-challenge-bar .pc-cb-link { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 14px; padding: 10px 48px; color: inherit; text-decoration: none; text-align: center; }
+  #pc-challenge-bar .pc-cb-tag { background: #CF2E25; color: #FFFFFF; font-weight: 700; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; }
+  #pc-challenge-bar .pc-cb-cta { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+  #pc-challenge-bar .pc-cb-link:hover .pc-cb-cta { color: #FFD7D4; }
+  #pc-challenge-bar .pc-cb-close { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: 0; color: #FFFFFF; font-size: 22px; line-height: 1; width: 36px; height: 36px; cursor: pointer; opacity: .8; }
+  #pc-challenge-bar .pc-cb-close:hover { opacity: 1; }
+  #pc-challenge-bar :focus-visible { outline: 2px solid #FFFFFF; outline-offset: 2px; }
+  @media (max-width: 600px) { #pc-challenge-bar { font-size: 14px; } #pc-challenge-bar .pc-cb-link { padding: 10px 44px 10px 14px; } }
+</style>
+<script>
+(function () {
+  var bar = document.getElementById("pc-challenge-bar");
+  var KEY = "pc_challenge_noel_2026_closed", closed = false;
+  try { closed = localStorage.getItem(KEY) === "1"; } catch (e) {}
+  if (!bar || closed || new Date() > new Date("2026-12-08T23:59:59+01:00")) return;
+  bar.hidden = false;
+  bar.querySelector(".pc-cb-close").addEventListener("click", function () {
+    bar.hidden = true;
+    try { localStorage.setItem(KEY, "1"); } catch (e) {}
+  });
+})();
+</script>
+
 <!-- ═══════════════════════════════ NAV ═══════════════════════════════ -->
 <nav class="site-nav">
   <div class="nav-inner">
