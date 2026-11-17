@@ -410,6 +410,14 @@ app.post('/api/challenge/subscribe', async (req, res) => {
   const newsletter = b.consent_conseils === true;
   const partenaires = b.consent_partenaires === true;
   const phoneAttrs = { phone_number: tel };
+  // Supabase : une ligne par candidat (réinscription = mise à jour du formulaire, le suivi n'est pas touché).
+  // Une erreur ici est journalisée mais ne bloque pas l'inscription Klaviyo.
+  const { error: sbError } = await supabaseAdmin.from('challenge_inscriptions').upsert({
+    challenge: 'copie-parfaite-noel-2026', prenom, nom, email, telephone: tel,
+    deja_passe_crpe: dejaPasse === 'Oui', sujet_optionnel: sujetOptionnel,
+    consent_conseils: newsletter, consent_partenaires: partenaires,
+  }, { onConflict: 'challenge,email' });
+  if (sbError) console.error('[Supabase challenge]', sbError.message);
   try {
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_CHALLENGE_NOEL_2026,
       { deja_passe_crpe: dejaPasse, challenge_sujet_optionnel: sujetOptionnel, consent_partenaires: partenaires, consent_conseils: newsletter }, phoneAttrs, false);
