@@ -394,6 +394,19 @@ const CHALLENGE_NOEL_2026_FIN_INSCRIPTIONS = new Date('2026-12-08T23:59:59+01:00
 // 3e sujet (optionnel), choisi à l'inscription ; « aucun » = seulement maths et français
 const CHALLENGE_SUJETS_OPTIONNELS = new Set(['aucun', 'histoire-geographie', 'emc', 'anglais', 'sciences-technologie', 'arts']);
 
+// Compteur d'inscrits affiché sur la page du challenge (mis en cache 60 s)
+let challengeCountCache = { at: 0, count: null };
+app.get('/api/challenge/count', async (req, res) => {
+  if (Date.now() - challengeCountCache.at > 60_000) {
+    const { count, error } = await supabaseAdmin.from('challenge_inscriptions')
+      .select('id', { count: 'exact', head: true }).eq('challenge', 'copie-parfaite-noel-2026');
+    if (error) { console.error('[Supabase challenge count]', error.message); return res.status(500).json({ error: 'Compteur indisponible.' }); }
+    challengeCountCache = { at: Date.now(), count };
+  }
+  res.set('Cache-Control', 'public, max-age=60');
+  res.json({ count: challengeCountCache.count });
+});
+
 app.post('/api/challenge/subscribe', async (req, res) => {
   if (!klaviyoGuard(res)) return;
   if (Date.now() > CHALLENGE_NOEL_2026_FIN_INSCRIPTIONS.getTime())

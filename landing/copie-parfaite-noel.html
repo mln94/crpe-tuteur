@@ -15,13 +15,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <title>La Copie Parfaite de Noël · Challenge CRPE gratuit | PassCRPE</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="googlebot" content="noindex, nofollow">
-<meta name="description" content="Challenge gratuit PassCRPE du 9 au 20 décembre 2026 : trois sujets blancs du CRPE (maths, français et un sujet optionnel) à rendre en 12 jours, en binôme. Inscriptions jusqu'au 8 décembre.">
+<meta name="description" content="Challenge CRPE gratuit PassCRPE du 10 au 20 décembre 2026 : trois sujets blancs du CRPE (maths, français et un sujet optionnel), 4 vérifications par matière, en binôme. Inscriptions jusqu'au 8 décembre.">
 <link rel="canonical" href="https://www.passcrpe.fr/copie-parfaite-noel">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.passcrpe.fr/copie-parfaite-noel">
 <meta property="og:title" content="La Copie Parfaite de Noël · Challenge CRPE gratuit">
 <meta property="og:image" content="https://www.passcrpe.fr/images/partage-passcrpe.jpg">
-<meta property="og:description" content="3 sujets blancs du CRPE, 12 jours, avant les fêtes. Gratuit, inscriptions jusqu'au 8 décembre.">
+<meta property="og:description" content="3 sujets blancs du CRPE du 10 au 20 décembre, avant les fêtes. Gratuit, inscriptions jusqu'au 8 décembre.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Inter:wght@400;500;600&family=Caveat:wght@500;700&display=swap">
@@ -325,6 +325,37 @@ form .btn { justify-content: center; font-size: 1.05rem; }
   .cert { grid-template-columns: 1fr; }
 }
 
+/* Étapes du challenge */
+.parcours { list-style: none; margin: 0; padding: 0; display: grid; border: 1px solid var(--line-strong); border-radius: 12px; overflow: hidden; background: var(--paper); }
+.parcours li { display: grid; grid-template-columns: 180px 1fr; gap: 20px; padding: 18px 22px; align-items: start; }
+.parcours li + li { border-top: 1px solid var(--line); }
+.parcours .when { font-family: var(--font-display); font-weight: 800; font-size: 1.15rem; letter-spacing: -0.01em; line-height: 1.15; font-variant-numeric: tabular-nums; }
+.parcours .when small { display: block; font-family: var(--font-body); font-weight: 600; font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; color: var(--red); margin-bottom: 2px; }
+.parcours li > div { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.parcours h3 { font-size: 1.1rem; }
+.parcours p { color: var(--muted); font-size: .96rem; max-width: 70ch; }
+.parcours li.now { background: color-mix(in srgb, var(--blue) 6%, var(--paper)); }
+.parcours li.key { background: color-mix(in srgb, var(--red) 7%, var(--paper)); }
+.parcours-note { font-size: .92rem; color: var(--muted); }
+
+/* Stratégie de vérification */
+.strat { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.strat article { background: var(--paper); border: 1px solid var(--line-strong); border-radius: 10px; padding: 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.strat .tag { font-family: var(--font-hand); color: var(--red); font-size: 1.4rem; font-weight: 700; line-height: 1; }
+.strat p { font-size: .94rem; color: var(--muted); }
+.strat p b { color: var(--ink); }
+.tips { margin: 0; padding: 22px 22px 22px 40px; display: grid; gap: 8px; border: 2px dashed var(--red); border-radius: 12px; background: var(--paper); }
+.tips li { padding-left: 4px; }
+.tips-title { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; }
+
+/* Compteur d'inscrits */
+.counter { display: inline-flex; align-items: center; gap: 10px; font-size: .98rem; color: var(--ink); }
+.counter .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 22%, transparent); flex: none; }
+.counter b { font-variant-numeric: tabular-nums; }
+
+@media (max-width: 860px) { .strat { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .parcours li { grid-template-columns: 1fr; gap: 6px; padding: 16px; } }
+
 footer { border-top: 1px solid var(--line); }
 footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; color: var(--muted); font-size: .85rem; }
 
@@ -373,18 +404,19 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
     <div class="wrap">
       <div class="hero-text">
         <span class="hero-free">Challenge CRPE gratuit</span>
-        <p class="eyebrow">Du 9 au 20 décembre 2026 · 12 jours</p>
+        <p class="eyebrow">Du 10 au 20 décembre 2026</p>
         <h1>La Copie Parfaite <em>de Noël</em> du CRPE.</h1>
-        <p class="lead">Trois sujets blancs du CRPE à rendre en 12 jours : mathématiques et français, plus un troisième sujet optionnel que vous choisissez à l'inscription. Vous vérifiez vos réponses 3 fois maximum par épreuve, vous vous entraidez en binôme, et vous commencez les fêtes avec une copie parfaite : plus de 80 % sur les deux copies.</p>
+        <p class="lead">Trois sujets blancs du CRPE : mathématiques et français, plus un troisième sujet optionnel que vous choisissez à l'inscription. Les sujets arrivent le 10 décembre à 00 h 01. Vous disposez de 4 vérifications par matière, à utiliser avec stratégie, vous vous entraidez en binôme, et vous commencez les fêtes avec une copie parfaite : plus de 80 % en maths et en français.</p>
         <div class="hero-meta">
           <span><b>100 % gratuit</b></span>
-          <span><b>9 → 20 décembre</b></span>
+          <span><b>10 → 20 décembre</b></span>
           <span><b>Certificat Copie Parfaite</b> à la clé</span>
         </div>
         <div class="hero-cta">
           <a class="btn" href="#inscription">Je relève le challenge →</a>
           <small>Inscriptions ouvertes jusqu'au 8 décembre</small>
         </div>
+        <p class="counter" data-counter hidden><span class="dot" aria-hidden="true"></span><span><b data-counter-n></b> candidats déjà inscrits</span></p>
       </div>
 
       <div class="copie" aria-hidden="true">
@@ -401,32 +433,36 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <span class="margin-mark" style="top: 122px">✓</span>
         <span class="margin-mark" style="top: 250px">✓</span>
         <span class="ann" style="right: 26px; top: 128px">unité ok !</span>
-        <span class="ann" style="right: 20px; bottom: 6px">Vérif. 2/3</span>
+        <span class="ann" style="right: 20px; bottom: 6px">Vérif. 2/4</span>
       </div>
     </div>
   </section>
 
   <section class="figures" aria-label="Le challenge en chiffres">
     <div class="wrap">
-      <div class="fig"><strong>12<span class="u"> j</span></strong><span>pour rendre vos 3 sujets (dont 1 optionnel)</span></div>
-      <div class="fig"><strong>3</strong><span>vérifications maximum par épreuve</span></div>
+      <div class="fig"><strong>10<span class="u"> déc.</span></strong><span>réception des sujets à 00 h 01</span></div>
+      <div class="fig"><strong>4</strong><span>vérifications par matière : soyez stratégique</span></div>
       <div class="fig"><strong>&gt;80<span class="u"> %</span></strong><span>sur les deux copies, maths et français, pour réussir</span></div>
     </div>
   </section>
 
-  <section class="block" id="programme">
+  <section class="block" id="etapes">
     <div class="wrap">
       <div class="sec-head">
-        <p class="eyebrow">Le programme</p>
-        <h2>12 jours pour finir l'année avec une copie parfaite</h2>
-        <p class="lead">Trois sujets à rendre : mathématiques, français, et un troisième sujet optionnel choisi à l'inscription. Le 20 décembre, vous recevez votre résultat et, si vous avez réussi, votre certificat Copie Parfaite. Juste à temps pour les fêtes.</p>
+        <p class="eyebrow">Les étapes</p>
+        <h2>De l'inscription au certificat, étape par étape</h2>
+        <p class="lead">Les quatre premières étapes se font dès votre inscription. Ensuite, rendez-vous le 9 décembre pour votre binôme et le 10 décembre à 00 h 01 pour les sujets.</p>
       </div>
-      <ol class="timeline">
-        <li><span class="day">Jusqu'au 8 déc.</span><span class="date">Inscriptions</span><p>Clôture des inscriptions le 8 décembre à minuit. Nous formons ensuite les binômes.</p></li>
-        <li><span class="day">J1 → J4</span><span class="date">9 → 12 déc.</span><p>Annonce des binômes le 9 décembre et lancement. Sujet de mathématiques.</p></li>
-        <li><span class="day">J5 → J8</span><span class="date">13 → 16 déc.</span><p>Sujet de français. Vous continuez à retravailler vos maths si besoin.</p></li>
-        <li><span class="day">J9 → J11</span><span class="date">17 → 19 déc.</span><p>Sujet optionnel (si vous l'avez choisi) et finalisation de vos copies.</p></li>
-        <li class="key"><span class="day">J12 · le grand jour</span><span class="date">20 déc.</span><p>Résultats, remise des certificats Copie Parfaite, et place aux fêtes.</p></li>
+      <ol class="parcours">
+        <li class="now"><span class="when"><small>Étape 1</small>Avant le 8 déc.</span><div><h3>Inscrivez-vous gratuitement</h3><p>Remplissez le formulaire en bas de cette page et choisissez votre sujet optionnel.</p></div></li>
+        <li class="now"><span class="when"><small>Étape 2</small>Juste après</span><div><h3>Recevez votre accès à la plateforme par e-mail</h3><p>L'e-mail avec votre accès à la plateforme du challenge vous est envoyé juste après l'inscription. Rien reçu après quelques minutes ? Vérifiez vos spams, puis écrivez-nous à <a href="mailto:contact@passcrpe.fr">contact@passcrpe.fr</a>.</p></div></li>
+        <li class="now"><span class="when"><small>Étape 3</small>Juste après</span><div><h3>Rejoignez le groupe Facebook du challenge</h3><p>C'est le lieu d'entraide entre tous les candidats : <a href="https://www.facebook.com/groups/1789421825661180" target="_blank" rel="noopener">rejoindre le groupe</a>.</p></div></li>
+        <li class="now"><span class="when"><small>Étape 4</small>Juste après</span><div><h3>Présentez-vous dans le groupe</h3><p>Une publication épinglée en haut du groupe vous attend : présentez-vous en commentaire (prénom, académie, première fois ou non, sujet optionnel choisi, objectif). C'est le premier pas vers l'entraide.</p></div></li>
+        <li><span class="when"><small>23 h 59</small>8 décembre</span><div><h3>Clôture des inscriptions</h3><p>Plus aucune inscription n'est possible après cette date.</p></div></li>
+        <li><span class="when"><small>Binômes</small>9 décembre</span><div><h3>Découvrez votre binôme</h3><p>Nous vous mettons en contact avec votre binôme grâce au numéro de téléphone indiqué à l'inscription. Vous vous organisez ensuite comme vous le souhaitez.</p></div></li>
+        <li class="key"><span class="when"><small>00 h 01</small>10 décembre</span><div><h3>Réception des sujets : top départ !</h3><p>Les sujets de mathématiques, de français et votre sujet optionnel sont disponibles. Rythme conseillé : maths du 10 au 13, français du 14 au 17, sujet optionnel et finalisation les 18 et 19.</p></div></li>
+        <li><span class="when"><small>Pendant le challenge</small>10 → 19 déc.</span><div><h3>Répondez, vérifiez, retravaillez</h3><p>4 vérifications par matière : utilisez-les avec stratégie et appliquez les conseils de chaque retour (voir plus bas).</p></div></li>
+        <li class="key"><span class="when"><small>Le grand jour</small>20 décembre</span><div><h3>Résultats et certificats Copie Parfaite</h3><p>Vous recevez votre résultat et, si vous avez dépassé 80 % en maths et en français, votre certificat. Place aux fêtes !</p></div></li>
       </ol>
     </div>
   </section>
@@ -439,10 +475,9 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <p class="lead">Lire un corrigé donne l'impression d'avoir compris. Retravailler sa réponse jusqu'à ce qu'elle soit juste, c'est ce qui fait progresser. Le challenge est construit sur cette idée.</p>
       </div>
       <ol class="steps">
-        <li><div><h3>Inscrivez-vous et choisissez votre sujet optionnel</h3><p>Lors de l'inscription, vous choisissez votre troisième sujet (facultatif) : histoire-géographie, enseignement moral et civique, anglais, sciences et technologie ou arts. N'oubliez pas votre numéro de téléphone : il sert à former les binômes.</p></div></li>
-        <li><div><h3>Découvrez votre binôme le 9 décembre</h3><p>Après la clôture des inscriptions, nous vous associons à un autre candidat. Le but du binôme : s'entraider sur les sujets. Vous vous organisez comme vous le souhaitez (téléphone, messages, visio…), et chacun remet sa propre copie.</p></div></li>
-        <li><div><h3>Répondez aux questions sur la plateforme</h3><p>Chaque sujet blanc est découpé en questions. Vous rédigez et postez vos réponses directement en ligne, à votre rythme, pendant les 12 jours.</p></div></li>
-        <li><div><h3>Vérifiez vos réponses : 3 fois maximum par épreuve</h3><p>À chaque vérification, la plateforme vous indique ce qui est juste et ce qui ne l'est pas encore, sans vous donner la correction. Vous disposez de 3 vérifications par épreuve : gardez-les pour le moment où votre copie est vraiment aboutie.</p></div></li>
+        <li><div><h3>Répondez aux questions sur la plateforme</h3><p>Chaque sujet blanc est découpé en questions. Vous rédigez et postez vos réponses directement en ligne, à votre rythme, du 10 au 19 décembre.</p></div></li>
+        <li><div><h3>Vérifiez vos réponses : 4 vérifications par matière</h3><p>À chaque vérification, la plateforme vous indique ce qui est juste et ce qui est à retravailler, avec des conseils, sans vous donner la correction. Vous disposez de 4 vérifications en maths, 4 en français et 4 pour le sujet optionnel : lisez bien les conseils et appliquez-les avant de renvoyer.</p></div></li>
+        <li><div><h3>Avancez avec votre binôme</h3><p>Votre binôme, annoncé le 9 décembre, est là pour s'entraider sur les sujets : confrontez vos réponses avant de les vérifier, et chacun remet sa propre copie.</p></div></li>
         <li><div><h3>Dépassez 80 % sur les deux copies</h3><p>Le challenge est réussi quand vos copies de mathématiques et de français obtiennent chacune plus de 80 % de réussite. Le sujet optionnel est un entraînement en plus : il n'est pas obligatoire pour réussir le challenge.</p></div></li>
       </ol>
       <div class="ia-ban">
@@ -459,7 +494,44 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
     </div>
   </section>
 
-  <section class="block" id="sujets">
+  <section class="block" id="strategie">
+    <div class="wrap">
+      <div class="sec-head">
+        <p class="eyebrow">Bien utiliser vos vérifications</p>
+        <h2>4 vérifications par matière : soyez stratégique</h2>
+        <p class="lead">Chaque vérification compte. Avant d'envoyer, posez-vous la bonne question : est-ce que j'envoie tout le sujet d'un coup, un exercice à la fois, ou deux exercices par deux ?</p>
+      </div>
+      <div class="strat">
+        <article>
+          <span class="tag">Option A</span>
+          <h3>Tout le sujet d'un coup</h3>
+          <p><b>Avantage :</b> un retour sur l'ensemble de votre copie dès la première vérification.</p>
+          <p><b>Limite :</b> si beaucoup de réponses sont à revoir, il vous reste peu d'essais pour tout corriger.</p>
+        </article>
+        <article>
+          <span class="tag">Option B</span>
+          <h3>Exercice par exercice</h3>
+          <p><b>Avantage :</b> un retour très ciblé, facile à exploiter.</p>
+          <p><b>Limite :</b> un sujet compte plusieurs exercices, et vos 4 vérifications s'épuisent vite.</p>
+        </article>
+        <article>
+          <span class="tag">Option C</span>
+          <h3>Deux exercices par deux</h3>
+          <p><b>Avantage :</b> un bon équilibre entre un retour ciblé et des essais en réserve.</p>
+          <p><b>Limite :</b> il faut bien planifier l'ordre de vos envois.</p>
+        </article>
+      </div>
+      <ul class="tips">
+        <li class="tips-title" style="list-style:none;margin-left:-18px">Nos conseils</li>
+        <li><b>Ne vérifiez pas trop tôt.</b> Terminez, relisez, et confrontez vos réponses avec votre binôme avant d'envoyer.</li>
+        <li><b>Prenez les conseils au sérieux.</b> Lisez attentivement chaque retour et appliquez tous les conseils avant la vérification suivante.</li>
+        <li><b>Notez ce que vous changez</b> entre deux vérifications, pour savoir ce qui a fonctionné.</li>
+        <li><b>Gardez au moins une vérification</b> pour votre copie finale.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="block alt" id="sujets">
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">Les trois sujets à rendre</p>
@@ -501,10 +573,10 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <div>
           <p class="eyebrow">Une plateforme dédiée</p>
           <h3>Vous répondez en ligne, question par question</h3>
-          <p>Pas de PDF à imprimer ni de scan à envoyer. Vous postez vos réponses sur la plateforme du challenge, vous voyez où vous en êtes, et vous lancez une vérification quand votre copie est prête (3 par épreuve).</p>
+          <p>Pas de PDF à imprimer ni de scan à envoyer. Vous postez vos réponses sur la plateforme du challenge, vous voyez où vous en êtes, et vous lancez une vérification quand vous êtes prêt·e (4 par matière).</p>
         </div>
         <div class="mock" aria-label="Exemple d'écran de la plateforme">
-          <div class="mock-bar"><span>Sujet 1 · Mathématiques</span><span>Vérification 2 · 1 restante</span></div>
+          <div class="mock-bar"><span>Sujet 1 · Mathématiques</span><span>Vérification 2 · 2 restantes</span></div>
           <div class="mock-row"><span>Exercice 1 – a)</span><span class="pill ok">Juste</span></div>
           <div class="mock-row"><span>Exercice 1 – b)</span><span class="pill ok">Juste</span></div>
           <div class="mock-row"><span>Exercice 2 – a)</span><span class="pill ko">À retravailler</span></div>
@@ -514,7 +586,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
     </div>
   </section>
 
-  <section class="block alt" id="entraide">
+  <section class="block" id="entraide">
     <div class="wrap">
       <div class="together">
         <div>
@@ -522,19 +594,20 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
           <h2>Vous ne préparez pas le concours seul·e</h2>
           <p class="lead">Le challenge repose sur l'apprentissage entre pairs. Dans le groupe Facebook privé, vous échangez sur les sujets, vous comparez vos raisonnements, vous expliquez une règle de grammaire à quelqu'un qui bloque, et quelqu'un vous débloque sur un problème de proportionnalité.</p>
           <p><b>En binôme, pour s'entraider sur les sujets.</b> Après la clôture des inscriptions, chaque participant est associé à un autre candidat ; les binômes sont annoncés le 9 décembre. Vous vous organisez comme vous le souhaitez : appels, messages, visio, à l'heure qui vous convient. Votre binôme est votre premier relais : vous vous motivez, vous confrontez vos réponses avant de les vérifier, et vous avancez au même rythme.</p>
+          <p><b>Première étape : présentez-vous.</b> Une publication épinglée en haut du groupe vous attend : dites qui vous êtes en commentaire et découvrez les autres candidats.</p>
           <p>Expliquer à un autre candidat est l'une des meilleures façons de vérifier qu'on a compris. Travaillez à deux, partagez vos pistes, puis chacun remet sa propre copie. <b>Sans aucune IA</b> : son usage est totalement interdit.</p>
         </div>
         <div class="quotes" aria-label="Exemple d'échanges dans le groupe">
           <div class="bubble"><b>Candidate · groupe du challenge</b>Je bloque sur l'exercice 2 : on parle bien de vitesse moyenne sur tout le trajet ?</div>
           <div class="bubble me"><b>Candidat · groupe du challenge</b>Oui ! Distance totale ÷ durée totale. Ne fais pas la moyenne des deux vitesses, c'est le piège.</div>
-          <div class="bubble"><b>Candidate · groupe du challenge</b>Validé à ma 2<sup>e</sup> vérification, merci 🙏</div>
+          <div class="bubble"><b>Candidate · groupe du challenge</b>Validé à ma 2<sup>e</sup> vérification sur 4, merci 🙏</div>
           <p class="bubble-note">Exemple d'échange pour illustrer le fonctionnement du groupe.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="block" id="regles">
+  <section class="block alt" id="regles">
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">Le règlement en bref</p>
@@ -544,10 +617,13 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <div><dt>Prix</dt><dd>Gratuit</dd></div>
         <div><dt>Clôture des inscriptions</dt><dd>8 décembre 2026</dd></div>
         <div><dt>Annonce des binômes</dt><dd>9 décembre 2026</dd></div>
-        <div><dt>Durée du challenge</dt><dd>12 jours · 9 → 20 décembre</dd></div>
+        <div><dt>Réception des sujets</dt><dd>10 décembre · 00 h 01</dd></div>
+        <div><dt>Résultats et certificats</dt><dd>20 décembre 2026</dd></div>
+        <div><dt>Accès à la plateforme</dt><dd>Par e-mail, juste après l'inscription</dd></div>
+        <div><dt>Présentation</dt><dd>Publication épinglée du groupe Facebook</dd></div>
         <div><dt>Sujets à rendre</dt><dd>3 : maths + français + 1 optionnel</dd></div>
         <div><dt>Sujet optionnel</dt><dd>Choisi à l'inscription</dd></div>
-        <div><dt>Vérifications de vos réponses</dt><dd>3 maximum par épreuve</dd></div>
+        <div><dt>Vérifications de vos réponses</dt><dd>4 par matière</dd></div>
         <div><dt>Seuil de réussite</dt><dd>&gt; 80 % sur les deux copies</dd></div>
         <div><dt>Travail en équipe</dt><dd>Binôme, organisation libre</dd></div>
         <div><dt>Intelligence artificielle</dt><dd>Strictement interdite</dd></div>
@@ -556,15 +632,17 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
     </div>
   </section>
 
-  <section class="signup alt" id="inscription">
+  <section class="signup" id="inscription">
     <div class="wrap">
       <div class="signup-intro">
         <span class="badge-free">Gratuit !</span>
         <h2>Prêt·e à rendre une copie parfaite avant Noël ?</h2>
-        <p class="lead">Inscriptions ouvertes jusqu'au <b>8 décembre 2026</b>. Le challenge dure 12 jours, du 9 au 20 décembre.</p>
+        <p class="lead">Inscriptions ouvertes jusqu'au <b>8 décembre 2026</b>. Les sujets arrivent le 10 décembre à 00 h 01, résultats le 20 décembre.</p>
+        <p class="counter" data-counter hidden><span class="dot" aria-hidden="true"></span><span><b data-counter-n></b> candidats déjà inscrits</span></p>
         <ul>
           <li>Trois sujets à rendre : maths, français et un sujet optionnel au choix</li>
-          <li>3 vérifications maximum par épreuve</li>
+          <li>Votre accès à la plateforme par e-mail, juste après l'inscription</li>
+          <li>4 vérifications par matière</li>
           <li>Un binôme pour s'entraider sur les sujets</li>
           <li>Un groupe d'entraide entre candidats</li>
           <li>Un certificat Copie Parfaite si vous réussissez</li>
@@ -632,7 +710,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
     </div>
   </section>
 
-  <section class="block" id="faq">
+  <section class="block alt" id="faq">
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">Questions fréquentes</p>
@@ -640,15 +718,17 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
       </div>
       <div class="faq">
         <details><summary>Le challenge est-il vraiment gratuit ?</summary><p>Oui. L'inscription, les trois sujets blancs, la plateforme, les vérifications et le certificat sont gratuits.</p></details>
-        <details><summary>Jusqu'à quand puis-je m'inscrire ?</summary><p>Jusqu'au 8 décembre 2026 inclus. Les binômes sont annoncés le 9 décembre, jour du lancement, et le challenge se termine le 20 décembre avec la remise des certificats : 12 jours en tout.</p></details>
+        <details><summary>Jusqu'à quand puis-je m'inscrire ?</summary><p>Jusqu'au 8 décembre 2026 à 23 h 59. Les binômes sont annoncés le 9 décembre, les sujets arrivent le 10 décembre à 00 h 01, et le challenge se termine le 20 décembre avec les résultats et la remise des certificats.</p></details>
+        <details><summary>Je n'ai pas reçu l'e-mail d'accès à la plateforme</summary><p>Il est envoyé juste après l'inscription. Vérifiez vos spams et vos courriers indésirables. Toujours rien après quelques minutes ? Écrivez-nous à <a href="mailto:contact@passcrpe.fr">contact@passcrpe.fr</a> en indiquant l'adresse utilisée pour vous inscrire.</p></details>
+        <details><summary>Où dois-je me présenter ?</summary><p>Dans le groupe Facebook du challenge, en commentaire de la publication épinglée en haut du groupe. Présentez-vous dès votre inscription : prénom, académie, première fois ou non, sujet optionnel choisi et objectif.</p></details>
         <details><summary>Combien de sujets dois-je rendre ?</summary><p>Trois sujets : mathématiques et français, obligatoires, et un troisième sujet optionnel que vous choisissez lors de l'inscription (histoire-géographie, enseignement moral et civique, anglais, sciences et technologie ou arts). Le sujet optionnel n'est pas pris en compte pour réussir le challenge.</p></details>
         <details><summary>Comment sont formés les binômes ?</summary><p>Après la clôture des inscriptions, nous associons chaque participant à un autre candidat, grâce au numéro de téléphone indiqué dans le formulaire : il est donc important de le renseigner correctement. Les binômes sont annoncés le 9 décembre. Le but est de s'entraider sur les sujets ; vous vous organisez ensuite comme vous le souhaitez.</p></details>
         <details><summary>Puis-je utiliser une intelligence artificielle ?</summary><p>Non. L'usage de l'IA est totalement interdit pendant le challenge, que ce soit pour rédiger, pour vérifier vos réponses ou pour travailler en binôme. Le jour du concours, vous serez seul·e face à votre copie : le challenge vous y prépare.</p></details>
         <details><summary>Faut-il avoir déjà passé le CRPE pour participer ?</summary><p>Non. Le challenge s'adresse aussi bien aux candidats qui préparent leur première session qu'à ceux qui le repassent. Les sujets blancs permettent à chacun de se situer.</p></details>
         <details><summary>La plateforme me donne-t-elle les bonnes réponses ?</summary><p>Non, et c'est volontaire. À chaque vérification, vous savez si votre réponse est juste ou à retravailler, mais c'est à vous de trouver pourquoi, seul·e ou avec l'aide du groupe.</p></details>
-        <details><summary>Combien de fois puis-je vérifier mes réponses ?</summary><p>3 fois maximum par épreuve. Chaque vérification vous indique ce qui est juste et ce qui est à retravailler, sans donner la correction. Gardez vos vérifications pour le moment où votre copie est vraiment aboutie.</p></details>
-        <details><summary>Que se passe-t-il si je n'atteins pas 80 % ?</summary><p>Vous aurez tout de même travaillé des sujets complets en profondeur. Tant qu'il vous reste des vérifications et du temps sur les 12 jours, vous pouvez retravailler votre copie.</p></details>
-        <details><summary>Combien de temps faut-il y consacrer ?</summary><p>Prévoyez l'équivalent de deux épreuves écrites (trois avec le sujet optionnel), plus le temps de retravailler vos réponses. Réparti sur 12 jours, cela reste compatible avec un emploi ou des études.</p></details>
+        <details><summary>Combien de fois puis-je vérifier mes réponses ?</summary><p>4 fois par matière : 4 en maths, 4 en français et 4 pour le sujet optionnel. Chaque vérification vous indique ce qui est juste et ce qui est à retravailler, avec des conseils, sans donner la correction. À vous de choisir ce que vous envoyez : tout le sujet, un exercice à la fois, ou deux par deux. Soyez stratégique et appliquez les conseils de chaque retour avant de renvoyer.</p></details>
+        <details><summary>Que se passe-t-il si je n'atteins pas 80 % ?</summary><p>Vous aurez tout de même travaillé des sujets complets en profondeur. Tant qu'il vous reste des vérifications et du temps avant la fin du challenge, vous pouvez retravailler votre copie.</p></details>
+        <details><summary>Combien de temps faut-il y consacrer ?</summary><p>Prévoyez l'équivalent de deux épreuves écrites (trois avec le sujet optionnel), plus le temps de retravailler vos réponses. Réparti du 10 au 19 décembre, cela reste compatible avec un emploi ou des études.</p></details>
         <details><summary>Dois-je avoir un compte Facebook ?</summary><p>Le groupe Facebook est un lieu d'entraide en plus de votre binôme. Il est recommandé pour profiter pleinement du challenge, mais la plateforme et les vérifications fonctionnent sans.</p></details>
       </div>
     </div>
@@ -660,21 +740,25 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
     <div class="sec-head">
       <span class="hand">Bienvenue dans l'aventure !</span>
       <h1 id="thanks-title" style="font-size: clamp(2.2rem, 5vw, 3.4rem)">Votre inscription est confirmée.</h1>
-      <p class="lead">Rendez-vous le 9 décembre pour l'annonce des binômes et le lancement du challenge CRPE « La Copie Parfaite de Noël ». Voici les prochaines étapes.</p>
+      <p class="lead">Rendez-vous le 9 décembre pour l'annonce des binômes, puis le 10 décembre à 00 h 01 pour la réception des sujets du challenge CRPE « La Copie Parfaite de Noël ». D'ici là, voici ce que vous pouvez faire dès maintenant.</p>
     </div>
     <ol class="next">
       <li><div>
+        <h3>Ouvrez l'e-mail d'accès à la plateforme</h3>
+        <p>Il vient de vous être envoyé. Rien reçu d'ici quelques minutes ? Vérifiez vos spams, puis écrivez-nous à <a href="mailto:contact@passcrpe.fr">contact@passcrpe.fr</a>.</p>
+      </div></li>
+      <li><div>
         <h3>Rejoignez le groupe Facebook du challenge</h3>
-        <p>C'est là que vous retrouverez les autres candidats et que les binômes seront annoncés le 9 décembre.</p>
+        <p>C'est le lieu d'entraide entre tous les candidats du challenge.</p>
         <a class="btn btn-fb" id="fb-link" href="#" target="_blank" rel="noopener">Rejoindre le groupe Facebook</a>
       </div></li>
       <li><div>
-        <h3>Surveillez votre boîte mail</h3>
-        <p>Vous allez recevoir un e-mail de confirmation, puis votre accès à la plateforme le 9 décembre. Pensez à vérifier vos spams et à ajouter PassCRPE à vos contacts.</p>
+        <h3>Présentez-vous dans la publication épinglée</h3>
+        <p>En haut du groupe, une publication épinglée vous attend : présentez-vous en commentaire (prénom, académie, première fois ou non, sujet optionnel choisi, objectif).</p>
       </div></li>
       <li><div>
         <h3>Bloquez vos dates</h3>
-        <p>Binômes et lancement le 9 décembre ; maths du 9 au 12, français du 13 au 16, sujet optionnel et finalisation du 17 au 19 ; résultats et certificats le 20 décembre.</p>
+        <p>8 décembre à 23 h 59 : clôture des inscriptions. 9 décembre : annonce des binômes. 10 décembre à 00 h 01 : réception des sujets. 20 décembre : résultats et certificats.</p>
       </div></li>
       <li><div>
         <h3>Parlez-en autour de vous</h3>
@@ -699,6 +783,8 @@ const CHALLENGE = {
   FACEBOOK_GROUP_URL: "https://www.facebook.com/groups/1789421825661180",
   // Fin des inscriptions : 8 décembre 2026 à 23:59 (heure de Paris)
   SIGNUP_DEADLINE: new Date("2026-12-08T23:59:59+01:00"),
+  // Le compteur d'inscrits ne s'affiche qu'à partir de ce nombre
+  COUNTER_MIN: 10,
 };
 
 const $ = (id) => document.getElementById(id);
@@ -773,6 +859,17 @@ function showThanks(firstName) {
 }
 
 if (new Date() > CHALLENGE.SIGNUP_DEADLINE) showClosed();
+
+// Compteur d'inscrits (table Supabase challenge_inscriptions, via le serveur)
+fetch("/api/challenge/count")
+  .then(r => r.ok ? r.json() : null)
+  .then(j => {
+    if (!j || !Number.isInteger(j.count) || j.count < CHALLENGE.COUNTER_MIN) return;
+    const n = j.count.toLocaleString("fr-FR");
+    document.querySelectorAll("[data-counter-n]").forEach(el => { el.textContent = n; });
+    document.querySelectorAll("[data-counter]").forEach(el => { el.hidden = false; });
+  })
+  .catch(() => {});
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
