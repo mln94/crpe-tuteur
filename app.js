@@ -214,8 +214,8 @@ function klaviyoHeaders() {
 }
 
 // Propriétés Klaviyo « parcours_signup » (page de l'inscription) et « parcours_newsletter » (page de l'abonnement
-// à la newsletter) : site PassCRPE ou page du quiz
-const PARCOURS = new Set(['passcrpe', 'quizcrpe']);
+// à la newsletter) : site PassCRPE, page du quiz ou challenge « La Copie Parfaite avant Noël » 2026
+const PARCOURS = new Set(['passcrpe', 'quizcrpe', 'challengecopieparfaitenoel26']);
 const parcoursOf = v => (PARCOURS.has(v) ? v : 'passcrpe');
 
 async function klaviyoSubscribePipeline(email, prenom, nom, listId, properties = {}, extraAttrs = {}, subscribeMarketing = true) {
@@ -412,7 +412,7 @@ app.get('/api/challenge/count', async (req, res) => {
 async function challengeCompteAcces(email, password, meta) {
   const { data, error } = await supabaseAdmin.auth.admin.createUser({
     email, password, email_confirm: true,
-    user_metadata: { ...meta, challenge: 'copie-parfaite-noel-2026', parcours: 'passcrpe' },
+    user_metadata: { ...meta, challenge: 'copie-parfaite-noel-2026', parcours: 'challengecopieparfaitenoel26' },
   });
   if (!error) return { userId: data.user.id, existant: false };
   if (error.code !== 'email_exists' && !/already been registered/i.test(error.message)) throw error;
@@ -469,10 +469,14 @@ app.post('/api/challenge/subscribe', async (req, res) => {
   if (sbError) console.error('[Supabase challenge]', sbError.message);
   try {
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_CHALLENGE_NOEL_2026,
-      { tentatives_crpe: tentatives, deja_passe_crpe: dejaPasse, challenge_sujet_optionnel: sujetOptionnel, consent_partenaires: partenaires, consent_conseils: newsletter }, phoneAttrs, false);
+      { ...(compte.existant ? {} : { parcours_signup: 'challengecopieparfaitenoel26' }),
+        tentatives_crpe: tentatives, deja_passe_crpe: dejaPasse, challenge_sujet_optionnel: sujetOptionnel, consent_partenaires: partenaires, consent_conseils: newsletter }, phoneAttrs, false);
     // Profil déjà existant : la pipeline ne réécrit pas ses propriétés, on ajoute celles du challenge
     // (un consentement déjà donné n'est jamais repassé à false)
     await klaviyoSetProperties(email, {
+      // Compte créé par le challenge : parcours d'inscription « challengecopieparfaitenoel26 »
+      // (un compte PassCRPE déjà existant garde son parcours d'origine)
+      ...(compte.existant ? {} : { parcours_signup: 'challengecopieparfaitenoel26' }),
       tentatives_crpe: tentatives,
       deja_passe_crpe: dejaPasse,
       challenge_sujet_optionnel: sujetOptionnel,
