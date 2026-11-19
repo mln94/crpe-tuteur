@@ -43,10 +43,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 html, body { margin: 0; }
 body { min-height: 100vh; background: var(--surface); color: var(--ink); font-family: var(--font-body); line-height: 1.5; display: flex; flex-direction: column; }
 a { color: var(--blue); }
-header { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; max-width: 980px; width: 100%; margin: 0 auto; }
-.brand { font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; }
-.brand span { color: var(--red); }
-.chip { background: var(--ink); color: var(--paper); font-weight: 700; font-size: .75rem; letter-spacing: .08em; padding: 5px 12px; border-radius: 99px; }
+/* En-tête : bandeau bleu foncé, logo PassCRPE en blanc (comme la page du challenge) */
+header { background: #1E2F7A; }
+header .hwrap { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 16px; max-width: 980px; margin: 0 auto; }
+.brand { display: inline-flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; color: #FFFFFF; text-decoration: none; }
+.brand svg { width: 30px; height: 30px; flex: none; }
+.chip { background: #FFFFFF; color: #1E2F7A; font-weight: 700; font-size: .75rem; letter-spacing: .08em; padding: 5px 12px; border-radius: 99px; white-space: nowrap; }
 main { flex: 1; display: grid; place-items: center; padding: 16px 16px 48px; }
 .card {
   position: relative; width: 100%; max-width: 440px; background-color: var(--paper);
@@ -111,8 +113,13 @@ footer { text-align: center; font-size: .82rem; color: var(--muted); padding: 0 
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TMLHJT3Q" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <!-- End Google Tag Manager (noscript) -->
 <header>
-  <a class="brand" href="/">Pass<span>CRPE</span></a>
-  <span class="chip">CHALLENGE CRPE</span>
+  <div class="hwrap">
+    <a class="brand" href="/" aria-label="PassCRPE, accueil">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+      PassCRPE
+    </a>
+    <span class="chip">CHALLENGE CRPE</span>
+  </div>
 </header>
 
 <main>
