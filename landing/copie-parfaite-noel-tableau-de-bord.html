@@ -85,8 +85,20 @@ input[aria-invalid="true"] { border-color: var(--red); }
 .msg { border-radius: 10px; padding: 12px 14px; font-size: .92rem; background: color-mix(in srgb, var(--red) 12%, var(--paper)); color: var(--red); }
 .msg:empty { display: none; }
 .small { font-size: .85rem; color: var(--muted); margin: 16px 0 0; }
-.done p { margin: 0 0 14px; }
-.done .check { font-family: var(--font-hand); color: var(--ok); font-size: 2.2rem; line-height: 1; margin: 0 0 4px; }
+.done .hand { color: var(--ok); }
+.soon { position: relative; margin: 22px 0 6px; padding: 22px 20px 22px 22px; border: 2px dashed var(--line-strong); border-radius: 12px;
+  background: repeating-linear-gradient(transparent 0 27px, color-mix(in srgb, var(--line) 70%, transparent) 27px 28px); display: flex; align-items: center; gap: 18px; }
+.soon p { margin: 0; font-size: 1.08rem; line-height: 1.5; }
+.soon p b { color: var(--red); white-space: nowrap; }
+.stamp { flex: none; width: 92px; height: 92px; border: 3px solid var(--red); border-radius: 52% 48% 50% 46%; color: var(--red);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; transform: rotate(-9deg); background: var(--paper);
+  font-family: var(--font-hand); line-height: 1; text-align: center; box-shadow: 0 0 0 4px color-mix(in srgb, var(--red) 10%, transparent); }
+.stamp span { font-size: 1rem; }
+.stamp b { font-family: var(--font-display); font-weight: 800; font-size: 1.45rem; letter-spacing: -0.02em; margin: 2px 0; }
+.done-foot { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 14px; margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); font-size: .85rem; color: var(--muted); }
+.who b { color: var(--ink); font-weight: 600; word-break: break-all; }
+.linkish { background: none; border: 0; padding: 4px 0; font: inherit; font-weight: 600; color: var(--blue); cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 480px) { .soon { flex-direction: column; text-align: center; } }
 footer { text-align: center; font-size: .82rem; color: var(--muted); padding: 0 16px 24px; }
 @media (max-width: 480px) {
   .card { padding: 26px 18px 22px 40px; background-image: linear-gradient(90deg, transparent 22px, var(--margin) 22px, var(--margin) 24px, transparent 24px); }
@@ -134,11 +146,16 @@ footer { text-align: center; font-size: .82rem; color: var(--muted); padding: 0 
 
     <!-- Connecté : le tableau de bord sera construit ici -->
     <div class="done" id="done" hidden tabindex="-1">
-      <p class="check">✓ Connecté·e</p>
+      <p class="hand">Vous êtes connecté·e !</p>
       <h1 id="done-title">Bienvenue dans le challenge</h1>
-      <p>Votre tableau de bord arrive bientôt. Les 3 sujets blancs y seront disponibles le <b>10 décembre à 00 h 01</b>.</p>
-      <p class="small" style="margin:0 0 18px">Connecté·e avec <b id="done-email"></b></p>
-      <button class="btn btn-ghost" type="button" id="logout">Se déconnecter</button>
+      <div class="soon">
+        <div class="stamp" aria-hidden="true"><span>Ouverture</span><b>08/12</b><span>2026</span></div>
+        <p>Votre tableau de bord sera opérationnel le <b>8 décembre 2026</b>.</p>
+      </div>
+      <div class="done-foot">
+        <span class="who">Connecté·e avec <b id="done-email"></b></span>
+        <button class="linkish" type="button" id="logout">Se déconnecter</button>
+      </div>
     </div>
   </div>
 </main>
