@@ -416,9 +416,11 @@ app.post('/api/challenge/subscribe', async (req, res) => {
   const nom = String(b.nom || '').trim().slice(0, 80);
   const email = String(b.email || '').trim().toLowerCase();
   const tel = telephoneE164(b.telephone);
-  const dejaPasse = b.deja_passe_crpe === 'Oui' ? 'Oui' : b.deja_passe_crpe === 'Non' ? 'Non' : null;
+  // Nombre de fois où le CRPE a déjà été passé (0 = première fois, 3 = 3 fois ou plus), comme à l'inscription au site
+  const tentatives = Number.isInteger(b.tentatives_crpe) && b.tentatives_crpe >= 0 && b.tentatives_crpe <= 3 ? b.tentatives_crpe : null;
+  const dejaPasse = tentatives === null ? null : tentatives > 0 ? 'Oui' : 'Non';
   const sujetOptionnel = CHALLENGE_SUJETS_OPTIONNELS.has(b.sujet_optionnel) ? b.sujet_optionnel : null;
-  if (!prenom || !nom || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !tel || !dejaPasse || !sujetOptionnel)
+  if (!prenom || !nom || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !tel || tentatives === null || !sujetOptionnel)
     return res.status(400).json({ error: 'Données invalides.' });
   const newsletter = b.consent_conseils === true;
   const partenaires = b.consent_partenaires === true;
@@ -427,16 +429,17 @@ app.post('/api/challenge/subscribe', async (req, res) => {
   // Une erreur ici est journalisée mais ne bloque pas l'inscription Klaviyo.
   const { error: sbError } = await supabaseAdmin.from('challenge_inscriptions').upsert({
     challenge: 'copie-parfaite-noel-2026', prenom, nom, email, telephone: tel,
-    deja_passe_crpe: dejaPasse === 'Oui', sujet_optionnel: sujetOptionnel,
+    deja_passe_crpe: tentatives > 0, tentatives_crpe: tentatives, sujet_optionnel: sujetOptionnel,
     consent_conseils: newsletter, consent_partenaires: partenaires,
   }, { onConflict: 'challenge,email' });
   if (sbError) console.error('[Supabase challenge]', sbError.message);
   try {
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_CHALLENGE_NOEL_2026,
-      { deja_passe_crpe: dejaPasse, challenge_sujet_optionnel: sujetOptionnel, consent_partenaires: partenaires, consent_conseils: newsletter }, phoneAttrs, false);
+      { tentatives_crpe: tentatives, deja_passe_crpe: dejaPasse, challenge_sujet_optionnel: sujetOptionnel, consent_partenaires: partenaires, consent_conseils: newsletter }, phoneAttrs, false);
     // Profil déjà existant : la pipeline ne réécrit pas ses propriétés, on ajoute celles du challenge
     // (un consentement déjà donné n'est jamais repassé à false)
     await klaviyoSetProperties(email, {
+      tentatives_crpe: tentatives,
       deja_passe_crpe: dejaPasse,
       challenge_sujet_optionnel: sujetOptionnel,
       ...(partenaires ? { consent_partenaires: true } : {}),

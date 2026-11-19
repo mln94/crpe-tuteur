@@ -1039,8 +1039,8 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   #pc-challenge-bar[hidden] { display: none !important; }
   #pc-challenge-bar .pc-cb-link { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 14px; padding: 10px 48px; color: inherit; text-decoration: none; text-align: center; }
   #pc-challenge-bar .pc-cb-tag { background: #CF2E25; color: #FFFFFF; font-weight: 700; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 99px; }
-  #pc-challenge-bar .pc-cb-cta { font-weight: 700; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
-  #pc-challenge-bar .pc-cb-link:hover .pc-cb-cta { color: #FFD7D4; }
+  #pc-challenge-bar .pc-cb-cta { display: inline-block; background: #FFFFFF; color: #CF2E25; font-weight: 800; padding: 7px 16px; border-radius: 99px; white-space: nowrap; box-shadow: 0 2px 0 rgba(0,0,0,.25); transition: background .15s, transform .15s; }
+  #pc-challenge-bar .pc-cb-link:hover .pc-cb-cta { background: #FFD7D4; transform: translateY(-1px); }
   #pc-challenge-bar .pc-cb-close { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: 0; color: #FFFFFF; font-size: 22px; line-height: 1; width: 36px; height: 36px; cursor: pointer; opacity: .8; }
   #pc-challenge-bar .pc-cb-close:hover { opacity: 1; }
   #pc-challenge-bar :focus-visible { outline: 2px solid #FFFFFF; outline-offset: 2px; }

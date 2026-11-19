@@ -420,7 +420,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
           <a class="btn" href="#inscription">Je relève le challenge →</a>
           <small>Inscriptions ouvertes jusqu'au 8 décembre</small>
         </div>
-        <p class="counter" data-counter hidden><span class="dot" aria-hidden="true"></span><span><b data-counter-n></b> candidats déjà inscrits</span></p>
+        <p class="counter" data-counter hidden><span class="dot" aria-hidden="true"></span><span data-counter-txt></span></p>
       </div>
 
       <div class="copie" aria-hidden="true">
@@ -640,7 +640,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <span class="badge-free">Gratuit !</span>
         <h2>Prêt·e à rendre une copie parfaite avant Noël ?</h2>
         <p class="lead">Inscriptions ouvertes jusqu'au <b>8 décembre 2026</b>. Les sujets arrivent le 10 décembre à 00 h 01, résultats le 20 décembre.</p>
-        <p class="counter" data-counter hidden><span class="dot" aria-hidden="true"></span><span><b data-counter-n></b> candidats déjà inscrits</span></p>
+        <p class="counter" data-counter hidden><span class="dot" aria-hidden="true"></span><span data-counter-txt></span></p>
         <ul>
           <li>Trois sujets à rendre : maths, français et un sujet optionnel au choix</li>
           <li>Votre accès à la plateforme par e-mail, juste après l'inscription</li>
@@ -695,10 +695,12 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
             <span class="err" id="sujet_optionnel-err"></span>
           </div>
           <fieldset>
-            <legend>Avez-vous déjà passé le CRPE ?</legend>
+            <legend>Combien de fois avez-vous déjà passé le CRPE ?</legend>
             <div class="choices">
-              <label class="choice"><input type="radio" name="deja_passe" id="deja_oui" value="Oui"><span>Oui</span></label>
-              <label class="choice"><input type="radio" name="deja_passe" id="deja_non" value="Non"><span>Non, ce sera ma première fois</span></label>
+              <label class="choice"><input type="radio" name="deja_passe" id="deja_0" value="0"><span>Jamais, ce sera ma première fois</span></label>
+              <label class="choice"><input type="radio" name="deja_passe" id="deja_1" value="1"><span>1 fois</span></label>
+              <label class="choice"><input type="radio" name="deja_passe" id="deja_2" value="2"><span>2 fois</span></label>
+              <label class="choice"><input type="radio" name="deja_passe" id="deja_3" value="3"><span>3 fois ou plus</span></label>
             </div>
             <span class="err" id="deja_passe-err"></span>
           </fieldset>
@@ -785,8 +787,8 @@ const CHALLENGE = {
   FACEBOOK_GROUP_URL: "https://www.facebook.com/groups/1789421825661180",
   // Fin des inscriptions : 8 décembre 2026 à 23:59 (heure de Paris)
   SIGNUP_DEADLINE: new Date("2026-12-08T23:59:59+01:00"),
-  // Le compteur d'inscrits ne s'affiche qu'à partir de ce nombre
-  COUNTER_MIN: 10,
+  // En dessous de ce nombre d'inscrits, le compteur affiche une phrase d'appel au lieu du chiffre
+  COUNTER_MIN: 1,
 };
 
 const $ = (id) => document.getElementById(id);
@@ -824,7 +826,7 @@ function validate() {
   ok = setError("email", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email) ? "" : "Saisissez une adresse e-mail valide, par exemple prenom@exemple.fr.") && ok;
   ok = setError("phone", d.phone ? "" : "Saisissez un numéro valide, par exemple 06 12 34 56 78 : il est indispensable pour les binômes.") && ok;
   ok = setError("sujet_optionnel", d.sujet_optionnel ? "" : "Choisissez votre 3e sujet, ou « Aucun ».") && ok;
-  $("deja_passe-err").textContent = d.deja_passe ? "" : "Indiquez si vous avez déjà passé le CRPE.";
+  $("deja_passe-err").textContent = d.deja_passe ? "" : "Indiquez combien de fois vous avez déjà passé le CRPE.";
   ok = !!d.deja_passe && ok;
   return ok ? d : null;
 }
@@ -835,7 +837,7 @@ async function sendSignup(d) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       prenom: d.first_name, nom: d.last_name, email: d.email, telephone: d.phone,
-      deja_passe_crpe: d.deja_passe, sujet_optionnel: d.sujet_optionnel, consent_conseils: d.newsletter, consent_partenaires: d.partners,
+      tentatives_crpe: Number(d.deja_passe), sujet_optionnel: d.sujet_optionnel, consent_conseils: d.newsletter, consent_partenaires: d.partners,
     }),
   });
   const json = await res.json().catch(() => ({}));
@@ -866,9 +868,12 @@ if (new Date() > CHALLENGE.SIGNUP_DEADLINE) showClosed();
 fetch("/api/challenge/count")
   .then(r => r.ok ? r.json() : null)
   .then(j => {
-    if (!j || !Number.isInteger(j.count) || j.count < CHALLENGE.COUNTER_MIN) return;
-    const n = j.count.toLocaleString("fr-FR");
-    document.querySelectorAll("[data-counter-n]").forEach(el => { el.textContent = n; });
+    if (!j || !Number.isInteger(j.count)) return;
+    const n = j.count;
+    const texte = n < CHALLENGE.COUNTER_MIN
+      ? "Inscriptions ouvertes : soyez parmi les premiers candidats !"
+      : `<b>${n.toLocaleString("fr-FR")}</b> ${n > 1 ? "candidats déjà inscrits" : "candidat déjà inscrit"}`;
+    document.querySelectorAll("[data-counter-txt]").forEach(el => { el.innerHTML = texte; });
     document.querySelectorAll("[data-counter]").forEach(el => { el.hidden = false; });
   })
   .catch(() => {});
