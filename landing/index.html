@@ -1954,6 +1954,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     window.addEventListener('DOMContentLoaded', function() { openAuth(null, 'register'); });
   } else if (_authParam === 'login') {
     window.addEventListener('DOMContentLoaded', function() { openAuth(null, 'login'); });
+  } else if (_authParam === 'forgot') {
+    // Lien « Mot de passe oublié » des e-mails (ex. bienvenue du challenge) : fenêtre ouverte sur la réinitialisation
+    window.addEventListener('DOMContentLoaded', function() { openAuth(null, 'login'); if (window.openForgot) window.openForgot(); });
   }
 
   function closeAuth() {
