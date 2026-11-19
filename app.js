@@ -385,11 +385,11 @@ app.post('/api/klaviyo/signup', async (req, res) => {
   }
 });
 
-/* ── Challenge « Copie Parfaite de Noël 2026 » (page /copie-parfaite-noel) ──
+/* ── Challenge « Copie Parfaite avant Noël 2026 » (page /copie-parfaite-noel) ──
    Tout inscrit rejoint la liste du challenge (sans abonnement marketing : les e-mails du challenge sont
    ceux qu'il a demandés en s'inscrivant). La newsletter n'est ajoutée que si la case est cochée,
    comme pour l'inscription classique. */
-const KLAVIYO_LIST_CHALLENGE_NOEL_2026 = 'Ur27fb'; // « Challenge Copie Parfaite Noël 2026 »
+const KLAVIYO_LIST_CHALLENGE_NOEL_2026 = 'Ur27fb'; // « Challenge Copie Parfaite avant Noël 2026 »
 const CHALLENGE_NOEL_2026_FIN_INSCRIPTIONS = new Date('2026-12-08T23:59:59+01:00');
 // 3e sujet (optionnel), choisi à l'inscription ; « aucun » = seulement maths et français
 const CHALLENGE_SUJETS_OPTIONNELS = new Set(['aucun', 'histoire-geographie', 'emc', 'anglais', 'sciences-technologie', 'arts']);
