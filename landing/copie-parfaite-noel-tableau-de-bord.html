@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TMLHJT3Q');</script>
+<!-- End Google Tag Manager -->
+<meta charset="utf-8">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<!-- Tableau de bord du challenge : pour l'instant, page de connexion (e-mail + mot de passe). Page non référencée. -->
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tableau de bord · La Copie Parfaite avant Noël | PassCRPE</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700;12..96,800&family=Inter:wght@400;500;600;700&family=Caveat:wght@700&display=swap">
+<style>
+:root {
+  --paper: #FBFCFF; --surface: #EEF2FB; --ink: #18264F; --muted: #56628A;
+  --line: #CBD7EF; --line-strong: #A9BCE3; --margin: #E59AA0;
+  --red: #CF2E25; --blue: #2950C8; --blue-ink: #FFFFFF; --ok: #1E7F4F;
+  --font-display: "Bricolage Grotesque", "Inter", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-hand: "Caveat", "Segoe Print", "Bradley Hand", cursive;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0E1328; --surface: #161D38; --ink: #E5EAF8; --muted: #9DA8CB;
+    --line: #232D4E; --line-strong: #33406A; --margin: #7A3B44; --red: #FF6D60;
+    --blue: #7F9EFF; --blue-ink: #0B1023; --ok: #5ED39A; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0E1328; --surface: #161D38; --ink: #E5EAF8; --muted: #9DA8CB;
+  --line: #232D4E; --line-strong: #33406A; --margin: #7A3B44; --red: #FF6D60;
+  --blue: #7F9EFF; --blue-ink: #0B1023; --ok: #5ED39A; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { min-height: 100vh; background: var(--surface); color: var(--ink); font-family: var(--font-body); line-height: 1.5; display: flex; flex-direction: column; }
+a { color: var(--blue); }
+header { display: flex; justify-content: space-between; align-items: center; padding: 18px 20px; max-width: 980px; width: 100%; margin: 0 auto; }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; letter-spacing: -0.02em; color: var(--ink); text-decoration: none; }
+.brand span { color: var(--red); }
+.chip { background: var(--ink); color: var(--paper); font-weight: 700; font-size: .75rem; letter-spacing: .08em; padding: 5px 12px; border-radius: 99px; }
+main { flex: 1; display: grid; place-items: center; padding: 16px 16px 48px; }
+.card {
+  position: relative; width: 100%; max-width: 440px; background-color: var(--paper);
+  background-image: linear-gradient(90deg, transparent 30px, var(--margin) 30px, var(--margin) 32px, transparent 32px);
+  border: 1px solid var(--line-strong); border-radius: 12px; padding: 32px 28px 28px 52px;
+  box-shadow: 0 24px 48px -28px rgba(24,38,79,.5);
+}
+.hand { font-family: var(--font-hand); color: var(--red); font-size: 1.7rem; line-height: 1; margin: 0 0 6px; transform: rotate(-2deg); transform-origin: left; }
+h1 { font-family: var(--font-display); font-weight: 800; font-size: 1.9rem; line-height: 1.05; letter-spacing: -0.03em; margin: 0 0 8px; }
+.intro { color: var(--muted); margin: 0 0 22px; font-size: .95rem; }
+form { display: flex; flex-direction: column; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.field label { font-weight: 600; font-size: .92rem; }
+.label-row { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.label-row a { font-size: .85rem; font-weight: 600; text-decoration: none; }
+.input-wrap { position: relative; }
+input[type=email], input[type=password], input[type=text] {
+  width: 100%; font: inherit; color: var(--ink); background: var(--paper);
+  border: 2px solid var(--line-strong); border-radius: 10px; padding: 12px 14px;
+}
+.input-wrap input { padding-right: 92px; }
+input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 22%, transparent); }
+input[aria-invalid="true"] { border-color: var(--red); }
+.toggle { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: transparent; border: 0; color: var(--blue); font: inherit; font-size: .85rem; font-weight: 600; padding: 8px 10px; cursor: pointer; border-radius: 8px; }
+.toggle:focus-visible { outline: 2px solid var(--blue); }
+.err { color: var(--red); font-size: .85rem; }
+.err:empty { display: none; }
+.btn {
+  font: inherit; font-weight: 700; font-size: 1.05rem; background: var(--blue); color: var(--blue-ink);
+  border: 0; border-radius: 12px; padding: 14px 20px; cursor: pointer; margin-top: 4px; text-align: center; text-decoration: none; display: block;
+  box-shadow: 0 3px 0 color-mix(in srgb, var(--blue) 55%, #000); transition: transform .12s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn[disabled] { opacity: .6; cursor: progress; }
+.btn-ghost { background: transparent; color: var(--blue); border: 2px solid var(--blue); box-shadow: none; font-size: .95rem; padding: 10px 16px; }
+.msg { border-radius: 10px; padding: 12px 14px; font-size: .92rem; background: color-mix(in srgb, var(--red) 12%, var(--paper)); color: var(--red); }
+.msg:empty { display: none; }
+.small { font-size: .85rem; color: var(--muted); margin: 16px 0 0; }
+.done p { margin: 0 0 14px; }
+.done .check { font-family: var(--font-hand); color: var(--ok); font-size: 2.2rem; line-height: 1; margin: 0 0 4px; }
+footer { text-align: center; font-size: .82rem; color: var(--muted); padding: 0 16px 24px; }
+@media (max-width: 480px) {
+  .card { padding: 26px 18px 22px 40px; background-image: linear-gradient(90deg, transparent 22px, var(--margin) 22px, var(--margin) 24px, transparent 24px); }
+  h1 { font-size: 1.6rem; }
+}
+</style>
+</head>
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TMLHJT3Q" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<header>
+  <a class="brand" href="/">Pass<span>CRPE</span></a>
+  <span class="chip">CHALLENGE CRPE</span>
+</header>
+
+<main>
+  <div class="card">
+    <div id="login">
+      <p class="hand">La Copie Parfaite avant Noël</p>
+      <h1>Connexion au tableau de bord</h1>
+      <p class="intro">Connectez-vous avec l'adresse e-mail et le mot de passe choisis à l'inscription au challenge.</p>
+      <form id="form" novalidate>
+        <div class="field">
+          <label for="email">Adresse e-mail</label>
+          <input type="email" id="email" name="email" autocomplete="email" inputmode="email" required>
+          <span class="err" id="email-err"></span>
+        </div>
+        <div class="field">
+          <div class="label-row">
+            <label for="password">Mot de passe</label>
+            <a href="/?auth=forgot">Mot de passe oublié ?</a>
+          </div>
+          <div class="input-wrap">
+            <input type="password" id="password" name="password" autocomplete="current-password" required>
+            <button type="button" class="toggle" id="toggle" aria-pressed="false">Afficher</button>
+          </div>
+          <span class="err" id="password-err"></span>
+        </div>
+        <div class="msg" id="msg" role="alert"></div>
+        <button class="btn" type="submit" id="submit">Se connecter</button>
+      </form>
+      <p class="small">Pas encore inscrit·e ? <a href="/copie-parfaite-noel#inscription">Inscrivez-vous au challenge</a> (gratuit).</p>
+    </div>
+
+    <!-- Connecté : le tableau de bord sera construit ici -->
+    <div class="done" id="done" hidden tabindex="-1">
+      <p class="check">✓ Connecté·e</p>
+      <h1 id="done-title">Bienvenue dans le challenge</h1>
+      <p>Votre tableau de bord arrive bientôt. Les 3 sujets blancs y seront disponibles le <b>10 décembre à 00 h 01</b>.</p>
+      <p class="small" style="margin:0 0 18px">Connecté·e avec <b id="done-email"></b></p>
+      <button class="btn btn-ghost" type="button" id="logout">Se déconnecter</button>
+    </div>
+  </div>
+</main>
+
+<footer>Challenge CRPE gratuit PassCRPE · <a href="/copie-parfaite-noel">Le challenge</a> · <a href="mailto:contact@passcrpe.fr">contact@passcrpe.fr</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var form = $("form"), email = $("email"), pwd = $("password"), btn = $("submit"), msg = $("msg");
+  // Même projet Supabase que le site : une session ouverte sur passcrpe.fr est reprise ici
+  var sb = window.supabase.createClient('https://zqwcermgfvcusuwjfviz.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8');
+
+  function showDashboard(user) {
+    var prenom = (user.user_metadata && user.user_metadata.prenom) || "";
+    $("done-title").textContent = prenom ? "Bienvenue " + prenom + " !" : "Bienvenue dans le challenge !";
+    $("done-email").textContent = user.email;
+    $("login").hidden = true;
+    $("done").hidden = false;
+    $("done").focus();
+  }
+  function showLogin() {
+    $("done").hidden = true;
+    $("login").hidden = false;
+  }
+
+  sb.auth.getSession().then(function (r) {
+    if (r.data && r.data.session) showDashboard(r.data.session.user);
+  });
+
+  $("toggle").addEventListener("click", function () {
+    var show = pwd.type === "password";
+    pwd.type = show ? "text" : "password";
+    this.textContent = show ? "Masquer" : "Afficher";
+    this.setAttribute("aria-pressed", String(show));
+  });
+  email.addEventListener("input", function () { $("email-err").textContent = ""; email.removeAttribute("aria-invalid"); });
+  pwd.addEventListener("input", function () { $("password-err").textContent = ""; pwd.removeAttribute("aria-invalid"); });
+
+  form.addEventListener("submit", async function (ev) {
+    ev.preventDefault();
+    msg.textContent = "";
+    var e = email.value.trim().toLowerCase(), ok = true;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e)) { $("email-err").textContent = "Saisissez une adresse e-mail valide."; email.setAttribute("aria-invalid", "true"); ok = false; }
+    if (!pwd.value) { $("password-err").textContent = "Saisissez votre mot de passe."; pwd.setAttribute("aria-invalid", "true"); ok = false; }
+    if (!ok) { (email.getAttribute("aria-invalid") ? email : pwd).focus(); return; }
+    btn.disabled = true; btn.textContent = "Connexion…";
+    try {
+      var res = await sb.auth.signInWithPassword({ email: e, password: pwd.value });
+      if (res.error) throw res.error;
+      window.dataLayer && dataLayer.push({ event: "challenge_tableau_de_bord_connexion" });
+      showDashboard(res.data.user);
+    } catch (err) {
+      var m = err.message || "";
+      msg.textContent = /invalid login credentials/i.test(m) ? "Adresse e-mail ou mot de passe incorrect. Mot de passe oublié ? Utilisez le lien au-dessus du champ."
+        : /not confirmed/i.test(m) ? "Votre adresse e-mail n'est pas encore confirmée. Écrivez-nous à contact@passcrpe.fr."
+        : /rate limit/i.test(m) ? "Trop de tentatives. Réessayez dans quelques minutes."
+        : "La connexion n'a pas abouti. Réessayez, ou écrivez-nous à contact@passcrpe.fr.";
+    } finally {
+      btn.disabled = false; btn.textContent = "Se connecter";
+    }
+  });
+
+  $("logout").addEventListener("click", async function () {
+    await sb.auth.signOut();
+    pwd.value = "";
+    showLogin();
+  });
+})();
+</script>
+</body>
+</html>
