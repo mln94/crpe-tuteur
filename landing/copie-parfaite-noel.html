@@ -420,7 +420,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
       <div class="hero-text">
         <div class="hero-top">
           <span class="hero-free">Challenge CRPE gratuit</span>
-          <p class="counter" data-counter hidden><span class="dot" aria-hidden="true"></span><span data-counter-txt></span></p>
+          <p class="counter" data-counter><span class="dot" aria-hidden="true"></span><span data-counter-txt><b>0</b> candidat inscrit</span></p>
         </div>
         <p class="eyebrow">La Copie Parfaite avant Noël · du 10 au 20 décembre 2026</p>
         <h1>3 sujets blancs du CRPE. <em>Des copies parfaites</em> avant Noël.</h1>
@@ -653,7 +653,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <span class="badge-free">Gratuit !</span>
         <h2>Prêt·e à rendre une copie parfaite avant Noël ?</h2>
         <p class="lead">Inscriptions ouvertes jusqu'au <b>8 décembre 2026</b>. Les sujets arrivent le 10 décembre à 00 h 01, résultats le 20 décembre.</p>
-        <p class="counter" data-counter hidden><span class="dot" aria-hidden="true"></span><span data-counter-txt></span></p>
+        <p class="counter" data-counter><span class="dot" aria-hidden="true"></span><span data-counter-txt><b>0</b> candidat inscrit</span></p>
         <ul>
           <li>Trois sujets à rendre : maths, français et un sujet optionnel au choix</li>
           <li>Votre accès à la plateforme par e-mail, juste après l'inscription</li>
@@ -810,7 +810,6 @@ const CHALLENGE = {
   // Fin des inscriptions : 8 décembre 2026 à 23:59 (heure de Paris)
   SIGNUP_DEADLINE: new Date("2026-12-08T23:59:59+01:00"),
   // En dessous de ce nombre d'inscrits, le compteur affiche une phrase d'appel au lieu du chiffre
-  COUNTER_MIN: 1,
 };
 
 const $ = (id) => document.getElementById(id);
@@ -903,9 +902,7 @@ if (new Date() > CHALLENGE.SIGNUP_DEADLINE) showClosed();
 // Relu toutes les 30 s tant que la page est visible, et juste après sa propre inscription.
 let compteurActuel = null;
 function afficherCompteur(n) {
-  const texte = n < CHALLENGE.COUNTER_MIN
-    ? "Inscriptions ouvertes : soyez le premier candidat inscrit !"
-    : `<b>${n.toLocaleString("fr-FR")}</b> ${n > 1 ? "candidats déjà inscrits" : "candidat déjà inscrit"}`;
+  const texte = `<b>${n.toLocaleString("fr-FR")}</b> ${n > 1 ? "candidats inscrits" : "candidat inscrit"}`;
   document.querySelectorAll("[data-counter-txt]").forEach(el => { el.innerHTML = texte; });
   document.querySelectorAll("[data-counter]").forEach(el => {
     el.hidden = false;
