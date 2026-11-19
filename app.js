@@ -397,13 +397,13 @@ const CHALLENGE_SUJETS_OPTIONNELS = new Set(['aucun', 'histoire-geographie', 'em
 // Compteur d'inscrits affiché sur la page du challenge (mis en cache 60 s)
 let challengeCountCache = { at: 0, count: null };
 app.get('/api/challenge/count', async (req, res) => {
-  if (Date.now() - challengeCountCache.at > 60_000) {
+  if (Date.now() - challengeCountCache.at > 10_000) {
     const { count, error } = await supabaseAdmin.from('challenge_inscriptions')
       .select('id', { count: 'exact', head: true }).eq('challenge', 'copie-parfaite-noel-2026');
     if (error) { console.error('[Supabase challenge count]', error.message); return res.status(500).json({ error: 'Compteur indisponible.' }); }
     challengeCountCache = { at: Date.now(), count };
   }
-  res.set('Cache-Control', 'public, max-age=60');
+  res.set('Cache-Control', 'no-store'); // le compteur augmente à chaque inscription
   res.json({ count: challengeCountCache.count });
 });
 
@@ -467,6 +467,7 @@ app.post('/api/challenge/subscribe', async (req, res) => {
     ...(compte.userId ? { user_id: compte.userId } : {}),
   }, { onConflict: 'challenge,email' });
   if (sbError) console.error('[Supabase challenge]', sbError.message);
+  else challengeCountCache.at = 0; // nouvelle inscription : le compteur est relu à la prochaine demande
   try {
     await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_CHALLENGE_NOEL_2026,
       { ...(compte.existant ? {} : { parcours_signup: 'challengecopieparfaitenoel26' }),

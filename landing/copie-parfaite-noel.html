@@ -355,9 +355,14 @@ form .btn { justify-content: center; font-size: 1.05rem; }
 /* Compteur d'inscrits */
 .hero-top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; }
 .hero-top .counter { font-weight: 600; }
-.counter { display: inline-flex; align-items: center; gap: 10px; font-size: .98rem; color: var(--ink); }
-.counter .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 22%, transparent); flex: none; }
-.counter b { font-variant-numeric: tabular-nums; }
+.counter { display: inline-flex; align-items: center; gap: 10px; font-size: .98rem; color: var(--ink); margin: 0;
+  background: var(--paper); border: 2px solid var(--ink); border-radius: 99px; padding: 6px 16px 6px 12px; box-shadow: 3px 3px 0 var(--ok); }
+.counter .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 22%, transparent); flex: none; animation: pulse 1.8s ease-in-out infinite; }
+.counter b { font-family: var(--font-display); font-size: 1.35rem; font-weight: 800; color: var(--ok); font-variant-numeric: tabular-nums; line-height: 1; }
+.counter.bump b { animation: bump .6s ease-out; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 7px color-mix(in srgb, var(--ok) 8%, transparent); } }
+@keyframes bump { 30% { transform: scale(1.35); } }
+@media (prefers-reduced-motion: reduce) { .counter .dot, .counter.bump b { animation: none; } }
 
 @media (max-width: 860px) { .strat { grid-template-columns: 1fr; } }
 @media (max-width: 560px) { .parcours li { grid-template-columns: 1fr; gap: 6px; padding: 16px; } }
@@ -894,19 +899,28 @@ $("pwd-toggle").addEventListener("click", function () {
 });
 if (new Date() > CHALLENGE.SIGNUP_DEADLINE) showClosed();
 
-// Compteur d'inscrits (table Supabase challenge_inscriptions, via le serveur)
-fetch("/api/challenge/count")
-  .then(r => r.ok ? r.json() : null)
-  .then(j => {
-    if (!j || !Number.isInteger(j.count)) return;
-    const n = j.count;
-    const texte = n < CHALLENGE.COUNTER_MIN
-      ? "Inscriptions ouvertes : soyez parmi les premiers candidats !"
-      : `<b>${n.toLocaleString("fr-FR")}</b> ${n > 1 ? "candidats déjà inscrits" : "candidat déjà inscrit"}`;
-    document.querySelectorAll("[data-counter-txt]").forEach(el => { el.innerHTML = texte; });
-    document.querySelectorAll("[data-counter]").forEach(el => { el.hidden = false; });
-  })
-  .catch(() => {});
+// Compteur d'inscrits (table Supabase challenge_inscriptions, via le serveur) : il augmente à chaque inscription.
+// Relu toutes les 30 s tant que la page est visible, et juste après sa propre inscription.
+let compteurActuel = null;
+function afficherCompteur(n) {
+  const texte = n < CHALLENGE.COUNTER_MIN
+    ? "Inscriptions ouvertes : soyez le premier candidat inscrit !"
+    : `<b>${n.toLocaleString("fr-FR")}</b> ${n > 1 ? "candidats déjà inscrits" : "candidat déjà inscrit"}`;
+  document.querySelectorAll("[data-counter-txt]").forEach(el => { el.innerHTML = texte; });
+  document.querySelectorAll("[data-counter]").forEach(el => {
+    el.hidden = false;
+    if (compteurActuel !== null && n > compteurActuel) { el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump"); }
+  });
+  compteurActuel = n;
+}
+function chargerCompteur() {
+  return fetch("/api/challenge/count", { cache: "no-store" })
+    .then(r => r.ok ? r.json() : null)
+    .then(j => { if (j && Number.isInteger(j.count)) afficherCompteur(j.count); })
+    .catch(() => {});
+}
+chargerCompteur();
+setInterval(() => { if (!document.hidden) chargerCompteur(); }, 30000);
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -923,6 +937,7 @@ form.addEventListener("submit", async (e) => {
       : "Connectez-vous avec votre adresse e-mail et le mot de passe choisi à l'inscription.";
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: "sign_up_challenge_noel_2026" });
+    chargerCompteur();
     showThanks(d.first_name);
   } catch (err) {
     if (err.closed || err.handled) return;
