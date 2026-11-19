@@ -349,6 +349,8 @@ form .btn { justify-content: center; font-size: 1.05rem; }
 .tips-title { font-family: var(--font-display); font-weight: 700; font-size: 1.2rem; }
 
 /* Compteur d'inscrits */
+.hero-top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; }
+.hero-top .counter { font-weight: 600; }
 .counter { display: inline-flex; align-items: center; gap: 10px; font-size: .98rem; color: var(--ink); }
 .counter .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 22%, transparent); flex: none; }
 .counter b { font-variant-numeric: tabular-nums; }
@@ -407,20 +409,22 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
   <section class="hero">
     <div class="wrap">
       <div class="hero-text">
-        <span class="hero-free">Challenge CRPE gratuit</span>
+        <div class="hero-top">
+          <span class="hero-free">Challenge CRPE gratuit</span>
+          <p class="counter" data-counter hidden><span class="dot" aria-hidden="true"></span><span data-counter-txt></span></p>
+        </div>
         <p class="eyebrow">La Copie Parfaite avant Noël · du 10 au 20 décembre 2026</p>
         <h1>3 sujets blancs du CRPE. <em>Des copies parfaites</em> avant Noël.</h1>
         <p class="lead">Mathématiques, français, et un troisième sujet blanc optionnel que vous choisissez à l'inscription. Les sujets arrivent le 10 décembre à 00 h 01. Vous disposez de 4 vérifications par matière, à utiliser avec stratégie, vous vous entraidez en binôme, et vous commencez les fêtes avec une copie parfaite : plus de 80 % en maths et en français.</p>
         <div class="hero-meta">
           <span><b>100 % gratuit</b></span>
           <span><b>10 → 20 décembre</b></span>
-          <span><b>Certificat Copie Parfaite</b> à la clé</span>
+          <span><b>Rapport détaillé + certificat</b> à la clé</span>
         </div>
         <div class="hero-cta">
           <a class="btn" href="#inscription">Je relève le challenge →</a>
           <small>Inscriptions ouvertes jusqu'au 8 décembre</small>
         </div>
-        <p class="counter" data-counter hidden><span class="dot" aria-hidden="true"></span><span data-counter-txt></span></p>
       </div>
 
       <div class="copie" aria-hidden="true">
@@ -452,7 +456,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
     <div class="wrap">
       <div class="sec-head">
         <p class="eyebrow">Les étapes</p>
-        <h2>De l'inscription au certificat, étape par étape</h2>
+        <h2>De l'inscription au rapport détaillé, étape par étape</h2>
         <p class="lead">Les quatre premières étapes se font dès votre inscription. Ensuite, rendez-vous le 9 décembre pour votre binôme et le 10 décembre à 00 h 01 pour les sujets.</p>
       </div>
       <ol class="parcours">
@@ -464,7 +468,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <li><span class="when"><small>Binômes</small>9 décembre</span><div><h3>Découvrez votre binôme</h3><p>Nous vous mettons en contact avec votre binôme grâce au numéro de téléphone indiqué à l'inscription. Vous vous organisez ensuite comme vous le souhaitez.</p></div></li>
         <li class="key"><span class="when"><small>00 h 01</small>10 décembre</span><div><h3>Réception des sujets : top départ !</h3><p>Les sujets de mathématiques, de français et votre sujet optionnel sont disponibles. Rythme conseillé : maths du 10 au 13, français du 14 au 17, sujet optionnel et finalisation les 18 et 19.</p></div></li>
         <li><span class="when"><small>Pendant le challenge</small>10 → 19 déc.</span><div><h3>Répondez, vérifiez, retravaillez</h3><p>4 vérifications par matière : utilisez-les avec stratégie et appliquez les conseils de chaque retour (voir plus bas).</p></div></li>
-        <li class="key"><span class="when"><small>Le grand jour</small>20 décembre</span><div><h3>Résultats et certificats Copie Parfaite</h3><p>Vous recevez votre résultat et, si vous avez dépassé 80 % en maths et en français, votre certificat. Place aux fêtes !</p></div></li>
+        <li class="key"><span class="when"><small>Le grand jour</small>20 décembre</span><div><h3>Rapport détaillé et certificat de complétion</h3><p>Vous recevez le rapport détaillé de vos réponses, matière par matière, et votre certificat de complétion. Place aux fêtes !</p></div></li>
       </ol>
     </div>
   </section>
@@ -489,8 +493,8 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
       <div class="cert">
         <div class="cert-seal">Copie<br>Parfaite<br>2026</div>
         <div>
-          <h3>Votre certificat Copie Parfaite le 20 décembre</h3>
-          <p>Chaque candidat qui dépasse 80 % sur les deux copies, mathématiques et français, reçoit son certificat nominatif à la clôture du challenge. Une belle façon de terminer l'année et de reprendre confiance avant les écrits.</p>
+          <h3>Rapport détaillé de vos réponses + certificat de complétion le 20 décembre</h3>
+          <p>À la clôture du challenge, chaque candidat qui a remis ses copies de mathématiques et de français reçoit le rapport détaillé de ses réponses : ce qui est réussi, ce qui est à retravailler, question par question. Il reçoit aussi son certificat de complétion nominatif. Une belle façon de terminer l'année et de savoir exactement quoi travailler avant les écrits.</p>
         </div>
       </div>
     </div>
@@ -620,7 +624,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <div><dt>Clôture des inscriptions</dt><dd>8 décembre 2026</dd></div>
         <div><dt>Annonce des binômes</dt><dd>9 décembre 2026</dd></div>
         <div><dt>Réception des sujets</dt><dd>10 décembre · 00 h 01</dd></div>
-        <div><dt>Résultats et certificats</dt><dd>20 décembre 2026</dd></div>
+        <div><dt>Rapports et certificats</dt><dd>20 décembre 2026</dd></div>
         <div><dt>Accès à la plateforme</dt><dd>Par e-mail, juste après l'inscription</dd></div>
         <div><dt>Présentation</dt><dd>Publication épinglée du groupe Facebook</dd></div>
         <div><dt>Sujets à rendre</dt><dd>3 : maths + français + 1 optionnel</dd></div>
@@ -629,7 +633,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <div><dt>Seuil de réussite</dt><dd>&gt; 80 % sur les deux copies</dd></div>
         <div><dt>Travail en équipe</dt><dd>Binôme, organisation libre</dd></div>
         <div><dt>Intelligence artificielle</dt><dd>Strictement interdite</dd></div>
-        <div><dt>Récompense</dt><dd>Certificat Copie Parfaite</dd></div>
+        <div><dt>Récompense</dt><dd>Rapport détaillé de vos réponses + certificat de complétion</dd></div>
       </dl>
     </div>
   </section>
@@ -647,7 +651,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
           <li>4 vérifications par matière</li>
           <li>Un binôme pour s'entraider sur les sujets</li>
           <li>Un groupe d'entraide entre candidats</li>
-          <li>Un certificat Copie Parfaite si vous réussissez</li>
+          <li>Le rapport détaillé de vos réponses + un certificat de complétion</li>
         </ul>
       </div>
 
@@ -721,8 +725,8 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <h2>Avant de vous lancer</h2>
       </div>
       <div class="faq">
-        <details><summary>Le challenge est-il vraiment gratuit ?</summary><p>Oui. L'inscription, les trois sujets blancs, la plateforme, les vérifications et le certificat sont gratuits.</p></details>
-        <details><summary>Jusqu'à quand puis-je m'inscrire ?</summary><p>Jusqu'au 8 décembre 2026 à 23 h 59. Les binômes sont annoncés le 9 décembre, les sujets arrivent le 10 décembre à 00 h 01, et le challenge se termine le 20 décembre avec les résultats et la remise des certificats.</p></details>
+        <details><summary>Le challenge est-il vraiment gratuit ?</summary><p>Oui. L'inscription, les trois sujets blancs, la plateforme, les vérifications, le rapport détaillé et le certificat sont gratuits.</p></details>
+        <details><summary>Jusqu'à quand puis-je m'inscrire ?</summary><p>Jusqu'au 8 décembre 2026 à 23 h 59. Les binômes sont annoncés le 9 décembre, les sujets arrivent le 10 décembre à 00 h 01, et le challenge se termine le 20 décembre avec l'envoi des rapports détaillés et des certificats de complétion.</p></details>
         <details><summary>Je n'ai pas reçu l'e-mail d'accès à la plateforme</summary><p>Il est envoyé juste après l'inscription. Vérifiez vos spams et vos courriers indésirables. Toujours rien après quelques minutes ? Écrivez-nous à <a href="mailto:contact@passcrpe.fr">contact@passcrpe.fr</a> en indiquant l'adresse utilisée pour vous inscrire.</p></details>
         <details><summary>Où dois-je me présenter ?</summary><p>Dans le groupe Facebook du challenge, en commentaire de la publication épinglée en haut du groupe. Présentez-vous dès votre inscription : prénom, académie, première fois ou non, sujet optionnel choisi et objectif.</p></details>
         <details><summary>Combien de sujets dois-je rendre ?</summary><p>Trois sujets : mathématiques et français, obligatoires, et un troisième sujet optionnel que vous choisissez lors de l'inscription (histoire-géographie, enseignement moral et civique, anglais, sciences et technologie ou arts). Le sujet optionnel n'est pas pris en compte pour réussir le challenge.</p></details>
@@ -731,7 +735,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <details><summary>Faut-il avoir déjà passé le CRPE pour participer ?</summary><p>Non. Le challenge s'adresse aussi bien aux candidats qui préparent leur première session qu'à ceux qui le repassent. Les sujets blancs permettent à chacun de se situer.</p></details>
         <details><summary>La plateforme me donne-t-elle les bonnes réponses ?</summary><p>Non, et c'est volontaire. À chaque vérification, vous savez si votre réponse est juste ou à retravailler, mais c'est à vous de trouver pourquoi, seul·e ou avec l'aide du groupe.</p></details>
         <details><summary>Combien de fois puis-je vérifier mes réponses ?</summary><p>4 fois par matière : 4 en maths, 4 en français et 4 pour le sujet optionnel. Chaque vérification vous indique ce qui est juste et ce qui est à retravailler, avec des conseils, sans donner la correction. À vous de choisir ce que vous envoyez : tout le sujet, un exercice à la fois, ou deux par deux. Soyez stratégique et appliquez les conseils de chaque retour avant de renvoyer.</p></details>
-        <details><summary>Que se passe-t-il si je n'atteins pas 80 % ?</summary><p>Vous aurez tout de même travaillé des sujets complets en profondeur. Tant qu'il vous reste des vérifications et du temps avant la fin du challenge, vous pouvez retravailler votre copie.</p></details>
+        <details><summary>Que se passe-t-il si je n'atteins pas 80 % ?</summary><p>Vous recevez quand même le rapport détaillé de vos réponses et votre certificat de complétion, et vous aurez travaillé des sujets complets en profondeur. Tant qu'il vous reste des vérifications et du temps avant la fin du challenge, vous pouvez retravailler votre copie.</p></details>
         <details><summary>Combien de temps faut-il y consacrer ?</summary><p>Prévoyez l'équivalent de deux épreuves écrites (trois avec le sujet optionnel), plus le temps de retravailler vos réponses. Réparti du 10 au 19 décembre, cela reste compatible avec un emploi ou des études.</p></details>
         <details><summary>Dois-je avoir un compte Facebook ?</summary><p>Le groupe Facebook est un lieu d'entraide en plus de votre binôme. Il est recommandé pour profiter pleinement du challenge, mais la plateforme et les vérifications fonctionnent sans.</p></details>
       </div>
@@ -762,7 +766,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
       </div></li>
       <li><div>
         <h3>Bloquez vos dates</h3>
-        <p>8 décembre à 23 h 59 : clôture des inscriptions. 9 décembre : annonce des binômes. 10 décembre à 00 h 01 : réception des sujets. 20 décembre : résultats et certificats.</p>
+        <p>8 décembre à 23 h 59 : clôture des inscriptions. 9 décembre : annonce des binômes. 10 décembre à 00 h 01 : réception des sujets. 20 décembre : rapports détaillés et certificats de complétion.</p>
       </div></li>
       <li><div>
         <h3>Parlez-en autour de vous</h3>
