@@ -255,6 +255,10 @@ form.card {
 }
 .field input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px color-mix(in srgb, var(--blue) 22%, transparent); }
 .field input[aria-invalid="true"] { border-color: var(--red); }
+.pwd-wrap { position: relative; }
+.pwd-wrap input { width: 100%; padding-right: 92px; }
+.pwd-toggle { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); background: transparent; border: 0; color: var(--blue); font: inherit; font-size: .85rem; font-weight: 600; padding: 8px 10px; cursor: pointer; border-radius: 8px; }
+.pwd-toggle:focus-visible { outline: 2px solid var(--blue); }
 .err { color: var(--red); font-size: .82rem; min-height: 0; }
 fieldset { border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .choices { display: flex; flex-wrap: wrap; gap: 10px; }
@@ -680,6 +684,15 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
             <span class="err" id="email-err"></span>
           </div>
           <div class="field">
+            <label for="password">Mot de passe d'accès à la plateforme</label>
+            <div class="pwd-wrap">
+              <input id="password" name="password" type="password" autocomplete="new-password" minlength="8" required aria-describedby="password-hint">
+              <button type="button" class="pwd-toggle" id="pwd-toggle" aria-pressed="false">Afficher</button>
+            </div>
+            <span class="hint" id="password-hint">Choisissez un mot de passe (8 caractères minimum) : avec votre adresse e-mail, il vous servira à vous connecter à la plateforme du challenge pour rendre vos copies. Vous avez déjà un compte PassCRPE ? Indiquez le mot de passe de ce compte.</span>
+            <span class="err" id="password-err"></span>
+          </div>
+          <div class="field">
             <label for="phone">Numéro de téléphone</label>
             <input id="phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="06 12 34 56 78" required aria-describedby="phone-hint">
             <span class="hint" id="phone-hint"><b>Important :</b> indiquez bien votre numéro, il est indispensable pour former les binômes et vous mettre en contact avec votre binôme. Ensuite, vous vous organisez comme vous le souhaitez.</span>
@@ -753,7 +766,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
     <ol class="next">
       <li><div>
         <h3>Ouvrez l'e-mail d'accès à la plateforme</h3>
-        <p>Il vient de vous être envoyé. Rien reçu d'ici quelques minutes ? Vérifiez vos spams, puis écrivez-nous à <a href="mailto:contact@passcrpe.fr">contact@passcrpe.fr</a>.</p>
+        <p><span id="thanks-account"></span> L'e-mail d'accès vient de vous être envoyé. Rien reçu d'ici quelques minutes ? Vérifiez vos spams, puis écrivez-nous à <a href="mailto:contact@passcrpe.fr">contact@passcrpe.fr</a>.</p>
       </div></li>
       <li><div>
         <h3>Rejoignez le groupe Facebook du challenge</h3>
@@ -818,6 +831,7 @@ function validate() {
     first_name: $("first_name").value.trim(),
     last_name: $("last_name").value.trim(),
     email: $("email").value.trim().toLowerCase(),
+    password: $("password").value,
     phone: normalizePhone($("phone").value.trim()),
     deja_passe: (form.querySelector('input[name="deja_passe"]:checked') || {}).value,
     sujet_optionnel: $("sujet_optionnel").value,
@@ -828,6 +842,7 @@ function validate() {
   ok = setError("first_name", d.first_name ? "" : "Indiquez votre prénom.") && ok;
   ok = setError("last_name", d.last_name ? "" : "Indiquez votre nom.") && ok;
   ok = setError("email", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(d.email) ? "" : "Saisissez une adresse e-mail valide, par exemple prenom@exemple.fr.") && ok;
+  ok = setError("password", d.password.length >= 8 ? "" : "Choisissez un mot de passe d'au moins 8 caractères pour accéder à la plateforme.") && ok;
   ok = setError("phone", d.phone ? "" : "Saisissez un numéro valide, par exemple 06 12 34 56 78 : il est indispensable pour les binômes.") && ok;
   ok = setError("sujet_optionnel", d.sujet_optionnel ? "" : "Choisissez votre 3e sujet, ou « Aucun ».") && ok;
   $("deja_passe-err").textContent = d.deja_passe ? "" : "Indiquez combien de fois vous avez déjà passé le CRPE.";
@@ -840,13 +855,18 @@ async function sendSignup(d) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      prenom: d.first_name, nom: d.last_name, email: d.email, telephone: d.phone,
+      prenom: d.first_name, nom: d.last_name, email: d.email, password: d.password, telephone: d.phone,
       tentatives_crpe: Number(d.deja_passe), sujet_optionnel: d.sujet_optionnel, consent_conseils: d.newsletter, consent_partenaires: d.partners,
     }),
   });
   const json = await res.json().catch(() => ({}));
   if (res.status === 410) { showClosed(); throw Object.assign(new Error("closed"), { closed: true }); }
+  if (res.status === 409 && json.code === "mot_de_passe") {
+    setError("password", json.error); $("password").focus();
+    throw Object.assign(new Error(json.error), { handled: true });
+  }
   if (!res.ok || !json.ok) throw new Error(json.error || "Erreur " + res.status);
+  return json;
 }
 
 function showClosed() {
@@ -866,6 +886,12 @@ function showThanks(firstName) {
   try { history.replaceState(null, "", "#merci"); } catch (e) {}
 }
 
+$("pwd-toggle").addEventListener("click", function () {
+  const show = $("password").type === "password";
+  $("password").type = show ? "text" : "password";
+  this.textContent = show ? "Masquer" : "Afficher";
+  this.setAttribute("aria-pressed", String(show));
+});
 if (new Date() > CHALLENGE.SIGNUP_DEADLINE) showClosed();
 
 // Compteur d'inscrits (table Supabase challenge_inscriptions, via le serveur)
@@ -891,12 +917,15 @@ form.addEventListener("submit", async (e) => {
   const btn = $("submit-btn");
   btn.disabled = true; btn.textContent = "Inscription en cours…";
   try {
-    await sendSignup(d);
+    const r = await sendSignup(d);
+    $("thanks-account").textContent = r.compte_existant
+      ? "Connectez-vous avec votre adresse e-mail et le mot de passe de votre compte PassCRPE."
+      : "Connectez-vous avec votre adresse e-mail et le mot de passe choisi à l'inscription.";
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: "sign_up_challenge_noel_2026" });
     showThanks(d.first_name);
   } catch (err) {
-    if (err.closed) return;
+    if (err.closed || err.handled) return;
     console.error(err);
     $("form-error").textContent = "L'inscription n'a pas pu être enregistrée. Vérifiez votre connexion puis réessayez.";
     $("form-error").hidden = false;
@@ -905,7 +934,7 @@ form.addEventListener("submit", async (e) => {
   }
 });
 
-["first_name", "last_name", "email", "phone"].forEach(id => $(id).addEventListener("input", () => setError(id, "")));
+["first_name", "last_name", "email", "password", "phone"].forEach(id => $(id).addEventListener("input", () => setError(id, "")));
 $("sujet_optionnel").addEventListener("change", () => setError("sujet_optionnel", ""));
 form.querySelectorAll('input[name="deja_passe"]').forEach(r => r.addEventListener("change", () => { $("deja_passe-err").textContent = ""; }));
 </script>
