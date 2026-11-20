@@ -428,8 +428,9 @@ app.post('/api/challenge/dashboard-connexion', async (req, res) => {
 
 // Compte Supabase du challenge : création (adresse considérée comme confirmée, l'accès est envoyé par Klaviyo),
 // ou vérification du mot de passe si un compte existe déjà. Renvoie { userId, existant, mauvaisMotDePasse }.
-// Après clic sur le lien de confirmation, la personne arrive connectée sur son tableau de bord du challenge
-const CHALLENGE_NOEL_2026_DASHBOARD_URL = 'https://www.passcrpe.fr/copie-parfaite-noel/tableau-de-bord';
+// Après clic sur le lien de confirmation, la personne revient sur la page du challenge (écran « adresse confirmée »
+// avec le bouton de connexion au tableau de bord)
+const CHALLENGE_NOEL_2026_CONFIRMATION_URL = 'https://www.passcrpe.fr/copie-parfaite-noel';
 
 // Inscription classique : compte Supabase créé par signUp, avec l'e-mail de confirmation Supabase
 // (envoyé par le SMTP du projet). Compte PassCRPE déjà existant : le mot de passe saisi doit être le sien.
@@ -437,7 +438,7 @@ async function challengeCompteAcces(email, password, meta) {
   // Client à part, sans session persistée, pour ne pas toucher à supabaseAdmin
   const pub = createClient(process.env.VITE_SUPABASE_URL, process.env.VITE_SUPABASE_ANON_KEY,
     { auth: { persistSession: false, autoRefreshToken: false } });
-  const redirect = { emailRedirectTo: CHALLENGE_NOEL_2026_DASHBOARD_URL };
+  const redirect = { emailRedirectTo: CHALLENGE_NOEL_2026_CONFIRMATION_URL };
   const { data, error } = await pub.auth.signUp({
     email, password,
     options: { ...redirect, data: { ...meta, challenge: 'copie-parfaite-noel-2026', parcours: 'challengecopieparfaitenoel26' } },

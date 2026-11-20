@@ -107,6 +107,8 @@ header.top .wrap { display: flex; justify-content: space-between; align-items: c
 .brand svg { width: 30px; height: 30px; flex: none; }
 .top-right { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .top .btn { padding: .6em 1em; font-size: .92rem; background: #FFFFFF; color: #1E2F7A; box-shadow: 0 2px 0 #0D1A4D; }
+.top .btn-ghost { background: transparent; color: #FFFFFF; border: 2px solid rgba(255,255,255,.7); box-shadow: none; }
+.top .btn-ghost:hover { box-shadow: none; background: rgba(255,255,255,.1); }
 .free-tag {
   display: inline-block; background: #F5B400; color: #1A1A1A; font-weight: 800; font-size: .82rem;
   letter-spacing: .08em; text-transform: uppercase; padding: .45em .9em; border-radius: 6px; white-space: nowrap;
@@ -416,6 +418,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
       PassCRPE
     </a>
     <div class="top-right">
+      <a class="btn btn-ghost" href="/copie-parfaite-noel/tableau-de-bord">Connexion</a>
       <a class="btn" href="#inscription">Je m'inscris</a>
     </div>
   </div>
@@ -481,7 +484,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <li class="now"><span class="when">Étape 3</span><div><h3>Recevez votre accès à la plateforme par e-mail</h3><p>L'e-mail avec votre accès à la plateforme du challenge vous est envoyé après votre inscription ; votre tableau de bord ouvre le 8 décembre à 8 h. Rien reçu après quelques minutes ? Vérifiez vos spams, puis écrivez-nous à <a href="mailto:contact@passcrpe.fr">contact@passcrpe.fr</a>.</p></div></li>
         <li class="now"><span class="when">Étape 4</span><div><h3>Rejoignez le groupe Facebook du challenge</h3><p>C'est le lieu d'entraide entre tous les candidats : <a href="https://www.facebook.com/groups/1789421825661180" target="_blank" rel="noopener">rejoindre le groupe</a>.</p></div></li>
         <li class="now"><span class="when">Étape 5</span><div><h3>Présentez-vous dans le groupe</h3><p>Une publication épinglée en haut du groupe vous attend : présentez-vous en commentaire (prénom, académie, première fois ou non, sujet optionnel choisi, objectif). C'est le premier pas vers l'entraide.</p></div></li>
-        <li class="key"><span class="when"><small>8 h · Tableau de bord</small>8 décembre</span><div><h3>Ouverture de votre tableau de bord</h3><p>Le 8 décembre à 8 h, votre tableau de bord du challenge ouvre et vous recevez un e-mail avec le lien pour vous connecter : rendez-vous sur <a href="/copie-parfaite-noel/tableau-de-bord">passcrpe.fr/copie-parfaite-noel/tableau-de-bord</a> avec l'e-mail et le mot de passe choisis à l'inscription. Vos sujets y apparaîtront le 10 décembre à minuit.</p></div></li>
+        <li class="key"><span class="when"><small>8 h · Tableau de bord</small>8 décembre</span><div><h3>Ouverture de votre tableau de bord</h3><p>Le 8 décembre à 8 h, votre tableau de bord du challenge ouvre et vous recevez un e-mail avec le lien pour vous connecter avec l'e-mail et le mot de passe choisis à l'inscription. Vos sujets y apparaîtront le 10 décembre à minuit.</p></div></li>
         <li><span class="when"><small>23 h 59</small>8 décembre</span><div><h3>Clôture des inscriptions</h3><p>Plus aucune inscription n'est possible après cette date.</p></div></li>
         <li><span class="when"><small>Binômes</small>9 décembre</span><div><h3>Découvrez votre binôme</h3><p>Nous vous mettons en contact avec votre binôme grâce au numéro de téléphone indiqué à l'inscription. Vous vous organisez ensuite comme vous le souhaitez.</p></div></li>
         <li class="key"><span class="when"><small>Minuit</small>10 décembre</span><div><h3>Les sujets arrivent dans votre tableau de bord : top départ !</h3><p>À minuit, les sujets de mathématiques, de français et votre sujet optionnel apparaissent dans votre tableau de bord. Rythme conseillé : maths du 10 au 13, français du 14 au 17, sujet optionnel et finalisation les 18 et 19.</p></div></li>
@@ -695,7 +698,8 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
           </div>
           <div class="field">
             <label for="email">Adresse e-mail</label>
-            <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required>
+            <input id="email" name="email" type="email" autocomplete="email" inputmode="email" required aria-describedby="email-hint">
+            <span class="hint" id="email-hint"><b>Important :</b> vérifiez bien votre adresse e-mail, toutes les informations de connexion vous sont envoyées par e-mail. Vous y recevrez l'e-mail de confirmation à valider, puis le lien de votre tableau de bord du challenge.</span>
             <span class="err" id="email-err"></span>
           </div>
           <div class="field">
@@ -785,9 +789,8 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <p>Nous venons de vous envoyer un e-mail de confirmation PassCRPE à <b id="thanks-email"></b>. Cliquez sur le lien qu'il contient pour valider votre adresse : sans cette étape, vous ne pourrez pas vous connecter à votre tableau de bord. Rien reçu d'ici quelques minutes ? Vérifiez vos spams et vos courriers indésirables.</p>
       </div></li>
       <li><div>
-        <h3>Accédez à votre tableau de bord du challenge</h3>
-        <p><span id="thanks-account"></span> Vous recevez aussi un e-mail de bienvenue avec votre accès. Rien reçu d'ici quelques minutes ? Vérifiez vos spams, puis écrivez-nous à <a href="mailto:contact@passcrpe.fr">contact@passcrpe.fr</a>.</p>
-        <a class="btn" href="/copie-parfaite-noel/tableau-de-bord">Accéder à mon tableau de bord</a>
+        <h3>Votre accès au tableau de bord du challenge</h3>
+        <p><span id="thanks-account"></span> Rien reçu d'ici quelques minutes ? Vérifiez vos spams, puis écrivez-nous à <a href="mailto:contact@passcrpe.fr">contact@passcrpe.fr</a>.</p>
       </div></li>
       <li><div>
         <h3>Rejoignez le groupe Facebook du challenge</h3>
@@ -807,6 +810,17 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <p>Un ami ou une amie prépare aussi le CRPE ? Inscriptions ouvertes jusqu'au 8 décembre.</p>
       </div></li>
     </ol>
+  </div>
+</section>
+
+<section class="thanks" id="confirme" hidden>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="hand" id="confirme-hand">C'est validé !</span>
+      <h1 id="confirme-title" style="font-size: clamp(2.2rem, 5vw, 3.4rem)">Votre adresse e&#8209;mail est confirmée.</h1>
+      <p class="lead" id="confirme-text">Votre inscription au challenge « La Copie Parfaite avant Noël » est complète. Connectez-vous avec votre adresse e-mail et votre mot de passe : votre tableau de bord ouvre le 8 décembre à 8 h, et vos sujets y arrivent le 10 décembre à minuit.</p>
+      <p><a class="btn" href="/copie-parfaite-noel/tableau-de-bord">Connexion</a></p>
+    </div>
   </div>
 </section>
 
@@ -914,6 +928,30 @@ function showClosed() {
   document.querySelectorAll('a[href="#inscription"]').forEach(a => { a.textContent = "Inscriptions closes"; });
 }
 
+/* Retour depuis le lien de l'e-mail de confirmation Supabase (#access_token=…&type=signup, ou #error_code=… si le lien
+   a expiré) : écran « adresse confirmée » avec le bouton de connexion, et synchronisation Klaviyo (email_verified). */
+(function retourConfirmation() {
+  const h = new URLSearchParams(location.hash.slice(1));
+  const token = h.get("type") === "signup" ? h.get("access_token") : null;
+  const erreur = h.get("error_code") || h.get("error");
+  if (!token && !erreur) return;
+  // Le jeton ne reste pas dans l'adresse
+  try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {}
+  if (token) {
+    fetch("/api/klaviyo/email-verified", { method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ access_token: token }) }).catch(() => {});
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "challenge_email_confirme" });
+  } else {
+    $("confirme-hand").textContent = "Oups…";
+    $("confirme-title").textContent = "Ce lien de confirmation a expiré ou a déjà été utilisé.";
+    $("confirme-text").textContent = "Essayez de vous connecter avec votre adresse e-mail et votre mot de passe : si votre adresse n'est pas encore validée, un nouvel e-mail de confirmation vous est envoyé automatiquement.";
+  }
+  document.querySelector("main").hidden = true;
+  $("confirme").hidden = false;
+  window.scrollTo({ top: 0 });
+})();
+
 function showThanks(firstName) {
   document.querySelector("main").hidden = true;
   $("thanks-title").textContent = `Bienvenue dans le challenge, ${firstName} !`;
@@ -969,8 +1007,8 @@ form.addEventListener("submit", async (e) => {
     if (r.email_a_confirmer) $("thanks-email").textContent = d.email;
     else $("thanks-confirm").remove();
     $("thanks-account").textContent = r.compte_existant
-      ? "Connectez-vous avec votre adresse e-mail et le mot de passe de votre compte PassCRPE."
-      : "Connectez-vous avec votre adresse e-mail et le mot de passe choisi à l'inscription.";
+      ? "Le lien de votre tableau de bord vous est envoyé par e-mail : vous vous y connecterez avec votre adresse e-mail et le mot de passe de votre compte PassCRPE."
+      : "Le lien de votre tableau de bord vous est envoyé par e-mail : vous vous y connecterez avec votre adresse e-mail et le mot de passe choisi à l'inscription.";
     window.dataLayer = window.dataLayer || [];
     window.dataLayer.push({ event: "sign_up_challenge_noel_2026" });
     chargerCompteur();

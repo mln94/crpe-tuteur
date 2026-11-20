@@ -173,11 +173,6 @@ footer { text-align: center; font-size: .82rem; color: var(--muted); padding: 0 
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
-  // Arrivée depuis le lien de l'e-mail de confirmation (#access_token=…&type=signup), lu avant que Supabase n'efface l'URL
-  var retourConfirmation = (function () {
-    var h = new URLSearchParams(location.hash.slice(1));
-    return h.get("type") === "signup" && h.get("access_token") ? h.get("access_token") : null;
-  })();
   var form = $("form"), email = $("email"), pwd = $("password"), btn = $("submit"), msg = $("msg");
   // Même projet Supabase que le site : une session ouverte sur passcrpe.fr est reprise ici
   var sb = window.supabase.createClient('https://zqwcermgfvcusuwjfviz.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8');
@@ -203,13 +198,6 @@ footer { text-align: center; font-size: .82rem; color: var(--muted); padding: 0 
 
   sb.auth.getSession().then(function (r) {
     if (r.data && r.data.session) { showDashboard(r.data.session.user); signalerConnexion(r.data.session); }
-    if (retourConfirmation) {
-      // Adresse validée : synchronisation Klaviyo (email_verified), comme sur le reste du site
-      fetch("/api/klaviyo/email-verified", { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ access_token: retourConfirmation }) }).catch(function () {});
-      window.dataLayer && dataLayer.push({ event: "challenge_email_confirme" });
-      if (r.data && r.data.session) $("done-title").textContent = "Adresse e-mail confirmée : " + $("done-title").textContent.charAt(0).toLowerCase() + $("done-title").textContent.slice(1);
-    }
   });
 
   $("toggle").addEventListener("click", function () {
@@ -238,7 +226,7 @@ footer { text-align: center; font-size: .82rem; color: var(--muted); padding: 0 
     } catch (err) {
       var m = err.message || "";
       if (/not confirmed/i.test(m))
-        sb.auth.resend({ type: "signup", email: e, options: { emailRedirectTo: location.origin + location.pathname } }).catch(function () {});
+        sb.auth.resend({ type: "signup", email: e, options: { emailRedirectTo: location.origin + "/copie-parfaite-noel" } }).catch(function () {});
       msg.textContent = /invalid login credentials/i.test(m) ? "Adresse e-mail ou mot de passe incorrect. Mot de passe oublié ? Utilisez le lien au-dessus du champ."
         : /not confirmed/i.test(m) ? "Votre adresse e-mail n'est pas encore validée. Nous venons de vous renvoyer l'e-mail de confirmation : cliquez sur son lien (pensez à vérifier vos spams), puis reconnectez-vous."
         : /rate limit/i.test(m) ? "Trop de tentatives. Réessayez dans quelques minutes."
