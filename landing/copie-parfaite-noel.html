@@ -287,6 +287,15 @@ form .btn { justify-content: center; font-size: 1.05rem; }
 }
 .success .hand { font-size: 2.2rem; line-height: 1; }
 .form-error { color: var(--red); font-size: .9rem; }
+/* Déjà inscrit·e sur PassCRPE : connexion puis formulaire court */
+.deja { display: flex; align-items: center; justify-content: space-between; gap: 12px 18px; flex-wrap: wrap;
+  border: 2px dashed var(--line-strong); border-radius: 12px; padding: 14px 18px; margin-bottom: 16px; background: var(--surface, var(--paper)); }
+.deja p { margin: 0; font-size: .95rem; color: var(--ink); max-width: 46ch; }
+.btn-outline { background: transparent; color: var(--blue); border: 2px solid var(--blue); box-shadow: none; padding: .55em 1em; font-size: .92rem; }
+.btn-outline:hover { box-shadow: none; background: color-mix(in srgb, var(--blue) 10%, transparent); }
+.linkish { background: none; border: 0; padding: 0; font: inherit; color: var(--blue); text-decoration: underline; cursor: pointer; }
+.deja-hello { margin: 0 0 6px; color: var(--ink); }
+.deja-statut { margin: 0 0 10px; font-size: .9rem; color: var(--ok, #1F8A5B); font-weight: 600; }
 
 /* FAQ */
 .faq { display: flex; flex-direction: column; border-top: 1px solid var(--line); }
@@ -683,6 +692,74 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
           <h3>Les inscriptions au challenge sont terminées depuis le 8 décembre.</h3>
           <p>Abonnez-vous à la newsletter PassCRPE pour être prévenu·e de la prochaine édition.</p>
         </div>
+        <div class="deja" id="deja-bar">
+          <p><b>Déjà inscrit·e sur PassCRPE ?</b> Connectez-vous : vous n'aurez que votre téléphone et votre sujet optionnel à indiquer.</p>
+          <button type="button" class="btn btn-outline" id="deja-open">Je me connecte</button>
+        </div>
+        <form class="card" id="deja-login" hidden novalidate>
+          <p class="deja-hello"><b>Connectez-vous avec votre compte PassCRPE</b></p>
+          <div class="field">
+            <label for="dl-email">Adresse e-mail</label>
+            <input id="dl-email" type="email" autocomplete="email" inputmode="email" required>
+            <span class="err" id="dl-email-err"></span>
+          </div>
+          <div class="field">
+            <label for="dl-password">Mot de passe</label>
+            <input id="dl-password" type="password" autocomplete="current-password" required>
+            <span class="err" id="dl-password-err"></span>
+          </div>
+          <p class="form-error" id="dl-error" hidden></p>
+          <button class="btn" type="submit" id="dl-submit">Se connecter</button>
+          <p style="margin:12px 0 0;font-size:.9rem"><button type="button" class="linkish" id="deja-back">← Je n'ai pas de compte PassCRPE : je m'inscris</button></p>
+        </form>
+        <form class="card" id="deja-form" hidden novalidate>
+          <p class="deja-hello">Bonjour <b id="deja-prenom"></b> 👋 Vous êtes connecté·e avec <b id="deja-email"></b>. <button type="button" class="linkish" id="deja-logout">Ce n'est pas vous ?</button></p>
+          <p class="deja-statut" id="deja-statut" hidden>✓ Vous participez déjà au challenge : vous pouvez modifier vos informations ci-dessous.</p>
+          <div class="row" id="df-identite" hidden>
+            <div class="field">
+              <label for="df-prenom">Prénom</label>
+              <input id="df-prenom" autocomplete="given-name">
+              <span class="err" id="df-prenom-err"></span>
+            </div>
+            <div class="field">
+              <label for="df-nom">Nom</label>
+              <input id="df-nom" autocomplete="family-name">
+              <span class="err" id="df-nom-err"></span>
+            </div>
+          </div>
+          <div class="field">
+            <label for="df-phone">Numéro de téléphone</label>
+            <input id="df-phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="06 12 34 56 78" required aria-describedby="df-phone-hint">
+            <span class="hint" id="df-phone-hint"><b>Important :</b> indiquez bien votre numéro, il est indispensable pour former les binômes et vous mettre en contact avec votre binôme.</span>
+            <span class="err" id="df-phone-err"></span>
+          </div>
+          <div class="field">
+            <label for="df-sujet">Votre 3<sup>e</sup> sujet (optionnel)</label>
+            <select id="df-sujet" required>
+              <option value="" selected disabled>Choisissez une option</option>
+              <option value="aucun">Aucun : seulement maths et français</option>
+              <option value="histoire-geographie">Histoire-géographie</option>
+              <option value="emc">Enseignement moral et civique</option>
+              <option value="anglais">Anglais (langue vivante)</option>
+              <option value="sciences-technologie">Sciences et technologie</option>
+              <option value="arts">Arts</option>
+            </select>
+            <span class="err" id="df-sujet-err"></span>
+          </div>
+          <div class="field" id="df-tentatives-field" hidden>
+            <label for="df-tentatives">Combien de fois avez-vous déjà passé le CRPE ?</label>
+            <select id="df-tentatives">
+              <option value="" selected disabled>Choisissez une option</option>
+              <option value="0">Jamais, ce sera ma première fois</option>
+              <option value="1">1 fois</option>
+              <option value="2">2 fois</option>
+              <option value="3">3 fois ou plus</option>
+            </select>
+            <span class="err" id="df-tentatives-err"></span>
+          </div>
+          <p class="form-error" id="df-error" hidden></p>
+          <button class="btn" type="submit" id="df-submit">Je participe au challenge</button>
+        </form>
         <form class="card" id="signup-form" novalidate>
           <div class="row">
             <div class="field">
@@ -831,6 +908,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script>
 /* Inscription : envoyée au serveur PassCRPE (/api/challenge/subscribe), qui ajoute le contact
    à la liste Klaviyo « Challenge Copie Parfaite avant Noël 2026 » (et à la newsletter si la case est cochée). */
@@ -924,6 +1002,7 @@ async function sendSignup(d) {
 
 function showClosed() {
   form.hidden = true;
+  ["deja-bar", "deja-login", "deja-form"].forEach(id => { $(id).hidden = true; });
   $("closed").hidden = false;
   document.querySelectorAll('a[href="#inscription"]').forEach(a => { a.textContent = "Inscriptions closes"; });
 }
@@ -951,6 +1030,140 @@ function showClosed() {
   $("confirme").hidden = false;
   window.scrollTo({ top: 0 });
 })();
+
+/* ── Déjà inscrit·e sur PassCRPE ──
+   Connexion avec le compte PassCRPE (même session que le site), puis formulaire court : téléphone pour le binôme,
+   sujet optionnel, et prénom, nom ou nombre de passages du CRPE seulement s'ils manquent au compte.
+   Envoi à /api/challenge/participer, qui met à jour Supabase et les propriétés Klaviyo. */
+const sb = window.supabase ? window.supabase.createClient("https://zqwcermgfvcusuwjfviz.supabase.co",
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8",
+  { auth: { detectSessionInUrl: false } }) : null;
+let dejaSession = null;
+const dejaMeta = () => (dejaSession && dejaSession.user.user_metadata) || {};
+
+function dejaMode(mode) { // "inscription" | "login" | "form"
+  $("signup-form").hidden = mode !== "inscription";
+  $("deja-bar").hidden = mode !== "inscription";
+  $("deja-login").hidden = mode !== "login";
+  $("deja-form").hidden = mode !== "form";
+}
+
+async function dejaAfficherFormulaire(session) {
+  dejaSession = session;
+  const m = dejaMeta();
+  const user = session.user;
+  $("deja-prenom").textContent = m.prenom || "";
+  $("deja-email").textContent = user.email;
+  $("df-identite").hidden = !!(m.prenom && m.nom);
+  $("df-tentatives-field").hidden = Number.isInteger(m.tentatives_crpe);
+  if (m.telephone && !$("df-phone").value) $("df-phone").value = m.telephone;
+  // Déjà participant·e : on reprend son téléphone et son sujet
+  try {
+    const r = await fetch("/api/challenge/mon-inscription", { headers: { Authorization: "Bearer " + session.access_token } });
+    const j = await r.json();
+    if (j.inscrit) {
+      $("deja-statut").hidden = false;
+      $("df-submit").textContent = "Mettre à jour ma participation";
+      if (j.telephone) $("df-phone").value = j.telephone;
+      if (j.sujet_optionnel) $("df-sujet").value = j.sujet_optionnel;
+    }
+  } catch (e) {}
+  dejaMode("form");
+}
+
+$("deja-open").addEventListener("click", () => {
+  if (!sb) return;
+  dejaMode("login");
+  $("dl-email").focus();
+});
+$("deja-back").addEventListener("click", () => { dejaMode("inscription"); $("first_name").focus(); });
+$("deja-logout").addEventListener("click", async () => {
+  if (sb) await sb.auth.signOut();
+  dejaSession = null;
+  $("deja-statut").hidden = true;
+  $("df-submit").textContent = "Je participe au challenge";
+  dejaMode("inscription");
+});
+
+$("deja-login").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("dl-error").hidden = true;
+  const email = $("dl-email").value.trim().toLowerCase(), pwd = $("dl-password").value;
+  let ok = setError("dl-email", /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) ? "" : "Saisissez une adresse e-mail valide.");
+  ok = setError("dl-password", pwd ? "" : "Saisissez votre mot de passe.") && ok;
+  if (!ok) return;
+  const btn = $("dl-submit");
+  btn.disabled = true; btn.textContent = "Connexion…";
+  try {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password: pwd });
+    if (error) throw error;
+    await dejaAfficherFormulaire(data.session);
+    $("df-phone").focus();
+  } catch (err) {
+    const m = err.message || "";
+    $("dl-error").textContent = /invalid login credentials/i.test(m) ? "Adresse e-mail ou mot de passe incorrect. Mot de passe oublié ? Réinitialisez-le depuis « Se connecter » sur passcrpe.fr."
+      : /not confirmed/i.test(m) ? "Votre adresse e-mail n'est pas encore validée : cliquez sur le lien de l'e-mail de confirmation PassCRPE, puis reconnectez-vous."
+      : /rate limit/i.test(m) ? "Trop de tentatives. Réessayez dans quelques minutes."
+      : "La connexion n'a pas abouti. Réessayez, ou écrivez-nous à contact@passcrpe.fr.";
+    $("dl-error").hidden = false;
+  } finally {
+    btn.disabled = false; btn.textContent = "Se connecter";
+  }
+});
+
+$("deja-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  $("df-error").hidden = true;
+  const m = dejaMeta();
+  const d = {
+    prenom: m.prenom || $("df-prenom").value.trim(),
+    nom: m.nom || $("df-nom").value.trim(),
+    telephone: normalizePhone($("df-phone").value.trim()),
+    sujet_optionnel: $("df-sujet").value,
+    tentatives_crpe: Number.isInteger(m.tentatives_crpe) ? m.tentatives_crpe : ($("df-tentatives").value === "" ? null : Number($("df-tentatives").value)),
+  };
+  let ok = setError("df-prenom", d.prenom ? "" : "Indiquez votre prénom.");
+  ok = setError("df-nom", d.nom ? "" : "Indiquez votre nom.") && ok;
+  ok = setError("df-phone", d.telephone ? "" : "Saisissez un numéro valide, par exemple 06 12 34 56 78 : il est indispensable pour les binômes.") && ok;
+  ok = setError("df-sujet", d.sujet_optionnel ? "" : "Choisissez votre 3e sujet, ou « Aucun ».") && ok;
+  ok = setError("df-tentatives", d.tentatives_crpe !== null ? "" : "Indiquez combien de fois vous avez déjà passé le CRPE.") && ok;
+  if (!ok) { const bad = $("deja-form").querySelector('[aria-invalid="true"]'); if (bad) bad.focus(); return; }
+  const btn = $("df-submit"), label = btn.textContent;
+  btn.disabled = true; btn.textContent = "Enregistrement…";
+  try {
+    // Session à jour (jeton rafraîchi si besoin)
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { dejaMode("login"); throw Object.assign(new Error("Session expirée"), { handled: true }); }
+    const res = await fetch("/api/challenge/participer", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: "Bearer " + session.access_token },
+      body: JSON.stringify({ ...d, utm: SOURCE.utm, referrer: SOURCE.referrer }),
+    });
+    const json = await res.json().catch(() => ({}));
+    if (res.status === 410) { showClosed(); return; }
+    if (!res.ok || !json.ok) throw new Error(json.error || "Erreur " + res.status);
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push({ event: "sign_up_challenge_noel_2026", method: "compte_passcrpe" });
+    chargerCompteur();
+    $("thanks-confirm").remove();
+    $("thanks-account").textContent = "Le lien de votre tableau de bord vous est envoyé par e-mail : vous vous y connecterez avec l'adresse e-mail et le mot de passe de votre compte PassCRPE.";
+    showThanks(d.prenom);
+  } catch (err) {
+    if (err.handled) return;
+    console.error(err);
+    $("df-error").textContent = "L'inscription n'a pas pu être enregistrée. Vérifiez votre connexion puis réessayez.";
+    $("df-error").hidden = false;
+  } finally {
+    btn.disabled = false; btn.textContent = label;
+  }
+});
+
+// Déjà connecté·e sur PassCRPE (même navigateur) : formulaire court directement, sauf retour de confirmation
+if (sb && !location.hash.includes("access_token") && !location.hash.includes("error")) {
+  sb.auth.getSession().then(({ data }) => {
+    if (data && data.session && $("closed").hidden) dejaAfficherFormulaire(data.session);
+  }).catch(() => {});
+}
 
 function showThanks(firstName) {
   document.querySelector("main").hidden = true;

@@ -460,6 +460,56 @@ async function challengeCompteAcces(email, password, meta) {
   throw e;
 }
 
+// Enregistre une participation au challenge : ligne Supabase challenge_inscriptions, liste Klaviyo du challenge et
+// propriétés du profil. Utilisée par l'inscription (nouveau compte ou compte existant) et par la participation des
+// personnes déjà connectées à PassCRPE (/api/challenge/participer).
+async function challengeEnregistrer({ email, prenom, nom, tel, tentatives, sujetOptionnel, newsletter, partenaires, source,
+  userId, compteExistant, inscrireNewsletter, garderConsentements = false }) {
+  const dejaPasse = tentatives > 0 ? 'Oui' : 'Non';
+  const phoneAttrs = { phone_number: tel };
+  // Inscription déjà connue : on garde sa première source (premier contact) et sa première connexion au tableau de bord
+  const { data: dejaInscrit } = await supabaseAdmin.from('challenge_inscriptions')
+    .select('utm_source, referrer, premiere_connexion_dashboard_at')
+    .eq('challenge', 'copie-parfaite-noel-2026').eq('email', email).maybeSingle();
+  const sourceAEcrire = dejaInscrit && (dejaInscrit.utm_source || dejaInscrit.referrer) ? {} : source;
+  const dejaConnecte = !!dejaInscrit?.premiere_connexion_dashboard_at;
+  // Supabase : une ligne par candidat (réinscription = mise à jour du formulaire, le suivi n'est pas touché).
+  // Une erreur ici est journalisée mais ne bloque pas l'inscription Klaviyo.
+  const { error: sbError } = await supabaseAdmin.from('challenge_inscriptions').upsert({
+    ...sourceAEcrire,
+    challenge: 'copie-parfaite-noel-2026', prenom, nom, email, telephone: tel,
+    deja_passe_crpe: tentatives > 0, tentatives_crpe: tentatives, sujet_optionnel: sujetOptionnel,
+    ...(garderConsentements && dejaInscrit ? {} : { consent_conseils: newsletter, consent_partenaires: partenaires }),
+    ...(userId ? { user_id: userId } : {}),
+  }, { onConflict: 'challenge,email' });
+  if (sbError) console.error('[Supabase challenge]', sbError.message);
+  else challengeCountCache.at = 0; // nouvelle inscription : le compteur est relu à la prochaine demande
+  await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_CHALLENGE_NOEL_2026,
+    { ...(compteExistant ? {} : { parcours_signup: 'challengecopieparfaitenoel26' }),
+      tentatives_crpe: tentatives, deja_passe_crpe: dejaPasse, challenge_sujet_optionnel: sujetOptionnel, consent_partenaires: partenaires, consent_conseils: newsletter }, phoneAttrs, false);
+  // Profil déjà existant : la pipeline ne réécrit pas ses propriétés ni son téléphone, on les met à jour ici
+  // (un consentement déjà donné n'est jamais repassé à false)
+  await klaviyoSetProperties(email, {
+    // Compte créé par le challenge : parcours d'inscription « challengecopieparfaitenoel26 »
+    // (un compte PassCRPE déjà existant garde son parcours d'origine)
+    ...(compteExistant ? {} : { parcours_signup: 'challengecopieparfaitenoel26' }),
+    tentatives_crpe: tentatives,
+    deja_passe_crpe: dejaPasse,
+    challenge_sujet_optionnel: sujetOptionnel,
+    // Tous les inscrits au challenge, comptes PassCRPE existants compris
+    participe_challenge: true,
+    // Première connexion au tableau de bord du challenge : false à l'inscription, true à la première connexion
+    connexion_dashboard: dejaConnecte,
+    ...(sourceAEcrire.utm_source ? { challenge_utm_source: sourceAEcrire.utm_source } : {}),
+    ...(sourceAEcrire.utm_medium ? { challenge_utm_medium: sourceAEcrire.utm_medium } : {}),
+    ...(sourceAEcrire.utm_campaign ? { challenge_utm_campaign: sourceAEcrire.utm_campaign } : {}),
+    ...(partenaires ? { consent_partenaires: true } : {}),
+    ...(newsletter ? { consent_conseils: true } : {}),
+  }, phoneAttrs);
+  if (newsletter && inscrireNewsletter)
+    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours_newsletter: 'passcrpe' }, phoneAttrs, true);
+}
+
 app.post('/api/challenge/subscribe', async (req, res) => {
   if (!klaviyoGuard(res)) return;
   if (Date.now() > CHALLENGE_NOEL_2026_FIN_INSCRIPTIONS.getTime())
@@ -471,7 +521,6 @@ app.post('/api/challenge/subscribe', async (req, res) => {
   const tel = telephoneE164(b.telephone);
   // Nombre de fois où le CRPE a déjà été passé (0 = première fois, 3 = 3 fois ou plus), comme à l'inscription au site
   const tentatives = Number.isInteger(b.tentatives_crpe) && b.tentatives_crpe >= 0 && b.tentatives_crpe <= 3 ? b.tentatives_crpe : null;
-  const dejaPasse = tentatives === null ? null : tentatives > 0 ? 'Oui' : 'Non';
   const sujetOptionnel = CHALLENGE_SUJETS_OPTIONNELS.has(b.sujet_optionnel) ? b.sujet_optionnel : null;
   const password = typeof b.password === 'string' ? b.password : '';
   if (!prenom || !nom || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !tel || tentatives === null || !sujetOptionnel
@@ -479,7 +528,6 @@ app.post('/api/challenge/subscribe', async (req, res) => {
     return res.status(400).json({ error: 'Données invalides.' });
   const newsletter = b.consent_conseils === true;
   const partenaires = b.consent_partenaires === true;
-  const phoneAttrs = { phone_number: tel };
   // Source de l'inscription : paramètres UTM du lien et page d'origine, captés par la page du challenge
   const texteCourt = (v) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, 150) : null);
   const u = b.utm && typeof b.utm === 'object' ? b.utm : {};
@@ -499,52 +547,60 @@ app.post('/api/challenge/subscribe', async (req, res) => {
   }
   if (compte.mauvaisMotDePasse)
     return res.status(409).json({ code: 'mot_de_passe', error: "Un compte PassCRPE existe déjà avec cette adresse : indiquez le mot de passe de ce compte. Mot de passe oublié ? Réinitialisez-le depuis « Se connecter » sur passcrpe.fr." });
-  // Inscription déjà connue : on garde sa première source (premier contact) et sa première connexion au tableau de bord
-  const { data: dejaInscrit } = await supabaseAdmin.from('challenge_inscriptions')
-    .select('utm_source, referrer, premiere_connexion_dashboard_at')
-    .eq('challenge', 'copie-parfaite-noel-2026').eq('email', email).maybeSingle();
-  const sourceAEcrire = dejaInscrit && (dejaInscrit.utm_source || dejaInscrit.referrer) ? {} : source;
-  const dejaConnecte = !!dejaInscrit?.premiere_connexion_dashboard_at;
-  // Supabase : une ligne par candidat (réinscription = mise à jour du formulaire, le suivi n'est pas touché).
-  // Une erreur ici est journalisée mais ne bloque pas l'inscription Klaviyo.
-  const { error: sbError } = await supabaseAdmin.from('challenge_inscriptions').upsert({
-    ...sourceAEcrire,
-    challenge: 'copie-parfaite-noel-2026', prenom, nom, email, telephone: tel,
-    deja_passe_crpe: tentatives > 0, tentatives_crpe: tentatives, sujet_optionnel: sujetOptionnel,
-    consent_conseils: newsletter, consent_partenaires: partenaires,
-    ...(compte.userId ? { user_id: compte.userId } : {}),
-  }, { onConflict: 'challenge,email' });
-  if (sbError) console.error('[Supabase challenge]', sbError.message);
-  else challengeCountCache.at = 0; // nouvelle inscription : le compteur est relu à la prochaine demande
   try {
-    await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_CHALLENGE_NOEL_2026,
-      { ...(compte.existant ? {} : { parcours_signup: 'challengecopieparfaitenoel26' }),
-        tentatives_crpe: tentatives, deja_passe_crpe: dejaPasse, challenge_sujet_optionnel: sujetOptionnel, consent_partenaires: partenaires, consent_conseils: newsletter }, phoneAttrs, false);
-    // Profil déjà existant : la pipeline ne réécrit pas ses propriétés, on ajoute celles du challenge
-    // (un consentement déjà donné n'est jamais repassé à false)
-    await klaviyoSetProperties(email, {
-      // Compte créé par le challenge : parcours d'inscription « challengecopieparfaitenoel26 »
-      // (un compte PassCRPE déjà existant garde son parcours d'origine)
-      ...(compte.existant ? {} : { parcours_signup: 'challengecopieparfaitenoel26' }),
-      tentatives_crpe: tentatives,
-      deja_passe_crpe: dejaPasse,
-      challenge_sujet_optionnel: sujetOptionnel,
-      // Tous les inscrits au challenge, comptes PassCRPE existants compris
-      participe_challenge: true,
-      // Première connexion au tableau de bord du challenge : false à l'inscription, true à la première connexion
-      connexion_dashboard: dejaConnecte,
-      ...(sourceAEcrire.utm_source ? { challenge_utm_source: sourceAEcrire.utm_source } : {}),
-      ...(sourceAEcrire.utm_medium ? { challenge_utm_medium: sourceAEcrire.utm_medium } : {}),
-      ...(sourceAEcrire.utm_campaign ? { challenge_utm_campaign: sourceAEcrire.utm_campaign } : {}),
-      ...(partenaires ? { consent_partenaires: true } : {}),
-      ...(newsletter ? { consent_conseils: true } : {}),
-    });
-    if (newsletter)
-      await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours_newsletter: 'passcrpe' }, phoneAttrs, true);
+    await challengeEnregistrer({ email, prenom, nom, tel, tentatives, sujetOptionnel, newsletter, partenaires, source,
+      userId: compte.userId, compteExistant: compte.existant, inscrireNewsletter: true });
     res.json({ ok: true, compte_existant: compte.existant, email_a_confirmer: compte.aConfirmer });
   } catch (err) {
     console.error('[Klaviyo challenge]', err.message);
     res.status(500).json({ error: err.message });
+  }
+});
+
+/* ── Challenge : personnes déjà inscrites sur PassCRPE ──
+   Connectées sur la page du challenge, elles ne remplissent que les informations manquantes (téléphone pour le binôme,
+   sujet optionnel, et prénom, nom ou nombre de passages du CRPE s'ils manquent à leur compte). */
+app.get('/api/challenge/mon-inscription', async (req, res) => {
+  const user = await getAuthenticatedUser(req);
+  if (!user) return res.status(401).json({ error: 'Non connecté.' });
+  const { data } = await supabaseAdmin.from('challenge_inscriptions')
+    .select('telephone, sujet_optionnel').eq('challenge', 'copie-parfaite-noel-2026')
+    .eq('email', String(user.email || '').toLowerCase()).maybeSingle();
+  res.json({ inscrit: !!data, telephone: data?.telephone || null, sujet_optionnel: data?.sujet_optionnel || null });
+});
+
+app.post('/api/challenge/participer', async (req, res) => {
+  if (!klaviyoGuard(res)) return;
+  if (Date.now() > CHALLENGE_NOEL_2026_FIN_INSCRIPTIONS.getTime())
+    return res.status(410).json({ error: 'Les inscriptions au challenge sont closes.' });
+  const user = await getAuthenticatedUser(req);
+  if (!user) return res.status(401).json({ error: 'Non connecté.' });
+  const meta = user.user_metadata || {};
+  const b = req.body || {};
+  const email = String(user.email || '').toLowerCase();
+  const prenom = String(meta.prenom || b.prenom || '').trim().slice(0, 80);
+  const nom = String(meta.nom || b.nom || '').trim().slice(0, 80);
+  const tel = telephoneE164(b.telephone);
+  const tentativesValide = (v) => Number.isInteger(v) && v >= 0 && v <= 3;
+  const tentatives = tentativesValide(meta.tentatives_crpe) ? meta.tentatives_crpe : tentativesValide(b.tentatives_crpe) ? b.tentatives_crpe : null;
+  const sujetOptionnel = CHALLENGE_SUJETS_OPTIONNELS.has(b.sujet_optionnel) ? b.sujet_optionnel : null;
+  if (!email || !prenom || !nom || !tel || tentatives === null || !sujetOptionnel)
+    return res.status(400).json({ error: 'Données invalides.' });
+  const texteCourt = (v) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, 150) : null);
+  const u = b.utm && typeof b.utm === 'object' ? b.utm : {};
+  const source = {
+    utm_source: texteCourt(u.source), utm_medium: texteCourt(u.medium), utm_campaign: texteCourt(u.campaign),
+    utm_content: texteCourt(u.content), utm_term: texteCourt(u.term), referrer: texteCourt(b.referrer),
+  };
+  try {
+    // Consentements : ceux déjà donnés sur le compte PassCRPE (aucune nouvelle inscription à la newsletter ici)
+    await challengeEnregistrer({ email, prenom, nom, tel, tentatives, sujetOptionnel,
+      newsletter: meta.consent_conseils === true, partenaires: meta.consent_partenaires === true, source,
+      userId: user.id, compteExistant: true, inscrireNewsletter: false, garderConsentements: true });
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('[Challenge participer]', err.message);
+    res.status(500).json({ error: "L'inscription n'a pas pu être enregistrée." });
   }
 });
 
@@ -593,14 +649,20 @@ async function klaviyoSetEmailVerified(email) {
 // Dates envoyées à Klaviyo au format « 2026-10-27T13:08:26Z » (ISO 8601 sans fractions de seconde), reconnu comme date
 // pour les flows ; Supabase renvoie des microsecondes (« …26.126101Z »)
 const dateKlaviyo = d => new Date(d).toISOString().slice(0, 19) + 'Z';
-async function klaviyoSetProperties(email, properties) {
+async function klaviyoSetProperties(email, properties, attributs = {}) {
   const searchRes = await fetch(`${KLAVIYO_API_BASE}/profiles/?filter=equals(email,"${encodeURIComponent(email)}")`, { headers: klaviyoHeaders() });
   const profileId = (await searchRes.json()).data?.[0]?.id;
   if (!profileId) { console.warn(`[Klaviyo] Profil introuvable pour ${email}`); return; }
   const patchRes = await fetch(`${KLAVIYO_API_BASE}/profiles/${profileId}`, {
     method: 'PATCH', headers: klaviyoHeaders(),
-    body: JSON.stringify({ data: { type: 'profile', id: profileId, attributes: { properties } } }),
+    body: JSON.stringify({ data: { type: 'profile', id: profileId, attributes: { ...attributs, properties } } }),
   });
+  // Numéro refusé par Klaviyo : les propriétés sont enregistrées sans le téléphone
+  if (patchRes.status === 400 && attributs.phone_number) {
+    const { phone_number, ...sansTel } = attributs;
+    console.warn(`[Klaviyo] numéro refusé pour ${email} (${phone_number}), propriétés enregistrées sans téléphone`);
+    return klaviyoSetProperties(email, properties, sansTel);
+  }
   if (!patchRes.ok) { const err = await patchRes.json(); throw new Error(err.errors?.[0]?.detail || `Erreur PATCH profil: ${patchRes.status}`); }
 }
 
