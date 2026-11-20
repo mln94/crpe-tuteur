@@ -466,7 +466,8 @@ async function challengeCompteAcces(email, password, meta) {
 async function challengeEnregistrer({ email, prenom, nom, tel, tentatives, sujetOptionnel, newsletter, partenaires, source,
   userId, compteExistant, inscrireNewsletter, garderConsentements = false }) {
   const dejaPasse = tentatives > 0 ? 'Oui' : 'Non';
-  const phoneAttrs = { phone_number: tel };
+  // Téléphone facultatif : jamais effacé s'il n'est pas indiqué
+  const phoneAttrs = tel ? { phone_number: tel } : {};
   // Inscription déjà connue : on garde sa première source (premier contact) et sa première connexion au tableau de bord
   const { data: dejaInscrit } = await supabaseAdmin.from('challenge_inscriptions')
     .select('utm_source, referrer, premiere_connexion_dashboard_at')
@@ -477,7 +478,7 @@ async function challengeEnregistrer({ email, prenom, nom, tel, tentatives, sujet
   // Une erreur ici est journalisée mais ne bloque pas l'inscription Klaviyo.
   const { error: sbError } = await supabaseAdmin.from('challenge_inscriptions').upsert({
     ...sourceAEcrire,
-    challenge: 'copie-parfaite-noel-2026', prenom, nom, email, telephone: tel,
+    challenge: 'copie-parfaite-noel-2026', prenom, nom, email, ...(tel ? { telephone: tel } : {}),
     deja_passe_crpe: tentatives > 0, tentatives_crpe: tentatives, sujet_optionnel: sujetOptionnel,
     ...(garderConsentements && dejaInscrit ? {} : { consent_conseils: newsletter, consent_partenaires: partenaires }),
     ...(userId ? { user_id: userId } : {}),
@@ -523,7 +524,7 @@ app.post('/api/challenge/subscribe', async (req, res) => {
   const tentatives = Number.isInteger(b.tentatives_crpe) && b.tentatives_crpe >= 0 && b.tentatives_crpe <= 3 ? b.tentatives_crpe : null;
   const sujetOptionnel = CHALLENGE_SUJETS_OPTIONNELS.has(b.sujet_optionnel) ? b.sujet_optionnel : null;
   const password = typeof b.password === 'string' ? b.password : '';
-  if (!prenom || !nom || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !tel || tentatives === null || !sujetOptionnel
+  if (!prenom || !nom || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || tentatives === null || !sujetOptionnel
       || password.length < 8 || password.length > 72)
     return res.status(400).json({ error: 'Données invalides.' });
   const newsletter = b.consent_conseils === true;
@@ -558,8 +559,7 @@ app.post('/api/challenge/subscribe', async (req, res) => {
 });
 
 /* ── Challenge : personnes déjà inscrites sur PassCRPE ──
-   Connectées sur la page du challenge, elles ne remplissent que les informations manquantes (téléphone pour le binôme,
-   sujet optionnel, et prénom, nom ou nombre de passages du CRPE s'ils manquent à leur compte). */
+   Connectées sur la page du challenge, elles ne remplissent que les informations manquantes (sujet optionnel, téléphone facultatif, et prénom, nom ou nombre de passages du CRPE s'ils manquent à leur compte). */
 app.get('/api/challenge/mon-inscription', async (req, res) => {
   const user = await getAuthenticatedUser(req);
   if (!user) return res.status(401).json({ error: 'Non connecté.' });
@@ -584,7 +584,7 @@ app.post('/api/challenge/participer', async (req, res) => {
   const tentativesValide = (v) => Number.isInteger(v) && v >= 0 && v <= 3;
   const tentatives = tentativesValide(meta.tentatives_crpe) ? meta.tentatives_crpe : tentativesValide(b.tentatives_crpe) ? b.tentatives_crpe : null;
   const sujetOptionnel = CHALLENGE_SUJETS_OPTIONNELS.has(b.sujet_optionnel) ? b.sujet_optionnel : null;
-  if (!email || !prenom || !nom || !tel || tentatives === null || !sujetOptionnel)
+  if (!email || !prenom || !nom || tentatives === null || !sujetOptionnel)
     return res.status(400).json({ error: 'Données invalides.' });
   const texteCourt = (v) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, 150) : null);
   const u = b.utm && typeof b.utm === 'object' ? b.utm : {};
