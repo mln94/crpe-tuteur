@@ -428,20 +428,33 @@ app.post('/api/challenge/dashboard-connexion', async (req, res) => {
 
 // Compte Supabase du challenge : création (adresse considérée comme confirmée, l'accès est envoyé par Klaviyo),
 // ou vérification du mot de passe si un compte existe déjà. Renvoie { userId, existant, mauvaisMotDePasse }.
+// Après clic sur le lien de confirmation, la personne arrive connectée sur son tableau de bord du challenge
+const CHALLENGE_NOEL_2026_DASHBOARD_URL = 'https://www.passcrpe.fr/copie-parfaite-noel/tableau-de-bord';
+
+// Inscription classique : compte Supabase créé par signUp, avec l'e-mail de confirmation Supabase
+// (envoyé par le SMTP du projet). Compte PassCRPE déjà existant : le mot de passe saisi doit être le sien.
 async function challengeCompteAcces(email, password, meta) {
-  const { data, error } = await supabaseAdmin.auth.admin.createUser({
-    email, password, email_confirm: true,
-    user_metadata: { ...meta, challenge: 'copie-parfaite-noel-2026', parcours: 'challengecopieparfaitenoel26' },
-  });
-  if (!error) return { userId: data.user.id, existant: false };
-  if (error.code !== 'email_exists' && !/already been registered/i.test(error.message)) throw error;
   // Client à part, sans session persistée, pour ne pas toucher à supabaseAdmin
-  const verif = createClient(process.env.VITE_SUPABASE_URL, process.env.VITE_SUPABASE_ANON_KEY,
+  const pub = createClient(process.env.VITE_SUPABASE_URL, process.env.VITE_SUPABASE_ANON_KEY,
     { auth: { persistSession: false, autoRefreshToken: false } });
-  const { data: s, error: e } = await verif.auth.signInWithPassword({ email, password });
-  if (!e) return { userId: s.user.id, existant: true };
-  // Compte jamais confirmé : on l'accepte tel quel (la personne utilisera « Mot de passe oublié » au besoin)
-  if (e.code === 'email_not_confirmed') return { userId: null, existant: true };
+  const redirect = { emailRedirectTo: CHALLENGE_NOEL_2026_DASHBOARD_URL };
+  const { data, error } = await pub.auth.signUp({
+    email, password,
+    options: { ...redirect, data: { ...meta, challenge: 'copie-parfaite-noel-2026', parcours: 'challengecopieparfaitenoel26' } },
+  });
+  if (error && error.code !== 'user_already_exists' && !/already registered/i.test(error.message)) throw error;
+  // Nouveau compte : Supabase renvoie un utilisateur avec au moins une identité, et l'e-mail de confirmation est parti
+  if (!error && data?.user?.identities?.length)
+    return { userId: data.user.id, existant: false, aConfirmer: !data.user.email_confirmed_at };
+  // Adresse déjà connue : on vérifie le mot de passe du compte existant
+  const { data: s, error: e } = await pub.auth.signInWithPassword({ email, password });
+  if (!e) return { userId: s.user.id, existant: true, aConfirmer: false };
+  // Compte jamais confirmé (bon mot de passe) : on renvoie l'e-mail de confirmation
+  if (e.code === 'email_not_confirmed' || /not confirmed/i.test(e.message)) {
+    const { error: r } = await pub.auth.resend({ type: 'signup', email, options: redirect });
+    if (r) console.error('[Supabase challenge] renvoi confirmation :', r.message);
+    return { userId: null, existant: true, aConfirmer: true };
+  }
   if (e.code === 'invalid_credentials' || /invalid login credentials/i.test(e.message)) return { mauvaisMotDePasse: true };
   throw e;
 }
@@ -473,13 +486,14 @@ app.post('/api/challenge/subscribe', async (req, res) => {
     utm_source: texteCourt(u.source), utm_medium: texteCourt(u.medium), utm_campaign: texteCourt(u.campaign),
     utm_content: texteCourt(u.content), utm_term: texteCourt(u.term), referrer: texteCourt(b.referrer),
   };
-  // Compte d'accès à la plateforme (e-mail + mot de passe choisi à l'inscription). Pas d'e-mail de confirmation
-  // Supabase : l'e-mail d'accès part du flow Klaviyo de la liste du challenge. Compte PassCRPE déjà existant :
-  // le mot de passe saisi doit être le sien (il n'est jamais modifié ici).
+  // Compte d'accès à la plateforme (e-mail + mot de passe choisi à l'inscription), avec e-mail de confirmation
+  // Supabase à valider. Compte PassCRPE déjà existant : le mot de passe saisi doit être le sien (jamais modifié ici).
   let compte;
   try { compte = await challengeCompteAcces(email, password, { prenom, nom, telephone: tel, tentatives_crpe: tentatives, consent_conseils: newsletter, consent_partenaires: partenaires }); }
   catch (err) {
     console.error('[Supabase challenge compte]', err.message);
+    if (err.status === 429 || /rate limit/i.test(err.message))
+      return res.status(429).json({ error: "Trop d'inscriptions en même temps : réessayez dans quelques minutes." });
     return res.status(500).json({ error: "La création de l'accès à la plateforme n'a pas abouti." });
   }
   if (compte.mauvaisMotDePasse)
@@ -526,7 +540,7 @@ app.post('/api/challenge/subscribe', async (req, res) => {
     });
     if (newsletter)
       await klaviyoSubscribePipeline(email, prenom, nom, KLAVIYO_LIST_NEWSLETTER, { parcours_newsletter: 'passcrpe' }, phoneAttrs, true);
-    res.json({ ok: true, compte_existant: compte.existant });
+    res.json({ ok: true, compte_existant: compte.existant, email_a_confirmer: compte.aConfirmer });
   } catch (err) {
     console.error('[Klaviyo challenge]', err.message);
     res.status(500).json({ error: err.message });
