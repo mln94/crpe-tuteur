@@ -20,7 +20,13 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://www.passcrpe.fr/copie-parfaite-noel">
 <meta property="og:title" content="La Copie Parfaite avant Noël · Challenge CRPE gratuit">
-<meta property="og:image" content="https://www.passcrpe.fr/images/partage-passcrpe.jpg">
+<meta property="og:image" content="https://www.passcrpe.fr/images/partage-copie-parfaite-noel.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Challenge CRPE gratuit La Copie Parfaite avant Noël, du 10 au 20 décembre 2026">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://www.passcrpe.fr/images/partage-copie-parfaite-noel.jpg">
 <meta property="og:description" content="3 sujets blancs du CRPE du 10 au 20 décembre, avant les fêtes. Gratuit, inscriptions jusqu'au 8 décembre.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -355,6 +361,7 @@ form .btn { justify-content: center; font-size: 1.05rem; }
 /* Compteur d'inscrits */
 .hero-top { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 22px; }
 .hero-top .counter { font-weight: 600; }
+.counter[hidden] { display: none !important; }
 .counter { display: inline-flex; align-items: center; gap: 10px; font-size: .98rem; color: var(--ink); margin: 0;
   background: var(--paper); border: 2px solid var(--ink); border-radius: 99px; padding: 6px 16px 6px 12px; box-shadow: 3px 3px 0 var(--ok); }
 .counter .dot { width: 10px; height: 10px; border-radius: 50%; background: var(--ok); box-shadow: 0 0 0 4px color-mix(in srgb, var(--ok) 22%, transparent); flex: none; animation: pulse 1.8s ease-in-out infinite; }
@@ -420,7 +427,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
       <div class="hero-text">
         <div class="hero-top">
           <span class="hero-free">Challenge CRPE gratuit</span>
-          <p class="counter" data-counter><span class="dot" aria-hidden="true"></span><span data-counter-txt><b>0</b> candidat inscrit</span></p>
+          <p class="counter" data-counter hidden><span class="dot" aria-hidden="true"></span><span data-counter-txt><b>0</b> candidat inscrit</span></p>
         </div>
         <p class="eyebrow">La Copie Parfaite avant Noël · du 10 au 20 décembre 2026</p>
         <h1>3 sujets blancs du CRPE. <em>Des copies parfaites</em> avant Noël.</h1>
@@ -655,7 +662,7 @@ footer .wrap { padding-block: 28px; display: flex; flex-wrap: wrap; justify-cont
         <span class="badge-free">Gratuit !</span>
         <h2>Prêt·e à rendre une copie parfaite avant Noël ?</h2>
         <p class="lead">Inscriptions ouvertes jusqu'au <b>8 décembre 2026</b>, jour de l'ouverture de votre tableau de bord. Les sujets y arrivent le 10 décembre à minuit, résultats le 20 décembre.</p>
-        <p class="counter" data-counter><span class="dot" aria-hidden="true"></span><span data-counter-txt><b>0</b> candidat inscrit</span></p>
+        <p class="counter" data-counter hidden><span class="dot" aria-hidden="true"></span><span data-counter-txt><b>0</b> candidat inscrit</span></p>
         <ul>
           <li>Trois sujets à rendre : maths, français et un sujet optionnel au choix</li>
           <li>Votre accès à la plateforme par e-mail, juste après l'inscription</li>
@@ -857,6 +864,20 @@ function validate() {
   return ok ? d : null;
 }
 
+/* Source de l'inscription : paramètres UTM du lien d'arrivée et page d'origine (gardés pendant la visite) */
+const SOURCE = (function () {
+  const q = new URLSearchParams(location.search), utm = {};
+  ["source", "medium", "campaign", "content", "term"].forEach(k => { const v = q.get("utm_" + k); if (v) utm[k] = v; });
+  let ref = document.referrer && !document.referrer.startsWith(location.origin) ? document.referrer : "";
+  try {
+    const memo = JSON.parse(sessionStorage.getItem("challenge_source") || "null");
+    if (!Object.keys(utm).length && memo) return memo;
+    const val = { utm, referrer: ref };
+    sessionStorage.setItem("challenge_source", JSON.stringify(val));
+    return val;
+  } catch { return { utm, referrer: ref }; }
+})();
+
 async function sendSignup(d) {
   const res = await fetch("/api/challenge/subscribe", {
     method: "POST",
@@ -864,6 +885,7 @@ async function sendSignup(d) {
     body: JSON.stringify({
       prenom: d.first_name, nom: d.last_name, email: d.email, password: d.password, telephone: d.phone,
       tentatives_crpe: Number(d.deja_passe), sujet_optionnel: d.sujet_optionnel, consent_conseils: d.newsletter, consent_partenaires: d.partners,
+      utm: SOURCE.utm, referrer: SOURCE.referrer,
     }),
   });
   const json = await res.json().catch(() => ({}));
@@ -904,11 +926,13 @@ if (new Date() > CHALLENGE.SIGNUP_DEADLINE) showClosed();
 // Compteur d'inscrits (table Supabase challenge_inscriptions, via le serveur) : il augmente à chaque inscription.
 // Relu toutes les 30 s tant que la page est visible, et juste après sa propre inscription.
 let compteurActuel = null;
+// Le compteur n'apparaît qu'à partir de 20 inscrits
+const COMPTEUR_SEUIL = 20;
 function afficherCompteur(n) {
   const texte = `<b>${n.toLocaleString("fr-FR")}</b> ${n > 1 ? "candidats inscrits" : "candidat inscrit"}`;
   document.querySelectorAll("[data-counter-txt]").forEach(el => { el.innerHTML = texte; });
   document.querySelectorAll("[data-counter]").forEach(el => {
-    el.hidden = false;
+    el.hidden = n < COMPTEUR_SEUIL;
     if (compteurActuel !== null && n > compteurActuel) { el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump"); }
   });
   compteurActuel = n;

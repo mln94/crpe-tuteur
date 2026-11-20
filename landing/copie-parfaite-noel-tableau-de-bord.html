@@ -177,6 +177,12 @@ footer { text-align: center; font-size: .82rem; color: var(--muted); padding: 0 
   // Même projet Supabase que le site : une session ouverte sur passcrpe.fr est reprise ici
   var sb = window.supabase.createClient('https://zqwcermgfvcusuwjfviz.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8');
 
+  // Première connexion au tableau de bord : enregistrée côté serveur (Supabase + Klaviyo connexion_dashboard)
+  function signalerConnexion(session) {
+    if (!session || !session.access_token) return;
+    fetch("/api/challenge/dashboard-connexion", { method: "POST", headers: { Authorization: "Bearer " + session.access_token } })
+      .catch(function () {});
+  }
   function showDashboard(user) {
     var prenom = (user.user_metadata && user.user_metadata.prenom) || "";
     $("done-title").textContent = prenom ? "Bienvenue " + prenom + " !" : "Bienvenue dans le challenge !";
@@ -191,7 +197,7 @@ footer { text-align: center; font-size: .82rem; color: var(--muted); padding: 0 
   }
 
   sb.auth.getSession().then(function (r) {
-    if (r.data && r.data.session) showDashboard(r.data.session.user);
+    if (r.data && r.data.session) { showDashboard(r.data.session.user); signalerConnexion(r.data.session); }
   });
 
   $("toggle").addEventListener("click", function () {
@@ -216,6 +222,7 @@ footer { text-align: center; font-size: .82rem; color: var(--muted); padding: 0 
       if (res.error) throw res.error;
       window.dataLayer && dataLayer.push({ event: "challenge_tableau_de_bord_connexion" });
       showDashboard(res.data.user);
+      signalerConnexion(res.data.session);
     } catch (err) {
       var m = err.message || "";
       msg.textContent = /invalid login credentials/i.test(m) ? "Adresse e-mail ou mot de passe incorrect. Mot de passe oublié ? Utilisez le lien au-dessus du champ."

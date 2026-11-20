@@ -407,6 +407,25 @@ app.get('/api/challenge/count', async (req, res) => {
   res.json({ count: challengeCountCache.count });
 });
 
+// Première connexion au tableau de bord du challenge : date enregistrée dans Supabase (une seule fois)
+// et propriété Klaviyo connexion_dashboard passée à true. Appelée par la page du tableau de bord après connexion.
+app.post('/api/challenge/dashboard-connexion', async (req, res) => {
+  const user = await getAuthenticatedUser(req);
+  if (!user) return res.status(401).json({ error: 'Non connecté.' });
+  const email = String(user.email || '').toLowerCase();
+  const { data: rows, error } = await supabaseAdmin.from('challenge_inscriptions')
+    .update({ premiere_connexion_dashboard_at: new Date().toISOString() })
+    .eq('challenge', 'copie-parfaite-noel-2026').eq('email', email).is('premiere_connexion_dashboard_at', null)
+    .select('id');
+  if (error) { console.error('[Supabase dashboard connexion]', error.message); return res.status(500).json({ error: 'Erreur.' }); }
+  const premiere = rows.length > 0;
+  if (premiere && process.env.KLAVIYO_PRIVATE_API_KEY) {
+    try { await klaviyoSetProperties(email, { connexion_dashboard: true, premiere_connexion_dashboard: new Date().toISOString() }); }
+    catch (err) { console.error('[Klaviyo dashboard connexion]', err.message); }
+  }
+  res.json({ ok: true, premiere });
+});
+
 // Compte Supabase du challenge : création (adresse considérée comme confirmée, l'accès est envoyé par Klaviyo),
 // ou vérification du mot de passe si un compte existe déjà. Renvoie { userId, existant, mauvaisMotDePasse }.
 async function challengeCompteAcces(email, password, meta) {
@@ -447,6 +466,13 @@ app.post('/api/challenge/subscribe', async (req, res) => {
   const newsletter = b.consent_conseils === true;
   const partenaires = b.consent_partenaires === true;
   const phoneAttrs = { phone_number: tel };
+  // Source de l'inscription : paramètres UTM du lien et page d'origine, captés par la page du challenge
+  const texteCourt = (v) => (typeof v === 'string' && v.trim() ? v.trim().slice(0, 150) : null);
+  const u = b.utm && typeof b.utm === 'object' ? b.utm : {};
+  const source = {
+    utm_source: texteCourt(u.source), utm_medium: texteCourt(u.medium), utm_campaign: texteCourt(u.campaign),
+    utm_content: texteCourt(u.content), utm_term: texteCourt(u.term), referrer: texteCourt(b.referrer),
+  };
   // Compte d'accès à la plateforme (e-mail + mot de passe choisi à l'inscription). Pas d'e-mail de confirmation
   // Supabase : l'e-mail d'accès part du flow Klaviyo de la liste du challenge. Compte PassCRPE déjà existant :
   // le mot de passe saisi doit être le sien (il n'est jamais modifié ici).
@@ -458,9 +484,16 @@ app.post('/api/challenge/subscribe', async (req, res) => {
   }
   if (compte.mauvaisMotDePasse)
     return res.status(409).json({ code: 'mot_de_passe', error: "Un compte PassCRPE existe déjà avec cette adresse : indiquez le mot de passe de ce compte. Mot de passe oublié ? Réinitialisez-le depuis « Se connecter » sur passcrpe.fr." });
+  // Inscription déjà connue : on garde sa première source (premier contact) et sa première connexion au tableau de bord
+  const { data: dejaInscrit } = await supabaseAdmin.from('challenge_inscriptions')
+    .select('utm_source, referrer, premiere_connexion_dashboard_at')
+    .eq('challenge', 'copie-parfaite-noel-2026').eq('email', email).maybeSingle();
+  const sourceAEcrire = dejaInscrit && (dejaInscrit.utm_source || dejaInscrit.referrer) ? {} : source;
+  const dejaConnecte = !!dejaInscrit?.premiere_connexion_dashboard_at;
   // Supabase : une ligne par candidat (réinscription = mise à jour du formulaire, le suivi n'est pas touché).
   // Une erreur ici est journalisée mais ne bloque pas l'inscription Klaviyo.
   const { error: sbError } = await supabaseAdmin.from('challenge_inscriptions').upsert({
+    ...sourceAEcrire,
     challenge: 'copie-parfaite-noel-2026', prenom, nom, email, telephone: tel,
     deja_passe_crpe: tentatives > 0, tentatives_crpe: tentatives, sujet_optionnel: sujetOptionnel,
     consent_conseils: newsletter, consent_partenaires: partenaires,
@@ -481,6 +514,13 @@ app.post('/api/challenge/subscribe', async (req, res) => {
       tentatives_crpe: tentatives,
       deja_passe_crpe: dejaPasse,
       challenge_sujet_optionnel: sujetOptionnel,
+      // Tous les inscrits au challenge, comptes PassCRPE existants compris
+      participe_challenge: true,
+      // Première connexion au tableau de bord du challenge : false à l'inscription, true à la première connexion
+      connexion_dashboard: dejaConnecte,
+      ...(sourceAEcrire.utm_source ? { challenge_utm_source: sourceAEcrire.utm_source } : {}),
+      ...(sourceAEcrire.utm_medium ? { challenge_utm_medium: sourceAEcrire.utm_medium } : {}),
+      ...(sourceAEcrire.utm_campaign ? { challenge_utm_campaign: sourceAEcrire.utm_campaign } : {}),
       ...(partenaires ? { consent_partenaires: true } : {}),
       ...(newsletter ? { consent_conseils: true } : {}),
     });
