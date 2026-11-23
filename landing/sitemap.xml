@@ -28,7 +28,7 @@
   <!-- Blog -->
   <url>
     <loc>https://www.passcrpe.fr/blog</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -276,6 +276,24 @@
   <url>
     <loc>https://www.passcrpe.fr/blog/crpe-2028-fin-concours-bac5-titulaires-master</loc>
     <lastmod>2026-11-15</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.passcrpe.fr/blog/crpe-reflexion-argumentee-methode-developpement</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.passcrpe.fr/blog/crpe-oral-1-expliciter-mobiliser-notion</loc>
+    <lastmod>2026-11-23</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.passcrpe.fr/blog/grands-courants-pedagogiques-crpe</loc>
+    <lastmod>2026-11-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
