@@ -23,6 +23,7 @@
     { "source": "/blog/crpe-reflexion-argumentee-methode-developpement", "destination": "/crpe-reflexion-argumentee-methode-developpement.html" },
     { "source": "/blog/crpe-oral-1-expliciter-mobiliser-notion", "destination": "/crpe-oral-1-expliciter-mobiliser-notion.html" },
     { "source": "/blog/grands-courants-pedagogiques-crpe", "destination": "/grands-courants-pedagogiques-crpe.html" },
+    { "source": "/blog/production-ecrits-ecole-crpe", "destination": "/production-ecrits-ecole-crpe.html" },
     { "source": "/crpe-par-academie", "destination": "/crpe-par-academie.html" },
     { "source": "/crpe-par-academie-2027", "destination": "/crpe-par-academie-2027.html" },
     { "source": "/crpe-par-academie/:slug", "destination": "/academies/:slug.html" },
