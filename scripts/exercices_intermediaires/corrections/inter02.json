@@ -1,0 +1,78 @@
+[
+  {
+    "source_id": 1,
+    "remplacements": [
+      [
+        "on lui en eût donné six",
+        "on lui en eût donné à peine six"
+      ]
+    ]
+  },
+  {
+    "source_id": 6,
+    "remplacements": [
+      [
+        "4. La formule « tout est au mieux dans le monde » parodie une philosophie de l'époque.",
+        "4. L'expression « ce meilleur des mondes possibles » parodie une philosophie de l'époque."
+      ]
+    ]
+  },
+  {
+    "source_id": 21,
+    "remplacements": [
+      [
+        "3. Ce passage se situe au tout début du Horla, récit qui bascule ensuite dans l'angoisse.",
+        "3. *Le Horla*, dont ce texte s'inspire, commence par l'évocation d'un bonheur paisible, puis bascule dans l'angoisse."
+      ]
+    ]
+  },
+  {
+    "source_id": 73,
+    "remplacements": [
+      [
+        "avant « aussi grande »",
+        "avant « égale »"
+      ]
+    ]
+  },
+  {
+    "source_id": 87,
+    "remplacements": [
+      [
+        "« comme si j'étais envoyé du ciel »",
+        "« comme si j'avais été envoyé du ciel »"
+      ]
+    ]
+  },
+  {
+    "source_id": 99,
+    "remplacements": [
+      [
+        "par lesquelles Hugo présente la cathédrale",
+        "par lesquelles le texte présente la cathédrale"
+      ]
+    ]
+  },
+  {
+    "source_id": 110,
+    "remplacements": [
+      [
+        "4. La note présente Charles comme « médecin ». En réalité, il est officier de santé, titre inférieur à celui de docteur.",
+        "4. La note précise que Charles est officier de santé, titre inférieur à celui de docteur en médecine."
+      ]
+    ]
+  },
+  {
+    "source_id": 114,
+    "remplacements": [
+      [
+        "« sa mère en était folle, et sa grand-mère encore davantage »",
+        "« sa mère en était folle, et sa mère-grand plus folle encore »"
+      ],
+      [
+        "celui de la grand-mère plus encore",
+        "celui de la mère-grand plus encore"
+      ]
+    ]
+  }
+]

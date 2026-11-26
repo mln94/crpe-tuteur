@@ -1,0 +1,178 @@
+[
+  {
+    "id": 1,
+    "texte_support": "Victor Hugo, *Les Misérables*, 1862 — deuxième partie, livre III (portrait de Cosette)\n« Cosette était laide. Heureuse, elle eût peut-être été jolie. Nous avons déjà esquissé cette petite figure sombre. Cosette était maigre et blême. Elle avait près de huit ans, on lui en eût donné à peine six. Ses grands yeux enfoncés dans une sorte d'ombre étaient presque éteints à force d'avoir pleuré. »"
+  },
+  {
+    "id": 2,
+    "texte_support": "Texte d'exemple inspiré de *Le Père Goriot* (Honoré de Balzac, 1835) — ce n'est pas une citation de l'œuvre.\n« Il était alors dans toute la splendeur d'une jeunesse créole. Sa peau bronzée, ses joues creuses, sa taille élancée et son regard de feu frappaient d'abord tous ceux qui l'approchaient. »",
+    "remplacements": [
+      [
+        "le personnage de Rastignac",
+        "ce personnage"
+      ]
+    ]
+  },
+  {
+    "id": 4,
+    "texte_support": "Texte d'exemple inspiré de *Le Petit Chose* (Alphonse Daudet, 1868) — ce n'est pas une citation de l'œuvre.\n« Pendant les récréations, je restais dans la classe à préparer mes leçons, à corriger les cahiers. Je n'osais pas sortir. Les grands élèves m'auraient battu, et les petits m'auraient ri au nez. »"
+  },
+  {
+    "id": 6,
+    "texte_support": "Voltaire, *Candide*, 1759 — chapitre I\n« Pangloss enseignait la métaphysico-théologo-cosmolonigologie. Il prouvait admirablement qu'il n'y a point d'effet sans cause, et que, dans ce meilleur des mondes possibles, le château de monseigneur le baron était le plus beau des châteaux, et madame la meilleure des baronnes possibles. »"
+  },
+  {
+    "id": 8,
+    "texte_support": "Texte d'exemple inspiré de *Vingt mille lieues sous les mers* (Jules Verne, 1870) — ce n'est pas une citation de l'œuvre.\n« Nous étions au 5 novembre 1867. Depuis plusieurs jours, mon compagnon Conseil et moi observions la mer avec attention. Un phénomène inexpliqué troublait les esprits de tous les marins : une chose énorme, lumineuse, allongée, qui nageait sous les flots. »"
+  },
+  {
+    "id": 13,
+    "texte_support": "Texte d'exemple inspiré de *Andromaque* (Jean Racine, 1667) — ce n'est pas une citation de l'œuvre.\n« Je ne l'ai point aimé, cruel ? Qu'ai-je donc fait ?\nJ'ai dédaigné pour lui les vœux de tous les Grecs ;\nJe lui ai consacré tout ce que vous voyez. »"
+  },
+  {
+    "id": 14,
+    "texte_support": "Texte d'exemple inspiré de *La Mare au diable* (George Sand, 1846) — ce n'est pas une citation de l'œuvre.\n« Il y a une chose bien belle à voir : c'est un paysan qui travaille, qui peine, qui sue sous le soleil d'été, qui retourne la terre noire, et dont le visage, calme et grave, exprime la conscience du devoir accompli. »"
+  },
+  {
+    "id": 21,
+    "texte_support": "Texte d'exemple inspiré de *Le Horla* (Guy de Maupassant, 1887) — ce n'est pas une citation de l'œuvre.\n« Je l'aime, cette belle vallée ! C'est elle qui m'a fait, et qui m'a rendu fort. Je la contemple avec bonheur chaque matin. »"
+  },
+  {
+    "id": 23,
+    "texte_support": "Texte d'exemple inspiré de *La Double Inconstance* (Marivaux, 1723) — ce n'est pas une citation de l'œuvre.\n« SILVIA. — Arlequin, je t'aime, et tu m'aimes ; cela est certain. Mais depuis qu'on nous a séparés, j'ai réfléchi. »",
+    "remplacements": [
+      [
+        "l'élève peut montrer que Marivaux construit",
+        "l'élève peut montrer que la réplique construit"
+      ]
+    ]
+  },
+  {
+    "id": 32,
+    "texte_support": "Texte d'exemple inspiré de *Germinal* (Émile Zola, 1885) — ce n'est pas une citation de l'œuvre.\n« C'était une mine de charbon. Dehors, le froid était vif ; dedans, une chaleur étouffante régnait. Les hommes travaillaient en silence, courbés, les muscles tendus, dans la lueur des lampes. »"
+  },
+  {
+    "id": 64,
+    "texte_support": "Paul Verlaine, *Poèmes saturniens*, 1866 — « Chanson d'automne » (première strophe)\n« Les sanglots longs\nDes violons\nDe l'automne\nBlessent mon cœur\nD'une langueur\nMonotone. »"
+  },
+  {
+    "id": 67,
+    "texte_support": "Texte d'exemple inspiré de *Le Mariage de Figaro* (Pierre de Beaumarchais, 1784) — ce n'est pas une citation de l'œuvre.\n« FIGARO. — La journée sera chaude.\nSUZANNE. — Tu t'es levé de bonne heure.\nFIGARO. — Par nécessité. »"
+  },
+  {
+    "id": 73,
+    "texte_support": "Honoré de Balzac, *Eugénie Grandet*, 1833 — incipit\n« Il se trouve dans certaines villes de province des maisons dont la vue inspire une mélancolie égale à celle que provoquent les cloîtres les plus sombres, les landes les plus ternes ou les ruines les plus tristes. »"
+  },
+  {
+    "id": 77,
+    "texte_support": "Texte d'exemple inspiré de *Manon Lescaut* (Abbé Prévost, 1731) — ce n'est pas une citation de l'œuvre.\n« Quoique j'eusse pu faire entrer cette aventure dans le cours de mes mémoires, j'ai cru qu'il valait mieux la séparer, et qu'en en faisant un récit à part, je la rendrais plus complète et plus agréable. »"
+  },
+  {
+    "id": 81,
+    "texte_support": "Texte d'exemple inspiré de *Le Comte de Monte-Cristo* (Alexandre Dumas, 1844) — ce n'est pas une citation de l'œuvre.\n« Il y a quelque chose de bien étrange dans cette destinée : après avoir été l'homme le plus riche, le plus heureux de Paris, le voilà devenu le plus misérable. »"
+  },
+  {
+    "id": 87,
+    "texte_support": "Montesquieu, *Lettres persanes*, 1721 — lettre XXX (Rica à Ibben)\n« Les habitants de Paris sont d'une curiosité qui va jusqu'à l'extravagance. Lorsque j'arrivai, je fus regardé comme si j'avais été envoyé du ciel : vieillards, hommes, femmes, enfants, tous voulaient me voir. »"
+  },
+  {
+    "id": 89,
+    "texte_support": "Texte d'exemple inspiré de *Le Rouge et le Noir* (Stendhal, 1830) — ce n'est pas une citation de l'œuvre.\n« Julien Sorel, fils d'un charpentier, était d'une ambition dévorante. Il voulait s'élever dans la société, quitter la condition modeste de sa naissance, et devenir quelqu'un. »"
+  },
+  {
+    "id": 96,
+    "texte_support": "Textes d'exemple inspirés de *Les Liaisons dangereuses* (Laclos, 1782) et de *Corinne ou l'Italie* (Germaine de Staël, 1807) — ce ne sont pas des citations des œuvres.\nPremier texte :\n« Je vous écris de ma chambre, où je reste enfermée depuis votre départ, ne voyant personne, n'occupant ma triste existence qu'à regretter une amie si chère. »\n\nSecond texte (inspiré de *Corinne ou l'Italie*) :\n« Corinne avançait sur un char antique ; elle était vêtue comme la Sibylle du Dominiquin, un châle des Indes tourné en turban sur sa tête. »",
+    "remplacements": [
+      [
+        "dans Laclos, la femme",
+        "dans le premier extrait, la femme"
+      ],
+      [
+        "registre lyrique (Laclos) / registre épique (Staël)",
+        "registre lyrique (premier extrait) / registre épique (second extrait)"
+      ]
+    ]
+  },
+  {
+    "id": 99,
+    "texte_support": "Texte d'exemple inspiré de *Notre-Dame de Paris* (Victor Hugo, 1831) — ce n'est pas une citation de l'œuvre.\n« Cette vieille église est, du reste, à Paris, un vaste témoin des temps passés ; c'est une espèce de grande page où l'histoire de la ville, la science, l'art, depuis les premiers jours de la chrétienté jusqu'à Louis XIV, est gravée en relief. »",
+    "remplacements": [
+      [
+        "Victor Hugo décrit Notre-Dame de Paris dans ce texte",
+        "Ce texte, inspiré de Victor Hugo, décrit Notre-Dame de Paris"
+      ],
+      [
+        "Hugo dit que la cathédrale est",
+        "Le texte dit que la cathédrale est"
+      ]
+    ]
+  },
+  {
+    "id": 110,
+    "texte_support": "Gustave Flaubert, *Madame Bovary*, 1857 — note de contexte et extrait (partie I, chapitre 6)\nNote de contexte : Flaubert publie *Madame Bovary* en 1857, une époque où les femmes en France ne peuvent pas voter, ne disposent pas de leur patrimoine et doivent obéir à leur mari. Emma Bovary, jeune femme de province, rêve d'une vie plus libre et plus riche que celle que lui offre son mari, Charles, officier de santé (un médecin de rang modeste, sans le titre de docteur).\nExtrait : « Elle aurait voulu vivre dans quelque vieux manoir, comme ces châtelaines au long corsage qui, sous le trèfle des ogives, passaient leurs jours, le coude sur la pierre et la main sous le menton, à regarder venir du fond de la campagne un cavalier à plume blanche qui galope sur un cheval noir. »"
+  },
+  {
+    "id": 114,
+    "texte_support": "Charles Perrault, *Le Petit Chaperon rouge*, 1697 — début du conte\n« Il était une fois une petite fille de village, la plus jolie qu'on eût su voir ; sa mère en était folle, et sa mère-grand plus folle encore. Cette bonne femme lui fit faire un petit chaperon rouge, qui lui seyait si bien, que partout on l'appelait le Petit Chaperon rouge. »",
+    "remplacements": [
+      [
+        "« sa grand-mère encore davantage »",
+        "« sa mère-grand plus folle encore »"
+      ]
+    ]
+  },
+  {
+    "id": 121,
+    "texte_support": "Prosper Mérimée, *Carmen*, 1845 — chapitre III (portrait de Carmen par Don José)\n« Elle avait un jupon rouge fort court qui laissait voir des bas de soie blancs avec plus d'un trou, et des souliers mignons de maroquin rouge attachés avec des rubans couleur de feu. Elle écartait sa mantille afin de montrer ses épaules et un gros bouquet de cassie qui sortait de sa chemise. »"
+  },
+  {
+    "id": 124,
+    "texte_support": "André Chénier, « La Jeune Captive », 1795 — première strophe\n« L'épi naissant mûrit de la faux respecté ;\nSans crainte du pressoir, le pampre tout l'été\nBoit les doux présents de l'aurore ;\nEt moi, comme lui belle, et jeune comme lui,\nQuoi que l'heure présente ait de trouble et d'ennui,\nJe ne veux point mourir encore. »"
+  },
+  {
+    "id": 135,
+    "texte_support": "Textes d'exemple inspirés de *Paul et Virginie* (Bernardin de Saint-Pierre, 1788) et de *Candide* (Voltaire, 1759, l'Eldorado) — ce ne sont pas des citations des œuvres.\nPremier texte :\n« Tout respirait ici une paix profonde, une solitude riante ; rien n'y rappelait les besoins des hommes ni leurs passions. »\n\nSecond texte (inspiré de *Candide*) :\n« Tout était beau, propre et en ordre dans ce pays. »"
+  },
+  {
+    "id": 143,
+    "texte_support": "Théophile Gautier, *Émaux et Camées*, 1852 — note biographique et extrait du poème « L'Art »\nNote : Théophile Gautier (1811-1872) est un écrivain français du XIXe siècle. Il a d'abord appartenu au mouvement romantique avant de défendre l'art pour l'art, une idée selon laquelle la beauté formelle d'une œuvre prime sur son utilité. Il est l'auteur de romans, de poèmes et de critiques littéraires.\nExtrait : « Tout passe. — L'art robuste\nSeul a l'éternité ;\nLe buste\nSurvit à la cité. »"
+  },
+  {
+    "id": 152,
+    "texte_support": "Gérard de Nerval, *Sylvie*, 1853 — chapitre I (texte adapté : les deux premières phrases sont de Nerval ; la dernière a été écrite pour l'exercice)\n« Je sortais d'un théâtre où tous les soirs je paraissais aux avant-scènes en grande tenue de soupirant. Quelquefois tout était plein, quelquefois tout était vide. Il m'était indifférent que la salle fût vide ou pleine : les actrices de ce temps ne m'inspiraient plus que de l'ennui. »"
+  },
+  {
+    "id": 183,
+    "texte_support": "Guy de Maupassant, *Boule de suif*, 1880 — portrait du personnage éponyme\n« Petite, ronde de partout, grasse à lard, avec des doigts bouffis, étranglés aux phalanges, pareils à des chapelets de courtes saucisses ; avec une peau luisante et tendue, une gorge énorme qui saillait sous sa robe, elle restait cependant appétissante et courue. »"
+  },
+  {
+    "id": 194,
+    "texte_support": "Texte d'exemple inspiré de *Le Père Goriot* (Honoré de Balzac, 1835) — ce n'est pas une citation de l'œuvre.\n« Il y a des familles entières qui souffrent, et dans cette souffrance, il y a quelque chose de plus grand que la misère ordinaire : c'est l'ennui de vivre. »",
+    "remplacements": [
+      [
+        "Balzac distingue",
+        "La phrase distingue"
+      ]
+    ]
+  },
+  {
+    "id": 196,
+    "texte_support": "Texte d'exemple inspiré de *Carmen* (Prosper Mérimée, 1845) — ce n'est pas une citation de l'œuvre.\n« J'avais passé toute la journée à errer aux environs de Cordoue. La ville était alors infestée de brigands... je rejoignis la route, cherchant une maison de paysan où je pourrais passer la nuit, lorsqu'un cavalier me héla. »",
+    "remplacements": [
+      [
+        "cet extrait de Mérimée",
+        "cet extrait inspiré de Mérimée"
+      ]
+    ]
+  },
+  {
+    "id": 234,
+    "texte_support": "Texte d'exemple inspiré de *Le Crime de Sylvestre Bonnard* (Anatole France, 1881) — ce n'est pas une citation de l'œuvre.\n« Les livres sont les grandes âmes qui demeurent. Vivre sans eux, c'est vivre sans lumière. »",
+    "remplacements": [
+      [
+        "Anatole France humanise",
+        "La phrase humanise"
+      ]
+    ]
+  }
+]
