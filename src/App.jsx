@@ -6825,7 +6825,7 @@ function AppContent({ authUser }) {
       <SideNav active={navActive} onChange={handleTabChange} unreadSupport={unreadSupport} authUser={authUser} profile={profile} />
       <TopBar progress={tuteurProgress} />
       <div
-        className="flex flex-col flex-1 min-h-0 max-w-3xl mx-auto w-full min-[1100px]:pt-4"
+        className="flex flex-col flex-1 min-h-0 max-w-3xl mx-auto w-full min-[1100px]:pt-4 min-[1100px]:mx-0 min-[1100px]:px-10 min-[1100px]:max-w-[900px]"
       >
         {showMathBanqueView ? (
           <MathBanqueView
