@@ -899,18 +899,23 @@ async function fetchMathProgressionStats(userId) {
 // Elle est acquise dès qu'une réponse sur cet objectif obtient au moins NOTION_ACQUISE / 10.
 // ---------------------------------------------------------------------------
 const NOTION_ACQUISE = 7;
-let notionsBanqueCache = null; // { francais: Set, maths: Set } : la banque change rarement
+let notionsBanqueCache = null; // { francais: Set, maths: Set, index: Map objectif → { matiere, thematique, classe } }
 
 async function fetchNotionsBanque() {
   if (notionsBanqueCache) return notionsBanqueCache;
   const headers = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
   const [fr, ma] = await Promise.all([
-    fetch(`${SUPABASE_URL}/rest/v1/exercices_francais_v?select=objectif`, { headers }).then(r => (r.ok ? r.json() : [])),
-    fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?select=objectif_apprentissage`, { headers }).then(r => (r.ok ? r.json() : [])),
+    fetch(`${SUPABASE_URL}/rest/v1/exercices_francais_v?select=objectif,thematique,niveau`, { headers }).then(r => (r.ok ? r.json() : [])),
+    fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?select=objectif_apprentissage,thematique,classe`, { headers }).then(r => (r.ok ? r.json() : [])),
   ]);
+  const rowsFr = Array.isArray(fr) ? fr : [], rowsMa = Array.isArray(ma) ? ma : [];
+  const index = new Map();
+  rowsFr.forEach(r => { if (r.objectif) index.set(`francais|${r.objectif}`, { matiere: 'francais', thematique: r.thematique, classe: r.niveau }); });
+  rowsMa.forEach(r => { if (r.objectif_apprentissage) index.set(`maths|${r.objectif_apprentissage}`, { matiere: 'maths', thematique: r.thematique, classe: r.classe }); });
   const res = {
-    francais: new Set((Array.isArray(fr) ? fr : []).map(r => r.objectif).filter(Boolean)),
-    maths:    new Set((Array.isArray(ma) ? ma : []).map(r => r.objectif_apprentissage).filter(Boolean)),
+    francais: new Set(rowsFr.map(r => r.objectif).filter(Boolean)),
+    maths:    new Set(rowsMa.map(r => r.objectif_apprentissage).filter(Boolean)),
+    index,
   };
   if (res.francais.size || res.maths.size) notionsBanqueCache = res;
   return res;
@@ -927,7 +932,14 @@ async function fetchTuteurProgress(userId) {
       fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs_math?${params}`, { headers }).then(r => (r.ok ? r.json() : [])),
     ]);
     const note = (r) => r.note_globale ?? r.note_crpe ?? null;
-    const parMatiere = (rows, set) => {
+    // Groupes de notions (matière + thème), et par classe : notions au total et acquises
+    const groupes = {};
+    const groupe = (cle) => (groupes[cle] ||= { total: 0, acquises: 0, parClasse: {} });
+    banque.index.forEach((v) => {
+      const g = groupe(`${v.matiere}|${v.thematique}`); g.total++;
+      const c = (g.parClasse[v.classe] ||= { total: 0, acquises: 0 }); c.total++;
+    });
+    const parMatiere = (rows, set, matiere) => {
       const best = new Map();
       rows.forEach(r => {
         if (!r.objectif || !set.has(r.objectif)) return;
@@ -935,12 +947,18 @@ async function fetchTuteurProgress(userId) {
         best.set(r.objectif, Math.max(best.get(r.objectif) ?? -1, n ?? -1));
       });
       let acquises = 0;
-      best.forEach(n => { if (n >= NOTION_ACQUISE) acquises++; });
+      best.forEach((n, objectif) => {
+        if (n < NOTION_ACQUISE) return;
+        acquises++;
+        const v = banque.index.get(`${matiere}|${objectif}`); if (!v) return;
+        const g = groupe(`${v.matiere}|${v.thematique}`); g.acquises++;
+        if (g.parClasse[v.classe]) g.parClasse[v.classe].acquises++;
+      });
       return { total: set.size, acquises, travaillees: best.size };
     };
     const rowsFr = Array.isArray(fr) ? fr : [], rowsMa = Array.isArray(ma) ? ma : [];
-    const francais = parMatiere(rowsFr, banque.francais);
-    const maths    = parMatiere(rowsMa, banque.maths);
+    const francais = parMatiere(rowsFr, banque.francais, 'francais');
+    const maths    = parMatiere(rowsMa, banque.maths, 'maths');
     const toutes = [...rowsFr, ...rowsMa];
     const premieres = toutes.filter(r => (r.tentative ?? 1) === 1);
     const notes = premieres.map(note).filter(n => n != null);
@@ -953,7 +971,7 @@ async function fetchTuteurProgress(userId) {
     let serie = 0;
     while (jours.has(cle(d))) { serie++; d.setDate(d.getDate() - 1); }
     return {
-      francais, maths,
+      francais, maths, groupes,
       total: francais.total + maths.total,
       acquises: francais.acquises + maths.acquises,
       questions: premieres.length, moyenne, serie, nbNotes: notes.length,
@@ -3700,12 +3718,13 @@ function OutilsReponse({ outils, onInsert }) {
 // ---------------------------------------------------------------------------
 // MathBanqueView — math exercise bank with 5-thematic menu
 // ---------------------------------------------------------------------------
-function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
-  const [step, setStep]                         = useState('thematique');
-  const [selectedThematique, setSelectedThematique] = useState(null);
+function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered, initialThematique = null, initialClasseId = null }) {
+  const preset = !!(initialThematique && initialClasseId);
+  const [step, setStep]                         = useState(preset ? 'exercises' : 'thematique');
+  const [selectedThematique, setSelectedThematique] = useState(preset ? initialThematique : null);
   const [selectedClasseId, setSelectedClasseId] = useState(null);
   const [exercises, setExercises]               = useState([]);
-  const [loadingEx, setLoadingEx]               = useState(false);
+  const [loadingEx, setLoadingEx]               = useState(preset);
   const [awaitingStart, setAwaitingStart]       = useState(false);
   const [currentIdx, setCurrentIdx]             = useState(0);
   const [phase, setPhase]                       = useState('question');
@@ -3780,6 +3799,30 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
     }
     setTimeout(() => inputRef.current?.focus(), 100);
   };
+
+  // Charge les exercices d'un thème et d'une classe (choix de la classe, ou lancement depuis le parcours)
+  const demarrerSerie = async (thematique, classeId) => {
+    const classe = NIVEAU_TO_CLASSE[classeId];
+    setSelectedClasseId(classeId);
+    setLoadingEx(true);
+    setStep('exercises');
+    setCurrentIdx(0);
+    setPhase('question');
+    tentativeRef.current = 1;
+    setInput('');
+    setMessages([]);
+    setOptions([]);
+    const data = await fetchExercicesMaths(thematique, classe);
+    const shuffled = shuffleArray(data);
+    setExercises(shuffled);
+    setLoadingEx(false);
+    setAwaitingStart(shuffled.length > 0);
+    if (shuffled.length === 0) return;
+    setTimeout(() => inputRef.current?.focus(), 150);
+  };
+  useEffect(() => {
+    if (preset) demarrerSerie(initialThematique, initialClasseId);
+  }, []);
 
   const startMathSession = () => {
     setAwaitingStart(false);
@@ -4004,25 +4047,7 @@ ${tentative < MAX_TENTATIVES
   if (step === 'classe') {
     return (
       <ClassPickerView
-        onSelect={async (classeId) => {
-          const classe = NIVEAU_TO_CLASSE[classeId];
-          setSelectedClasseId(classeId);
-          setLoadingEx(true);
-          setStep('exercises');
-          setCurrentIdx(0);
-          setPhase('question');
-          tentativeRef.current = 1;
-          setInput('');
-          setMessages([]);
-          setOptions([]);
-          const data = await fetchExercicesMaths(selectedThematique, classe);
-          const shuffled = shuffleArray(data);
-          setExercises(shuffled);
-          setLoadingEx(false);
-          setAwaitingStart(shuffled.length > 0);
-          if (shuffled.length === 0) return;
-          setTimeout(() => inputRef.current?.focus(), 150);
-        }}
+        onSelect={(classeId) => demarrerSerie(selectedThematique, classeId)}
         onBack={() => setStep('thematique')}
       />
     );
@@ -6111,6 +6136,7 @@ function SiteHeader({ authUser, profile, onSupport }) {
 function BottomNav({ active, onChange, unreadSupport = 0 }) {
   const tabs = [
     { id: 'home',    label: 'Accueil',    icon: Home          },
+    { id: 'parcours', label: 'Parcours',  icon: ListChecks    },
     { id: 'chat',    label: 'Reprendre',  icon: RotateCcw     },
     { id: 'history', label: 'Historique', icon: BookOpen      },
     { id: 'stats',   label: 'Stats',      icon: BarChart2     },
@@ -6144,12 +6170,208 @@ function BottomNav({ active, onChange, unreadSupport = 0 }) {
 }
 
 // ---------------------------------------------------------------------------
+// ParcoursView — « Mon parcours » : étapes de PARCOURS_JOURS jours. Chaque étape mélange un groupe de notions de
+// français et un groupe de notions de maths (thèmes du programme, en 5e, 4e et 3e), puis se termine par un sujet
+// blanc sur les notions vues (à venir). Le parcours démarre au clic ; la date est gardée dans le compte
+// (user_metadata.parcours_passcrpe_debut) pour être la même sur tous les appareils.
+// ---------------------------------------------------------------------------
+const PARCOURS_JOURS = 15;
+const PARCOURS_ETAPES = [
+  { francais: ['grammaire'],   maths: ['Nombres et calculs'] },
+  { francais: ['vocabulaire'], maths: ['Proportionnalité, fonctions'] },
+  { francais: ['lecture'],     maths: ['Espace et géométrie'] },
+  { francais: ['ecriture'],    maths: ['Organisation et gestion de données et probabilités', 'La pensée informatique'] },
+];
+const PARCOURS_CLASSES = [['5eme', '5e'], ['4eme', '4e'], ['3eme', '3e']];
+const jourLocal = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+const ajouterJours = (iso, n) => { const d = new Date(`${iso}T00:00:00`); d.setDate(d.getDate() + n); return d; };
+const dateCourte = (d) => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
+
+function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths }) {
+  const [debut, setDebut] = useState(() => authUser?.user_metadata?.parcours_passcrpe_debut || null);
+  const [enregistrement, setEnregistrement] = useState(false);
+  const [confirmerReset, setConfirmerReset] = useState(false);
+
+  const demarrer = async () => {
+    const d = jourLocal();
+    setEnregistrement(true);
+    setDebut(d);
+    try { await sbClient.auth.updateUser({ data: { parcours_passcrpe_debut: d } }); } catch { /* gardé pour cette visite */ }
+    setEnregistrement(false);
+    setConfirmerReset(false);
+  };
+
+  const nbEtapes = PARCOURS_ETAPES.length;
+  const jour = debut ? Math.max(0, Math.round((new Date(`${jourLocal()}T00:00:00`) - new Date(`${debut}T00:00:00`)) / 864e5)) : null;
+  const termine = jour !== null && jour >= nbEtapes * PARCOURS_JOURS;
+  const etapeCourante = jour === null ? 0 : Math.min(Math.floor(jour / PARCOURS_JOURS), nbEtapes - 1);
+  const jourDansEtape = jour === null ? 0 : (termine ? PARCOURS_JOURS : (jour % PARCOURS_JOURS) + 1);
+
+  const g = (matiere, thematique) => progress?.groupes?.[`${matiere}|${thematique}`] || null;
+  const groupesEtape = (e) => [
+    ...e.francais.map(id => ({ matiere: 'francais', id, label: FRANCAIS_TOPICS.find(t => t.id === id)?.label || id, thematique: TOPIC_TO_THEMATIQUE[id] })),
+    ...e.maths.map(th => ({ matiere: 'maths', id: th, label: th, thematique: th })),
+  ];
+  const totauxEtape = (e) => groupesEtape(e).reduce((a, x) => { const p = g(x.matiere, x.thematique); return { total: a.total + (p?.total || 0), acquises: a.acquises + (p?.acquises || 0) }; }, { total: 0, acquises: 0 });
+
+  const cur = totauxEtape(PARCOURS_ETAPES[etapeCourante]);
+  const joursRestants = Math.max(1, PARCOURS_JOURS - jourDansEtape + 1);
+  const parJour = Math.ceil(Math.max(0, cur.total - cur.acquises) / joursRestants);
+
+  const Barre = ({ pct, couleur }) => (
+    <span className="block h-1.5 rounded-full bg-gray-100 overflow-hidden">
+      <i className={`block h-full ${couleur}`} style={{ width: `${pct}%` }} />
+    </span>
+  );
+
+  const Groupe = ({ x, actif }) => {
+    const p = g(x.matiere, x.thematique);
+    const pct = p?.total ? Math.round(p.acquises / p.total * 100) : 0;
+    const fr = x.matiere === 'francais';
+    return (
+      <div className="rounded-xl border border-gray-100 bg-white px-4 py-3.5">
+        <div className="flex items-center gap-3">
+          <span className={`w-9 h-9 rounded-xl grid place-items-center flex-shrink-0 ${fr ? 'bg-indigo-100 text-indigo-600' : 'bg-emerald-100 text-emerald-600'}`}>
+            {fr ? <BookMarked className="w-4 h-4" /> : <Calculator className="w-4 h-4" />}
+          </span>
+          <div className="flex-1 min-w-0">
+            <p className={`text-[11px] font-bold uppercase tracking-wide ${fr ? 'text-indigo-500' : 'text-emerald-600'}`}>{fr ? 'Français' : 'Maths'} · groupe de notions</p>
+            <p className="text-sm font-semibold text-gray-900 leading-snug">{x.label}</p>
+          </div>
+          <span className="text-xs font-bold text-gray-500 whitespace-nowrap">{p ? `${p.acquises} / ${p.total}` : '–'} <span className="font-medium text-gray-400">acquises</span></span>
+        </div>
+        <div className="mt-2.5"><Barre pct={pct} couleur={fr ? 'bg-indigo-500' : 'bg-emerald-500'} /></div>
+        <div className="flex flex-wrap gap-2 mt-3">
+          {PARCOURS_CLASSES.map(([niveauId, classe]) => {
+            const c = p?.parClasse?.[classe];
+            return (
+              <button
+                key={niveauId}
+                onClick={() => (fr ? onLancerFrancais(x.id, niveauId) : onLancerMaths(x.thematique, niveauId))}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-colors ${
+                  actif
+                    ? (fr ? 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700' : 'bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-700')
+                    : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'
+                }`}
+              >
+                S'entraîner · {classe}{c ? <span className="font-medium opacity-75"> · {c.acquises}/{c.total}</span> : null}
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="flex-1 overflow-y-auto px-4 pt-6 pb-24">
+      <h1 className="text-2xl font-bold text-gray-900">Mon parcours</h1>
+      <p className="text-sm text-gray-500 mt-1 leading-relaxed">
+        Le parcours avance par étapes de <b className="text-gray-700">{PARCOURS_JOURS} jours</b> : vous pratiquez un groupe de notions de français et un groupe de notions de maths,
+        puis vous faites un <b className="text-gray-700">sujet blanc</b> sur les notions vues. Une notion est acquise dès qu'une de vos réponses obtient au moins {NOTION_ACQUISE}/10.
+      </p>
+
+      {/* Bandeau : démarrer, ou l'étape en cours */}
+      {!debut ? (
+        <div className="mt-5 rounded-2xl p-5 text-white bg-gradient-to-br from-indigo-600 to-violet-600 shadow-lg shadow-indigo-200">
+          <p className="text-xs font-bold uppercase tracking-widest opacity-80">{nbEtapes} étapes · {nbEtapes * PARCOURS_JOURS} jours</p>
+          <p className="text-lg font-bold mt-1">Prêt(e) à commencer ?</p>
+          <p className="text-sm opacity-90 mt-1">Votre première étape dure {PARCOURS_JOURS} jours à partir d'aujourd'hui : grammaire et nombres et calculs, puis un sujet blanc.</p>
+          <button onClick={demarrer} disabled={enregistrement} className="mt-4 px-5 py-2.5 rounded-xl bg-white text-indigo-700 text-sm font-bold hover:bg-indigo-50 disabled:opacity-60">
+            Commencer mon parcours aujourd'hui →
+          </button>
+        </div>
+      ) : termine ? (
+        <div className="mt-5 rounded-2xl p-5 text-white bg-gradient-to-br from-indigo-600 to-violet-600 shadow-lg shadow-indigo-200">
+          <p className="text-lg font-bold">🎉 Parcours terminé</p>
+          <p className="text-sm opacity-90 mt-1">Vous avez parcouru les {nbEtapes} étapes. Continuez à consolider les notions qui ne sont pas encore acquises.</p>
+        </div>
+      ) : (
+        <div className="mt-5 rounded-2xl p-5 text-white bg-gradient-to-br from-indigo-600 to-violet-600 shadow-lg shadow-indigo-200">
+          <div className="flex items-start justify-between gap-3">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-widest opacity-80">Étape {etapeCourante + 1} sur {nbEtapes}</p>
+              <p className="text-lg font-bold mt-1">Jour {jourDansEtape} sur {PARCOURS_JOURS}</p>
+            </div>
+            <span className="text-right text-xs opacity-90">Sujet blanc le<br /><b className="text-sm">{dateCourte(ajouterJours(debut, etapeCourante * PARCOURS_JOURS + PARCOURS_JOURS - 1))}</b></span>
+          </div>
+          <span className="block h-2 rounded-full bg-white/25 overflow-hidden mt-3">
+            <i className="block h-full bg-white" style={{ width: `${Math.round(jourDansEtape / PARCOURS_JOURS * 100)}%` }} />
+          </span>
+          <p className="text-sm mt-3 opacity-95">
+            {cur.acquises} / {cur.total} notions de l'étape acquises.{' '}
+            {cur.total > cur.acquises
+              ? <>Objectif : <b>environ {parJour} notion{parJour > 1 ? 's' : ''} à acquérir par jour</b> pour être prêt(e) le jour du sujet blanc.</>
+              : <b>Toutes les notions de l'étape sont acquises : bravo !</b>}
+          </p>
+        </div>
+      )}
+
+      {/* Les étapes */}
+      <div className="mt-6 flex flex-col gap-4">
+        {PARCOURS_ETAPES.map((e, i) => {
+          const passee = debut && (termine || i < etapeCourante);
+          const actif = !!debut && !termine && i === etapeCourante;
+          const t = totauxEtape(e);
+          const du = debut ? ajouterJours(debut, i * PARCOURS_JOURS) : null;
+          const au = debut ? ajouterJours(debut, i * PARCOURS_JOURS + PARCOURS_JOURS - 1) : null;
+          return (
+            <section key={i} className={`rounded-2xl border p-4 ${actif ? 'border-indigo-300 bg-indigo-50/40 shadow-sm' : 'border-gray-100 bg-gray-50/60'}`}>
+              <div className="flex items-center justify-between gap-3 mb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className={`w-8 h-8 rounded-full grid place-items-center text-sm font-black ${actif ? 'bg-indigo-600 text-white' : passee ? 'bg-emerald-500 text-white' : 'bg-white border border-gray-200 text-gray-500'}`}>
+                    {passee ? '✓' : i + 1}
+                  </span>
+                  <div>
+                    <p className="text-sm font-bold text-gray-900">Étape {i + 1}</p>
+                    <p className="text-xs text-gray-500">{du ? `Du ${dateCourte(du)} au ${dateCourte(au)}` : `${PARCOURS_JOURS} jours de pratique, puis un sujet blanc`}</p>
+                  </div>
+                </div>
+                <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${actif ? 'bg-indigo-600 text-white' : passee ? 'bg-emerald-100 text-emerald-700' : 'bg-white border border-gray-200 text-gray-500'}`}>
+                  {actif ? 'En cours' : passee ? 'Terminée' : 'À venir'} · {t.acquises}/{t.total}
+                </span>
+              </div>
+              <div className="flex flex-col gap-2.5">
+                {groupesEtape(e).map(x => <Groupe key={`${x.matiere}-${x.id}`} x={x} actif={actif} />)}
+                <div className="rounded-xl border border-dashed border-gray-300 bg-white/70 px-4 py-3.5 flex items-center gap-3">
+                  <span className="w-9 h-9 rounded-xl grid place-items-center bg-amber-100 text-amber-600 flex-shrink-0"><ClipboardList className="w-4 h-4" /></span>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[11px] font-bold uppercase tracking-wide text-amber-600">Fin de l'étape{au ? ` · ${dateCourte(au)}` : ''}</p>
+                    <p className="text-sm font-semibold text-gray-900">Sujet blanc sur les notions de l'étape</p>
+                  </div>
+                  <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full bg-violet-50 text-violet-600 whitespace-nowrap">Bientôt disponible</span>
+                </div>
+              </div>
+            </section>
+          );
+        })}
+      </div>
+
+      {debut && (
+        <div className="mt-6 text-center">
+          {confirmerReset ? (
+            <p className="text-xs text-gray-500">
+              Recommencer le parcours à partir d'aujourd'hui ? Vos notions acquises sont conservées.{' '}
+              <button onClick={demarrer} className="font-bold text-indigo-600 hover:underline">Oui, recommencer</button>{' · '}
+              <button onClick={() => setConfirmerReset(false)} className="font-semibold text-gray-500 hover:underline">Annuler</button>
+            </p>
+          ) : (
+            <button onClick={() => setConfirmerReset(true)} className="text-xs font-semibold text-gray-400 hover:text-gray-600">Recommencer le parcours à partir d'aujourd'hui</button>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // SideNav — menu à gauche sur ordinateur (≥ 1100 px), même organisation que le Quiz CRPE :
 // logo en haut, onglets, compte en bas. Sur mobile, l'en-tête et la BottomNav restent affichés.
 // ---------------------------------------------------------------------------
 function SideNav({ active, onChange, unreadSupport = 0, authUser, profile }) {
   const tabs = [
     { id: 'home',    label: 'Accueil',    icon: Home       },
+    { id: 'parcours', label: 'Mon parcours', icon: ListChecks },
     { id: 'chat',    label: 'Reprendre',  icon: RotateCcw  },
     { id: 'history', label: 'Historique', icon: BookOpen   },
     { id: 'stats',   label: 'Mes stats',  icon: BarChart2  },
@@ -6594,7 +6816,7 @@ function AppContent({ authUser }) {
   });
   const [activeTab, setActiveTab] = useState(() => {
     const o = new URLSearchParams(window.location.search).get('onglet');
-    return ['home', 'history', 'stats', 'support', 'profile'].includes(o) ? o : 'home';
+    return ['home', 'parcours', 'history', 'stats', 'support', 'profile'].includes(o) ? o : 'home';
   });
   const [chatMatiere, setChatMatiere] = useState(null);
   const [sessionKey, setSessionKey] = useState(0);
@@ -6607,6 +6829,7 @@ function AppContent({ authUser }) {
   const [pendingStart, setPendingStart] = useState(null);
   const [showBanqueView, setShowBanqueView] = useState(false);
   const [showMathBanqueView, setShowMathBanqueView] = useState(false);
+  const [mathPreset, setMathPreset] = useState(null); // { thematique, classeId } quand la série est lancée depuis le parcours
   const [banqueSession, setBanqueSession] = useState(null);
   const [autoResumeBanque, setAutoResumeBanque] = useState(false);
   const [dbFreeQsUsed, setDbFreeQsUsed] = useState(null);
@@ -6716,6 +6939,7 @@ function AppContent({ authUser }) {
       return;
     }
     if (matiere === 'maths') {
+      setMathPreset(null);
       setShowMathBanqueView(true);
       return;
     }
@@ -6741,6 +6965,20 @@ function AppContent({ authUser }) {
     setFrancaisMode('banque');
     setAutoResumeBanque(true);
     setShowBanqueView(true);
+  };
+
+  // Parcours : lance directement la série d'un groupe de notions (thème) pour une classe
+  const lancerFrancaisParcours = (topicId, niveauId) => {
+    setPendingStart(null);
+    setFrancaisTopic(topicId);
+    setSessionNiveau(niveauId);
+    setFrancaisMode('questions');
+    setAutoResumeBanque(false);
+    setShowBanqueView(true);
+  };
+  const lancerMathsParcours = (thematique, classeId) => {
+    setMathPreset({ thematique, classeId });
+    setShowMathBanqueView(true);
   };
 
   const handleModeSelect = (modeId) => {
@@ -6853,7 +7091,10 @@ function AppContent({ authUser }) {
       >
         {showMathBanqueView ? (
           <MathBanqueView
-            onBack={() => { setShowMathBanqueView(false); const uid = authUser?.id || storage.get('crpe_user_id'); if (uid) refreshFreeQsCount(uid); }}
+            key={mathPreset ? `${mathPreset.thematique}-${mathPreset.classeId}` : 'libre'}
+            initialThematique={mathPreset?.thematique}
+            initialClasseId={mathPreset?.classeId}
+            onBack={() => { setShowMathBanqueView(false); setMathPreset(null); const uid = authUser?.id || storage.get('crpe_user_id'); if (uid) refreshFreeQsCount(uid); }}
             authUser={authUser}
             isLocked={isLockedMaths}
             onQuestionAnswered={(uid) => refreshFreeQsCount(uid)}
@@ -6920,6 +7161,14 @@ function AppContent({ authUser }) {
                 topic={chatMatiere === 'francais' ? francaisTopic : null}
                 niveau={sessionNiveau}
                 mode={chatMatiere === 'francais' ? francaisMode : null}
+              />
+            )}
+            {activeTab === 'parcours' && (
+              <ParcoursView
+                authUser={authUser}
+                progress={tuteurProgress}
+                onLancerFrancais={lancerFrancaisParcours}
+                onLancerMaths={lancerMathsParcours}
               />
             )}
             {activeTab === 'history' && <HistoryView />}
