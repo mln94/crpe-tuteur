@@ -893,6 +893,76 @@ async function fetchMathProgressionStats(userId) {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Progression des notions du tuteur (barre du haut, comme le Quiz CRPE)
+// Une notion = un objectif du programme de la banque d'exercices (français + maths).
+// Elle est acquise dès qu'une réponse sur cet objectif obtient au moins NOTION_ACQUISE / 10.
+// ---------------------------------------------------------------------------
+const NOTION_ACQUISE = 7;
+let notionsBanqueCache = null; // { francais: Set, maths: Set } : la banque change rarement
+
+async function fetchNotionsBanque() {
+  if (notionsBanqueCache) return notionsBanqueCache;
+  const headers = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
+  const [fr, ma] = await Promise.all([
+    fetch(`${SUPABASE_URL}/rest/v1/exercices_francais_v?select=objectif`, { headers }).then(r => (r.ok ? r.json() : [])),
+    fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?select=objectif_apprentissage`, { headers }).then(r => (r.ok ? r.json() : [])),
+  ]);
+  const res = {
+    francais: new Set((Array.isArray(fr) ? fr : []).map(r => r.objectif).filter(Boolean)),
+    maths:    new Set((Array.isArray(ma) ? ma : []).map(r => r.objectif_apprentissage).filter(Boolean)),
+  };
+  if (res.francais.size || res.maths.size) notionsBanqueCache = res;
+  return res;
+}
+
+async function fetchTuteurProgress(userId) {
+  if (!SUPABASE_URL || !SUPABASE_KEY || !userId) return null;
+  try {
+    const headers = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
+    const params = new URLSearchParams({ user_id: `eq.${userId}`, select: 'objectif,tentative,note_globale,note_crpe,created_at' });
+    const [banque, fr, ma] = await Promise.all([
+      fetchNotionsBanque(),
+      fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs_francais?${params}`, { headers }).then(r => (r.ok ? r.json() : [])),
+      fetch(`${SUPABASE_URL}/rest/v1/reponses_utilisateurs_math?${params}`, { headers }).then(r => (r.ok ? r.json() : [])),
+    ]);
+    const note = (r) => r.note_globale ?? r.note_crpe ?? null;
+    const parMatiere = (rows, set) => {
+      const best = new Map();
+      rows.forEach(r => {
+        if (!r.objectif || !set.has(r.objectif)) return;
+        const n = note(r);
+        best.set(r.objectif, Math.max(best.get(r.objectif) ?? -1, n ?? -1));
+      });
+      let acquises = 0;
+      best.forEach(n => { if (n >= NOTION_ACQUISE) acquises++; });
+      return { total: set.size, acquises, travaillees: best.size };
+    };
+    const rowsFr = Array.isArray(fr) ? fr : [], rowsMa = Array.isArray(ma) ? ma : [];
+    const francais = parMatiere(rowsFr, banque.francais);
+    const maths    = parMatiere(rowsMa, banque.maths);
+    const toutes = [...rowsFr, ...rowsMa];
+    const premieres = toutes.filter(r => (r.tentative ?? 1) === 1);
+    const notes = premieres.map(note).filter(n => n != null);
+    const moyenne = notes.length ? Math.round(notes.reduce((a, b) => a + b, 0) / notes.length * 10) / 10 : null;
+    // Jours d'affilée avec au moins une réponse (aujourd'hui, ou hier si rien encore aujourd'hui)
+    const cle = (d) => `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}`;
+    const jours = new Set(toutes.map(r => r.created_at && cle(new Date(r.created_at))).filter(Boolean));
+    const d = new Date();
+    if (!jours.has(cle(d))) d.setDate(d.getDate() - 1);
+    let serie = 0;
+    while (jours.has(cle(d))) { serie++; d.setDate(d.getDate() - 1); }
+    return {
+      francais, maths,
+      total: francais.total + maths.total,
+      acquises: francais.acquises + maths.acquises,
+      questions: premieres.length, moyenne, serie, nbNotes: notes.length,
+    };
+  } catch {
+    return null;
+  }
+}
+
 async function supabaseInsert(table, data) {
   if (!SUPABASE_URL || !SUPABASE_KEY) return;
   try {
@@ -6125,6 +6195,81 @@ function SideNav({ active, onChange, unreadSupport = 0, authUser, profile }) {
 }
 
 // ---------------------------------------------------------------------------
+// TopBar — barre du haut sur ordinateur, comme le Quiz CRPE : progression des notions,
+// échéances du concours, moyenne, jours d'affilée et questions répondues
+// ---------------------------------------------------------------------------
+// Calendrier 2027 (même source que le Quiz CRPE) : [date, intitulé, quand, où, type, libellé court]
+const ECHEANCES_CONCOURS = [
+  ['2026-11-25', 'Clôture des inscriptions', 'mer. 25 nov. 2026, 12 h', 'Sur Cyclades', '', 'Inscriptions'],
+  ['2027-03-30', 'Écrits d’admissibilité', '30 et 31 mars 2027', 'Toutes les académies', 'cle', 'Écrits'],
+  ['2027-04-15', 'Résultats d’admissibilité', 'mi-avril à fin mai 2027', 'Selon ton académie', '≈', 'Admissibilité'],
+  ['2027-05-15', 'Oraux d’admission', 'mai-juin 2027', 'Selon ton académie', '≈', 'Oraux'],
+  ['2027-06-20', 'Résultats d’admission', 'fin juin 2027', 'Selon ton académie', '≈', 'Admission'],
+];
+const joursAvant = (iso) => { const a = new Date(); a.setHours(0, 0, 0, 0); return Math.round((new Date(`${iso}T00:00:00`) - a) / 864e5); };
+const nfr = (n) => Number(n).toLocaleString('fr-FR');
+
+function TopBar({ progress }) {
+  const p = progress;
+  const pct = p && p.total ? Math.round(p.acquises / p.total * 100) : 0;
+  const titreJauge = p
+    ? `Notions acquises (au moins ${NOTION_ACQUISE}/10 sur l'objectif) · Français : ${p.francais.acquises} / ${p.francais.total} · Maths : ${p.maths.acquises} / ${p.maths.total}`
+    : 'Progression des notions';
+  const pill = 'inline-flex items-center gap-1.5 px-[11px] py-1.5 rounded-full border border-gray-200 bg-white font-extrabold text-[13px] text-gray-900 whitespace-nowrap flex-shrink-0';
+  return (
+    <div className="hidden min-[1100px]:flex flex-shrink-0 items-center gap-2.5 pl-7 pr-6 py-3.5 bg-white/95 backdrop-blur border-b border-gray-100 text-sm text-gray-500">
+      <span className="hidden min-[1600px]:inline whitespace-nowrap flex-shrink-0" title={titreJauge}>Progression</span>
+      <span className="w-20 h-1.5 rounded-full bg-gray-200 overflow-hidden flex-shrink-0" title={titreJauge}>
+        <i className="block h-full bg-gradient-to-r from-indigo-600 to-indigo-400 transition-[width] duration-500" style={{ width: `${pct}%` }} />
+      </span>
+      <span className="whitespace-nowrap flex-shrink-0" title={titreJauge}>
+        {p ? `${nfr(p.acquises)} / ${nfr(p.total)} notions` : '– notions'}
+      </span>
+      <div
+        className="flex-[0_1_auto] min-w-0 ml-1 pl-3 pr-[18px] border-l border-gray-200 flex flex-nowrap items-center gap-[5px] overflow-x-auto text-xs [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        style={{ WebkitMaskImage: 'linear-gradient(90deg, #000 calc(100% - 24px), transparent)', maskImage: 'linear-gradient(90deg, #000 calc(100% - 24px), transparent)' }}
+      >
+        <span className="font-extrabold text-gray-700 mr-0.5 flex-shrink-0" title="Échéances du concours 2027">📅</span>
+        {ECHEANCES_CONCOURS.map(([iso, nom, quand, ou, type, court]) => {
+          const j = joursAvant(iso), passe = j < 0;
+          const proche = !passe && type !== 'cle' && j <= 30;
+          return (
+            <span
+              key={iso}
+              title={`${nom} · ${quand} · ${ou}`}
+              className={`inline-flex items-center gap-[5px] pl-[3px] pr-[9px] py-[3px] rounded-full border bg-white text-gray-700 font-bold whitespace-nowrap flex-shrink-0 ${
+                passe ? 'opacity-50 border-gray-200' : type === 'cle' ? 'border-[1.5px] border-indigo-600' : proche ? 'border-indigo-200 bg-indigo-50' : 'border-gray-200'
+              }`}
+            >
+              <b className={`px-2 py-0.5 rounded-full text-[11.5px] font-black ${
+                passe ? 'bg-gray-100 text-gray-600' : type === 'cle' ? 'bg-gray-900 text-white' : proche ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-gray-600'
+              }`}>
+                {passe ? 'Passé' : `${type === '≈' ? '≈' : ''}J-${j}`}
+              </b>
+              {court}
+            </span>
+          );
+        })}
+      </div>
+      <span className="ml-auto flex gap-2">
+        <span
+          className={`${pill} !bg-indigo-50 !border-indigo-200 !text-indigo-800`}
+          title={p?.nbNotes ? `Moyenne de tes ${p.nbNotes} réponses corrigées (1re tentative), français et maths` : 'Pas encore de réponse corrigée'}
+        >
+          📊 Moyenne {p?.moyenne != null ? nfr(p.moyenne) : '–'} / 10
+        </span>
+        <span className={pill} title={`${p?.serie || 0} jour${(p?.serie || 0) > 1 ? 's' : ''} d’affilée avec au moins une réponse`}>
+          🔥 {p?.serie || 0} j
+        </span>
+        <span className={pill} title={`${nfr(p?.questions || 0)} question${(p?.questions || 0) > 1 ? 's' : ''} répondue${(p?.questions || 0) > 1 ? 's' : ''} avec le tuteur`}>
+          ✅ {nfr(p?.questions || 0)} q.
+        </span>
+      </span>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // App root
 // ---------------------------------------------------------------------------
 // RevisionSetupView — choose how many items to review
@@ -6466,8 +6611,17 @@ function AppContent({ authUser }) {
     });
   }, [isLockedApp]);
 
+  // Barre du haut (ordinateur) : progression des notions, rechargée après chaque réponse et au retour d'une série
+  const [tuteurProgress, setTuteurProgress] = useState(null);
+  const refreshTuteurProgress = (userId) => {
+    if (!userId) return;
+    fetchTuteurProgress(userId).then(p => { if (p) setTuteurProgress(p); });
+  };
+
   const refreshFreeQsCount = (userId) => {
     if (!userId) return;
+    // Les réponses sont enregistrées en arrière-plan : on relit la progression un peu après
+    setTimeout(() => refreshTuteurProgress(userId), 1500);
     fetchFreeQuestionsUsed(userId).then(count => {
       if (count !== null) setDbFreeQsUsed(count);
     });
@@ -6498,6 +6652,7 @@ function AppContent({ authUser }) {
     if (userId) {
       fetchLastActiveSession(userId).then(row => { if (row) setBanqueSession(row); });
       refreshFreeQsCount(userId);
+      refreshTuteurProgress(userId);
       sbClient.from('support_tickets')
         .select('id', { count: 'exact', head: true })
         .eq('user_seen_reply', false)
@@ -6668,6 +6823,7 @@ function AppContent({ authUser }) {
     <div className="bg-gray-50 flex flex-col overflow-hidden min-[1100px]:pl-[232px]" style={{ height: '100dvh' }}>
       <SiteHeader authUser={authUser} profile={profile} onSupport={() => handleTabChange('support')} />
       <SideNav active={navActive} onChange={handleTabChange} unreadSupport={unreadSupport} authUser={authUser} profile={profile} />
+      <TopBar progress={tuteurProgress} />
       <div
         className="flex flex-col flex-1 min-h-0 max-w-3xl mx-auto w-full min-[1100px]:pt-4"
       >
