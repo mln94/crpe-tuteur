@@ -1,0 +1,458 @@
+[
+  {
+    "id": 24,
+    "texte_support": "Voltaire, *Candide*, 1759 — chapitre III (Candide traverse un village dévasté par la guerre)\n« Ici des vieillards criblés de coups regardaient mourir leurs femmes égorgées, qui tenaient leurs enfants à leurs mamelles sanglantes ; là des filles éventrées après avoir assouvi les besoins naturels de quelques héros rendaient les derniers soupirs ; d'autres, à demi brûlées, criaient qu'on achevât de leur donner la mort. »",
+    "remplacements": [
+      [
+        "(des femmes, des enfants, des filles)",
+        "(« Ici des vieillards… », « là des filles… », « d'autres… »)"
+      ]
+    ]
+  },
+  {
+    "id": 26,
+    "texte_support": "Jean de La Fontaine, *Fables*, 1668 — livre I, fable 1, « La Cigale et la Fourmi » (début)\n« La Cigale, ayant chanté\nTout l'été,\nSe trouva fort dépourvue\nQuand la bise fut venue :\nPas un seul petit morceau\nDe mouche ou de vermisseau. »",
+    "reponse_ideale": "Dans cet extrait, on relève trois signes de ponctuation :\n— Les virgules (,) encadrent le groupe participial « ayant chanté tout l'été », apposé au sujet « La Cigale » : elles isolent cette précision (la cause de la situation) entre le sujet et le verbe « se trouva ». On peut supprimer le groupe entre virgules : « La Cigale se trouva fort dépourvue ».\n— Les deux-points (:) après « Quand la bise fut venue » annoncent une explication ou une illustration : « Pas un seul petit morceau de mouche ou de vermisseau » précise en quoi la Cigale est « dépourvue ».\n— Le point (.) final clôt l'ensemble.\nOn remarque que la phrase qui suit les deux-points est non verbale (aucun verbe conjugué) : la ponctuation relie ici une phrase verbale complexe (avec la subordonnée de temps « Quand la bise fut venue ») et un groupe nominal qui en développe le sens. Dans une fable en vers, la ponctuation guide aussi la lecture : les fins de vers ne correspondent pas toujours à une pause, contrairement aux signes de ponctuation."
+  },
+  {
+    "id": 31,
+    "texte_support": "Gustave Flaubert, *Madame Bovary*, 1857 — partie I, chapitre 7 (texte légèrement adapté pour l'exercice : dans le roman, un point sépare « comme on disait » de la suite, qui commence par « Pour en goûter la douceur »)\n« Elle songeait quelquefois que c'étaient là pourtant les plus beaux jours de sa vie, la lune de miel, comme on disait ; mais pour goûter la douceur, il eût fallu, sans doute, s'en aller vers ces pays à noms sonores où les lendemains de mariage ont de plus suaves paresses. »"
+  },
+  {
+    "id": 41,
+    "texte_support": "Phrase d'exemple inspirée de *Les Misérables* (Victor Hugo, 1862) — ce n'est pas une citation de l'œuvre.\n« C'est lui qui porta secours à l'enfant. »"
+  },
+  {
+    "id": 49,
+    "texte_support": "Phrase d'exemple inspirée de *Les Misérables* (Victor Hugo, 1862) — ce n'est pas une citation de l'œuvre.\n« Il ne répondait pas. Il ne bougeait pas. »"
+  },
+  {
+    "id": 52,
+    "texte_support": "Phrase d'exemple inspirée de *Germinal* (Émile Zola, 1885) — ce n'est pas une citation de l'œuvre.\n« Bien qu'il fît nuit noire, Étienne reconnut les lieux parce qu'il avait souvent traversé cette plaine. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Zola",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 53,
+    "texte_support": "Montesquieu, *De l'esprit des lois*, 1748 — livre XI, chapitre 4\n« Pour qu'on ne puisse abuser du pouvoir, il faut que, par la disposition des choses, le pouvoir arrête le pouvoir. »"
+  },
+  {
+    "id": 57,
+    "texte_support": "Guy de Maupassant, *Boule de suif*, 1880 — incipit (les deux premières phrases sont de Maupassant ; « Misère ! Défaite ! » a été ajouté pour l'exercice)\n« Pendant plusieurs jours de suite des lambeaux d'armée en déroute avaient traversé la ville. Ce n'était point de la troupe, mais des hordes débandées. Misère ! Défaite ! »",
+    "remplacements": [
+      [
+        "Ce n'était pas des troupes, mais des hordes débandées.",
+        "Ce n'était point de la troupe, mais des hordes débandées."
+      ],
+      [
+        "Ce n'était pas des troupes",
+        "Ce n'était point de la troupe"
+      ]
+    ]
+  },
+  {
+    "id": 61,
+    "texte_support": "Phrase d'exemple inspirée de *Le Mariage de Figaro* (Beaumarchais, 1784) — ce n'est pas une citation de l'œuvre.\n« Figaro — Je voudrais bien savoir si elle viendra. »"
+  },
+  {
+    "id": 63,
+    "texte_support": "Phrase d'exemple inspirée de *Une vie* (Guy de Maupassant, 1883) — ce n'est pas une citation de l'œuvre.\n« Elle revoyait la maison blanche dont elle avait tant rêvé, avec le jardin que son père lui avait décrit. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Maupassant",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 65,
+    "texte_support": "Jean Racine, *Andromaque*, 1667 — acte IV, scène 5 (Hermione à Pyrrhus, qui l'abandonne)\n« Je t'aimais inconstant ; qu'aurais-je fait fidèle ? »"
+  },
+  {
+    "id": 70,
+    "texte_support": "Chateaubriand, *Mémoires d'outre-tombe*, 1849-1850 — livre I, chapitre 1\n« Je suis né gentilhomme. Selon moi, j'ai profité du hasard de mon berceau, j'ai gardé cet amour plus ferme de la liberté qui appartient principalement à l'aristocratie dont la dernière heure est sonnée. »",
+    "question": "Dans la fin de la phrase, « cet amour plus ferme de la liberté qui appartient principalement à l'aristocratie dont la dernière heure est sonnée », identifiez les deux mots subordonnants. Sont-ils des pronoms relatifs ou des conjonctions de subordination ? Précisez leur antécédent et leur fonction.",
+    "reponse_ideale": "Les deux mots subordonnants sont « qui » et « dont ». Ce sont des pronoms relatifs :\n— « qui » introduit la proposition subordonnée relative « qui appartient principalement à l'aristocratie… ». Son antécédent est le groupe nominal « cet amour plus ferme de la liberté » (c'est cet amour qui appartient à l'aristocratie). Il est sujet du verbe « appartient ».\n— « dont » introduit la proposition subordonnée relative « dont la dernière heure est sonnée ». Son antécédent est « l'aristocratie ». Il est complément du nom « heure » : la dernière heure de l'aristocratie est sonnée.\nOn les distingue d'une conjonction de subordination (comme « que » dans « il faut que… ») parce qu'ils reprennent un antécédent et ont une fonction grammaticale dans la proposition qu'ils introduisent, alors qu'une conjonction n'a aucune fonction."
+  },
+  {
+    "id": 71,
+    "texte_support": "Phrase d'exemple inspirée de *Le Crime de Sylvestre Bonnard* (Anatole France, 1881) — ce n'est pas une citation de l'œuvre.\n« Il aimait les vieux livres ; cependant, il n'en achetait plus guère, car sa bourse était vide. Pourtant, il entrait parfois chez les bouquinistes, ne serait-ce que pour regarder. »",
+    "remplacements": [
+      [
+        "dans cet extrait d'Anatole France",
+        "dans cet extrait"
+      ]
+    ]
+  },
+  {
+    "id": 74,
+    "texte_support": "Phrase d'exemple inspirée de *Madame Bovary* (Gustave Flaubert, 1857) — ce n'est pas une citation de l'œuvre.\n« Elle cousait ; il lisait ; il fumait. »",
+    "remplacements": [
+      [
+        "Cette construction illustre l'art de Flaubert : dire",
+        "Cette construction montre qu'on peut dire"
+      ]
+    ]
+  },
+  {
+    "id": 79,
+    "texte_support": "Alphonse de Lamartine, *Méditations poétiques*, 1820 — « Le Lac »\n« Ô temps ! suspends ton vol, et vous, heures propices !\nSuspendez votre cours :\nLaissez-nous savourer les rapides délices\nDes plus beaux de nos jours ! »"
+  },
+  {
+    "id": 80,
+    "texte_support": "Phrase d'exemple inspirée de *Le Père Goriot* (Honoré de Balzac, 1835) — ce n'est pas une citation de l'œuvre.\n« Il savait que la misère attendait ceux qui résistaient à la fortune. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Balzac",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 83,
+    "texte_support": "Phrase d'exemple inspirée de *La Chèvre de Monsieur Seguin* (Alphonse Daudet, 1869) — ce n'est pas une citation de l'œuvre.\n« Toute la nuit, le loup et la chèvre se battirent. Par moments, Blanquette faiblissait. Puis elle reprenait courage. »"
+  },
+  {
+    "id": 84,
+    "texte_support": "Phrase d'exemple inspirée de *Les Misérables* (Victor Hugo, 1862) — ce n'est pas une citation de l'œuvre.\n« Bien qu'il fût blessé, il continua sa route sans se plaindre. »"
+  },
+  {
+    "id": 90,
+    "texte_support": "Phrase d'exemple inspirée de *La Confession d'un enfant du siècle* (Alfred de Musset, 1836) — ce n'est pas une citation de l'œuvre.\n« Cette jeunesse ardente et désespérée, nourrie de rêves impossibles, se jeta dans tous les excès. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Musset",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 91,
+    "texte_support": "Phrase d'exemple inspirée de *Le Rouge et le Noir* (Stendhal, 1830) — ce n'est pas une citation de l'œuvre.\n« Il espérait qu'on lui pardonnerait d'avoir trop aimé la gloire. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Stendhal",
+        "Dans cette phrase"
+      ],
+      [
+        "Dans la phrase de Stendhal",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 92,
+    "texte_support": "Phrase d'exemple inspirée de *Le Tour du monde en quatre-vingts jours* (Jules Verne, 1872) — ce n'est pas une citation de l'œuvre.\n« Phileas Fogg habitait une belle maison dans le quartier de Saville Row. »"
+  },
+  {
+    "id": 98,
+    "texte_support": "Honoré de Balzac, *Le Père Goriot*, 1835 — début du roman (le narrateur s'adresse au lecteur)\n« Ah ! sachez-le : ce drame n'est ni une fiction, ni un roman. All is true, il est si véritable, que chacun peut en reconnaître les éléments chez soi, dans son cœur peut-être. »",
+    "reponse_ideale": "On peut relever plusieurs mots de liaison qui assurent la cohésion et la progression des idées :\n— « ni… ni » : coordination négative. Elle nie deux qualifications (« une fiction », « un roman ») pour mieux affirmer la vérité du récit.\n— « si… que » : cette corrélation exprime la conséquence. Le récit est « si véritable » qu'il en résulte que « chacun peut en reconnaître les éléments chez soi ». C'est le connecteur qui fait progresser le raisonnement : de l'affirmation (« ce n'est ni une fiction ni un roman ») à sa conséquence pour le lecteur.\n— « peut-être » : adverbe de modalisation qui nuance la fin de la phrase et invite le lecteur à s'examiner lui-même (« dans son cœur »).\nLes deux-points après « sachez-le » annoncent aussi ce que le narrateur veut faire savoir : ils jouent le rôle d'un lien logique implicite."
+  },
+  {
+    "id": 100,
+    "texte_support": "Phrase d'exemple inspirée de *La Maison de Claudine* (Colette, 1922) — ce n'est pas une citation de l'œuvre.\n« Le vieux jardin plein de roses odorantes que ma mère cultivait avec soin nous appartenait. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Colette",
+        "Dans cette phrase"
+      ],
+      [
+        "Dans la phrase de Colette",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 101,
+    "texte_support": "Phrase d'exemple inspirée de *La Mare au diable* (George Sand, 1846) — ce n'est pas une citation de l'œuvre.\n« Germain conduisait lentement sa charrue dans la grande plaine. »"
+  },
+  {
+    "id": 111,
+    "texte_support": "Phrase d'exemple inspirée de *Le Petit Chose* (Alphonse Daudet, 1868) — ce n'est pas une citation de l'œuvre.\n« — T'as vu le vieux ? Il nous a encore collé une heure de colle. C'est trop nul ! »"
+  },
+  {
+    "id": 112,
+    "texte_support": "Phrase d'exemple inspirée de *Germinal* (Émile Zola, 1885) — ce n'est pas une citation de l'œuvre.\n« Une mine énorme et sombre s'étendait au fond de la plaine. »"
+  },
+  {
+    "id": 122,
+    "texte_support": "Réplique d'exemple écrite à la manière des personnages populaires de *L'Assommoir* (Émile Zola, 1877) — ce n'est pas une citation du roman.\n« Ah ! la sacrée boutique ! C'était bath tout de même, ce truc-là. »",
+    "remplacements": [
+      [
+        "Dans cet extrait de Zola, quel registre",
+        "Dans cette réplique, quel registre"
+      ]
+    ]
+  },
+  {
+    "id": 126,
+    "texte_support": "Pierre Corneille, *Le Cid*, 1637 — acte I, scène 5\nDON DIÈGUE. — Rodrigue, as-tu du cœur ?\nDON RODRIGUE. — Tout autre que mon père\nL'éprouverait sur l'heure."
+  },
+  {
+    "id": 130,
+    "texte_support": "Phrase d'exemple inspirée de *Le Petit Chaperon rouge* (Charles Perrault, 1697) — ce n'est pas une citation de l'œuvre.\n« Sa mère lui fit une galette et un petit pot de beurre, et lui dit de les porter à sa grand-mère. »"
+  },
+  {
+    "id": 132,
+    "texte_support": "Phrase d'exemple inspirée de *Le Rouge et le Noir* (Stendhal, 1830) — ce n'est pas une citation de l'œuvre.\n« Quand il eut fini de lire la lettre, Julien sentit qu'il avait été trahi. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Stendhal",
+        "Dans cette phrase"
+      ],
+      [
+        "Dans la phrase de Stendhal",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 134,
+    "texte_support": "Phrase d'exemple inspirée de *Madame Bovary* (Gustave Flaubert, 1857) — ce n'est pas une citation de l'œuvre.\n« Pourquoi donc était-elle si malheureuse ? Où était le bonheur qu'elle avait tant espéré ? »",
+    "remplacements": [
+      [
+        "permet à Flaubert de",
+        "permet au romancier de"
+      ]
+    ]
+  },
+  {
+    "id": 140,
+    "texte_support": "Phrase d'exemple inspirée de *Carmen* (Prosper Mérimée, 1845) — ce n'est pas une citation de l'œuvre.\n« Si je n'avais pas rencontré cette femme, j'aurais continué à vivre tranquille et honnête. »",
+    "remplacements": [
+      [
+        "Dans cette phrase de Mérimée",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 144,
+    "texte_support": "Phrase d'exemple inspirée de *Boule de Suif* (Guy de Maupassant, 1880) — ce n'est pas une citation de l'œuvre.\n« Elle dit qu'elle avait faim. Puis, se tournant vers lui :\n— Prenez donc un peu de poulet, monsieur.\nIl répondit qu'il n'avait besoin de rien. »",
+    "remplacements": [
+      [
+        "Dans cet extrait de Maupassant",
+        "Dans cet extrait"
+      ]
+    ]
+  },
+  {
+    "id": 149,
+    "texte_support": "Pierre Corneille, *Le Cid*, 1637 — acte III, scène 4 (Chimène à Rodrigue)\n« Va, je ne te hais point. »"
+  },
+  {
+    "id": 150,
+    "texte_support": "Théophile Gautier, *Émaux et Camées*, 1852 — « L'Art »\n« Tout passe. — L'art robuste\nSeul a l'éternité ;\nLe buste\nSurvit à la cité. »"
+  },
+  {
+    "id": 157,
+    "texte_support": "Phrase d'exemple inspirée de *Les Filles du feu* (Gérard de Nerval, 1854) — ce n'est pas une citation de l'œuvre.\n« La lettre fut écrite à la hâte, et remise par un serviteur fidèle. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Nerval",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 159,
+    "texte_support": "Phrase d'exemple inspirée de *Le Jeu de l'amour et du hasard* (Marivaux, 1730) — ce n'est pas une citation de l'œuvre.\nSilvia dit à sa soubrette : « Écoute, je ne sais pas ce que je veux. »"
+  },
+  {
+    "id": 161,
+    "texte_support": "Phrase d'exemple inspirée de *La Mare au Diable* (George Sand, 1846) — ce n'est pas une citation de l'œuvre.\n« Il faut que tu partes avant qu'il ait fait nuit. »",
+    "remplacements": [
+      [
+        "Dans la phrase de George Sand",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 163,
+    "texte_support": "Gustave Flaubert, *Madame Bovary*, 1857 — partie I, chapitre 6\n« Elle aimait la mer à cause de ses tempêtes, et la verdure seulement lorsqu'elle était clairsemée parmi les ruines. »"
+  },
+  {
+    "id": 166,
+    "texte_support": "Phrase d'exemple inspirée de *Mateo Falcone* (Prosper Mérimée, 1829) — ce n'est pas une citation de l'œuvre.\n« Fortunato lui dit qu'il ne savait rien. »\npuis plus loin :\n« Fortunato s'écria : \"Je n'ai rien vu !\" »"
+  },
+  {
+    "id": 168,
+    "texte_support": "Phrase d'exemple inspirée de *Du côté de chez Swann* (Marcel Proust, 1913) — ce n'est pas une citation de l'œuvre.\n« Je suis heureux qu'elle soit venue et qu'il ait pu la voir. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Proust",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 170,
+    "texte_support": "Phrase d'exemple inspirée de *La Mare au diable* (George Sand, 1846) — ce n'est pas une citation de l'œuvre.\n« Si tu venais avec moi, petit, tu verrais de belles choses. »",
+    "remplacements": [
+      [
+        "Dans la phrase de George Sand",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 174,
+    "texte_support": "Phrase d'exemple inspirée de *Les Trois Mousquetaires* (Alexandre Dumas, 1844) — ce n'est pas une citation de l'œuvre.\n« Athos dit à d'Artagnan qu'il était prêt à le suivre. »"
+  },
+  {
+    "id": 176,
+    "texte_support": "Phrase d'exemple inspirée de *Le Tour du monde en quatre-vingts jours* (Jules Verne, 1872) — ce n'est pas une citation de l'œuvre.\n« Phileas Fogg prit sa montre, vit l'heure, et dit à son domestique qu'ils devaient partir. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Jules Verne",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 179,
+    "texte_support": "Phrase d'exemple inspirée de *Germinal* (Émile Zola, 1885) — ce n'est pas une citation de l'œuvre.\n« Depuis une heure, il marchait sur la grande route qui s'étendait entre les plaines noires. Tout à coup, il s'arrêta. »",
+    "remplacements": [
+      [
+        "Dans cet extrait de Zola",
+        "Dans cet extrait"
+      ]
+    ]
+  },
+  {
+    "id": 184,
+    "texte_support": "Phrase d'exemple inspirée de *Candide* (Voltaire, 1759) — ce n'est pas une citation de l'œuvre.\n« Candide écoutait attentivement et croyait innocemment. »"
+  },
+  {
+    "id": 191,
+    "texte_support": "Phrase d'exemple inspirée de *Les Fleurs du Mal* (Charles Baudelaire, 1857) — ce n'est pas une citation de l'œuvre.\n« Pour qu'elle fût heureuse, il lui offrit tout ce qu'il possédait. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Baudelaire",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 198,
+    "texte_support": "Phrase d'exemple inspirée de *Bel-Ami* (Guy de Maupassant, 1885) — ce n'est pas une citation de l'œuvre.\n« Il fallait qu'il réussît, quoi qu'il lui en coûtât. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Maupassant",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 206,
+    "texte_support": "Phrase d'exemple inspirée de *Colomba* (Prosper Mérimée, 1840) — ce n'est pas une citation de l'œuvre.\n« Il disait qu'il reviendrait dès que la situation le permettrait. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Mérimée",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 209,
+    "texte_support": "Phrase d'exemple inspirée de *Les Confessions* (Jean-Jacques Rousseau, 1782) — ce n'est pas une citation de l'œuvre.\n« Quand il eut fini de lire, il posa le livre et réfléchit longuement. »"
+  },
+  {
+    "id": 210,
+    "texte_support": "Phrase d'exemple inspirée de *Le Jeu de l'amour et du hasard* (Marivaux, 1730) — ce n'est pas une citation de l'œuvre.\n« C'est vous et moi qui devons régler cette affaire. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Marivaux",
+        "Dans cette phrase"
+      ],
+      [
+        "Dans la phrase de Marivaux",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 212,
+    "texte_support": "Phrase d'exemple inspirée de *La Porte étroite* (André Gide, 1909) — ce n'est pas une citation de l'œuvre.\n« Les longues promenades silencieuses qu'ils faisaient ensemble lui semblaient précieuses. »",
+    "remplacements": [
+      [
+        "Dans la phrase d'André Gide",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 215,
+    "texte_support": "Phrase d'exemple inspirée de *Pensées* (Blaise Pascal, 1670) — ce n'est pas une citation de l'œuvre.\n« Les deux partis se sont trompés en voulant exclure l'un ou l'autre. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Pascal",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 216,
+    "texte_support": "Phrase d'exemple inspirée de *Le Père Goriot* (Honoré de Balzac, 1835) — ce n'est pas une citation de l'œuvre.\n« Il allait, venait, s'asseyait, se levait, prenait un livre, le reposait. »"
+  },
+  {
+    "id": 217,
+    "texte_support": "Phrase d'exemple inspirée de *Le Roman de la momie* (Théophile Gautier, 1858) — ce n'est pas une citation de l'œuvre.\n« Épuisée, elle s'assit sur le sable froid et resta silencieuse. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Gautier",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 220,
+    "texte_support": "Phrase d'exemple inspirée de *Le Rouge et le Noir* (Stendhal, 1830) — ce n'est pas une citation de l'œuvre.\n« Julien lisait dans sa chambre quand le domestique entra brusquement. »"
+  },
+  {
+    "id": 226,
+    "texte_support": "Phrase d'exemple inspirée de *Sylvie* (Gérard de Nerval, 1853) — ce n'est pas une citation de l'œuvre.\n« Les lettres qu'il avait écrites restaient sans réponse. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Nerval",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 227,
+    "texte_support": "Phrase d'exemple inspirée de *Lettres* (Mme de Sévigné, 1671) — ce n'est pas une citation de l'œuvre.\n« Les belles fleurs de nos jardins commençaient à s'épanouir doucement. »"
+  },
+  {
+    "id": 230,
+    "texte_support": "Phrase d'exemple inspirée de *Une saison en enfer* (Arthur Rimbaud, 1873) — ce n'est pas une citation de l'œuvre.\n« La plupart des poètes ignoraient cette vérité. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Rimbaud",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 231,
+    "texte_support": "Phrase d'exemple inspirée de *Les Aventures de Télémaque* (Fénelon, 1699) — ce n'est pas une citation de l'œuvre.\n« Télémaque était jeune et courageux. »"
+  },
+  {
+    "id": 236,
+    "texte_support": "Phrase d'exemple inspirée de *De l'Esprit des lois* (Montesquieu, 1748) — ce n'est pas une citation de l'œuvre.\n« La liberté, les droits et la justice constituent les fondements de toute société. »"
+  },
+  {
+    "id": 240,
+    "texte_support": "Blaise Pascal, *Pensées*, publication posthume en 1670\n« Les rivières sont des chemins qui marchent, et qui portent où l'on veut aller. »"
+  },
+  {
+    "id": 243,
+    "texte_support": "Phrase d'exemple inspirée de *Gil Blas de Santillane* (Alain-René Lesage, 1715) — ce n'est pas une citation de l'œuvre.\n« Mon oncle était homme de bien et de probité. »"
+  }
+]
