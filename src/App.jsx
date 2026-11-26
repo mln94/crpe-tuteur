@@ -518,7 +518,7 @@ Et affiche l'exercice normalement.
 Attends sa réponse SANS donner la correction au préalable.
 Maintiens un compteur de tentatives par exercice (commence à 1, réinitialise à 1 à chaque nouvel exercice).
 
-— Tentative 1 : Fournis une correction format strict sans astérisques ni tirets en début de ligne :
+— Tentatives 1 à 5 : Fournis une correction format strict sans astérisques ni tirets en début de ligne :
 
 Note écriture : [X]/10
 Note orthographe : [X]/10
@@ -533,7 +533,7 @@ Ce qui va :
 Pistes d'amélioration :
 [2 à 3 pistes concrètes et actionnables pour améliorer la réponse — sans révéler la réponse modèle]
 
-Souhaitez-vous améliorer votre réponse ?
+Souhaitez-vous améliorer votre réponse ? (tentative [n] sur 6 : vous pouvez réécrire votre réponse jusqu'à 6 fois pour la parfaire)
 
 **[R]** **[S]** **[N]** **[O]**
 
@@ -545,7 +545,7 @@ Réponse type CRPE :
 Si l'utilisateur répond **[N]** (Réessayer) : réponds par une courte phrase d'encouragement (ex : "D'accord, réessayez !"). Ne réaffiche PAS l'exercice — il est déjà visible dans le chat. Affiche ensuite **[S]** seul sur la dernière ligne pour proposer une synthèse de cours. Incrémente le compteur à 2.
 Si l'utilisateur répond **[O]** (Question suivante) : passe directement à l'exercice suivant sans afficher la réponse type.
 
-— Tentative 2 : Fournis une correction complète format strict :
+— Tentative 6 (dernière) : Fournis une correction complète format strict :
 
 Note écriture : [X]/10
 Note orthographe : [X]/10
@@ -1366,13 +1366,13 @@ Excellente réponse ! Vous maîtrisez bien cet exercice.
 
 **[S]** **[N]** **[R]** **[O]**
 
-Si note < 8 ET tentatives < 2 :
+Si note < 8 ET tentatives < 6 :
 
 **[S]** **[N]** **[R]** **[O]**
 
-Si note < 8 ET tentatives = 2 :
+Si note < 8 ET tentatives = 6 :
 
-Vous avez utilisé vos 2 tentatives.
+Vous avez utilisé vos 6 tentatives.
 
 **[R]** **[S]** **[O]** **[D]**
 
@@ -1948,6 +1948,13 @@ function SyntheseModal({ content, loading, onClose }) {
 // PaywallModal — shown after FREE_QUESTION_LIMIT questions
 // ---------------------------------------------------------------------------
 const FREE_QUESTION_LIMIT = 10;
+// Tentatives par question : on réécrit sa réponse jusqu'à MAX_TENTATIVES fois pour la parfaire et prendre l'habitude de bien rédiger
+const MAX_TENTATIVES = 6;
+function messageNouvelleTentative(n) {
+  if (n >= MAX_TENTATIVES) return `**Dernière tentative (${n} sur ${MAX_TENTATIVES})** — Appuyez-vous sur toutes les corrections précédentes pour rédiger votre meilleure réponse.`;
+  if (n === 2) return `**Tentative 2 sur ${MAX_TENTATIVES}** — Relisez la question et la correction, puis améliorez votre réponse. Vous avez **jusqu'à ${MAX_TENTATIVES} tentatives** pour la parfaire : c'est en réécrivant, correction après correction, qu'on prend l'habitude de bien rédiger, comme le jour du concours.`;
+  return `**Tentative ${n} sur ${MAX_TENTATIVES}** — Encore un effort : appliquez les conseils de la dernière correction pour améliorer votre réponse.`;
+}
 const CONTACT_EMAIL       = 'mohamed.necib94310@gmail.com';
 const CRPE_PRICE_LABEL    = '360,00 € TTC'; // doit rester aligné avec CRPE_PRICE dans app.js
 const CRPE_PRICE_LABEL_HT = '299,00 € HT';
@@ -2299,7 +2306,7 @@ function ChatView({ matiere, profile, sessionKey, onNewSession, onBack, topic, n
       reponse_ideale: idealResponse,
       conseils,
       ...noteFields,
-      ...(tentativeRef.current === 2 ? { tentative: 2 } : {}),
+      ...(tentativeRef.current > 1 ? { tentative: tentativeRef.current } : {}),
     };
     supabaseInsertReturningId('reponses_utilisateurs_francais', reponseRecord)
       .then(reponseId => saveFautesEtErreurs(correctionText, reponseId));
@@ -3359,19 +3366,20 @@ function HistoryView() {
   // Group by calendar day
   const byDay = [];
   // Regrouper les tentatives d'une même question dans un seul groupe
-  const groupMap = new Map(); // key → { t1, t2, latestDate }
+  const groupMap = new Map(); // key → { all: [tentatives triées], latestDate }
   rows.forEach(row => {
     const gKey = row.id_question_completee
       ? `q_${row.id_question_completee}_${row.session_id}`
       : `r_${row.session_id}_${row.question}`;
-    if (!groupMap.has(gKey)) groupMap.set(gKey, { t1: null, t2: null, latestDate: row.created_at });
+    if (!groupMap.has(gKey)) groupMap.set(gKey, { all: [], latestDate: row.created_at });
     const g = groupMap.get(gKey);
-    if (row.tentative === 1) g.t1 = row; else g.t2 = row;
+    g.all.push(row);
     if (row.created_at > g.latestDate) g.latestDate = row.created_at;
   });
+  groupMap.forEach(g => g.all.sort((a, b) => (a.tentative ?? 1) - (b.tentative ?? 1) || String(a.created_at).localeCompare(String(b.created_at))));
   const groups = [...groupMap.values()].sort((a, b) => b.latestDate.localeCompare(a.latestDate));
 
-  const matiereOf = (g) => (g.t1 || g.t2)?._matiere ?? getMatiereFromThematique((g.t1 || g.t2)?.thematique);
+  const matiereOf = (g) => g.all[0]?._matiere ?? getMatiereFromThematique(g.all[0]?.thematique);
   const counts = {
     all:      groups.length,
     francais: groups.filter(g => matiereOf(g) === 'francais').length,
@@ -3430,7 +3438,7 @@ function HistoryView() {
           <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2 capitalize">{day}</p>
 
           {dayMap.get(day).map(g => {
-            const ref  = g.t1 || g.t2;
+            const ref  = g.all[0];
             const gMatiere = matiereOf(g);
             const topicLabel = FRANCAIS_TOPICS.find(t => t.id === ref.thematique)?.label
               || MATH_THEMATIQUES.find(t => t.id === ref.thematique || t.label === ref.thematique)?.label
@@ -3438,8 +3446,8 @@ function HistoryView() {
             const gId  = ref.id;
             const isOpen = expandedId === gId;
             const time = new Date(g.latestDate).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' });
-            // Note affichée dans le header = meilleure tentative (ou la seule disponible)
-            const bestRow = g.t2 || g.t1;
+            // Note affichée dans le header = dernière tentative (ou la seule disponible)
+            const bestRow = g.all[g.all.length - 1];
             const bVals = [bestRow.note_ecriture, bestRow.note_orthographe, bestRow.note_crpe].filter(v => v != null);
             const bestG = bVals.length ? Math.round(bVals.reduce((a, b) => a + b, 0) / bVals.length * 10) / 10 : null;
 
@@ -3494,7 +3502,7 @@ function HistoryView() {
                       <span className="text-xs font-semibold text-gray-700">{topicLabel}</span>
                       {ref.classe && <><span className="text-gray-200">·</span><span className="text-xs text-gray-400">{ref.classe}</span></>}
                       <span className="text-gray-200">·</span><span className="text-xs text-gray-400">{time}</span>
-                      {g.t2 && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-500 font-medium">2 tentatives</span>}
+                      {g.all.length > 1 && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-indigo-50 text-indigo-500 font-medium">{g.all.length} tentatives</span>}
                     </div>
                     {ref.sous_categorie && <p className="text-[10px] text-indigo-500 font-medium mt-0.5 truncate">{ref.sous_categorie}</p>}
                     {ref.question && <p className="text-[10px] text-gray-400 mt-0.5 truncate">{ref.question}</p>}
@@ -3520,8 +3528,14 @@ function HistoryView() {
                       </div>
                     )}
                     <div className="space-y-3">
-                      {g.t1 && <TentativeBlock row={g.t1} label={g.t2 ? '1ʳᵉ tentative' : 'Ma réponse'} color="bg-gray-50 border-gray-100" />}
-                      {g.t2 && <TentativeBlock row={g.t2} label="2ᵉ tentative" color="bg-indigo-50/40 border-indigo-100" />}
+                      {g.all.map((row, i) => (
+                        <TentativeBlock
+                          key={row.id ?? i}
+                          row={row}
+                          label={g.all.length === 1 ? 'Ma réponse' : `${i + 1}${i === 0 ? 'ʳᵉ' : 'ᵉ'} tentative`}
+                          color={i === 0 ? 'bg-gray-50 border-gray-100' : 'bg-indigo-50/40 border-indigo-100'}
+                        />
+                      ))}
                     </div>
                   </div>
                 )}
@@ -3790,8 +3804,9 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered }) {
       return;
     }
     if (opt === 'N') {
-      tentativeRef.current = 2;
-      const retryMsg = "Tentative 2 — Relisez l'énoncé et améliorez votre réponse.";
+      if (tentativeRef.current >= MAX_TENTATIVES) return;
+      tentativeRef.current += 1;
+      const retryMsg = messageNouvelleTentative(tentativeRef.current);
       const updated = [...messages, { role: 'user', content: '[N]' }, { role: 'assistant', content: retryMsg }];
       setMessages(updated);
       setOptions([]);
@@ -3882,9 +3897,13 @@ Note méthode : X/10
 Note CRPE : X/10
 Note globale : X/10
 
-${tentative === 1
-  ? '**[N]** **[R]** **[S]** **[D]** **[O]**'
-  : '**[R]** **[S]** **[D]** **[O]**'
+${tentative < MAX_TENTATIVES
+  ? `Tentative ${tentative} sur ${MAX_TENTATIVES}${tentative === 1 ? ` : vous pouvez réécrire votre réponse jusqu'à ${MAX_TENTATIVES} fois pour la parfaire.` : '.'}
+
+**[N]** **[R]** **[S]** **[D]** **[O]**`
+  : `Vous avez utilisé vos ${MAX_TENTATIVES} tentatives.
+
+**[R]** **[S]** **[D]** **[O]**`
 }`;
 
     try {
@@ -4120,7 +4139,7 @@ ${tentative === 1
           <>
             <ChatBubble msg={{
               role: 'assistant',
-              content: `Vous travaillez sur **${selectedThematique}** — **${getNiveauLabel(selectedClasseId)}** — **Cycle 4**.\n\nLes sous-catégories et les objectifs de chaque question correspondent aux **programmes officiels du cycle 4 de l'Éducation nationale**.\n\nVoici comment fonctionne la session :\n\n1. Une question est posée, avec une figure si nécessaire.\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **2 tentatives** par question pour améliorer votre réponse.\n4. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'maths', [selectedThematique], NIVEAU_TO_CLASSE[selectedClasseId], getNiveauLabel(selectedClasseId))}\n\n` : ''}${exercises.length} exercice${exercises.length > 1 ? 's' : ''} disponible${exercises.length > 1 ? 's' : ''} pour cette sélection.`,
+              content: `Vous travaillez sur **${selectedThematique}** — **${getNiveauLabel(selectedClasseId)}** — **Cycle 4**.\n\nLes sous-catégories et les objectifs de chaque question correspondent aux **programmes officiels du cycle 4 de l'Éducation nationale**.\n\nVoici comment fonctionne la session :\n\n1. Une question est posée, avec une figure si nécessaire.\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **jusqu'à ${MAX_TENTATIVES} tentatives** par question pour parfaire votre réponse : c'est en la réécrivant, correction après correction, qu'on prend l'habitude de bien rédiger.\n4. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'maths', [selectedThematique], NIVEAU_TO_CLASSE[selectedClasseId], getNiveauLabel(selectedClasseId))}\n\n` : ''}${exercises.length} exercice${exercises.length > 1 ? 's' : ''} disponible${exercises.length > 1 ? 's' : ''} pour cette sélection.`,
             }} />
             <div className="pl-11 mt-1 mb-2">
               <button
@@ -4621,9 +4640,13 @@ Note globale : X/10
 ORTHO: "mot_fautif" → "correction" | "mot2" → "correction2"  (ou ORTHO: aucune si aucune faute d'orthographe)
 SYNTAXE: "erreur de syntaxe" → "correction" | ...  (ou SYNTAXE: aucune si aucune erreur de syntaxe)
 
-${tentative === 1
-  ? '**[N]** **[R]** **[S]** **[D]** **[O]**'
-  : '**[R]** **[S]** **[D]** **[O]**'
+${tentative < MAX_TENTATIVES
+  ? `Tentative ${tentative} sur ${MAX_TENTATIVES}${tentative === 1 ? ` : vous pouvez réécrire votre réponse jusqu'à ${MAX_TENTATIVES} fois pour la parfaire.` : '.'}
+
+**[N]** **[R]** **[S]** **[D]** **[O]**`
+  : `Vous avez utilisé vos ${MAX_TENTATIVES} tentatives.
+
+**[R]** **[S]** **[D]** **[O]**`
 }`;
 
   const handleOption = (opt) => {
@@ -4637,13 +4660,14 @@ ${tentative === 1
       return;
     }
     if (opt === '[N]') {
-      tentativeRef.current = 2;
-      const retryMsg = 'Tentative 2 — Relisez la question et améliorez votre réponse.';
+      if (tentativeRef.current >= MAX_TENTATIVES) return;
+      tentativeRef.current += 1;
+      const retryMsg = messageNouvelleTentative(tentativeRef.current);
       const updated = [...messages, { role: 'user', content: '[N]' }, { role: 'assistant', content: retryMsg }];
       setMessages(updated);
       setOptions([]);
       setPhase('question');
-      saveToDb(updated, currentIndex, exerciceNum, displayedDiff, 2, 'question');
+      saveToDb(updated, currentIndex, exerciceNum, displayedDiff, tentativeRef.current, 'question');
       setTimeout(() => inputRef.current?.focus(), 100);
       return;
     }
@@ -4822,7 +4846,7 @@ ${tentative === 1
               reponse:       content,
               reponse_ideale: q?.reponse_ideale || null,
               conseils,
-              tentative:     2,
+              tentative,
               ...noteFields,
             }).then(saveBanqueFautesEtErreurs);
           }
@@ -4983,7 +5007,7 @@ ${tentative === 1
           <>
             <ChatBubble msg={{
               role: 'assistant',
-              content: `Vous travaillez sur **${topicLabel}** — **${niveauLabel}** — **Cycle 4**.\n\nLes sous-catégories et les objectifs de chaque question correspondent aux **programmes officiels du cycle 4 de l'Éducation nationale**.\n\nVoici comment fonctionne la session :\n\n1. ${levelUnlocked ? 'La version **Facile** de chaque exercice est affichée en premier.' : 'Seules les questions de niveau **Facile** sont disponibles pour l\'instant.'}\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **2 tentatives** par question pour améliorer votre réponse.\n4. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n5. ${levelUnlocked ? 'Si vous souhaitez aller plus loin, passez à la **version intermédiaire** du même exercice.' : 'Remplissez les critères sur la page d\'accueil pour débloquer le niveau intermédiaire.'}\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'francais', [topic, topicLabel], classe, niveauLabel)}\n\n` : ''}${pairs.length > 0 ? `${pairs.length} exercice${pairs.length > 1 ? 's' : ''} disponible${pairs.length > 1 ? 's' : ''} pour cette sélection.` : 'Aucun exercice disponible pour cette sélection.'}`,
+              content: `Vous travaillez sur **${topicLabel}** — **${niveauLabel}** — **Cycle 4**.\n\nLes sous-catégories et les objectifs de chaque question correspondent aux **programmes officiels du cycle 4 de l'Éducation nationale**.\n\nVoici comment fonctionne la session :\n\n1. ${levelUnlocked ? 'La version **Facile** de chaque exercice est affichée en premier.' : 'Seules les questions de niveau **Facile** sont disponibles pour l\'instant.'}\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **jusqu'à ${MAX_TENTATIVES} tentatives** par question pour parfaire votre réponse : c'est en la réécrivant, correction après correction, qu'on prend l'habitude de bien rédiger.\n4. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n5. ${levelUnlocked ? 'Si vous souhaitez aller plus loin, passez à la **version intermédiaire** du même exercice.' : 'Remplissez les critères sur la page d\'accueil pour débloquer le niveau intermédiaire.'}\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'francais', [topic, topicLabel], classe, niveauLabel)}\n\n` : ''}${pairs.length > 0 ? `${pairs.length} exercice${pairs.length > 1 ? 's' : ''} disponible${pairs.length > 1 ? 's' : ''} pour cette sélection.` : 'Aucun exercice disponible pour cette sélection.'}`,
             }} />
             <div className="pl-11 mt-1 mb-2 flex flex-col gap-2">
               {hasSavedSession && (
