@@ -2651,9 +2651,26 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     }).catch(function () { el.innerHTML = '<div class="quiz-msg">Les thèmes n’ont pas pu être chargés. Réessayez.</div>'; });
   }
   function nomTheme(t) { var g = groupe(t); return g ? g.court : t; }
+  // Filtre « Afficher » : nombre de notions du thème dans le statut choisi, et message quand la matière n'en a aucune
+  var CHAMP_NT = { a_revoir: 'a_revoir', en_cours: 'en_cours', maitrisee: 'maitrisees', pas_vue: 'pas_vues' };
+  function videFiltreNt() {
+    var m = MATIERES.filter(function (x) { return x[0] === nt.mat; })[0], nom = m ? m[1] : 'cette matière';
+    var txt = {
+      a_revoir: '🎉 <b>Aucune notion à revoir en ' + esc(nom) + ' pour le moment.</b> Une notion passe « À revoir » quand vous vous trompez : elle revient alors dans vos prochaines séries.',
+      en_cours: '<b>Aucune notion en cours en ' + esc(nom) + ' pour le moment.</b> Une notion est en cours dès que vous y avez répondu juste, jusqu’à ce qu’elle soit maîtrisée.',
+      maitrisee: '<b>Aucune notion maîtrisée en ' + esc(nom) + ' pour l’instant.</b> Une notion est maîtrisée après 3 bonnes réponses à 3 questions différentes : continuez vos séries !',
+      pas_vue: '🎉 <b>Vous avez déjà travaillé toutes les notions de ' + esc(nom) + '.</b> Bravo !'
+    }[nt.filtre] || 'Aucune notion pour ce filtre.';
+    return '<div class="quiz-card"><p style="margin:0">' + txt + '</p><div class="quiz-actions" style="margin-top:14px"><button type="button" class="quiz-btn ghost" data-nt-filtre="">Voir toutes les notions</button></div></div>';
+  }
   function dessinerThemes() {
     var el = document.getElementById('nt-themes'); if (!el || !nt.themes) return;
+    var champ = CHAMP_NT[nt.filtre], visibles = nt.themes.filter(function (t) { return !champ || t[champ] > 0; });
+    if (champ && !visibles.length) { el.innerHTML = videFiltreNt(); return; }
+    // Avec un filtre, au moins un des thèmes affichés est ouvert
+    if (champ && !visibles.some(function (t) { return nt.ouverts[t.theme]; })) nt.ouverts[visibles[0].theme] = true;
     el.innerHTML = nt.themes.map(function (t, i) {
+      if (champ && !(t[champ] > 0)) return '';
       var p = t.total ? Math.round(t.maitrisees / t.total * 100) : 0, ouvert = !!nt.ouverts[t.theme];
       return '<div class="nt-theme' + (ouvert ? ' ouvert' : '') + '"><button type="button" class="nt-theme-btn" data-nt-theme="' + i + '" aria-expanded="' + ouvert + '" aria-controls="nt-th-' + i + '">' +
         '<span><b>' + esc(nomTheme(t.theme)) + '</b><small>' + t.maitrisees + ' / ' + t.total + ' notion' + (t.total > 1 ? 's' : '') + ' maîtrisée' + (t.maitrisees > 1 ? 's' : '') + '</small></span>' +
@@ -4218,7 +4235,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     if (b.dataset.ntMat) { choisirMatNt(b.dataset.ntMat); return; }
     if (b.dataset.ntFiltre !== undefined) {
       nt.filtre = b.dataset.ntFiltre;
-      root.querySelectorAll('[data-nt-filtre]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      root.querySelectorAll('.nt-filtres [data-nt-filtre]').forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.ntFiltre === nt.filtre)); });
       dessinerThemes(); return;
     }
     if (b.dataset.ntTheme !== undefined) {
