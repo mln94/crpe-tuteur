@@ -1,0 +1,382 @@
+[
+  {
+    "id": 5,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Colette).\n« Je garde dans un petit cahier les images qui me reviennent : l'odeur du jardin au matin, la couleur de la glycine en mai, le prénom de la chatte grise. Écrire, c'est retenir ce qui s'enfuit. »",
+    "remplacements": [
+      [
+        "Colette utilise un carnet",
+        "L'auteure de ce texte utilise un carnet"
+      ],
+      [
+        "comme celui de Colette",
+        "comme celui de l'auteure du texte"
+      ]
+    ]
+  },
+  {
+    "id": 7,
+    "texte_support": "Texte d'exemple inspiré de *À l'ombre des jeunes filles en fleurs* (Marcel Proust, 1919) — ce n'est pas une citation de l'œuvre.\n« Mon cher ami, je t'écris pour te dire que la fête de samedi sera magnifique : il y aura de la musique, des lumières, et beaucoup de monde. Mais surtout, je veux que tu y sois. Ta présence compte plus que tout le reste. »"
+  },
+  {
+    "id": 10,
+    "texte_support": "Molière, *Le Bourgeois gentilhomme*, 1670 — acte II, scène 4\nMONSIEUR JOURDAIN. — Quoi ? quand je dis : « Nicole, apportez-moi mes pantoufles, et me donnez mon bonnet de nuit », c'est de la prose ?\nMAÎTRE DE PHILOSOPHIE. — Oui, Monsieur.\nMONSIEUR JOURDAIN. — Par ma foi ! il y a plus de quarante ans que je dis de la prose sans que j'en susse rien, et je vous suis le plus obligé du monde de m'avoir appris cela."
+  },
+  {
+    "id": 15,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de André Gide).\n« Ce matin, avant d'écrire, j'ai fait ma liste : les livres à finir, les lettres à répondre, les idées à noter. Une liste n'est pas un texte, mais elle prépare le texte à venir. »",
+    "remplacements": [
+      [
+        "André Gide distingue",
+        "L'auteur de ce texte distingue"
+      ]
+    ]
+  },
+  {
+    "id": 22,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Albert Camus).\n« Pour le roman, je prends un cahier à part. Pour les idées qui surgissent dans la journée, une feuille volante. Pour les lectures, une fiche avec le titre et trois lignes. Chaque chose à sa place. »",
+    "remplacements": [
+      [
+        "Camus décrit un système",
+        "L'auteur de ce texte décrit un système"
+      ]
+    ]
+  },
+  {
+    "id": 27,
+    "texte_support": "Scène d'exemple inspirée de *Le Jeu de l'amour et du hasard* (Marivaux, 1730) — ce n'est pas une citation de l'œuvre.\nSILVIA : Mais dis-moi, toi qui as été spectateur de leur ménage, dis-moi, Lisette, as-tu remarqué que le mari aimait sa femme ?\nLISETTE : Cela se voit encore assez bien quelquefois.\nSILVIA : Quelquefois ! voilà qui n'est guère satisfaisant. Et qu'est-ce que tu appelles quelquefois ? Explique-toi, je te prie.\nLISETTE : Madame, je veux dire… tantôt, ça va bien ; tantôt, ça va mal ; ça va comme ça va."
+  },
+  {
+    "id": 34,
+    "texte_support": "Jean-Paul Sartre, *L'existentialisme est un humanisme*, conférence du 29 octobre 1945 (publiée en 1946) — extrait\n« Qu'est-ce que signifie ici que l'existence précède l'essence ? Cela signifie que l'homme existe d'abord, se rencontre, surgit dans le monde, et qu'il se définit après. »"
+  },
+  {
+    "id": 39,
+    "texte_support": "Scène d'exemple inspirée de *Hernani* (Victor Hugo, 1830) — ce n'est pas une citation de l'œuvre.\nDON RUY GOMEZ : Hernani ! devant tous je t'offre cette main, / Cette main qui jamais ne trembla dans la mienne. / Sois mon gendre. Je suis vieux, tu es jeune ; — prends. / Hernani, réponds-moi.\nHERNANI : Seigneur, vous vous méprenez / Sur mon compte. Je suis un proscrit. Jamais homme / Digne d'une telle alliance ne fut banni. / Accepter serait vous outrager. Non.\nDON RUY GOMEZ : Tu refuses ?\nHERNANI : Je refuse. Pardonnez."
+  },
+  {
+    "id": 45,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Simone de Beauvoir).\n« J'avais pris l'habitude de tout noter : ce que je lisais, ce que j'entendais, ce que je pensais. Ce cahier n'était pour personne. Il m'appartenait. C'est là que je devenais moi-même. »",
+    "remplacements": [
+      [
+        "Simone de Beauvoir décrit",
+        "L'auteure de ce texte décrit"
+      ],
+      [
+        "L'extrait de Simone de Beauvoir montre",
+        "Ce texte montre"
+      ]
+    ]
+  },
+  {
+    "id": 68,
+    "texte_support": "Texte d'exemple inspiré de *Les Années* (Annie Ernaux, 2008) — ce n'est pas une citation de l'œuvre.\n« Elle notait tout : les titres de films, les noms de chansons entendues à la radio, les phrases qui lui semblaient importantes. C'était sa façon à elle de ne pas perdre le monde. »",
+    "remplacements": [
+      [
+        "Annie Ernaux décrit",
+        "Ce texte décrit"
+      ]
+    ]
+  },
+  {
+    "id": 72,
+    "texte_support": "Scène d'exemple inspirée de *Les Mouches* (Jean-Paul Sartre, 1943) — ce n'est pas une citation de l'œuvre.\nORESTE : Je ne reviendrai pas sous ta loi. Tu es le dieu des morts et des vivants, mais tu n'es pas le dieu de ceux qui décident. Reste dans ton ciel, Jupiter, je suis libre.\nJUPITER : Ta liberté est un exil.\nORESTE : C'est vrai. Je suis condamné à être libre. Il n'y a pas de ciel pour moi.\nJUPITER : Tu es un criminel.\nORESTE : Je l'ai su dès le premier coup. Mais je ne regrette pas."
+  },
+  {
+    "id": 86,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Patrick Modiano).\n« Je ne sais rien de la vie de Dora Bruder. Mais je crois que cette ignorance même m'a forcé à chercher, à imaginer, à ressentir ce que je ne pouvais pas savoir. »",
+    "remplacements": [
+      [
+        "Modiano réfléchit sur sa propre démarche",
+        "L'auteur de ce texte réfléchit sur sa propre démarche"
+      ]
+    ]
+  },
+  {
+    "id": 97,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Gustave Flaubert).\n« Ce que je veux faire, c'est un livre sur rien, un livre sans attache extérieure, qui se tiendrait de lui-même par la force interne de son style. Avant d'écrire la première ligne, j'ai passé des semaines à dresser le plan. »",
+    "remplacements": [
+      [
+        "Flaubert insiste",
+        "L'auteur de ce texte insiste"
+      ]
+    ]
+  },
+  {
+    "id": 107,
+    "texte_support": "Scène d'exemple inspirée de *Incendies* (Wajdi Mouawad, 2003) — ce n'est pas une citation de l'œuvre.\nSIMON : Je refuse. Je ne veux pas chercher un père que je n'ai pas eu.\nJEANNE : Tu ne sais pas si tu l'as eu ou pas.\nSIMON : Il n'était pas là.\nJEANNE : Il n'était peut-être pas libre.\nSIMON : Je m'en fous. Il n'était pas là et c'est tout ce que je sais. Et c'est tout ce qui compte.\nJEANNE : Il y a un testament. Des instructions.\nSIMON : Je n'obéis pas aux morts."
+  },
+  {
+    "id": 117,
+    "texte_support": "Texte d'exemple inspiré de *La Naissance du jour* (Colette, 1928) — ce n'est pas une citation de l'œuvre.\n« Le soleil venait de se lever sur la mer. La lumière, encore hésitante, effleurait la surface de l'eau et dorait les pins. Tout était silence, sauf le murmure régulier des vagues sur le sable tiède. »",
+    "remplacements": [
+      [
+        "Colette mêle narration et description dans cet extrait",
+        "Ce texte mêle narration et description"
+      ]
+    ]
+  },
+  {
+    "id": 118,
+    "texte_support": "Scène d'exemple inspirée de *On ne badine pas avec l'amour* (Alfred de Musset, 1834) — ce n'est pas une citation de l'œuvre.\nLE CHŒUR : Doucement bercés sur leur mule fringante, messer Blazius et dame Pluche gravissent la côte. Ils arrivent au château du baron. Dame Pluche est essoufflée. Il y a sur la litière une grande cagette d'osier dans laquelle on aperçoit mademoiselle Camille, la nièce du baron. Elle arrive au château après cinq ans de couvent. Messer Blazius a une bedaine rebondie ; dame Pluche a un menton à triple étage."
+  },
+  {
+    "id": 127,
+    "texte_support": "Texte d'exemple inspiré de *Les Misérables* (Victor Hugo, 1862) — ce n'est pas une citation de l'œuvre.\n« On dit que l'instruction coûte cher. Savez-vous ce qui coûte plus cher encore ? L'ignorance. »",
+    "remplacements": [
+      [
+        "Hugo utilise une question rhétorique",
+        "Ce texte utilise une question rhétorique"
+      ],
+      [
+        "Hugo avait raison",
+        "Ce texte a raison"
+      ]
+    ]
+  },
+  {
+    "id": 137,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Honoré de Balzac).\n« Avant d'écrire une ligne de mon roman, j'ai dressé la liste de tous les personnages, leur histoire, leurs liens entre eux, ce qu'ils veulent et ce qui les empêche de l'avoir. Tout était là, sur mes feuilles, avant le premier mot. »",
+    "remplacements": [
+      [
+        "Balzac décrit une planification",
+        "L'auteur de ce texte décrit une planification"
+      ]
+    ]
+  },
+  {
+    "id": 141,
+    "texte_support": "Scène d'exemple inspirée de *La guerre de Troie n'aura pas lieu* (Jean Giraudoux, 1935) — ce n'est pas une citation de l'œuvre.\nULYSSE : Je ne sais pas si la guerre de Troie aura lieu. Mais il est deux vérités que je vois ce soir et que je veux vous dire. L'une est que les destins, dans les grandes crises, ne se déroulent pas par décision des hommes. Ils se déroulent par des forces et des penchants obscurs. Et l'autre est que les hommes croient toujours qu'en parlant ils peuvent quelque chose. Ils peuvent parfois, dans les petites crises. Pas dans les grandes."
+  },
+  {
+    "id": 147,
+    "texte_support": "Texte d'exemple écrit à la manière des *Exercices de style* (Raymond Queneau, 1947), version « Métaphores » — ce n'est pas une citation de l'œuvre.\n« Au centre d'un tourbillon de couleurs, un jeune poulet au long cou plumé semblait s'irriter sans raison contre un paisible agneau... »"
+  },
+  {
+    "id": 153,
+    "texte_support": "Scène d'exemple inspirée de *La Puce à l'oreille* (Feydeau, 1907) — ce n'est pas une citation de l'œuvre.\nMME CHANDEBISE : Il est huit heures du soir, Victor Emmanuel n'est pas rentré. Il arrive toujours à sept heures.\nCAMILLE (avec une difficulté à articuler) : Il est peut-être retenu.\nMME CHANDEBISE : Retenu ! Toujours retenu, depuis un mois. Je n'ose pas penser à ce que ça veut dire.\nCAMILLE : Il a peut-être beaucoup de travail.\nMME CHANDEBISE : De travail ! (Elle ricane.) On appelle ça comme ça."
+  },
+  {
+    "id": 156,
+    "texte_support": "Texte d'exemple inspiré de *Mémoires d'Hadrien* (Marguerite Yourcenar, 1951) — ce n'est pas une citation de l'œuvre.\n« J'ai essayé d'être juste envers moi-même. Ces exercices de résistance volontaire, ces efforts pour me voir tel que je suis, m'ont coûté plus qu'on ne pourrait le croire. »",
+    "remplacements": [
+      [
+        "Yourcenar décrit l'effort",
+        "Ce texte décrit l'effort"
+      ]
+    ]
+  },
+  {
+    "id": 160,
+    "texte_support": "Scène d'exemple inspirée de *L'Amante anglaise* (Marguerite Duras, 1968) — ce n'est pas une citation de l'œuvre.\nCLAIRE : D'abord il y a eu le bruit. Ensuite le silence. Ensuite j'ai compris que c'était fait. Que je l'avais fait. C'était la nuit. Il n'y avait personne dans la rue. J'ai attendu. J'ai attendu longtemps. Rien n'est venu. Alors je suis rentrée.",
+    "remplacements": [
+      [
+        "Duras utilise",
+        "le texte utilise"
+      ]
+    ]
+  },
+  {
+    "id": 162,
+    "texte_support": "Texte d'exemple inspiré de *Boule de suif* (Guy de Maupassant, 1880) — ce n'est pas une citation de l'œuvre.\n« La voiture roulait depuis des heures dans la plaine blanche. Cornudet dit alors d'une voix grave : \"Il faut qu'on mange.\" Boule de suif ouvrit son panier sans répondre. Elle pensa qu'ils allaient enfin la regarder différemment. »",
+    "remplacements": [
+      [
+        "Maupassant mêle dans cet extrait",
+        "Cet extrait mêle"
+      ]
+    ]
+  },
+  {
+    "id": 167,
+    "texte_support": "Scène d'exemple inspirée de *En attendant Godot* (Samuel Beckett, 1952) — ce n'est pas une citation de l'œuvre.\nVLADIMIR : Alors, on y va ?\nESTRAGON : Allons-y.\n(Ils ne bougent pas.)\nVLADIMIR : Dis, Estragon.\nESTRAGON : Plaît-il ?\nVLADIMIR : Tu as bien dit que tu ne te rappelais rien ?\nESTRAGON : Quoi ?\nVLADIMIR : On est venu ici hier.\nESTRAGON : Ah bon ? Ça ne me dit rien.\nVLADIMIR : Pourtant. Ça ne te dit vraiment rien ?"
+  },
+  {
+    "id": 172,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Émile Zola).\n« Les mineurs travaillent dans des conditions inhumaines. Il faut que cela change. La preuve : dans la fosse, la température dépasse 40 degrés, les hommes ne voient pas la lumière du soleil pendant des semaines. »",
+    "remplacements": [
+      [
+        "Zola soutient sa thèse",
+        "L'auteur de ces notes soutient sa thèse"
+      ]
+    ]
+  },
+  {
+    "id": 175,
+    "texte_support": "Scène d'exemple inspirée de *Dans la solitude des champs de coton* (Bernard-Marie Koltès, 1985) — ce n'est pas une citation de l'œuvre.\nLE DEALER : Il n'y a pas de hasard dans une rencontre de nuit entre deux hommes qui marchent seuls. Soit ils se fuient, soit ils se cherchent, soit l'un cherche ce que l'autre fuit. Et si vous êtes là, c'est que vous voulez quelque chose. Un homme qui veut quelque chose, ça se voit. Ça marche d'une certaine façon. Il y a quelque chose dans les yeux, dans les mains."
+  },
+  {
+    "id": 186,
+    "texte_support": "Scène d'exemple inspirée de *Art* (Yasmina Reza, 1994) — ce n'est pas une citation de l'œuvre.\nMARC : Serge a acheté un tableau.\nC'est une toile d'environ un mètre soixante sur un mètre vingt, peinte en blanc. Le fond est blanc et si on cligne les yeux, on peut apercevoir de fins liserés blancs transversaux.\nSerge est un de mes vieux amis.\nJe ne dirai pas que c'est un homme de mauvais goût car il a toujours aimé des choses dont je n'aurais jamais eu l'idée et souvent ces choses m'ont enrichi.\nMais ce tableau est une merde."
+  },
+  {
+    "id": 200,
+    "texte_support": "Texte d'exemple inspiré de *La Promesse de l'aube* (Romain Gary, 1960) — ce n'est pas une citation de l'œuvre.\n« Ma mère avait décidé que je serais un grand homme. Cela ne se discutait pas. Ce n'était pas une espérance, c'était un fait accompli. »",
+    "remplacements": [
+      [
+        "Gary utilise le genre autobiographique",
+        "Ce texte utilise le genre autobiographique"
+      ]
+    ]
+  },
+  {
+    "id": 205,
+    "texte_support": "Scène d'exemple inspirée de *Par-dessus bord* (Michel Vinaver, 1972) — ce n'est pas une citation de l'œuvre.\nDIRECTEUR : Je voudrais que vous me parliez un peu de votre vie privée.\nBENOÎT : Ma vie privée ?\nDIRECTEUR : Si vous n'y voyez pas d'inconvénient.\nBENOÎT : Bien sûr que non. J'ai une femme. Deux enfants. Nous habitons Clichy.\nDIRECTEUR : Vous ne semblez pas très... heureux en ce moment.\nBENOÎT : Non, non... je vais très bien, merci.\nDIRECTEUR : (pause) Très bien."
+  },
+  {
+    "id": 207,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Albert Camus).\n« Il n'y a pas de monde sans amour. C'est pourquoi je refuse la haine et la violence. Non par faiblesse, mais parce que je sais qu'elles conduisent à la destruction de ce que j'aime. »",
+    "remplacements": [
+      [
+        "Camus structure son refus",
+        "Ce texte structure son refus"
+      ]
+    ]
+  },
+  {
+    "id": 213,
+    "texte_support": "Scène d'exemple inspirée de *Andromaque* (Jean Racine, 1667) — ce n'est pas une citation de l'œuvre.\nJe ne t'ai point aimé, cruel ! Qu'ai-je donc fait ?\nMes pleurs sur tes genoux n'ont pu te désarmer ;\nTu m'as fait perdre, hélas ! jusqu'aux larmes, cruel,\nCar tes rigueurs et tes dédains m'ont accoutumée\nÀ des pleurs que d'abord j'avais presque taris.\nNe me parle donc plus que de lui. Parle-moi\nDe mes chers intérêts, de mon amour, de lui.",
+    "remplacements": [
+      [
+        "Dans cet extrait de Racine",
+        "Dans cet extrait"
+      ]
+    ]
+  },
+  {
+    "id": 214,
+    "texte_support": "Francis Ponge, *Le Parti pris des choses*, 1942 — début de « La pluie »\n« La pluie, dans la cour où je la regarde tomber, descend à des allures très diverses. Au centre c'est un fin rideau (ou réseau) discontinu, une chute implacable mais relativement lente de gouttes probablement assez légères, une précipitation sempiternelle sans vigueur, une fraction intense du météore pur. »"
+  },
+  {
+    "id": 218,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Victor Hugo).\n« Trop long ici — supprimer. Recommencer cette scène autrement. Mettre Valjean dans la rue, pas dans l'église. Effet plus saisissant. »",
+    "remplacements": [
+      [
+        "Hugo utilise son brouillon",
+        "L'auteur de ces notes utilise son brouillon"
+      ],
+      [
+        "comme Hugo, on barre",
+        "comme l'auteur de ces notes, on barre"
+      ]
+    ]
+  },
+  {
+    "id": 221,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Gustave Flaubert).\n« J'ai relu mon chapitre hier. Il manquait de clarté. J'ai suivi le conseil de mon ami : couper les phrases trop longues, simplifier le vocabulaire des dialogues. Le texte respire mieux maintenant. »",
+    "remplacements": [
+      [
+        "Flaubert révise son texte",
+        "L'auteur de ce texte révise son texte"
+      ]
+    ]
+  },
+  {
+    "id": 222,
+    "texte_support": "Scène d'exemple inspirée de *Un mot pour un autre* (Jean Tardieu, 1951) — ce n'est pas une citation de l'œuvre.\nMADAME DE PERLEMINOUZE : Chère amie, quel mironton de vous revoir ! Il y a si longtemps que je soupirais après cette verjutade !\nMADAME PAMPLEMOUSSE (lui tendant les flottards) : Vous êtes trop aimable... Voici quelques flottards cueillis ce matin dans mon jardinage.\nMADAME DE PERLEMINOUZE : Que vous êtes gentille ! Ces flottards sont vraiment ramurants.",
+    "remplacements": [
+      [
+        "Ce texte de Jean Tardieu remplace",
+        "Ce texte, écrit à la manière de Jean Tardieu, remplace"
+      ],
+      [
+        "Ce texte de Tardieu illustre",
+        "Ce texte illustre"
+      ]
+    ]
+  },
+  {
+    "id": 224,
+    "texte_support": "Texte d'exemple inspiré de *L'Écume des jours* (Boris Vian, 1947) — ce n'est pas une citation de l'œuvre.\n« Colin était heureux. Il vivait dans un appartement lumineux et mangeait des plats merveilleux. »"
+  },
+  {
+    "id": 225,
+    "texte_support": "Scène d'exemple inspirée de *Cyrano de Bergerac* (Edmond Rostand, 1897) — ce n'est pas une citation de l'œuvre.\nROXANE : Que dites-vous ? Non, non ! C'est trop beau, trop doux !... Dites encore ! Vivez ! car aujourd'hui Quelqu'un vous aime, et cet amour qui pèse...\nCHRISTIAN : Roxane !...\nROXANE : Chut ! cet amour... laissez... En dessous du balcon, Ombre et lumière douce : entendez ma voix qui tremble, Et comprenez le sens de tout ce que je n'ose !"
+  },
+  {
+    "id": 228,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Marcel Proust).\n« Relire pour : (1) les répétitions de \"et\" — trop fréquent ; (2) les phrases trop longues — couper ; (3) la cohérence des temps — vérifier l'imparfait/passé simple. »",
+    "remplacements": [
+      [
+        "Proust se fixe",
+        "L'auteur de ces notes se fixe"
+      ]
+    ]
+  },
+  {
+    "id": 229,
+    "texte_support": "Victor Hugo, *Ruy Blas*, 1838 — acte III, scène 2 (début de la tirade de Ruy Blas, qui surprend les ministres en train de se partager les richesses du royaume)\n« Bon appétit, messieurs ! — Ô ministres intègres !\nConseillers vertueux ! voilà votre façon\nDe servir, serviteurs qui pillez la maison ! »"
+  },
+  {
+    "id": 232,
+    "texte_support": "Texte d'exemple inspiré de *Regain* (Jean Giono, 1930) — ce n'est pas une citation de l'œuvre.\n« Le vent passa sur la colline comme une main. Les herbes s'inclinèrent toutes ensemble, puis se redressèrent lentement, comme des hommes après une grande peur. »",
+    "remplacements": [
+      [
+        "Giono enrichit sa description",
+        "Ce texte enrichit sa description"
+      ],
+      [
+        "en t'inspirant du style de Giono",
+        "en t'inspirant du style de ce texte"
+      ],
+      [
+        "en s'inspirant de Giono",
+        "en s'inspirant de ce texte"
+      ]
+    ]
+  },
+  {
+    "id": 233,
+    "texte_support": "Molière, *Les Précieuses ridicules*, 1659 — scène 9 (seule la réplique de Mascarille est de Molière ; les répliques de Cathos et Madelon ont été écrites pour l'exercice)\nMASCARILLE : De grâce, madame, ne soyez pas inexorable à ce fauteuil qui vous tend les bras il y a un quart d'heure ; contentez un peu l'envie qu'il a de vous embrasser.\nCATHOS (s'asseyant) : Voyez-vous, il faut avouer qu'il a de l'esprit.\nMADELON : Assurément. Je trouve son galimathias tout à fait bien."
+  },
+  {
+    "id": 237,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Émile Zola).\n« [Version 1 :] Nana était belle. [Version 2 :] Nana avait cette beauté qui trouble. [Version 3 :] Nana était une de ces beautés qui font peur, comme si la nature avait voulu créer un danger. »",
+    "remplacements": [
+      [
+        "Zola améliore sa phrase",
+        "L'auteur de ce brouillon améliore sa phrase"
+      ]
+    ]
+  },
+  {
+    "id": 238,
+    "texte_support": "Scène d'exemple inspirée de *Le Soulier de satin* (Paul Claudel, 1929) — ce n'est pas une citation de l'œuvre.\nLE PÈRE JÉSUITE : Seigneur, je vous remercie de m'avoir lié ainsi ! Il y a des fois où la liberté me fait peur. Les liens que vous m'avez mis, fussent-ils des liens de péché, me sont chers. Je vous offre ce bois de grande valeur et ce corps cloué comme une offrande."
+  },
+  {
+    "id": 239,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Marguerite Duras).\n« Je suis seule avec le texte. Et je dois décider. Est-ce que c'est juste ? Est-ce que c'est vrai ? Est-ce que c'est nécessaire ? Si je ne peux pas répondre oui à ces trois questions, je recommence. »",
+    "remplacements": [
+      [
+        "Duras se donne trois critères",
+        "L'auteure de ce texte se donne trois critères"
+      ]
+    ]
+  },
+  {
+    "id": 241,
+    "texte_support": "Scène d'exemple inspirée de *Becket ou l'honneur de Dieu* (Jean Anouilh, 1959) — ce n'est pas une citation de l'œuvre.\nBECKET (à genoux, face au public) : Pauvre roi. Ce n'est pas lui qui me trahit. C'est lui qui a été trahi par ses propres hommes. Mais moi, je suis libre. Libre et nu comme au premier jour... Seigneur, c'est vous qui l'avez voulu.\n(Les chevaliers l'entourent et le frappent.)(Il tombe.)(Silence.)(Les chevaliers sortent.)(Becket reste seul, à terre.)(Lumière qui se réduit lentement.)(Voix du roi en off, dans l'obscurité : « Becket ! Becket ! »)"
+  },
+  {
+    "id": 242,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Louis Aragon).\n« J'ai tout appris dans les livres que j'aimais. Chaque page lue est une pierre que je pose dans la construction de ce que j'écris. »",
+    "remplacements": [
+      [
+        "Aragon décrit l'intertextualité",
+        "Ce texte décrit l'intertextualité"
+      ]
+    ]
+  },
+  {
+    "id": 244,
+    "texte_support": "Scène d'exemple inspirée de *La Reine morte* (Henry de Montherlant, 1942) — ce n'est pas une citation de l'œuvre.\nLE ROI : Je veux que vous me compreniez, Ferrante. Non, je veux que vous me sentiez... Ces hommes-là ne méritent pas d'être aimés. Ils ne méritent que d'être utilisés. Avez-vous aimé quelqu'un dans votre vie ? Vraiment aimé ?\nFERRANTE : Je ne crois pas.\nLE ROI : Alors vous ne savez pas... C'est une grande souffrance, et une grande richesse. Je voudrais vous en donner un peu."
+  },
+  {
+    "id": 245,
+    "texte_support": "Texte d'exemple : propos imaginaire d'un écrivain sur sa pratique d'écriture (rédigé pour l'exercice ; ce n'est pas une citation de Antoine de Saint-Exupéry).\n« Écrire, c'est d'abord respecter celui qui lira. C'est soigner chaque mot, chaque phrase, pour qu'elles portent leur sens jusqu'à lui sans se perdre en route. »",
+    "remplacements": [
+      [
+        "Saint-Exupéry rappelle",
+        "Ce texte rappelle"
+      ]
+    ]
+  }
+]
