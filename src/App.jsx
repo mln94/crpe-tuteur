@@ -6197,6 +6197,7 @@ function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths, isP
   const [debut, setDebut] = useState(() => authUser?.user_metadata?.parcours_passcrpe_debut || null);
   const [enregistrement, setEnregistrement] = useState(false);
   const [confirmerReset, setConfirmerReset] = useState(false);
+  const [replies, setReplies] = useState({}); // étapes repliées / dépliées par la personne
 
   const demarrer = async () => {
     const d = jourLocal();
@@ -6205,6 +6206,7 @@ function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths, isP
     try { await sbClient.auth.updateUser({ data: { parcours_passcrpe_debut: d } }); } catch { /* gardé pour cette visite */ }
     setEnregistrement(false);
     setConfirmerReset(false);
+    setReplies({});
   };
 
   const nbEtapes = PARCOURS_ETAPES.length;
@@ -6219,55 +6221,54 @@ function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths, isP
     ...e.maths.map(th => ({ matiere: 'maths', id: th, label: th, thematique: th })),
   ];
   const totauxEtape = (e) => groupesEtape(e).reduce((a, x) => { const p = g(x.matiere, x.thematique); return { total: a.total + (p?.total || 0), acquises: a.acquises + (p?.acquises || 0) }; }, { total: 0, acquises: 0 });
+  const titreEtape = (e) => groupesEtape(e).map(x => x.label.split(' et ')[0].split(',')[0]).join(' · ');
+  const lancer = (x, niveauId) => (x.matiere === 'francais' ? onLancerFrancais(x.id, niveauId) : onLancerMaths(x.thematique, niveauId));
+  // Classe conseillée : la première (5e → 3e) qui a encore des notions à acquérir
+  const classeConseillee = (x) => {
+    const p = g(x.matiere, x.thematique);
+    return PARCOURS_CLASSES.find(([, c]) => { const pc = p?.parClasse?.[c]; return !pc || pc.acquises < pc.total; }) || PARCOURS_CLASSES[0];
+  };
 
   const cur = totauxEtape(PARCOURS_ETAPES[etapeCourante]);
   const joursRestants = Math.max(1, PARCOURS_JOURS - jourDansEtape + 1);
   const parJour = Math.ceil(Math.max(0, cur.total - cur.acquises) / joursRestants);
+  const pctEtape = cur.total ? Math.round(cur.acquises / cur.total * 100) : 0;
+  const prochain = groupesEtape(PARCOURS_ETAPES[etapeCourante]).find(x => { const p = g(x.matiere, x.thematique); return !p || p.acquises < p.total; });
+  const jEcrits = joursAvant('2027-03-30');
+  const prenom = (authUser?.user_metadata?.prenom || '').trim();
+  const aujourdhui = new Date().toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+  const dateEtape = (i, fin) => ajouterJours(debut, i * PARCOURS_JOURS + (fin ? PARCOURS_JOURS - 1 : 0));
+  const etatEtape = (i) => (!debut ? 'afaire' : termine || i < etapeCourante ? 'fini' : i === etapeCourante ? 'cours' : 'afaire');
+  const estReplie = (i) => (replies[i] ?? (debut ? i !== etapeCourante : i !== 0));
 
-  const Barre = ({ pct, couleur }) => (
-    <span className="block h-1.5 rounded-full bg-gray-100 overflow-hidden">
-      <i className={`block h-full ${couleur}`} style={{ width: `${pct}%` }} />
-    </span>
-  );
-
-  const Groupe = ({ x, actif }) => {
-    const p = g(x.matiere, x.thematique);
-    const pct = p?.total ? Math.round(p.acquises / p.total * 100) : 0;
-    const fr = x.matiere === 'francais';
-    return (
-      <div className="rounded-xl border border-gray-100 bg-white px-4 py-3.5">
-        <div className="flex items-center gap-3">
-          <span className={`w-9 h-9 rounded-xl grid place-items-center flex-shrink-0 ${fr ? 'bg-indigo-100 text-indigo-600' : 'bg-emerald-100 text-emerald-600'}`}>
-            {fr ? <BookMarked className="w-4 h-4" /> : <Calculator className="w-4 h-4" />}
-          </span>
-          <div className="flex-1 min-w-0">
-            <p className={`text-[11px] font-bold uppercase tracking-wide ${fr ? 'text-indigo-500' : 'text-emerald-600'}`}>{fr ? 'Français' : 'Maths'} · groupe de notions</p>
-            <p className="text-sm font-semibold text-gray-900 leading-snug">{x.label}</p>
-          </div>
-          <span className="text-xs font-bold text-gray-500 whitespace-nowrap">{p ? `${p.acquises} / ${p.total}` : '–'} <span className="font-medium text-gray-400">acquises</span></span>
-        </div>
-        <div className="mt-2.5"><Barre pct={pct} couleur={fr ? 'bg-indigo-500' : 'bg-emerald-500'} /></div>
-        <div className="flex flex-wrap gap-2 mt-3">
-          {PARCOURS_CLASSES.map(([niveauId, classe]) => {
-            const c = p?.parClasse?.[classe];
-            return (
-              <button
-                key={niveauId}
-                onClick={() => (fr ? onLancerFrancais(x.id, niveauId) : onLancerMaths(x.thematique, niveauId))}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-colors ${
-                  actif
-                    ? (fr ? 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700' : 'bg-emerald-600 border-emerald-600 text-white hover:bg-emerald-700')
-                    : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'
-                }`}
-              >
-                S'entraîner · {classe}{c ? <span className="font-medium opacity-75"> · {c.acquises}/{c.total}</span> : null}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    );
+  // Styles repris du parcours du Quiz CRPE (accent indigo PassCRPE au lieu de l'orange)
+  const ROND = {
+    fini:   'bg-emerald-500 text-white',
+    cours:  'bg-white text-indigo-700 border-[3px] border-indigo-500 shadow-[0_0_0_5px_rgba(99,102,241,.14)]',
+    afaire: 'bg-white text-gray-500 border-2 border-gray-300',
+    ferme:  'bg-gray-100 text-gray-400 border-2 border-gray-200 text-base',
   };
+  const BADGE = {
+    fini:   'bg-emerald-100 text-emerald-700',
+    cours:  'bg-indigo-50 text-indigo-700',
+    afaire: 'bg-gray-100 text-gray-500',
+    avenir: 'bg-violet-50 text-violet-700',
+  };
+  const btn = (plein) => `rounded-[10px] px-3.5 py-2 text-[13px] font-extrabold whitespace-nowrap border-[1.5px] transition-colors ${plein ? 'bg-indigo-600 border-indigo-600 text-white hover:bg-indigo-700' : 'bg-white border-gray-200 text-gray-800 hover:border-indigo-600 hover:text-indigo-700'}`;
+
+  const Item = ({ n, etat, rondTexte, lbl, titre, children, cote }) => (
+    <div className="relative grid grid-cols-1 min-[700px]:grid-cols-[1fr_auto] gap-4 items-center bg-white border border-gray-200 rounded-[18px] px-[22px] py-[18px] mb-3.5 shadow-[0_1px_2px_rgba(16,24,40,.04),0_6px_18px_rgba(16,24,40,.04)]">
+      <span className={`absolute -left-[44px] min-[700px]:-left-[64px] top-[18px] w-8 h-8 min-[700px]:w-11 min-[700px]:h-11 rounded-full grid place-items-center font-black text-[13px] min-[700px]:text-[15px] z-[1] ${ROND[etat]}`}>
+        {rondTexte ?? (etat === 'fini' ? '✓' : n)}
+      </span>
+      <div className="min-w-0">
+        <span className="text-[12.5px] font-extrabold text-rose-600">{lbl}</span>
+        <h4 className="mt-[3px] mb-1.5 text-[17px] font-bold text-gray-900">{titre}</h4>
+        {children}
+      </div>
+      <div className="flex min-[700px]:flex-col items-center min-[700px]:items-end justify-between gap-2.5">{cote}</div>
+    </div>
+  );
 
   return (
     <div className="flex-1 overflow-y-auto px-4 pt-6 pb-24">
@@ -6278,130 +6279,198 @@ function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths, isP
           onClose={() => setShowPaywall(false)}
         />
       )}
-      {/* Essai gratuit (comptes non payants) : questions utilisées, et accès complet une fois l'essai terminé */}
-      {!isPaid && (
-        <div className={`mb-5 rounded-2xl border px-4 py-3 ${isLocked ? 'border-indigo-200 bg-indigo-50' : 'border-gray-100 bg-white'}`}>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            <p className="text-xs font-bold text-gray-700">Essai gratuit</p>
-            {[['Français', freeQsFrancais, 'bg-indigo-500'], ['Maths', freeQsMaths, 'bg-emerald-500']].map(([label, n, couleur]) => (
-              <div key={label} className="flex items-center gap-2 text-xs text-gray-500">
-                <span>{label}</span>
-                <span className="w-16 h-1.5 rounded-full bg-gray-100 overflow-hidden"><i className={`block h-full ${n >= FREE_QUESTION_LIMIT ? 'bg-red-400' : couleur}`} style={{ width: `${Math.min(100, n / FREE_QUESTION_LIMIT * 100)}%` }} /></span>
-                <b className={n >= FREE_QUESTION_LIMIT ? 'text-red-500' : 'text-gray-600'}>{Math.min(n, FREE_QUESTION_LIMIT)}/{FREE_QUESTION_LIMIT}</b>
-              </div>
-            ))}
-            <button onClick={() => setShowPaywall(true)} className={`ml-auto px-3.5 py-2 rounded-xl text-xs font-bold ${isLocked ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-200' : 'border border-indigo-200 text-indigo-700 hover:bg-indigo-50'}`}>
-              🔓 Débloquer mon accès complet
-            </button>
-          </div>
-          {isLocked && <p className="text-[11px] text-gray-500 mt-2">Vos {FREE_QUESTION_LIMIT} questions gratuites sont utilisées · Accès illimité pour continuer votre parcours.</p>}
-        </div>
-      )}
-      <h1 className="text-2xl font-bold text-gray-900">Mon parcours</h1>
-      <p className="text-sm text-gray-500 mt-1 leading-relaxed">
-        Le parcours avance par étapes de <b className="text-gray-700">{PARCOURS_JOURS} jours</b> : vous pratiquez un groupe de notions de français et un groupe de notions de maths,
-        puis vous faites <b className="text-gray-700">deux sujets blancs</b> sur les notions vues : un de français et un de maths, tous les deux à faire. Une notion est acquise dès qu'une de vos réponses obtient au moins {NOTION_ACQUISE}/10.
-      </p>
 
-      {/* Bandeau : démarrer, ou l'étape en cours */}
-      {!debut ? (
-        <div className="mt-5 rounded-2xl p-5 text-white bg-gradient-to-br from-indigo-600 to-violet-600 shadow-lg shadow-indigo-200">
-          <p className="text-xs font-bold uppercase tracking-widest opacity-80">{nbEtapes} étapes · {nbEtapes * PARCOURS_JOURS} jours</p>
-          <p className="text-lg font-bold mt-1">Prêt(e) à commencer ?</p>
-          <p className="text-sm opacity-90 mt-1">Votre première étape dure {PARCOURS_JOURS} jours à partir d'aujourd'hui : grammaire et nombres et calculs, puis un sujet blanc de français et un sujet blanc de maths.</p>
-          <button onClick={demarrer} disabled={enregistrement} className="mt-4 px-5 py-2.5 rounded-xl bg-white text-indigo-700 text-sm font-bold hover:bg-indigo-50 disabled:opacity-60">
-            Commencer mon parcours aujourd'hui →
-          </button>
-        </div>
-      ) : termine ? (
-        <div className="mt-5 rounded-2xl p-5 text-white bg-gradient-to-br from-indigo-600 to-violet-600 shadow-lg shadow-indigo-200">
-          <p className="text-lg font-bold">🎉 Parcours terminé</p>
-          <p className="text-sm opacity-90 mt-1">Vous avez parcouru les {nbEtapes} étapes. Continuez à consolider les notions qui ne sont pas encore acquises.</p>
-        </div>
-      ) : (
-        <div className="mt-5 rounded-2xl p-5 text-white bg-gradient-to-br from-indigo-600 to-violet-600 shadow-lg shadow-indigo-200">
-          <div className="flex items-start justify-between gap-3">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-widest opacity-80">Étape {etapeCourante + 1} sur {nbEtapes}</p>
-              <p className="text-lg font-bold mt-1">Jour {jourDansEtape} sur {PARCOURS_JOURS}</p>
+      <div className="min-[1100px]:grid min-[1100px]:grid-cols-[minmax(0,1fr)_330px] gap-7 items-start">
+        <div className="min-w-0">
+          {/* ── Bandeau (comme le Quiz CRPE) ── */}
+          <section className="relative overflow-hidden rounded-[22px] px-6 py-7 min-[700px]:px-[34px] min-[700px]:py-[30px] text-white grid min-[700px]:grid-cols-[1fr_auto] gap-6 items-center shadow-[0_20px_40px_-24px_rgba(30,27,46,.6)]"
+            style={{ background: 'radial-gradient(520px 260px at 72% 125%, rgba(99,102,241,.55), transparent 70%), linear-gradient(120deg, #1e1b2e, #241f4a 60%, #2e1d4d)' }}>
+            <div className="min-w-0">
+              <div className="text-indigo-300 font-extrabold text-sm">⏳ {jEcrits > 0 ? `J-${jEcrits} avant les écrits` : 'Les écrits sont passés : place aux oraux'}</div>
+              <h2 className="mt-1.5 mb-2 text-[26px] min-[700px]:text-[30px] font-bold tracking-tight">{prenom ? `Bonjour ${prenom} 👋` : 'Mon parcours 👋'}</h2>
+              <div className="flex flex-wrap gap-x-[18px] gap-y-1.5 mb-2.5 text-amber-200 text-sm font-semibold">
+                <span>📆 {aujourdhui.charAt(0).toUpperCase() + aujourdhui.slice(1)}</span>
+                {debut && !termine && (cur.total > cur.acquises
+                  ? <span>🎯 Objectif du jour : <b className="text-white">environ {parJour} notion{parJour > 1 ? 's' : ''} à acquérir</b></span>
+                  : <span>✅ Toutes les notions de l'étape sont acquises</span>)}
+              </div>
+              <p className="m-0 mb-4 text-gray-300 text-[15px] leading-relaxed">
+                Votre parcours vers le CRPE, par étapes de {PARCOURS_JOURS} jours : un groupe de notions de français et un groupe de notions de maths, puis deux sujets blancs (français et maths) sur les notions vues.
+              </p>
+              <div className="flex flex-wrap gap-2 items-center mb-[18px]">
+                {(debut
+                  ? [termine ? '🎉 Parcours terminé' : `🗓️ Étape ${etapeCourante + 1} sur ${nbEtapes} · jour ${jourDansEtape} / ${PARCOURS_JOURS}`, ...(termine ? [] : [`📝 Sujets blancs le ${dateCourte(dateEtape(etapeCourante, true))}`])]
+                  : [`🗓️ ${nbEtapes} étapes · ${nbEtapes * PARCOURS_JOURS} jours`, '📝 2 sujets blancs par étape']
+                ).map(t => <span key={t} className="bg-white/10 border border-white/20 rounded-full px-3 py-[5px] text-[13px] font-semibold">{t}</span>)}
+              </div>
+              {!debut ? (
+                <button onClick={demarrer} disabled={enregistrement} className="inline-flex gap-2.5 items-center bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl px-5 py-3.5 font-extrabold text-[15px] shadow-[0_10px_24px_-10px_rgba(99,102,241,.9)] disabled:opacity-60">
+                  Commencer mon parcours aujourd'hui →
+                </button>
+              ) : prochain && !termine ? (
+                <button onClick={() => lancer(prochain, classeConseillee(prochain)[0])} className="inline-flex gap-2.5 items-center bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl px-5 py-3.5 font-extrabold text-[15px] shadow-[0_10px_24px_-10px_rgba(99,102,241,.9)]">
+                  ▶ Continuer : {prochain.label.split(' et ')[0].split(',')[0]} · {classeConseillee(prochain)[1]}
+                </button>
+              ) : null}
             </div>
-            <span className="text-right text-xs opacity-90">Sujets blancs le<br /><b className="text-sm">{dateCourte(ajouterJours(debut, etapeCourante * PARCOURS_JOURS + PARCOURS_JOURS - 1))}</b></span>
-          </div>
-          <span className="block h-2 rounded-full bg-white/25 overflow-hidden mt-3">
-            <i className="block h-full bg-white" style={{ width: `${Math.round(jourDansEtape / PARCOURS_JOURS * 100)}%` }} />
-          </span>
-          <p className="text-sm mt-3 opacity-95">
-            {cur.acquises} / {cur.total} notions de l'étape acquises.{' '}
-            {cur.total > cur.acquises
-              ? <>Objectif : <b>environ {parJour} notion{parJour > 1 ? 's' : ''} à acquérir par jour</b> pour être prêt(e) le jour des sujets blancs.</>
-              : <b>Toutes les notions de l'étape sont acquises : bravo !</b>}
-          </p>
-        </div>
-      )}
+            {/* Anneau : notions acquises de l'étape en cours */}
+            <div className="absolute right-3.5 top-4 w-[82px] h-[82px] min-[700px]:relative min-[700px]:right-auto min-[700px]:top-auto min-[700px]:w-[140px] min-[700px]:h-[140px]">
+              <svg viewBox="0 0 140 140" className="w-full h-full -rotate-90 block">
+                <circle cx="70" cy="70" r="60" fill="none" stroke="rgba(255,255,255,.14)" strokeWidth="12" />
+                <circle cx="70" cy="70" r="60" fill="none" stroke="#818cf8" strokeWidth="12" strokeLinecap="round" strokeDasharray="377" strokeDashoffset={Math.round(377 * (1 - pctEtape / 100))} />
+              </svg>
+              <div className="absolute inset-0 grid place-content-center text-center">
+                <strong className="text-[19px] min-[700px]:text-[32px] font-black">{pctEtape} %</strong>
+                <small className="hidden min-[700px]:block text-gray-300 text-xs">{cur.acquises} / {cur.total} notions</small>
+              </div>
+            </div>
+          </section>
 
-      {/* Les étapes */}
-      <div className="mt-6 flex flex-col gap-4">
-        {PARCOURS_ETAPES.map((e, i) => {
-          const passee = debut && (termine || i < etapeCourante);
-          const actif = !!debut && !termine && i === etapeCourante;
-          const t = totauxEtape(e);
-          const du = debut ? ajouterJours(debut, i * PARCOURS_JOURS) : null;
-          const au = debut ? ajouterJours(debut, i * PARCOURS_JOURS + PARCOURS_JOURS - 1) : null;
-          return (
-            <section key={i} className={`rounded-2xl border p-4 ${actif ? 'border-indigo-300 bg-indigo-50/40 shadow-sm' : 'border-gray-100 bg-gray-50/60'}`}>
-              <div className="flex items-center justify-between gap-3 mb-3">
-                <div className="flex items-center gap-2.5">
-                  <span className={`w-8 h-8 rounded-full grid place-items-center text-sm font-black ${actif ? 'bg-indigo-600 text-white' : passee ? 'bg-emerald-500 text-white' : 'bg-white border border-gray-200 text-gray-500'}`}>
-                    {passee ? '✓' : i + 1}
+          {/* Essai gratuit */}
+          {!isPaid && (
+            <div className={`mt-4 rounded-2xl border px-4 py-3 ${isLocked ? 'border-indigo-200 bg-indigo-50' : 'border-gray-200 bg-white'}`}>
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+                <p className="text-xs font-bold text-gray-700">Essai gratuit</p>
+                {[['Français', freeQsFrancais, 'bg-indigo-500'], ['Maths', freeQsMaths, 'bg-emerald-500']].map(([label, n, couleur]) => (
+                  <div key={label} className="flex items-center gap-2 text-xs text-gray-500">
+                    <span>{label}</span>
+                    <span className="w-16 h-1.5 rounded-full bg-gray-100 overflow-hidden"><i className={`block h-full ${n >= FREE_QUESTION_LIMIT ? 'bg-red-400' : couleur}`} style={{ width: `${Math.min(100, n / FREE_QUESTION_LIMIT * 100)}%` }} /></span>
+                    <b className={n >= FREE_QUESTION_LIMIT ? 'text-red-500' : 'text-gray-600'}>{Math.min(n, FREE_QUESTION_LIMIT)}/{FREE_QUESTION_LIMIT}</b>
+                  </div>
+                ))}
+                <button onClick={() => setShowPaywall(true)} className={`ml-auto px-3.5 py-2 rounded-xl text-xs font-bold ${isLocked ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-200' : 'border border-indigo-200 text-indigo-700 hover:bg-indigo-50'}`}>
+                  🔓 Débloquer mon accès complet
+                </button>
+              </div>
+              {isLocked && <p className="text-[11px] text-gray-500 mt-2">Vos {FREE_QUESTION_LIMIT} questions gratuites sont utilisées · Accès illimité pour continuer votre parcours.</p>}
+            </div>
+          )}
+
+          {/* ── Une section par étape (comme le Quiz CRPE) ── */}
+          {PARCOURS_ETAPES.map((e, i) => {
+            const etat = etatEtape(i), replie = estReplie(i), t = totauxEtape(e);
+            let n = 0;
+            return (
+              <section key={i} className="mt-[38px]">
+                <div
+                  role="button" tabIndex={0} aria-expanded={!replie}
+                  onClick={() => setReplies(r => ({ ...r, [i]: !replie }))}
+                  onKeyDown={(ev) => { if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); setReplies(r => ({ ...r, [i]: !replie })); } }}
+                  className={`group relative cursor-pointer select-none rounded-xl border px-[18px] pt-14 pb-3.5 min-[700px]:pt-3.5 min-[700px]:pr-[150px] flex flex-wrap items-baseline gap-x-3.5 gap-y-1.5 ${replie ? 'mb-0 bg-indigo-50/40 border-indigo-100' : 'mb-4 bg-white border-gray-200'}`}
+                >
+                  <span className="absolute left-3.5 top-3 min-[700px]:left-auto min-[700px]:right-3.5 min-[700px]:top-1/2 min-[700px]:-translate-y-1/2 px-3.5 py-2 rounded-full bg-indigo-600 group-hover:bg-indigo-700 text-white text-[13.5px] font-extrabold whitespace-nowrap shadow-[0_4px_12px_rgba(79,70,229,.3)]">
+                    {replie ? 'Afficher ▾' : 'Réduire ▴'}
                   </span>
-                  <div>
-                    <p className="text-sm font-bold text-gray-900">Étape {i + 1}</p>
-                    <p className="text-xs text-gray-500">{du ? `Du ${dateCourte(du)} au ${dateCourte(au)}` : `${PARCOURS_JOURS} jours de pratique, puis deux sujets blancs`}</p>
-                  </div>
+                  <h3 className="m-0 text-[21px] font-bold text-gray-900 tracking-tight group-hover:text-indigo-700">
+                    {etat === 'fini' ? '✅' : etat === 'cours' ? '📘' : '📗'} Étape {i + 1} · {titreEtape(e)}
+                  </h3>
+                  <em className={`not-italic text-xs font-extrabold px-2.5 py-1 rounded-full ${etat === 'cours' ? 'bg-indigo-600 text-white' : etat === 'fini' ? 'bg-emerald-100 text-emerald-700' : 'bg-gray-100 text-gray-500'}`}>
+                    {debut ? `Du ${dateCourte(dateEtape(i))} au ${dateCourte(dateEtape(i, true))}` : `${PARCOURS_JOURS} jours`}
+                  </em>
+                  <p className="m-0 w-full text-gray-500 text-sm">
+                    {etat === 'cours' ? `En cours · jour ${jourDansEtape} sur ${PARCOURS_JOURS} · ` : etat === 'fini' ? 'Terminée · ' : ''}{t.acquises} / {t.total} notions acquises. {PARCOURS_JOURS} jours de pratique, puis deux sujets blancs.
+                  </p>
                 </div>
-                <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${actif ? 'bg-indigo-600 text-white' : passee ? 'bg-emerald-100 text-emerald-700' : 'bg-white border border-gray-200 text-gray-500'}`}>
-                  {actif ? 'En cours' : passee ? 'Terminée' : 'À venir'} · {t.acquises}/{t.total}
-                </span>
-              </div>
-              <div className="flex flex-col gap-2.5">
-                {groupesEtape(e).map(x => <Groupe key={`${x.matiere}-${x.id}`} x={x} actif={actif} />)}
-                <div className="rounded-xl border border-dashed border-gray-300 bg-white/70 px-4 py-3.5">
-                  <div className="flex items-center gap-3">
-                    <span className="w-9 h-9 rounded-xl grid place-items-center bg-amber-100 text-amber-600 flex-shrink-0"><ClipboardList className="w-4 h-4" /></span>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[11px] font-bold uppercase tracking-wide text-amber-600">Fin de l'étape{au ? ` · ${dateCourte(au)}` : ''} · 2 sujets blancs à faire</p>
-                      <p className="text-sm font-semibold text-gray-900">Sujets blancs sur les notions de l'étape</p>
-                    </div>
-                  </div>
-                  <div className="grid sm:grid-cols-2 gap-2 mt-3">
-                    {[['Sujet blanc de français', 'bg-indigo-50 text-indigo-700', <BookMarked key="f" className="w-3.5 h-3.5" />], ['Sujet blanc de maths', 'bg-emerald-50 text-emerald-700', <Calculator key="m" className="w-3.5 h-3.5" />]].map(([titre, couleur, icone]) => (
-                      <div key={titre} className="flex items-center gap-2 rounded-lg border border-gray-100 bg-white px-3 py-2">
-                        <span className={`w-6 h-6 rounded-md grid place-items-center ${couleur}`}>{icone}</span>
-                        <span className="flex-1 text-xs font-semibold text-gray-800">{titre}</span>
-                        <span className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-violet-50 text-violet-600 whitespace-nowrap">Bientôt disponible</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </section>
-          );
-        })}
-      </div>
 
-      {debut && (
-        <div className="mt-6 text-center">
-          {confirmerReset ? (
-            <p className="text-xs text-gray-500">
-              Recommencer le parcours à partir d'aujourd'hui ? Vos notions acquises sont conservées.{' '}
-              <button onClick={demarrer} className="font-bold text-indigo-600 hover:underline">Oui, recommencer</button>{' · '}
-              <button onClick={() => setConfirmerReset(false)} className="font-semibold text-gray-500 hover:underline">Annuler</button>
-            </p>
-          ) : (
-            <button onClick={() => setConfirmerReset(true)} className="text-xs font-semibold text-gray-400 hover:text-gray-600">Recommencer le parcours à partir d'aujourd'hui</button>
+                {!replie && (
+                  <div className="relative pl-11 min-[700px]:pl-16">
+                    <span className="absolute left-[15px] min-[700px]:left-[21px] top-[22px] bottom-[22px] w-[3px] rounded bg-gray-200" />
+                    {groupesEtape(e).map(x => {
+                      n++;
+                      const p = g(x.matiere, x.thematique);
+                      const pct = p?.total ? Math.round(p.acquises / p.total * 100) : 0;
+                      const fini = p && p.total && p.acquises >= p.total;
+                      const et = fini ? 'fini' : (etat === 'cours' || (p?.acquises > 0)) ? 'cours' : 'afaire';
+                      const fr = x.matiere === 'francais';
+                      return (
+                        <Item
+                          key={`${x.matiere}-${x.id}`} n={n} etat={et}
+                          lbl={`Étape ${i + 1}.${n} · ${fr ? 'Français' : 'Maths'} · groupe de notions`}
+                          titre={`${fr ? '✍️' : '🔢'} ${x.label}`}
+                          cote={<>
+                            <span className={`text-xs font-extrabold px-[11px] py-[5px] rounded-full whitespace-nowrap ${BADGE[et]}`}>{et === 'fini' ? 'Terminé' : et === 'cours' ? `En cours · ${pct} %` : 'À faire'}</span>
+                            <button onClick={() => lancer(x, classeConseillee(x)[0])} className={btn(etat === 'cours' && prochain && prochain.id === x.id)}>S'entraîner</button>
+                          </>}
+                        >
+                          <p className="m-0 text-sm text-gray-600 leading-relaxed"><b className="text-gray-800">{p ? p.acquises : 0} notions acquises</b> sur {p ? p.total : '–'}, en 5e, 4e et 3e.</p>
+                          <div className="h-1.5 max-w-[300px] rounded-full bg-gray-100 overflow-hidden mt-3"><i className={`block h-full rounded-full ${et === 'cours' ? 'bg-indigo-500' : 'bg-emerald-500'}`} style={{ width: `${pct}%` }} /></div>
+                          <div className="flex flex-wrap gap-1.5 mt-2.5">
+                            {PARCOURS_CLASSES.map(([niveauId, classe]) => {
+                              const c = p?.parClasse?.[classe];
+                              return (
+                                <button key={niveauId} onClick={() => lancer(x, niveauId)} className="border border-gray-200 bg-gray-50 rounded-full px-2.5 py-1 text-[12.5px] font-bold text-gray-700 hover:border-indigo-500 hover:text-indigo-700 hover:bg-indigo-50">
+                                  {classe}{c ? ` · ${c.acquises}/${c.total}` : ''}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </Item>
+                      );
+                    })}
+                    {[['francais', 'Sujet blanc de français', '📝'], ['maths', 'Sujet blanc de maths', '📐']].map(([m, titre, ic]) => {
+                      n++;
+                      return (
+                        <Item
+                          key={m} n={n} etat="ferme" rondTexte="🔒"
+                          lbl={`Étape ${i + 1}.${n} · Fin de l'étape${debut ? ` · ${dateCourte(dateEtape(i, true))}` : ''}`}
+                          titre={`${ic} ${titre}`}
+                          cote={<span className={`text-xs font-extrabold px-[11px] py-[5px] rounded-full whitespace-nowrap ${BADGE.avenir}`}>Bientôt disponible</span>}
+                        >
+                          <p className="m-0 text-sm text-gray-600 leading-relaxed">Sur les notions {m === 'francais' ? 'de français' : 'de maths'} de l'étape. Les deux sujets blancs sont à faire pour terminer l'étape.</p>
+                        </Item>
+                      );
+                    })}
+                  </div>
+                )}
+              </section>
+            );
+          })}
+
+          {debut && (
+            <div className="mt-8 text-center">
+              {confirmerReset ? (
+                <p className="text-xs text-gray-500">
+                  Recommencer le parcours à partir d'aujourd'hui ? Vos notions acquises sont conservées.{' '}
+                  <button onClick={demarrer} className="font-bold text-indigo-600 hover:underline">Oui, recommencer</button>{' · '}
+                  <button onClick={() => setConfirmerReset(false)} className="font-semibold text-gray-500 hover:underline">Annuler</button>
+                </p>
+              ) : (
+                <button onClick={() => setConfirmerReset(true)} className="text-xs font-semibold text-gray-400 hover:text-gray-600">Recommencer le parcours à partir d'aujourd'hui</button>
+              )}
+            </div>
           )}
         </div>
-      )}
+
+        {/* ── Plan du parcours, à droite sur ordinateur (comme le Quiz CRPE) ── */}
+        <aside className="hidden min-[1100px]:block sticky top-4">
+          <div className="bg-white border border-gray-200 rounded-[20px] px-[18px] py-5 shadow-[0_1px_2px_rgba(16,24,40,.04),0_8px_24px_rgba(16,24,40,.05)]">
+            <h3 className="m-0 mb-1 text-lg font-bold text-gray-900">🧭 Mon parcours en {nbEtapes} étapes</h3>
+            <p className="m-0 mb-4 text-[13px] text-gray-500 leading-relaxed">{PARCOURS_JOURS} jours par étape : un groupe de notions de français, un de maths, puis deux sujets blancs.</p>
+            <div className="relative pl-11">
+              <span className="absolute left-[17px] top-[18px] bottom-[18px] w-[3px] rounded bg-gray-200" />
+              {PARCOURS_ETAPES.map((e, i) => {
+                const etat = etatEtape(i), t = totauxEtape(e), pct = t.total ? Math.round(t.acquises / t.total * 100) : 0;
+                return (
+                  <div key={i} className="relative pb-5 last:pb-0">
+                    <span className={`absolute -left-11 top-0 w-9 h-9 rounded-full grid place-items-center text-[15px] font-black z-[1] ${etat === 'fini' ? 'bg-emerald-500 text-white' : etat === 'cours' ? 'bg-indigo-50 text-indigo-700 border-[3px] border-indigo-500 shadow-[0_0_0_5px_rgba(99,102,241,.14)]' : 'bg-white text-gray-500 border-2 border-gray-300'}`}>
+                      {etat === 'fini' ? '✓' : i + 1}
+                    </span>
+                    <span className="block text-xs font-extrabold text-rose-600">Étape {i + 1}{etat === 'cours' ? ' · en cours' : ''}</span>
+                    <h4 className="mt-0.5 mb-0.5 text-[15px] font-bold text-gray-900 leading-snug">{titreEtape(e)}</h4>
+                    <span className={`inline-block mt-1 mb-2 text-[12px] font-bold px-2 py-[3px] rounded-full border ${etat === 'cours' ? 'text-indigo-700 bg-indigo-50 border-indigo-200' : 'text-gray-500 bg-gray-50 border-gray-200'}`}>
+                      {debut ? `${dateCourte(dateEtape(i))} → ${dateCourte(dateEtape(i, true))}` : `${PARCOURS_JOURS} jours`}
+                    </span>
+                    <div className="text-[13px] text-gray-600">
+                      <div className="h-[7px] rounded-full bg-gray-100 overflow-hidden my-1"><i className="block h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500" style={{ width: `${pct}%` }} /></div>
+                      <b className="text-gray-900">{t.acquises} / {t.total}</b> notions · 2 sujets blancs
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
   );
 }
@@ -7332,7 +7401,7 @@ function AppContent({ authUser }) {
       <SideNav active={navActive} onChange={handleTabChange} unreadSupport={unreadSupport} authUser={authUser} profile={profile} />
       <TopBar progress={tuteurProgress} />
       <div
-        className="flex flex-col flex-1 min-h-0 max-w-3xl mx-auto w-full min-[1100px]:pt-4 min-[1100px]:mx-0 min-[1100px]:px-10 min-[1100px]:max-w-[900px]"
+        className={`flex flex-col flex-1 min-h-0 max-w-3xl mx-auto w-full min-[1100px]:pt-4 min-[1100px]:mx-0 min-[1100px]:px-10 ${activeTab === 'parcours' && !showMathBanqueView && !showBanqueView && !showTopicPicker && !showClassPicker ? 'min-[1100px]:max-w-[1340px]' : 'min-[1100px]:max-w-[900px]'}`}
       >
         {showMathBanqueView ? (
           <MathBanqueView
