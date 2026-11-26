@@ -6140,7 +6140,6 @@ function SiteHeader({ authUser, profile, onSupport }) {
 // ---------------------------------------------------------------------------
 function BottomNav({ active, onChange, unreadSupport = 0 }) {
   const tabs = [
-    { id: 'home',    label: 'Accueil',    icon: Home          },
     { id: 'parcours', label: 'Parcours',  icon: ListChecks    },
     { id: 'notions', label: 'Notions',    icon: CheckCircle2  },
     { id: 'chat',    label: 'Reprendre',  icon: RotateCcw     },
@@ -6193,7 +6192,8 @@ const jourLocal = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() 
 const ajouterJours = (iso, n) => { const d = new Date(`${iso}T00:00:00`); d.setDate(d.getDate() + n); return d; };
 const dateCourte = (d) => d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' });
 
-function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths }) {
+function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths, isPaid = true, isLocked = false, freeQsFrancais = 0, freeQsMaths = 0, onPaymentConfirmed }) {
+  const [showPaywall, setShowPaywall] = useState(false);
   const [debut, setDebut] = useState(() => authUser?.user_metadata?.parcours_passcrpe_debut || null);
   const [enregistrement, setEnregistrement] = useState(false);
   const [confirmerReset, setConfirmerReset] = useState(false);
@@ -6271,6 +6271,32 @@ function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths }) {
 
   return (
     <div className="flex-1 overflow-y-auto px-4 pt-6 pb-24">
+      {showPaywall && (
+        <PaywallModal
+          questionsUsed={freeQsFrancais + freeQsMaths}
+          onUnlock={() => { setShowPaywall(false); onPaymentConfirmed?.(); }}
+          onClose={() => setShowPaywall(false)}
+        />
+      )}
+      {/* Essai gratuit (comptes non payants) : questions utilisées, et accès complet une fois l'essai terminé */}
+      {!isPaid && (
+        <div className={`mb-5 rounded-2xl border px-4 py-3 ${isLocked ? 'border-indigo-200 bg-indigo-50' : 'border-gray-100 bg-white'}`}>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+            <p className="text-xs font-bold text-gray-700">Essai gratuit</p>
+            {[['Français', freeQsFrancais, 'bg-indigo-500'], ['Maths', freeQsMaths, 'bg-emerald-500']].map(([label, n, couleur]) => (
+              <div key={label} className="flex items-center gap-2 text-xs text-gray-500">
+                <span>{label}</span>
+                <span className="w-16 h-1.5 rounded-full bg-gray-100 overflow-hidden"><i className={`block h-full ${n >= FREE_QUESTION_LIMIT ? 'bg-red-400' : couleur}`} style={{ width: `${Math.min(100, n / FREE_QUESTION_LIMIT * 100)}%` }} /></span>
+                <b className={n >= FREE_QUESTION_LIMIT ? 'text-red-500' : 'text-gray-600'}>{Math.min(n, FREE_QUESTION_LIMIT)}/{FREE_QUESTION_LIMIT}</b>
+              </div>
+            ))}
+            <button onClick={() => setShowPaywall(true)} className={`ml-auto px-3.5 py-2 rounded-xl text-xs font-bold ${isLocked ? 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-md shadow-indigo-200' : 'border border-indigo-200 text-indigo-700 hover:bg-indigo-50'}`}>
+              🔓 Débloquer mon accès complet
+            </button>
+          </div>
+          {isLocked && <p className="text-[11px] text-gray-500 mt-2">Vos {FREE_QUESTION_LIMIT} questions gratuites sont utilisées · Accès illimité pour continuer votre parcours.</p>}
+        </div>
+      )}
       <h1 className="text-2xl font-bold text-gray-900">Mon parcours</h1>
       <p className="text-sm text-gray-500 mt-1 leading-relaxed">
         Le parcours avance par étapes de <b className="text-gray-700">{PARCOURS_JOURS} jours</b> : vous pratiquez un groupe de notions de français et un groupe de notions de maths,
@@ -6589,7 +6615,6 @@ function NotionsView({ progress, onLancerFrancais, onLancerMaths }) {
 // ---------------------------------------------------------------------------
 function SideNav({ active, onChange, unreadSupport = 0, authUser, profile }) {
   const tabs = [
-    { id: 'home',    label: 'Accueil',    icon: Home       },
     { id: 'parcours', label: 'Mon parcours', icon: ListChecks },
     { id: 'notions', label: 'Notions acquises', icon: CheckCircle2 },
     { id: 'chat',    label: 'Reprendre',  icon: RotateCcw  },
@@ -7036,7 +7061,7 @@ function AppContent({ authUser }) {
   });
   const [activeTab, setActiveTab] = useState(() => {
     const o = new URLSearchParams(window.location.search).get('onglet');
-    return ['home', 'parcours', 'notions', 'history', 'stats', 'support', 'profile'].includes(o) ? o : 'home';
+    return ['parcours', 'notions', 'history', 'stats', 'support', 'profile'].includes(o) ? o : 'parcours';
   });
   const [chatMatiere, setChatMatiere] = useState(null);
   const [sessionKey, setSessionKey] = useState(0);
@@ -7267,7 +7292,7 @@ function AppContent({ authUser }) {
       if (banqueSession) { handleResumeBanque(); return; }             // série de questions de français en cours
       if (storage.get('crpe_session_francais')?.displayMessages?.length) { handleStart('francais', false); return; }
       if (storage.get('crpe_session_maths')?.displayMessages?.length)    { handleStart('maths', false); return; }
-      setActiveTab('home');                                            // aucune session en cours : on choisit sur l'accueil
+      setActiveTab('parcours');                                        // aucune session en cours : on choisit dans le parcours
       return;
     }
     setActiveTab(tab);
@@ -7275,7 +7300,7 @@ function AppContent({ authUser }) {
 
   // Onglet surligné : pendant une série de questions, « Reprendre » ; pendant le choix du thème ou de la classe, « Accueil »
   const navActive = (showMathBanqueView || showBanqueView) ? 'chat'
-    : (showTopicPicker || showClassPicker) ? 'home'
+    : (showTopicPicker || showClassPicker) ? 'parcours'
     : activeTab;
 
   if (!ready) {
@@ -7355,21 +7380,6 @@ function AppContent({ authUser }) {
           />
         ) : (
           <>
-            {activeTab === 'home' && (
-              <HomeView
-                profile={profile}
-                onStart={handleStart}
-                banqueSession={banqueSession}
-                onResumeBanque={handleResumeBanque}
-                isLocked={isLockedApp}
-                isLockedFrancais={isLockedFrancais}
-                isLockedMaths={isLockedMaths}
-                freeQsFrancais={freeQsFrancais}
-                freeQsMaths={freeQsMaths}
-                isPaid={isPaidApp}
-                onPaymentConfirmed={refreshPaidStatus}
-              />
-            )}
             {activeTab === 'chat' && chatMatiere && (
               <ChatView
                 key={`${chatMatiere}-${sessionKey}`}
@@ -7377,7 +7387,7 @@ function AppContent({ authUser }) {
                 profile={profile}
                 sessionKey={sessionKey}
                 onNewSession={handleNewSession}
-                onBack={() => setActiveTab('home')}
+                onBack={() => setActiveTab('parcours')}
                 topic={chatMatiere === 'francais' ? francaisTopic : null}
                 niveau={sessionNiveau}
                 mode={chatMatiere === 'francais' ? francaisMode : null}
@@ -7387,6 +7397,11 @@ function AppContent({ authUser }) {
               <ParcoursView
                 authUser={authUser}
                 progress={tuteurProgress}
+                isPaid={isPaidApp}
+                isLocked={isLockedApp}
+                freeQsFrancais={freeQsFrancais}
+                freeQsMaths={freeQsMaths}
+                onPaymentConfirmed={refreshPaidStatus}
                 onLancerFrancais={lancerFrancaisParcours}
                 onLancerMaths={lancerMathsParcours}
               />
