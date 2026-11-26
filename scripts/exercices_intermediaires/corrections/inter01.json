@@ -1,0 +1,11 @@
+[
+  {"source_id": 30, "remplacements": [["Rousseau écrit qu'il « déclare qu'il n'est point vrai »", "La préface affirme : « je déclare qu'il n'est point vrai »"], ["Rousseau se présente comme celui qui", "L'auteur de la préface se présente comme celui qui"], ["En parlant de « recueil », Rousseau fait comme si", "En parlant de « recueil », l'auteur fait comme si"]]},
+  {"source_id": 56, "remplacements": [["dans le texte de l'abbé Prévost", "dans ce texte"]]},
+  {"source_id": 82, "remplacements": [["Dans la phrase de Balzac", "Dans cette phrase"]]},
+  {"source_id": 93, "remplacements": [["Dans la didascalie de Musset", "Dans cette réplique"]]},
+  {"source_id": 165, "remplacements": [["Dans la phrase de Germaine de Staël", "Dans cette phrase"]]},
+  {"source_id": 173, "remplacements": [["Quel est le sens du mot chez Laclos ?", "Quel est le sens du mot dans cette phrase ?"], ["Chez Laclos, dans une lettre sur l'art de la séduction", "Ici, dans le contexte d'un roman épistolaire sur l'art de la séduction comme *Les Liaisons dangereuses*"]]},
+  {"source_id": 185, "remplacements": [["Dans la phrase de Constant", "Dans cette phrase"]]},
+  {"source_id": 113, "remplacements": [["pour un texte comme celui de Jules Renard", "pour un texte aussi bref que celui-ci"], ["Le style de Renard est sobre et elliptique", "Ce style est sobre et elliptique"]]},
+  {"source_id": 155, "remplacements": [["la description de Loti", "cette description"]]}
+]

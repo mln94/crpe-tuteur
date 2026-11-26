@@ -1,0 +1,310 @@
+[
+  {
+    "id": 11,
+    "texte_support": "Jean de La Fontaine, *Fables*, 1668 — livre I, fable 1, « La Cigale et la Fourmi » (début)\n« La Cigale, ayant chanté\nTout l'été,\nSe trouva fort dépourvue\nQuand la bise fut venue. »"
+  },
+  {
+    "id": 12,
+    "texte_support": "Phrase d'exemple inspirée de *Le Mariage de Figaro* (Beaumarchais, 1784) — ce n'est pas une citation de l'œuvre.\n« Ah ! qu'une femme est malheureuse ! moins son mari lui fait de tort, plus elle est coupable de s'en plaindre. »",
+    "remplacements": [
+      [
+        "Dans cet extrait de Beaumarchais",
+        "Dans cet extrait"
+      ]
+    ]
+  },
+  {
+    "id": 18,
+    "texte_support": "Charles Perrault, *Histoires ou contes du temps passé* (*Contes de ma mère l'Oye*), 1697 — « Le Petit Chaperon rouge »\n« Elle fut bien étonnée de voir comment sa mère-grand était faite en son déshabillé. »",
+    "remplacements": [
+      [
+        "« surprise »",
+        "« étonnée »"
+      ]
+    ]
+  },
+  {
+    "id": 19,
+    "texte_support": "Phrase d'exemple inspirée de *Le Père Goriot* (Honoré de Balzac, 1835) — ce n'est pas une citation de l'œuvre.\n« Il avait dîné en ville, il arriva vers minuit. Pour s'éviter de la besogne, il avait laissé ses bottes dans le corridor. »",
+    "remplacements": [
+      [
+        "Balzac n'énonce pas",
+        "La phrase n'énonce pas"
+      ]
+    ]
+  },
+  {
+    "id": 30,
+    "texte_support": "Phrase d'exemple inspirée de *La Nouvelle Héloïse* (Jean-Jacques Rousseau, 1761) — ce n'est pas une citation de l'œuvre.\n« Ce recueil, avec le goût qu'on a pour les romans, n'a besoin, pour être reçu, que d'être cru vrai ; et je déclare qu'il n'est point vrai. »",
+    "remplacements": [
+      [
+        "Rousseau emploie le mot",
+        "Cette phrase emploie le mot"
+      ],
+      [
+        "un choix délibéré de Rousseau",
+        "un choix délibéré de l'auteur de cette préface"
+      ],
+      [
+        "mais Rousseau récuse",
+        "mais la préface récuse"
+      ]
+    ]
+  },
+  {
+    "id": 38,
+    "texte_support": "Phrase d'exemple inspirée de *Andromaque* (Jean Racine, 1667) — ce n'est pas une citation de l'œuvre.\n« Je t'apporte, seigneur, de nouvelles plus douces. »",
+    "remplacements": [
+      [
+        "Dans la phrase de Racine",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 50,
+    "texte_support": "Phrase d'exemple inspirée de *Le Crime de Sylvestre Bonnard* (Anatole France, 1881) — ce n'est pas une citation de l'œuvre.\n« Je tirai de ma bibliothèque le vieux Littré, ce monument de la langue française, et je cherchai le mot \"fantôme\". »"
+  },
+  {
+    "id": 55,
+    "texte_support": "Phrase d'exemple inspirée de *Les Aventures de Télémaque* (Fénelon, 1699) — ce n'est pas une citation de l'œuvre.\n« Il cherchait son père avec une tendresse inquiète. »"
+  },
+  {
+    "id": 56,
+    "texte_support": "Phrase d'exemple inspirée de *Manon Lescaut* (Abbé Prévost, 1731) — ce n'est pas une citation de l'œuvre.\n« Quoique j'eusse pu faire entrer cette partie de mes Mémoires dans le corps de l'ouvrage, j'ai cru qu'il serait plus agréable de la donner séparément. »",
+    "remplacements": [
+      [
+        "L'Abbé Prévost emploie le mot",
+        "Ce texte emploie le mot"
+      ]
+    ]
+  },
+  {
+    "id": 60,
+    "texte_support": "Phrase d'exemple inspirée de *Germinal* (Émile Zola, 1885) — ce n'est pas une citation de l'œuvre.\n« Le coron dormait. La nuit était noire, les maisons fermées, sans une lueur, sans un soupir. Les toits se fondaient dans l'obscurité du ciel, comme des formes endormies. »"
+  },
+  {
+    "id": 66,
+    "texte_support": "Blaise Pascal, *Pensées*, publication posthume en 1670\n« L'homme n'est qu'un roseau, le plus faible de la nature ; mais c'est un roseau pensant. »"
+  },
+  {
+    "id": 69,
+    "texte_support": "Phrase d'exemple inspirée de *Bel-Ami* (Guy de Maupassant, 1885) — ce n'est pas une citation de l'œuvre.\n« Il était beau, certes, mais il était pauvre. Or la pauvreté, à Paris, est un vice. Cependant il ne désespérait pas ; il avait du talent, de l'ambition, et il savait que la fortune sourit aux audacieux. »"
+  },
+  {
+    "id": 75,
+    "texte_support": "Phrase d'exemple inspirée de *Les Misérables* (Victor Hugo, 1862) — ce n'est pas une citation de l'œuvre.\n« L'évêque vint s'asseoir à côté de lui. L'évêque lui prit la main. — Vous n'avez pas souffert trop longtemps ? »",
+    "remplacements": [
+      [
+        "la lecture du texte de Hugo",
+        "la lecture de cette phrase"
+      ],
+      [
+        "(sens de Hugo)",
+        "(sens dans la phrase)"
+      ],
+      [
+        "Dans le contexte de Hugo",
+        "Dans le contexte des Misérables"
+      ]
+    ]
+  },
+  {
+    "id": 78,
+    "texte_support": "Phrase d'exemple inspirée de *Lettres de mon moulin* (Alphonse Daudet, 1869) — ce n'est pas une citation de l'œuvre.\n« Le mas de Camargue était splendide ce matin-là. Les champs d'oliviers, les vignes, les prés verts, tout cela brillait sous le soleil de septembre. »"
+  },
+  {
+    "id": 82,
+    "texte_support": "Phrase d'exemple inspirée de *Le Père Goriot* (Honoré de Balzac, 1835) — ce n'est pas une citation de l'œuvre.\n« Ce sont là des mœurs bourgeoises, dans les demeures aristocratiques comme dans les maisons bourgeoises : l'antipathie des classes. »",
+    "remplacements": [
+      [
+        "Dans cet extrait de Balzac",
+        "Dans cet extrait"
+      ],
+      [
+        "Dans le texte de Balzac",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 88,
+    "texte_support": "Phrase d'exemple inspirée de *Le Rouge et le Noir* (Stendhal, 1830) — ce n'est pas une citation de l'œuvre.\n« Il était ému, il était heureux, il était content. Jamais il n'avait ressenti une pareille satisfaction. »",
+    "remplacements": [
+      [
+        "Stendhal accumule",
+        "La phrase accumule"
+      ]
+    ]
+  },
+  {
+    "id": 93,
+    "texte_support": "Phrase d'exemple inspirée de *On ne badine pas avec l'amour* (Alfred de Musset, 1834) — ce n'est pas une citation de l'œuvre.\n« Maître Blazius : Dame Pluche, nous arrivons tous deux dans ce château. »",
+    "remplacements": [
+      [
+        "cette didascalie de Musset",
+        "cette réplique"
+      ],
+      [
+        "Dans le contexte de Musset",
+        "Dans le contexte de la pièce"
+      ]
+    ]
+  },
+  {
+    "id": 105,
+    "texte_support": "Phrase d'exemple inspirée de *Lettres* (Mme de Sévigné, 1672) — ce n'est pas une citation de l'œuvre.\n« Je vous ai écrit une lettre froide, je l'avoue ; mais mon cœur ne l'était pas. »",
+    "remplacements": [
+      [
+        "Mme de Sévigné nie",
+        "L'épistolière nie"
+      ]
+    ]
+  },
+  {
+    "id": 113,
+    "texte_support": "Phrase d'exemple inspirée de *Poil de Carotte* (Jules Renard, 1894) — ce n'est pas une citation de l'œuvre.\n« Poil de Carotte s'assit sur le rebord du puits. Il regardait l'eau froide, immobile, au fond. »"
+  },
+  {
+    "id": 116,
+    "texte_support": "Phrase d'exemple inspirée de *Le Rouge et le Noir* (Stendhal, 1830) — ce n'est pas une citation de l'œuvre.\n« Julien avait une de ces âmes rares qui souffrent bien davantage d'une froideur insolite que du mal même. »",
+    "remplacements": [
+      [
+        "Dans cet extrait de Stendhal",
+        "Dans cet extrait"
+      ],
+      [
+        "Stendhal emploie « froideur »",
+        "La phrase emploie « froideur »"
+      ]
+    ]
+  },
+  {
+    "id": 128,
+    "texte_support": "Phrases d'exemple inspirées de *René* (Chateaubriand, 1802) et de *Chatterton* (Alfred de Vigny, 1835) — ce ne sont pas des citations des œuvres.\n1. « Il faut que je vous parle de mon séjour en Amérique... Je cherchais un enthousiasme que je ne trouvais plus en Europe. »\n2. « J'ai l'enthousiasme d'un autre âge, et mon âme se consume dans une époque qui ne la comprend pas. »",
+    "remplacements": [
+      [
+        "Chez Chateaubriand (1802)",
+        "Dans la première phrase (inspirée de René, 1802)"
+      ],
+      [
+        "Chez Vigny (1835)",
+        "Dans la seconde phrase (inspirée de Chatterton, 1835)"
+      ],
+      [
+        "mais Chateaubriand l'inscrit",
+        "mais la première phrase l'inscrit"
+      ],
+      [
+        "tandis que Vigny en fait",
+        "tandis que la seconde en fait"
+      ]
+    ]
+  },
+  {
+    "id": 136,
+    "texte_support": "Phrase d'exemple inspirée de *Le Journal d'une femme de chambre* (Octave Mirbeau, 1900) — ce n'est pas une citation de l'œuvre.\n« Je sais pas, moi… C'est comme ça, quoi. Y'a des jours où on se sent pas bien. »"
+  },
+  {
+    "id": 146,
+    "texte_support": "Phrase d'exemple inspirée de *Les Trophées* (José-Maria de Heredia, 1893) — ce n'est pas une citation de l'œuvre.\n« Elle s'abandonnait à la magnificence\nDe la nuit triomphale, immense, grandiose. »"
+  },
+  {
+    "id": 148,
+    "texte_support": "Gérard de Nerval, *Sylvie*, 1853 — chapitre I (première phrase)\n« Je sortais d'un théâtre où tous les soirs je paraissais aux avant-scènes en grande tenue de soupirant. »"
+  },
+  {
+    "id": 151,
+    "texte_support": "Phrase d'exemple inspirée de *Le Jeu de l'amour et du hasard* (Marivaux, 1730) — ce n'est pas une citation de l'œuvre.\n« Je veux être libre, et non pas esclave. »"
+  },
+  {
+    "id": 155,
+    "texte_support": "Phrase d'exemple inspirée de *Pêcheur d'Islande* (Pierre Loti, 1886) — ce n'est pas une citation de l'œuvre.\n« La mer était immobile, d'une immobilité absolue, sans une ride, sans un frémissement. »",
+    "remplacements": [
+      [
+        "Loti utilise le mot",
+        "La phrase utilise le mot"
+      ],
+      [
+        "Loti renforce",
+        "la phrase renforce"
+      ]
+    ]
+  },
+  {
+    "id": 158,
+    "texte_support": "Phrase d'exemple inspirée de *Émaux et Camées* (Théophile Gautier, 1852) — ce n'est pas une citation de l'œuvre.\n« Je voulais faire quelque chose d'impeccable : voilà le secret de ma vie entière. »"
+  },
+  {
+    "id": 165,
+    "texte_support": "Phrase d'exemple inspirée de *De la littérature* (Germaine de Staël, 1800) — ce n'est pas une citation de l'œuvre.\n« La perfectibilité de l'espèce humaine n'est autre chose que le développement des lumières. »",
+    "remplacements": [
+      [
+        "Dans cette phrase de Germaine de Staël",
+        "Dans cette phrase"
+      ]
+    ]
+  },
+  {
+    "id": 169,
+    "texte_support": "Bossuet, *Oraison funèbre d'Henriette d'Angleterre*, 1670\n« Ô nuit désastreuse ! ô nuit effroyable, où retentit tout à coup, comme un éclat de tonnerre, cette étonnante nouvelle : Madame se meurt, Madame est morte ! »"
+  },
+  {
+    "id": 171,
+    "texte_support": "Phrase d'exemple inspirée de *Les Diaboliques* (Barbey d'Aurevilly, 1874) — ce n'est pas une citation de l'œuvre.\n« Elle était d'une beauté irrésistible, insolente, provocatrice. »"
+  },
+  {
+    "id": 173,
+    "texte_support": "Phrase d'exemple inspirée de *Les Liaisons dangereuses* (Laclos, 1782) — ce n'est pas une citation de l'œuvre.\n« On est bien sot, à votre âge, de ne pas savoir encore que la discrétion est nécessaire. »",
+    "remplacements": [
+      [
+        "Le mot « discrétion » est employé par Laclos au XVIIIe siècle",
+        "Le mot « discrétion » est employé ici dans un contexte du XVIIIe siècle"
+      ]
+    ]
+  },
+  {
+    "id": 178,
+    "texte_support": "Phrase d'exemple inspirée de *Cyrano de Bergerac* (Edmond Rostand, 1897) — ce n'est pas une citation de l'œuvre.\n« Si j'avais eu moins de scrupules, j'aurais pu triompher. Mais il faudrait que je sois sans honneur pour agir ainsi. »"
+  },
+  {
+    "id": 185,
+    "texte_support": "Phrase d'exemple inspirée de *Adolphe* (Benjamin Constant, 1816) — ce n'est pas une citation de l'œuvre.\n« Il me semblait que l'univers entier n'était pas digne d'occuper un moment la pensée de l'homme. »"
+  },
+  {
+    "id": 190,
+    "texte_support": "Phrase d'exemple inspirée de *Mémoires* (Saint-Simon, 1715) — ce n'est pas une citation de l'œuvre.\n« Il avait une mémoire prodigieuse et un travail infatigable. »"
+  },
+  {
+    "id": 199,
+    "texte_support": "Phrase d'exemple inspirée de *À rebours* (Joris-Karl Huysmans, 1884) — ce n'est pas une citation de l'œuvre.\n« Il avait faim, mais à cette heure si tardive, aucun saint ne pouvait venir à son aide. »"
+  },
+  {
+    "id": 202,
+    "texte_support": "Phrase d'exemple inspirée de *Dictionnaire universel* (Antoine Furetière, 1690) — ce n'est pas une citation de l'œuvre.\n« L'usage doit céder à la raison quand la raison est bien fondée. »"
+  },
+  {
+    "id": 203,
+    "texte_support": "Didascalie d'exemple inspirée de *Chatterton* (Alfred de Vigny, 1835) — ce n'est pas une citation de l'œuvre.\n« Chatterton prend la fiole, hésite, puis boit. »",
+    "remplacements": [
+      [
+        "Dans cette didascalie de Vigny",
+        "Dans cette didascalie"
+      ]
+    ]
+  },
+  {
+    "id": 208,
+    "texte_support": "Phrase d'exemple inspirée de *Les Bergeries* (Honorat de Racan, 1625) — ce n'est pas une citation de l'œuvre.\n« Le temps passe, et les heures légères / Emportent nos ans avec eux. »"
+  },
+  {
+    "id": 211,
+    "texte_support": "Phrase d'exemple inspirée de *Paul et Virginie* (Bernardin de Saint-Pierre, 1788) — ce n'est pas une citation de l'œuvre.\n« Virginie n'avait point d'autre miroir que la source près de laquelle elle s'asseyait, ni d'autre ornement que les fleurs dont elle se parait quelquefois. »",
+    "remplacements": [
+      [
+        "Dans cette phrase de Bernardin de Saint-Pierre",
+        "Dans cette phrase"
+      ]
+    ]
+  }
+]
