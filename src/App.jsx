@@ -905,13 +905,13 @@ async function fetchNotionsBanque() {
   if (notionsBanqueCache) return notionsBanqueCache;
   const headers = { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` };
   const [fr, ma] = await Promise.all([
-    fetch(`${SUPABASE_URL}/rest/v1/exercices_francais_v?select=objectif,thematique,niveau`, { headers }).then(r => (r.ok ? r.json() : [])),
-    fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?select=objectif_apprentissage,thematique,classe`, { headers }).then(r => (r.ok ? r.json() : [])),
+    fetch(`${SUPABASE_URL}/rest/v1/exercices_francais_v?select=objectif,thematique,niveau,sous_categorie`, { headers }).then(r => (r.ok ? r.json() : [])),
+    fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?select=objectif_apprentissage,thematique,classe,sous_categorie`, { headers }).then(r => (r.ok ? r.json() : [])),
   ]);
   const rowsFr = Array.isArray(fr) ? fr : [], rowsMa = Array.isArray(ma) ? ma : [];
   const index = new Map();
-  rowsFr.forEach(r => { if (r.objectif) index.set(`francais|${r.objectif}`, { matiere: 'francais', thematique: r.thematique, classe: r.niveau }); });
-  rowsMa.forEach(r => { if (r.objectif_apprentissage) index.set(`maths|${r.objectif_apprentissage}`, { matiere: 'maths', thematique: r.thematique, classe: r.classe }); });
+  rowsFr.forEach(r => { if (r.objectif) index.set(`francais|${r.objectif}`, { matiere: 'francais', objectif: r.objectif, thematique: r.thematique, classe: r.niveau, sous_categorie: r.sous_categorie }); });
+  rowsMa.forEach(r => { if (r.objectif_apprentissage) index.set(`maths|${r.objectif_apprentissage}`, { matiere: 'maths', objectif: r.objectif_apprentissage, thematique: r.thematique, classe: r.classe, sous_categorie: r.sous_categorie }); });
   const res = {
     francais: new Set(rowsFr.map(r => r.objectif).filter(Boolean)),
     maths:    new Set(rowsMa.map(r => r.objectif_apprentissage).filter(Boolean)),
@@ -939,12 +939,17 @@ async function fetchTuteurProgress(userId) {
       const g = groupe(`${v.matiere}|${v.thematique}`); g.total++;
       const c = (g.parClasse[v.classe] ||= { total: 0, acquises: 0 }); c.total++;
     });
+    const notions = {}; // `${matiere}|${objectif}` → { best, derniere, derniereAt, reponses }
     const parMatiere = (rows, set, matiere) => {
       const best = new Map();
       rows.forEach(r => {
         if (!r.objectif || !set.has(r.objectif)) return;
         const n = note(r);
         best.set(r.objectif, Math.max(best.get(r.objectif) ?? -1, n ?? -1));
+        const d = (notions[`${matiere}|${r.objectif}`] ||= { best: null, derniere: null, derniereAt: null, reponses: 0 });
+        d.reponses++;
+        if (n != null && (d.best == null || n > d.best)) d.best = n;
+        if (r.created_at && (!d.derniereAt || r.created_at > d.derniereAt)) { d.derniereAt = r.created_at; d.derniere = n; }
       });
       let acquises = 0;
       best.forEach((n, objectif) => {
@@ -971,7 +976,7 @@ async function fetchTuteurProgress(userId) {
     let serie = 0;
     while (jours.has(cle(d))) { serie++; d.setDate(d.getDate() - 1); }
     return {
-      francais, maths, groupes,
+      francais, maths, groupes, notions, index: banque.index,
       total: francais.total + maths.total,
       acquises: francais.acquises + maths.acquises,
       questions: premieres.length, moyenne, serie, nbNotes: notes.length,
@@ -6137,6 +6142,7 @@ function BottomNav({ active, onChange, unreadSupport = 0 }) {
   const tabs = [
     { id: 'home',    label: 'Accueil',    icon: Home          },
     { id: 'parcours', label: 'Parcours',  icon: ListChecks    },
+    { id: 'notions', label: 'Notions',    icon: CheckCircle2  },
     { id: 'chat',    label: 'Reprendre',  icon: RotateCcw     },
     { id: 'history', label: 'Historique', icon: BookOpen      },
     { id: 'stats',   label: 'Stats',      icon: BarChart2     },
@@ -6268,7 +6274,7 @@ function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths }) {
       <h1 className="text-2xl font-bold text-gray-900">Mon parcours</h1>
       <p className="text-sm text-gray-500 mt-1 leading-relaxed">
         Le parcours avance par étapes de <b className="text-gray-700">{PARCOURS_JOURS} jours</b> : vous pratiquez un groupe de notions de français et un groupe de notions de maths,
-        puis vous faites un <b className="text-gray-700">sujet blanc</b> sur les notions vues. Une notion est acquise dès qu'une de vos réponses obtient au moins {NOTION_ACQUISE}/10.
+        puis vous faites <b className="text-gray-700">deux sujets blancs</b> sur les notions vues : un de français et un de maths, tous les deux à faire. Une notion est acquise dès qu'une de vos réponses obtient au moins {NOTION_ACQUISE}/10.
       </p>
 
       {/* Bandeau : démarrer, ou l'étape en cours */}
@@ -6276,7 +6282,7 @@ function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths }) {
         <div className="mt-5 rounded-2xl p-5 text-white bg-gradient-to-br from-indigo-600 to-violet-600 shadow-lg shadow-indigo-200">
           <p className="text-xs font-bold uppercase tracking-widest opacity-80">{nbEtapes} étapes · {nbEtapes * PARCOURS_JOURS} jours</p>
           <p className="text-lg font-bold mt-1">Prêt(e) à commencer ?</p>
-          <p className="text-sm opacity-90 mt-1">Votre première étape dure {PARCOURS_JOURS} jours à partir d'aujourd'hui : grammaire et nombres et calculs, puis un sujet blanc.</p>
+          <p className="text-sm opacity-90 mt-1">Votre première étape dure {PARCOURS_JOURS} jours à partir d'aujourd'hui : grammaire et nombres et calculs, puis un sujet blanc de français et un sujet blanc de maths.</p>
           <button onClick={demarrer} disabled={enregistrement} className="mt-4 px-5 py-2.5 rounded-xl bg-white text-indigo-700 text-sm font-bold hover:bg-indigo-50 disabled:opacity-60">
             Commencer mon parcours aujourd'hui →
           </button>
@@ -6293,7 +6299,7 @@ function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths }) {
               <p className="text-xs font-bold uppercase tracking-widest opacity-80">Étape {etapeCourante + 1} sur {nbEtapes}</p>
               <p className="text-lg font-bold mt-1">Jour {jourDansEtape} sur {PARCOURS_JOURS}</p>
             </div>
-            <span className="text-right text-xs opacity-90">Sujet blanc le<br /><b className="text-sm">{dateCourte(ajouterJours(debut, etapeCourante * PARCOURS_JOURS + PARCOURS_JOURS - 1))}</b></span>
+            <span className="text-right text-xs opacity-90">Sujets blancs le<br /><b className="text-sm">{dateCourte(ajouterJours(debut, etapeCourante * PARCOURS_JOURS + PARCOURS_JOURS - 1))}</b></span>
           </div>
           <span className="block h-2 rounded-full bg-white/25 overflow-hidden mt-3">
             <i className="block h-full bg-white" style={{ width: `${Math.round(jourDansEtape / PARCOURS_JOURS * 100)}%` }} />
@@ -6301,7 +6307,7 @@ function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths }) {
           <p className="text-sm mt-3 opacity-95">
             {cur.acquises} / {cur.total} notions de l'étape acquises.{' '}
             {cur.total > cur.acquises
-              ? <>Objectif : <b>environ {parJour} notion{parJour > 1 ? 's' : ''} à acquérir par jour</b> pour être prêt(e) le jour du sujet blanc.</>
+              ? <>Objectif : <b>environ {parJour} notion{parJour > 1 ? 's' : ''} à acquérir par jour</b> pour être prêt(e) le jour des sujets blancs.</>
               : <b>Toutes les notions de l'étape sont acquises : bravo !</b>}
           </p>
         </div>
@@ -6324,7 +6330,7 @@ function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths }) {
                   </span>
                   <div>
                     <p className="text-sm font-bold text-gray-900">Étape {i + 1}</p>
-                    <p className="text-xs text-gray-500">{du ? `Du ${dateCourte(du)} au ${dateCourte(au)}` : `${PARCOURS_JOURS} jours de pratique, puis un sujet blanc`}</p>
+                    <p className="text-xs text-gray-500">{du ? `Du ${dateCourte(du)} au ${dateCourte(au)}` : `${PARCOURS_JOURS} jours de pratique, puis deux sujets blancs`}</p>
                   </div>
                 </div>
                 <span className={`text-[11px] font-bold px-2.5 py-1 rounded-full ${actif ? 'bg-indigo-600 text-white' : passee ? 'bg-emerald-100 text-emerald-700' : 'bg-white border border-gray-200 text-gray-500'}`}>
@@ -6333,13 +6339,23 @@ function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths }) {
               </div>
               <div className="flex flex-col gap-2.5">
                 {groupesEtape(e).map(x => <Groupe key={`${x.matiere}-${x.id}`} x={x} actif={actif} />)}
-                <div className="rounded-xl border border-dashed border-gray-300 bg-white/70 px-4 py-3.5 flex items-center gap-3">
-                  <span className="w-9 h-9 rounded-xl grid place-items-center bg-amber-100 text-amber-600 flex-shrink-0"><ClipboardList className="w-4 h-4" /></span>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-[11px] font-bold uppercase tracking-wide text-amber-600">Fin de l'étape{au ? ` · ${dateCourte(au)}` : ''}</p>
-                    <p className="text-sm font-semibold text-gray-900">Sujet blanc sur les notions de l'étape</p>
+                <div className="rounded-xl border border-dashed border-gray-300 bg-white/70 px-4 py-3.5">
+                  <div className="flex items-center gap-3">
+                    <span className="w-9 h-9 rounded-xl grid place-items-center bg-amber-100 text-amber-600 flex-shrink-0"><ClipboardList className="w-4 h-4" /></span>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[11px] font-bold uppercase tracking-wide text-amber-600">Fin de l'étape{au ? ` · ${dateCourte(au)}` : ''} · 2 sujets blancs à faire</p>
+                      <p className="text-sm font-semibold text-gray-900">Sujets blancs sur les notions de l'étape</p>
+                    </div>
                   </div>
-                  <span className="text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-full bg-violet-50 text-violet-600 whitespace-nowrap">Bientôt disponible</span>
+                  <div className="grid sm:grid-cols-2 gap-2 mt-3">
+                    {[['Sujet blanc de français', 'bg-indigo-50 text-indigo-700', <BookMarked key="f" className="w-3.5 h-3.5" />], ['Sujet blanc de maths', 'bg-emerald-50 text-emerald-700', <Calculator key="m" className="w-3.5 h-3.5" />]].map(([titre, couleur, icone]) => (
+                      <div key={titre} className="flex items-center gap-2 rounded-lg border border-gray-100 bg-white px-3 py-2">
+                        <span className={`w-6 h-6 rounded-md grid place-items-center ${couleur}`}>{icone}</span>
+                        <span className="flex-1 text-xs font-semibold text-gray-800">{titre}</span>
+                        <span className="text-[9px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-violet-50 text-violet-600 whitespace-nowrap">Bientôt disponible</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </section>
@@ -6365,6 +6381,209 @@ function ParcoursView({ authUser, progress, onLancerFrancais, onLancerMaths }) {
 }
 
 // ---------------------------------------------------------------------------
+// NotionsView — « Mes notions acquises » (comme le Quiz CRPE) : une notion = un objectif du programme de la banque.
+// Acquise : une réponse à au moins NOTION_ACQUISE/10 ; à revoir : dernière réponse sous NOTION_A_REVOIR/10 ;
+// en cours : travaillée sans être acquise ; pas encore vue : aucune réponse.
+// ---------------------------------------------------------------------------
+const NOTION_A_REVOIR = 5;
+const STATUTS_NOTION = {
+  acquise:  { label: 'Acquise',         pastille: 'bg-emerald-500', chip: 'bg-emerald-50 text-emerald-700' },
+  en_cours: { label: 'En cours',        pastille: 'bg-indigo-500',  chip: 'bg-indigo-50 text-indigo-700' },
+  a_revoir: { label: 'À revoir',        pastille: 'bg-orange-500',  chip: 'bg-orange-50 text-orange-700' },
+  pas_vue:  { label: 'Pas encore vue',  pastille: 'bg-gray-300',    chip: 'bg-gray-100 text-gray-500' },
+};
+const FILTRES_NOTIONS = [['', 'Toutes'], ['a_revoir', 'À revoir'], ['en_cours', 'En cours'], ['acquise', 'Acquises'], ['pas_vue', 'Pas encore vues']];
+const statutNotion = (d) => {
+  if (!d) return 'pas_vue';
+  if (d.best != null && d.best >= NOTION_ACQUISE) return 'acquise';
+  if (d.derniere != null && d.derniere < NOTION_A_REVOIR) return 'a_revoir';
+  return 'en_cours';
+};
+const ORDRE_CLASSES = { '5e': 0, '4e': 1, '3e': 2 };
+const topicDeThematique = (th) => Object.entries(TOPIC_TO_THEMATIQUE).find(([, v]) => v === th)?.[0] || null;
+
+function NotionsView({ progress, onLancerFrancais, onLancerMaths }) {
+  const [mat, setMat] = useState('francais');
+  const [filtre, setFiltre] = useState('');
+  const [ouverts, setOuverts] = useState({});
+
+  if (!progress?.index) {
+    return (
+      <div className="flex-1 overflow-y-auto px-4 pt-6 pb-24">
+        <h1 className="text-2xl font-bold text-gray-900">Suivi de mes notions acquises</h1>
+        <div className="mt-5 flex items-center gap-2 text-sm text-gray-500"><Loader2 className="w-4 h-4 animate-spin" /> Chargement de vos notions…</div>
+      </div>
+    );
+  }
+
+  // Toutes les notions de la banque avec leur statut
+  const toutes = [...progress.index.values()].map(v => {
+    const d = progress.notions?.[`${v.matiere}|${v.objectif}`];
+    return { ...v, d, statut: statutNotion(d) };
+  });
+  const compter = (liste) => liste.reduce((a, x) => { a.total++; a[x.statut]++; return a; }, { total: 0, acquise: 0, en_cours: 0, a_revoir: 0, pas_vue: 0 });
+  const tot = compter(toutes);
+  const parMat = { francais: compter(toutes.filter(x => x.matiere === 'francais')), maths: compter(toutes.filter(x => x.matiere === 'maths')) };
+  const aRevoir = toutes.filter(x => x.statut === 'a_revoir').sort((a, b) => String(b.d?.derniereAt).localeCompare(String(a.d?.derniereAt))).slice(0, 5);
+
+  // Thèmes de la matière choisie, dans l'ordre du programme
+  const ordreThemes = mat === 'francais' ? FRANCAIS_TOPICS.map(t => t.label) : MATH_THEMATIQUES.map(t => t.label);
+  const notionsMat = toutes.filter(x => x.matiere === mat);
+  const themes = [...new Set(notionsMat.map(x => x.thematique))]
+    .sort((a, b) => (ordreThemes.indexOf(a) + 1 || 99) - (ordreThemes.indexOf(b) + 1 || 99))
+    .map(th => {
+      const liste = notionsMat.filter(x => x.thematique === th)
+        .sort((a, b) => (ORDRE_CLASSES[a.classe] ?? 9) - (ORDRE_CLASSES[b.classe] ?? 9) || String(a.sous_categorie).localeCompare(String(b.sous_categorie)));
+      return { th, liste, c: compter(liste) };
+    });
+  const visibles = filtre ? themes.filter(t => t.c[filtre] > 0) : themes;
+  const estOuvert = (th, i) => (ouverts[th] ?? (i === 0));
+  const nomMat = mat === 'francais' ? 'français' : 'maths';
+  const vide = {
+    a_revoir: `🎉 Aucune notion à revoir en ${nomMat} pour le moment. Une notion passe « À revoir » quand votre dernière réponse obtient moins de ${NOTION_A_REVOIR}/10.`,
+    en_cours: `Aucune notion en cours en ${nomMat} pour le moment. Une notion est en cours dès que vous y avez répondu, jusqu'à ce qu'elle soit acquise.`,
+    acquise:  `Aucune notion acquise en ${nomMat} pour l'instant. Une notion est acquise dès qu'une de vos réponses obtient au moins ${NOTION_ACQUISE}/10 : lancez une série !`,
+    pas_vue:  `🎉 Vous avez déjà travaillé toutes les notions de ${nomMat}. Bravo !`,
+  }[filtre];
+
+  const Pill = ({ on, onClick, children }) => (
+    <button onClick={onClick} className={`px-3 py-1.5 rounded-full text-xs font-bold border transition-colors ${on ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'}`}>{children}</button>
+  );
+  const Stat = ({ n, label, couleur }) => (
+    <div className="flex-1 min-w-[110px] rounded-xl bg-gray-50 px-3 py-2.5">
+      <b className={`block text-xl font-black ${couleur}`}>{n}</b>
+      <span className="text-xs text-gray-500">{label}</span>
+    </div>
+  );
+
+  return (
+    <div className="flex-1 overflow-y-auto px-4 pt-6 pb-24">
+      <h1 className="text-2xl font-bold text-gray-900">Suivi de mes notions acquises</h1>
+      <p className="text-sm text-gray-500 mt-1 leading-relaxed">
+        Suivez votre progression notion par notion. Chaque notion correspond à un objectif du programme du cycle 4.
+        Elle est <b className="text-gray-700">acquise</b> dès qu'une de vos réponses obtient au moins {NOTION_ACQUISE}/10, et passe <b className="text-gray-700">à revoir</b> si votre dernière réponse obtient moins de {NOTION_A_REVOIR}/10.
+      </p>
+
+      {/* Progression globale */}
+      <section className="mt-5 rounded-2xl border border-gray-100 bg-white p-4 shadow-sm">
+        <h2 className="text-sm font-bold text-gray-900">Ma progression globale</h2>
+        <div className="flex flex-wrap gap-2 mt-3">
+          <Stat n={<>{tot.acquise} <small className="text-xs font-bold text-gray-400">/ {tot.total}</small></>} label={tot.acquise > 1 ? 'notions acquises' : 'notion acquise'} couleur="text-emerald-600" />
+          <Stat n={tot.en_cours} label="en cours" couleur="text-indigo-600" />
+          <Stat n={tot.a_revoir} label="à revoir" couleur="text-orange-600" />
+        </div>
+        <div className="grid grid-cols-2 gap-3 mt-4">
+          {[['francais', 'Français', 'bg-indigo-500'], ['maths', 'Maths', 'bg-emerald-500']].map(([m, label, couleur]) => {
+            const c = parMat[m], pct = c.total ? Math.round(c.acquise / c.total * 100) : 0;
+            return (
+              <div key={m}>
+                <div className="flex justify-between text-xs mb-1"><b className="text-gray-700">{label}</b><span className="text-gray-500">{c.acquise} / {c.total} · {pct} %</span></div>
+                <span className="block h-1.5 rounded-full bg-gray-100 overflow-hidden"><i className={`block h-full ${couleur}`} style={{ width: `${pct}%` }} /></span>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* À revoir en priorité */}
+      <section className="mt-4 rounded-2xl border border-orange-100 bg-orange-50/40 p-4">
+        <h2 className="text-sm font-bold text-gray-900">À revoir en priorité</h2>
+        {aRevoir.length ? (
+          <div className="mt-2 flex flex-col divide-y divide-orange-100">
+            {aRevoir.map(x => (
+              <div key={`${x.matiere}|${x.objectif}`} className="py-2 flex items-start gap-2.5">
+                <span className={`mt-0.5 text-[10px] font-bold uppercase px-1.5 py-0.5 rounded ${x.matiere === 'francais' ? 'bg-indigo-100 text-indigo-700' : 'bg-emerald-100 text-emerald-700'}`}>{x.matiere === 'francais' ? 'Fr' : 'Ma'}</span>
+                <span className="flex-1 text-sm text-gray-700 leading-snug">{x.objectif}</span>
+                <span className="text-xs text-gray-400 whitespace-nowrap">{x.d?.derniere != null ? `${x.d.derniere}/10` : ''}</span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="mt-1 text-sm text-gray-500">{tot.acquise + tot.en_cours ? '🎉 Aucune notion à revoir : toutes les notions travaillées sont en cours ou acquises.' : 'Lancez une première série pour commencer à suivre vos notions.'}</p>
+        )}
+      </section>
+
+      {/* Détail par matière */}
+      <h2 className="text-base font-bold text-gray-900 mt-6">Détail par matière</h2>
+      <div className="flex flex-wrap items-center gap-2 mt-3">
+        <Pill on={mat === 'francais'} onClick={() => { setMat('francais'); setOuverts({}); }}>Français</Pill>
+        <Pill on={mat === 'maths'} onClick={() => { setMat('maths'); setOuverts({}); }}>Maths</Pill>
+      </div>
+      <div className="flex flex-wrap items-center gap-2 mt-2.5">
+        <span className="text-[11px] font-extrabold uppercase tracking-wide text-gray-400 mr-1">Afficher</span>
+        {FILTRES_NOTIONS.map(([id, label]) => <Pill key={id || 'toutes'} on={filtre === id} onClick={() => { setFiltre(id); setOuverts({}); }}>{label}</Pill>)}
+      </div>
+
+      <div className="mt-4 flex flex-col gap-2.5">
+        {filtre && !visibles.length ? (
+          <div className="rounded-2xl border border-gray-100 bg-white p-4 text-sm text-gray-600">
+            <p>{vide}</p>
+            <button onClick={() => setFiltre('')} className="mt-3 px-3 py-1.5 rounded-lg border border-gray-200 text-xs font-bold text-gray-600 hover:border-gray-400">Voir toutes les notions</button>
+          </div>
+        ) : visibles.map((t, i) => {
+          const ouvert = estOuvert(t.th, i);
+          const pct = t.c.total ? Math.round(t.c.acquise / t.c.total * 100) : 0;
+          const liste = filtre ? t.liste.filter(x => x.statut === filtre) : t.liste;
+          const topicId = mat === 'francais' ? topicDeThematique(t.th) : null;
+          const lancable = mat === 'maths' || !!topicId;
+          return (
+            <div key={t.th} className="rounded-2xl border border-gray-100 bg-white overflow-hidden">
+              <button onClick={() => setOuverts(o => ({ ...o, [t.th]: !ouvert }))} className="w-full px-4 py-3 flex items-center gap-3 text-left hover:bg-gray-50">
+                <span className="flex-1 min-w-0">
+                  <b className="block text-sm text-gray-900">{t.th}</b>
+                  <small className="text-xs text-gray-500">{t.c.acquise} / {t.c.total} notion{t.c.total > 1 ? 's' : ''} acquise{t.c.acquise > 1 ? 's' : ''}{t.c.a_revoir ? ` · ${t.c.a_revoir} à revoir` : ''}</small>
+                </span>
+                <span className="w-24 h-1.5 rounded-full bg-gray-100 overflow-hidden flex-shrink-0"><i className={`block h-full ${mat === 'francais' ? 'bg-indigo-500' : 'bg-emerald-500'}`} style={{ width: `${pct}%` }} /></span>
+                {ouvert ? <ChevronUp className="w-4 h-4 text-gray-300" /> : <ChevronDown className="w-4 h-4 text-gray-300" />}
+              </button>
+              {ouvert && (
+                <div className="border-t border-gray-50 px-4 py-3">
+                  {lancable && (
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {PARCOURS_CLASSES.map(([niveauId, classe]) => (
+                        <button
+                          key={niveauId}
+                          onClick={() => (mat === 'francais' ? onLancerFrancais(topicId, niveauId) : onLancerMaths(t.th, niveauId))}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold text-white ${mat === 'francais' ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-emerald-600 hover:bg-emerald-700'}`}
+                        >
+                          S'entraîner · {classe}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {liste.length ? (
+                    <ul className="flex flex-col divide-y divide-gray-50">
+                      {liste.map(x => {
+                        const s = STATUTS_NOTION[x.statut];
+                        return (
+                          <li key={x.objectif} className="py-2.5 flex items-start gap-2.5">
+                            <span className={`mt-1.5 w-2 h-2 rounded-full flex-shrink-0 ${s.pastille}`} />
+                            <span className="flex-1 min-w-0">
+                              <span className="block text-sm text-gray-800 leading-snug">{x.objectif}</span>
+                              <span className="block text-[11px] text-gray-400 mt-0.5">{x.classe}{x.sous_categorie ? ` · ${x.sous_categorie}` : ''}</span>
+                            </span>
+                            <span className="flex flex-col items-end gap-1 flex-shrink-0">
+                              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap ${s.chip}`}>{s.label}</span>
+                              {x.d?.best != null && <span className="text-[10px] text-gray-400">meilleure note {x.d.best}/10</span>}
+                            </span>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  ) : (
+                    <p className="text-sm text-gray-500">Aucune notion « {FILTRES_NOTIONS.find(f => f[0] === filtre)?.[1].toLowerCase()} » dans ce thème.</p>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // SideNav — menu à gauche sur ordinateur (≥ 1100 px), même organisation que le Quiz CRPE :
 // logo en haut, onglets, compte en bas. Sur mobile, l'en-tête et la BottomNav restent affichés.
 // ---------------------------------------------------------------------------
@@ -6372,6 +6591,7 @@ function SideNav({ active, onChange, unreadSupport = 0, authUser, profile }) {
   const tabs = [
     { id: 'home',    label: 'Accueil',    icon: Home       },
     { id: 'parcours', label: 'Mon parcours', icon: ListChecks },
+    { id: 'notions', label: 'Notions acquises', icon: CheckCircle2 },
     { id: 'chat',    label: 'Reprendre',  icon: RotateCcw  },
     { id: 'history', label: 'Historique', icon: BookOpen   },
     { id: 'stats',   label: 'Mes stats',  icon: BarChart2  },
@@ -6816,7 +7036,7 @@ function AppContent({ authUser }) {
   });
   const [activeTab, setActiveTab] = useState(() => {
     const o = new URLSearchParams(window.location.search).get('onglet');
-    return ['home', 'parcours', 'history', 'stats', 'support', 'profile'].includes(o) ? o : 'home';
+    return ['home', 'parcours', 'notions', 'history', 'stats', 'support', 'profile'].includes(o) ? o : 'home';
   });
   const [chatMatiere, setChatMatiere] = useState(null);
   const [sessionKey, setSessionKey] = useState(0);
@@ -7166,6 +7386,13 @@ function AppContent({ authUser }) {
             {activeTab === 'parcours' && (
               <ParcoursView
                 authUser={authUser}
+                progress={tuteurProgress}
+                onLancerFrancais={lancerFrancaisParcours}
+                onLancerMaths={lancerMathsParcours}
+              />
+            )}
+            {activeTab === 'notions' && (
+              <NotionsView
                 progress={tuteurProgress}
                 onLancerFrancais={lancerFrancaisParcours}
                 onLancerMaths={lancerMathsParcours}
