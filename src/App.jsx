@@ -986,6 +986,17 @@ async function fetchTuteurProgress(userId) {
   }
 }
 
+// Ordre des questions d'une série : notions jamais vues d'abord, puis à revoir, en cours, et acquises en dernier
+// (l'ordre mélangé est gardé à l'intérieur de chaque groupe). Ainsi, en suivant le parcours, on passe par toutes les questions.
+const PRIORITE_STATUT = { pas_vue: 0, a_revoir: 1, en_cours: 2, acquise: 3 };
+async function ordonnerParPriorite(questions, matiere, champObjectif, userId) {
+  if (!userId || !Array.isArray(questions) || questions.length < 2) return questions;
+  const p = await fetchTuteurProgress(userId);
+  if (!p?.notions) return questions;
+  const rang = (q) => PRIORITE_STATUT[statutNotion(p.notions[`${matiere}|${q[champObjectif]}`])] ?? 0;
+  return questions.map((q, i) => [q, rang(q), i]).sort((a, b) => a[1] - b[1] || a[2] - b[2]).map(x => x[0]);
+}
+
 async function supabaseInsert(table, data) {
   if (!SUPABASE_URL || !SUPABASE_KEY) return;
   try {
@@ -3818,7 +3829,7 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered, initia
     setMessages([]);
     setOptions([]);
     const data = await fetchExercicesMaths(thematique, classe);
-    const shuffled = shuffleArray(data);
+    const shuffled = await ordonnerParPriorite(shuffleArray(data), 'maths', 'objectif_apprentissage', authUser?.id || storage.get('crpe_user_id'));
     setExercises(shuffled);
     setLoadingEx(false);
     setAwaitingStart(shuffled.length > 0);
@@ -4169,7 +4180,7 @@ ${tentative < MAX_TENTATIVES
           <>
             <ChatBubble msg={{
               role: 'assistant',
-              content: `Vous travaillez sur **${selectedThematique}** — **${getNiveauLabel(selectedClasseId)}** — **Cycle 4**.\n\nLes sous-catégories et les objectifs de chaque question correspondent aux **programmes officiels du cycle 4 de l'Éducation nationale**.\n\nVoici comment fonctionne la session :\n\n1. Une question est posée, avec une figure si nécessaire.\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **jusqu'à ${MAX_TENTATIVES} tentatives** par question pour parfaire votre réponse : c'est en la réécrivant, correction après correction, qu'on prend l'habitude de bien rédiger.\n4. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'maths', [selectedThematique], NIVEAU_TO_CLASSE[selectedClasseId], getNiveauLabel(selectedClasseId))}\n\n` : ''}${exercises.length} exercice${exercises.length > 1 ? 's' : ''} disponible${exercises.length > 1 ? 's' : ''} pour cette sélection.`,
+              content: `Vous travaillez sur **${selectedThematique}** — **${getNiveauLabel(selectedClasseId)}** — **Cycle 4**.\n\nLes sous-catégories et les objectifs de chaque question correspondent aux **programmes officiels du cycle 4 de l'Éducation nationale**.\n\nVoici comment fonctionne la session :\n\n1. Une question est posée, avec une figure si nécessaire.\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **jusqu'à ${MAX_TENTATIVES} tentatives** par question pour parfaire votre réponse : c'est en la réécrivant, correction après correction, qu'on prend l'habitude de bien rédiger.\n4. Les questions que vous n'avez **jamais faites passent en premier**, puis celles à revoir : en suivant les séries, vous passez par toutes les notions.\n5. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'maths', [selectedThematique], NIVEAU_TO_CLASSE[selectedClasseId], getNiveauLabel(selectedClasseId))}\n\n` : ''}${exercises.length} exercice${exercises.length > 1 ? 's' : ''} disponible${exercises.length > 1 ? 's' : ''} pour cette sélection.`,
             }} />
             <div className="pl-11 mt-1 mb-2">
               <button
@@ -4554,7 +4565,7 @@ function BanqueQuestionsView({ topic, niveau, onBack, autoResume = false, resume
   useEffect(() => {
     const userId = userIdRef.current;
     Promise.all([
-      fetchQuestionsFromBanque(topic, niveau),
+      fetchQuestionsFromBanque(topic, niveau).then(q => ordonnerParPriorite(q, 'francais', 'objectif', userId)),
       resumeRow ? Promise.resolve(resumeRow) : fetchActiveSession(userId, topic, niveau),
       resumeRow ? Promise.resolve(new Set()) : fetchCompletedQuestionIds(userId),
       fetchProgressionStats(userId),
@@ -5037,7 +5048,7 @@ ${tentative < MAX_TENTATIVES
           <>
             <ChatBubble msg={{
               role: 'assistant',
-              content: `Vous travaillez sur **${topicLabel}** — **${niveauLabel}** — **Cycle 4**.\n\nLes sous-catégories et les objectifs de chaque question correspondent aux **programmes officiels du cycle 4 de l'Éducation nationale**.\n\nVoici comment fonctionne la session :\n\n1. ${levelUnlocked ? 'La version **Facile** de chaque exercice est affichée en premier.' : 'Seules les questions de niveau **Facile** sont disponibles pour l\'instant.'}\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **jusqu'à ${MAX_TENTATIVES} tentatives** par question pour parfaire votre réponse : c'est en la réécrivant, correction après correction, qu'on prend l'habitude de bien rédiger.\n4. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n5. ${levelUnlocked ? 'Si vous souhaitez aller plus loin, passez à la **version intermédiaire** du même exercice.' : 'Remplissez les critères sur la page d\'accueil pour débloquer le niveau intermédiaire.'}\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'francais', [topic, topicLabel], classe, niveauLabel)}\n\n` : ''}${pairs.length > 0 ? `${pairs.length} exercice${pairs.length > 1 ? 's' : ''} disponible${pairs.length > 1 ? 's' : ''} pour cette sélection.` : 'Aucun exercice disponible pour cette sélection.'}`,
+              content: `Vous travaillez sur **${topicLabel}** — **${niveauLabel}** — **Cycle 4**.\n\nLes sous-catégories et les objectifs de chaque question correspondent aux **programmes officiels du cycle 4 de l'Éducation nationale**.\n\nVoici comment fonctionne la session :\n\n1. ${levelUnlocked ? 'La version **Facile** de chaque exercice est affichée en premier.' : 'Seules les questions de niveau **Facile** sont disponibles pour l\'instant.'}\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **jusqu'à ${MAX_TENTATIVES} tentatives** par question pour parfaire votre réponse : c'est en la réécrivant, correction après correction, qu'on prend l'habitude de bien rédiger.\n4. Les questions que vous n'avez **jamais faites passent en premier**, puis celles à revoir : en suivant les séries, vous passez par toutes les notions.\n5. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n6. ${levelUnlocked ? 'Si vous souhaitez aller plus loin, passez à la **version intermédiaire** du même exercice.' : 'Remplissez les critères sur la page d\'accueil pour débloquer le niveau intermédiaire.'}\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'francais', [topic, topicLabel], classe, niveauLabel)}\n\n` : ''}${pairs.length > 0 ? `${pairs.length} exercice${pairs.length > 1 ? 's' : ''} disponible${pairs.length > 1 ? 's' : ''} pour cette sélection.` : 'Aucun exercice disponible pour cette sélection.'}`,
             }} />
             <div className="pl-11 mt-1 mb-2 flex flex-col gap-2">
               {hasSavedSession && (
