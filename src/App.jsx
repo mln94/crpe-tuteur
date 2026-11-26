@@ -726,7 +726,7 @@ async function fetchExercicesMaths(thematique, classe) {
     const params = new URLSearchParams({
       thematique: `eq.${thematique}`,
       classe:     `eq.${classe}`,
-      select:     'id,objectif_id,objectif_apprentissage,thematique,sous_categorie,classe,enonce,question,reponse_ideale,figure_path,figure_svg,figure_masquee,outil_reponse,synthese_cours,definition_mots_cles',
+      select:     'id,objectif_id,objectif_apprentissage,thematique,sous_categorie,classe,niveau_difficulte,enonce,question,reponse_ideale,figure_path,figure_svg,figure_masquee,outil_reponse,synthese_cours,definition_mots_cles',
       order:      'id.asc',
     });
     const res = await fetch(`${SUPABASE_URL}/rest/v1/exercices_maths?${params}`, {
@@ -984,6 +984,29 @@ async function fetchTuteurProgress(userId) {
   } catch {
     return null;
   }
+}
+
+// Niveaux des exercices de la banque (comme le Quiz CRPE) : on choisit Facile ou Intermédiaire au début de la série,
+// et, en facile, la version intermédiaire du même objectif est proposée dès que la réponse obtient au moins NOTION_ACQUISE/10
+const niveauExo = (q) => ((q?.niveau_difficulte || '').toLowerCase().startsWith('interm') ? 'Intermédiaire' : 'Facile');
+function NiveauChoix({ valeur, onChange, nbFacile, nbInter, couleur = 'indigo' }) {
+  const on = couleur === 'emerald' ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-indigo-600 border-indigo-600 text-white';
+  return (
+    <div className="flex items-center gap-1.5 flex-wrap">
+      <span className="text-[11px] font-bold uppercase tracking-wide text-gray-400 mr-0.5">Niveau</span>
+      {[['Facile', nbFacile], ['Intermédiaire', nbInter]].map(([n, nb]) => (
+        <button
+          key={n}
+          onClick={() => valeur !== n && nb > 0 && onChange(n)}
+          disabled={!nb}
+          title={nb ? `${nb} exercice${nb > 1 ? 's' : ''}` : 'Bientôt disponible pour cette sélection'}
+          className={`px-2.5 py-1 rounded-full text-xs font-bold border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${valeur === n ? on : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'}`}
+        >
+          {n}{nb != null ? <span className="font-medium opacity-75"> · {nb}</span> : null}
+        </button>
+      ))}
+    </div>
+  );
 }
 
 // Ordre des questions d'une série : notions jamais vues d'abord, puis à revoir, en cours, et acquises en dernier
@@ -3740,6 +3763,8 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered, initia
   const [selectedThematique, setSelectedThematique] = useState(preset ? initialThematique : null);
   const [selectedClasseId, setSelectedClasseId] = useState(null);
   const [exercises, setExercises]               = useState([]);
+  const [banque, setBanque]                     = useState([]); // exercices du thème et de la classe, les deux niveaux
+  const [difficulte, setDifficulte]             = useState('Facile');
   const [loadingEx, setLoadingEx]               = useState(preset);
   const [awaitingStart, setAwaitingStart]       = useState(false);
   const [currentIdx, setCurrentIdx]             = useState(0);
@@ -3808,7 +3833,7 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered, initia
     setSynthese({ open: false, content: '', minimized: false });
     setDefinitions({ open: false, content: '', minimized: false });
     if (exercises.length > 0) {
-      const msg = buildMathQuestionMessage(exercises[0], 1);
+      const msg = messageQuestion(exercises[0], 1);
       setMessages([{ role: 'assistant', content: msg }]);
       setOptions(extractOptions(msg));
       generateAndSaveFigure(exercises[0], 0);
@@ -3817,8 +3842,9 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered, initia
   };
 
   // Charge les exercices d'un thème et d'une classe (choix de la classe, ou lancement depuis le parcours)
-  const demarrerSerie = async (thematique, classeId) => {
+  const demarrerSerie = async (thematique, classeId, diff = difficulte) => {
     const classe = NIVEAU_TO_CLASSE[classeId];
+    setDifficulte(diff);
     setSelectedClasseId(classeId);
     setLoadingEx(true);
     setStep('exercises');
@@ -3829,7 +3855,8 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered, initia
     setMessages([]);
     setOptions([]);
     const data = await fetchExercicesMaths(thematique, classe);
-    const shuffled = await ordonnerParPriorite(shuffleArray(data), 'maths', 'objectif_apprentissage', authUser?.id || storage.get('crpe_user_id'));
+    setBanque(data);
+    const shuffled = await ordonnerParPriorite(shuffleArray(data.filter(e => niveauExo(e) === diff)), 'maths', 'objectif_apprentissage', authUser?.id || storage.get('crpe_user_id'));
     setExercises(shuffled);
     setLoadingEx(false);
     setAwaitingStart(shuffled.length > 0);
@@ -3840,11 +3867,15 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered, initia
     if (preset) demarrerSerie(initialThematique, initialClasseId);
   }, []);
 
+  const intermDe = (e) => (e && niveauExo(e) === 'Facile' ? banque.find(x => niveauExo(x) === 'Intermédiaire' && x.objectif_id === e.objectif_id) : null);
+  const messageQuestion = (e, num) => buildMathQuestionMessage(e, num, !!intermDe(e));
+  const nbParNiveau = { Facile: banque.filter(e => niveauExo(e) === 'Facile').length, Intermédiaire: banque.filter(e => niveauExo(e) === 'Intermédiaire').length };
+
   const startMathSession = () => {
     setAwaitingStart(false);
     sessionIdRef.current = null;
     if (exercises.length > 0) {
-      const msg = buildMathQuestionMessage(exercises[0], 1);
+      const msg = messageQuestion(exercises[0], 1);
       setMessages([{ role: 'assistant', content: msg }]);
       setOptions(extractOptions(msg));
       generateAndSaveFigure(exercises[0], 0);
@@ -3873,6 +3904,20 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered, initia
       setTimeout(() => inputRef.current?.focus(), 100);
       return;
     }
+    if (opt === '1') {
+      const h = intermDe(ex);
+      if (!h) return;
+      const liste = [...exercises]; liste[currentIdx] = h; setExercises(liste);
+      tentativeRef.current = 1;
+      const msg = buildMathQuestionMessage(h, currentIdx + 1, false);
+      const updated = [...messages, { role: 'user', content: '[1]' }, { role: 'assistant', content: msg }];
+      setMessages(updated);
+      setOptions(extractOptions(msg));
+      setPhase('question');
+      generateAndSaveFigure(h, updated.length - 1);
+      setTimeout(() => inputRef.current?.focus(), 100);
+      return;
+    }
     if (opt === 'R') {
       const reponseMsg = buildMathReponseMessage(ex, currentIdx + 1);
       const updated = [...messages, { role: 'user', content: '[R]' }, { role: 'assistant', content: reponseMsg }];
@@ -3897,7 +3942,7 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered, initia
       const nextEx  = exercises[nextIdx];
       tentativeRef.current = 1;
       setCurrentIdx(nextIdx);
-      const nextMsg = buildMathQuestionMessage(nextEx, nextIdx + 1);
+      const nextMsg = messageQuestion(nextEx, nextIdx + 1);
       const updated = [...messages, { role: 'user', content: '[O]' }, { role: 'assistant', content: nextMsg }];
       setMessages(updated);
       setOptions(extractOptions(nextMsg));
@@ -3929,7 +3974,7 @@ function MathBanqueView({ onBack, authUser, isLocked, onQuestionAnswered, initia
 Thématique : ${ex.thematique}
 Sous-catégorie : ${ex.sous_categorie}
 Objectif : ${ex.objectif_apprentissage}
-Niveau : ${ex.classe} — Facile
+Niveau : ${ex.classe} — ${niveauExo(ex)}
 
 Énoncé :
 ${ex.enonce || ''}
@@ -3974,7 +4019,13 @@ ${tentative < MAX_TENTATIVES
           setStreamingText('');
           const finalMsgs = [...msgsBefore, { role: 'assistant', content: final }];
           setMessages(finalMsgs);
-          setOptions(extractOptions(final));
+          {
+            const n = extractNotesFromText(final);
+            const opts = extractOptions(final);
+            // Notion réussie en facile : on propose la version intermédiaire du même objectif
+            if (intermDe(ex) && (n.globale ?? n.crpe ?? 0) >= NOTION_ACQUISE && !opts.includes('1')) opts.push('1');
+            setOptions(opts);
+          }
           setPhase('answered');
           const userId = authUser?.id || storage.get('crpe_user_id');
           if (userId) {
@@ -4166,9 +4217,12 @@ ${tentative < MAX_TENTATIVES
               {ex?.classe}
               <span className="mx-1 text-gray-300">·</span>
               <span className="font-medium text-gray-500">Cycle 4</span>
+              <span className="mx-1 text-gray-300">·</span>
+              <span className="font-semibold text-emerald-600">{difficulte}</span>
             </p>
           </div>
         </div>
+        <div className="hidden sm:block ml-3"><NiveauChoix valeur={difficulte} onChange={(d) => demarrerSerie(selectedThematique, selectedClasseId, d)} nbFacile={nbParNiveau.Facile} nbInter={nbParNiveau['Intermédiaire']} couleur="emerald" /></div>
         <button onClick={restartSession} className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 ml-3">
           <RotateCcw className="w-3 h-3" /> Nouvelle session
         </button>
@@ -4180,9 +4234,10 @@ ${tentative < MAX_TENTATIVES
           <>
             <ChatBubble msg={{
               role: 'assistant',
-              content: `Vous travaillez sur **${selectedThematique}** — **${getNiveauLabel(selectedClasseId)}** — **Cycle 4**.\n\nLes sous-catégories et les objectifs de chaque question correspondent aux **programmes officiels du cycle 4 de l'Éducation nationale**.\n\nVoici comment fonctionne la session :\n\n1. Une question est posée, avec une figure si nécessaire.\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **jusqu'à ${MAX_TENTATIVES} tentatives** par question pour parfaire votre réponse : c'est en la réécrivant, correction après correction, qu'on prend l'habitude de bien rédiger.\n4. Les questions que vous n'avez **jamais faites passent en premier**, puis celles à revoir : en suivant les séries, vous passez par toutes les notions.\n5. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'maths', [selectedThematique], NIVEAU_TO_CLASSE[selectedClasseId], getNiveauLabel(selectedClasseId))}\n\n` : ''}${exercises.length} exercice${exercises.length > 1 ? 's' : ''} disponible${exercises.length > 1 ? 's' : ''} pour cette sélection.`,
+              content: `Vous travaillez sur **${selectedThematique}** — **${getNiveauLabel(selectedClasseId)}** — **Cycle 4**.\n\nLes sous-catégories et les objectifs de chaque question correspondent aux **programmes officiels du cycle 4 de l'Éducation nationale**.\n\nVoici comment fonctionne la session :\n\n1. Choisissez le **niveau** (Facile ou Intermédiaire) ci-dessous ou en haut de la série. En facile, dès que votre réponse obtient au moins ${NOTION_ACQUISE}/10, la **version intermédiaire** de la même notion vous est proposée.\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **jusqu'à ${MAX_TENTATIVES} tentatives** par question pour parfaire votre réponse : c'est en la réécrivant, correction après correction, qu'on prend l'habitude de bien rédiger.\n4. Les questions que vous n'avez **jamais faites passent en premier**, puis celles à revoir : en suivant les séries, vous passez par toutes les notions.\n5. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'maths', [selectedThematique], NIVEAU_TO_CLASSE[selectedClasseId], getNiveauLabel(selectedClasseId))}\n\n` : ''}${exercises.length} exercice${exercises.length > 1 ? 's' : ''} disponible${exercises.length > 1 ? 's' : ''} pour cette sélection.`,
             }} />
-            <div className="pl-11 mt-1 mb-2">
+            <div className="pl-11 mt-1 mb-2 flex flex-col gap-2">
+              <NiveauChoix valeur={difficulte} onChange={(d) => demarrerSerie(selectedThematique, selectedClasseId, d)} nbFacile={nbParNiveau.Facile} nbInter={nbParNiveau['Intermédiaire']} couleur="emerald" />
               <button
                 onClick={startMathSession}
                 className="bg-emerald-600 text-white rounded-xl px-5 py-2.5 text-sm font-semibold hover:bg-emerald-700 active:bg-emerald-800 transition-all w-fit"
@@ -4399,17 +4454,16 @@ function ClassPickerView({ onSelect, onBack }) {
 // ---------------------------------------------------------------------------
 // BanqueQuestionsView — questions from DB, UI identical to ChatView
 // ---------------------------------------------------------------------------
-function pairQuestions(questions, completedIds = new Set(), unlocked = false) {
-  const facile = questions.filter(q => (q.niveau_difficulte || '').toLowerCase() === 'facile');
-  const interm  = unlocked
-    ? questions.filter(q => (q.niveau_difficulte || '').toLowerCase().includes('interm'))
-    : [];
+function pairQuestions(questions, completedIds = new Set(), difficulte = 'Facile') {
+  const interm = questions.filter(q => niveauExo(q) === 'Intermédiaire');
+  // Niveau intermédiaire choisi : les questions intermédiaires seules
+  if (difficulte === 'Intermédiaire') return interm.filter(q => !completedIds.has(q.id)).map(q => ({ base: q, harder: null }));
+  const facile = questions.filter(q => niveauExo(q) === 'Facile');
 
   const pairs = [];
   for (const f of facile) {
-    const harder = interm.find(q2 =>
-      q2.thematique === f.thematique && q2.sous_categorie === f.sous_categorie
-    );
+    // Version intermédiaire du même objectif du programme
+    const harder = interm.find(q2 => q2.objectif === f.objectif);
     const facileDone = completedIds.has(f.id);
     const hardDone   = harder ? completedIds.has(harder.id) : true;
 
@@ -4471,13 +4525,13 @@ function formatSousQuestions(q) {
   return /^\s*1\)\s/.test(t) && /\n\d+\)\s/.test(t) ? `\n${t.trim()}` : t;
 }
 
-function buildMathQuestionMessage(ex, num) {
+function buildMathQuestionMessage(ex, num, hasHarder = false) {
   const s = ex.synthese_cours        ? '**[S]**' : '';
   const d = ex.definition_mots_cles ? '**[D]**' : '';
-  const opts = ['**[R]**', s, d, '**[O]**'].filter(Boolean).join(' ');
+  const opts = ['**[R]**', s, d, hasHarder ? '**[1]**' : '', '**[O]**'].filter(Boolean).join(' ');
   return [
     `Exercice ${num} · ${ex.sous_categorie} (ID Supabase : ${ex.id})`,
-    `Niveau de difficulté : Facile`,
+    `Niveau de difficulté : ${niveauExo(ex)}`,
     `Sous-catégorie : ${ex.sous_categorie}`,
     `Objectif : ${ex.objectif_apprentissage}`,
     ex.enonce ? `\n${ex.enonce}` : '',
@@ -4501,7 +4555,8 @@ function BanqueQuestionsView({ topic, niveau, onBack, autoResume = false, resume
 
   const [pairs, setPairs]               = useState([]);
   const [loadingQ, setLoadingQ]         = useState(true);
-  const [levelUnlocked, setLevelUnlocked] = useState(false);
+  const [difficulte, setDifficulte]     = useState('Facile');
+  const questionsRef                    = useRef([]); // toutes les questions du thème et de la classe (les deux niveaux)
   const [currentIndex, setCurrentIndex] = useState(0);
   const [displayedDiff, setDisplayedDiff] = useState('base');
   const [exerciceNum, setExerciceNum]   = useState(1);
@@ -4570,9 +4625,8 @@ function BanqueQuestionsView({ topic, niveau, onBack, autoResume = false, resume
       resumeRow ? Promise.resolve(new Set()) : fetchCompletedQuestionIds(userId),
       fetchProgressionStats(userId),
     ]).then(([data, dbRow, completedIds, progressStats]) => {
-      const unlocked = progressStats.unlocked;
-      setLevelUnlocked(unlocked);
-      setPairs(pairQuestions(data, completedIds, unlocked));
+      questionsRef.current = data || [];
+      setPairs(pairQuestions(questionsRef.current, completedIds, 'Facile'));
       if (dbRow && Array.isArray(dbRow.messages) && dbRow.messages.length > 1) {
         savedDbRowRef.current = dbRow;
         setHasSavedSession(true);
@@ -4598,6 +4652,24 @@ function BanqueQuestionsView({ topic, niveau, onBack, autoResume = false, resume
 
   const currentPair = pairs[currentIndex];
   const currentQ    = currentPair ? (currentPair[displayedDiff] ?? currentPair.base) : null;
+  const nbParNiveau = {
+    Facile: questionsRef.current.filter(q => niveauExo(q) === 'Facile').length,
+    Intermédiaire: questionsRef.current.filter(q => niveauExo(q) === 'Intermédiaire').length,
+  };
+  // Changer de niveau : nouvelle liste de questions, retour à l'écran de départ de la série
+  const changerDifficulte = (d) => {
+    setDifficulte(d);
+    setPairs(pairQuestions(questionsRef.current, new Set(), d));
+    setCurrentIndex(0);
+    setExerciceNum(1);
+    setDisplayedDiff('base');
+    tentativeRef.current = 1;
+    setMessages([]);
+    setOptions([]);
+    setPhase('question');
+    setHasSavedSession(false);
+    setAwaitingStart(true);
+  };
 
   // ── startSession ──────────────────────────────────────────────────────────
   const startSession = async (resume = false) => {
@@ -4814,11 +4886,18 @@ ${tentative < MAX_TENTATIVES
           setStreamingText('');
           const finalMsgs = [...msgsBefore, { role: 'assistant', content: final }];
           setMessages(finalMsgs);
-          setOptions(extractOptions(final));
+          const notes = extractNotesFromText(final);
+          {
+            const vals = [notes.ecriture, notes.orthographe, notes.crpe].filter(v => v != null);
+            const moy = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : 0;
+            const opts = extractOptions(final);
+            // Notion réussie en facile : on propose la version intermédiaire du même objectif
+            if (diffSnap === 'base' && pairs[idxSnap]?.harder && moy >= NOTION_ACQUISE && !opts.includes('1')) opts.push('1');
+            setOptions(opts);
+          }
           setPhase('answered');
           saveToDb(finalMsgs, idxSnap, numSnap, diffSnap, tentative, 'answered');
 
-          const notes = extractNotesFromText(final);
           const _ne2 = notes.ecriture ?? null, _no2 = notes.orthographe ?? null, _nc2 = notes.crpe ?? null;
           const _ngVals2 = [_ne2, _no2, _nc2].filter(v => v != null);
           const noteFields = {
@@ -5031,9 +5110,12 @@ ${tentative < MAX_TENTATIVES
               <span className="ml-1">{niveauLabel}</span>
               <span className="ml-1 text-gray-300">·</span>
               <span className="ml-1 font-medium text-gray-500">Cycle 4</span>
+              <span className="ml-1 text-gray-300">·</span>
+              <span className="ml-1 font-semibold text-indigo-600">{difficulte}</span>
             </p>
           </div>
         </div>
+        <div className="hidden sm:block ml-3"><NiveauChoix valeur={difficulte} onChange={changerDifficulte} nbFacile={nbParNiveau.Facile} nbInter={nbParNiveau['Intermédiaire']} /></div>
         <button
           onClick={restartSession}
           className="flex items-center gap-1 text-xs text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0 ml-3"
@@ -5048,9 +5130,10 @@ ${tentative < MAX_TENTATIVES
           <>
             <ChatBubble msg={{
               role: 'assistant',
-              content: `Vous travaillez sur **${topicLabel}** — **${niveauLabel}** — **Cycle 4**.\n\nLes sous-catégories et les objectifs de chaque question correspondent aux **programmes officiels du cycle 4 de l'Éducation nationale**.\n\nVoici comment fonctionne la session :\n\n1. ${levelUnlocked ? 'La version **Facile** de chaque exercice est affichée en premier.' : 'Seules les questions de niveau **Facile** sont disponibles pour l\'instant.'}\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **jusqu'à ${MAX_TENTATIVES} tentatives** par question pour parfaire votre réponse : c'est en la réécrivant, correction après correction, qu'on prend l'habitude de bien rédiger.\n4. Les questions que vous n'avez **jamais faites passent en premier**, puis celles à revoir : en suivant les séries, vous passez par toutes les notions.\n5. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n6. ${levelUnlocked ? 'Si vous souhaitez aller plus loin, passez à la **version intermédiaire** du même exercice.' : 'Remplissez les critères sur la page d\'accueil pour débloquer le niveau intermédiaire.'}\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'francais', [topic, topicLabel], classe, niveauLabel)}\n\n` : ''}${pairs.length > 0 ? `${pairs.length} exercice${pairs.length > 1 ? 's' : ''} disponible${pairs.length > 1 ? 's' : ''} pour cette sélection.` : 'Aucun exercice disponible pour cette sélection.'}`,
+              content: `Vous travaillez sur **${topicLabel}** — **${niveauLabel}** — **Cycle 4**.\n\nLes sous-catégories et les objectifs de chaque question correspondent aux **programmes officiels du cycle 4 de l'Éducation nationale**.\n\nVoici comment fonctionne la session :\n\n1. Choisissez le **niveau** (Facile ou Intermédiaire) ci-dessous ou en haut de la série.\n2. Rédigez votre réponse dans le champ ci-dessous. **L'IA corrige et note votre production.**\n3. Vous avez **jusqu'à ${MAX_TENTATIVES} tentatives** par question pour parfaire votre réponse : c'est en la réécrivant, correction après correction, qu'on prend l'habitude de bien rédiger.\n4. Les questions que vous n'avez **jamais faites passent en premier**, puis celles à revoir : en suivant les séries, vous passez par toutes les notions.\n5. Consultez la **synthèse du cours** ou les **définitions des mots clés** via les boutons dédiés.\n6. En niveau facile, dès que votre réponse obtient au moins ${NOTION_ACQUISE}/10, la **version intermédiaire** de la même notion vous est proposée.\n\n${questionsRepondues ? `${questionsReponduesPhrase(questionsRepondues, 'francais', [topic, topicLabel], classe, niveauLabel)}\n\n` : ''}${pairs.length > 0 ? `${pairs.length} exercice${pairs.length > 1 ? 's' : ''} disponible${pairs.length > 1 ? 's' : ''} pour cette sélection.` : 'Aucun exercice disponible pour cette sélection.'}`,
             }} />
             <div className="pl-11 mt-1 mb-2 flex flex-col gap-2">
+              <NiveauChoix valeur={difficulte} onChange={changerDifficulte} nbFacile={nbParNiveau.Facile} nbInter={nbParNiveau['Intermédiaire']} />
               {hasSavedSession && (
                 <button
                   onClick={() => startSession(true)}
