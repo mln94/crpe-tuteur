@@ -6008,7 +6008,8 @@ function SiteHeader({ authUser, profile, onSupport }) {
     a.addEventListener('click', go);
     return () => a.removeEventListener('click', go);
   }, [onSupport]);
-  return <div ref={ref} className="flex-shrink-0" dangerouslySetInnerHTML={{ __html: APP_NAV_HTML }} />;
+  // Sur ordinateur, le menu de gauche (SideNav) remplace l'en-tête
+  return <div ref={ref} className="flex-shrink-0 min-[1100px]:hidden" dangerouslySetInnerHTML={{ __html: APP_NAV_HTML }} />;
 }
 
 // BottomNav
@@ -6023,7 +6024,7 @@ function BottomNav({ active, onChange, unreadSupport = 0 }) {
     { id: 'profile', label: 'Profil',     icon: User          },
   ];
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-40">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-40 min-[1100px]:hidden">
       <div className="flex max-w-3xl mx-auto">
         {tabs.map(({ id, label, icon: Icon }) => (
           <button
@@ -6044,6 +6045,81 @@ function BottomNav({ active, onChange, unreadSupport = 0 }) {
           </button>
         ))}
       </div>
+    </nav>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// SideNav — menu à gauche sur ordinateur (≥ 1100 px), même organisation que le Quiz CRPE :
+// logo en haut, onglets, compte en bas. Sur mobile, l'en-tête et la BottomNav restent affichés.
+// ---------------------------------------------------------------------------
+function SideNav({ active, onChange, unreadSupport = 0, authUser, profile }) {
+  const tabs = [
+    { id: 'home',    label: 'Accueil',    icon: Home       },
+    { id: 'chat',    label: 'Reprendre',  icon: RotateCcw  },
+    { id: 'history', label: 'Historique', icon: BookOpen   },
+    { id: 'stats',   label: 'Mes stats',  icon: BarChart2  },
+    { id: 'support', label: 'Support',    icon: HelpCircle },
+    { id: 'profile', label: 'Profil',     icon: User       },
+  ];
+  const m = authUser?.user_metadata || {};
+  const nom = `${profile?.prenom || m.prenom || ''} ${profile?.nom || m.nom || ''}`.trim() || authUser?.email || '';
+  return (
+    <nav
+      aria-label="Navigation de PassCRPE"
+      className="hidden min-[1100px]:flex fixed top-0 left-0 bottom-0 w-[232px] z-40 flex-col gap-1 bg-white border-r border-gray-100 px-3 pt-[18px]"
+    >
+      <a href="/app" className="flex items-center gap-3 px-2 pt-1 pb-[22px] no-underline">
+        <span className="w-[42px] h-[42px] rounded-xl grid place-items-center text-white bg-gradient-to-br from-indigo-600 to-indigo-400 shadow-[0_6px_16px_-6px_rgba(79,70,229,.7)]">
+          <GraduationCap className="w-[22px] h-[22px]" />
+        </span>
+        <span>
+          <b className="block text-base font-extrabold text-gray-900">PassCRPE</b>
+          <small className="block text-xs font-semibold text-gray-500">Tuteur IA</small>
+        </span>
+      </a>
+      {tabs.map(({ id, label, icon: Icon }) => {
+        const on = active === id;
+        return (
+          <button
+            key={id}
+            onClick={() => onChange(id)}
+            aria-current={on ? 'page' : undefined}
+            className={`flex items-center gap-3 px-3.5 py-[11px] rounded-xl text-[15px] font-semibold text-left transition-colors ${
+              on
+                ? 'bg-indigo-600 text-white shadow-[0_8px_18px_-8px_rgba(79,70,229,.8)] hover:bg-indigo-700'
+                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+            }`}
+          >
+            <span className="relative">
+              <Icon className={`w-5 h-5 ${on ? 'stroke-[2.5]' : ''}`} />
+              {id === 'support' && unreadSupport > 0 && (
+                <span className="absolute -top-0.5 -right-1 w-2 h-2 bg-red-500 rounded-full border-[1.5px] border-white" />
+              )}
+            </span>
+            {label}
+          </button>
+        );
+      })}
+      {authUser && (
+        <div className="mt-auto border-t border-gray-100 px-2 pt-3.5 pb-4">
+          <div className="flex items-center gap-2.5">
+            <span className="w-10 h-10 rounded-full grid place-items-center bg-indigo-50 text-indigo-700 font-black text-base flex-shrink-0">
+              {(nom[0] || '?').toUpperCase()}
+            </span>
+            <span className="min-w-0">
+              <strong className="block text-sm text-gray-900 truncate">{nom}</strong>
+              <small className="block text-xs font-bold text-indigo-700 truncate">
+                {profile?.concours || 'Candidat(e)'}
+              </small>
+            </span>
+          </div>
+          <div className="flex gap-1.5 mt-2.5">
+            <a href="/espace" className="flex-1 text-center whitespace-nowrap py-[7px] px-0.5 rounded-lg border border-gray-200 text-[11.5px] font-bold text-gray-600 no-underline hover:border-indigo-600 hover:text-indigo-700">🏠 Mon espace</a>
+            <a href="/quizapp" className="flex-1 text-center whitespace-nowrap py-[7px] px-0.5 rounded-lg border border-gray-200 text-[11.5px] font-bold text-gray-600 no-underline hover:border-indigo-600 hover:text-indigo-700">🎯 Quiz CRPE</a>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
@@ -6560,6 +6636,11 @@ function AppContent({ authUser }) {
     setActiveTab(tab);
   };
 
+  // Onglet surligné : pendant une série de questions, « Reprendre » ; pendant le choix du thème ou de la classe, « Accueil »
+  const navActive = (showMathBanqueView || showBanqueView) ? 'chat'
+    : (showTopicPicker || showClassPicker) ? 'home'
+    : activeTab;
+
   if (!ready) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -6584,10 +6665,11 @@ function AppContent({ authUser }) {
   );
 
   return (
-    <div className="bg-gray-50 flex flex-col overflow-hidden" style={{ height: '100dvh' }}>
+    <div className="bg-gray-50 flex flex-col overflow-hidden min-[1100px]:pl-[232px]" style={{ height: '100dvh' }}>
       <SiteHeader authUser={authUser} profile={profile} onSupport={() => handleTabChange('support')} />
+      <SideNav active={navActive} onChange={handleTabChange} unreadSupport={unreadSupport} authUser={authUser} profile={profile} />
       <div
-        className="flex flex-col flex-1 min-h-0 max-w-3xl mx-auto w-full"
+        className="flex flex-col flex-1 min-h-0 max-w-3xl mx-auto w-full min-[1100px]:pt-4"
       >
         {showMathBanqueView ? (
           <MathBanqueView
@@ -6673,7 +6755,7 @@ function AppContent({ authUser }) {
           </>
         )}
       </div>
-      <BottomNav active={activeTab} onChange={handleTabChange} unreadSupport={unreadSupport} />
+      <BottomNav active={navActive} onChange={handleTabChange} unreadSupport={unreadSupport} />
     </div>
   );
 }
