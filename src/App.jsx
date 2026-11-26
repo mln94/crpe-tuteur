@@ -992,7 +992,7 @@ const niveauExo = (q) => ((q?.niveau_difficulte || '').toLowerCase().startsWith(
 function NiveauChoix({ valeur, onChange, nbFacile, nbInter, couleur = 'indigo' }) {
   const on = couleur === 'emerald' ? 'bg-emerald-600 border-emerald-600 text-white' : 'bg-indigo-600 border-indigo-600 text-white';
   return (
-    <div className="flex items-center gap-1.5 flex-wrap">
+    <div className="flex items-center gap-1.5 flex-wrap sm:flex-nowrap">
       <span className="text-[11px] font-bold uppercase tracking-wide text-gray-400 mr-0.5">Niveau</span>
       {[['Facile', nbFacile], ['Intermédiaire', nbInter]].map(([n, nb]) => (
         <button
@@ -1000,7 +1000,7 @@ function NiveauChoix({ valeur, onChange, nbFacile, nbInter, couleur = 'indigo' }
           onClick={() => valeur !== n && nb > 0 && onChange(n)}
           disabled={!nb}
           title={nb ? `${nb} exercice${nb > 1 ? 's' : ''}` : 'Bientôt disponible pour cette sélection'}
-          className={`px-2.5 py-1 rounded-full text-xs font-bold border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${valeur === n ? on : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'}`}
+          className={`px-2.5 py-1 rounded-full text-xs font-bold border whitespace-nowrap transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${valeur === n ? on : 'bg-white border-gray-200 text-gray-600 hover:border-gray-400'}`}
         >
           {n}{nb != null ? <span className="font-medium opacity-75"> · {nb}</span> : null}
         </button>
