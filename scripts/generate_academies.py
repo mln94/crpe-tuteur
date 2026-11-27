@@ -2,7 +2,7 @@
 """Génère la page hub « CRPE par académie » et les 30 pages académie.
 
 Données : scripts/academies-data.json
-Sorties : landing/crpe-par-academie.html et landing/academies/<slug>.html
+Sorties : landing/crpe-par-academie.html, landing/academies/<slug>.html et landing/crpe-prive-par-academie.html (données du privé : scripts/prive-data.json)
 Usage   : python3 scripts/generate_academies.py
 """
 import json
@@ -220,6 +220,7 @@ CSS = """
     .acad-wrap .table-wrap { margin: 16px 0 8px; }
     .acad-wrap table { font-size: 14px; }
     .acad-wrap thead th { padding: 0; }
+    .acad-wrap thead.thead-simple th { padding: 12px 14px; white-space: nowrap; }
     .acad-wrap thead th button { all: unset; box-sizing: border-box; display: block; width: 100%; padding: 12px 14px; cursor: pointer; font-weight: 700; white-space: nowrap; }
     .acad-wrap thead th button::after { content: attr(data-arrow); margin-left: 6px; font-size: 10px; }
     .acad-wrap thead th button:focus-visible { outline: 2px solid #fff; outline-offset: -4px; }
@@ -695,6 +696,8 @@ def page_hub():
   <h1>Résultats du CRPE {SESSION} par académie : inscrits, admis et taux de réussite</h1>
   <p class="lead">On ne passe pas le concours du CRPE « en France », mais dans <strong>une académie</strong>. C'est elle qui organise le concours et, si vous êtes reçu, vous affecte dans l'une de ses écoles. Choisir son académie, c'est donc choisir à la fois ses chances de réussite et l'endroit où l'on va enseigner. Voici le <strong>résultat du concours de professeur des écoles</strong> {SESSION} académie par académie, pour les deux concours externes : le concours <strong>bac+3</strong> (ouvert dès la licence) et le concours <strong>bac+5</strong> (master 2), ainsi que le <strong>troisième concours</strong> et le <strong>second concours interne</strong>. Inscrits, résultats d'admissibilité, admis et taux de réussite. <strong>Cliquez sur une académie de la carte</strong> pour découvrir ses résultats détaillés.</p>
 
+  <div class="callout">Vous visez une école <strong>privée sous contrat</strong> ? Les contrats offerts, inscrits et admis du concours de l'enseignement privé sont sur la page <a href="/crpe-prive-par-academie">résultats du CRPE privé {SESSION} par académie</a>.</div>
+
   {sommaire_html([('bac3', 'Concours externe bac+3'), ('bac5', 'Concours externe bac+5 (master 2)'), ('troisieme', 'Troisième concours'), ('interne', 'Second concours interne'), ('carte', 'La carte des académies'), ('methode', 'Comment est calculée la sélectivité ?'), ('regions', 'Les académies par région académique'), ('choisir', 'Comment choisir son académie ?')])}
 
   <h2 class="concours-titre" id="bac3">Concours externe bac+3 : les résultats {SESSION} par académie</h2>
@@ -861,6 +864,218 @@ def page_2027():
     # Page d'attente sans contenu propre : non indexée tant que les chiffres ne sont pas publiés
     return html.replace('  <link rel="canonical"', '  <meta name="robots" content="noindex, follow" />\n  <link rel="canonical"', 1)
 
+# ── Enseignement privé sous contrat (CAPE) : une page, toutes les académies ──
+URL_PRIVE = '/crpe-prive-par-academie'
+PRIVE = json.load(open(os.path.join(ROOT, 'scripts', 'prive-data.json'), encoding='utf-8'))
+PRIVE_CONCOURS = [
+    ('bac3', 'Concours externe bac+3', 'c-bac3', 'kpi-accent', "ouvert dès la licence (bac+3), c'est le concours le plus courant pour enseigner dans le privé"),
+    ('bac5', 'Concours externe bac+5 (master 2)', 'c-bac5', 'kpi-master', "ouvert aux titulaires d'un master 2"),
+    ('troisieme', 'Troisième concours', 'c-troisieme', 'kpi-troisieme', "ouvert aux candidats qui justifient d'une expérience professionnelle"),
+    ('interne', 'Second concours interne', 'c-interne', 'kpi-interne', "réservé aux maîtres déjà en fonction dans l'enseignement privé sous contrat (contractuels ou délégués auxiliaires)"),
+    ('interne_exceptionnel', 'Concours interne exceptionnel', 'c-interne', 'kpi-interne', 'un concours interne ponctuel, organisé à titre exceptionnel'),
+]
+PRIVE_LR = [('lr_bac3', 'bac+3'), ('lr_bac5', 'bac+5')]
+
+def taux_p(x):
+    return x['admis'] / x['presents'] if x['presents'] else None
+
+def fpct_p(t):
+    return fpct(round(t * 100 + 1e-9, 2) / 100) if t is not None else '–'  # arrondi au plus proche, comme la source
+
+def kpis_prive(n, classe, nom):
+    t = taux_p(n)
+    lc = '' if n.get('inscritsLC') is None else f'<div class="kpi"><span class="kpi-value">{fint(n["inscritsLC"])}</span><span class="kpi-label">candidats inscrits sur liste complémentaire</span></div>'
+    return f'''<section class="kpis" aria-label="Chiffres nationaux du {nom}">
+    <div class="kpi"><span class="kpi-value">{fint(n['contrats'])}</span><span class="kpi-label">contrats offerts</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(n['inscrits'])}</span><span class="kpi-label">inscrits</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(n['presents'])}</span><span class="kpi-label">présents aux épreuves écrites</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(n['admissibles'])}</span><span class="kpi-label">candidats admissibles</span></div>
+    <div class="kpi"><span class="kpi-value">{fint(n['admis'])}</span><span class="kpi-label">admis</span></div>
+    {lc}
+    <div class="kpi {classe}"><span class="kpi-value">{fpct_p(t)}</span><span class="kpi-label">taux de réussite national (admis / présents)</span></div>
+  </section>'''
+
+def table_prive(cle, rows, lc=True):
+    def ligne(a):
+        t = taux_p(a)
+        return f'''
+        <tr>
+          <td data-v="{escape(a['nom'])}">{escape(a['nom'])}</td>
+          <td class="num" data-v="{a['contrats']}">{fint(a['contrats'])}</td>
+          <td class="num" data-v="{a['inscrits']}">{fint(a['inscrits'])}</td>
+          <td class="num" data-v="{a['presents']}">{fint(a['presents'])}</td>
+          <td class="num" data-v="{a['admissibles']}">{fint(a['admissibles'])}</td>
+          <td class="num" data-v="{a['admis']}">{fint(a['admis'])}</td>
+          <td class="num" data-v="{-1 if t is None else f'{t:.6f}'}">{fpct_p(t)}</td>''' + (
+            f'''
+          <td class="num" data-v="{a['inscritsLC'] or 0}">{fint(a['inscritsLC'] or 0)}</td>''' if lc else '') + '''
+        </tr>'''
+    body = ''.join(ligne(a) for a in sorted(rows, key=lambda a: a['nom']))
+    lc_th = '\n          <th class="num"><button type="button" data-col="7">Liste compl.</button></th>' if lc else ''
+    return f'''<div class="table-wrap">
+    <table id="priveTable-{cle}" class="sortable">
+      <thead>
+        <tr>
+          <th><button type="button" data-col="0" data-type="text">Académie</button></th>
+          <th class="num"><button type="button" data-col="1">Contrats</button></th>
+          <th class="num"><button type="button" data-col="2">Inscrits</button></th>
+          <th class="num"><button type="button" data-col="3">Présents</button></th>
+          <th class="num"><button type="button" data-col="4">Admissibles</button></th>
+          <th class="num"><button type="button" data-col="5">Admis</button></th>
+          <th class="num"><button type="button" data-col="6">Taux de réussite</button></th>{lc_th}
+        </tr>
+      </thead>
+      <tbody>{body}
+      </tbody>
+    </table>
+  </div>'''
+
+def page_prive():
+    C = PRIVE['concours']
+    S = PRIVE['session']
+    TAUX_PUBLIC = {'bac3': TAUX_NATIONAL, 'bac5': TAUX_MASTER_NATIONAL,
+                   'troisieme': AUTRES[0]['taux_national'], 'interne': AUTRES[1]['taux_national']}
+    POSTES_PUBLIC = {'bac3': TOT['postes'], 'bac5': MASTER_NAT['postes'],
+                     'troisieme': AUTRES[0]['national']['postes'], 'interne': AUTRES[1]['national']['postes']}
+    total_admis = sum(c['national']['admis'] for c in C.values())
+    total_contrats = sum(c['national']['contrats'] for c in C.values())
+    sections = ''
+    for cle, titre, ctitre, ckpi, public in PRIVE_CONCOURS:
+        c = C[cle]
+        n, rows = c['national'], c['academies']
+        t = taux_p(n)
+        note = ''
+        if cle == 'bac5':
+            sc = {k: sum(a[k] for a in rows) for k in ('contrats', 'admis')}
+            note = (f"<p><em>Les totaux nationaux ci-dessus sont ceux publiés par le ministère. L'addition des lignes du tableau donne un peu moins "
+                    f"({fint(sc['contrats'])} contrats et {fint(sc['admis'])} admis) : l'écart vient de la source officielle.</em></p>")
+        if cle == 'interne':
+            note = ("<p><em>Guyane : aucun inscrit n'est indiqué dans les données officielles. Bordeaux et Nancy-Metz affichent 0 contrat offert "
+                    "pour ce concours dans la source.</em></p>")
+        comp = ''
+        if cle in TAUX_PUBLIC:
+            comp = (f" Dans l'enseignement public, le même concours affichait <strong>{fpct(TAUX_PUBLIC[cle])}</strong> de réussite pour "
+                    f"{fint(POSTES_PUBLIC[cle])} postes.")
+        sections += f'''
+  <h2 class="concours-titre {ctitre}" id="{cle.replace('_', '-')}">{titre} : les résultats {S} du privé par académie</h2>
+  <p>Ce concours est {public}. En {S}, {len(rows)} académies l'ont organisé pour l'enseignement privé : <strong>{fint(n['admis'])} candidats</strong> ont été admis sur {fint(n['presents'])} présents aux épreuves écrites, soit <strong>{fpct_p(t)}</strong> de réussite.{comp}</p>
+  {kpis_prive(n, ckpi, titre.lower())}
+  <h3>{titre} privé {S} : le tableau comparatif des académies</h3>
+  {table_prive(cle, rows)}
+  {note}
+'''
+        if cle == 'troisieme':
+            # Concours spéciaux langues régionales, placés après le troisième concours
+            lr = ''
+            for k, niv in PRIVE_LR:
+                x = C[k]
+                lr += f'''
+  <h3>Concours externe spécial {niv} (langues régionales)</h3>
+  <p>{fint(x['national']['contrats'])} contrats offerts, {fint(x['national']['inscrits'])} inscrits, {fint(x['national']['presents'])} présents, {fint(x['national']['admissibles'])} admissibles et <strong>{fint(x['national']['admis'])} admis</strong> ({fpct_p(taux_p(x['national']))} de réussite).</p>
+  {table_prive(k, x['academies'], lc=(k == 'lr_bac5'))}'''
+            sections += f'''
+  <h2 class="concours-titre c-troisieme" id="langues-regionales">Concours spéciaux langues régionales : les résultats {S} du privé</h2>
+  <p>Ces concours recrutent des professeurs des écoles qui enseignent aussi en langue régionale (basque, breton, catalan, corse, occitan, langue régionale d'Alsace…), dans les académies qui proposent un enseignement bilingue : Bordeaux, Corse, Montpellier, Rennes et Strasbourg.</p>
+  {lr}
+'''
+        if cle == 'interne':
+            sp = C['interne_special']
+            sections += f'''
+  <h3>Second concours interne spécial (langues régionales)</h3>
+  <p>{fint(sp['national']['contrats'])} contrats offerts, {fint(sp['national']['inscrits'])} inscrits, {fint(sp['national']['presents'])} présents, {fint(sp['national']['admissibles'])} admissibles et <strong>{fint(sp['national']['admis'])} admis</strong> en {S}.</p>
+  {table_prive('interne_special', sp['academies'], lc=False)}
+'''
+
+    comp_rows = ''.join(f'''
+        <tr><td>{titre}</td><td class="num">{fint(POSTES_PUBLIC[cle])}</td><td class="num">{fpct(TAUX_PUBLIC[cle])}</td><td class="num">{fint(C[cle]['national']['contrats'])}</td><td class="num">{fpct_p(taux_p(C[cle]['national']))}</td></tr>'''
+        for cle, titre, *_ in PRIVE_CONCOURS if cle in TAUX_PUBLIC)
+
+    body = f'''<div class="acad-wrap">
+
+  <nav class="breadcrumb" aria-label="Fil d'Ariane">
+    <a href="/">Accueil</a><span>›</span><a href="{HUB_URL}">CRPE par académie</a><span>›</span><span aria-current="page">Enseignement privé {S}</span>
+  </nav>
+
+  <h1>Résultats du CRPE privé {S} par académie : contrats, admis et taux de réussite</h1>
+  <p class="lead">Pour enseigner en école <strong>privée sous contrat</strong>, on ne passe pas exactement le CRPE mais son équivalent : le concours d'accès au <strong>CAPE</strong> (certificat d'aptitude au professorat des écoles). Les épreuves sont les mêmes que dans le public ; ce qui change, c'est qu'on obtient un <strong>contrat</strong> (et non un poste de fonctionnaire), et que le nombre de places est bien plus petit. Voici le résultat du concours de professeur des écoles de l'<strong>enseignement privé</strong> {S}, académie par académie et concours par concours : contrats offerts, inscrits, admissibles, admis et taux de réussite.</p>
+
+  <div class="callout">En {S}, <strong>{fint(total_admis)} candidats</strong> ont été admis à un concours de professeur des écoles du privé, pour {fint(total_contrats)} contrats offerts, tous concours confondus. Les résultats de l'enseignement public sont sur la page <a href="{HUB_URL}">résultats du CRPE {S} par académie</a>.</div>
+
+  {sommaire_html([('bac3', 'Concours externe bac+3'), ('bac5', 'Concours externe bac+5 (master 2)'), ('troisieme', 'Troisième concours'), ('langues-regionales', 'Concours langues régionales'), ('interne', 'Second concours interne'), ('interne-exceptionnel', 'Concours interne exceptionnel'), ('public-prive', 'Public ou privé : les chiffres comparés'), ('differences', 'CRPE public et concours du privé : ce qui change')])}
+{sections}
+  <h2 id="public-prive">CRPE public ou privé {S} : les chiffres comparés</h2>
+  <p>Le taux de réussite (admis divisé par présents aux épreuves écrites) au niveau national, pour chaque concours, dans le public et dans le privé :</p>
+  <div class="table-wrap">
+    <table>
+      <thead class="thead-simple"><tr><th>Concours</th><th class="num">Postes (public)</th><th class="num">Réussite (public)</th><th class="num">Contrats (privé)</th><th class="num">Réussite (privé)</th></tr></thead>
+      <tbody>{comp_rows}
+      </tbody>
+    </table>
+  </div>
+  <p>Dans le privé, il y a beaucoup moins de places, mais aussi beaucoup moins de candidats : le taux de réussite dépend surtout de l'académie. Sur une petite académie, quelques candidats de plus ou de moins font varier le taux de plusieurs points d'une année sur l'autre.</p>
+
+  <h2 id="differences">CRPE public et concours du privé : ce qui change</h2>
+  <ul>
+    <li><strong>Les épreuves :</strong> elles sont identiques. Mêmes écrits de français et de mathématiques, mêmes oraux, mêmes exigences du jury. Une préparation au CRPE prépare donc aussi au concours du privé.</li>
+    <li><strong>Le statut :</strong> dans le public, le lauréat devient fonctionnaire. Dans le privé sous contrat, il devient maître contractuel : il est payé par l'État, mais enseigne dans un établissement privé.</li>
+    <li><strong>L'affectation :</strong> dans le privé, il faut être accueilli par un établissement. Dans l'enseignement catholique, qui regroupe la plupart des écoles privées sous contrat, cela passe par un accord délivré au niveau du diocèse. Renseignez-vous tôt auprès de la direction diocésaine de votre académie.</li>
+  </ul>
+
+  <div class="related-section">
+    <p class="related-label">Lire aussi</p>
+    <div class="related-grid">
+      <a href="{HUB_URL}" class="related-card">
+        <span class="related-tag">Ressource</span>
+        <h4>Résultats du CRPE {S} par académie (enseignement public)</h4>
+        <p>Carte de France, postes, inscrits, admis et sélectivité des {N} académies.</p>
+        <span class="related-cta">Voir les résultats →</span>
+      </a>
+      <a href="/blog/crpe-bac3-structure-premiere-epreuve-admissibilite" target="_blank" rel="noopener" class="related-card">
+        <span class="related-tag">Le concours</span>
+        <h4>CRPE externe Bac+3 2026 : structure de l'épreuve d'admissibilité</h4>
+        <p>Durée, barème, parties français et mathématiques : la structure complète de la première épreuve.</p>
+        <span class="related-cta">Lire l'article →</span>
+      </a>
+      <a href="/notions-crpe" class="related-card">
+        <span class="related-tag">Ressource</span>
+        <h4>Les notions à maîtriser pour le CRPE</h4>
+        <p>Discipline par discipline, les notions attendues aux épreuves d'admissibilité.</p>
+        <span class="related-cta">Voir les notions →</span>
+      </a>
+    </div>
+  </div>
+
+  <p class="updated">Dernière mise à jour : 27 novembre 2026 · Données : <a href="{PRIVE['source']}" target="_blank" rel="noopener">ministère de l'Éducation nationale, devenirenseignant.gouv.fr</a> (mise à jour {PRIVE['maj_source']}), concours de l'enseignement privé, session {S}</p>
+
+</div>
+
+<script>
+  // Tri des tableaux comparatifs
+  document.querySelectorAll('table.sortable').forEach(function (table) {{
+    const tbody = table.tBodies[0];
+    let col = 0, dir = 1;
+    table.querySelectorAll('th button').forEach(btn => btn.addEventListener('click', () => {{
+      const c = +btn.dataset.col, text = btn.dataset.type === 'text';
+      if (c === col) dir = -dir; else {{ col = c; dir = text ? 1 : -1; }}
+      const rows = [...tbody.rows].sort((a, b) => {{
+        const x = a.cells[c].dataset.v, y = b.cells[c].dataset.v;
+        return (text ? x.localeCompare(y, 'fr') : x - y) * dir;
+      }});
+      rows.forEach(r => tbody.appendChild(r));
+      table.querySelectorAll('th button').forEach(b => {{
+        const on = +b.dataset.col === col;
+        b.dataset.arrow = on ? (dir === 1 ? '▲' : '▼') : '';
+        b.parentElement.setAttribute('aria-sort', on ? (dir === 1 ? 'ascending' : 'descending') : 'none');
+      }});
+    }}));
+  }});
+</script>'''
+    return page(f'Résultats CRPE privé {S} par académie : contrats, admis et taux de réussite | PassCRPE',
+                f"Résultats {S} du concours de professeur des écoles de l'enseignement privé (CAPE) par académie : contrats offerts, inscrits, admissibles, admis et taux de réussite, concours bac+3, bac+5, troisième concours et internes.",
+                URL_PRIVE, breadcrumb_ld([('Accueil', '/'), ('CRPE par académie', HUB_URL), (f'Enseignement privé {S}', URL_PRIVE)]), body,
+                f'Résultats du CRPE privé {S} par académie : contrats, admis et taux de réussite')
+
+
 # ── Écriture ─────────────────────────────────────────────────────────────────
 out_dir = os.path.join(ROOT, 'landing', 'academies')
 os.makedirs(out_dir, exist_ok=True)
@@ -868,4 +1083,5 @@ for a in ACADS:
     open(os.path.join(out_dir, a['slug'] + '.html'), 'w', encoding='utf-8').write(page_academie(a))
 open(os.path.join(ROOT, 'landing', 'crpe-par-academie.html'), 'w', encoding='utf-8').write(page_hub())
 open(os.path.join(ROOT, 'landing', 'crpe-par-academie-2027.html'), 'w', encoding='utf-8').write(page_2027())
+open(os.path.join(ROOT, 'landing', 'crpe-prive-par-academie.html'), 'w', encoding='utf-8').write(page_prive())
 print(f'{N} pages académie + page hub générées.')

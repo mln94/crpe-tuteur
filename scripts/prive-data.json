@@ -1,0 +1,1123 @@
+{
+ "session": "2026",
+ "source": "https://www.devenirenseignant.gouv.fr/les-donnees-statistiques-des-CRPE-de-l-enseignement-prive-2026-1698",
+ "maj_source": "septembre 2026",
+ "concours": {
+  "bac3": {
+   "national": {
+    "contrats": 481,
+    "inscrits": 8840,
+    "presents": 3595,
+    "admissibles": 1087,
+    "admis": 467,
+    "inscritsLC": 45
+   },
+   "academies": [
+    {
+     "nom": "Aix-Marseille",
+     "slug": "aix-marseille",
+     "contrats": 18,
+     "inscrits": 398,
+     "presents": 118,
+     "admissibles": 45,
+     "admis": 18,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Amiens",
+     "slug": "amiens",
+     "contrats": 7,
+     "inscrits": 148,
+     "presents": 44,
+     "admissibles": 20,
+     "admis": 7,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Besançon",
+     "slug": "besancon",
+     "contrats": 5,
+     "inscrits": 79,
+     "presents": 23,
+     "admissibles": 12,
+     "admis": 5,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Bordeaux",
+     "slug": "bordeaux",
+     "contrats": 20,
+     "inscrits": 461,
+     "presents": 168,
+     "admissibles": 44,
+     "admis": 19,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Clermont-Ferrand",
+     "slug": "clermont-ferrand",
+     "contrats": 8,
+     "inscrits": 193,
+     "presents": 74,
+     "admissibles": 30,
+     "admis": 8,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Corse",
+     "slug": "corse",
+     "contrats": 3,
+     "inscrits": 22,
+     "presents": 8,
+     "admissibles": 7,
+     "admis": 3,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Créteil",
+     "slug": "creteil",
+     "contrats": 27,
+     "inscrits": 267,
+     "presents": 60,
+     "admissibles": 42,
+     "admis": 27,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Dijon",
+     "slug": "dijon",
+     "contrats": 8,
+     "inscrits": 157,
+     "presents": 51,
+     "admissibles": 19,
+     "admis": 8,
+     "inscritsLC": 2
+    },
+    {
+     "nom": "Grenoble",
+     "slug": "grenoble",
+     "contrats": 19,
+     "inscrits": 357,
+     "presents": 119,
+     "admissibles": 48,
+     "admis": 19,
+     "inscritsLC": 4
+    },
+    {
+     "nom": "Guadeloupe",
+     "slug": "guadeloupe",
+     "contrats": 4,
+     "inscrits": 36,
+     "presents": 7,
+     "admissibles": 1,
+     "admis": 1,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Guyane",
+     "slug": "guyane",
+     "contrats": 2,
+     "inscrits": 16,
+     "presents": 4,
+     "admissibles": 2,
+     "admis": 1,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Lille",
+     "slug": "lille",
+     "contrats": 34,
+     "inscrits": 586,
+     "presents": 269,
+     "admissibles": 75,
+     "admis": 34,
+     "inscritsLC": 5
+    },
+    {
+     "nom": "Limoges",
+     "slug": "limoges",
+     "contrats": 2,
+     "inscrits": 55,
+     "presents": 20,
+     "admissibles": 4,
+     "admis": 2,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Lyon",
+     "slug": "lyon",
+     "contrats": 31,
+     "inscrits": 571,
+     "presents": 282,
+     "admissibles": 69,
+     "admis": 31,
+     "inscritsLC": 2
+    },
+    {
+     "nom": "Martinique",
+     "slug": "martinique",
+     "contrats": 6,
+     "inscrits": 36,
+     "presents": 17,
+     "admissibles": 6,
+     "admis": 6,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Montpellier",
+     "slug": "montpellier",
+     "contrats": 21,
+     "inscrits": 386,
+     "presents": 178,
+     "admissibles": 60,
+     "admis": 21,
+     "inscritsLC": 4
+    },
+    {
+     "nom": "Nancy-Metz",
+     "slug": "nancy-metz",
+     "contrats": 12,
+     "inscrits": 99,
+     "presents": 42,
+     "admissibles": 24,
+     "admis": 12,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Nantes",
+     "slug": "nantes",
+     "contrats": 69,
+     "inscrits": 1270,
+     "presents": 700,
+     "admissibles": 105,
+     "admis": 68,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Nice",
+     "slug": "nice",
+     "contrats": 10,
+     "inscrits": 240,
+     "presents": 52,
+     "admissibles": 15,
+     "admis": 10,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Normandie",
+     "slug": "normandie",
+     "contrats": 15,
+     "inscrits": 411,
+     "presents": 133,
+     "admissibles": 36,
+     "admis": 15,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Orléans-Tours",
+     "slug": "orleans-tours",
+     "contrats": 19,
+     "inscrits": 254,
+     "presents": 85,
+     "admissibles": 43,
+     "admis": 19,
+     "inscritsLC": 4
+    },
+    {
+     "nom": "Paris",
+     "slug": "paris",
+     "contrats": 42,
+     "inscrits": 345,
+     "presents": 128,
+     "admissibles": 102,
+     "admis": 36,
+     "inscritsLC": 11
+    },
+    {
+     "nom": "Poitiers",
+     "slug": "poitiers",
+     "contrats": 2,
+     "inscrits": 193,
+     "presents": 41,
+     "admissibles": 10,
+     "admis": 2,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Polynésie française",
+     "slug": "polynesie-francaise",
+     "contrats": 3,
+     "inscrits": 51,
+     "presents": 22,
+     "admissibles": 6,
+     "admis": 1,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Reims",
+     "slug": "reims",
+     "contrats": 3,
+     "inscrits": 112,
+     "presents": 40,
+     "admissibles": 18,
+     "admis": 3,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Rennes",
+     "slug": "rennes",
+     "contrats": 35,
+     "inscrits": 1049,
+     "presents": 562,
+     "admissibles": 90,
+     "admis": 35,
+     "inscritsLC": 2
+    },
+    {
+     "nom": "La Réunion",
+     "slug": "la-reunion",
+     "contrats": 8,
+     "inscrits": 184,
+     "presents": 86,
+     "admissibles": 28,
+     "admis": 8,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Strasbourg",
+     "slug": "strasbourg",
+     "contrats": 3,
+     "inscrits": 84,
+     "presents": 16,
+     "admissibles": 6,
+     "admis": 3,
+     "inscritsLC": 2
+    },
+    {
+     "nom": "Toulouse",
+     "slug": "toulouse",
+     "contrats": 22,
+     "inscrits": 402,
+     "presents": 158,
+     "admissibles": 62,
+     "admis": 22,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Versailles",
+     "slug": "versailles",
+     "contrats": 23,
+     "inscrits": 378,
+     "presents": 88,
+     "admissibles": 58,
+     "admis": 23,
+     "inscritsLC": 3
+    }
+   ]
+  },
+  "bac5": {
+   "national": {
+    "contrats": 601,
+    "inscrits": 8873,
+    "presents": 3036,
+    "admissibles": 1334,
+    "admis": 597,
+    "inscritsLC": 56
+   },
+   "academies": [
+    {
+     "nom": "Aix-Marseille",
+     "slug": "aix-marseille",
+     "contrats": 32,
+     "inscrits": 396,
+     "presents": 99,
+     "admissibles": 58,
+     "admis": 32,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Amiens",
+     "slug": "amiens",
+     "contrats": 14,
+     "inscrits": 144,
+     "presents": 37,
+     "admissibles": 23,
+     "admis": 14,
+     "inscritsLC": 3
+    },
+    {
+     "nom": "Besançon",
+     "slug": "besancon",
+     "contrats": 6,
+     "inscrits": 79,
+     "presents": 18,
+     "admissibles": 12,
+     "admis": 6,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Bordeaux",
+     "slug": "bordeaux",
+     "contrats": 25,
+     "inscrits": 472,
+     "presents": 124,
+     "admissibles": 46,
+     "admis": 25,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Clermont-Ferrand",
+     "slug": "clermont-ferrand",
+     "contrats": 14,
+     "inscrits": 191,
+     "presents": 61,
+     "admissibles": 31,
+     "admis": 14,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Corse",
+     "slug": "corse",
+     "contrats": 3,
+     "inscrits": 32,
+     "presents": 6,
+     "admissibles": 4,
+     "admis": 3,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Créteil",
+     "slug": "creteil",
+     "contrats": 29,
+     "inscrits": 325,
+     "presents": 85,
+     "admissibles": 64,
+     "admis": 27,
+     "inscritsLC": 3
+    },
+    {
+     "nom": "Dijon",
+     "slug": "dijon",
+     "contrats": 10,
+     "inscrits": 136,
+     "presents": 43,
+     "admissibles": 20,
+     "admis": 10,
+     "inscritsLC": 3
+    },
+    {
+     "nom": "Grenoble",
+     "slug": "grenoble",
+     "contrats": 20,
+     "inscrits": 351,
+     "presents": 91,
+     "admissibles": 36,
+     "admis": 20,
+     "inscritsLC": 2
+    },
+    {
+     "nom": "Guadeloupe",
+     "slug": "guadeloupe",
+     "contrats": 5,
+     "inscrits": 53,
+     "presents": 18,
+     "admissibles": 6,
+     "admis": 1,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Guyane",
+     "slug": "guyane",
+     "contrats": 2,
+     "inscrits": 20,
+     "presents": 4,
+     "admissibles": 1,
+     "admis": 1,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Lille",
+     "slug": "lille",
+     "contrats": 36,
+     "inscrits": 596,
+     "presents": 247,
+     "admissibles": 88,
+     "admis": 36,
+     "inscritsLC": 4
+    },
+    {
+     "nom": "Limoges",
+     "slug": "limoges",
+     "contrats": 2,
+     "inscrits": 60,
+     "presents": 15,
+     "admissibles": 4,
+     "admis": 2,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Lyon",
+     "slug": "lyon",
+     "contrats": 56,
+     "inscrits": 543,
+     "presents": 212,
+     "admissibles": 124,
+     "admis": 61,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Martinique",
+     "slug": "martinique",
+     "contrats": 5,
+     "inscrits": 48,
+     "presents": 23,
+     "admissibles": 2,
+     "admis": 2,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Montpellier",
+     "slug": "montpellier",
+     "contrats": 24,
+     "inscrits": 360,
+     "presents": 128,
+     "admissibles": 48,
+     "admis": 24,
+     "inscritsLC": 4
+    },
+    {
+     "nom": "Nancy-Metz",
+     "slug": "nancy-metz",
+     "contrats": 14,
+     "inscrits": 97,
+     "presents": 34,
+     "admissibles": 17,
+     "admis": 12,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Nantes",
+     "slug": "nantes",
+     "contrats": 78,
+     "inscrits": 1096,
+     "presents": 480,
+     "admissibles": 172,
+     "admis": 78,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Nice",
+     "slug": "nice",
+     "contrats": 6,
+     "inscrits": 229,
+     "presents": 40,
+     "admissibles": 21,
+     "admis": 6,
+     "inscritsLC": 3
+    },
+    {
+     "nom": "Normandie",
+     "slug": "normandie",
+     "contrats": 20,
+     "inscrits": 479,
+     "presents": 164,
+     "admissibles": 48,
+     "admis": 20,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Orléans-Tours",
+     "slug": "orleans-tours",
+     "contrats": 22,
+     "inscrits": 291,
+     "presents": 91,
+     "admissibles": 45,
+     "admis": 22,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Paris",
+     "slug": "paris",
+     "contrats": 46,
+     "inscrits": 477,
+     "presents": 158,
+     "admissibles": 134,
+     "admis": 48,
+     "inscritsLC": 19
+    },
+    {
+     "nom": "Poitiers",
+     "slug": "poitiers",
+     "contrats": 7,
+     "inscrits": 216,
+     "presents": 40,
+     "admissibles": 19,
+     "admis": 7,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Polynésie française",
+     "slug": "polynesie-francaise",
+     "contrats": 1,
+     "inscrits": 29,
+     "presents": 16,
+     "admissibles": 5,
+     "admis": 1,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Reims",
+     "slug": "reims",
+     "contrats": 13,
+     "inscrits": 112,
+     "presents": 32,
+     "admissibles": 27,
+     "admis": 13,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Rennes",
+     "slug": "rennes",
+     "contrats": 47,
+     "inscrits": 907,
+     "presents": 419,
+     "admissibles": 96,
+     "admis": 47,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "La Réunion",
+     "slug": "la-reunion",
+     "contrats": 12,
+     "inscrits": 212,
+     "presents": 101,
+     "admissibles": 29,
+     "admis": 12,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Strasbourg",
+     "slug": "strasbourg",
+     "contrats": 2,
+     "inscrits": 92,
+     "presents": 10,
+     "admissibles": 6,
+     "admis": 2,
+     "inscritsLC": 2
+    },
+    {
+     "nom": "Toulouse",
+     "slug": "toulouse",
+     "contrats": 21,
+     "inscrits": 389,
+     "presents": 125,
+     "admissibles": 56,
+     "admis": 21,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Versailles",
+     "slug": "versailles",
+     "contrats": 27,
+     "inscrits": 441,
+     "presents": 115,
+     "admissibles": 91,
+     "admis": 23,
+     "inscritsLC": 7
+    }
+   ]
+  },
+  "lr_bac3": {
+   "national": {
+    "contrats": 19,
+    "inscrits": 128,
+    "presents": 64,
+    "admissibles": 28,
+    "admis": 9,
+    "inscritsLC": null
+   },
+   "academies": [
+    {
+     "nom": "Bordeaux",
+     "slug": "bordeaux",
+     "contrats": 8,
+     "inscrits": 27,
+     "presents": 17,
+     "admissibles": 6,
+     "admis": 3,
+     "inscritsLC": null
+    },
+    {
+     "nom": "Corse",
+     "slug": "corse",
+     "contrats": 1,
+     "inscrits": 15,
+     "presents": 10,
+     "admissibles": 3,
+     "admis": 0,
+     "inscritsLC": null
+    },
+    {
+     "nom": "Montpellier",
+     "slug": "montpellier",
+     "contrats": 6,
+     "inscrits": 27,
+     "presents": 15,
+     "admissibles": 11,
+     "admis": 4,
+     "inscritsLC": null
+    },
+    {
+     "nom": "Rennes",
+     "slug": "rennes",
+     "contrats": 3,
+     "inscrits": 58,
+     "presents": 22,
+     "admissibles": 8,
+     "admis": 2,
+     "inscritsLC": null
+    },
+    {
+     "nom": "Strasbourg",
+     "slug": "strasbourg",
+     "contrats": 1,
+     "inscrits": 1,
+     "presents": 0,
+     "admissibles": 0,
+     "admis": 0,
+     "inscritsLC": null
+    }
+   ]
+  },
+  "lr_bac5": {
+   "national": {
+    "contrats": 27,
+    "inscrits": 104,
+    "presents": 51,
+    "admissibles": 27,
+    "admis": 13,
+    "inscritsLC": 0
+   },
+   "academies": [
+    {
+     "nom": "Bordeaux",
+     "slug": "bordeaux",
+     "contrats": 9,
+     "inscrits": 9,
+     "presents": 8,
+     "admissibles": 3,
+     "admis": 1,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Corse",
+     "slug": "corse",
+     "contrats": 1,
+     "inscrits": 14,
+     "presents": 9,
+     "admissibles": 2,
+     "admis": 1,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Montpellier",
+     "slug": "montpellier",
+     "contrats": 7,
+     "inscrits": 28,
+     "presents": 16,
+     "admissibles": 13,
+     "admis": 7,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Rennes",
+     "slug": "rennes",
+     "contrats": 7,
+     "inscrits": 49,
+     "presents": 18,
+     "admissibles": 9,
+     "admis": 4,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Strasbourg",
+     "slug": "strasbourg",
+     "contrats": 3,
+     "inscrits": 4,
+     "presents": 0,
+     "admissibles": 0,
+     "admis": 0,
+     "inscritsLC": 0
+    }
+   ]
+  },
+  "troisieme": {
+   "national": {
+    "contrats": 34,
+    "inscrits": 516,
+    "presents": 126,
+    "admissibles": 75,
+    "admis": 27,
+    "inscritsLC": 4
+   },
+   "academies": [
+    {
+     "nom": "Créteil",
+     "slug": "creteil",
+     "contrats": 12,
+     "inscrits": 110,
+     "presents": 22,
+     "admissibles": 17,
+     "admis": 6,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Orléans-Tours",
+     "slug": "orleans-tours",
+     "contrats": 3,
+     "inscrits": 57,
+     "presents": 11,
+     "admissibles": 7,
+     "admis": 3,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Paris",
+     "slug": "paris",
+     "contrats": 8,
+     "inscrits": 92,
+     "presents": 25,
+     "admissibles": 18,
+     "admis": 7,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Reims",
+     "slug": "reims",
+     "contrats": 1,
+     "inscrits": 30,
+     "presents": 9,
+     "admissibles": 3,
+     "admis": 1,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Strasbourg",
+     "slug": "strasbourg",
+     "contrats": 1,
+     "inscrits": 27,
+     "presents": 5,
+     "admissibles": 3,
+     "admis": 1,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Toulouse",
+     "slug": "toulouse",
+     "contrats": 3,
+     "inscrits": 86,
+     "presents": 22,
+     "admissibles": 6,
+     "admis": 3,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Versailles",
+     "slug": "versailles",
+     "contrats": 6,
+     "inscrits": 114,
+     "presents": 32,
+     "admissibles": 21,
+     "admis": 6,
+     "inscritsLC": 2
+    }
+   ]
+  },
+  "interne": {
+   "national": {
+    "contrats": 85,
+    "inscrits": 766,
+    "presents": 237,
+    "admissibles": 123,
+    "admis": 61,
+    "inscritsLC": 3
+   },
+   "academies": [
+    {
+     "nom": "Besançon",
+     "slug": "besancon",
+     "contrats": 5,
+     "inscrits": 19,
+     "presents": 5,
+     "admissibles": 3,
+     "admis": 3,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Bordeaux",
+     "slug": "bordeaux",
+     "contrats": 0,
+     "inscrits": 47,
+     "presents": 12,
+     "admissibles": 5,
+     "admis": 0,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Clermont-Ferrand",
+     "slug": "clermont-ferrand",
+     "contrats": 3,
+     "inscrits": 31,
+     "presents": 6,
+     "admissibles": 5,
+     "admis": 2,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Créteil",
+     "slug": "creteil",
+     "contrats": 3,
+     "inscrits": 21,
+     "presents": 6,
+     "admissibles": 5,
+     "admis": 3,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Dijon",
+     "slug": "dijon",
+     "contrats": 5,
+     "inscrits": 28,
+     "presents": 12,
+     "admissibles": 5,
+     "admis": 2,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Grenoble",
+     "slug": "grenoble",
+     "contrats": 8,
+     "inscrits": 65,
+     "presents": 26,
+     "admissibles": 16,
+     "admis": 8,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Guyane",
+     "slug": "guyane",
+     "contrats": 4,
+     "inscrits": 0,
+     "presents": 0,
+     "admissibles": 0,
+     "admis": 0,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Lille",
+     "slug": "lille",
+     "contrats": 4,
+     "inscrits": 59,
+     "presents": 23,
+     "admissibles": 10,
+     "admis": 4,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Limoges",
+     "slug": "limoges",
+     "contrats": 2,
+     "inscrits": 17,
+     "presents": 7,
+     "admissibles": 3,
+     "admis": 2,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Lyon",
+     "slug": "lyon",
+     "contrats": 8,
+     "inscrits": 88,
+     "presents": 33,
+     "admissibles": 16,
+     "admis": 3,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Nancy-Metz",
+     "slug": "nancy-metz",
+     "contrats": 0,
+     "inscrits": 19,
+     "presents": 6,
+     "admissibles": 2,
+     "admis": 1,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Orléans-Tours",
+     "slug": "orleans-tours",
+     "contrats": 3,
+     "inscrits": 27,
+     "presents": 8,
+     "admissibles": 5,
+     "admis": 3,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Paris",
+     "slug": "paris",
+     "contrats": 10,
+     "inscrits": 49,
+     "presents": 8,
+     "admissibles": 7,
+     "admis": 5,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Poitiers",
+     "slug": "poitiers",
+     "contrats": 3,
+     "inscrits": 31,
+     "presents": 6,
+     "admissibles": 6,
+     "admis": 2,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Reims",
+     "slug": "reims",
+     "contrats": 2,
+     "inscrits": 22,
+     "presents": 6,
+     "admissibles": 3,
+     "admis": 2,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Rennes",
+     "slug": "rennes",
+     "contrats": 3,
+     "inscrits": 124,
+     "presents": 35,
+     "admissibles": 7,
+     "admis": 3,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Strasbourg",
+     "slug": "strasbourg",
+     "contrats": 4,
+     "inscrits": 21,
+     "presents": 3,
+     "admissibles": 2,
+     "admis": 2,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Toulouse",
+     "slug": "toulouse",
+     "contrats": 3,
+     "inscrits": 48,
+     "presents": 17,
+     "admissibles": 6,
+     "admis": 3,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Versailles",
+     "slug": "versailles",
+     "contrats": 15,
+     "inscrits": 50,
+     "presents": 18,
+     "admissibles": 17,
+     "admis": 13,
+     "inscritsLC": 0
+    }
+   ]
+  },
+  "interne_special": {
+   "national": {
+    "contrats": 10,
+    "inscrits": 9,
+    "presents": 5,
+    "admissibles": 4,
+    "admis": 0,
+    "inscritsLC": null
+   },
+   "academies": [
+    {
+     "nom": "Bordeaux",
+     "slug": "bordeaux",
+     "contrats": 0,
+     "inscrits": 2,
+     "presents": 0,
+     "admissibles": 0,
+     "admis": 0,
+     "inscritsLC": null
+    },
+    {
+     "nom": "Rennes",
+     "slug": "rennes",
+     "contrats": 9,
+     "inscrits": 6,
+     "presents": 5,
+     "admissibles": 4,
+     "admis": 0,
+     "inscritsLC": null
+    },
+    {
+     "nom": "Strasbourg",
+     "slug": "strasbourg",
+     "contrats": 1,
+     "inscrits": 1,
+     "presents": 0,
+     "admissibles": 0,
+     "admis": 0,
+     "inscritsLC": null
+    }
+   ]
+  },
+  "interne_exceptionnel": {
+   "national": {
+    "contrats": 46,
+    "inscrits": 166,
+    "presents": 96,
+    "admissibles": 61,
+    "admis": 40,
+    "inscritsLC": 2
+   },
+   "academies": [
+    {
+     "nom": "Créteil",
+     "slug": "creteil",
+     "contrats": 20,
+     "inscrits": 49,
+     "presents": 26,
+     "admissibles": 22,
+     "admis": 14,
+     "inscritsLC": 0
+    },
+    {
+     "nom": "Guyane",
+     "slug": "guyane",
+     "contrats": 4,
+     "inscrits": 24,
+     "presents": 12,
+     "admissibles": 6,
+     "admis": 4,
+     "inscritsLC": 1
+    },
+    {
+     "nom": "Versailles",
+     "slug": "versailles",
+     "contrats": 22,
+     "inscrits": 93,
+     "presents": 58,
+     "admissibles": 33,
+     "admis": 22,
+     "inscritsLC": 1
+    }
+   ]
+  }
+ }
+}

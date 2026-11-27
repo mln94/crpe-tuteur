@@ -29,6 +29,7 @@
     { "source": "/blog/licence-professorat-des-ecoles-lpe", "destination": "/licence-professorat-des-ecoles-lpe.html" },
     { "source": "/crpe-par-academie", "destination": "/crpe-par-academie.html" },
     { "source": "/crpe-par-academie-2027", "destination": "/crpe-par-academie-2027.html" },
+    { "source": "/crpe-prive-par-academie", "destination": "/crpe-prive-par-academie.html" },
     { "source": "/crpe-par-academie/:slug", "destination": "/academies/:slug.html" },
     { "source": "/rapports-jury-crpe/2026", "destination": "/rapports-jury-crpe-2026.html" },
     { "source": "/rapports-jury-crpe/2025", "destination": "/rapports-jury-crpe-2025.html" },

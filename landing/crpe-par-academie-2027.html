@@ -252,11 +252,22 @@
     .kpi-troisieme .kpi-value { color: #c2410c; }
     .kpi-interne { background: #f5f3ff; border-color: #ddd6fe; }
     .kpi-interne .kpi-value { color: #6d28d9; }
-    .sommaire { font-size: 14.5px; color: var(--gray-500); margin: 14px 0 0; line-height: 1.9; }
-    .sommaire a { color: var(--indigo-600); font-weight: 600; text-decoration: none; white-space: nowrap; }
-    .sommaire a:hover { text-decoration: underline; }
+    .concours-titre { margin-top: 64px !important; padding-top: 22px; border-top: 3px solid var(--indigo-600); }
+    .concours-titre.c-bac5 { border-top-color: #059669; }
+    .concours-titre.c-troisieme { border-top-color: #ea580c; }
+    .concours-titre.c-interne { border-top-color: #7c3aed; }
+    .sommaire { position: static; z-index: auto; backdrop-filter: none; -webkit-backdrop-filter: none; background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: 14px; padding: 16px 20px; margin: 18px 0 8px; font-size: 15px; line-height: 1.7; color: var(--gray-700); }
+    .sommaire > p { font-weight: 800; color: var(--gray-900); margin: 0 0 6px; }
+    .acad-wrap .sommaire ol { margin: 0 0 0 20px; padding: 0; list-style: decimal; }
+    .acad-wrap .sommaire li { margin-bottom: 3px; }
+    .acad-wrap .sommaire ol ol { margin: 4px 0 6px 18px; list-style: lower-alpha; font-size: 14.5px; }
+    .sommaire a { color: var(--indigo-600); text-decoration: underline; }
     .acad-wrap [id] { scroll-margin-top: 84px; }
     .funnel-bar.funnel-bar-master { background: #10b981; }
+    .funnel-bar.funnel-bar-troisieme { background: #f97316; }
+    .funnel-row.light .funnel-bar.funnel-bar-troisieme { background: #fdba74; }
+    .funnel-bar.funnel-bar-interne { background: #8b5cf6; }
+    .funnel-row.light .funnel-bar.funnel-bar-interne { background: #c4b5fd; }
     .funnel-row.light .funnel-bar.funnel-bar-master { background: #6ee7b7; }
     .kpi-master .kpi-value { color: #047857; }
     .kpi-accent .kpi-value { color: var(--indigo-700); }
@@ -291,6 +302,7 @@
     .acad-wrap .table-wrap { margin: 16px 0 8px; }
     .acad-wrap table { font-size: 14px; }
     .acad-wrap thead th { padding: 0; }
+    .acad-wrap thead.thead-simple th { padding: 12px 14px; white-space: nowrap; }
     .acad-wrap thead th button { all: unset; box-sizing: border-box; display: block; width: 100%; padding: 12px 14px; cursor: pointer; font-weight: 700; white-space: nowrap; }
     .acad-wrap thead th button::after { content: attr(data-arrow); margin-left: 6px; font-size: 10px; }
     .acad-wrap thead th button:focus-visible { outline: 2px solid #fff; outline-offset: -4px; }
@@ -423,6 +435,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <div class="nav-sub-menu">
             <a href="/crpe-par-academie">Session 2026</a>
             <a href="/crpe-par-academie-2027">Session 2027</a>
+            <a href="/crpe-prive-par-academie">Enseignement privé 2026</a>
           </div>
           <button type="button" class="nav-sub-toggle" aria-expanded="false" onclick="toggleNavSub(this)">Rapports de jury <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
           <div class="nav-sub-menu">
@@ -620,8 +633,18 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </label>
         <p style="font-size:11px;color:#6b7280;line-height:1.5;margin-top:8px;">Ces cases sont facultatives et n'ont aucun effet sur ton inscription. Tu peux te désinscrire à tout moment grâce au lien présent dans chaque e-mail. En savoir plus : <a href="/politique-de-confidentialite" target="_blank" rel="noopener" style="color:#4f46e5;">politique de confidentialité</a>.</p>
       </div>
+      <p id="forgotRow" style="text-align:right;margin:-4px 0 2px;font-size:13px"><a href="#" onclick="openForgot(event)" style="font-weight:600;text-decoration:none">Mot de passe oublié ?</a></p>
       <button type="submit" class="auth-submit" id="authSubmit">Se connecter</button>
     </form>
+    <div id="forgotBlock" style="display:none">
+      <p style="font-size:17px;font-weight:700;color:#0f172a;margin:0 0 6px">Mot de passe oublié</p>
+      <p style="font-size:13.5px;color:#64748b;line-height:1.55;margin:0 0 16px">Indiquez l'adresse e-mail de votre compte : nous vous envoyons un lien pour choisir un nouveau mot de passe.</p>
+      <form onsubmit="sendForgot(event)" style="display:flex;flex-direction:column;gap:14px">
+        <div class="auth-field"><label class="auth-label" for="forgotEmail">Adresse e-mail</label><input class="auth-input" type="email" id="forgotEmail" placeholder="vous@exemple.fr" required autocomplete="email" /></div>
+        <button type="submit" class="auth-submit" id="forgotSubmit">Recevoir le lien</button>
+      </form>
+      <p style="text-align:center;margin:14px 0 0;font-size:13px"><a href="#" onclick="closeForgot(event)" style="font-weight:600;text-decoration:none">← Retour à la connexion</a></p>
+    </div>
     <div class="auth-message" id="authMessage"></div>
     <div id="resendBlock" style="display:none;text-align:center;margin-top:12px">
       <p style="font-size:13px;color:#64748b;margin-bottom:8px">Vous n'avez pas reçu l'e-mail ?</p>
@@ -649,6 +672,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     document.getElementById('registerFields').style.display=isLogin?'none':'flex';
     document.getElementById('consentRow').style.display=isLogin?'none':'block';
     document.getElementById('authSubmit').textContent=isLogin?'Se connecter':'Créer mon compte';
+    document.getElementById('resendBlock').style.display='none';
     document.getElementById('authToggle').innerHTML=isLogin?'Pas encore de compte ? <button onclick="switchTab(\'register\')">Créer un compte</button>':'Déjà un compte ? <button onclick="switchTab(\'login\')">Se connecter</button>';
     clearAuthMessage();
   }
@@ -678,18 +702,53 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       else { window.dataLayer.push({event:'sign_up_'+(window.SIGNUP_PARCOURS||(location.pathname.indexOf('/quiz')===0?'quizcrpe':'passcrpe')),method:'email'}); _lastEmail=email; document.getElementById('authForm').style.display='none'; document.getElementById('authTabs').style.display='none'; document.getElementById('authToggle').style.display='none'; document.getElementById('resendBlock').style.display='block'; showAuthMessage('✓ E-mail de confirmation envoyé à '+email+'. Vérifiez vos spams.','success'); }
     } else {
       const {data,error}=await sb.auth.signInWithPassword({email,password});
-      if (error) { showAuthMessage(error.message,'error'); }
+      // Compte non confirmé : bouton de renvoi de l'e-mail de confirmation
+      if (error&&/not confirmed/i.test(error.message)) { _lastEmail=email; showAuthMessage('Votre adresse e-mail n\'est pas encore confirmée. Cliquez sur le lien reçu par e-mail, ou demandez-en un nouveau ci-dessous.','error'); document.getElementById('resendBlock').style.display='block'; }
+      else if (error) { showAuthMessage(error.message,'error'); }
       else { showAuthMessage('✓ Connexion réussie ! Redirection…','success'); setTimeout(()=>{ window.location.href=window.location.port==='3001'?'http://localhost:5173':'/app'; },800); }
     }
     btn.disabled=false; btn.textContent=authMode==='register'?'Créer mon compte':'Se connecter';
   }
   async function resendConfirmation() {
     const btn=document.getElementById('resendBtn'); btn.disabled=true; btn.textContent='Envoi…';
-    const {error}=await getSB().auth.resend({type:'signup',email:_lastEmail});
+    const {error}=await getSB().auth.resend({type:'signup',email:_lastEmail,...(window.EMAIL_REDIRECT_URL?{options:{emailRedirectTo:window.EMAIL_REDIRECT_URL}}:{})});
     btn.textContent=error?'Erreur, réessayez':'✓ E-mail renvoyé !';
     if (!error) setTimeout(()=>{ btn.textContent='Renvoyer l\'e-mail'; btn.disabled=false; },4000);
     else btn.disabled=false;
   }
+</script>
+<script>
+  // Mot de passe oublié : lien envoyé par Supabase vers /nouveau-mot-de-passe
+  // (si Supabase renvoie vers une autre page, on y redirige avec le jeton de l'URL)
+  if (/type=recovery/.test(location.hash)) location.replace('/nouveau-mot-de-passe' + location.hash);
+  (function () {
+    var _switchTab = switchTab, _closeAuth = closeAuth;
+    function el(id) { return document.getElementById(id); }
+    function showForgot(on) {
+      el('forgotBlock').style.display = on ? 'block' : 'none';
+      el('authForm').style.display = on ? 'none' : '';
+      el('authToggle').style.display = on ? 'none' : '';
+      if (on) { el('authTabs').style.display = 'none'; el('resendBlock').style.display = 'none'; }
+    }
+    // Liens à la couleur du bouton de la fenêtre (violet PassCRPE, orange QuizCRPE)
+    var couleur = getComputedStyle(el('authSubmit')).backgroundColor;
+    document.querySelectorAll('#forgotRow a, #forgotBlock a').forEach(function (a) { a.style.color = couleur; });
+    switchTab = function (mode) { showForgot(false); _switchTab(mode); el('forgotRow').style.display = mode === 'login' ? '' : 'none'; };
+    closeAuth = function () { showForgot(false); _closeAuth(); };
+    window.openForgot = function (e) { if (e) e.preventDefault(); clearAuthMessage(); el('forgotEmail').value = el('authEmail').value.trim(); showForgot(true); el('forgotEmail').focus(); };
+    window.closeForgot = function (e) { if (e) e.preventDefault(); clearAuthMessage(); showForgot(false); switchTab('login'); };
+    window.sendForgot = async function (e) {
+      e.preventDefault();
+      var btn = el('forgotSubmit'), email = el('forgotEmail').value.trim();
+      if (!email) return;
+      btn.disabled = true; btn.textContent = 'Envoi…';
+      var res = await getSB().auth.resetPasswordForEmail(email, { redirectTo: location.origin + '/nouveau-mot-de-passe' });
+      btn.disabled = false; btn.textContent = 'Recevoir le lien';
+      if (res.error && /rate|seconds|too many/i.test(res.error.message)) showAuthMessage('Trop de demandes. Patientez une minute avant de réessayer.', 'error');
+      else if (res.error) showAuthMessage('L\'envoi a échoué. Vérifiez l\'adresse et réessayez.', 'error');
+      else showAuthMessage('✓ Si un compte existe pour ' + email + ', un e-mail vient de vous être envoyé. Le lien est valable 24 heures. Pensez à regarder dans vos spams.', 'success');
+    };
+  })();
 </script>
 <script>
   // Menu mobile : ouvre/ferme la liste des liens et la referme après un clic
