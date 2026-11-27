@@ -39,15 +39,25 @@ Ignorer : annonces de résultats sans demande, administratif pur (inscriptions, 
 Champ « Type de demande » : un parmi `Outils / ressources`, `Avis livre / prépa`, `Méthode / organisation`, `Entraînement / sujets`, `Maths`, `Français`, `Oral`, `Motivation / perdu`.
 
 ## 4. Proposition de réponse
-Commentaire prêt à copier, en français, ton de candidat·e/formateur bienveillant, pas commercial :
-- d'abord répondre vraiment à la question (1-2 conseils concrets) ;
-- puis proposer PassCRPE comme piste, simplement : Le Quiz CRPE by PassCRPE (quiz d'entraînement maths et français),
-  le tuteur IA PassCRPE (correction et explications), les articles du blog, le challenge gratuit « La Copie Parfaite avant Noël »
-  (10-22 décembre 2026, inscriptions jusqu'au 8 décembre) tant qu'il est ouvert. Choisir ce qui colle à la demande, pas tout.
-- Lien avec UTM : `https://www.passcrpe.fr/<page>?utm_source=facebook&utm_medium=groupe_reponse&utm_campaign=passcrpe_veille&utm_content=<slug du groupe>`
-  (`/quizcrpe` pour le quiz, `/blog` ou l'article pertinent, `/copie-parfaite-noel` pour le challenge).
-- 3 à 6 lignes. Pas de majuscules criardes, 0-1 emoji. Ne jamais mettre d'email personnel.
-- Si le groupe interdit la pub (règle vue sur la page), écrire la réponse sans lien et ajouter « (groupe sans pub : proposer le lien en MP) ».
+Commentaire prêt à copier-coller par l'utilisateur, qui le publie sous son propre nom. En français, ton chaleureux, à la 1re personne.
+**Transparence obligatoire** (demande de l'utilisateur, 27/11/2026) : la réponse dit clairement que c'est lui qui a créé l'app,
+par ex. « Je me permets de te parler de PassCRPE, une app que j'ai créée pour préparer le CRPE… ». Jamais de faux témoignage
+(« je l'ai utilisée et j'ai réussi »), jamais se faire passer pour un candidat neutre.
+Structure :
+1. répondre vraiment à la question (1-2 conseils concrets, utiles même sans l'app) ;
+2. présenter l'app en disant qu'on l'a créée, et expliquer en une phrase chacun ce qui colle à la demande :
+   - **PassCRPE** (https://www.passcrpe.fr) : tuteur IA, des milliers d'exercices de français et de maths adaptés au niveau,
+     corrigés selon les exigences du jury, avec des conseils pour progresser ;
+   - **Le Quiz CRPE by PassCRPE** (https://www.passcrpe.fr/quizcrpe) : séries de 20 questions notées sur 20 en français, maths,
+     histoire-géo, EMC, sciences, arts et anglais, sur le programme du cycle 4 ; chaque erreur est expliquée, révisions espacées,
+     test de positionnement gratuit ;
+   - selon le cas : les outils gratuits (`/outils`), un article du blog, ou le challenge gratuit « La Copie Parfaite avant Noël »
+     (10-22 décembre 2026, inscriptions jusqu'au 8 décembre, `/copie-parfaite-noel`) tant qu'il est ouvert ;
+3. finir simplement (« si ça peut t'aider », « n'hésite pas si tu as des questions »).
+- Lien avec UTM : `https://www.passcrpe.fr/<page>?utm_source=facebook&utm_medium=groupe_reponse&utm_campaign=passcrpe_veille&utm_content=<slug du groupe>`.
+- 4 à 8 lignes. Pas de majuscules criardes, 0-1 emoji. N'inventer ni prix ni fonctionnalité. Ne jamais mettre d'email personnel.
+- Si le groupe interdit la pub (règle vue sur la page), garder la présentation transparente mais sans lien, et ajouter
+  « (groupe sans pub : proposer le lien en MP) ».
 
 ## 5a. Envoi au dashboard (obligatoire, même sans message retenu)
 Écrire `logs/veille-facebook/<J>.json` :
