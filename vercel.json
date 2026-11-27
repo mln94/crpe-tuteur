@@ -43,6 +43,7 @@
     { "source": "/copie-parfaite-noel/tableau-de-bord", "destination": "/copie-parfaite-noel-tableau-de-bord.html" },
     { "source": "/suivi-publications", "destination": "/suivi-publications.html" },
     { "source": "/suivi-nouveautes", "destination": "/suivi-nouveautes.html" },
+    { "source": "/suivi-agents", "destination": "/suivi-agents.html" },
     { "source": "/outils", "destination": "/outils.html" },
     { "source": "/outils/entraineur-crpe", "destination": "/entraineur-crpe.html" },
     { "source": "/outils/entraineur-crpe/rapport/:token", "destination": "/entraineur-rapport.html" },
@@ -54,7 +55,8 @@
     { "source": "/newsletter(.html)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
     { "source": "/copie-parfaite-noel(.*)", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
     { "source": "/suivi-publications(.html)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }] },
-    { "source": "/suivi-nouveautes(.html)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }] }
+    { "source": "/suivi-nouveautes(.html)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, follow" }] },
+    { "source": "/suivi-agents(.html)?", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] }
   ],
   "functions": {
     "api/index.js": {

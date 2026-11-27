@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- Page interne (suivi des agents IA : veille des groupes Facebook et rédaction du blog) : non indexée.
+     Absente du sitemap ; en-tête X-Robots-Tag aussi envoyé (vercel.json).
+     Données : tables Supabase agents_runs, agents_veille_messages, agents_blog_articles, agents_etat, réservées au compte
+     administrateur (RLS). Écrites par les scripts du Mac (scripts/agents_suivi.mjs, scripts/agents-poller.sh). -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="googlebot" content="noindex, nofollow">
+<title>Suivi des agents IA | PassCRPE</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<style>
+:root{
+  --bg:#f5f6ff; --surface:#ffffff; --fg:#1a1a2e; --muted:#6b7280; --line:#e0e3ff;
+  --indigo:#4f46e5; --indigo-fonce:#3730a3; --indigo-clair:#eef0ff; --violet:#6366f1;
+  --ok:#059669; --ok-soft:#ecfdf5; --rouge:#b91c1c; --rouge-soft:#fef2f2; --jaune:#fef3c7; --jaune-fg:#92400e;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:'Inter',system-ui,sans-serif;font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  padding:28px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+[hidden]{display:none!important}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.tete{background:linear-gradient(135deg,var(--indigo) 0%,var(--violet) 100%);color:#fff;border-radius:20px;padding:24px 28px;position:relative}
+.logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;margin-bottom:12px}
+.logo-ic{width:36px;height:36px;border-radius:10px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center}
+.logo-ic svg{width:20px;height:20px}
+.logo b span{color:#c7d2fe}
+h1{font-weight:900;font-size:clamp(24px,5vw,32px);line-height:1.15;letter-spacing:-.5px;margin:0}
+h2{font-size:19px;font-weight:800;margin:0 0 12px}
+h3{font-size:15px;font-weight:800;margin:0;color:var(--indigo-fonce)}
+.lede{color:#e0e7ff;margin:8px 0 0;max-width:72ch}
+.tete nav{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+.tete nav a{color:#fff;font-weight:700;font-size:13.5px;background:rgba(255,255,255,.16);padding:6px 12px;border-radius:99px;text-decoration:none}
+.deco{position:absolute;top:20px;right:22px;background:rgba(255,255,255,.16)!important;color:#fff!important;border:0!important}
+.carte{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:18px}
+label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+input[type=email],input[type=password],input[type=date],select{font:500 15px 'Inter',sans-serif;color:var(--fg);background:var(--bg);border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;min-width:0}
+input:focus-visible,button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--indigo);outline-offset:2px}
+button,.btn{font:700 13px 'Inter',sans-serif;border-radius:10px;padding:9px 13px;cursor:pointer;border:1.5px solid var(--indigo);background:#fff;color:var(--indigo);white-space:nowrap;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+button.primary{background:var(--indigo);color:#fff}
+button.discret{border-color:var(--line);color:var(--indigo-fonce)}
+button:hover,.btn:hover{filter:brightness(1.08)}
+button:disabled{opacity:.6;cursor:default}
+.err{color:var(--rouge);font-size:14px;margin:0;min-height:1em}
+.auth{width:100%;max-width:420px;margin:40px auto 0;display:flex;flex-direction:column;gap:14px}
+.auth input{width:100%}
+/* Cartes d'état */
+.etats{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px}
+.etat{background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.etat-tete{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.etat dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;margin:0;font-size:14px}
+.etat dt{color:var(--muted)}
+.etat dd{margin:0;font-weight:600;font-variant-numeric:tabular-nums}
+.alerte{background:var(--rouge-soft);border:1.5px solid #fecaca;color:var(--rouge);border-radius:10px;padding:8px 12px;font-size:13.5px;font-weight:600}
+/* Onglets */
+.onglets{display:flex;gap:8px;flex-wrap:wrap}
+.onglets button{border-color:var(--line);color:var(--muted);font-size:14px;padding:10px 16px}
+.onglets button[aria-selected=true]{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.filtres{display:flex;gap:8px;flex-wrap:wrap;margin:4px 0 14px}
+.filtres button{border-color:var(--line);color:var(--muted)}
+.filtres button[aria-pressed=true]{background:var(--indigo-clair);border-color:var(--indigo);color:var(--indigo-fonce)}
+.puce{font-size:12px;font-weight:700;padding:3px 9px;border-radius:99px;background:#f3f4f6;color:var(--muted);white-space:nowrap;display:inline-block}
+.puce.ok{background:#dcfce7;color:#166534}
+.puce.att{background:var(--jaune);color:var(--jaune-fg)}
+.puce.cours{background:#e0e7ff;color:var(--indigo-fonce)}
+.puce.err{background:#fee2e2;color:var(--rouge)}
+/* Relance */
+.relance{display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end;background:var(--indigo-clair);border:1.5px dashed var(--indigo);border-radius:12px;padding:14px}
+.relance p{margin:0;font-size:13.5px;color:var(--indigo-fonce);flex-basis:100%}
+/* Jours */
+.jours{display:flex;flex-direction:column;gap:12px}
+.jour{border:1.5px solid var(--line);border-radius:14px;background:#fff;overflow:hidden}
+.jour-tete{display:grid;grid-template-columns:22px 1fr auto;gap:12px;align-items:center;padding:14px 16px;cursor:pointer;width:100%;background:none;border:0;border-radius:0;color:var(--fg);font:inherit;text-align:left;white-space:normal}
+.jour-tete:hover{background:#f8f9ff;filter:none}
+.jour.ouvert{border-color:var(--indigo)}
+.jour.ouvert .jour-tete{background:var(--indigo-clair)}
+.chev{color:var(--indigo);font-size:12px;text-align:center}
+.jour-titre b{font-weight:800;color:var(--indigo-fonce);text-transform:capitalize}
+.jour-titre small{display:block;color:var(--muted);font-size:13px}
+.badges{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.jour-corps{padding:6px 16px 18px;display:flex;flex-direction:column;gap:12px}
+.resume{background:#fafaff;border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px}
+.resume p{margin:0 0 6px;white-space:pre-line}
+.resume ul{margin:4px 0 0;padding-left:18px;color:var(--muted)}
+.msg{border:1.5px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg.Répondu{background:var(--ok-soft);border-color:#a7f3d0}
+.msg.Ignoré{opacity:.6}
+.msg-tete{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start}
+.msg-tete .qui{display:flex;flex-direction:column;gap:2px}
+.msg-tete .qui a{color:var(--indigo-fonce);font-weight:800;text-decoration:none}
+.msg-tete .qui small{color:var(--muted);font-size:13px}
+.type{display:inline-block;font-size:11.5px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:2px 8px;border-radius:6px;background:#e0f2fe;color:#075985;width:max-content}
+.texte{overflow-wrap:anywhere;white-space:pre-wrap;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:12px;font-size:14px;max-height:260px;overflow:auto;margin:0;font-family:inherit}
+.texte.rep{background:var(--indigo-clair);border-color:#c7d2fe}
+.etiq{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0}
+.ligne{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ligne select{padding:6px 10px;font-size:14px}
+/* Blog */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);padding:8px 10px;border-bottom:1.5px solid var(--line)}
+td{padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+td a{color:var(--indigo-fonce);font-weight:700;text-decoration:none}
+td small{color:var(--muted);display:block}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--muted)}
+details summary{cursor:pointer;color:var(--rouge);font-weight:700;font-size:13px}
+pre.journal{font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;background:#fafaff;border:1.5px solid var(--line);border-radius:10px;padding:12px;white-space:pre-wrap;overflow-wrap:anywhere;max-height:300px;overflow:auto;margin:0}
+.vide{color:var(--muted);margin:0}
+.foot{color:var(--muted);font-size:13.5px;max-width:80ch;margin:0}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--indigo-fonce);color:#fff;padding:10px 18px;border-radius:99px;font-weight:700;font-size:14px;box-shadow:0 8px 24px rgba(55,48,163,.3);z-index:9}
+@media (max-width:640px){.tableau{overflow-x:auto}.deco{position:static;margin-top:12px}
+  .jour-tete{grid-template-columns:18px 1fr}.badges{grid-column:2;justify-content:flex-start}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="tete">
+    <div class="logo"><span class="logo-ic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span><b>Pass<span>CRPE</span></b></div>
+    <h1>Suivi des agents IA</h1>
+    <p class="lede">La veille des groupes Facebook, jour après jour, avec les messages auxquels PassCRPE peut répondre et une réponse prête à copier. Et l'agent qui rédige et publie les articles du blog.</p>
+    <nav><a href="/suivi-publications">→ Suivi des publications dans les groupes</a><a href="/suivi-nouveautes">→ Suivi des nouveautés</a><a href="https://docs.google.com/spreadsheets/d/10NdYKLI6Z-NmahCtfra7PWcIXPxy4s6FqooE9gPM5t0/edit" target="_blank" rel="noopener">→ Google Sheet de la veille</a></nav>
+    <button type="button" class="deco" id="deco" hidden>Se déconnecter</button>
+  </header>
+
+  <section class="carte auth" id="auth" hidden>
+    <h2>Connexion</h2>
+    <label for="email">E-mail<input id="email" type="email" autocomplete="username"></label>
+    <label for="mdp">Mot de passe<input id="mdp" type="password" autocomplete="current-password"></label>
+    <button type="button" class="primary" id="connexion">Se connecter</button>
+    <p class="err" id="authErr"></p>
+  </section>
+
+  <div id="app" hidden style="display:flex;flex-direction:column;gap:20px">
+    <div class="etats" id="etats"></div>
+
+    <div class="onglets" role="tablist" aria-label="Agents">
+      <button type="button" role="tab" id="tab-veille" aria-controls="pan-veille">Veille Facebook</button>
+      <button type="button" role="tab" id="tab-blog" aria-controls="pan-blog">Agent blog</button>
+    </div>
+
+    <section class="carte" id="pan-veille" role="tabpanel" aria-labelledby="tab-veille">
+      <h2>Messages identifiés, jour après jour</h2>
+      <div class="relance">
+        <p><b>Relancer la veille pour un jour passé.</b> Le Mac lit les posts publiés ce jour-là dans les groupes et ajoute ici les messages trouvés (sans doublon). Il démarre dans les 2 minutes s'il est allumé avec Chrome ouvert ; comptez 20 à 40 minutes. Au-delà d'une semaine, Facebook charge mal les anciens posts : le résultat peut être incomplet.</p>
+        <label for="jourRelance">Jour des posts<input type="date" id="jourRelance"></label>
+        <button type="button" class="primary" id="relancer">Relancer ce jour</button>
+      </div>
+      <div class="filtres" id="filtres" role="group" aria-label="Filtrer les messages" style="margin-top:16px">
+        <button type="button" data-f="tous" aria-pressed="true">Tous les messages</button>
+        <button type="button" data-f="À répondre" aria-pressed="false">À répondre</button>
+        <button type="button" data-f="Répondu" aria-pressed="false">Répondu</button>
+        <button type="button" data-f="Ignoré" aria-pressed="false">Ignoré</button>
+      </div>
+      <div class="jours" id="jours"></div>
+      <p class="vide" id="aucunJour" hidden>Aucun passage pour l'instant.</p>
+    </section>
+
+    <section class="carte" id="pan-blog" role="tabpanel" aria-labelledby="tab-blog" hidden>
+      <h2>Articles rédigés par l'agent</h2>
+      <p class="foot" style="margin-bottom:14px">La rédaction se fait dans le cloud (tâche planifiée Claude « Article blog PassCRPE » : choix du sujet dans le plan éditorial, rédaction, image). Le Publieur du Mac envoie ensuite chaque article prêt sur le site (GitHub puis Vercel). Un article bloqué avant d'être prêt n'apparaît pas ici : voir l'historique de la tâche dans Claude.</p>
+      <div class="tableau"><table>
+        <thead><tr><th>Jour</th><th>Article</th><th>Publication</th></tr></thead>
+        <tbody id="articles"></tbody>
+      </table></div>
+      <p class="vide" id="aucunArticle" hidden>Aucun article pour l'instant.</p>
+      <h3 style="margin:20px 0 8px">Journal du Publieur</h3>
+      <pre class="journal" id="journal"></pre>
+    </section>
+
+    <p class="foot">La veille tourne sur le Mac (launchd) : chaque jour à 9h30 pour les posts de la veille, et à la demande depuis cette page. Elle a besoin du Mac allumé et de Chrome connecté à Facebook avec l'extension Claude. Les messages sont aussi ajoutés au Google Sheet « PassCRPE - Veille groupes Facebook ».</p>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+const SB = window.supabase.createClient('https://zqwcermgfvcusuwjfviz.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxd2Nlcm1nZnZjdXN1d2pmdml6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNzkzMDYsImV4cCI6MjA4ODc1NTMwNn0.2QjrNafsARpnIA605-hh3jZWjMxZoyQzGTC3LL99Wr8');
+const ADMIN_EMAIL = 'mohamed.necib94310@gmail.com';
+const STATUTS = ['À répondre', 'Répondu', 'Ignoré'];
+const RUN = { en_attente: ['att', 'En attente du Mac'], en_cours: ['cours', 'En cours'], ok: ['ok', 'Terminé'], erreur: ['err', 'Erreur'] };
+
+const $ = id => document.getElementById(id);
+const esc = v => String(v ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+                set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} } };
+const jourParis = (decalage = 0) => new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Paris' }).format(new Date(Date.now() + decalage * 864e5));
+const dateHeure = x => x ? new Date(x).toLocaleString('fr-FR', { dateStyle: 'medium', timeStyle: 'short' }) : '—';
+const dateJour = x => x ? new Date(x + 'T12:00:00').toLocaleDateString('fr-FR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }) : '';
+const ilya = x => { if (!x) return null; const m = Math.round((Date.now() - new Date(x)) / 6e4); return m < 1 ? "à l'instant" : m < 60 ? `il y a ${m} min` : m < 1440 ? `il y a ${Math.round(m / 60)} h` : `il y a ${Math.round(m / 1440)} j`; };
+
+let runs = [], messages = [], articles = [], etat = {};
+let onglet = store.get('ag_onglet', 'veille'), filtre = store.get('ag_filtre', 'tous'), ouverts = new Set(store.get('ag_ouverts', []));
+let minuteur = null;
+
+// ── Connexion ──
+async function demarrer() {
+  const { data } = await SB.auth.getSession();
+  if (data.session?.user?.email === ADMIN_EMAIL) return ouvrir();
+  $('auth').hidden = false; $('app').hidden = true; $('deco').hidden = true;
+  $('email').value = ADMIN_EMAIL;
+}
+$('connexion').addEventListener('click', async () => {
+  const email = $('email').value.trim(), password = $('mdp').value;
+  if (email !== ADMIN_EMAIL) { $('authErr').textContent = 'Accès non autorisé.'; return; }
+  $('connexion').disabled = true; $('authErr').textContent = '';
+  const { error } = await SB.auth.signInWithPassword({ email, password });
+  $('connexion').disabled = false;
+  if (error) { $('authErr').textContent = error.message; return; }
+  ouvrir();
+});
+$('mdp').addEventListener('keydown', e => { if (e.key === 'Enter') $('connexion').click(); });
+$('deco').addEventListener('click', async () => { await SB.auth.signOut(); clearInterval(minuteur); demarrer(); });
+
+async function ouvrir() {
+  $('auth').hidden = true; $('app').hidden = false; $('deco').hidden = false;
+  $('jourRelance').max = jourParis(-1); $('jourRelance').value = jourParis(-1);
+  await charger();
+  clearInterval(minuteur); minuteur = setInterval(charger, 60000);
+}
+async function charger() {
+  const [r, m, a, e] = await Promise.all([
+    SB.from('agents_runs').select('*').order('jour', { ascending: false }).order('created_at', { ascending: false }).limit(400),
+    SB.from('agents_veille_messages').select('*').order('jour', { ascending: false }).order('post_le', { ascending: false }).limit(2000),
+    SB.from('agents_blog_articles').select('*').order('jour', { ascending: false }),
+    SB.from('agents_etat').select('*'),
+  ]);
+  const err = r.error || m.error || a.error || e.error;
+  if (err) { toast('Chargement impossible : ' + err.message); return; }
+  runs = r.data; messages = m.data;
+  articles = a.data.sort((x, y) => (y.publie_le || y.jour).localeCompare(x.publie_le || x.jour)); etat = Object.fromEntries(e.data.map(x => [x.cle, x]));
+  rendre();
+}
+
+// ── Rendu ──
+function rendre() { rendreEtats(); rendreOnglets(); rendreVeille(); rendreBlog(); }
+
+function rendreEtats() {
+  const veille = runs.filter(x => x.agent === 'veille_facebook');
+  const dernier = veille.find(x => x.statut === 'ok' || x.statut === 'erreur');
+  const actifs = veille.filter(x => x.statut === 'en_attente' || x.statut === 'en_cours');
+  const aRepondre = messages.filter(x => x.statut === 'À répondre').length;
+  const poller = etat.poller_dernier_passage?.valeur;
+  const macMuet = !poller || (Date.now() - new Date(poller)) > 15 * 6e4;
+  const pub = (etat.publieur_launchd?.valeur || '');
+  const pubRuns = (pub.match(/runs = (\d+)/) || [])[1], pubExit = (pub.match(/last exit code = (\S+)/) || [])[1];
+  const dernierArt = articles.find(x => x.statut === 'OK');
+  const artErr = articles.filter(x => x.statut && x.statut !== 'OK' && !/attente|préparation/.test(x.statut)).length;
+  $('etats').innerHTML =
+    '<div class="etat"><div class="etat-tete"><h3>Veille Facebook</h3>' + (actifs.length ? '<span class="puce cours">' + actifs.length + ' passage(s) en cours ou en attente</span>' : '<span class="puce ok">Planifiée chaque jour à 9h30</span>') + '</div>' +
+    '<dl><dt>Dernier passage</dt><dd>' + (dernier ? dateJour(dernier.jour) + ' · <span class="puce ' + RUN[dernier.statut][0] + '">' + RUN[dernier.statut][1] + '</span>' : '—') + '</dd>' +
+    '<dt>Messages à répondre</dt><dd>' + aRepondre + '</dd>' +
+    '<dt>Mac (exécuteur)</dt><dd>' + (poller ? 'vu ' + ilya(poller) : 'jamais vu') + '</dd></dl>' +
+    (macMuet ? '<div class="alerte">Le Mac ne s\'est pas manifesté depuis plus de 15 minutes : il est éteint, en veille, ou le programme est arrêté. Les relances attendront qu\'il revienne.</div>' : '') + '</div>' +
+    '<div class="etat"><div class="etat-tete"><h3>Agent blog</h3>' + (artErr ? '<span class="puce err">' + artErr + ' en erreur</span>' : '<span class="puce ok">Lundi, mercredi, vendredi</span>') + '</div>' +
+    '<dl><dt>Dernier article publié</dt><dd>' + (dernierArt ? esc(dernierArt.titre || dernierArt.slug) + '<br><small style="color:var(--muted);font-weight:500">' + dateHeure(dernierArt.publie_le) + '</small>' : '—') + '</dd>' +
+    '<dt>Articles suivis</dt><dd>' + articles.length + '</dd>' +
+    '<dt>Publieur du Mac</dt><dd>' + (pubRuns ? pubRuns + ' vérifications · dernier code ' + esc(pubExit) : '—') + (etat.publieur_launchd ? ' <small style="color:var(--muted);font-weight:500">(' + ilya(etat.publieur_launchd.updated_at) + ')</small>' : '') + '</dd></dl></div>';
+}
+
+function rendreOnglets() {
+  for (const o of ['veille', 'blog']) {
+    $('tab-' + o).setAttribute('aria-selected', String(onglet === o));
+    $('pan-' + o).hidden = onglet !== o;
+  }
+}
+for (const o of ['veille', 'blog']) $('tab-' + o).addEventListener('click', () => { onglet = o; store.set('ag_onglet', o); rendreOnglets(); });
+
+function rendreVeille() {
+  document.querySelectorAll('#filtres button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.f === filtre)));
+  const veille = runs.filter(x => x.agent === 'veille_facebook');
+  const jours = [...new Set([...veille.map(x => x.jour), ...messages.map(x => x.jour)])].sort().reverse();
+  $('aucunJour').hidden = jours.length > 0;
+  const html = jours.map(j => {
+    const rj = veille.filter(x => x.jour === j);                      // plus récent d'abord
+    const r = rj[0];
+    const mj = messages.filter(x => x.jour === j);
+    const vis = mj.filter(x => filtre === 'tous' || x.statut === filtre);
+    if (filtre !== 'tous' && !vis.length) return '';
+    const ouvert = ouverts.has(j);
+    const nbRep = mj.filter(x => x.statut === 'À répondre').length;
+    const badges = (r ? '<span class="puce ' + RUN[r.statut][0] + '">' + RUN[r.statut][1] + '</span>' : '') +
+      '<span class="puce' + (mj.length ? ' ok' : '') + '">' + mj.length + ' message' + (mj.length > 1 ? 's' : '') + '</span>' +
+      (nbRep ? '<span class="puce att">' + nbRep + ' à répondre</span>' : '');
+    const sous = r ? [r.groupes_lus != null ? r.groupes_lus + ' groupes lus' : null, (r.groupes_echec || []).length ? (r.groupes_echec.length + ' inaccessible' + (r.groupes_echec.length > 1 ? 's' : '')) : null,
+      r.origine === 'dashboard' ? 'relancé depuis cette page' : null, r.fin ? 'fini ' + dateHeure(r.fin) : (r.debut ? 'commencé ' + dateHeure(r.debut) : null)].filter(Boolean).join(' · ') : '';
+    let corps = '';
+    if (ouvert) {
+      corps = '<div class="jour-corps">';
+      if (r && (r.resume || (r.groupes_echec || []).length)) {
+        corps += '<div class="resume">' + (r.resume ? '<p>' + esc(r.resume) + '</p>' : '') +
+          ((r.groupes_echec || []).length ? '<b style="font-size:13px">Groupes inaccessibles</b><ul>' + r.groupes_echec.map(g => '<li>' + esc(g.groupe) + ' : ' + esc(g.raison) + '</li>').join('') + '</ul>' : '') + '</div>';
+      }
+      if (rj.length > 1) corps += '<p class="vide" style="font-size:13px">' + rj.length + ' passages pour ce jour (le plus récent est affiché).</p>';
+      corps += vis.length ? vis.map(rendreMessage).join('') : '<p class="vide">' + (r && r.statut !== 'ok' ? 'Pas encore de résultat.' : 'Aucun message retenu ce jour-là.') + '</p>';
+      corps += '</div>';
+    }
+    return '<div class="jour' + (ouvert ? ' ouvert' : '') + '"><button type="button" class="jour-tete" data-jour="' + j + '" aria-expanded="' + ouvert + '">' +
+      '<span class="chev">' + (ouvert ? '▼' : '▶') + '</span><span class="jour-titre"><b>' + dateJour(j) + '</b><small>' + esc(sous) + '</small></span><span class="badges">' + badges + '</span></button>' + corps + '</div>';
+  }).join('');
+  $('jours').innerHTML = html || (jours.length ? '<p class="vide">Aucun message avec ce statut.</p>' : '');
+}
+
+function rendreMessage(m) {
+  return '<article class="msg ' + esc(m.statut) + '" data-id="' + m.id + '">' +
+    '<div class="msg-tete"><div class="qui">' +
+      (m.lien_groupe ? '<a href="' + esc(m.lien_groupe) + '" target="_blank" rel="noopener">' + esc(m.groupe) + '</a>' : '<b>' + esc(m.groupe) + '</b>') +
+      '<small>' + esc(m.pseudo || 'Pseudo inconnu') + (m.post_le ? ' · ' + esc(m.post_le) : '') + '</small></div>' +
+      (m.type_demande ? '<span class="type">' + esc(m.type_demande) + '</span>' : '') + '</div>' +
+    '<p class="etiq">Message</p><pre class="texte">' + esc(m.message) + '</pre>' +
+    (m.reponse ? '<p class="etiq">Proposition de réponse</p><pre class="texte rep">' + esc(m.reponse) + '</pre>' : '') +
+    '<div class="ligne">' +
+      (m.reponse ? '<button type="button" class="primary" data-copier="' + m.id + '">Copier la réponse</button>' : '') +
+      (m.lien_post ? '<a class="btn" href="' + esc(m.lien_post) + '" target="_blank" rel="noopener">Ouvrir le post</a>' : '') +
+      '<select data-statut="' + m.id + '" aria-label="Statut du message">' + STATUTS.map(s => '<option' + (s === m.statut ? ' selected' : '') + '>' + s + '</option>').join('') + '</select>' +
+    '</div></article>';
+}
+
+$('jours').addEventListener('click', async e => {
+  const t = e.target.closest('[data-jour]');
+  if (t) { const j = t.dataset.jour; ouverts.has(j) ? ouverts.delete(j) : ouverts.add(j); store.set('ag_ouverts', [...ouverts]); rendreVeille(); return; }
+  const c = e.target.closest('[data-copier]');
+  if (c) {
+    const m = messages.find(x => x.id === c.dataset.copier);
+    try { await navigator.clipboard.writeText(m.reponse); toast('Réponse copiée'); } catch (_) { toast('Copie impossible'); }
+  }
+});
+$('jours').addEventListener('change', async e => {
+  const s = e.target.closest('[data-statut]'); if (!s) return;
+  const { error } = await SB.from('agents_veille_messages').update({ statut: s.value, updated_at: new Date().toISOString() }).eq('id', s.dataset.statut);
+  if (error) { toast('Erreur : ' + error.message); return; }
+  const m = messages.find(x => x.id === s.dataset.statut); m.statut = s.value; rendre(); toast('Statut enregistré');
+});
+$('filtres').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  filtre = b.dataset.f; store.set('ag_filtre', filtre); rendreVeille();
+});
+
+$('relancer').addEventListener('click', async () => {
+  const jour = $('jourRelance').value;
+  if (!jour) { toast('Choisissez un jour'); return; }
+  if (jour >= jourParis()) { toast('Choisissez un jour passé'); return; }
+  if (runs.some(x => x.agent === 'veille_facebook' && x.jour === jour && (x.statut === 'en_attente' || x.statut === 'en_cours'))) { toast('Ce jour est déjà en cours ou en attente'); return; }
+  $('relancer').disabled = true;
+  const { error } = await SB.from('agents_runs').insert({ agent: 'veille_facebook', jour, origine: 'dashboard' });
+  $('relancer').disabled = false;
+  if (error) { toast('Erreur : ' + error.message); return; }
+  ouverts.add(jour); store.set('ag_ouverts', [...ouverts]);
+  toast('Relance demandée pour le ' + new Date(jour + 'T12:00:00').toLocaleDateString('fr-FR'));
+  charger();
+});
+
+function rendreBlog() {
+  $('aucunArticle').hidden = articles.length > 0;
+  $('articles').innerHTML = articles.map(a => {
+    const cls = a.statut === 'OK' ? 'ok' : /attente|préparation/.test(a.statut || '') ? 'att' : 'err';
+    const lib = a.statut === 'OK' ? 'Publié' : a.statut || '—';
+    return '<tr><td class="num">' + new Date(a.jour + 'T12:00:00').toLocaleDateString('fr-FR', { dateStyle: 'medium' }) + '</td>' +
+      '<td>' + (a.statut === 'OK' ? '<a href="' + esc(a.url) + '" target="_blank" rel="noopener">' + esc(a.titre || a.slug) + '</a>' : '<b>' + esc(a.titre || a.slug) + '</b>') +
+        '<small>' + esc(a.dossier) + '</small>' + (a.commit ? '<small>' + esc(a.commit) + '</small>' : '') + '</td>' +
+      '<td><span class="puce ' + cls + '">' + esc(lib) + '</span>' + (a.publie_le ? '<small>' + dateHeure(a.publie_le) + '</small>' : '') +
+        (a.erreur ? '<details><summary>Voir l\'erreur</summary><pre class="journal">' + esc(a.erreur) + '</pre></details>' : '') + '</td></tr>';
+  }).join('');
+  $('journal').textContent = etat.publieur_journal?.valeur || 'Pas encore de journal.';
+}
+
+let tt; function toast(m) { const t = $('toast'); t.textContent = m; t.hidden = false; clearTimeout(tt); tt = setTimeout(() => t.hidden = true, 2200); }
+
+demarrer();
+</script>
+</body>
+</html>
