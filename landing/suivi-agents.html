@@ -161,7 +161,7 @@ pre.journal{font:12.5px ui-monospace,SFMono-Regular,Menlo,monospace;background:#
 
     <section class="carte" id="pan-blog" role="tabpanel" aria-labelledby="tab-blog" hidden>
       <h2>Articles rédigés par l'agent</h2>
-      <p class="foot" style="margin-bottom:14px">La rédaction se fait dans le cloud (tâche planifiée Claude « Article blog PassCRPE » : choix du sujet dans le plan éditorial, rédaction, image). Le Publieur du Mac envoie ensuite chaque article prêt sur le site (GitHub puis Vercel). Un article bloqué avant d'être prêt n'apparaît pas ici : voir l'historique de la tâche dans Claude.</p>
+      <p class="foot" style="margin-bottom:14px">La rédaction se fait dans le cloud (tâche planifiée Claude « Article blog PassCRPE » : choix du sujet dans le plan éditorial, rédaction, image). Le Publieur du Mac (lancé toutes les 2 minutes par le programme des agents) envoie ensuite chaque article prêt sur le site (GitHub puis Vercel). Un article bloqué avant d'être prêt n'apparaît pas ici : voir l'historique de la tâche dans Claude.</p>
       <div class="tableau"><table>
         <thead><tr><th>Jour</th><th>Article</th><th>Publication</th></tr></thead>
         <tbody id="articles"></tbody>
@@ -257,7 +257,7 @@ function rendreEtats() {
     '<div class="etat"><div class="etat-tete"><h3>Agent blog</h3>' + (artErr ? '<span class="puce err">' + artErr + ' en erreur</span>' : '<span class="puce ok">Lundi, mercredi, vendredi</span>') + '</div>' +
     '<dl><dt>Dernier article publié</dt><dd>' + (dernierArt ? esc(dernierArt.titre || dernierArt.slug) + '<br><small style="color:var(--muted);font-weight:500">' + dateHeure(dernierArt.publie_le) + '</small>' : '—') + '</dd>' +
     '<dt>Articles suivis</dt><dd>' + articles.length + '</dd>' +
-    '<dt>Publieur du Mac</dt><dd>' + (pubRuns ? pubRuns + ' vérifications · dernier code ' + esc(pubExit) : '—') + (etat.publieur_launchd ? ' <small style="color:var(--muted);font-weight:500">(' + ilya(etat.publieur_launchd.updated_at) + ')</small>' : '') + '</dd></dl></div>';
+    '<dt>Publieur du Mac</dt><dd>' + (pubRuns ? pubRuns + ' vérifications · dernier code ' + esc(pubExit) : esc(pub || '—')) + (etat.publieur_launchd ? ' <small style="color:var(--muted);font-weight:500">(' + ilya(etat.publieur_launchd.updated_at) + ')</small>' : '') + '</dd></dl></div>';
 }
 
 function rendreOnglets() {

@@ -6,6 +6,11 @@
 # Lancé via ~/.passcrpe/PassCRPE Agents.app : une application a le droit de lire le Bureau (protection macOS), pas un script.
 export PATH="$HOME/.local/bin:/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin"
 cd /Users/necib/Desktop/DEV/NEW_120426/CRPE || exit 1
+# Publieur des articles du blog (avant le verrou : il tourne même pendant une veille Facebook ; il a son propre verrou).
+# Remplace l'ancienne app « PassCRPE Publieur » (launchd fr.passcrpe.publier-articles, désactivé le 27/11/2026) dont
+# macOS affichait sans cesse la fenêtre « Exécuter / Quitter », ce qui la bloquait.
+/Library/Frameworks/Python.framework/Versions/3.11/bin/python3 -I "$HOME/.passcrpe/publier_articles.py" >> "$HOME/.passcrpe/launchd.log" 2>&1
+
 LOCK="$HOME/.passcrpe/verrou-agents"
 mkdir "$LOCK" 2>/dev/null || {
   # verrou de plus de 3 h = passage planté : on le libère
@@ -15,7 +20,7 @@ trap 'rmdir "$LOCK" 2>/dev/null' EXIT
 mkdir -p logs/veille-facebook
 
 node scripts/agents_suivi.mjs --sync-blog >/dev/null 2>&1
-node scripts/agents_suivi.mjs --etat publieur_launchd "$(launchctl print gui/$(id -u)/fr.passcrpe.publier-articles 2>&1 | grep -E '^\s*(state|runs|last exit code) =' | sed 's/^[[:space:]]*//')" >/dev/null 2>&1
+node scripts/agents_suivi.mjs --etat publieur_launchd "intégré au programme des agents (toutes les 2 min)" >/dev/null 2>&1
 
 [[ $(TZ=Europe/Paris date +%H%M) -ge 0930 ]] && node scripts/agents_suivi.mjs --planifier-veille >/dev/null 2>&1
 
