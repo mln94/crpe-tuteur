@@ -26,6 +26,7 @@
     { "source": "/blog/production-ecrits-ecole-crpe", "destination": "/production-ecrits-ecole-crpe.html" },
     { "source": "/blog/apprentissage-code-cp-crpe", "destination": "/apprentissage-code-cp-crpe.html" },
     { "source": "/blog/crpe-oral-1-francais-notions", "destination": "/crpe-oral-1-francais-notions.html" },
+    { "source": "/blog/licence-professorat-des-ecoles-lpe", "destination": "/licence-professorat-des-ecoles-lpe.html" },
     { "source": "/crpe-par-academie", "destination": "/crpe-par-academie.html" },
     { "source": "/crpe-par-academie-2027", "destination": "/crpe-par-academie-2027.html" },
     { "source": "/crpe-par-academie/:slug", "destination": "/academies/:slug.html" },
